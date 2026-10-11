@@ -11,7 +11,7 @@ const W = 600, H = 190;
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 interface Props {
-  /** Avance del pedido entre el taller y tu casa (0 a 1). */
+  /** Avance del pedido entre el local y tu casa (0 a 1). */
   progress: number;
   /** Quién lo lleva según la temática; sin temática, el punto dorado de siempre. */
   traveler?: Traveler | null;
@@ -20,7 +20,7 @@ interface Props {
   delivered?: boolean;
 }
 
-/** Ruta ilustrada del taller a tu casa: la línea avanza según la etapa. Sin mapas externos. */
+/** Ruta ilustrada del local a tu casa: la línea avanza según la etapa. Sin mapas externos. */
 export function RouteMap({ progress, traveler, accent = "#c8ff2e", delivered = false }: Props) {
   const ref = useRef<SVGPathElement>(null);
   const [dot, setDot] = useState({ x: 40, y: 150 });

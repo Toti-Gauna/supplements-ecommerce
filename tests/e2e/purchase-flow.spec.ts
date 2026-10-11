@@ -7,30 +7,27 @@ test("flujo móvil completo hasta la confirmación de demostración", async ({ p
   await expect(page.getByRole("note").filter({ hasText: "No se cobra nada" })).toBeVisible();
 
   // Búsqueda tolerante a errores
-  await page.goto("buscar/?q=comedro");
+  await page.goto("buscar/?q=creatna");
   await expect(page.getByRole("status").filter({ hasText: "resultados" })).toBeVisible();
-  await page.getByRole("link", { name: "Comedero perro globo" }).click();
+  await page.getByRole("link", { name: "Creatina monohidrato micronizada" }).first().click();
 
-  // Ficha todo en uno: color, texto con vista previa en vivo, aprobación y agregar
-  await expect(page.getByRole("heading", { level: 1, name: "Comedero perro globo" })).toBeVisible();
-  await page.getByTitle("Celeste").first().click();
-  const text = page.getByLabel("Texto", { exact: true });
-  await text.fill("Toby 🐶");
-  await expect(page.getByRole("alert").filter({ hasText: "emoji" })).toBeVisible();
-  await text.fill("Ñoqui");
-  await page.getByText("Manuscrita").click();
-  await expect(page.getByText("Vista previa en vivo")).toBeVisible();
-  const add = page.getByRole("button", { name: "Agregar al carrito" }).filter({ visible: true });
-  // Sin casilla: agregar al carrito equivale a "Así lo quiero" (queda explicado junto a la cantidad)
-  await expect(page.getByText(/Al agregarlo confirmás/)).toBeVisible();
+  // Ficha en una sola tarjeta: tamaño (tarjetas con servicios), el precio se actualiza y se agrega desde la barra de abajo
+  await expect(page.getByRole("heading", { level: 1, name: "Creatina monohidrato micronizada" })).toBeVisible();
+  const card = page.getByRole("region", { name: "Elegí sabor, tamaño y cantidad" });
+  await card.getByText("500 g", { exact: true }).click();
+  await expect(card.getByRole("radio", { name: /500 g/ })).toBeChecked();
+  const add = page.locator("[data-buy-bar]").getByRole("button", { name: /Agregar al carrito/ });
+  await expect(add).toContainText("$ 45.900");
   await add.click();
   const drawer = page.getByRole("dialog", { name: "Carrito" });
-  await expect(drawer.getByText("Agregaste Comedero perro globo")).toBeVisible();
+  await expect(drawer.getByText("Agregaste Creatina monohidrato micronizada")).toBeVisible();
   await drawer.getByRole("link", { name: "Ver carrito completo" }).click();
 
   // Carrito: cupón vencido, cupón válido
   await expect(page).toHaveURL(/carrito\/$/);
-  await expect(page.getByText("✓ Aprobada")).toBeVisible();
+  const cartLines = page.getByRole("list", { name: "Productos en el carrito" });
+  await expect(cartLines.getByText("Creatina monohidrato micronizada")).toBeVisible();
+  await expect(cartLines.getByText("500 g")).toBeVisible();
   const code = page.getByLabel("¿Tenés un código?");
   await code.fill("invierno");
   await code.press("Enter");
@@ -76,7 +73,10 @@ test("flujo móvil completo hasta la confirmación de demostración", async ({ p
   await page.getByRole("link", { name: "Seguir mi pedido", exact: true }).click();
   await expect(page).toHaveURL(/pedido\/demo-volta\/$/);
   await expect(page.getByText("estado actual")).toBeVisible();
-  await expect(page.getByText(/“Ñoqui”/).first()).toBeVisible();
+  // El seguimiento muestra lo que se compró (no el pedido de ejemplo)
+  const items = page.getByRole("region", { name: "Tu pedido de demostración" });
+  await expect(items.getByText("1 × Creatina monohidrato micronizada")).toBeVisible();
+  await expect(items.getByText("500 g")).toBeVisible();
 
   // Reiniciar demo deja todo vacío
   page.once("dialog", (d) => d.accept());
@@ -88,17 +88,19 @@ test("flujo móvil completo hasta la confirmación de demostración", async ({ p
 
 test("checkout con cuenta demo, retiro y Mercado Pago simulado", async ({ page }) => {
   const assertNoExternal = guardNetwork(page);
-  await page.goto("p/vela-caniche/");
-  await page.getByRole("button", { name: "Agregar al carrito" }).last().click();
-  await expect(page.getByRole("dialog", { name: "Carrito" }).getByText("Agregaste Vela caniche")).toBeVisible();
+  await page.goto("p/overvolt-pre/");
+  // En el celular "Agregar al carrito" está en la barra flotante de abajo (el de la tarjeta se oculta)
+  const add = page.locator("[data-buy-bar]").getByRole("button", { name: /Agregar al carrito/ });
+  await add.click();
+  await expect(page.getByRole("dialog", { name: "Carrito" }).getByText("Agregaste Overvolt pre-entreno")).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(page.getByRole("dialog", { name: "Carrito" })).toBeHidden();
   await page.getByLabel("Cantidad:").selectOption("2");
-  await page.getByRole("button", { name: "Agregar al carrito" }).last().click();
+  await add.click();
   await page.goto("checkout/");
   await page.getByRole("button", { name: "Ingresar con cuenta demo" }).click();
   await page.getByRole("button", { name: "Continuar a la entrega" }).click();
-  await page.getByText("Retiro en persona").click();
+  await page.getByText("Retiro en el local").click();
   await page.getByRole("button", { name: "Continuar al pago" }).click();
   await page.getByText("Tarjetas de débito, crédito y prepagas", { exact: true }).click();
   await page.getByRole("button", { name: "Revisar pedido" }).click();
@@ -109,5 +111,32 @@ test("checkout con cuenta demo, retiro y Mercado Pago simulado", async ({ page }
   await page.getByRole("button", { name: /Simular ida y vuelta/ }).click();
   await expect(page.getByText(/pendiente de confirmación/)).toBeVisible();
   await expect(page.getByText(/acreditad/i)).toHaveCount(0);
+  assertNoExternal();
+});
+
+test("Fase 2 · descuento stack: proteína + creatina + pre en el carrito restan 10 %; con dos categorías avisa cuánto falta", async ({ page }) => {
+  const assertNoExternal = guardNetwork(page);
+  const addFromBar = async (slug: string, name: string) => {
+    await page.goto(`p/${slug}/`);
+    await page.locator("[data-buy-bar]").getByRole("button", { name: /Agregar al carrito/ }).click();
+    await expect(page.getByRole("dialog", { name: "Carrito" }).getByText(`Agregaste ${name}`)).toBeVisible();
+  };
+  const summary = page.getByRole("region", { name: "Resumen", exact: true });
+  const total = summary.locator("dd").last();
+  await addFromBar("ionic-whey", "Ionic Whey 100%");
+  await addFromBar("creatina-monohidrato", "Creatina monohidrato micronizada");
+  await page.goto("carrito/");
+  // Dos categorías de suplementos: todavía no hay descuento, solo el aviso de cuánto falta.
+  await expect(page.getByText(/Sumá 1 categoría más de suplementos/)).toBeVisible();
+  await expect(summary.getByText(/Descuento stack/)).toHaveCount(0);
+  await expect(total).toHaveText("$ 84.800");
+  await addFromBar("overvolt-pre", "Overvolt pre-entreno");
+  await page.goto("carrito/");
+  // Tres categorías: 10 % sobre $ 121.700 = $ 12.170 y el total baja.
+  await expect(page.getByText(/¡Armaste tu stack!/)).toBeVisible();
+  const row = summary.locator("div").filter({ has: page.getByText("Descuento stack (10 %)", { exact: true }) });
+  await expect(row.locator("dd")).toHaveText("−$ 12.170");
+  await expect(total).toHaveText("$ 109.530");
+  await expect(page.getByText(/Sumá \d categorías? más/)).toHaveCount(0);
   assertNoExternal();
 });

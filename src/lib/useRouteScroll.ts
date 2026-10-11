@@ -5,7 +5,14 @@ import { useEffect, useLayoutEffect, useRef } from "react";
 /** Durante cuánto tiempo después de navegar se corrige la posición si algo la mueve (la transición de página). */
 const SETTLE_MS = 600;
 
-/** Lleva al inicio real de la página o, si el link trae ancla (`/p/collar/#personalizar`), a esa sección. */
+/** Posición del elemento en la página sin contar transformaciones: una animación de entrada (Reveal) no la mueve. */
+function pageTop(el: HTMLElement): number {
+  let y = 0;
+  for (let e: HTMLElement | null = el; e; e = e.offsetParent as HTMLElement | null) y += e.offsetTop;
+  return y;
+}
+
+/** Lleva al inicio real de la página o, si el link trae ancla (`/#ofertas-tematicas`), a esa sección. */
 function scrollToStart() {
   const id = decodeURIComponent(location.hash.slice(1));
   const target = id ? document.getElementById(id) : null;
@@ -16,7 +23,7 @@ function scrollToStart() {
   // La sección queda debajo del header fijo: su scroll-margin si lo tiene, si no el alto del header y un poco de aire.
   const header = document.querySelector<HTMLElement>("[data-shop-header]");
   const margin = parseFloat(getComputedStyle(target).scrollMarginTop) || (header?.offsetHeight ?? 0) + 16;
-  const top = Math.max(0, Math.round(target.getBoundingClientRect().top + scrollY - margin));
+  const top = Math.max(0, Math.round(pageTop(target) - margin));
   if (Math.abs(scrollY - top) > 1) window.scrollTo({ top, left: 0, behavior: "instant" });
 }
 

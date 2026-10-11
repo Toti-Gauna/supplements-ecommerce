@@ -14,7 +14,7 @@ const measure = (page: Page) => page.evaluate(() => {
 for (const [width, height] of [[1180, 740], [1440, 900], [1080, 700]] as const) {
   test(`8.2.6 a ${width}×${height}: la galería acompaña la compra, entra entera y se suelta al terminar la sección`, async ({ page }) => {
     await page.setViewportSize({ width, height });
-    await page.goto("p/collar-con-nombre/");
+    await page.goto("p/ionic-whey/");
     const max = await page.evaluate(() => document.documentElement.scrollHeight - innerHeight);
     let stuck = 0;
     for (let y = 0; y <= Math.min(max, 2600); y += 150) {
@@ -35,14 +35,14 @@ for (const [width, height] of [[1180, 740], [1440, 900], [1080, 700]] as const) 
 }
 
 test("8.2.6 en el celular la galería va en el flujo normal (sin fijarse)", async ({ page }) => {
-  await page.goto("p/collar-con-nombre/");
+  await page.goto("p/ionic-whey/");
   expect((await measure(page)).position).toBe("static");
 });
 
 test("8.2.7 botones en columna, del mismo ancho y en orden; favoritos aparte; Regalar ahora abre el regalo", async ({ page }) => {
   await page.setViewportSize({ width: 1180, height: 820 });
-  await page.goto("p/vela-en-lata/");
-  const card = page.locator("#personalizar");
+  await page.goto("p/overvolt-pre/");
+  const card = page.getByRole("region", { name: "Elegí sabor, tamaño y cantidad" });
   const names = ["Agregar al carrito", "Comprar ahora", "Regalar ahora"];
   const boxes = [];
   for (const name of names) {
@@ -58,15 +58,15 @@ test("8.2.7 botones en columna, del mismo ancho y en orden; favoritos aparte; Re
     expect(boxes[i]!.y).toBeGreaterThan(boxes[i - 1]!.y + boxes[i - 1]!.height - 1);
   }
   await expect(card.getByRole("button", { name: /favoritos/ })).toHaveCount(0);
-  await page.getByRole("button", { name: /Guardar Vela en lata pintada en favoritos/ }).first().click();
+  await page.getByRole("button", { name: /Guardar Overvolt pre-entreno en favoritos/ }).first().click();
   await expect(page.getByText("Guardado en favoritos")).toBeVisible();
   await card.getByRole("button", { name: "Regalar ahora" }).click();
   await expect(page.getByRole("dialog")).toBeVisible();
 });
 
 test("8.2.7 en el celular: Comprar y Regalar en la tarjeta, Agregar en la barra de abajo (uno solo visible)", async ({ page }) => {
-  await page.goto("p/vela-en-lata/");
-  const card = page.locator("#personalizar");
+  await page.goto("p/overvolt-pre/");
+  const card = page.getByRole("region", { name: "Elegí sabor, tamaño y cantidad" });
   await expect(card.getByRole("button", { name: "Comprar ahora" })).toBeVisible();
   await expect(card.getByRole("button", { name: "Regalar ahora" })).toBeVisible();
   await expect(page.getByRole("button", { name: /Agregar al carrito/ }).filter({ visible: true })).toHaveCount(1);
@@ -75,11 +75,11 @@ test("8.2.7 en el celular: Comprar y Regalar en la tarjeta, Agregar en la barra 
 test("8.2.8 ir de un producto a otro por las tarjetas reinicia la ficha: nombre, precio, cantidad y arriba de todo", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.setViewportSize({ width: 1180, height: 820 });
-  await page.goto("p/vela-en-lata/");
+  await page.goto("p/overvolt-pre/");
   await page.keyboard.press("Escape");
   // Algo en el carrito y una cantidad distinta de 1: el carrito se conserva, la cantidad no.
   await page.getByLabel("Cantidad:").selectOption("2");
-  await page.locator("#personalizar").getByRole("button", { name: "Agregar al carrito" }).click();
+  await page.getByRole("region", { name: "Elegí sabor, tamaño y cantidad" }).getByRole("button", { name: "Agregar al carrito" }).click();
   await page.keyboard.press("Escape");
   const cart = page.locator("[data-shop-header]").getByRole("button", { name: /^Carrito, / });
   const label = await cart.getAttribute("aria-label");

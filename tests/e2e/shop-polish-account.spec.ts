@@ -58,10 +58,10 @@ for (const [width, height] of [[1180, 820], [820, 1180], [390, 844]] as const) {
     await page.goto("cuenta/");
     await page.getByRole("button", { name: "Entrar a la cuenta demo" }).click();
     const nav = page.getByRole("navigation", { name: "Secciones de la cuenta" });
-    await expect(nav.getByRole("link")).toHaveCount(5);
+    await expect(nav.getByRole("link")).toHaveCount(6);
     await expect(nav.getByRole("link", { name: /^Mis pedidos/ })).toHaveAttribute("aria-current", "true");
     await expect(page.getByRole("heading", { level: 2, name: "Mis pedidos" })).toBeVisible();
-    for (const [tile, check] of [["Mis regalos", /de Lucía/], ["Misiones", /Comprá 2 productos/], ["Premios", "Grabado de nombre gratis"], ["Direcciones", "Casa"]] as const) {
+    for (const [tile, check] of [["Recompras", "Todavía no pediste avisos"], ["Mis regalos", /de Lucía/], ["Misiones", /Comprá 2 productos/], ["Premios", "Envío gratis en la próxima compra"], ["Direcciones", "Casa"]] as const) {
       await nav.getByRole("link", { name: new RegExp(`^${tile}`) }).click();
       const panel = page.locator("#cuenta-seccion");
       await expect(panel.getByRole("heading", { level: 2, name: tile })).toBeVisible();
@@ -78,3 +78,40 @@ for (const [width, height] of [[1180, 820], [820, 1180], [390, 844]] as const) {
     expect(await horizontalOverflow(page)).toBeLessThanOrEqual(0);
   });
 }
+
+test("Fase 2 · aviso de recompra: la calculadora de la ficha lo guarda y Mi cuenta → Recompras lo muestra, recompra y lo quita", async ({ page }) => {
+  const assertNoExternal = guardNetwork(page);
+  await page.goto("p/ionic-whey/");
+  const calc = page.getByRole("region", { name: "¿Cuánto te dura?" });
+  await calc.scrollIntoViewIfNeeded();
+  // Chocolate 2 lb trae 30 servicios: a 2 por día dura 15 días.
+  await calc.getByRole("button", { name: "2 por día" }).click();
+  await expect(calc.getByRole("button", { name: "2 por día" })).toHaveAttribute("aria-pressed", "true");
+  await expect(calc.getByRole("progressbar", { name: "Envase de 30 servicios: dura 15 días" })).toBeVisible();
+  await expect(calc.getByText("15", { exact: true })).toBeVisible();
+  await calc.getByRole("button", { name: "Avisame antes de que se termine" }).click();
+  await expect(calc.getByText(/Te avisamos el/)).toBeVisible();
+  await expect(calc.getByRole("button", { name: "Avisame antes de que se termine" })).toHaveCount(0);
+
+  await page.goto("cuenta/");
+  await page.getByRole("button", { name: "Entrar a la cuenta demo" }).click();
+  const nav = page.getByRole("navigation", { name: "Secciones de la cuenta" });
+  await expect(nav.getByRole("link", { name: /^Recompras/ })).toContainText("1 aviso");
+  await page.goto("cuenta/#recompras");
+  const panel = page.locator("#cuenta-seccion");
+  await expect(panel.getByRole("heading", { level: 2, name: "Recompras" })).toBeVisible();
+  const item = panel.getByRole("listitem").filter({ hasText: "Ionic Whey 100%" });
+  await expect(item).toContainText("Chocolate · 2 lb (907 g)");
+  await expect(item).toContainText("2 por día");
+  // Recomprar suma el mismo pote al carrito en un toque.
+  await item.getByRole("button", { name: "Recomprar" }).click();
+  const drawer = page.getByRole("dialog", { name: "Carrito" });
+  await expect(drawer.getByText("Agregaste Ionic Whey 100%")).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(drawer).toBeHidden();
+  await item.getByRole("button", { name: "Quitar aviso" }).click();
+  await expect(panel.getByText("Ionic Whey 100%")).toHaveCount(0);
+  await expect(panel.getByText(/Todavía no pediste avisos/)).toBeVisible();
+  await expect(nav.getByRole("link", { name: /^Recompras/ })).toContainText("Sin avisos");
+  assertNoExternal();
+});

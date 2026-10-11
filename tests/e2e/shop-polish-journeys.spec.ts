@@ -45,7 +45,7 @@ async function contactToConfirm(page: Page, pay: "Transferencia bancaria" | "Tar
   await page.getByLabel("Email").fill("juana@ejemplo.com");
   await page.getByLabel("Teléfono / WhatsApp").fill("223 555-1234");
   await page.getByRole("button", { name: "Continuar a la entrega" }).click();
-  await page.getByText("Retiro en persona").first().click();
+  await page.getByText("Retiro en el local").first().click();
   await page.getByRole("button", { name: "Continuar al pago" }).click();
   await page.getByText(pay, { exact: true }).click();
   await page.getByRole("button", { name: "Revisar pedido" }).click();
@@ -62,20 +62,23 @@ for (const d of DEVICES) {
     test.use({ viewport: d.viewport, isMobile: d.mobile, hasTouch: d.mobile });
     test.describe.configure({ timeout: 90_000 });
 
-    test("A · compra: inicio → categoría → producto → personalización → carrito → checkout → entrega → pago → confirmación", async ({ page }) => {
+    test("A · compra: inicio → categoría → producto → tamaño → carrito → checkout → entrega → pago → confirmación", async ({ page }) => {
       const w = watch(page);
       await page.goto("");
       await w.check("inicio");
-      await page.locator("#cats-rail a[href$='/c/comederos/']").click();
-      await expect(page.getByRole("heading", { level: 1, name: "Comederos" })).toBeVisible();
+      await page.locator("#cats-rail a[href$='/c/creatinas/']").click();
+      await expect(page.getByRole("heading", { level: 1, name: "Creatinas" })).toBeVisible();
       await w.check("categoría");
-      await page.getByRole("link", { name: "Comedero perro globo" }).first().click();
-      await expect(page.getByRole("heading", { level: 1, name: "Comedero perro globo" })).toBeVisible();
-      await page.getByLabel("Texto", { exact: true }).fill("Toby");
+      await page.getByRole("link", { name: "Creatina monohidrato micronizada" }).first().click();
+      await expect(page.getByRole("heading", { level: 1, name: "Creatina monohidrato micronizada" })).toBeVisible();
+      const card = page.getByRole("region", { name: "Elegí sabor, tamaño y cantidad" });
+      await card.getByText("500 g", { exact: true }).click();
+      await expect(card.getByRole("radio", { name: /500 g/ })).toBeChecked();
       await w.check("producto");
-      await page.getByRole("button", { name: "Agregar al carrito" }).filter({ visible: true }).first().click();
+      // Desde tablet se agrega desde la tarjeta; en el celular, desde la barra de abajo (uno solo visible).
+      await page.getByRole("button", { name: /Agregar al carrito/ }).filter({ visible: true }).first().click();
       await page.getByRole("dialog", { name: "Carrito" }).getByRole("link", { name: "Ver carrito completo" }).click();
-      await expect(page.getByText(/“Toby”/).first()).toBeVisible();
+      await expect(page.getByRole("list", { name: "Productos en el carrito" }).getByText("Sin sabor · 500 g")).toBeVisible();
       await w.check("carrito");
       await page.getByRole("button", { name: "Continuar al checkout" }).click();
       await page.getByRole("dialog", { name: "Ruleta de cupones" }).getByRole("button", { name: "Continuar sin girar" }).click();
@@ -87,25 +90,27 @@ for (const d of DEVICES) {
       w.done();
     });
 
-    test("B · regalo desde la ficha: modal → carrito → checkout → revisar el regalo (sin perder la personalización)", async ({ page }) => {
+    test("B · regalo desde la ficha: modal → carrito → checkout → revisar el regalo (sin perder el sabor elegido)", async ({ page }) => {
       const w = watch(page);
       await seed(page, null, true);
-      await page.goto("p/comedero-perro-globo/");
-      await page.getByLabel("Texto", { exact: true }).fill("Toby");
-      await page.locator("#personalizar").getByRole("button", { name: "Regalar ahora" }).click();
+      await page.goto("p/overvolt-pre/");
+      const card = page.getByRole("region", { name: "Elegí sabor, tamaño y cantidad" });
+      await card.getByTitle("Limón").click();
+      await expect(card.getByRole("radio", { name: "Limón" })).toBeChecked();
+      await card.getByRole("button", { name: "Regalar ahora" }).click();
       const modal = page.getByRole("dialog", { name: "Es para regalar" });
       await modal.getByLabel("Para", { exact: true }).fill("Sofía");
       await modal.getByLabel("De parte de").fill("Lucía");
-      await modal.getByLabel("Mensaje").fill("¡Para Toby!");
+      await modal.getByLabel("Mensaje").fill("¡Para que entrenes con todo!");
       await w.check("modal de regalo");
       await page.keyboard.press("Escape");
-      await expect(page.getByLabel("Texto", { exact: true })).toHaveValue("Toby");
-      await page.locator("#personalizar").getByRole("button", { name: "Regalar ahora" }).click();
+      await expect(card.getByRole("radio", { name: "Limón" })).toBeChecked();
+      await card.getByRole("button", { name: "Regalar ahora" }).click();
       await expect(modal.getByLabel("Para", { exact: true })).toHaveValue("Sofía");
       await modal.getByRole("button", { name: "Agregar regalo al carrito" }).click();
       await page.getByRole("dialog", { name: "Carrito" }).getByRole("link", { name: "Ver carrito completo" }).click();
       await expect(page.getByText("Regalo para Sofía · de Lucía")).toBeVisible();
-      await expect(page.getByText(/“Toby”/).first()).toBeVisible();
+      await expect(page.getByRole("list", { name: "Productos en el carrito" }).getByText("Limón")).toBeVisible();
       await page.getByRole("button", { name: "Continuar al checkout" }).click();
       await contactToConfirm(page, "Transferencia bancaria");
       await expect(page.getByRole("region", { name: "¿Es para regalo?" }).getByText("Regalo para Sofía")).toBeVisible();
@@ -118,7 +123,7 @@ for (const d of DEVICES) {
 
     test("B · regalo desde el checkout: ¿Es para regalo? → modal → revisar el regalo → confirmar", async ({ page }) => {
       const w = watch(page);
-      await seed(page, { lines: [{ id: "l1", productSlug: "vela-caniche", variantId: "vc-vainilla", quantity: 1 }], couponCode: null }, true);
+      await seed(page, { lines: [{ id: "l1", productSlug: "overvolt-pre", variantId: "ov-limon-300", quantity: 1 }], couponCode: null }, true);
       await page.goto("checkout/");
       await contactToConfirm(page, "Transferencia bancaria");
       const section = page.getByRole("region", { name: "¿Es para regalo?" });
@@ -137,7 +142,7 @@ for (const d of DEVICES) {
 
     test("C · club: misiones → ruleta → premio → aplicar → checkout → desactivar el cupón", async ({ page }) => {
       const w = watch(page);
-      await seed(page, { lines: [{ id: "l1", productSlug: "vela-en-lata", variantId: "vel-patria", quantity: 4 }], couponCode: null }, false);
+      await seed(page, { lines: [{ id: "l1", productSlug: "overvolt-pre", variantId: "ov-frutos-rojos-300", quantity: 4 }], couponCode: null }, false);
       await page.addInitScript(() => { Math.random = () => 0.1; });
       await page.goto("club/");
       await expect(page.getByRole("heading", { name: "Tus misiones" })).toBeVisible();
@@ -203,11 +208,16 @@ for (const d of DEVICES) {
     });
 
     test("E · seguimiento: en producción → en camino → entregado → cambio de temática → repetir", async ({ page }) => {
+      // En VOLTA "Probar temáticas" viene apagado (las temáticas se rehacen en la Fase 5): se prende desde el panel.
+      await page.goto("admin-demo/tematicas/");
+      const tryButton = page.getByRole("switch", { name: /Probar temáticas/ });
+      await tryButton.click();
+      await expect(tryButton).toHaveAttribute("aria-checked", "true");
       const w = watch(page);
       await page.goto("pedido/demo-volta/");
       const run = async () => {
         const zone = page.getByRole("region", { name: "Probá los estados del pedido — Demostración" });
-        for (const [label, title] of [["En producción", "En producción"], ["En camino", "En camino"], ["Entregado", "Entregado"]] as const) {
+        for (const [label, title] of [["Armando tu pedido", "Armando tu pedido"], ["En camino", "En camino"], ["Entregado", "Entregado"]] as const) {
           await zone.getByText(label, { exact: true }).click();
           await expect(page.getByRole("heading", { level: 2, name: title, exact: true })).toBeVisible();
         }

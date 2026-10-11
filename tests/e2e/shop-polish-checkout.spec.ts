@@ -5,7 +5,7 @@ import { expect, test, type Page } from "@playwright/test";
 async function toCheckout(page: Page) {
   // Un producto en el carrito y un premio de la ruleta ya guardado (así no se abre la ruleta antes del checkout).
   await page.addInitScript(() => {
-    localStorage.setItem("volta-demo:cart", JSON.stringify({ state: { lines: [{ id: "l1", productSlug: "vela-en-lata", variantId: "vel-patria", quantity: 2 }] }, version: 0 }));
+    localStorage.setItem("volta-demo:cart", JSON.stringify({ state: { lines: [{ id: "l1", productSlug: "overvolt-pre", variantId: "ov-frutos-rojos-300", quantity: 2 }] }, version: 0 }));
     localStorage.setItem("volta-demo:account", JSON.stringify({ state: { wheelPrize: { code: "DEMO", label: "Premio", at: "2026-10-10T12:00:00.000Z" } }, version: 0 }));
   });
   await page.goto("checkout/");
@@ -28,7 +28,7 @@ for (const width of [1180, 390]) {
     await toCheckout(page);
     const summary = page.getByRole("region", { name: "Resumen de tu compra" });
     await expect(summary).toBeVisible();
-    await expect(summary.getByText("2 × Vela en lata pintada")).toBeVisible();
+    await expect(summary.getByText("2 × Overvolt pre-entreno")).toBeVisible();
     let l = await layout(page);
     expect(l.summaryTop).toBeGreaterThan(l.optionsBottom);
     await page.getByRole("button", { name: "Continuar a la entrega" }).click();
@@ -67,7 +67,7 @@ for (const width of [1180, 390]) {
 test("8.2.10 tarjetas de débito, crédito y prepagas: se entiende cómo se pagaría y en la demo no se cobra", async ({ page }) => {
   await toCheckout(page);
   await page.getByRole("button", { name: "Continuar a la entrega" }).click();
-  await page.getByText("Retiro en persona").click();
+  await page.getByText("Retiro en el local").click();
   await page.getByRole("button", { name: "Continuar al pago" }).click();
   const card = page.locator("label", { hasText: "Tarjetas de débito, crédito y prepagas" });
   await expect(card).toContainText("Pagá con tarjeta de débito, crédito o prepaga de forma segura. En esta demostración no se realiza ningún cobro real.");

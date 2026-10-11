@@ -38,6 +38,9 @@ async function opensAtTop(page: Page, url: RegExp) {
 
 const down = (page: Page, px: number) => page.evaluate((d) => window.scrollBy({ top: d, behavior: "instant" }), px);
 
+const preview = (page: Page, id: string) =>
+  page.addInitScript((v) => localStorage.setItem("volta-demo:theme-preview", JSON.stringify({ state: { previewId: v }, version: 0 })), id);
+
 test("inicio → categoría → producto → producto relacionado", async ({ page }) => {
   await page.locator("#cats-rail").scrollIntoViewIfNeeded();
   await page.locator("#cats-rail a").first().click();
@@ -61,9 +64,10 @@ test("recomendados → producto → carrito → checkout", async ({ page }) => {
   await rec.scrollIntoViewIfNeeded();
   await rec.locator("[data-product-card] h3 a").first().click();
   await opensAtTop(page, /\/p\/[^/]+\/$/);
-  await visit(page, "p/vela-en-lata/");
+  await visit(page, "p/overvolt-pre/");
   await down(page, 500);
-  await page.getByRole("button", { name: /Agregar al carrito/ }).first().click();
+  // En el celular "Agregar al carrito" vive en la barra flotante de abajo.
+  await page.locator("[data-buy-bar]").getByRole("button", { name: /Agregar al carrito/ }).click();
   await page.getByRole("link", { name: "Ver carrito completo" }).click();
   await opensAtTop(page, /\/carrito\/$/);
   await page.getByRole("button", { name: /Continuar al checkout/ }).click();
@@ -81,25 +85,36 @@ test("header y pie: links internos desde abajo de la página", async ({ page }) 
 });
 
 test("un link con ancla abre en esa sección (debajo del header) y Atrás vuelve a donde estaba", async ({ page }) => {
-  const section = page.locator("#probalo").locator("xpath=ancestor::section[1]");
-  await section.scrollIntoViewIfNeeded();
+  // El link con ancla hacia otra página es "Ver ofertas" de la cinta de la temática (lleva a /#ofertas-tematicas).
+  await preview(page, "navidad");
+  await visit(page, "c/proteinas/");
+  const ribbon = page.locator("[data-theme-ribbon]");
+  // Se baja hasta dejar la cinta arriba de todo: se sale de un punto que no es el inicio de la página.
+  await down(page, Math.floor((await ribbon.boundingBox())!.y));
+  // Se espera a que el link sea el que recibe el toque en su lugar: si no, Playwright reintenta el clic moviendo la página.
+  const link = ribbon.getByRole("link", { name: "Ver ofertas" });
+  await expect.poll(() => link.evaluate((a) => {
+    const r = a.getBoundingClientRect();
+    return document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2) === a;
+  })).toBe(true);
   const left = await page.evaluate(() => Math.round(scrollY));
-  await section.getByRole("link", { name: /Personalizar este collar/ }).click();
-  await expect(page).toHaveURL(/\/p\/[^/]+\/#personalizar$/);
+  expect(left).toBeGreaterThan(0);
+  await link.click();
+  await expect(page).toHaveURL(/\/supplements-ecommerce\/#ofertas-tematicas$/);
   await page.waitForTimeout(700);
   const { top, header } = await page.evaluate(() => ({
-    top: document.getElementById("personalizar")!.getBoundingClientRect().top,
+    top: document.getElementById("ofertas-tematicas")!.getBoundingClientRect().top,
     header: document.querySelector("[data-shop-header]")!.getBoundingClientRect().bottom,
   }));
   expect(top).toBeGreaterThanOrEqual(header - 1);
   expect(top).toBeLessThan(header + 120);
   await page.goBack();
-  await expect(page).toHaveURL(/\/supplements-ecommerce\/$/);
+  await expect(page).toHaveURL(/\/c\/proteinas\/$/);
   await expect.poll(() => page.evaluate(() => Math.round(scrollY))).toBeGreaterThan(left / 2);
 });
 
 test("lo que no es navegación (ordenar los productos) no mueve la página", async ({ page }) => {
-  await visit(page, "c/comederos/");
+  await visit(page, "c/proteinas/");
   await down(page, 300);
   const y = await page.evaluate(() => Math.round(scrollY));
   await page.getByLabel("Ordenar por").selectOption({ index: 2 });

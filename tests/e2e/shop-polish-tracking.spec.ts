@@ -6,7 +6,7 @@ const preview = (page: Page, id: string) =>
 
 const STATES = [
   ["Esperando comprobante", "Esperando tu comprobante"],
-  ["En producción", "En producción"],
+  ["Armando tu pedido", "Armando tu pedido"],
   ["Listo", "Listo"],
   ["En camino", "En camino"],
   ["Entregado", "Entregado"],
@@ -17,7 +17,7 @@ test("8.2.11 Original: los cinco estados se prueban, cambian la vista y la entre
   const zone = page.getByRole("region", { name: "Probá los estados del pedido — Demostración" });
   await expect(zone).toBeVisible();
   await expect(zone.getByText("Solo cambia esta vista")).toBeVisible();
-  const map = page.getByRole("img", { name: /del camino entre el taller y tu casa|llegó a tu casa/ });
+  const map = page.getByRole("img", { name: /del camino entre el local y tu casa|llegó a tu casa/ });
   // Original conserva el seguimiento de siempre: el punto dorado, sin viajero.
   await expect(page.locator("[data-trk-traveler]")).toHaveCount(0);
   for (const [label, title] of STATES) {

@@ -5,8 +5,8 @@ const FLOW = [
   { label: "Pedido recibido", description: "Reservamos tu pedido." },
   { label: "Pago en revisión", description: "Volta verifica el ingreso de la transferencia o QR." },
   { label: "Pagado", description: "Pago confirmado." },
-  { label: "En producción", description: "Tu pieza se está fabricando con la vista previa que aprobaste." },
-  { label: "Listo", description: "Terminado y embalado." },
+  { label: "Armando tu pedido", description: "Controlamos lote y vencimiento de cada producto y lo embalamos." },
+  { label: "Listo", description: "Embalado y precintado, listo para salir." },
   { label: "Enviado", description: "En camino con el cadete o el correo." },
   { label: "Entregado", description: "¡Que lo disfrutes!" },
 ];
@@ -14,7 +14,7 @@ const FLOW = [
 /** Estados que se pueden probar en el seguimiento de demostración (solo cambian la vista, no el pedido). */
 export const SAMPLE_STATES = [
   { id: "pending", label: "Esperando comprobante", current: 0 },
-  { id: "production", label: "En producción", current: 3 },
+  { id: "production", label: "Armando tu pedido", current: 3 },
   { id: "ready", label: "Listo", current: 4 },
   { id: "shipped", label: "En camino", current: 5 },
   { id: "delivered", label: "Entregado", current: 7 },

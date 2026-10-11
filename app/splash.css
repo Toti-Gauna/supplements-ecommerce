@@ -98,8 +98,9 @@
 /* Con temática, la escena de la fecha rodea al logo (flor, corazón, aros): el bloque va más compacto y sin la batería,
    que mide lo mismo que el logo de Velmar para el que se dibujaron las escenas (se rehacen en la Fase 5). */
 html[data-season] #volta-splash .splash-battery { display: none; }
-html[data-season] #volta-splash .word { font-size: 2.25rem; line-height: 1.1; }
-@media (min-width: 640px) { html[data-season] #volta-splash .word { font-size: 3rem; } }
+html[data-season] #volta-splash .splash-mark { width: 3.5rem; height: 3.5rem; }
+html[data-season] #volta-splash .word { font-size: 2rem; line-height: 1.1; }
+@media (min-width: 640px) { html[data-season] #volta-splash .splash-mark { width: 4rem; height: 4rem; } html[data-season] #volta-splash .word { font-size: 3rem; } }
 
 /* Pantallas bajas (celular apaisado): logo más chico y sin rótulos, así el aro y las escenas no lo pisan. */
 @media (max-height: 560px) {

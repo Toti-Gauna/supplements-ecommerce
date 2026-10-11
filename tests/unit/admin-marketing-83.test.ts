@@ -19,7 +19,7 @@ describe("misiones (8.3.23)", () => {
 
 describe("premios de la ruleta (8.3.25)", () => {
   it("el catálogo de muestra tiene IDs estables y cada gajo apunta a uno", () => {
-    expect(defaultWheel.segments.map((s) => s.id)).toEqual(["w5", "wship", "wgrab", "w10", "w3000", "wkey", "w15", "wship2"]);
+    expect(defaultWheel.segments.map((s) => s.id)).toEqual(["w5", "wship", "wmuestra", "w10", "w3000", "wshaker", "w15", "wship2"]);
     expect(defaultWheel.segments.every((s) => prizes.some((p) => p.id === s.prizeId && p.name === s.label))).toBe(true);
     expect(defaultWheel.segments.filter((s) => s.prizeId === "p-envio")).toHaveLength(2);
   });
@@ -57,8 +57,8 @@ describe("premios de la ruleta (8.3.25)", () => {
     expect(w.segments.map((s) => s.id)).toEqual(old.segments.map((s) => s.id));
     expect(w.prizes).toHaveLength(7);
     expect(w.segments.every((s) => w.prizes!.some((p) => p.id === s.prizeId))).toBe(true);
-    expect(w.prizes!.find((p) => p.name === "Grabado gratis")?.template).toBe("engraving");
-    expect(w.prizes!.find((p) => p.name === "Llavero de regalo")?.template).toBe("gift");
+    expect(w.prizes!.find((p) => p.name === "Muestra de regalo")?.template).toBe("sample");
+    expect(w.prizes!.find((p) => p.name === "Shaker VOLTA de regalo")?.template).toBe("gift");
     expect(withPrizeCatalog(defaultWheel)).toBe(defaultWheel);
   });
   it("guardar exige vigencia, pesos válidos, premios del catálogo y peso positivo con la ruleta visible", () => {

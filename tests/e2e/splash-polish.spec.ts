@@ -53,9 +53,13 @@ test("San Valentín: Lola y Pancho cenan debajo del logo, todo centrado y sin pi
   const scene = page.locator("#volta-splash .season-scene");
   await expect(scene.locator(".vl-dinner svg.pup")).toHaveCount(2);
   const view = page.viewportSize()!;
-  const brand = (await page.locator("#volta-splash .splash-brand").boundingBox())!;
-  const heart = (await scene.locator(".vl-heart").boundingBox())!;
-  const dinner = (await scene.locator(".vl-dinner").boundingBox())!;
+  // Todo en el mismo cuadro y relativo a la pantalla de carga: a los 4,35 s sube como cortina y, con la máquina cargada,
+  // medir una caja por vez podía tomar el logo antes de la cortina y la cena ya subiendo.
+  const { brand, heart, dinner } = await page.locator("#volta-splash").evaluate((splash) => {
+    const top = splash.getBoundingClientRect().top;
+    const box = (sel: string) => { const r = splash.querySelector(sel)!.getBoundingClientRect(); return { x: r.x, y: r.y - top, width: r.width, height: r.height }; };
+    return { brand: box(".splash-brand"), heart: box(".season-scene .vl-heart"), dinner: box(".season-scene .vl-dinner") };
+  });
   expect(Math.abs(center(heart).x - view.width / 2)).toBeLessThan(2);
   expect(Math.abs(center(dinner).x - view.width / 2)).toBeLessThan(2);
   // El logo dentro del corazón y la cena debajo; el grupo entero entra en la pantalla.

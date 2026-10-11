@@ -36,12 +36,19 @@
   batería de categorías) y checkout; las recomendaciones del carrito priorizan las categorías que faltan.
 - **Avisos de recompra**: desde la calculadora ("Avisame antes de que se termine") a **Mi cuenta → Recompras**, con
   batería de lo que queda y "Recomprar" en un toque (`volta-demo:reminders`, se borra con Reiniciar demo).
-- Barra de envío gratis con forma de batería. Textos de temáticas, footer y WhatsApp sin restos de Velmar.
+- Barra de envío gratis con forma de batería. Textos de temáticas, footer, seguimiento ("Armando tu pedido") y WhatsApp
+  sin restos de Velmar.
+- Arreglos que aparecieron al adaptar los e2e: doble clic en la vista Excel del panel editaba otra fila si la grilla no
+  entraba en pantalla; el ancla al cambiar de página podía dejar el título debajo del header en equipos lentos; con
+  temática, la pantalla de carga muestra el logo compacto (las escenas de Velmar lo pisaban).
+- Tests: 236 unitarios y 297 e2e adaptados a VOLTA (se borraron solo los del configurador de collar), más los nuevos
+  de descuento stack y aviso de recompra.
 
 ## Pendiente de Velmar (se resuelve en su fase)
 | Qué queda | Dónde se ve | Fase |
 |---|---|---|
 | Escenas de regalo y temáticas con los personajes de Velmar | `/regalo/`, temáticas (apagadas) | 5 |
-| Ruleta con estética dorada de Velmar y premio "Grabado gratis" | Club, al ir a pagar | 4 |
-| Emails, recordatorios de cumpleaños de mascotas, cola de producción, insumos y calendario "del taller" | Panel | 6 y 7 |
+| Ruleta con estética dorada de Velmar y premios "Grabado gratis" y "Llavero de regalo" | Club, al ir a pagar | 4 |
+| Emails, recordatorios y email de cumpleaños de mascotas, cola de producción, insumos y calendario "del taller" | Panel | 6 y 7 |
+| Editor de producto: si se llega con Tab a "Ver en tienda", al volver abre en el último paso (con mouse no pasa) | Panel → Productos | 6 |
 | Estudio de contenido con decoraciones de Velmar | Panel → Estudio | 7 |

@@ -15,6 +15,7 @@ import { MARKETING, SubpageHeader } from "../marketing/SubpageHeader";
 import { usePaged } from "../usePaged";
 import { useDemoSave } from "../useDemoSave";
 import { COUPONS_SECTION } from "./CouponsHub";
+import { GAME_COUPON_PREFIX } from "@/demo/engine/game-prize";
 
 function valueLabel(c: Coupon): string {
   return c.type === "PERCENT" ? `${c.value}%` : c.type === "FIXED" ? formatARS(c.value) : "Envío gratis";
@@ -47,6 +48,7 @@ export function CouponsList() {
                 {expired && <Badge tone="danger">Vencido</Badge>}
                 {c.onlyRegistered && <Badge tone="neutral">Solo con cuenta</Badge>}
                 {c.code.startsWith("RULETA") && <Badge tone="brand">Ruleta</Badge>}
+                {c.code.startsWith(GAME_COUPON_PREFIX) && <Badge tone="brand">Shaker Rush</Badge>}
                 {c.themeId && <Badge tone="brand">Temática</Badge>}
               </div>
               <p className="text-sm text-muted">{c.description}{c.minSubtotal ? ` · mínimo ${formatARS(c.minSubtotal)}` : ""}{c.endsAt ? ` · vence ${formatDate(c.endsAt)}` : ""}</p>

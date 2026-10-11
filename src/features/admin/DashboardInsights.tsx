@@ -1,11 +1,12 @@
 "use client";
-import { Gift, Ticket, Target } from "lucide-react";
+import { Gamepad2, Gift, Ticket, Target } from "lucide-react";
 import { ProductArt } from "@/components/illustrations/ProductArt";
 import { topProducts } from "@/demo/admin/metrics";
 import type { AdminOrder, AuditEntry } from "@/demo/admin/types";
 import { getProduct } from "@/demo/engine/catalog";
 import { formatDateTime } from "@/lib/date";
 import { useDemoData } from "@/stores/admin";
+import { GAME_COUPON_PREFIX } from "@/demo/engine/game-prize";
 
 export function TopProducts({ orders }: { orders: AdminOrder[] }) {
   const top = topProducts(orders, 5);
@@ -38,15 +39,17 @@ export function ClubPerformance() {
   const coupons = useDemoData((d) => d.coupons);
   const wheel = useDemoData((d) => d.wheel);
   const prizes = coupons.filter((c) => c.code.startsWith("RULETA"));
+  const gamePrizes = coupons.filter((c) => c.code.startsWith(GAME_COUPON_PREFIX));
   const rows = [
     { icon: Target, label: "Misiones completadas", value: missions.reduce((s, m) => s + (m.completedCount ?? 0), 0), note: `${missions.filter((m) => m.active !== false).length} activas` },
     { icon: Ticket, label: "Usos de cupones", value: coupons.reduce((s, c) => s + (c.usedCount ?? 0), 0), note: `${coupons.filter((c) => c.active !== false).length} activos` },
     { icon: Gift, label: "Premios de ruleta emitidos", value: prizes.length, note: wheel.active ? "ruleta activa" : "ruleta pausada" },
+    { icon: Gamepad2, label: "Premios de Shaker Rush", value: gamePrizes.length, note: "uno por día y navegador" },
   ];
   return (
     <section aria-labelledby="club" className="rounded-3xl bg-night p-5 text-on-night">
       <h2 id="club" className="font-display mb-4 text-2xl">Club Volta <span className="font-sans text-sm text-night-muted">(demo)</span></h2>
-      <ul className="grid gap-3 sm:grid-cols-3">
+      <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {rows.map(({ icon: Icon, label, value, note }) => (
           <li key={label} className="flex items-center gap-3 rounded-2xl bg-white/5 p-3">
             <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-volt text-night"><Icon size={18} aria-hidden="true" /></span>

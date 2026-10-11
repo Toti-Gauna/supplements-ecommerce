@@ -7,6 +7,7 @@ import { useHydrated } from "@/stores/hydration";
 import { BenefitsBar } from "../home/BenefitsBar";
 import { CategoryCircles } from "../home/CategoryCircles";
 import { ClubBand } from "../home/ClubBand";
+import { GameTeaser } from "../game/GameTeaser";
 import { HeroCarousel } from "../home/HeroCarousel";
 import { GoalRail } from "../home/GoalRail";
 import { ProductRail } from "../home/ProductRail";
@@ -47,6 +48,7 @@ export function HomeSections() {
       <Later size={640}><ProductStories /></Later>
       <Later size={480}><ProductRail id="novedades" eyebrow="Recién salidos" title="Novedades" products={newArrivals(8).map(toCard)} /></Later>
       <Later size={420}><ClubBand /></Later>
+      <Later size={360}><section aria-label="Juego Shaker Rush"><GameTeaser /></section></Later>
       <Later size={320}><Values /></Later>
     </div>
   );

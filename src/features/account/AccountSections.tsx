@@ -11,6 +11,8 @@ import { formatARS } from "@/lib/money";
 import type { DemoOrder } from "@/stores/checkout";
 import { useWheelPrize } from "../club/useWheelPrize";
 import { WheelPrizeTicket } from "../club/WheelPrizeTicket";
+import { GamePrizeTicket } from "../game/GamePrizeTicket";
+import { useGameCodes } from "@/stores/game";
 
 /** El premio de la ruleta, con su estado, primero en los premios de la cuenta (8.2.14). */
 function WheelPrizeItem() {
@@ -60,9 +62,11 @@ const REWARDS = [
 export const availableRewards = (used: string[]) => REWARDS.filter((r) => !r.expired && !used.includes(r.id)).length;
 
 export function RewardsSection({ used, onUse }: { used: string[]; onUse: (id: string) => void }) {
+  const gameCodes = useGameCodes();
   return (
     <ul className="grid gap-3 sm:grid-cols-2">
       <WheelPrizeItem />
+      {gameCodes.map((code) => <li key={code} className="sm:col-span-2"><GamePrizeTicket code={code} badge="Ganado en Shaker Rush" /></li>)}
       {REWARDS.map((r) => {
         const isUsed = used.includes(r.id);
         return (

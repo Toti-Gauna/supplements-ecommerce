@@ -1,0 +1,55 @@
+import type { PackStyle } from "../types";
+
+/**
+ * Marcas de MUESTRA (inventadas): VOLTA Lab es la marca propia de la tienda; Krono, Brava Sport, Ozono y Forja
+ * imitan a las distribuidoras que vende una tienda real, sin usar ninguna marca existente.
+ */
+export interface BrandInfo {
+  id: string;
+  name: string;
+  /** Una línea para el panel y los filtros. */
+  note: string;
+}
+
+export const brands: BrandInfo[] = [
+  { id: "volta-lab", name: "VOLTA Lab", note: "Marca propia de la tienda" },
+  { id: "krono", name: "Krono Nutrition", note: "Marca de muestra · línea premium" },
+  { id: "brava", name: "Brava Sport", note: "Marca de muestra · deportes" },
+  { id: "ozono", name: "Ozono", note: "Marca de muestra · salud y veganos" },
+  { id: "forja", name: "Forja", note: "Marca de muestra · pre-entrenos y volumen" },
+];
+
+type Line = { line: string; sub?: string };
+
+/** Envase de cada marca: grafito y voltio (propia), blanco y rojo, azul y amarillo, menta y verde agua, tostado y naranja. */
+export const pack = {
+  volta: ({ line, sub }: Line): PackStyle => ({ body: "#101318", band: "#101318", ink: "#eef1f5", accent: "#c8ff2e", mark: "VOLTA LAB", line, sub, pattern: "bolt" }),
+  voltaWhite: ({ line, sub }: Line): PackStyle => ({ body: "#e9edf2", lid: "#101318", band: "#ffffff", ink: "#0b0d10", accent: "#8b72ff", mark: "VOLTA LAB", line, sub, pattern: "bolt" }),
+  krono: ({ line, sub }: Line): PackStyle => ({ body: "#f1f2ee", lid: "#c9ccd2", band: "#ffffff", ink: "#111318", accent: "#ff4d2e", mark: "KRONO", line, sub, pattern: "stripes" }),
+  brava: ({ line, sub }: Line): PackStyle => ({ body: "#1b2a6b", band: "#1b2a6b", ink: "#f4f6ff", accent: "#ffd23f", mark: "BRAVA SPORT", line, sub, pattern: "wave" }),
+  ozono: ({ line, sub }: Line): PackStyle => ({ body: "#e7f2f0", lid: "#0d2b29", band: "#ffffff", ink: "#0d2b29", accent: "#0fa89b", mark: "OZONO", line, sub, pattern: "grid" }),
+  forja: ({ line, sub }: Line): PackStyle => ({ body: "#24130d", lid: "#120905", band: "#24130d", ink: "#fff1e6", accent: "#ff7a1a", mark: "FORJA", line, sub, pattern: "stripes" }),
+};
+
+/** Colores de sabor (franja del rótulo, polvo, gomitas). */
+export const FLAVOR = {
+  chocolate: "#5a3220",
+  vainilla: "#f1dfae",
+  frutilla: "#e5576f",
+  cookies: "#cfc6b6",
+  dulceDeLeche: "#c27a3a",
+  banana: "#f3d34a",
+  limon: "#d8f05a",
+  frutosRojos: "#b8234a",
+  mango: "#ffa630",
+  uva: "#7a3fa0",
+  sandia: "#ff5f6d",
+  natural: "#e8e4d8",
+  mani: "#c9874a",
+  naranja: "#ff8a2a",
+  blueRazz: "#2f8cff",
+  pomelo: "#ff7f6e",
+  anana: "#f7c948",
+  tropical: "#ffb547",
+  chocolateBlanco: "#efe3c8",
+} as const;

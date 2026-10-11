@@ -1,0 +1,104 @@
+# Demo estática de Volta → GitHub Pages (fase pre-seña).
+# Valida en cada PR; publica desde main, desde las ramas de fase (fase-*, para mostrar una fase antes de mergearla)
+# o a mano. Hay un solo sitio: el último deploy es el que se ve. Sin secretos.
+# Cuando empiece el backend (post-seña) ver docs/demo-pages.md: el trigger pasa a la rama demo/pages.
+name: Demo Pages
+
+on:
+  push:
+    branches: [main, "fase-*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: demo-pages-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  NEXT_TELEMETRY_DISABLED: "1"
+
+jobs:
+  build:
+    name: Lint, tipos, tests, export y e2e
+    runs-on: ubuntu-latest
+    # ~300 e2e en celular: unos 12 minutos con 2 workers.
+    timeout-minutes: 40
+    permissions:
+      contents: read
+      pages: read # configure-pages lee base_path/base_url del sitio
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Leer configuración de Pages
+        id: pages
+        uses: actions/configure-pages@v6
+
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+
+      - name: Build (export estático)
+        run: npm run build
+        env:
+          PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          PAGES_SITE_URL: ${{ steps.pages.outputs.base_url }}
+
+      - name: Verificar export
+        run: |
+          test -f out/index.html
+          test -f out/404.html
+          test -f out/pedido/demo-volta/index.html
+
+      - name: Instalar Chromium para e2e
+        run: npx playwright install --with-deps chromium
+
+      - name: E2E móvil contra el export bajo subpath
+        run: npm run e2e
+        env:
+          CI: "true"
+          PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+
+      - name: Reporte de Playwright
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report
+          path: |
+            playwright-report
+            test-results
+          retention-days: 7
+
+      - name: Subir artifact de Pages
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: out
+
+  deploy:
+    name: Publicar en GitHub Pages
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v5

@@ -1,0 +1,101 @@
+/*
+ * Motion de la tienda (Fase 5, VEL-54): transiciones entre páginas, la imagen que vuela de la tarjeta a la ficha
+ * y microinteracciones. Solo transform/opacity/filter. Con "reducir movimiento" todo queda quieto.
+ */
+
+/* ---------- Transiciones entre páginas (React <ViewTransition> en app/(shop)/template.tsx) ---------- */
+::view-transition { pointer-events: none; }
+::view-transition-old(root), ::view-transition-new(root) { animation: none; }
+::view-transition-old(.page-out) { animation: vt-out 160ms cubic-bezier(0.4, 0, 1, 1) both; }
+::view-transition-new(.page-in) { animation: vt-in 380ms cubic-bezier(0.16, 1, 0.3, 1) 80ms both; }
+@keyframes vt-out { to { opacity: 0; transform: translateY(-6px) scale(0.99); } }
+@keyframes vt-in { from { opacity: 0; transform: translateY(16px); filter: blur(4px); } }
+/* Con View Transitions, la entrada por CSS de la plantilla duplicaría la animación. */
+@supports (view-transition-name: none) { .page-enter { animation: none; } }
+
+/* La imagen del producto: de la tarjeta a la galería (relación de aspecto distinta, sin deformar). */
+.vt-hero { view-transition-name: product-hero; }
+::view-transition-group(product-hero) { animation-duration: 520ms; animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1); z-index: 5; }
+::view-transition-old(product-hero), ::view-transition-new(product-hero) { height: 100%; object-fit: cover; overflow: clip; }
+::view-transition-image-pair(product-hero) { animation-name: vt-soften; animation-duration: 520ms; }
+@keyframes vt-soften { 40% { filter: blur(2px); } }
+/* Sin pareja (se sale de la ficha o se llega desde otro link), la galería acompaña a la página en vez de quedar flotando. */
+::view-transition-old(product-hero):only-child { animation: vt-out 160ms cubic-bezier(0.4, 0, 1, 1) both; }
+::view-transition-new(product-hero):only-child { animation: vt-in 380ms cubic-bezier(0.16, 1, 0.3, 1) 80ms both; }
+
+/* ---------- Microinteracciones ---------- */
+/* Tarjetas: se elevan al pasar el mouse y se hunden apenas al tocarlas. */
+[data-product-card] > div:first-child { transition: transform 500ms var(--ease-out-expo), box-shadow 500ms var(--ease-out-expo); }
+@media (hover: hover) { [data-product-card]:hover > div:first-child { transform: translateY(-4px); } }
+[data-product-card]:active > div:first-child { transform: scale(0.985); transition-duration: 160ms; }
+/* Carrito del header: la bolsa se sacude cuando entra algo. */
+.animate-bag { transform-origin: 50% 15%; animation: bag-jiggle 650ms var(--ease-out-expo); }
+@keyframes bag-jiggle { 25% { transform: rotate(-13deg) scale(1.14); } 50% { transform: rotate(9deg); } 75% { transform: rotate(-4deg); } }
+/* Precio que cambia (variante, personalización, cantidad). */
+.animate-num { display: inline-block; animation: num-in 420ms var(--ease-out-expo); }
+@keyframes num-in { from { opacity: 0.25; transform: translateY(-0.3em); filter: blur(3px); } }
+
+/* ---------- Rendimiento ---------- */
+/* Secciones de más abajo: no se dibujan hasta acercarse a la pantalla; el tamaño estimado evita saltos del scroll. */
+.cv-auto { content-visibility: auto; contain-intrinsic-size: auto 600px; }
+/* content-visibility recorta lo que sale de su caja: dentro del <main>, la caja llega al borde de la pantalla (y un poco
+   arriba y abajo) para que los rieles que sangran hasta el borde y las sombras no queden cortados. */
+.cv-bleed { margin: -2rem -1rem; padding: 2rem 1rem; }
+@media (min-width: 640px) { .cv-bleed { margin-inline: -1.5rem; padding-inline: 1.5rem; } }
+/* Segunda vista de la tarjeta: se monta con el mouse encima, así que entra con su fundido desde cero. */
+@keyframes fade-from-0 { from { opacity: 0; } }
+.fade-from-0 { animation: fade-from-0 500ms ease-out; }
+
+/* ---------- Escenario a pantalla completa (ruleta y regalos) ---------- */
+/* Casi negro con la luz de la temática desde abajo y arriba; entra con un fundido corto. */
+.immersive-backdrop {
+  background:
+    radial-gradient(60% 45% at 50% 42%, color-mix(in srgb, var(--glow-b) 30%, transparent), transparent 70%),
+    radial-gradient(90% 60% at 50% 110%, color-mix(in srgb, var(--glow-a) 55%, transparent), transparent 70%),
+    #07080a;
+  animation: stage-in 320ms ease-out both;
+}
+.immersive-stage > :not(.immersive-backdrop) { animation: stage-rise 520ms var(--ease-out-expo) 80ms both; }
+/* Sobre el fondo casi negro, el anillo de foco va en crema (el de la tienda, oliva, no llega a 3:1). */
+.immersive-stage :focus-visible { outline-color: #e3ff8f; }
+@keyframes stage-in { from { opacity: 0; } }
+@keyframes stage-rise { from { opacity: 0; transform: translateY(14px) scale(0.98); } }
+/* Con el escenario abierto, los fondos animados de la tienda se pausan (no se ven y gastan batería). */
+.stage-open .season-backdrop *, .stage-open .season-scene * { animation-play-state: paused !important; }
+
+/* Regalo abierto: lo de adentro entra en cascada; la nota queda apenas inclinada, como un papel. */
+.gift-card > * { flex-shrink: 0; animation: stage-rise 640ms var(--ease-out-expo) both; }
+.gift-card > :nth-child(2) { animation-delay: 90ms; } .gift-card > :nth-child(3) { animation-delay: 180ms; }
+.gift-card > :nth-child(4) { animation-delay: 240ms; } .gift-card > :nth-child(5) { animation-delay: 320ms; } .gift-card > :nth-child(n+6) { animation-delay: 400ms; }
+.gift-card-note { transform: rotate(var(--tilt, 0deg)); }
+/* Regalo sin abrir en la cuenta: un saltito de vez en cuando (tres veces) para que se note. */
+.gift-tile-new { animation: gift-tile 2.4s ease-in-out 0.6s 3; }
+@keyframes gift-tile { 0%, 72%, 100% { transform: none; } 80% { transform: translateY(-4px) rotate(-6deg); } 88% { transform: translateY(0) rotate(5deg); } 94% { transform: rotate(-2deg); } }
+
+/* Ruleta a pantalla completa: el centro "Girar" late tres veces; al ganar, el cupón sube y un brillo lo cruza una vez. */
+.wheel-hub { animation: hub-pulse 1.8s ease-in-out 0.9s 3; }
+@keyframes hub-pulse { 50% { box-shadow: 0 0 0 10px rgb(243 220 166 / 0.18), 0 8px 24px -6px rgb(0 0 0 / 0.8); } }
+.wheel-win .themed-coupon { animation: coupon-in 760ms cubic-bezier(.2,1.3,.4,1) 120ms both; }
+@keyframes coupon-in { from { opacity: 0; transform: translateY(40px) scale(0.85) rotate(-4deg); } }
+.coupon-shine { background: linear-gradient(110deg, transparent 35%, rgb(255 255 255 / 0.28) 50%, transparent 65%); background-size: 260% 100%; background-position: 140% 0; animation: coupon-shine 1.4s ease-out 700ms both; }
+@keyframes coupon-shine { to { background-position: -40% 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*), ::view-transition-image-pair(*) { animation: none !important; }
+  [data-product-card] > div:first-child { transition: none; }
+  .immersive-backdrop, .immersive-stage > :not(.immersive-backdrop), .gift-card > *, .gift-tile-new, .wheel-hub, .wheel-win .themed-coupon, .coupon-shine { animation: none; }
+}
+
+/* ---------- Seguimiento: el viajero de la temática (Polish 8.2.11) ---------- */
+/* Unas vueltas mientras viaja (1,6 s) y quieto al llegar: nada de animaciones permanentes. */
+.trk-fly { animation: trk-fly 0.8s ease-in-out 2 alternate; }
+.trk-walk { animation: trk-walk 0.4s ease-in-out 4 alternate; }
+.trk-hop { animation: trk-hop 0.4s cubic-bezier(.3, 0, .4, 1) 4 alternate; }
+.trk-bob { animation: trk-bob 0.8s ease-in-out 2 alternate; }
+@keyframes trk-fly { from { transform: translateY(3px) rotate(-3deg); } to { transform: translateY(-6px) rotate(3deg); } }
+@keyframes trk-walk { from { transform: rotate(-2deg); } to { transform: rotate(2deg) translateY(-2px); } }
+@keyframes trk-hop { from { transform: translateY(0); } to { transform: translateY(-12px); } }
+@keyframes trk-bob { from { transform: translateY(0) rotate(-4deg); } to { transform: translateY(-5px) rotate(4deg); } }
+.trk-hearts::before, .trk-hearts::after { content: "♥"; position: absolute; left: -14%; color: #ff8fab; font-size: 0.8rem; opacity: 0; animation: trk-heart 1.6s ease-out 1 both; }
+.trk-hearts::after { left: -30%; top: 30%; font-size: 0.6rem; animation-delay: 0.4s; }
+@keyframes trk-heart { 20% { opacity: 1; } to { opacity: 0; transform: translate(-10px, -14px); } }

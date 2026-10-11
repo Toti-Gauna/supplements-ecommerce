@@ -11,7 +11,7 @@ test("Original: un solo aro, concéntrico con el logo, con las piezas montadas e
   await page.goto("");
   const splash = page.locator("#volta-splash");
   await expect(splash.locator(".splash-halo")).toHaveCount(1);
-  expect(await page.evaluate(() => getComputedStyle(document.documentElement).backgroundColor)).toBe("rgb(19, 22, 14)");
+  expect(await page.evaluate(() => getComputedStyle(document.documentElement).backgroundColor)).toBe("rgb(7, 9, 12)");
   // Las medidas son de la caja final: las animaciones con fin (menos el telón) saltan a su último cuadro.
   await page.evaluate(() => document.getAnimations().forEach((a) => {
     if (a instanceof CSSAnimation && a.animationName !== "splash-curtain" && a.effect?.getComputedTiming().endTime !== Infinity) a.finish();
@@ -67,7 +67,7 @@ test("San Valentín: Lola y Pancho cenan debajo del logo, todo centrado y sin pi
 
 test("al recargar a mitad de página, la pantalla de carga queda por encima de todo (capa superior)", async ({ page }) => {
   await preview(page, "san-valentin");
-  await page.goto("p/velador-con-foto/");
+  await page.goto("p/ionic-whey/");
   await page.keyboard.press("Escape");
   await page.evaluate(() => window.scrollTo({ top: 700, behavior: "instant" }));
   await page.reload();

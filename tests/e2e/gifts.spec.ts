@@ -8,7 +8,7 @@ async function checkout(page: Page) {
   await page.getByLabel("Email").fill("lucia@ejemplo.com");
   await page.getByLabel("Teléfono / WhatsApp").fill("223 555-1234");
   await page.getByRole("button", { name: "Continuar a la entrega" }).click();
-  await page.getByText("Retiro en persona").first().click();
+  await page.getByText("Retiro en el local").first().click();
   await page.getByRole("button", { name: "Continuar al pago" }).click();
   await page.getByText("Transferencia bancaria").click();
   await page.getByRole("button", { name: "Revisar pedido" }).click();
@@ -19,7 +19,7 @@ async function checkout(page: Page) {
 
 test("regalar: ficha → carrito → checkout → link que se abre a golpes, sin precio", async ({ page }) => {
   const assertNoExternal = guardNetwork(page);
-  await page.goto("p/home-spray/");
+  await page.goto("p/bcaa-211/");
   await page.getByRole("button", { name: "Regalar ahora" }).click();
   const sheet = page.getByRole("dialog", { name: "Es para regalar" });
   // Sin "para quién" no se puede seguir y el foco vuelve al campo
@@ -28,9 +28,9 @@ test("regalar: ficha → carrito → checkout → link que se abre a golpes, sin
   await expect(sheet.getByLabel("Para", { exact: true })).toBeFocused();
   await sheet.getByLabel("Para", { exact: true }).fill("Sofía");
   await sheet.getByLabel("De parte de").fill("Lucía");
-  await sheet.getByLabel("Mensaje").fill("¡Feliz Navidad! Para que la casa huela rico 🎄");
+  await sheet.getByLabel("Mensaje").fill("¡Feliz Navidad! Para que arranques el 2027 con todo 🎄");
   await sheet.getByLabel("Ocasión").selectOption("navidad");
-  await expect(sheet.getByText("Se abre como: el regalo de papá noel.")).toBeVisible();
+  await expect(sheet.getByText("Se abre como: el regalo de Papá Noel.")).toBeVisible();
   await sheet.getByRole("button", { name: "Agregar regalo al carrito" }).click();
   await expect(page.getByRole("dialog", { name: "Carrito" })).toBeVisible();
 
@@ -60,8 +60,8 @@ test("regalar: ficha → carrito → checkout → link que se abre a golpes, sin
   const gift = stage.getByRole("button", { name: /Golpeá el regalo para abrirlo/ });
   for (let i = 0; i < 5; i++) await gift.click();
   await expect(stage.getByText("Lucía te regaló")).toBeVisible({ timeout: 6000 });
-  await expect(stage.getByRole("heading", { name: "Home spray Volta" })).toBeVisible();
-  await expect(stage.getByText("¡Feliz Navidad! Para que la casa huela rico 🎄")).toBeVisible();
+  await expect(stage.getByRole("heading", { name: "BCAA 2:1:1" })).toBeVisible();
+  await expect(stage.getByText("¡Feliz Navidad! Para que arranques el 2027 con todo 🎄")).toBeVisible();
   await expect(stage.getByText(/\$\s?\d/)).toHaveCount(0);
   await stage.getByRole("button", { name: "Guardar en mis regalos" }).click();
   await expect(stage.getByRole("link", { name: "Está en mis regalos" })).toBeVisible();

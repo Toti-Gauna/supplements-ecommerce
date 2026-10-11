@@ -7,7 +7,7 @@ const preview = (page: Page, id: string) =>
 test.describe("temáticas de la Fase 5", () => {
   for (const [id, heading, scene] of [
     ["orgullo", "Orgullo de ser quien sos", "Especial Orgullo"],
-    ["revolucion-de-mayo", "Con escarapela y empanadas", "Especial 25 de Mayo"],
+    ["revolucion-de-mayo", "Con escarapela y proteína", "Especial 25 de Mayo"],
     ["dia-de-la-bandera", "Celeste y blanca, como el cielo de la costa", "Especial Día de la Bandera"],
     ["dia-de-la-independencia", "Independientes desde 1816", "Especial 9 de Julio"],
   ] as const) {
@@ -79,7 +79,7 @@ test("navegar entre páginas usa View Transitions y la imagen del producto vuela
 
 test("microinteracciones: la cantidad rueda sin duplicar el número y el corazón de favoritos destella", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
-  await page.goto("p/vela-caniche/");
+  await page.goto("p/ionic-whey/");
   await page.keyboard.press("Escape");
   await page.getByRole("button", { name: /Guardar .* en favoritos/ }).first().click();
   await expect(page.locator("button[aria-pressed='true'] .bg-ember").first()).toBeAttached();

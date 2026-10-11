@@ -2,12 +2,12 @@ import { expect, test, type Page } from "@playwright/test";
 
 /** Polish 8.2 · Lote 7 (8.2.14): el premio de la ruleta conserva su estado entre pantallas, recargas y el checkout. */
 
-/** Cuatro velas en el carrito ($38.000): alcanza el mínimo de cualquier premio de la ruleta. */
+/** Dos colágenos en el carrito ($47.800): alcanza el mínimo de cualquier premio de la ruleta. */
 const seedCart = (page: Page) =>
   page.addInitScript(() => {
     if (sessionStorage.getItem("seeded")) return;
     sessionStorage.setItem("seeded", "1");
-    localStorage.setItem("volta-demo:cart", JSON.stringify({ state: { lines: [{ id: "l1", productSlug: "vela-en-lata", variantId: "vel-patria", quantity: 4 }], couponCode: null }, version: 0 }));
+    localStorage.setItem("volta-demo:cart", JSON.stringify({ state: { lines: [{ id: "l1", productSlug: "colageno", variantId: "co-limon-300", quantity: 2 }], couponCode: null }, version: 0 }));
   });
 
 async function win(page: Page) {
@@ -81,7 +81,7 @@ test("8.2.14 guardado y utilizado: un solo premio, un solo cupón y no se puede 
   await page.getByLabel("Email").fill("juana@ejemplo.com");
   await page.getByLabel("Teléfono / WhatsApp").fill("223 555-1234");
   await page.getByRole("button", { name: "Continuar a la entrega" }).click();
-  await page.getByText("Retiro en persona").click();
+  await page.getByText("Retiro en el local").click();
   await page.getByRole("button", { name: "Continuar al pago" }).click();
   await page.getByText("Transferencia bancaria").click();
   await page.getByRole("button", { name: "Revisar pedido" }).click();
@@ -94,7 +94,7 @@ test("8.2.14 guardado y utilizado: un solo premio, un solo cupón y no se puede 
   await expect(stage.getByRole("button", { name: "Aplicar ahora" })).toHaveCount(0);
   await page.keyboard.press("Escape");
   // Escribirlo a mano en el carrito tampoco sirve.
-  await page.goto("p/vela-caniche/");
+  await page.goto("p/ionic-whey/");
   await page.getByRole("button", { name: "Agregar al carrito" }).last().click();
   await page.goto("carrito/");
   await page.getByLabel("¿Tenés un código?").fill(code);

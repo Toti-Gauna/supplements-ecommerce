@@ -27,8 +27,8 @@ const giftDialog = (page: Page) => page.getByRole("dialog", { name: "Es para reg
 
 test("8.2.16 modal centrado con vista previa: Escape y Cerrar, foco, fondo quieto y lo escrito sigue al reabrir", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 860 });
-  await page.goto("p/home-spray/");
-  const trigger = page.locator("#personalizar").getByRole("button", { name: "Regalar ahora" });
+  await page.goto("p/bcaa-211/");
+  const trigger = page.getByRole("region", { name: "Elegí sabor, tamaño y cantidad" }).getByRole("button", { name: "Regalar ahora" });
   await trigger.click();
   const modal = giftDialog(page);
   await expect(modal).toBeVisible();
@@ -40,10 +40,10 @@ test("8.2.16 modal centrado con vista previa: Escape y Cerrar, foco, fondo quiet
   expect(await page.evaluate(() => getComputedStyle(document.documentElement).overflow)).toBe("hidden");
   // La vista previa acompaña lo que se escribe.
   await modal.getByLabel("Para", { exact: true }).fill("Sofía");
-  await modal.getByLabel("Mensaje").fill("Para que la casa huela rico");
+  await modal.getByLabel("Mensaje").fill("Para tus salidas a correr");
   await modal.getByLabel("Ocasión").selectOption("dia-del-animal");
   await expect(modal.getByText("Para Sofía")).toBeVisible();
-  await expect(modal.getByText("“Para que la casa huela rico”")).toBeVisible();
+  await expect(modal.getByText("“Para tus salidas a correr”")).toBeVisible();
   await expect(modal.getByText("La cucha de Pancho", { exact: true })).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(modal).toBeHidden();
@@ -58,7 +58,7 @@ test("8.2.16 modal centrado con vista previa: Escape y Cerrar, foco, fondo quiet
 });
 
 test("8.2.16 validación y límites: para quién, de parte de quién, email y largo del mensaje", async ({ page }) => {
-  await page.goto("p/home-spray/");
+  await page.goto("p/bcaa-211/");
   await page.getByRole("button", { name: "Regalar ahora" }).click();
   const modal = giftDialog(page);
   await modal.getByRole("button", { name: "Agregar regalo al carrito" }).click();
@@ -93,7 +93,7 @@ async function toConfirm(page: Page) {
   await page.getByLabel("Email").fill("lucia@ejemplo.com");
   await page.getByLabel("Teléfono / WhatsApp").fill("223 555-1234");
   await page.getByRole("button", { name: "Continuar a la entrega" }).click();
-  await page.getByText("Retiro en persona").first().click();
+  await page.getByText("Retiro en el local").first().click();
   await page.getByRole("button", { name: "Continuar al pago" }).click();
   await page.getByText("Transferencia bancaria").click();
   await page.getByRole("button", { name: "Revisar pedido" }).click();
@@ -103,7 +103,7 @@ test("8.2.16 mismo modal y mismo borrador desde la ficha y desde \"¿Es para reg
   const assertNoExternal = guardNetwork(page);
   // Premio de la ruleta ya guardado: ir a pagar no abre la ruleta.
   await page.addInitScript(() => localStorage.setItem("volta-demo:account", JSON.stringify({ state: { wheelPrize: { code: "DEMO", label: "Premio", at: "2026-10-10T12:00:00.000Z" } }, version: 0 })));
-  await page.goto("p/home-spray/");
+  await page.goto("p/bcaa-211/");
   // Empieza el regalo en la ficha y lo deja sin terminar.
   await page.getByRole("button", { name: "Regalar ahora" }).click();
   await giftDialog(page).getByLabel("Para", { exact: true }).fill("Martina");
@@ -117,7 +117,7 @@ test("8.2.16 mismo modal y mismo borrador desde la ficha y desde \"¿Es para reg
   await page.getByLabel("Email").fill("lucia@ejemplo.com");
   await page.getByLabel("Teléfono / WhatsApp").fill("223 555-1234");
   await page.getByRole("button", { name: "Continuar a la entrega" }).click();
-  await page.getByText("Retiro en persona").first().click();
+  await page.getByText("Retiro en el local").first().click();
   await page.getByRole("button", { name: "Continuar al pago" }).click();
   await page.getByText("Transferencia bancaria").click();
   await page.getByRole("button", { name: "Revisar pedido" }).click();
@@ -151,19 +151,19 @@ test("8.2.16 con varios productos en el checkout se elige cuál es el regalo", a
   await page.addInitScript(() => {
     if (sessionStorage.getItem("seeded")) return;
     sessionStorage.setItem("seeded", "1");
-    localStorage.setItem("volta-demo:cart", JSON.stringify({ state: { lines: [{ id: "a", productSlug: "vela-en-lata", variantId: "vel-patria", quantity: 1 }, { id: "b", productSlug: "vela-caniche", variantId: "vc-vainilla", quantity: 1 }], couponCode: null }, version: 0 }));
+    localStorage.setItem("volta-demo:cart", JSON.stringify({ state: { lines: [{ id: "a", productSlug: "overvolt-pre", variantId: "ov-limon-300", quantity: 1 }, { id: "b", productSlug: "ionic-whey", variantId: "iw-vainilla-2lb", quantity: 1 }], couponCode: null }, version: 0 }));
     localStorage.setItem("volta-demo:account", JSON.stringify({ state: { wheelPrize: { code: "DEMO", label: "Premio", at: "2026-10-10T12:00:00.000Z" } }, version: 0 }));
   });
   await toConfirm(page);
   await page.getByRole("button", { name: "Sí, es para regalar" }).click();
   const modal = giftDialog(page);
   await modal.getByLabel("¿Cuál es el regalo?").selectOption("b");
-  await expect(modal.getByRole("heading", { name: "Vela caniche" })).toBeVisible();
+  await expect(modal.getByRole("heading", { name: "Ionic Whey 100%" })).toBeVisible();
   await modal.getByLabel("Para", { exact: true }).fill("Juli");
   await modal.getByLabel("De parte de").fill("Caro");
   await modal.getByRole("button", { name: "Agregar regalo al carrito" }).click();
   const section = page.getByRole("region", { name: "¿Es para regalo?" });
-  await expect(section.getByRole("listitem").filter({ hasText: "Regalo para Juli" })).toContainText("Vela caniche");
+  await expect(section.getByRole("listitem").filter({ hasText: "Regalo para Juli" })).toContainText("Ionic Whey 100%");
   // Queda el otro producto para regalar aparte.
   await expect(section.getByRole("button", { name: "Regalar otro" })).toBeVisible();
 });

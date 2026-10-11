@@ -4,7 +4,7 @@ import { guardNetwork, horizontalOverflow } from "./helpers";
 test("ruleta: gira (sin animación con movimiento reducido), emite un cupón y se aplica en el carrito", async ({ page }) => {
   const assertNoExternal = guardNetwork(page);
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("p/home-spray/");
+  await page.goto("p/bcaa-211/");
   await page.getByRole("button", { name: "Agregar al carrito" }).last().click();
   await page.keyboard.press("Escape");
   await page.goto("club/");
@@ -29,10 +29,10 @@ test("ruleta: gira (sin animación con movimiento reducido), emite un cupón y s
   assertNoExternal();
 });
 
-test("ficha: stock bajo la imagen, cantidad desplegable, favoritos y diseño requerido", async ({ page }) => {
-  await page.goto("p/comedero-elevado-madera/");
+test("ficha: stock bajo la imagen, cantidad desplegable y favoritos", async ({ page }) => {
+  await page.goto("p/overvolt-pre/");
   await expect(page.getByText(/En stock · 12 disponibles/)).toBeVisible();
-  await expect(page.getByRole("heading", { name: /Completá el set/ })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Sumalo a tu stack/ })).toBeVisible();
   // Con la máquina cargada, elegir antes de que la ficha termine de hidratar se pierde (React repone el valor):
   // se reintenta hasta que el selector responde.
   const qty = page.getByLabel("Cantidad:");
@@ -40,22 +40,20 @@ test("ficha: stock bajo la imagen, cantidad desplegable, favoritos y diseño req
     await qty.selectOption("2");
     await expect(qty).toHaveValue("2", { timeout: 500 });
   }).toPass({ timeout: 10_000 });
-  // Agregar sin escribir el texto lleva el foco al campo
-  const add = page.getByRole("button", { name: /Agregar al carrito/ }).filter({ visible: true });
-  await add.click();
-  await expect(page.getByLabel("Texto", { exact: true })).toBeFocused();
-  await page.getByLabel("Texto", { exact: true }).fill("Luna");
-  await add.click();
+  // En el celular se agrega desde la barra flotante; la cantidad elegida llega al carrito.
+  await page.getByRole("button", { name: /Agregar al carrito/ }).filter({ visible: true }).click();
   await page.getByRole("dialog", { name: "Carrito" }).getByRole("link", { name: "Ver carrito completo" }).click();
   await expect(page).toHaveURL(/carrito\/$/);
   const main = page.locator("main");
-  await expect(main.getByRole("group", { name: /Cantidad de Comedero elevado/ }).locator("output")).toHaveText("2");
-  await expect(main.getByText(/“Luna”/)).toBeVisible();
+  await expect(main.getByRole("group", { name: /Cantidad de Overvolt pre-entreno/ }).locator("output")).toHaveText("2");
+  // El sabor elegido y el total de la línea (2 × $ 36.900).
+  await expect(main.getByText(/^Frutos rojos/).first()).toBeVisible();
+  await expect(main.getByText(/\$\s?73\.800/).first()).toBeVisible();
   // Favoritos: el corazón guarda el producto y aparece en su pantalla (pestaña de la barra inferior)
-  await page.goto("p/vela-caniche/");
-  await page.getByRole("button", { name: "Guardar Vela caniche en favoritos" }).filter({ visible: true }).click();
+  await page.goto("p/ionic-whey/");
+  await page.getByRole("button", { name: "Guardar Ionic Whey 100% en favoritos" }).filter({ visible: true }).click();
   await page.goto("favoritos/");
-  await expect(page.getByRole("list", { name: "Favoritos guardados" }).getByText("Vela caniche")).toBeVisible();
+  await expect(page.getByRole("list", { name: "Favoritos guardados" }).getByText("Ionic Whey 100%")).toBeVisible();
 });
 
 test("barra inferior de la tienda y carrusel con pausa", async ({ page }) => {
@@ -69,7 +67,8 @@ test("barra inferior de la tienda y carrusel con pausa", async ({ page }) => {
   await nav.getByRole("link", { name: "Categorías" }).click();
   await expect(page).toHaveURL(/categorias\/$/);
   // En la ficha la barra inferior se reemplaza por la de compra
-  await page.goto("p/vela-caniche/");
+  await page.goto("p/ionic-whey/");
+  await expect(page.locator("[data-buy-bar]")).toBeVisible();
   await expect(nav).toHaveCount(0);
   await page.goto("");
   await expect(page.getByRole("button", { name: /Reproducir carrusel|Pausar carrusel/ })).toBeVisible();
@@ -77,7 +76,7 @@ test("barra inferior de la tienda y carrusel con pausa", async ({ page }) => {
 
 test("carrito: elegir cupón sin escribir el código y ruleta al ir a pagar", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("p/vela-caniche/");
+  await page.goto("p/ionic-whey/");
   await page.getByRole("button", { name: "Agregar al carrito" }).last().click();
   await page.keyboard.press("Escape");
   await page.goto("carrito/");
@@ -109,12 +108,13 @@ test("buscador superpuesto con resultados en vivo y búsquedas recientes", async
   await page.getByRole("button", { name: "Buscar" }).click();
   const dialog = page.getByRole("dialog", { name: "Buscar" });
   await expect(dialog.getByRole("searchbox")).toBeFocused();
-  await page.keyboard.type("comedro");
+  // Con un error de tipeo igual encuentra el producto.
+  await page.keyboard.type("glutamna");
   await expect(dialog.getByRole("status")).toContainText("resultado");
-  await dialog.getByRole("link", { name: /Comedero perro globo/ }).click();
-  await expect(page.getByRole("heading", { level: 1, name: "Comedero perro globo" })).toBeVisible();
+  await dialog.getByRole("link", { name: /Glutamina micronizada/ }).click();
+  await expect(page.getByRole("heading", { level: 1, name: "Glutamina micronizada" })).toBeVisible();
   await page.getByRole("button", { name: "Buscar" }).click();
-  await expect(page.getByRole("dialog", { name: "Buscar" }).getByRole("button", { name: "comedro" })).toBeVisible();
+  await expect(page.getByRole("dialog", { name: "Buscar" }).getByRole("button", { name: "glutamna" })).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(page.getByRole("dialog", { name: "Buscar" })).toBeHidden();
 });
@@ -123,7 +123,7 @@ test("seguimiento: el pedido arriba y el resto de productos en un modal", async 
   await page.goto("pedido/demo-volta/");
   await expect(page.getByRole("heading", { name: "Pedido de ejemplo" })).toBeVisible();
   await page.getByRole("button", { name: /Ver 1 producto más/ }).click();
-  await expect(page.getByRole("dialog", { name: "Productos del pedido" }).getByText(/Placa NFC “Seguinos en Instagram”/)).toBeVisible();
+  await expect(page.getByRole("dialog", { name: "Productos del pedido" }).getByText(/Barra proteica 20 g/)).toBeVisible();
   await page.keyboard.press("Escape");
   await page.getByText("Esperando comprobante").click();
   await expect(page.getByRole("heading", { name: "Falta el comprobante" })).toBeVisible();
@@ -142,28 +142,30 @@ test("menú móvil y carrito lateral se operan con teclado", async ({ page }) =>
 });
 
 test("sin desborde horizontal a 375 px con productos en carrito, checkout y confirmación", async ({ page }) => {
-  await page.goto("p/vela-caniche/");
+  await page.goto("p/ionic-whey/");
   await page.getByRole("button", { name: "Agregar al carrito" }).last().click();
   await page.keyboard.press("Escape");
-  for (const path of ["", "carrito/", "checkout/", "p/vela-caniche/", "p/velador-con-foto/", "club/", "cupones/", "pedido/demo-volta/"]) {
+  for (const path of ["", "carrito/", "checkout/", "p/ionic-whey/", "p/barra-proteica/", "club/", "cupones/", "pedido/demo-volta/"]) {
     await page.goto(path);
     await page.waitForTimeout(400);
     expect(await horizontalOverflow(page), path).toBeLessThanOrEqual(0);
   }
 });
 
-test("modo oscuro: se activa, se recuerda al recargar y llega al panel", async ({ page }) => {
+// VOLTA arranca en modo oscuro (el de la marca): se prueba el cambio a claro y la vuelta.
+test("modo claro: se activa, se recuerda al recargar y llega al panel", async ({ page }) => {
   await page.goto("");
-  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+  expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe("rgb(10, 12, 16)");
   await page.getByRole("button", { name: "Abrir menú" }).click();
-  await page.getByRole("dialog", { name: "Menú" }).getByRole("button", { name: "Activar modo oscuro" }).click();
-  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
-  const bg = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
-  expect(bg).toBe("rgb(18, 21, 16)");
-  await page.reload();
-  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
-  await page.goto("admin-demo/");
-  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
-  await page.getByRole("button", { name: "Activar modo claro" }).click();
+  await page.getByRole("dialog", { name: "Menú" }).getByRole("button", { name: "Activar modo claro" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  const bg = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
+  expect(bg).toBe("rgb(242, 243, 238)");
+  await page.reload();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  await page.goto("admin-demo/");
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  await page.getByRole("button", { name: "Activar modo oscuro" }).click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
 });

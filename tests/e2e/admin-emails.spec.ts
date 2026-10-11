@@ -3,15 +3,15 @@ import { guardNetwork } from "./helpers";
 
 const toast = (page: Page, text: string | RegExp) => page.getByRole("status").filter({ hasText: text });
 
-test("compra en la tienda: los emails de compra y de diseño recibido aparecen en la bandeja", async ({ page }) => {
+test("compra en la tienda: el email de compra aparece en la bandeja y es el único que sale", async ({ page }) => {
   const assertNoExternal = guardNetwork(page);
-  await page.goto("p/collar-con-nombre/");
-  await page.getByLabel("Nombre", { exact: true }).fill("Simba");
-  await page.getByRole("button", { name: "Agregar al carrito" }).last().click();
+  await page.goto("p/overvolt-pre/");
+  // En el celular, "Agregar al carrito" está en la barra flotante (el de la tarjeta queda oculto).
+  await page.getByRole("button", { name: "Agregar al carrito" }).filter({ visible: true }).click();
   await page.goto("checkout/");
   await page.getByRole("button", { name: "Ingresar con cuenta demo" }).click();
   await page.getByRole("button", { name: "Continuar a la entrega" }).click();
-  await page.getByText("Retiro en persona").click();
+  await page.getByText("Retiro en el local").click();
   await page.getByRole("button", { name: "Continuar al pago" }).click();
   await page.getByText("Tarjetas de débito, crédito y prepagas", { exact: true }).click();
   await page.getByRole("button", { name: "Revisar pedido" }).click();
@@ -21,11 +21,13 @@ test("compra en la tienda: los emails de compra y de diseño recibido aparecen e
 
   await page.goto("admin-demo/emails/?vista=enviados");
   const inbox = page.getByRole("region", { name: "Bandeja de salida" });
-  await expect(inbox.getByRole("button", { name: /Recibimos tu diseño.*VOL-DEMO-0001/ })).toBeVisible();
+  // Sin productos personalizados no hay email de "diseño recibido": la compra manda solo la confirmación.
+  await expect(inbox.getByRole("button", { name: /VOL-DEMO-0001/ })).toHaveCount(1);
+  await expect(inbox.getByRole("button", { name: /Recibimos tu diseño/ })).toHaveCount(0);
   await inbox.getByRole("button", { name: /¡Gracias por tu compra, .*VOL-DEMO-0001/ }).click();
   const mail = page.getByRole("dialog", { name: /Email: ¡Gracias por tu compra/ });
-  await expect(mail.getByRole("article")).toContainText("1 × Collar con nombre y dijes de patita");
-  await expect(mail.getByRole("article")).toContainText("“Simba”");
+  await expect(mail.getByRole("article")).toContainText("1 × Overvolt pre-entreno");
+  await expect(mail.getByRole("article")).toContainText("30 servicios");
   await expect(mail.getByText(/Simulado: en la demo no sale ningún email/)).toBeVisible();
   assertNoExternal();
 });
@@ -58,7 +60,7 @@ test.describe("editor en escritorio", () => {
     await page.getByRole("button", { name: "Insertar Total del pedido" }).click();
     await expect(text.locator("[data-token='order.total']")).toHaveText("Total del pedido");
     const preview = page.getByRole("article", { name: /Email: Pago aprobado/ });
-    await expect(preview).toContainText(/Total: \$\s?27\.350/);
+    await expect(preview).toContainText(/Total: \$\s?44\.810/);
     await expect(preview).not.toContainText("{");
     // Asunto con otro dato
     await page.getByRole("textbox", { name: "Asunto" }).click();
@@ -89,6 +91,13 @@ test.describe("editor en escritorio", () => {
 
 test("cumpleaños de mascota: el email sale desde los recordatorios de la ficha del cliente", async ({ page }) => {
   await page.goto("admin-demo/usuarios/ficha/?email=diego.a@ejemplo.com");
+  // Las fichas de VOLTA no traen mascotas: se carga una desde el panel con el cumple dentro de los 60 días.
+  const pets = page.getByRole("region", { name: "Mascotas" });
+  await pets.getByLabel("Nombre").fill("Ñoqui");
+  await pets.getByLabel("Día del cumpleaños").selectOption("10");
+  await pets.getByLabel("Mes del cumpleaños").selectOption({ label: "octubre" });
+  await pets.getByRole("button", { name: "Agregar" }).click();
+  await expect(toast(page, "Ñoqui agregado a la ficha")).toBeVisible();
   const send = page.getByRole("button", { name: /Simular el email del día: Cumple de Ñoqui/ });
   await send.click();
   await expect(toast(page, "Email de cumpleaños en la bandeja de salida")).toBeVisible();

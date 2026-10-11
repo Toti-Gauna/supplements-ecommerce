@@ -14,7 +14,7 @@ test("elegir la fecha muestra las tres plantillas con los textos, productos y la
   await open(page);
   const formats = page.getByRole("group", { name: "Formato" });
   for (const name of ["Post", "Historia o reel", "Carrusel"]) await expect(formats.getByRole("button", { name: new RegExp(name) })).toBeVisible();
-  await expect(page.getByLabel("Titular")).toHaveValue("Para la que nos cuida a todos");
+  await expect(page.getByLabel("Titular")).toHaveValue("Para la que nunca para");
   await expect(page.getByLabel("Bajada")).toHaveValue("Especial Día de la Madre");
   await expect(page.getByRole("group", { name: "Productos de la pieza" }).getByRole("button", { pressed: true })).toHaveCount(3);
   const caption = page.getByRole("textbox", { name: "Texto para el posteo" });

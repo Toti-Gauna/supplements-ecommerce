@@ -25,6 +25,10 @@ test.describe("escritorio con mouse", () => {
     await expect(page.getByRole("link", { name: "Volver a Marketing" })).toBeVisible();
     await expect(page.getByRole("heading", { level: 1, name: /Temáticas/ })).toBeVisible();
     const mode = page.getByLabel("Modo", { exact: true });
+    // Hasta la Fase 5 la tienda arranca sin temática (docs/plan-por-fases.md).
+    await expect(mode).toHaveValue("off");
+    await expect(page.getByLabel("Temática fija")).toHaveCount(0);
+    await mode.selectOption("auto");
     await expect(mode).toHaveValue("auto");
     // En automático no hay selector de temática fija: no se confunde con la que sale por fecha.
     await expect(page.getByLabel("Temática fija")).toHaveCount(0);
@@ -67,22 +71,22 @@ test.describe("escritorio con mouse", () => {
     const list = page.getByRole("list").filter({ has: page.getByRole("button", { name: /^Diapositiva 1:/ }) });
     await list.getByRole("button", { name: /^Diapositiva 2:/ }).click();
     await expect(page.getByRole("heading", { name: "Diapositiva 2" })).toBeVisible();
-    await titleField(page).fill("Velas para regalar");
-    await expect(preview(page)).toContainText("Velas para regalar");
+    await titleField(page).fill("Combos para regalar");
+    await expect(preview(page)).toContainText("Combos para regalar");
     await expect(preview(page)).toContainText("Volta · 02");
     // Salir y volver conserva el borrador.
     await page.getByRole("link", { name: "Volver a Contenido" }).click();
     await page.getByRole("link", { name: /Carrusel/ }).click();
     await expect(page.getByText("Recuperamos los cambios del carrusel que quedaron sin guardar.")).toBeVisible();
     await list.getByRole("button", { name: /^Diapositiva 2:/ }).click();
-    await expect(titleField(page)).toHaveValue("Velas para regalar");
+    await expect(titleField(page)).toHaveValue("Combos para regalar");
     // Imagen: formato inválido, muy chica y válida.
     const file = page.locator("input[type=file]");
     await file.setInputFiles({ name: "notas.txt", mimeType: "text/plain", buffer: Buffer.from("hola") });
     await expect(page.getByRole("alert").filter({ hasText: "Subí JPG, PNG o WEBP" })).toBeVisible();
     await file.setInputFiles({ name: "chica.png", mimeType: "image/png", buffer: await pngOf(page, 200, 150) });
     await expect(page.getByRole("alert").filter({ hasText: "al menos 400 px" })).toBeVisible();
-    await file.setInputFiles({ name: "vela.png", mimeType: "image/png", buffer: await makePng(page) });
+    await file.setInputFiles({ name: "pote.png", mimeType: "image/png", buffer: await makePng(page) });
     await expect(preview(page).locator("img")).toBeVisible();
     await expect(page.getByRole("button", { name: "Quitar imagen" })).toBeVisible();
     // Encuadre: mueve el punto visible de la imagen en la vista previa.
@@ -91,18 +95,18 @@ test.describe("escritorio con mouse", () => {
     // Sin texto alternativo no se guarda; el error señala la diapositiva.
     await page.getByRole("button", { name: "Guardar carrusel" }).click();
     await expect(page.getByRole("alert").filter({ hasText: "Describí la imagen" })).toBeVisible();
-    await page.getByLabel("Texto alternativo").fill("Vela artesanal sobre la mesa");
+    await page.getByLabel("Texto alternativo").fill("Pote de proteína sobre la mesada");
     await page.getByRole("button", { name: "Guardar carrusel" }).click();
     await expect(toast(page, "Carrusel guardado")).toBeVisible();
     const after = await stored(page);
-    expect(after.slides[1].title).toBe("Velas para regalar");
-    expect(after.slides[1].image.alt).toBe("Vela artesanal sobre la mesa");
+    expect(after.slides[1].title).toBe("Combos para regalar");
+    expect(after.slides[1].image.alt).toBe("Pote de proteína sobre la mesada");
     expect(after.slides[0].title).toBe(before?.slides?.[0]?.title ?? after.slides[0].title);
     if (before) { expect(after.faqs).toEqual(before.faqs); expect(after.homeCta).toEqual(before.homeCta); }
     await page.goto("");
     const hero = page.locator("section[aria-roledescription=carrusel]");
-    await expect(hero.getByRole("img", { name: "Vela artesanal sobre la mesa" })).toBeAttached();
-    await expect(hero.getByText("Velas para regalar")).toBeAttached();
+    await expect(hero.getByRole("img", { name: "Pote de proteína sobre la mesada" })).toBeAttached();
+    await expect(hero.getByText("Combos para regalar")).toBeAttached();
   });
 
   test("8.3.28 carrusel: crear, reordenar y quitar no mezcla datos; texto largo falla con mensaje claro", async ({ page }) => {
@@ -145,8 +149,8 @@ test.describe("escritorio con mouse", () => {
       };
     });
     await page.goto("admin-demo/contenido/carrusel/");
-    await page.locator("input[type=file]").setInputFiles({ name: "vela.png", mimeType: "image/png", buffer: await makePng(page) });
-    await page.getByLabel("Texto alternativo").fill("Vela sobre la mesa");
+    await page.locator("input[type=file]").setInputFiles({ name: "pote.png", mimeType: "image/png", buffer: await makePng(page) });
+    await page.getByLabel("Texto alternativo").fill("Pote sobre la mesada");
     await page.getByRole("button", { name: "Guardar carrusel" }).click();
     await expect(toast(page, "No hay lugar para guardar el carrusel")).toBeVisible();
     await expect(page.getByText(/Cambios sin guardar/)).toBeVisible();
@@ -155,7 +159,7 @@ test.describe("escritorio con mouse", () => {
     expect((await stored(page))?.slides?.[0]?.image).toBeUndefined();
     await page.reload();
     await expect(page.getByText("Recuperamos los cambios del carrusel que quedaron sin guardar.")).toBeVisible();
-    await expect(page.getByLabel("Texto alternativo")).toHaveValue("Vela sobre la mesa");
+    await expect(page.getByLabel("Texto alternativo")).toHaveValue("Pote sobre la mesada");
   });
 });
 

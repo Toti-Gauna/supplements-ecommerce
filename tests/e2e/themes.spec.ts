@@ -3,6 +3,15 @@ import { guardNetwork } from "./helpers";
 
 test("probar temáticas: Halloween cambia cinta, logo, carrusel y ofertas; el cupón queda en el carrito", async ({ page }) => {
   const assertNoExternal = guardNetwork(page);
+  // Hasta la Fase 5 el botón arranca oculto: se prende desde el panel para mostrarle la demo al cliente.
+  await page.goto("admin-demo/tematicas/");
+  const tryButton = page.getByRole("switch", { name: /Probar temáticas/ });
+  await expect(tryButton).not.toBeChecked();
+  await tryButton.click();
+  await expect(tryButton).toBeChecked();
+  // El panel deja puesta una temática (Navidad fija) para ver que "Original" la tapa solo en este navegador.
+  await page.getByLabel("Modo", { exact: true }).selectOption("fixed");
+  await page.getByLabel("Temática fija").selectOption("navidad");
   await page.goto("");
   await page.getByRole("button", { name: "Probar temáticas" }).click();
   const picker = page.getByRole("dialog", { name: "Probar temáticas" });
@@ -26,6 +35,8 @@ test("probar temáticas: Halloween cambia cinta, logo, carrusel y ofertas; el cu
   await expect(page.locator("html")).toHaveClass(/amb-paused/);
   await page.locator("[data-theme-ribbon]").getByRole("button", { name: "Salir" }).click();
   await expect(page.locator("[data-theme-ribbon='halloween']")).toHaveCount(0);
+  // Sin vista previa manda el panel.
+  await expect(page.locator("[data-theme-ribbon='navidad']")).toBeVisible();
 
   // "Original": la marca sin temática, aunque el panel tenga una puesta
   await page.getByRole("button", { name: "Probar temáticas" }).click();
@@ -42,15 +53,18 @@ test("el panel edita la temática y su modo; la tienda lo refleja", async ({ pag
   await expect(page.getByRole("heading", { name: /Temáticas/ })).toBeVisible();
   await page.getByRole("button", { name: "Editar Navidad" }).click();
   const editor = page.getByRole("dialog", { name: "Editar Navidad" });
-  await editor.getByLabel("Titular").fill("Feliz Navidad con nombre");
+  await editor.getByLabel("Titular").fill("Feliz Navidad con energía");
   await editor.getByRole("button", { name: "Guardar temática" }).click();
   await expect(editor).toBeHidden();
 
   await page.getByLabel("Modo", { exact: true }).selectOption("fixed");
   await page.getByLabel("Temática fija").selectOption("navidad");
+  // El botón "Probar temáticas" arranca oculto hasta la Fase 5: se prende acá y se apaga al final.
+  await page.getByRole("switch", { name: /Probar temáticas/ }).click();
   await page.goto("");
-  await expect(page.getByRole("heading", { name: "Feliz Navidad con nombre" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Feliz Navidad con energía" })).toBeVisible();
   await expect(page.locator("[data-theme-ribbon='navidad']")).toContainText("NAVIDAD15");
+  await expect(page.getByRole("button", { name: "Probar temáticas" })).toBeVisible();
 
   await page.goto("admin-demo/tematicas/");
   await page.getByLabel("Modo", { exact: true }).selectOption("off");

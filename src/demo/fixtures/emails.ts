@@ -6,11 +6,11 @@ import type { ArtKey } from "../types";
  * los arma React Email y los envía Nodemailer, como dice la spec.
  */
 
-export type EmailTrigger = "order-created" | "custom-received" | "payment-approved" | "in-production" | "ready" | "shipped" | "pet-birthday";
+export type EmailTrigger = "order-created" | "repurchase" | "payment-approved" | "in-production" | "ready" | "shipped" | "pet-birthday";
 
 export const TRIGGER_LABEL: Record<EmailTrigger, string> = {
   "order-created": "Compra realizada",
-  "custom-received": "Pedido personalizado recibido",
+  repurchase: "Se le termina el producto",
   "payment-approved": "Pago aprobado",
   "in-production": "En producción",
   ready: "Listo para entregar",
@@ -20,7 +20,7 @@ export const TRIGGER_LABEL: Record<EmailTrigger, string> = {
 
 export const TRIGGER_HINT: Record<EmailTrigger, string> = {
   "order-created": "Cuando el cliente confirma la compra en la tienda.",
-  "custom-received": "Cuando la compra trae algo personalizado: confirma que recibimos el diseño aprobado.",
+  repurchase: "Unos días antes de que se le termine lo que compró, según los servicios del envase (desde la ficha del cliente).",
   "payment-approved": "Cuando se aprueba el comprobante o llega la confirmación de Mercado Pago.",
   "in-production": "Cuando el pedido pasa a producción.",
   ready: "Cuando el pedido está listo para retirar o despachar.",
@@ -112,12 +112,12 @@ export const emailTemplates: EmailTemplate[] = [
       { id: id(), type: "order-card" }, { id: id(), type: "products" }, btn("tracking", t("Seguir mi pedido")), foot()],
   },
   {
-    id: "tpl-custom-received", name: "Recibimos tu diseño", trigger: "custom-received", active: true,
-    subject: [t("Recibimos tu diseño, "), k("customer.firstName")],
-    preheader: [t("Lo hacemos tal cual lo aprobaste.")],
-    blocks: [head(), h(t("Tu diseño ya está en el taller")),
-      p(t("Hola "), k("customer.firstName"), t(", guardamos la vista previa que aprobaste. La vamos a fabricar exactamente así.")),
-      { id: id(), type: "products" }, p(t("Si querés cambiar algo, escribinos antes de que el pedido pase a producción.")), btn("whatsapp", t("Escribir al taller")), foot()],
+    id: "tpl-repurchase", name: "Tu pote se está por terminar", trigger: "repurchase", active: true,
+    subject: [k("customer.firstName"), t(", ¿te queda para esta semana?")],
+    preheader: [t("Reponé antes de cortar la rutina.")],
+    blocks: [head(), h(t("Se te está por terminar")),
+      p(t("Hola "), k("customer.firstName"), t(", por los servicios del envase que llevaste, en unos días se te termina. Si lo pedís hoy, en Mar del Plata te llega con cadete en el día.")),
+      btn("shop", t("Volver a pedirlo")), p(t("¿Querés cambiar de sabor o pasar al tamaño grande? En la ficha ves el precio por servicio de cada uno.")), foot()],
   },
   {
     id: "tpl-payment-approved", name: "Pago aprobado", trigger: "payment-approved", active: true,

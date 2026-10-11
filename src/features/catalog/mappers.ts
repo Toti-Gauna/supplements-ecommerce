@@ -27,10 +27,9 @@ export function toCard(product: Product): ProductCardData {
     tint: product.variants[0]?.colorHex,
     colors: [...new Set(product.variants.map((v) => v.colorHex).filter((c): c is string => Boolean(c)))],
     fromPrice: fromPrice(product),
-    hasRange: deltas.size > 1 || Boolean(product.personalization?.surcharge),
+    hasRange: deltas.size > 1,
     isNew: product.isNew,
     madeToOrder: product.variants.every((v) => v.stock < 0),
-    personalizable: Boolean(product.personalization),
     stockNote: stockNote(product),
   };
 }

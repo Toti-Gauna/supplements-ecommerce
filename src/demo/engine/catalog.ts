@@ -1,8 +1,5 @@
 import type { Category, Goal, Product, Variant } from "../types";
 import { demoData, STATIC_CATEGORY_SLUGS, STATIC_PRODUCT_SLUGS } from "./source";
-import type { CollarConfig } from "../fixtures/collar";
-import { collarSurcharge, describeCollar } from "./collar";
-import type { CartLine } from "./cart-types";
 
 export type Availability = { kind: "made-to-order"; days?: number } | { kind: "in-stock"; units: number } | { kind: "out-of-stock" };
 export type SortKey = "relevance" | "price-asc" | "price-desc" | "new";
@@ -38,11 +35,6 @@ export function categoryHref(slug: string): string {
   return STATIC_CATEGORY_SLUGS.has(slug) ? `/c/${slug}/` : `/c/demo/?slug=${encodeURIComponent(slug)}`;
 }
 
-/** La personalización vive en la ficha: este enlace lleva directo a esa sección. */
-export function personalizeHref(slug: string): string {
-  return `${productHref(slug)}#personalizar`;
-}
-
 export function featuredCategories(): Category[] {
   return visibleCategories().filter((c) => c.featured);
 }
@@ -64,22 +56,13 @@ export function goalHref(goal: Goal): string {
   return `/buscar/?objetivo=${goal}`;
 }
 
-export function personalizableProducts(): Product[] {
-  return activeProducts().filter((p) => p.personalization);
-}
-
 export function fromPrice(product: Product): number {
   return product.basePrice + Math.min(0, ...product.variants.map((v) => v.priceDelta));
 }
 
-/** Precio unitario: base + variante + recargo de personalización (+ opciones del collar si las hay). */
-export function unitPrice(product: Product, variant: Variant, withPersonalization: boolean, collar?: CollarConfig): number {
-  return product.basePrice + variant.priceDelta + personalizationSurcharge(product, withPersonalization, collar);
-}
-
-export function personalizationSurcharge(product: Product, withPersonalization: boolean, collar?: CollarConfig): number {
-  if (!withPersonalization) return 0;
-  return (product.personalization?.surcharge ?? 0) + collarSurcharge(product.personalization?.collar, collar);
+/** Precio unitario de lista: base + recargo de la variante. */
+export function unitPrice(product: Product, variant: Variant): number {
+  return product.basePrice + variant.priceDelta;
 }
 
 export function availability(product: Product, variant: Variant): Availability {
@@ -116,9 +99,4 @@ export function variantOptions(product: Product): { colors: { name: string; hex?
     if (v.size) sizes.add(v.size);
   }
   return { colors: [...colors].map(([name, hex]) => ({ name, hex })), sizes: [...sizes] };
-}
-
-/** Opciones del collar de una línea (carrito, pedido, emails), o "" si no es un collar configurado. */
-export function collarLineDetail(line: Pick<CartLine, "productSlug" | "personalization">): string {
-  return describeCollar(getProduct(line.productSlug)?.personalization?.collar, line.personalization?.collar);
 }

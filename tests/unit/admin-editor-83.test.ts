@@ -9,7 +9,7 @@ const whey = products.find((p) => p.slug === "ionic-whey")!;
 
 describe("pasos del editor (8.3.20)", () => {
   it("la foto va primero y la revisión al final", () => {
-    expect(PRODUCT_STEPS.map((s) => s.id)).toEqual(["foto", "datos", "venta", "variantes", "envio", "personalizacion", "revision"]);
+    expect(PRODUCT_STEPS.map((s) => s.id)).toEqual(["foto", "datos", "venta", "variantes", "envio", "suplemento", "revision"]);
   });
   it("completo sale de validar, no de visitar: un producto del catálogo no tiene errores", () => {
     const c = checkSteps(whey, categories);

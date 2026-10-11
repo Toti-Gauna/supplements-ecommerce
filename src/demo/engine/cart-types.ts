@@ -1,21 +1,4 @@
-import type { CollarConfig } from "../fixtures/collar";
-import type { GiftOccasion, PersonalizationKind } from "../types";
-
-export interface LinePersonalization {
-  kind: PersonalizationKind;
-  text?: string;
-  font?: string;
-  color?: string;
-  colorName?: string;
-  notes?: string;
-  /** Vista previa aprobada (data URL generado en el navegador). Nunca se sube a ningún servidor en la demo. */
-  previewDataUrl?: string;
-  /** Miniatura de la foto de referencia (solo navegador). */
-  referenceDataUrl?: string;
-  approvedAt: string;
-  /** Configuración del collar (solo productos con configurador). */
-  collar?: CollarConfig;
-}
+import type { GiftOccasion } from "../types";
 
 /** El producto se compra para regalar (pedido de Ignacio, fuera de la especificación). */
 export interface LineGift {
@@ -32,6 +15,5 @@ export interface CartLine {
   productSlug: string;
   variantId: string;
   quantity: number;
-  personalization?: LinePersonalization;
   gift?: LineGift;
 }

@@ -8,7 +8,7 @@ import { categoryHref, productsInCategory, visibleCategories } from "@/demo/engi
 import { cn } from "@/lib/cn";
 import { useDemoVersion } from "@/stores/admin";
 
-/** Menú desplegable de la tienda (escritorio): categorías ilustradas + acceso al personalizador. */
+/** Menú desplegable de la tienda (escritorio): categorías ilustradas + acceso por objetivo. */
 export function ShopMenu({ active }: { active: boolean }) {
   useDemoVersion();
   const [open, setOpen] = useState(false);

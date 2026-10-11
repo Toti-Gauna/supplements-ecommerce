@@ -33,7 +33,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
   // 8.3.19: un solo módulo. Stock es su vista por variante, la Planilla es "Ver en formato Excel" e importar es una
   // acción de la pantalla; las rutas anteriores siguen llevando acá.
   { href: "/admin-demo/productos/", label: "Productos y stock", short: "Productos", icon: Boxes, group: "Catálogo", badge: "stock", tab: true },
-  { href: "/admin-demo/categorias/", label: "Categorías y personalización", short: "Categorías", icon: Shapes, group: "Catálogo" },
+  { href: "/admin-demo/categorias/", label: "Categorías", short: "Categorías", icon: Shapes, group: "Catálogo" },
   // 8.3.24: entrada con una tarjeta por herramienta de Marketing; cada una sigue con su acceso propio.
   { href: "/admin-demo/marketing/", label: "Resumen", short: "Marketing", icon: Megaphone, group: "Marketing" },
   { href: "/admin-demo/misiones/", label: "Misiones", short: "Misiones", icon: Target, group: "Marketing" },

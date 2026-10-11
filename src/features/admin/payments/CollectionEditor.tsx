@@ -5,7 +5,7 @@ import { describedBy, Field, Input } from "@/components/atoms/Field";
 import { SampleQr } from "@/components/molecules/SampleQr";
 import { collectionErrors, type CollectionKey } from "@/demo/admin/collection";
 import { fileToThumbnail } from "@/lib/image";
-import { PhotoInput } from "../../personalize/PhotoInput";
+import { PhotoInput } from "@/components/molecules/PhotoInput";
 import { useSettingsDraft } from "../settings/useSettingsDraft";
 import { useSessionDraft } from "../useSessionDraft";
 

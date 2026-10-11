@@ -2,7 +2,6 @@ import { categories } from "../fixtures/categories";
 import { coupons, demoSettings, homeCta, missions, shippingZones, slides, type DemoSettings } from "../fixtures/commerce";
 import { storeFaqs } from "../fixtures/content";
 import { products } from "../fixtures/products";
-import { textZones, type TextZone } from "../fixtures/templates";
 import { seasonalThemes, themeCoupons, themeSettings } from "../fixtures/themes";
 import { defaultWheel, type WheelConfig } from "../fixtures/wheel";
 import type { CarouselSlide, Category, Coupon, Faq, Mission, Product, SeasonalTheme, ShippingZone, ThemeSettings } from "../types";
@@ -18,7 +17,6 @@ export interface DemoData {
   missions: Mission[];
   zones: ShippingZone[];
   settings: DemoSettings;
-  textZones: Record<string, TextZone>;
   wheel: WheelConfig;
   content: { slides: CarouselSlide[]; homeCta: { title: string; text: string }; faqs: Faq[] };
   themes: SeasonalTheme[];
@@ -33,7 +31,6 @@ export function defaultDemoData(): DemoData {
     missions,
     zones: shippingZones.map((z) => ({ ...z, active: true })),
     settings: demoSettings,
-    textZones,
     wheel: defaultWheel,
     content: { slides: slides.map((s) => ({ ...s, active: true })), homeCta, faqs: storeFaqs },
     themes: seasonalThemes,

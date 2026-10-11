@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { Plus, Sparkles } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useState } from "react";
 import type { ArtKey, ArtView, PackStyle } from "@/demo/types";
 import { getProduct } from "@/demo/engine/catalog";
@@ -29,7 +29,6 @@ export interface ProductCardData {
   hasRange: boolean;
   isNew: boolean;
   madeToOrder: boolean;
-  personalizable: boolean;
   stockNote: string;
   /** Oferta de temática: precio con el cupón y su sello (colores de la temática). */
   deal?: { price: number | null; label: string; bg: string; ink: string };
@@ -55,13 +54,12 @@ export function ProductCard({ product, priority }: { product: ProductCardData; p
         <div className="absolute left-3 top-3 flex flex-wrap gap-1.5">
           {product.deal && <span className="rounded-full px-2.5 py-1 text-[11px] font-extrabold shadow-sm" style={{ background: product.deal.bg, color: product.deal.ink }}>{product.deal.label}</span>}
           {product.isNew && <span className="rounded-full bg-night px-2.5 py-1 text-[11px] font-bold text-on-night">Nuevo</span>}
-          {product.personalizable && <span className="rounded-full bg-on-night/90 px-2.5 py-1 text-[11px] font-bold text-night backdrop-blur">Personalizable</span>}
         </div>
         {full && (
-          <button type="button" onClick={() => quickAdd(full)} aria-label={product.personalizable ? `Personalizar ${product.name}` : `Agregar ${product.name} al carrito`}
+          <button type="button" onClick={() => quickAdd(full)} aria-label={`Agregar ${product.name} al carrito`}
             className="absolute bottom-3 right-3 z-10 flex h-11 items-center gap-2 rounded-full bg-primary px-3.5 text-sm font-bold text-on-primary shadow-[var(--shadow-glow)] transition-all duration-300 hover:bg-primary-hover lg:translate-y-3 lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100 lg:focus-visible:translate-y-0 lg:focus-visible:opacity-100">
-            {product.personalizable ? <Sparkles size={16} aria-hidden="true" /> : <Plus size={16} aria-hidden="true" />}
-            <span className="max-lg:sr-only">{product.personalizable ? "Personalizar" : "Agregar"}</span>
+            <Plus size={16} aria-hidden="true" />
+            <span className="max-lg:sr-only">Agregar</span>
           </button>
         )}
       </div>

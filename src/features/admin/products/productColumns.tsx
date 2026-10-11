@@ -29,7 +29,7 @@ export function productColumns(categories: Category[], low: number, onToggle: (p
     { id: "stock", header: "Stock", className: "whitespace-nowrap", cell: (p) => <StockChip state={productStockState(p, low)} units={productStockTotal(p)} />, sortValue: (p) => productStockTotal(p) ?? Number.MAX_SAFE_INTEGER, exportValue: stockText },
     { id: "stockState", header: "Estado de stock", defaultHidden: true, cell: (p) => STOCK_LABEL[productStockState(p, low)], exportValue: (p) => STOCK_LABEL[productStockState(p, low)] },
     { id: "sold", header: "Vendidos", align: "right", cell: (p) => p.soldCount, sortValue: (p) => p.soldCount, exportValue: (p) => p.soldCount },
-    { id: "tags", header: "Etiquetas", cell: (p) => <span className="flex flex-wrap gap-1">{p.featured && <Badge>Destacado</Badge>}{p.isNew && <Badge tone="brand">Nuevo</Badge>}{p.personalization && <Badge>Personalizable</Badge>}</span> },
+    { id: "tags", header: "Etiquetas", cell: (p) => <span className="flex flex-wrap gap-1">{p.featured && <Badge>Destacado</Badge>}{p.isNew && <Badge tone="brand">Nuevo</Badge>}{p.brand && <Badge>{p.brand}</Badge>}</span> },
     {
       id: "active", header: "En la tienda", sortValue: (p) => p.active !== false, exportValue: (p) => (p.active === false ? "Pausado" : "Visible"),
       cell: (p) => <Switch checked={p.active !== false} onChange={() => onToggle(p)} label={p.active === false ? "Pausado" : "Visible"} />,

@@ -39,10 +39,8 @@ describe("render de plantillas", () => {
     const card = mail.blocks.find((b) => b.type === "order-card");
     expect(card).toMatchObject({ code: "VOL-000121", fulfillment: "Cadete en Mar del Plata", status: "En producción" });
     const products = mail.blocks.find((b) => b.type === "products");
-    expect(products).toMatchObject({ lines: [{ name: "Creatina monohidrato micronizada", variant: "Sin sabor · 500 g", quantity: 1 }] });
-    // El detalle de lo personalizado sale de la línea (hoy ningún producto del catálogo se personaliza)
-    const engraved = { ...order, lines: [{ ...order.lines[0]!, personalization: { kind: "TEXT" as const, text: "Kira", font: "Clásica", approvedAt: "" } }] };
-    expect(renderEmail(tpl("tpl-order-created"), contextForOrder(engraved)).blocks.find((b) => b.type === "products")).toMatchObject({ lines: [{ detail: "“Kira” · Clásica" }] });
+    // El detalle de cada línea son los servicios del envase.
+    expect(products).toMatchObject({ lines: [{ name: "Creatina monohidrato micronizada", variant: "Sin sabor · 500 g", quantity: 1, detail: "100 servicios" }] });
     const pet = renderEmail(tpl("tpl-pet-birthday"), { customerName: "Diego Álvarez", email: "d@e.com", pet: { name: "Ñoqui" } });
     expect(pet.subject).toBe("¡Feliz cumple, Ñoqui! 🎂");
     expect(renderEmail({ ...tpl("tpl-pet-birthday"), blocks: [{ id: "x", type: "order-card" }] }, { customerName: "D", email: "d" }).blocks).toEqual([]);
@@ -59,7 +57,7 @@ describe("disparadores y bandeja de salida", () => {
     expect(triggersForTransition("PAID", "IN_PRODUCTION")).toEqual(["in-production"]);
     expect(triggersForTransition("IN_CLAIM", "IN_PRODUCTION")).toEqual([]);
     expect(triggersForTransition("IN_CLAIM", "PAID")).toEqual([]);
-    expect(triggersForNewOrder({ lines: [{ id: "a", productSlug: "x", variantId: "y", quantity: 1, personalization: { kind: "TEXT", approvedAt: "" } }] })).toEqual(["order-created", "custom-received"]);
+    expect(triggersForNewOrder()).toEqual(["order-created"]);
   });
   it("una plantilla pausada no sale y la bandeja tiene límite", () => {
     const ctx = contextForOrder(defaultAdminData().orders[0]!);

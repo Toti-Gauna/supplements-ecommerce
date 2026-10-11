@@ -64,11 +64,11 @@ describe("plazos y capacidad", () => {
   it("plazo por variante, por producto y de stock", () => {
     const whey = getProduct("ionic-whey")!;
     const onOrder = { ...whey.variants[0]!, stock: -1 };
-    expect(lineLeadDays(whey, whey.variants[0], false)).toBe(1);
-    expect(lineLeadDays(whey, onOrder, false)).toBe(3);
-    expect(lineLeadDays({ ...whey, madeToOrderDays: 4 }, onOrder, false)).toBe(4);
-    expect(lineLeadDays({ ...whey, madeToOrderDays: 4 }, whey.variants[0], true)).toBe(4);
-    expect(lineLeadDays(whey, { ...onOrder, leadDays: 6 }, false)).toBe(6);
+    expect(lineLeadDays(whey, whey.variants[0])).toBe(1);
+    expect(lineLeadDays(whey, onOrder)).toBe(3);
+    expect(lineLeadDays({ ...whey, madeToOrderDays: 4 }, onOrder)).toBe(4);
+    expect(lineLeadDays({ ...whey, madeToOrderDays: 4 }, whey.variants[0])).toBe(1);
+    expect(lineLeadDays(whey, { ...onOrder, leadDays: 6 })).toBe(6);
     withMadeToOrderBanana();
     expect(orderLeadDays([wheyLine, bananaLine])).toBe(10);
   });

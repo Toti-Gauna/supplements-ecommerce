@@ -1,11 +1,12 @@
 "use client";
 import { Lock, Truck } from "lucide-react";
-import { motion } from "motion/react";
 import { Button, ButtonLink } from "@/components/atoms/Button";
 import { ListSkeleton } from "@/components/atoms/Skeleton";
 import { EmptyState } from "@/components/molecules/EmptyState";
 import { OrderSummary } from "@/components/molecules/OrderSummary";
 import { FLOATING_BAR } from "@/components/organisms/bottomBars";
+import { BatteryMeter } from "@/components/molecules/BatteryMeter";
+import { StackNudge } from "./StackNudge";
 import { CartLineItem, type CartLineView } from "@/components/organisms/CartLineItem";
 import { getProduct, maxQuantity } from "@/demo/engine/catalog";
 import { missingForFreeShipping, type QuotedLine } from "@/demo/engine/pricing";
@@ -27,8 +28,8 @@ export function toLineView(q: QuotedLine): CartLineView | null {
   const variant = product?.variants.find((v) => v.id === q.line.variantId);
   if (!product || !variant) return null;
   return {
-    id: q.line.id, slug: product.slug, name: product.name, variantLabel: variant.label, art: product.art, tint: variant.colorHex,
-    unitPrice: q.unitPrice, lineTotal: q.lineTotal, quantity: q.line.quantity, maxQuantity: maxQuantity(variant), personalization: q.line.personalization, gift: q.line.gift, zone: demoData().textZones[product.art],
+    id: q.line.id, slug: product.slug, name: product.name, variantLabel: variant.label, art: product.art, pack: product.pack, tint: variant.colorHex, servings: variant.servings,
+    unitPrice: q.unitPrice, lineTotal: q.lineTotal, quantity: q.line.quantity, maxQuantity: maxQuantity(variant), gift: q.line.gift,
   };
 }
 
@@ -54,6 +55,7 @@ export function CartView() {
     <OrderSummary
       rows={[
         { label: `Subtotal (${quote.units} ${quote.units === 1 ? "producto" : "productos"})`, amount: quote.subtotal },
+        ...(quote.stack.discount > 0 ? [{ label: `Descuento stack (${quote.stack.pct} %)`, amount: quote.stack.discount, negative: true }] : []),
         ...(quote.couponDiscount > 0 ? [{ label: "Cupón", amount: quote.couponDiscount, negative: true }] : []),
         { label: "Envío", amount: null, pendingLabel: "Se calcula en el checkout" },
       ]}
@@ -69,8 +71,9 @@ export function CartView() {
       <div className="flex flex-col gap-4 lg:col-start-1">
         <div className="rounded-2xl bg-surface px-4 py-3 shadow-[var(--shadow-card)]">
           <p className="flex items-center gap-2 text-sm font-semibold"><Truck size={18} aria-hidden="true" className="text-primary" />{missing > 0 ? <>Te faltan <strong>{formatARS(missing)}</strong> para envío gratis</> : "¡Tenés envío gratis!"}</p>
-          <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-accent"><motion.div className="h-full rounded-full bg-primary" initial={{ width: 0 }} animate={{ width: `${Math.min(100, (quote.subtotal / threshold) * 100)}%` }} transition={{ duration: 1 }} /></div>
+          <BatteryMeter pct={Math.min(100, (quote.subtotal / threshold) * 100)} label="Avance hacia el envío gratis" className="mt-2" tone={missing > 0 ? "volt" : "success"} />
         </div>
+        <StackNudge stack={quote.stack} />
         <ul className="flex flex-col gap-3" aria-label="Productos en el carrito">
           {quote.lines.map((q) => {
             const view = toLineView(q);
@@ -89,7 +92,7 @@ export function CartView() {
       </div>
       <div data-buy-bar className={cn(FLOATING_BAR, "z-30 pl-5 lg:hidden")}>
         <div className="min-w-0 flex-1">
-          <p className="text-xs text-muted">Total{quote.couponDiscount > 0 ? " con cupón" : ""} · sin envío</p>
+          <p className="text-xs text-muted">Total{quote.couponDiscount > 0 || quote.stack.discount > 0 ? " con descuentos" : ""} · sin envío</p>
           <p className="text-xl font-extrabold tabular-nums">{formatARS(quote.total)}</p>
         </div>
         <Button size="lg" onClick={goToCheckout} className="px-6"><Lock size={16} aria-hidden="true" /> Ir a pagar</Button>

@@ -4,8 +4,8 @@ import { Input, Textarea } from "@/components/atoms/Field";
 import { Select } from "@/components/atoms/Select";
 import { Switch } from "@/components/atoms/Switch";
 import { PRODUCT_STEPS, type StepCheck, type StepId } from "@/demo/admin/product-steps";
-import { templatesFrom } from "@/demo/admin/templates";
-import type { Category, Product } from "@/demo/types";
+import { goals } from "@/demo/fixtures/goals";
+import type { Category, Product, ProductBadge } from "@/demo/types";
 import { cn } from "@/lib/cn";
 import { NumberField } from "../NumberField";
 import { ProductMediaFields } from "../ProductMediaFields";
@@ -30,19 +30,36 @@ export function Step({ id, check, tried, children }: StepProps) {
   );
 }
 
+const BADGES: readonly (readonly [ProductBadge, string])[] = [["sin-tacc", "Sin TACC"], ["vegano", "Vegano"], ["sin-azucar", "Sin azúcar"], ["keto", "Keto"], ["marca-propia", "Marca propia"], ["sin-cafeina", "Sin cafeína"]];
+
+/** Opciones múltiples como fichas (checkbox nativos con la estética del panel). */
+function Chips({ legend, options, value, onChange }: { legend: string; options: readonly (readonly [string, string])[]; value: string[]; onChange: (v: string[]) => void }) {
+  return (
+    <fieldset>
+      <legend className="mb-2 text-sm font-bold">{legend}</legend>
+      <div className="flex flex-wrap gap-2">
+        {options.map(([id, label]) => (
+          <label key={id} className={cn("inline-flex min-h-10 cursor-pointer items-center gap-2 rounded-full border px-3 text-sm font-semibold has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary/50", value.includes(id) ? "border-primary bg-primary text-on-primary" : "border-line bg-bg")}>
+            <input type="checkbox" className="sr-only" checked={value.includes(id)} onChange={(e) => onChange(e.target.checked ? [...value, id] : value.filter((x) => x !== id))} />{label}
+          </label>
+        ))}
+      </div>
+    </fieldset>
+  );
+}
+
 interface Props { d: Product; set: (p: Partial<Product>) => void; checks: Record<StepId, StepCheck>; tried: boolean; categories: Category[]; products: Product[]; onGo: (id: StepId) => void }
 
 /** Los bloques del editor en el orden de 8.3.20: la foto primero; nada se pierde respecto del formulario anterior. */
 export function EditorSections({ d, set, checks, tried, categories, products, onGo }: Props) {
   const dims = d.dims ?? { lengthCm: 0, widthCm: 0, heightCm: 0, weightG: 0 };
   const step = (id: StepId, children: ReactNode) => <Step id={id} check={checks[id]} tried={tried}>{children}</Step>;
-  const templates = templatesFrom(products);
   return (
     <>
       {step("foto", <ProductMediaFields draft={d} onChange={set} />)}
       {step("datos", (
         <>
-          <label className="flex flex-col gap-1 text-sm font-bold">Nombre<Input value={d.name} onChange={(e) => set({ name: e.target.value })} aria-invalid={tried && checks.datos.errors.length > 0} placeholder="Vela caniche" /></label>
+          <label className="flex flex-col gap-1 text-sm font-bold">Nombre<Input value={d.name} onChange={(e) => set({ name: e.target.value })} aria-invalid={tried && checks.datos.errors.length > 0} placeholder="Whey protein 2 lb" /></label>
           <label className="flex flex-col gap-1 text-sm font-bold">Descripción corta<Input value={d.short} onChange={(e) => set({ short: e.target.value })} placeholder="Se ve debajo del nombre en la tienda" /></label>
           <label className="flex flex-col gap-1 text-sm font-bold">Descripción<Textarea value={d.description} onChange={(e) => set({ description: e.target.value })} /></label>
         </>
@@ -54,7 +71,7 @@ export function EditorSections({ d, set, checks, tried, categories, products, on
               <Select value={d.categorySlug} onChange={(e) => set({ categorySlug: e.target.value })}>{[...categories].sort((a, b) => a.sortOrder - b.sortOrder).map((c) => <option key={c.slug} value={c.slug}>{c.name}</option>)}</Select>
             </label>
             <NumberField id="p-price" label="Precio base ilustrativo" suffix="ARS" value={d.basePrice} onChange={(n) => set({ basePrice: n })} />
-            <NumberField id="p-days" label="Plazo de fabricación" suffix="días hábiles" value={d.madeToOrderDays} onChange={(n) => set({ madeToOrderDays: n || undefined })} hint="Lo que tarda el taller desde el pago. Cuenta solo días hábiles (sin feriados) y lo usa el calendario de entregas" />
+            <NumberField id="p-days" label="Plazo si es por encargo" suffix="días hábiles" value={d.madeToOrderDays} onChange={(n) => set({ madeToOrderDays: n || undefined })} hint="Lo que tarda en llegar al local desde el pago, para las variantes por encargo. Cuenta solo días hábiles y lo usa el calendario de despachos" />
           </div>
           <div className="flex flex-wrap gap-x-6">
             <Switch checked={d.active !== false} onChange={(v) => set({ active: v })} label="Visible en la tienda" />
@@ -72,13 +89,15 @@ export function EditorSections({ d, set, checks, tried, categories, products, on
           <NumberField id="d-g" label="Peso" suffix="g" value={dims.weightG} onChange={(n) => set({ dims: { ...dims, weightG: n } })} />
         </div>
       ))}
-      {step("personalizacion", (
+      {step("suplemento", (
         <>
-          <Select aria-label="Plantilla de personalización" value={d.personalization?.id ?? ""} onChange={(e) => set({ personalization: templates.find((t) => t.id === e.target.value) })}>
-            <option value="">Sin personalización</option>
-            {templates.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
-          </Select>
-          <p className="text-xs text-muted">Las plantillas se ajustan en “Categorías y personalización”.</p>
+          <label className="flex flex-col gap-1 text-sm font-bold">Marca
+            <Input value={d.brand} list="marcas" onChange={(e) => set({ brand: e.target.value })} placeholder="VOLTA Lab" />
+            <datalist id="marcas">{[...new Set(products.map((p) => p.brand).filter(Boolean))].map((b) => <option key={b} value={b} />)}</datalist>
+          </label>
+          <Chips legend="Objetivos" options={goals.map((g) => [g.id, g.name] as const)} value={d.goals ?? []} onChange={(v) => set({ goals: v as Product["goals"] })} />
+          <Chips legend="Sellos del rótulo" options={BADGES} value={d.badges ?? []} onChange={(v) => set({ badges: v as ProductBadge[] })} />
+          <p className="text-xs text-muted">La tabla nutricional, el uso y el lote se cargan con la planilla del proveedor (Importar Excel).</p>
         </>
       ))}
       {step("revision", (

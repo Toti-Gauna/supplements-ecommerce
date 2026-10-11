@@ -16,11 +16,14 @@ export interface DemoSettings {
   cuit: string | null;
   /** Aviso de stock bajo desde estas unidades (las demos viejas no lo traen: se usa 3). */
   lowStockThreshold?: number;
+  /** Descuento stack: % y cuántas categorías de suplementos distintas hacen falta. */
+  stack?: { pct: number; minCategories: number };
 }
 
 /** Ajustes de cobro de MUESTRA. Ningún dato bancario real. */
 export const demoSettings: DemoSettings = {
   transferDiscountPct: 10,
+  stack: { pct: 10, minCategories: 3 },
   freeShippingFrom: 120000,
   pendingTransferHours: 48,
   transferAlias: "ALIAS.DE.MUESTRA",

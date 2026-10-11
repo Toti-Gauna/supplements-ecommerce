@@ -25,7 +25,7 @@ function Block({ block: b, primary }: { block: RenderedBlock; primary: string })
     case "image":
       return (
         <figure className="px-6 pt-5">
-          <ProductVisual art={b.art} label={b.caption || "Imagen del taller"} showBadge={false} className="aspect-[16/9] w-full rounded-2xl" />
+          <ProductVisual art={b.art} label={b.caption || "Imagen de la tienda"} showBadge={false} className="aspect-[16/9] w-full rounded-2xl" />
           {b.caption && <figcaption className="mt-2 text-center text-xs text-[#5b6370]">{b.caption}</figcaption>}
         </figure>
       );
@@ -81,7 +81,7 @@ function Block({ block: b, primary }: { block: RenderedBlock; primary: string })
       return (
         <div className="mt-8 border-t border-[#eceef1] px-6 py-5 text-center text-xs leading-relaxed text-[#5b6370]">
           <p className="font-bold text-[#23272f]">Volta · Mar del Plata</p>
-          <p>Objetos hechos a mano para tu casa y tu mascota · @volta.mdp</p>
+          <p>Suplementos originales, con lote y vencimiento · @volta.mdp</p>
           <p className="mt-2">Recibís este email porque compraste en la tienda. Demo: no se envió a nadie.</p>
         </div>
       );

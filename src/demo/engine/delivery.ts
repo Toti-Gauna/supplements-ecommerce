@@ -10,7 +10,7 @@ import { addWorkdays, closureFor, nextWorkday, type WorkCalendar } from "./workd
  * día comprometido; cuando el día se llena, la próxima fecha disponible pasa al siguiente día hábil con lugar.
  */
 
-/** Lo que está en stock y no se personaliza sale al día hábil siguiente. */
+/** Lo que está en stock sale al día hábil siguiente (o en el día con cadete, ver la ficha). */
 export const READY_STOCK_DAYS = 1;
 /** Plazo si un producto a pedido no tiene plazo cargado. */
 export const DEFAULT_MAKE_DAYS = 3;
@@ -29,10 +29,10 @@ export function calendarOf(settings: WorkshopSettings): WorkCalendar {
   return { closedWeekdays: settings.closedWeekdays, closures: settings.closures };
 }
 
-/** Días hábiles de fabricación de una línea: plazo de la variante, del producto o el de stock. */
-export function lineLeadDays(product: Product, variant: Variant | undefined, personalized: boolean): number {
+/** Días hábiles de preparación de una línea: plazo de la variante, del producto (por encargo) o el de stock. */
+export function lineLeadDays(product: Product, variant: Variant | undefined): number {
   if (variant?.leadDays != null) return variant.leadDays;
-  if (personalized || !variant || variant.stock < 0) return product.madeToOrderDays || DEFAULT_MAKE_DAYS;
+  if (!variant || variant.stock < 0) return product.madeToOrderDays || DEFAULT_MAKE_DAYS;
   return READY_STOCK_DAYS;
 }
 
@@ -40,7 +40,7 @@ export function lineLeadDays(product: Product, variant: Variant | undefined, per
 export function orderLeadDays(lines: CartLine[]): number {
   return Math.max(READY_STOCK_DAYS, ...lines.map((l) => {
     const p = getProduct(l.productSlug);
-    return p ? lineLeadDays(p, p.variants.find((v) => v.id === l.variantId), !!l.personalization) : READY_STOCK_DAYS;
+    return p ? lineLeadDays(p, p.variants.find((v) => v.id === l.variantId)) : READY_STOCK_DAYS;
   }));
 }
 
@@ -94,7 +94,7 @@ export function nextFreeDayFor(order: ScheduledOrder, today: string, orders: Sch
 
 /** Estimación para la ficha de la tienda, antes de agregar al carrito. */
 export function estimateForProduct(product: Product, variant: Variant | undefined, today: string, orders: ScheduledOrder[], settings: WorkshopSettings): Availability & { leadDays: number } {
-  const leadDays = lineLeadDays(product, variant, !!product.personalization);
+  const leadDays = lineLeadDays(product, variant);
   const earliest = addWorkdays(today, leadDays, calendarOf(settings));
   return { leadDays, ...firstAvailableDay(earliest, loadByDay(orders), settings) };
 }

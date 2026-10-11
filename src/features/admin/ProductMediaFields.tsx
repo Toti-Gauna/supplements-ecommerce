@@ -8,7 +8,7 @@ import { ProductVisual } from "@/components/illustrations/ProductVisual";
 import { CONTAINER_LABEL } from "@/components/illustrations/supplements";
 import type { ArtKey, Product } from "@/demo/types";
 import { fileToThumbnail } from "@/lib/image";
-import { PhotoInput } from "../personalize/PhotoInput";
+import { PhotoInput } from "@/components/molecules/PhotoInput";
 
 const ARTS = (Object.keys(CONTAINER_LABEL) as ArtKey[]).map((key) => ({ key, label: CONTAINER_LABEL[key] }));
 

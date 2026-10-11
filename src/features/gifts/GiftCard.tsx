@@ -38,7 +38,7 @@ export function GiftCard({ gift, saved, preview, onSave, onReplay }: Props) {
         </blockquote>
       )}
       {gift.eta && (
-        <p className="mt-4 flex items-center gap-2 text-sm text-night-muted"><CalendarCheck size={16} aria-hidden="true" className="text-volt-soft" /> Lo hace el taller y está listo el {formatDay(gift.eta, "long")}</p>
+        <p className="mt-4 flex items-center gap-2 text-sm text-night-muted"><CalendarCheck size={16} aria-hidden="true" className="text-volt-soft" /> Sale del local el {formatDay(gift.eta, "long")}</p>
       )}
       <div className="mt-6 grid w-full gap-2">
         {preview ? (

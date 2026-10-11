@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { Check, Trash2, Truck } from "lucide-react";
 import { Button, ButtonLink } from "@/components/atoms/Button";
 import { Sheet } from "@/components/motion/Sheet";
+import { BatteryMeter } from "@/components/molecules/BatteryMeter";
 import { QuantityStepper } from "@/components/molecules/QuantityStepper";
 import { LineThumb } from "@/components/organisms/LineThumb";
 import { getProduct, maxQuantity } from "@/demo/engine/catalog";
@@ -12,6 +13,7 @@ import { demoData } from "@/demo/engine/source";
 import { formatARS } from "@/lib/money";
 import { useCart } from "@/stores/cart";
 import { useUi } from "@/stores/ui";
+import { StackNudge } from "./StackNudge";
 import { CartMissionNudge } from "./CartMissionNudge";
 import { MiniRecommendations } from "./MiniRecommendations";
 import { useCartQuote } from "./useCartQuote";
@@ -46,8 +48,9 @@ export function CartDrawer() {
           <>
             <div className="mb-4 rounded-2xl bg-surface p-3">
               <p className="flex items-center gap-2 text-sm font-semibold"><Truck size={16} aria-hidden="true" className="text-primary" />{missing > 0 ? `Te faltan ${formatARS(missing)} para envío gratis` : "¡Tenés envío gratis!"}</p>
-              <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-accent"><motion.div className="h-full rounded-full bg-primary" initial={false} animate={{ width: `${Math.min(100, (quote.subtotal / threshold) * 100)}%` }} /></div>
+              <BatteryMeter pct={Math.min(100, (quote.subtotal / threshold) * 100)} label="Avance hacia el envío gratis" className="mt-2" tone={missing > 0 ? "volt" : "success"} />
             </div>
+            <div className="mb-4"><StackNudge stack={quote.stack} compact /></div>
             <ul className="flex flex-col gap-3">
               {quote.lines.map((q) => {
                 const product = getProduct(q.line.productSlug);
@@ -55,10 +58,10 @@ export function CartDrawer() {
                 if (!product || !variant) return null;
                 return (
                   <motion.li layout key={q.line.id} className="flex gap-3 rounded-2xl bg-surface p-3">
-                    <div className="w-16 shrink-0"><LineThumb art={product.art} pack={product.pack} tint={variant.colorHex} name={product.name} personalization={q.line.personalization} zone={demoData().textZones[product.art]} /></div>
+                    <div className="w-16 shrink-0"><LineThumb art={product.art} pack={product.pack} tint={variant.colorHex} name={product.name} /></div>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-bold">{product.name}</p>
-                      <p className="truncate text-xs text-muted">{variant.label}{q.line.personalization?.text ? ` · “${q.line.personalization.text}”` : ""}</p>
+                      <p className="truncate text-xs text-muted">{variant.label}</p>
                       <div className="mt-1 flex items-center justify-between">
                         <QuantityStepper label={`Cantidad de ${product.name}`} value={q.line.quantity} max={maxQuantity(variant)} onChange={(n) => setQuantity(q.line.id, n)} />
                         <span className="text-sm font-extrabold tabular-nums">{formatARS(q.lineTotal)}</span>
@@ -76,7 +79,8 @@ export function CartDrawer() {
       </div>
       {lines.length > 0 && (
         <div className="border-t border-line bg-surface px-6 py-4">
-          <div className="mb-3 flex items-end justify-between"><span className="text-sm text-muted">Subtotal (muestra)</span><span className="text-2xl font-extrabold tabular-nums">{formatARS(quote.subtotal)}</span></div>
+          {quote.stack.discount > 0 && <p className="mb-1 flex justify-between text-sm font-semibold text-success"><span>Descuento stack ({quote.stack.pct} %)</span><span className="tabular-nums">−{formatARS(quote.stack.discount)}</span></p>}
+          <div className="mb-3 flex items-end justify-between"><span className="text-sm text-muted">Subtotal (muestra)</span><span className="text-2xl font-extrabold tabular-nums">{formatARS(quote.subtotal - quote.stack.discount)}</span></div>
           <div className="grid gap-2">
             <Button onClick={goToCheckout} size="lg" className="w-full">Ir al checkout</Button>
             <ButtonLink href="/carrito/" onClick={closeCart} variant="ghost" className="w-full">Ver carrito completo</ButtonLink>

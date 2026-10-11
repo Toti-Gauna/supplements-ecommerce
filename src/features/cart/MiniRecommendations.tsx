@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { Plus, Sparkles } from "lucide-react";
+import { Plus } from "lucide-react";
 import { ProductVisual } from "@/components/illustrations/ProductVisual";
 import { fromPrice, productHref } from "@/demo/engine/catalog";
 import type { Product } from "@/demo/types";
@@ -18,9 +18,9 @@ export function MiniRecommendations({ title, products, onNavigate }: { title: st
           <li key={p.slug} className="group relative w-36 shrink-0">
             <div className="relative">
               <ProductVisual art={p.art} pack={p.pack} photoUrl={p.photoDataUrl} tint={p.variants[0]?.colorHex} label={p.imageAlt || p.name} showBadge={false} className="aspect-square rounded-2xl transition-transform duration-500 group-hover:scale-[1.03]" />
-              <button type="button" onClick={() => quickAdd(p)} aria-label={p.personalization ? `Personalizar ${p.name}` : `Agregar ${p.name}`}
+              <button type="button" onClick={() => quickAdd(p)} aria-label={`Agregar ${p.name}`}
                 className="absolute bottom-2 right-2 z-10 grid h-9 w-9 place-items-center rounded-full bg-surface text-primary shadow-[var(--shadow-card)] hover:bg-primary hover:text-on-primary">
-                {p.personalization ? <Sparkles size={16} aria-hidden="true" /> : <Plus size={18} aria-hidden="true" />}
+                <Plus size={18} aria-hidden="true" />
               </button>
             </div>
             {/* Toda la tarjeta lleva a la ficha (enlace estirado); el botón de agregar queda por encima. */}

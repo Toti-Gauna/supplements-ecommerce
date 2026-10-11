@@ -6,6 +6,6 @@ import { brand } from "./brand";
  */
 export const site = {
   title: `${brand.name} · Tienda (demo)`,
-  description: `${brand.tagline}. Personalizá tu pieza, mirá la vista previa y aprobala antes de pagar. ${brand.city}.`,
+  description: `${brand.tagline}. Proteínas, creatinas, pre-entrenos y vitaminas originales, con lote y vencimiento a la vista. Cadete en el día en ${brand.city}.`,
   indexable: process.env.DEMO_INDEXABLE === "true",
 };

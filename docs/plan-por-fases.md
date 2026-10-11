@@ -105,6 +105,7 @@ de Velmar en la tienda (collar, foto personalizada, mascotas) sin romper carrito
 - **Quiz "¿Qué necesitás?"**: 4 preguntas (objetivo, días de entrenamiento, horario, restricciones) → stack recomendado
   con el porqué de cada producto.
 - Bloque en vivo en el inicio (el equivalente al probador de Velmar).
+- Panel: editor de la regla del descuento stack (porcentaje y cantidad de categorías).
 **Demo:** hacer el quiz en el celular, ajustar el stack recomendado y mandarlo al carrito con el descuento aplicado.
 
 ## Fase 4 · Gamificación

@@ -10,7 +10,7 @@ export const PRODUCT_STEPS = [
   { id: "venta", label: "Categoría, precio, plazo y visibilidad", short: "Venta" },
   { id: "variantes", label: "Variantes, precio y stock", short: "Variantes" },
   { id: "envio", label: "Medidas de envío", short: "Envío" },
-  { id: "personalizacion", label: "Personalización", short: "Personalización" },
+  { id: "suplemento", label: "Marca, objetivos y sellos", short: "Suplemento" },
   { id: "revision", label: "Revisión y guardado", short: "Revisión" },
 ] as const;
 
@@ -31,7 +31,7 @@ export function checkSteps(p: Product, categories: Category[]): Record<StepId, S
       warnings: [],
     },
     envio: { errors: [], warnings: dims && dims.lengthCm > 0 && dims.widthCm > 0 && dims.heightCm > 0 && dims.weightG > 0 ? [] : ["Cargá largo, ancho, alto y peso para cotizar envíos."] },
-    personalizacion: { errors: [], warnings: [] },
+    suplemento: { errors: [], warnings: p.brand?.trim() ? [] : ["Cargá la marca: se ve en la ficha y en los filtros."] },
   };
   const out = Object.fromEntries(Object.entries(steps).map(([id, s]) => [id, { ...s, complete: s.errors.length === 0 && s.warnings.length === 0 }])) as Record<StepId, StepCheck>;
   const blocking = Object.values(steps).flatMap((s) => s.errors);

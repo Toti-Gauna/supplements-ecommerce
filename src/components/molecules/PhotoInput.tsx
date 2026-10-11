@@ -1,7 +1,7 @@
 "use client";
 import { Upload } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
-import { ACCEPTED_PHOTO_TYPES, validatePhoto } from "@/demo/engine/personalization";
+import { ACCEPTED_PHOTO_TYPES, validatePhoto } from "@/lib/image";
 
 /** Selector de foto con validación local de tipo y tamaño. */
 export function PhotoInput({ label, hint, onFile }: { label: string; hint: string; onFile: (file: File) => void }) {

@@ -26,8 +26,8 @@ export const useCart = create<CartState>()(
       couponCode: null,
       add: (line) => {
         set((state) => {
-          // Dos personalizaciones distintas (o dos regalos) son dos ítems; sin personalización se agrupa por variante.
-          const existing = !line.personalization && !line.gift && state.lines.find((l) => !l.personalization && !l.gift && l.variantId === line.variantId);
+          // Dos regalos son dos ítems (cada uno con su destinatario); lo demás se agrupa por variante.
+          const existing = !line.gift && state.lines.find((l) => !l.gift && l.variantId === line.variantId);
           if (existing) {
             return { lines: state.lines.map((l) => (l.id === existing.id ? { ...l, quantity: Math.min(10, l.quantity + line.quantity) } : l)) };
           }

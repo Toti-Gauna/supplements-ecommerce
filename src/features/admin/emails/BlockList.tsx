@@ -9,10 +9,10 @@ import { ChipEditor } from "./ChipEditor";
 const DESCRIBE: Partial<Record<EmailBlockType, string>> = {
   header: "Logo y nombre de Volta sobre fondo oscuro.",
   "order-card": "Código, total, estado, fecha de entrega y forma de entrega del pedido.",
-  products: "Los productos del pedido con su variante y la personalización aprobada.",
+  products: "Los productos del pedido con su sabor, presentación y servicios.",
   tracking: "Recorrido del pedido marcado en la etapa actual.",
   divider: "Una línea para separar.",
-  footer: "Datos del taller y aviso de por qué recibe el email.",
+  footer: "Datos de la tienda y aviso de por qué recibe el email.",
 };
 
 const ADDABLE: EmailBlockType[] = ["heading", "text", "button", "image", "order-card", "products", "tracking", "divider"];

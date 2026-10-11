@@ -43,7 +43,7 @@ export function VariantPicker({ legend, options, value, onChange, swatches }: { 
               ) : card ? (
                 <>
                   <span className={cn("relative text-sm font-bold", selected && "text-on-night", o.disabled && "line-through")}>{o.label}</span>
-                  <span className={cn("font-lab relative mt-0.5 text-[11px]", selected ? "text-volt" : "text-muted")}>{o.detail}</span>
+                  <span className={cn("font-lab relative mt-0.5 whitespace-pre-line text-[11px] leading-snug", selected ? "text-volt" : "text-muted")}>{o.detail}</span>
                 </>
               ) : (
                 <span className={cn("relative", selected && "text-on-night", o.disabled && "line-through")}>{o.label}</span>

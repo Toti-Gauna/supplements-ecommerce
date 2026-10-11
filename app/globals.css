@@ -261,11 +261,6 @@ html[data-theme="light"] {
 /* La pantalla de carga de marca vive en app/splash.css. */
 .confetti-piece { animation: confetti 1000ms var(--ease-out-expo) both; }
 
-/* Letras y dijes del collar: se balancean colgados del cordón tres veces al aparecer o al cambiar y quedan quietos
-   (un balanceo sin fin redibujaba el SVG en cada cuadro y trababa el scroll de la ficha). */
-@keyframes collar-swing { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-3.5deg); } 75% { transform: rotate(3.5deg); } }
-.collar-swing { animation: collar-swing 2.8s ease-in-out 3; }
-
 /* Luces del aro de la ruleta: se encienden en cadena mientras gira y todas juntas al ganar. */
 @keyframes bulb-chase { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
 .bulb-chase { animation: bulb-chase .5s linear infinite; }

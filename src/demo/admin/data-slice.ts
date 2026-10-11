@@ -1,8 +1,7 @@
 import type { DemoData } from "../engine/source";
 import type { DemoSettings } from "../fixtures/commerce";
-import type { TextZone } from "../fixtures/templates";
 import type { WheelConfig, WheelPrize } from "../fixtures/wheel";
-import type { CarouselSlide, Coupon, Faq, Mission, PersonalizationTemplate, Product, SeasonalTheme, ShippingZone, ThemeSettings } from "../types";
+import type { CarouselSlide, Coupon, Faq, Mission, Product, SeasonalTheme, ShippingZone, ThemeSettings } from "../types";
 import { auditEntry, type AdminData } from "./defaults";
 import type { ClaimStatus } from "./types";
 
@@ -15,8 +14,6 @@ export interface DataActions {
   toggleCategoryFeatured: (slug: string) => void;
   /** Guarda varias categorías de una vez (vista Excel): una sola línea de auditoría. */
   updateCategories: (categories: DemoData["categories"], action: string) => void;
-  saveTemplate: (template: PersonalizationTemplate) => void;
-  saveTextZone: (art: string, zone: TextZone) => void;
   saveMission: (mission: Mission) => void;
   saveCoupon: (coupon: Coupon, previousCode?: string) => void;
   saveWheel: (wheel: WheelConfig) => void;
@@ -58,8 +55,6 @@ export function createDataActions(set: Set): DataActions {
     }),
     updateCategories: (categories, action) => edit(action, "Categorías", () => ({ categories })),
     toggleCategoryFeatured: (slug) => edit("Categoría destacada", slug, (d) => ({ categories: d.categories.map((c) => (c.slug === slug ? { ...c, featured: !c.featured } : c)) })),
-    saveTemplate: (t) => edit("Plantilla de personalización", t.name, (d) => ({ products: d.products.map((p) => (p.personalization?.id === t.id ? { ...p, personalization: t } : p)) })),
-    saveTextZone: (art, zone) => edit("Zona de texto", art, (d) => ({ textZones: { ...d.textZones, [art]: zone } })),
     saveMission: (m) => edit("Misión guardada", m.title, (d) => ({ missions: upsert(d.missions, m, (x) => x.id === m.id) })),
     saveCoupon: (c, prev) => edit("Cupón guardado", c.code, (d) => ({ coupons: upsert(d.coupons, c, (x) => x.code === (prev ?? c.code)) })),
     saveWheel: (wheel) => edit("Ruleta de cupones actualizada", "Ruleta", () => ({ wheel })),

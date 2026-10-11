@@ -31,8 +31,9 @@ export function triggersForTransition(from: OrderStatus, to: OrderStatus): Email
   return [];
 }
 
-export function triggersForNewOrder(order: Pick<AdminOrder, "lines">): EmailTrigger[] {
-  return order.lines.some((l) => l.personalization) ? ["order-created", "custom-received"] : ["order-created"];
+/** Disparadores de una compra nueva (un solo email: la confirmación). */
+export function triggersForNewOrder(): EmailTrigger[] {
+  return ["order-created"];
 }
 
 let seq = 0;

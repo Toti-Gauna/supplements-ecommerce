@@ -22,12 +22,16 @@ export interface Macros {
 
 /** `grams`: peso de la porción (para la columna de 100 g). `extra`: activos (creatina, cafeína, vitaminas…). */
 export function nutrition(serving: string, grams: number, m: Macros, ingredients: string, opts: { allergens?: string; extra?: NutritionRow[] } = {}): Nutrition {
+  // Sin aporte de macronutrientes (creatina pura): el rótulo argentino lista solo los activos y lo aclara en una leyenda.
+  if (m.kcal === 0 && m.carbs === 0 && m.protein === 0 && m.fat === 0 && m.sodium === 0) {
+    return { serving, rows: [{ label: "Valor energético", serving: "0 kcal", dv: "0%" }, ...(opts.extra ?? [])], ingredients, allergens: opts.allergens, note: NOT_SIGNIFICANT };
+  }
   const k = 100 / grams;
   const row = (label: string, v: number, unit: string, ref?: number, sub = false): NutritionRow => ({
     label, serving: fmt(v, unit), per100: fmt(Math.round(v * k * 10) / 10, unit), dv: ref ? pct(v, ref) : undefined, sub,
   });
   const rows: NutritionRow[] = [
-    { label: "Valor energético", serving: `${m.kcal} kcal = ${Math.round(m.kcal * 4.2)} kJ`, per100: `${Math.round(m.kcal * k)} kcal`, dv: pct(m.kcal, VD.kcal) },
+    { label: "Valor energético", serving: `${m.kcal}\u00a0kcal =\u00a0${Math.round(m.kcal * 4.2)}\u00a0kJ`, per100: `${Math.round(m.kcal * k)} kcal`, dv: pct(m.kcal, VD.kcal) },
     row("Carbohidratos", m.carbs, "g", VD.carbs),
     ...(m.sugars !== undefined ? [row("de los cuales azúcares", m.sugars, "g", undefined, true)] : []),
     row("Proteínas", m.protein, "g", VD.protein),
@@ -41,6 +45,8 @@ export function nutrition(serving: string, grams: number, m: Macros, ingredients
   return { serving, rows, ingredients, allergens: opts.allergens };
 }
 
+const NOT_SIGNIFICANT = "No aporta cantidades significativas de carbohidratos, proteínas, grasas totales, grasas saturadas, grasas trans, fibra alimentaria ni sodio.";
+
 /** Rótulo de cápsulas o comprimidos: solo los activos por porción (sin aporte energético significativo). */
 export function actives(serving: string, rows: [string, string, string?][], ingredients: string, allergens?: string): Nutrition {
   return {
@@ -48,5 +54,6 @@ export function actives(serving: string, rows: [string, string, string?][], ingr
     rows: [{ label: "Valor energético", serving: "0 kcal", dv: "0%" }, ...rows.map(([label, value, dv]) => ({ label, serving: value, dv }))],
     ingredients,
     allergens,
+    note: NOT_SIGNIFICANT,
   };
 }

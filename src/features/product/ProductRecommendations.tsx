@@ -11,5 +11,5 @@ export function ProductRecommendations({ slug }: { slug: string }) {
   if (!product) return null;
   const recs = recommendForProduct(product, 4);
   if (recs.length === 0) return null;
-  return <ProductRail id="relacionados" eyebrow="Te puede gustar" title="Completá" accent="el set" products={recs.map(toCard)} />;
+  return <ProductRail id="relacionados" eyebrow="Te puede gustar" title="Sumalo a" accent="tu stack" products={recs.map(toCard)} />;
 }

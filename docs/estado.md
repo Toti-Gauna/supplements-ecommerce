@@ -6,7 +6,7 @@
 - Temáticas apagadas (`themeSettings.mode = "off"`, sin botón "Probar temáticas") hasta la Fase 5.
 - Documentación original en `docs/referencia-velmar/`.
 
-## Fase 1 · Identidad eléctrica y catálogo ✅ (en revisión)
+## Fase 1 · Identidad eléctrica y catálogo ✅
 - Marca VOLTA en `src/config/brand.ts`: paleta oscura por defecto y clara "Tiza", Archivo + JetBrains Mono, logo con
   rayo, favicon e imagen para compartir. Ver `docs/tono-visual.md`.
 - Librería SVG de envases (14 tipos, 3 vistas, 5 estilos de marca) y defs globales.
@@ -20,12 +20,28 @@
 - Panel: misma estructura con la piel eléctrica; pedidos, clientes, reclamos, costos (con costo de proveedor) e
   insumos (embalaje y regalos) con datos de suplementos.
 
+## Fase 2 · Ficha de suplemento y stack ✅ (en revisión)
+- Fuera la personalización de Velmar (texto, foto, collar, plantillas, `/crear/[slug]`, Konva): dominio, tienda, panel
+  y tests. El panel "Categorías y personalización" queda como **Categorías**.
+- Ficha nueva: galería (estudio, detalle con scoop/cápsulas/gomitas y gimnasio), sellos (vegano, sin TACC…), precio por
+  servicio, una tarjeta para sabor (muestras) y tamaño (servicios y precio por servicio, con **Mejor precio por
+  servicio** marcado), lote y vencimiento.
+- Debajo: **Armá tu stack** (2 sugerencias de otras categorías + "Agregar 3 al carrito"), **Tu día con este
+  suplemento** (momentos de toma), **¿Cuánto te dura?** (días, fecha en que se termina, proteína del día por peso y
+  objetivo, dosis de creatina de referencia, siempre orientativo), **Información nutricional** con formato de rótulo
+  argentino (porción / 100 g / %VD; leyenda "No aporta cantidades significativas…" cuando corresponde) y entrega
+  ("Lo despachamos el…").
+- **Descuento stack** en el motor de precios: con suplementos de 3 categorías distintas, 10 % sobre esas líneas
+  (regla en `settings.stack`; su editor en el panel llega con la Fase 3). Se ve en carrito, carrito lateral (con
+  batería de categorías) y checkout; las recomendaciones del carrito priorizan las categorías que faltan.
+- **Avisos de recompra**: desde la calculadora ("Avisame antes de que se termine") a **Mi cuenta → Recompras**, con
+  batería de lo que queda y "Recomprar" en un toque (`volta-demo:reminders`, se borra con Reiniciar demo).
+- Barra de envío gratis con forma de batería. Textos de temáticas, footer y WhatsApp sin restos de Velmar.
+
 ## Pendiente de Velmar (se resuelve en su fase)
 | Qué queda | Dónde se ve | Fase |
 |---|---|---|
-| Código de personalización (texto, foto, collar) sin usar por ningún producto | Panel → Categorías y personalización, editor de producto | 2 |
-| "¿Cuándo llega?" calcula con la capacidad del taller | Ficha | 2 |
 | Escenas de regalo y temáticas con los personajes de Velmar | `/regalo/`, temáticas (apagadas) | 5 |
-| Ruleta con estética dorada de Velmar | Club, al ir a pagar | 4 |
-| Emails, recordatorios de cumpleaños de mascotas, cola de producción, insumos de taller | Panel | 6 y 7 |
+| Ruleta con estética dorada de Velmar y premio "Grabado gratis" | Club, al ir a pagar | 4 |
+| Emails, recordatorios de cumpleaños de mascotas, cola de producción, insumos y calendario "del taller" | Panel | 6 y 7 |
 | Estudio de contenido con decoraciones de Velmar | Panel → Estudio | 7 |

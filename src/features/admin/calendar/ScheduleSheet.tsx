@@ -8,7 +8,6 @@ import { LineThumb } from "@/components/organisms/LineThumb";
 import type { AdminOrder } from "@/demo/admin/types";
 import { getProduct } from "@/demo/engine/catalog";
 import { calendarOf, checkReschedule, loadByDay, nextFreeDayFor, orderLeadDays } from "@/demo/engine/delivery";
-import { demoData } from "@/demo/engine/source";
 import { closureFor, nextWorkday, prevWorkday } from "@/demo/engine/workdays";
 import type { WorkshopSettings } from "@/demo/fixtures/workshop";
 import { formatDay } from "@/lib/date";
@@ -70,7 +69,7 @@ export function ScheduleSheet({ order, orders, settings, today, late, movable, w
                   const v = p?.variants.find((x) => x.id === l.variantId);
                   return (
                     <li key={l.id} className="flex items-center gap-3 text-sm">
-                      {p && <div className="w-12 shrink-0"><LineThumb art={p.art} pack={p.pack} tint={v?.colorHex} name={p.name} personalization={l.personalization} zone={demoData().textZones[p.art]} /></div>}
+                      {p && <div className="w-12 shrink-0"><LineThumb art={p.art} pack={p.pack} tint={v?.colorHex} name={p.name} /></div>}
                       <span className="min-w-0 flex-1"><span className="block font-semibold">{l.quantity} × {p?.name ?? l.productSlug}</span><span className="text-muted">{v?.label}</span></span>
                     </li>
                   );

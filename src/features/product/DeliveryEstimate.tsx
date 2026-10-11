@@ -15,7 +15,7 @@ const ROWS = [
 ] as const;
 
 /**
- * Estimación con el calendario real del taller: plazo de fabricación en días hábiles, feriados y capacidad diaria.
+ * Estimación con el calendario real del depósito: plazo de preparación en días hábiles, feriados y despachos por día.
  * Si los primeros días ya están completos en el panel, el comprador ve la próxima fecha con lugar.
  */
 export function DeliveryEstimate({ product, variant }: { product: Product; variant: Variant }) {
@@ -30,9 +30,9 @@ export function DeliveryEstimate({ product, variant }: { product: Product; varia
       <p className="mb-3 flex items-start gap-2.5 rounded-xl bg-bg p-3 text-sm">
         <CalendarCheck size={18} aria-hidden="true" className="mt-0.5 shrink-0 text-primary" />
         <span>
-          <span className="font-bold">Lo tenemos listo el {formatDay(est.day, "long")}</span>
+          <span className="font-bold">Lo despachamos el {formatDay(est.day, "long")}</span>
           <span className="block text-muted">
-            {est.leadDays === 1 ? "Sale al día hábil siguiente." : `Se prepara en ${est.leadDays} días hábiles.`}
+            {est.leadDays === 1 ? "En stock: sale al día hábil siguiente." : `Entra al depósito en ${est.leadDays} días hábiles.`}
             {est.fullDays.length > 0 && ` Los días anteriores el reparto ya está completo: es la primera fecha con lugar.`}
           </span>
         </span>

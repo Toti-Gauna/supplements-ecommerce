@@ -1,3 +1,13 @@
+/** Fotos que se aceptan para subir en el panel demo (producto, comprobante, banners): tipo y tamaño máximos. */
+export const MAX_PHOTO_BYTES = 10 * 1024 * 1024;
+export const ACCEPTED_PHOTO_TYPES = ["image/jpeg", "image/png", "image/webp"];
+
+export function validatePhoto(file: { type: string; size: number }): string | null {
+  if (!ACCEPTED_PHOTO_TYPES.includes(file.type)) return "Ese archivo no es una foto compatible. Subí JPG, PNG o WEBP.";
+  if (file.size > MAX_PHOTO_BYTES) return `La foto pesa ${(file.size / 1024 / 1024).toFixed(1)} MB. El máximo es 10 MB.`;
+  return null;
+}
+
 /** Procesamiento de imágenes 100% en el navegador. Nada se sube a ningún servidor. */
 export async function readImage(file: Blob, maxSize: number, quality: number, background?: string): Promise<{ src: string; width: number; height: number }> {
   const bitmap = await createImageBitmap(file);

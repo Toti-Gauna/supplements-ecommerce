@@ -7,6 +7,8 @@ import { formatARS } from "@/lib/money";
 export function summaryRows(quote: Omit<Quote, "lines">) {
   return [
     { label: "Subtotal", amount: quote.subtotal },
+    // `stack` puede faltar en un pedido guardado antes de la Fase 2.
+    ...((quote.stack?.discount ?? 0) > 0 ? [{ label: `Descuento stack (${quote.stack!.pct} %)`, amount: quote.stack!.discount, negative: true }] : []),
     ...(quote.couponDiscount > 0 ? [{ label: "Cupón", amount: quote.couponDiscount, negative: true }] : []),
     ...(quote.transferDiscount > 0 ? [{ label: "Descuento transferencia/QR", amount: quote.transferDiscount, negative: true }] : []),
     { label: quote.freeShippingApplied ? "Envío (gratis)" : "Envío", amount: quote.shippingCost, pendingLabel: "Elegí la entrega" },
@@ -22,7 +24,7 @@ export function CheckoutSummary({ quote }: { quote: Quote }) {
           const product = getProduct(q.line.productSlug);
           return (
             <li key={q.line.id} className="flex justify-between gap-2">
-              <span className="min-w-0 truncate">{q.line.quantity} × {product?.name}{q.line.personalization ? " (personalizado)" : ""}{q.line.gift ? ` · regalo para ${q.line.gift.to}` : ""}</span>
+              <span className="min-w-0 truncate">{q.line.quantity} × {product?.name}{q.line.gift ? ` · regalo para ${q.line.gift.to}` : ""}</span>
               <span className="shrink-0 whitespace-nowrap tabular-nums">{formatARS(q.lineTotal)}</span>
             </li>
           );

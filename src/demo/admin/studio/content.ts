@@ -49,7 +49,7 @@ export function toStudioProduct(product: Product, offer: ThemeOffer | null): Stu
   const price = fromPrice(product);
   return {
     slug: product.slug, name: product.name, short: product.short, categorySlug: product.categorySlug, art: product.art, pack: product.pack,
-    tint: product.variants[0]?.colorHex, photoDataUrl: product.photoDataUrl, personalizable: Boolean(product.personalization),
+    tint: product.variants[0]?.colorHex, photoDataUrl: product.photoDataUrl, personalizable: false,
     price, offerPrice: offerPrice(price, offer),
   };
 }

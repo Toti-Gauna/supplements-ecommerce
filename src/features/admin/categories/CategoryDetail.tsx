@@ -36,7 +36,7 @@ function Details({ category }: { category: Category }) {
   );
 }
 
-/** Detalle completo de una categoría (8.3.22): datos, lugar en la tienda, productos, reposición y personalización. */
+/** Detalle completo de una categoría (8.3.22): datos, lugar en la tienda, productos y reposición. */
 export function CategoryDetail() {
   const slug = useSearchParams().get("slug") ?? "";
   const { data, moveCategory, toggleCategoryFeatured } = useAdmin();
@@ -47,7 +47,6 @@ export function CategoryDetail() {
   const back = <Link href="/admin-demo/categorias/" className="inline-flex items-center gap-1.5 self-start text-sm font-bold text-muted hover:text-ink"><ArrowLeft size={16} aria-hidden="true" /> Categorías</Link>;
   if (!category || !row) return <div className="flex flex-col gap-4">{back}<EmptyState title="No encontramos esa categoría">Puede que la hayas renombrado en otra pestaña o que el enlace esté incompleto.</EmptyState></div>;
   const products = data.products.filter((p) => p.categorySlug === slug).sort((a, b) => a.name.localeCompare(b.name, "es"));
-  const templates = [...new Map(products.filter((p) => p.personalization).map((p) => [p.personalization!.id, p.personalization!])).values()];
   const btn = "inline-flex h-10 items-center gap-1.5 rounded-xl border border-line bg-surface px-3 text-sm font-bold disabled:opacity-30";
   return (
     <div className="flex flex-col gap-6">
@@ -91,10 +90,6 @@ export function CategoryDetail() {
             ))}
           </ul>
         )}
-      </section>
-      <section aria-labelledby="cd-tpl" className={card}>
-        <h2 id="cd-tpl" className="text-lg font-extrabold">Personalización</h2>
-        <p className="mt-1 text-sm text-muted">{templates.length ? `Sus productos usan ${templates.map((t) => `“${t.name}”`).join(", ")}.` : "Ningún producto de esta categoría es personalizable."} Las plantillas se ajustan en <Link href="/admin-demo/categorias/#tpls" className="font-bold text-primary underline">Categorías y personalización</Link>.</p>
       </section>
     </div>
   );

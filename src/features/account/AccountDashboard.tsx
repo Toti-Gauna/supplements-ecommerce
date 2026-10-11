@@ -1,5 +1,5 @@
 "use client";
-import { Gift, LogOut, MapPin, Package, Sparkles, Trophy, type LucideIcon } from "lucide-react";
+import { BellRing, Gift, LogOut, MapPin, Package, Sparkles, Trophy, type LucideIcon } from "lucide-react";
 import type { MouseEvent, ReactNode } from "react";
 import { giftsFor } from "@/demo/engine/gifts";
 import { demoGifts } from "@/demo/fixtures/gifts";
@@ -9,9 +9,11 @@ import { useAccount } from "@/stores/account";
 import { useDemoData } from "@/stores/admin";
 import { useCheckout } from "@/stores/checkout";
 import { useGifts } from "@/stores/gifts";
+import { useReminders } from "@/stores/reminders";
 import { useWheelPrize } from "../club/useWheelPrize";
 import { AccountGifts } from "../gifts/AccountGifts";
 import { AddressesSection, MissionsSection, OrdersSection, RewardsSection, availableRewards } from "./AccountSections";
+import { RepurchaseSection } from "./RepurchaseSection";
 import { useAccountTab, type AccountTab } from "./useAccountTab";
 
 interface Section { id: AccountTab; title: string; icon: LucideIcon; summary: string; intro: string; body: ReactNode }
@@ -32,9 +34,11 @@ export function AccountDashboard({ user }: { user: { name: string; email: string
   const unopened = received.filter((g) => !opened.includes(g.code)).length;
   const { status: prizeStatus } = useWheelPrize();
   const rewards = availableRewards(usedRewards) + (prizeStatus && prizeStatus !== "utilizado" ? 1 : 0);
+  const reminders = useReminders((s) => s.items.length);
   const [tab, select] = useAccountTab();
   const sections: Section[] = [
     { id: "pedidos", title: "Mis pedidos", icon: Package, summary: plural(lastOrder ? 2 : 1, "pedido", "pedidos"), intro: "Seguí cada pedido paso a paso.", body: <OrdersSection lastOrder={lastOrder} /> },
+    { id: "recompras", title: "Recompras", icon: BellRing, summary: reminders ? plural(reminders, "aviso", "avisos") : "Sin avisos", intro: "Te avisamos antes de que se termine el pote y lo recomprás en un toque.", body: <RepurchaseSection /> },
     { id: "regalos", title: "Mis regalos", icon: Gift, summary: unopened ? plural(unopened, "sin abrir", "sin abrir") : plural(received.length, "regalo", "regalos"), intro: "Los que te mandaron se abren sin el link; los que hiciste, para volver a mandarlos.", body: <AccountGifts email={user.email} /> },
     { id: "misiones", title: "Misiones", icon: Sparkles, summary: plural(missions.length, "activa", "activas"), intro: "Tus compras suman a cada misión (progreso de ejemplo).", body: <MissionsSection /> },
     { id: "premios", title: "Premios", icon: Trophy, summary: rewards ? plural(rewards, "disponible", "disponibles") : "Sin premios para usar", intro: "El premio de la ruleta y los de las misiones, de un solo uso.", body: <RewardsSection used={usedRewards} onUse={markRewardUsed} /> },
@@ -68,11 +72,11 @@ export function AccountDashboard({ user }: { user: { name: string; email: string
           </div>
         </div>
         <nav aria-label="Secciones de la cuenta">
-          <ul className="grid grid-cols-2 gap-3 md:grid-cols-5 lg:grid-cols-1">
+          <ul className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-1">
             {sections.map(({ id, title, icon: Icon, summary }, i) => {
               const on = id === tab;
               return (
-                <li key={id} className={cn(i === sections.length - 1 && "max-md:col-span-2")}>
+                <li key={id} className={cn(sections.length % 2 === 1 && i === sections.length - 1 && "max-md:col-span-2")}>
                   <a href={`#${id}`} aria-current={on ? "true" : undefined} onClick={(e) => open(e, id)}
                     className={cn("flex h-full min-h-20 items-center gap-2.5 rounded-[1.6rem] border p-3 transition-[background-color,border-color,box-shadow] sm:gap-3 sm:p-3.5 md:flex-col md:items-start lg:min-h-16 lg:flex-row lg:items-center lg:py-3",
                       on ? "border-night bg-night text-on-night shadow-[var(--shadow-card)]" : "border-line bg-surface hover:border-ink/30")}>

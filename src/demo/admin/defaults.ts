@@ -31,7 +31,7 @@ export interface EmailsData {
 /** Historial de muestra: los emails que habrían salido con cada paso de los pedidos sembrados. */
 function seedOutbox(orders: AdminOrder[], templates: EmailTemplate[]): OutboxEmail[] {
   const sent = orders.flatMap((o) => [
-    ...emailsForOrder(templates, triggersForNewOrder(o), o, o.createdAt),
+    ...emailsForOrder(templates, triggersForNewOrder(), o, o.createdAt),
     ...o.log.flatMap((l) => (l.from ? emailsForOrder(templates, triggersForTransition(l.from, l.to), { ...o, status: l.to }, l.at) : [])),
   ]);
   return sent.sort((a, b) => Date.parse(b.at) - Date.parse(a.at)).slice(0, OUTBOX_LIMIT);

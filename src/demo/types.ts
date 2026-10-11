@@ -1,11 +1,9 @@
-import type { CollarSpec } from "./fixtures/collar";
 import type { ContainerKind, PackStyle } from "@/components/illustrations/supplements/types";
 
 export type { PackStyle };
 
 /** Tipos del catálogo de demo. Espejan el modelo de la especificación técnica (sección 4). */
 
-export type PersonalizationKind = "TEXT" | "PHOTO" | "PHOTO_REFERENCE";
 export type PaymentMethod = "CHECKOUT_PRO" | "BANK_TRANSFER" | "QR_MANUAL";
 export type FulfillmentType = "PICKUP" | "LOCAL_DELIVERY" | "SHIPPING";
 /** Envase de la ilustración (librería SVG de suplementos, `src/components/illustrations/supplements`). */
@@ -43,23 +41,6 @@ export interface Faq {
   a: string;
 }
 
-export type PhotoMask = "arch" | "circle" | "rounded";
-
-export interface PersonalizationTemplate {
-  id: string;
-  name: string;
-  kind: PersonalizationKind;
-  /** Silueta que recorta la foto (solo PHOTO). */
-  mask?: PhotoMask;
-  maxChars?: number;
-  fonts?: string[];
-  colors?: { name: string; hex: string }[];
-  surcharge: number;
-  notesPlaceholder?: string;
-  /** Configurador de collar (formato, material, cordón, dije y talle). Pedido de Ignacio, fuera de la spec. */
-  collar?: CollarSpec;
-}
-
 /** Objetivos de entrenamiento: filtran el catálogo y arman stacks. */
 export type Goal = "masa-muscular" | "fuerza" | "energia" | "recuperacion" | "definicion" | "salud" | "resistencia";
 
@@ -88,6 +69,8 @@ export interface Nutrition {
   rows: NutritionRow[];
   ingredients: string;
   allergens?: string;
+  /** Leyenda del rótulo, p. ej. "No aporta cantidades significativas de…" (CAA) cuando todo da cero. */
+  note?: string;
 }
 
 export interface Usage {
@@ -111,7 +94,6 @@ export interface Product {
   art: ArtKey;
   gallery: ArtView[];
   variants: Variant[];
-  personalization?: PersonalizationTemplate;
   faqs: Faq[];
   featured: boolean;
   isNew: boolean;

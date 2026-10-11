@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { availability, getProduct, isPurchasable, visibleCategories } from "@/demo/engine/catalog";
 import { previewMission } from "@/demo/engine/missions";
-import { validatePhoto, validateText } from "@/demo/engine/personalization";
+import { validatePhoto } from "@/lib/image";
 import { missions } from "@/demo/fixtures/commerce";
 
 describe("catálogo", () => {
@@ -37,12 +37,7 @@ describe("misiones (ilustrativo)", () => {
   });
 });
 
-describe("personalización", () => {
-  it("acepta acentos y ñ, rechaza emoji y exceso", () => {
-    expect(validateText("Ñandú", 10)).toBeNull();
-    expect(validateText("Toby 🐶", 10)).toMatch(/emoji/);
-    expect(validateText("Bartolomeo Max", 10)).toMatch(/Máximo/);
-  });
+describe("fotos del panel", () => {
   it("rechaza fotos pesadas o con tipo inválido", () => {
     expect(validatePhoto({ type: "image/jpeg", size: 20 * 1024 * 1024 })).toMatch(/10 MB/);
     expect(validatePhoto({ type: "application/pdf", size: 1000 })).toMatch(/JPG/);

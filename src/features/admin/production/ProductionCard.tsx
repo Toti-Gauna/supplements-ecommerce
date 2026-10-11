@@ -6,15 +6,13 @@ import { LineThumb } from "@/components/organisms/LineThumb";
 import { isLate } from "@/demo/admin/order-groups";
 import type { AdminOrder } from "@/demo/admin/types";
 import { nextColumn, PRODUCTION_COLUMNS, productionMove, type ProductionColumn } from "@/demo/admin/workshop/production";
-import { collarLineDetail, getProduct } from "@/demo/engine/catalog";
+import { getProduct } from "@/demo/engine/catalog";
 import { calendarOf } from "@/demo/engine/delivery";
-import { demoData } from "@/demo/engine/source";
 import { workdaysBetween } from "@/demo/engine/workdays";
 import { formatDay } from "@/lib/date";
 import { cn } from "@/lib/cn";
 import { useAdmin } from "@/stores/admin";
 
-const KIND = { TEXT: "Texto", PHOTO: "Foto", PHOTO_REFERENCE: "Foto de referencia" };
 export const columnLabel = (c: ProductionColumn) => PRODUCTION_COLUMNS.find((x) => x.id === c)!.label;
 
 function DueChip({ order, today }: { order: AdminOrder; today: string }) {
@@ -82,16 +80,13 @@ export function ProductionCard({ order, column, today, onMove, onDragStart, onDr
         {order.lines.map((l) => {
           const p = getProduct(l.productSlug);
           const v = p?.variants.find((x) => x.id === l.variantId);
-          const per = l.personalization;
           return (
             <li key={l.id} className="flex gap-3">
-              {p && <div className="w-14 shrink-0"><LineThumb art={p.art} pack={p.pack} tint={v?.colorHex} name={p.name} personalization={per} zone={demoData().textZones[p.art]} /></div>}
+              {p && <div className="w-14 shrink-0"><LineThumb art={p.art} pack={p.pack} tint={v?.colorHex} name={p.name} /></div>}
               <div className="min-w-0 flex-1 text-sm">
                 <p className="font-bold leading-snug">{l.quantity} × {p?.name ?? l.productSlug}</p>
                 {v && <p className="text-muted">{v.label}</p>}
-                {per && <p className="mt-0.5 text-xs font-semibold text-success">{KIND[per.kind]} aprobada{per.text ? `: “${per.text}”` : ""}{per.font ? ` · ${per.font}` : ""}{per.colorName ? ` · ${per.colorName}` : ""}</p>}
-                {per?.collar && <p className="text-xs font-semibold text-ink">{collarLineDetail(l)}</p>}
-                {per?.notes && <p className="text-xs text-muted">{per.notes}</p>}
+                {p?.lot && <p className="font-lab text-xs text-muted">Lote {p.lot.code}</p>}
               </div>
             </li>
           );

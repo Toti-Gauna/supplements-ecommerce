@@ -36,7 +36,7 @@ export function ClaimDetail() {
               <div className="flex flex-wrap gap-2">
                 {claim.status === "OPEN" && <ConfirmButton size="sm" variant="secondary" title={`Tomar ${claim.code}`} confirmLabel="Marcar en curso" description="El comprador vería que su reclamo está en curso." onConfirm={() => save("Reclamo en curso", () => resolveClaim(claim.id, "IN_PROGRESS", ""))}>Marcar en curso</ConfirmButton>}
                 <ConfirmButton size="sm" title={`Resolver ${claim.code}`} confirmLabel="Resolver" reasonLabel="Resolución para el comprador" description="Se cierra con estado Resuelto y la respuesta queda registrada." onConfirm={(r) => save("Reclamo resuelto", () => resolveClaim(claim.id, "RESOLVED", r))}>Resolver</ConfirmButton>
-                <ConfirmButton size="sm" variant="danger" title={`Rechazar ${claim.code}`} confirmLabel="Rechazar" reasonLabel="Motivo (por ejemplo, producto personalizado, art. 1116)" description="Se cierra con estado Rechazado y el motivo queda registrado." onConfirm={(r) => save("Reclamo rechazado", () => resolveClaim(claim.id, "REJECTED", r))}>Rechazar</ConfirmButton>
+                <ConfirmButton size="sm" variant="danger" title={`Rechazar ${claim.code}`} confirmLabel="Rechazar" reasonLabel="Motivo (por ejemplo, envase abierto o precinto roto)" description="Se cierra con estado Rechazado y el motivo queda registrado." onConfirm={(r) => save("Reclamo rechazado", () => resolveClaim(claim.id, "REJECTED", r))}>Rechazar</ConfirmButton>
               </div>
             ) : <p className="text-sm text-muted">Reclamo cerrado. No hay acciones pendientes.</p>}
           </Panel>

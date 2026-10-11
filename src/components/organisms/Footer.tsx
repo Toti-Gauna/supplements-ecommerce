@@ -17,7 +17,7 @@ export function Footer() {
         <div className="grid grid-cols-[minmax(0,1fr)] gap-12 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,2fr)]">
           <div className="flex flex-col gap-5">
             <Logo tone="light" />
-            <p className="font-display max-w-sm text-3xl leading-tight text-on-night">Objetos hechos a mano, con nombre y con historia.</p>
+            <p className="font-display max-w-sm text-3xl leading-tight text-on-night">Energía de verdad, con lote y vencimiento.</p>
             <p className="text-sm text-night-muted">{brand.tagline}. Local en {brand.city}.</p>
             {brand.instagram && (
               <a href={`https://instagram.com/${brand.instagram}`} target="_blank" rel="noopener noreferrer" className="flex w-fit items-center gap-1 text-sm font-bold text-volt hover:text-on-night">

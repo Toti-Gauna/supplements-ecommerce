@@ -1,5 +1,5 @@
 import type { CartLine } from "../../engine/cart-types";
-import { collarLineDetail, getProduct } from "../../engine/catalog";
+import { getProduct } from "../../engine/catalog";
 import { STATUS_LABEL, type OrderStatus } from "../../engine/orders";
 import type { ButtonLink, EmailBlock, EmailTemplate, EmailToken, Inline } from "../../fixtures/emails";
 import { DEMO_TRACKING_TOKEN } from "../../fixtures/commerce";
@@ -109,10 +109,8 @@ function renderLines(lines: CartLine[]): RenderedLine[] {
   return lines.map((l) => {
     const p = getProduct(l.productSlug);
     const v = p?.variants.find((x) => x.id === l.variantId);
-    const per = l.personalization;
-    const detail = per?.kind === "TEXT" && per.text ? `“${per.text}”${per.font ? ` · ${per.font}` : ""}` : per?.kind === "PHOTO" ? "Con tu foto" : per?.kind === "PHOTO_REFERENCE" ? "Pintado desde tu foto" : undefined;
-    const collar = collarLineDetail(l);
-    return { name: p?.name ?? l.productSlug, variant: v?.label ?? "", quantity: l.quantity, art: p?.art ?? "tub", tint: v?.colorHex, detail: [detail, collar].filter(Boolean).join(" · ") || undefined };
+    const detail = v?.servings && v.servings > 1 ? `${v.servings} servicios` : undefined;
+    return { name: p?.name ?? l.productSlug, variant: v?.label ?? "", quantity: l.quantity, art: p?.art ?? "tub", tint: v?.colorHex, detail };
   });
 }
 

@@ -1,6 +1,9 @@
 import type { Product } from "../types";
 import type { CartLine } from "./cart-types";
 import { activeProducts, fromPrice, getProduct } from "./catalog";
+import { STACK_CATEGORIES } from "./stack";
+
+const isSupplement = (p: Product) => (STACK_CATEGORIES as readonly string[]).includes(p.categorySlug);
 
 /** Recomendaciones de la demo: afinidad por etiquetas y categoría + popularidad. Sin datos personales. */
 function overlap(a: string[], b: string[]): number {
@@ -21,7 +24,10 @@ export function recommendForProduct(product: Product, n = 4): Product[] {
   return rank(pool, (p) => (p.categorySlug === product.categorySlug ? 4 : 0) + overlap(p.tags, product.tags) * 3, n);
 }
 
-/** "Completá tu pedido": complementos que no están en el carrito, con preferencia por otra categoría y precio accesible. */
+/**
+ * "Completá tu pedido": complementos que no están en el carrito, con preferencia por otra categoría y precio accesible.
+ * Si ya hay suplementos, empuja los de otra categoría de suplementos: son los que suman al descuento stack.
+ */
 export function recommendForCart(lines: CartLine[], n = 4): Product[] {
   const inCart = lines.flatMap((l) => getProduct(l.productSlug) ?? []);
   const slugs = new Set(inCart.map((p) => p.slug));
@@ -29,5 +35,6 @@ export function recommendForCart(lines: CartLine[], n = 4): Product[] {
   const tags = inCart.flatMap((p) => p.tags);
   const pool = activeProducts().filter((p) => !slugs.has(p.slug) && p.variants.some((v) => v.stock !== 0));
   if (inCart.length === 0) return rank(pool, () => 0, n);
-  return rank(pool, (p) => overlap(p.tags, tags) * 2 + (cats.has(p.categorySlug) ? 0 : 1.5) + (fromPrice(p) <= 15000 ? 1 : 0), n);
+  const stacking = inCart.some(isSupplement);
+  return rank(pool, (p) => overlap(p.tags, tags) * 2 + (cats.has(p.categorySlug) ? 0 : 1.5 + (stacking && isSupplement(p) ? 2 : 0)) + (fromPrice(p) <= 15000 ? 1 : 0), n);
 }

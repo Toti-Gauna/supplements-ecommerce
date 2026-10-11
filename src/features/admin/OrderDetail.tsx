@@ -57,7 +57,7 @@ export function OrderDetail() {
           <Panel title="Cliente" action={<Link href={profileHref(order.customer.email)} className="text-sm font-bold text-primary underline">Ver ficha del cliente</Link>}>
             <Facts items={[["Nombre", order.customer.name], ["Email", order.customer.email], ["Teléfono", order.customer.phone]]} />
           </Panel>
-          <Panel title="Productos y personalización aprobada"><OrderItems lines={order.lines} /></Panel>
+          <Panel title="Productos, lote y servicios"><OrderItems lines={order.lines} /></Panel>
           <Panel title="Pago" action={manual && order.proof ? <Link href={paymentHref(order.code)} className="text-sm font-bold text-primary underline">Ver comprobante</Link> : undefined}>
             <Facts items={[
               ["Medio", paymentLabel(order.paymentMethod)],

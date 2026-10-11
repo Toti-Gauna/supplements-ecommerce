@@ -3,38 +3,29 @@ import { quoteCart } from "@/demo/engine/pricing";
 import { validateCoupon } from "@/demo/engine/coupons";
 import { defaultDemoData, setDemoData } from "@/demo/engine/source";
 import type { CartLine } from "@/demo/engine/cart-types";
-import { engravingTemplate } from "@/demo/fixtures/templates";
-import type { Product } from "@/demo/types";
 
 const now = new Date("2026-10-04T12:00:00");
 /** Creatina 500 g ($29.900 + $16.000) × 2 = $91.800: debajo del envío gratis ($120.000). */
 const creatine: CartLine = { id: "a", productSlug: "creatina-monohidrato", variantId: "cm-sin-sabor-500", quantity: 2 };
 
-/** Ningún producto del catálogo se personaliza: el recargo se prueba con un shaker grabado armado acá. */
-const engravedShaker: Product = {
-  slug: "shaker-grabado", name: "Shaker grabado", short: "", description: "", categorySlug: "accesorios", brand: "VOLTA Lab",
-  basePrice: 8900, art: "shaker", gallery: ["front"], faqs: [], featured: false, isNew: false, soldCount: 0, tags: [],
-  variants: [{ id: "sg-grafito", label: "Grafito", priceDelta: 0, stock: 5 }],
-  personalization: engravingTemplate,
-};
-const engraved: CartLine = {
-  id: "b", productSlug: "shaker-grabado", variantId: "sg-grafito", quantity: 1,
-  personalization: { kind: "TEXT", text: "Toti", approvedAt: now.toISOString() },
-};
+const whey: CartLine = { id: "w", productSlug: "ionic-whey", variantId: "iw-chocolate-2lb", quantity: 1 };
+const pre: CartLine = { id: "p", productSlug: "overvolt-pre", variantId: "ov-limon-300", quantity: 1 };
+const shaker: CartLine = { id: "s", productSlug: "shaker-volta", variantId: "sh-voltio", quantity: 1 };
 
-beforeEach(() => {
-  const data = defaultDemoData();
-  setDemoData({ ...data, products: [...data.products, engravedShaker] });
-});
+beforeEach(() => setDemoData(defaultDemoData()));
 
 describe("precio", () => {
   it("suma variante y cantidad", () => {
     expect(quoteCart([creatine]).subtotal).toBe((29900 + 16000) * 2);
   });
-  it("suma el recargo de personalización", () => {
-    const q = quoteCart([engraved]);
-    expect(q.subtotal).toBe(8900 + 2500);
-    expect(q.personalizationTotal).toBe(2500);
+  it("stack: con 3 categorías de suplementos descuenta el 10 % de esas líneas, antes del cupón y la transferencia", () => {
+    const q = quoteCart([whey, creatine, pre, shaker], { paymentMethod: "BANK_TRANSFER", fulfillment: "PICKUP" });
+    const supplements = 54900 + 91800 + 36900;
+    expect(q.subtotal).toBe(supplements + 8900);
+    expect(q.stack).toMatchObject({ missing: 0, base: supplements, discount: Math.round(supplements * 0.1) });
+    expect(q.transferDiscount).toBe(Math.round((q.subtotal - q.stack.discount) * 0.1));
+    expect(q.total).toBe(q.subtotal - q.stack.discount - q.transferDiscount);
+    expect(quoteCart([whey, creatine]).stack).toMatchObject({ missing: 1, discount: 0 });
   });
   it("aplica descuento por transferencia sobre subtotal menos cupón", () => {
     const c = validateCoupon("bienvenida10", { subtotal: 91800, isRegistered: false, now });

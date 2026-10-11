@@ -1,7 +1,7 @@
 import { seasonalThemes } from "../fixtures/themes";
 import type { GiftOccasion } from "../types";
 import type { CartLine, LineGift } from "./cart-types";
-import { collarLineDetail, getProduct } from "./catalog";
+import { getProduct } from "./catalog";
 
 /**
  * Regalos (pedido de Ignacio, fuera de la especificación; la spec lo listaba como "regalá uno" fuera de alcance).
@@ -19,7 +19,7 @@ export interface GiftItem {
   slug: string;
   name: string;
   variant: string;
-  /** Detalle de la personalización ("Nombre: TOTO"). */
+  /** Detalle para quien recibe ("30 servicios"). */
   detail?: string;
 }
 
@@ -107,22 +107,14 @@ export function giftsFor(email: string | undefined, { addressed, saved }: { addr
   return [...saved, ...mine].filter((g) => !seen.has(g.code) && Boolean(seen.add(g.code))).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }
 
-/** Detalle que ve quien recibe (sin precio): el texto, la foto o el collar elegido. */
-function lineDetail(line: CartLine): string | undefined {
-  const p = line.personalization;
-  if (!p) return undefined;
-  if (p.collar) return collarLineDetail(line) || undefined;
-  if (p.text) return `Texto: “${p.text}”`;
-  return p.kind === "PHOTO" ? "Con una foto elegida para vos" : p.kind === "PHOTO_REFERENCE" ? "Pintado a mano desde una foto" : undefined;
-}
-
 /** Un regalo por cada línea marcada como regalo, con su código. */
 export function giftsFromLines(lines: CartLine[], { orderCode, now, eta, random }: { orderCode: string; now: Date; eta?: string; random: () => number }): Gift[] {
   return lines.flatMap((line) => {
     const product = getProduct(line.productSlug);
     if (!line.gift || !product) return [];
     const variant = product.variants.find((v) => v.id === line.variantId);
-    const detail = lineDetail(line);
+    // Quien recibe ve cuánto le dura (los servicios), nunca el precio.
+    const detail = variant?.servings && variant.servings > 1 ? `${variant.servings} servicios` : undefined;
     return [{
       code: makeGiftCode(random), ...cleanGift(line.gift), orderCode, createdAt: now.toISOString(), ...(eta ? { eta } : {}),
       item: { slug: product.slug, name: product.name, variant: variant?.label ?? "", ...(detail ? { detail } : {}) },

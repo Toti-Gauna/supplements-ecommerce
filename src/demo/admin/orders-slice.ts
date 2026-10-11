@@ -64,7 +64,7 @@ export function createOrdersActions(set: Set, get: () => AdminData): OrdersActio
           status: "PENDING_PAYMENT", fulfillment: order.fulfillment, paymentMethod: order.paymentMethod, lines: order.lines,
           total: order.quote.total, notes: [], fromShop: true, promisedDate: promiseFor(order.lines, DEMO_TODAY, s.orders, s.workshop.settings, order.code).day, log: [{ at: order.createdAt, from: null, to: "PENDING_PAYMENT", note: "Checkout de demostración" }],
         };
-        const mails = emailsForOrder(s.emails.templates, triggersForNewOrder(created), created, order.createdAt);
+        const mails = emailsForOrder(s.emails.templates, triggersForNewOrder(), created, order.createdAt);
         return { orders: [created, ...s.orders.filter((o) => o.code !== order.code)], emails: { ...s.emails, outbox: pushOutbox(s.emails.outbox, mails) } };
       }),
     receiveProof: (code, fileName) =>

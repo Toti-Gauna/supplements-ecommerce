@@ -46,6 +46,12 @@ y distinta de las que hay hoy (negro + rojo agresivo, o blanco clínico). Todo s
 - **Pantalla de carga "Cargando energía"** (`Splash.tsx` + `app/splash.css`): pulso, la "V" que se arma con el rayo y
   un fogonazo, batería de 10 celdas que llega a 100 %, aro eléctrico con cometa y envases en órbita. Solo
   transform/opacity, 5 s, Escape la cierra y con "reducir movimiento" no aparece.
+- **Ruleta "Disco olímpico"** (`src/features/club/Wheel*.tsx`): disco de pesas con los gajos en los colores
+  reglamentarios (rojo 25 kg, azul 20, amarillo 15, verde 10) con goma moteada y relieve, aro con 24 LED voltio que
+  corren en cadena al girar y titilan al ganar, maza de acero moleteada con "VOLTA · 20 KG" y "Girar" en el agujero
+  de la barra, y el puntero como traba de barra. Escenario noche con halo plasma, pulso y polvo de tiza.
+- **Niveles del club** (`LevelGlyph`): un disco visto de frente con una batería que se carga una celda por nivel
+  (Novato, Atleta, Élite, Bestia; Bestia suma el rayo).
 - Fondo con grano fino y grilla de puntos; bandas oscuras con filo voltio muy sutil; botón primario con destello.
 
 ## Detalles técnicos

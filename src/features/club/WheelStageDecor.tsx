@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import { useId, type CSSProperties } from "react";
 import { cn } from "@/lib/cn";
 import { VOLT } from "./wheel-art";
 
@@ -17,18 +17,19 @@ const PULSE = "M0 60H470l16-30 20 70 24-96 22 84 16-28H1200";
  * "reducir movimiento" queda quieto.
  */
 export function WheelStageDecor({ spinning, landed }: { spinning: boolean; landed: boolean }) {
+  const fade = `${useId().replace(/:/g, "")}fade`;
   return (
     <div aria-hidden="true" className="pointer-events-none absolute inset-0">
       <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="absolute inset-x-0 top-1/2 h-[18%] w-full -translate-y-1/2">
         <defs>
-          <linearGradient id="wheel-pulse-fade" x1="0" x2="1" y1="0" y2="0">
+          <linearGradient id={fade} x1="0" x2="1" y1="0" y2="0">
             <stop offset="0" stopColor={VOLT} stopOpacity="0" />
             <stop offset=".3" stopColor={VOLT} stopOpacity=".5" />
             <stop offset=".7" stopColor={VOLT} stopOpacity=".5" />
             <stop offset="1" stopColor={VOLT} stopOpacity="0" />
           </linearGradient>
         </defs>
-        <path d={PULSE} fill="none" stroke="url(#wheel-pulse-fade)" strokeOpacity=".7" strokeWidth="2" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+        <path d={PULSE} fill="none" stroke={`url(#${fade})`} strokeOpacity=".7" strokeWidth="2" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
         {landed && <path d={PULSE} pathLength={1} className="wheel-pulse-hit" fill="none" stroke={VOLT} strokeWidth="3" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />}
       </svg>
       <div className={cn("wheel-halo absolute left-1/2 top-1/2 aspect-square w-[calc(var(--dial)*1.24)] -translate-x-1/2 -translate-y-1/2 rounded-full", spinning && "is-spinning")} />

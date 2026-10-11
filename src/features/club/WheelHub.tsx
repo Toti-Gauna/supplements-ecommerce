@@ -65,7 +65,7 @@ function HubArt({ live }: { live: boolean }) {
   );
 }
 
-const HUB = "absolute inset-[35%] z-10 grid place-items-center rounded-full";
+const HUB = "absolute inset-[35%] z-10 grid place-items-center rounded-full [container-type:inline-size]";
 
 /**
  * Maza central del disco. Con `onSpin` es el botón "Girar" (el agujero de la barra se ilumina y late); sin él, una
@@ -78,10 +78,10 @@ export function WheelHub({ onSpin }: { onSpin?: () => void }) {
       {onSpin && <span className="mt-[1cqw] pl-[0.18em] font-lab text-[clamp(8px,9.5cqw,13px)] font-extrabold tracking-[0.18em] text-volt">GIRAR</span>}
     </span>
   );
-  if (!onSpin) return <div aria-hidden="true" className={cn(HUB, "pointer-events-none [container-type:inline-size]")}><HubArt live={false} />{inner}</div>;
+  if (!onSpin) return <div aria-hidden="true" className={cn(HUB, "pointer-events-none")}><HubArt live={false} />{inner}</div>;
   return (
     <button type="button" onClick={onSpin} aria-label="Girar la ruleta"
-      className={cn(HUB, "wheel-hub [container-type:inline-size] shadow-[0_10px_24px_-8px_rgb(0_0_0/0.85)] transition-transform hover:scale-[1.04] active:scale-95 focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-volt-soft")}>
+      className={cn(HUB, "wheel-hub shadow-[0_10px_24px_-8px_rgb(0_0_0/0.85)] transition-transform hover:scale-[1.04] active:scale-95 focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-volt-soft")}>
       <HubArt live />
       {inner}
     </button>

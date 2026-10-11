@@ -2,7 +2,6 @@ import { useId } from "react";
 import { RewardGlyph, glyphFor, shortValue } from "@/components/illustrations/RewardGlyph";
 import { DISPLAY_FONT, MONO_FONT } from "@/config/brand";
 import type { WheelSegment } from "@/demo/fixtures/wheel";
-import { cn } from "@/lib/cn";
 import { PLATES, plateFor, polar, RUBBER_FLECKS, sectorPath, VOLT } from "./wheel-art";
 
 const C = 200;
@@ -59,7 +58,7 @@ export function WheelDisc({ segments, landed = null }: { segments: WheelSegment[
       {/* Gajo ganador: los demás se apagan y él queda con filo voltio. */}
       {landed !== null && segments.map((s, i) => (
         <path key={s.id} d={sectorPath(C, C, R.hub, R.edge - 1, i * slice, (i + 1) * slice)}
-          className={cn("transition-opacity duration-300", i === landed ? "wheel-landed" : undefined)}
+          className={i === landed ? "wheel-landed" : undefined}
           fill={i === landed ? "#fff" : "#000"} fillOpacity={i === landed ? 0.08 : 0.5}
           stroke={i === landed ? VOLT : "none"} strokeWidth="4" strokeLinejoin="round" />
       ))}
@@ -72,15 +71,13 @@ export function WheelDisc({ segments, landed = null }: { segments: WheelSegment[
 function SegmentLabel({ segment: s, index, slice }: { segment: WheelSegment; index: number; slice: number }) {
   const plate = plateFor(index);
   const value = shortValue(s.kind, s.value, s.label);
-  const darkInk = plate.ink !== "#ffffff";
-  const shadow = darkInk ? "#fff" : "#000";
   return (
     <g transform={`rotate(${index * slice + slice / 2} ${C} ${C})`} opacity={s.active ? 1 : 0.4}>
       <g transform={`translate(${C - 19.2} ${C - 125}) scale(.8)`}>
-        <g transform="translate(0 1.4)" opacity=".3"><RewardGlyph kind={glyphFor(s.kind, s.label)} standalone={false} color={shadow} /></g>
+        <g transform="translate(0 1.4)" opacity=".3"><RewardGlyph kind={glyphFor(s.kind, s.label)} standalone={false} color={plate.emboss} /></g>
         <RewardGlyph kind={glyphFor(s.kind, s.label)} standalone={false} color={plate.ink} />
       </g>
-      {[shadow, plate.ink].map((fill, k) => (
+      {[plate.emboss, plate.ink].map((fill, k) => (
         <text key={k} x={C} y={C - 139 + (k ? 0 : 1.6)} textAnchor="middle" fill={fill} opacity={k ? 1 : 0.32}
           fontSize={value.length > 5 ? 20 : 24} fontWeight="800" letterSpacing=".4" style={{ fontFamily: DISPLAY_FONT, fontStretch: "112%" }}>
           {value}

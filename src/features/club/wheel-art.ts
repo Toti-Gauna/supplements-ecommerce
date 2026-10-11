@@ -8,18 +8,19 @@ export interface PlateColor {
   base: string;
   dark: string;
   light: string;
-  /** Texto e ícono sobre el gajo (contraste ≥ 4,5:1 con `base`). */
+  /** Texto e ícono sobre el gajo (contraste ≥ 4,5:1 con `base`) y la copia corrida que les da relieve. */
   ink: string;
+  emboss: string;
   /** Rótulo en relieve del borde, como en un disco de verdad. */
   weight: string;
 }
 
 /** Rojo 25, azul 20, amarillo 15 y verde 10 kg: se repiten en ese orden alrededor del disco. */
 export const PLATES: PlateColor[] = [
-  { base: "#cc2229", dark: "#7c0d12", light: "#e8434a", ink: "#ffffff", weight: "25 KG" },
-  { base: "#1f50c8", dark: "#0d2668", light: "#3d6fe3", ink: "#ffffff", weight: "20 KG" },
-  { base: "#f2c21b", dark: "#a87b06", light: "#ffd84a", ink: "#14110a", weight: "15 KG" },
-  { base: "#12803f", dark: "#08431f", light: "#1fa457", ink: "#ffffff", weight: "10 KG" },
+  { base: "#cc2229", dark: "#7c0d12", light: "#e8434a", ink: "#ffffff", emboss: "#000", weight: "25 KG" },
+  { base: "#1f50c8", dark: "#0d2668", light: "#3d6fe3", ink: "#ffffff", emboss: "#000", weight: "20 KG" },
+  { base: "#f2c21b", dark: "#a87b06", light: "#ffd84a", ink: "#14110a", emboss: "#fff", weight: "15 KG" },
+  { base: "#12803f", dark: "#08431f", light: "#1fa457", ink: "#ffffff", emboss: "#000", weight: "10 KG" },
 ];
 
 export const plateFor = (i: number) => PLATES[i % PLATES.length]!;

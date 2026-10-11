@@ -1,0 +1,41 @@
+/* Shaker Rush: animaciones de la escena (tarjeta e inicio) y de las capas del juego. Sin bucles infinitos y nada con
+   "reducir movimiento". Solo transform y opacity. */
+.drop { animation: drop 1.5s cubic-bezier(0.5, 0, 0.8, 0.4) 0.5s 3 both; }
+@keyframes drop {
+  0% { transform: translateY(-46px); opacity: 0; }
+  14% { opacity: 1; }
+  82% { transform: translateY(70px); opacity: 1; }
+  100% { transform: translateY(78px); opacity: 0; }
+}
+.pop { opacity: 0; animation: pop 1.5s linear 0.5s 3 both; }
+@keyframes pop {
+  0%, 80% { opacity: 0; transform: translateY(0); }
+  86% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-14px); }
+}
+.hidden { opacity: 0; }
+.settle { animation: settle 900ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+@keyframes settle { from { opacity: 0; transform: translateY(-14px); } }
+
+/* Cuenta regresiva: cada número entra con un golpe corto. */
+.count { animation: count 600ms cubic-bezier(0.2, 1.3, 0.4, 1) both; }
+@keyframes count { from { opacity: 0; transform: scale(1.6); } }
+/* Capas (pausa, resultado) */
+.panel { animation: panel 420ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+@keyframes panel { from { opacity: 0; transform: translateY(16px) scale(0.98); } }
+
+/* Fondo del campo: noche con luz voltio abajo, plasma arriba y grilla de puntos (el canvas encima es transparente). */
+.arena {
+  /* Alerta sobre la noche (tiempo que se acaba, chatarra): el escenario es oscuro en los dos modos. */
+  --game-alert: #ff8a73;
+  background:
+    radial-gradient(120% 40% at 50% 100%, rgb(200 255 46 / 0.12), transparent 70%),
+    radial-gradient(90% 50% at 50% 0%, rgb(139 114 255 / 0.18), transparent 70%),
+    radial-gradient(circle at 1px 1px, rgb(238 241 245 / 0.07) 1px, transparent 1.4px) 0 0 / 22px 22px,
+    #07080a;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drop, .settle, .count, .panel { animation: none; }
+  .pop { animation: none; opacity: 0; }
+}

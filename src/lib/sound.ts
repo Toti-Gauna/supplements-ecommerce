@@ -4,7 +4,8 @@
  * en este navegador. En el panel no suena nada.
  */
 
-export type SoundName = "add" | "favorite" | "unfavorite" | "coupon" | "tick" | "spin" | "win" | "purchase" | "error" | "nav" | "hit" | "open";
+export type SoundName = "add" | "favorite" | "unfavorite" | "coupon" | "tick" | "spin" | "win" | "purchase" | "error" | "nav" | "hit" | "open"
+  | "catch" | "powerup" | "junk" | "gameover";
 
 const KEY = "volta-sound";
 let ctx: AudioContext | null = null;
@@ -83,7 +84,8 @@ function noise(at: number, dur: number, { gain = 0.3, from = 2500, to }: { gain?
   src.start(t);
 }
 
-const SOUNDS: Record<SoundName, () => void> = {
+/** `step` (opcional) varía el sonido: en Shaker Rush, el combo sube el tono de cada captura. */
+const SOUNDS: Record<SoundName, (step: number) => void> = {
   // "Pop" con brillo: algo entró al carrito
   add: () => { tone(520, 0, 0.12, { type: "sine", gain: 0.55, slideTo: 980 }); tone(1320, 0.07, 0.18, { type: "triangle", gain: 0.22 }); },
   favorite: () => { tone(784, 0, 0.12, { gain: 0.35 }); tone(1175, 0.08, 0.2, { gain: 0.3 }); },
@@ -112,16 +114,34 @@ const SOUNDS: Record<SoundName, () => void> = {
     noise(0, 0.45, { gain: 0.12, from: 400, to: 4200 });
     [784, 988, 1175, 1568, 1976].forEach((f, i) => tone(f, 0.12 + i * 0.07, 0.5, { type: "triangle", gain: 0.16 }));
   },
+  // Shaker Rush: "bloop" que sube un semitono por cada paso del combo (hasta una octava)
+  catch: (step) => {
+    const f = 620 * 2 ** (Math.min(step, 12) / 12);
+    tone(f, 0, 0.1, { type: "triangle", gain: 0.3, slideTo: f * 1.5 });
+    tone(f * 2, 0.04, 0.08, { gain: 0.1 });
+  },
+  // Rayo ×2 o scoop dorado: soplido eléctrico y arpegio
+  powerup: () => {
+    noise(0, 0.3, { gain: 0.1, from: 700, to: 5200 });
+    [660, 880, 1320, 1760].forEach((f, i) => tone(f, i * 0.05, 0.22, { type: "triangle", gain: 0.2 }));
+  },
+  // Chatarra: golpe grave con zumbido
+  junk: () => { tone(190, 0, 0.2, { type: "square", gain: 0.14, slideTo: 85 }); noise(0, 0.12, { gain: 0.26, from: 700, to: 220 }); },
+  // Fin de la partida: tres notas que bajan y cierran
+  gameover: () => {
+    [784, 659, 523].forEach((f, i) => tone(f, i * 0.12, 0.28, { type: "triangle", gain: 0.2 }));
+    tone(392, 0.36, 0.6, { gain: 0.2 });
+  },
 };
 
 /** Registro para las pruebas automáticas (qué sonó y en qué orden). No afecta el audio. */
 declare global { interface Window { __voltaSounds?: SoundName[] } }
 
-export function playSound(name: SoundName): void {
+export function playSound(name: SoundName, step = 0): void {
   if (typeof window === "undefined" || window.location.pathname.includes("/admin-demo") || isMuted()) return;
   // Registro para los tests: solo si la página lo pidió (no crece en uso normal).
   window.__voltaSounds?.push(name);
   if (!ctx) return;
   if (ctx.state !== "running" && ctx.state !== "closed") void ctx.resume();
-  try { SOUNDS[name](); } catch { /* audio no disponible: la tienda sigue igual */ }
+  try { SOUNDS[name](step); } catch { /* audio no disponible: la tienda sigue igual */ }
 }

@@ -19,7 +19,8 @@ export interface DataActions {
   saveWheel: (wheel: WheelConfig) => void;
   /** Suma un premio al catálogo de la ruleta (8.3.25); queda disponible para elegir en los gajos. */
   addWheelPrize: (prize: WheelPrize) => void;
-  addPrizeCoupon: (coupon: Coupon) => void;
+  /** Cupón ganado en la tienda (ruleta o Shaker Rush); `action` es la línea de auditoría. */
+  addPrizeCoupon: (coupon: Coupon, action?: string) => void;
   /** Un pedido confirmado usó el cupón: suma un uso (el de la ruleta queda "utilizado"). */
   redeemCoupon: (code: string) => void;
   saveSettings: (patch: Partial<DemoSettings>) => void;
@@ -59,7 +60,7 @@ export function createDataActions(set: Set): DataActions {
     saveCoupon: (c, prev) => edit("Cupón guardado", c.code, (d) => ({ coupons: upsert(d.coupons, c, (x) => x.code === (prev ?? c.code)) })),
     saveWheel: (wheel) => edit("Ruleta de cupones actualizada", "Ruleta", () => ({ wheel })),
     addWheelPrize: (prize) => edit(`Premio de la ruleta creado: ${prize.name}`, prize.id, (d) => ({ wheel: { ...d.wheel, prizes: [...(d.wheel.prizes ?? []), prize] } })),
-    addPrizeCoupon: (c) => edit("Premio de ruleta emitido", c.code, (d) => ({ coupons: [...d.coupons.filter((x) => x.code !== c.code), c] })),
+    addPrizeCoupon: (c, action = "Premio de ruleta emitido") => edit(action, c.code, (d) => ({ coupons: [...d.coupons.filter((x) => x.code !== c.code), c] })),
     redeemCoupon: (code) => edit("Cupón usado en un pedido", code, (d) => ({ coupons: d.coupons.map((c) => (c.code === code ? { ...c, usedCount: (c.usedCount ?? 0) + 1 } : c)) })),
     saveSettings: (patch) => edit("Ajustes guardados", Object.keys(patch).join(", "), (d) => ({ settings: { ...d.settings, ...patch } })),
     saveZone: (z) => edit("Zona de envío", z.name, (d) => ({ zones: upsert(d.zones, z, (x) => x.id === z.id) })),

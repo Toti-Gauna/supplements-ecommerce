@@ -6,9 +6,14 @@ import { playSound } from "@/lib/sound";
 import { useAccount } from "@/stores/account";
 import { useAdmin, useDemoData } from "@/stores/admin";
 
+/** Pausa al frenar: el gajo ganador queda marcado y las luces titilan antes de mostrar el cupón. */
+const LANDING_MS = 1300;
+const wait = (ms: number) => new Promise<void>((resolve) => window.setTimeout(resolve, ms));
+
 /**
  * Lógica de la ruleta (demo: un giro por navegador; en producción el sorteo y el límite van en el servidor).
- * El premio lo decide el sorteo ponderado del engine; el giro y el frenado solo lo muestran.
+ * El premio lo decide el sorteo ponderado del engine; el giro y el frenado solo lo muestran. Con "reducir
+ * movimiento" el disco cae directo en el gajo y el cupón aparece sin la pausa.
  */
 export function useWheelSpin() {
   const wheel = useDemoData((d) => d.wheel);
@@ -20,6 +25,9 @@ export function useWheelSpin() {
   const kick = useMotionValue(0);
   const [spinning, setSpinning] = useState(false);
   const [justWon, setJustWon] = useState(false);
+  /** Gajo ganador mientras el disco está frenado y las luces titilan (antes del cupón). */
+  const [landed, setLanded] = useState<number | null>(null);
+  const [spinDir, setSpinDir] = useState<1 | -1>(1);
   const disc = useRef<HTMLDivElement>(null);
   const drag = useRef<{ id: number; last: number; acc: number; start: number; samples: { t: number; r: number }[] } | null>(null);
   const spinningRef = useRef(false);
@@ -55,6 +63,7 @@ export function useWheelSpin() {
     if (!pick) return;
     spinningRef.current = true;
     setSpinning(true);
+    setSpinDir(dir);
     setWheelSpinning(true);
     // El premio se guarda antes de la animación (que es solo visual): salir a mitad de giro no da otro giro.
     const coupon = prizeCoupon(pick.segment, Math.random().toString(36).slice(2, 7), new Date(), wheel.validDays);
@@ -65,11 +74,17 @@ export function useWheelSpin() {
     const target = landingRotation(rotate.get(), pick.index, count, dir, turns, Math.random());
     await animate(rotate, target, { duration: reduce ? 0 : Math.min(6.2, 3.2 + turns * 0.35), ease: [0.1, 0.72, 0.16, 1] });
     if (!mounted.current) return;
+    playSound("win");
+    if (!reduce) {
+      setLanded(pick.index);
+      await wait(LANDING_MS);
+      if (!mounted.current) return;
+      setLanded(null);
+    }
     spinningRef.current = false;
     setSpinning(false);
     setWheelSpinning(false);
     setJustWon(true);
-    playSound("win");
   };
 
   const angleOf = (e: PointerEvent<HTMLDivElement>) => {
@@ -111,7 +126,7 @@ export function useWheelSpin() {
 
   // Ref de función para el disco: el componente no lee refs durante el render.
   const bindDisc = useCallback((el: HTMLDivElement | null) => { disc.current = el; }, []);
-  return { wheel, rotate, kick, bindDisc, handlers, spin, spinning, justWon, canSpin, shown, prize };
+  return { wheel, rotate, kick, bindDisc, handlers, spin, spinning, justWon, landed, dir: spinDir, canSpin, shown, prize, won: wheelPrize };
 }
 
 export type WheelSpinState = ReturnType<typeof useWheelSpin>;

@@ -2,13 +2,17 @@
 import { useState } from "react";
 import { describedBy, Field, Input } from "@/components/atoms/Field";
 import { Select } from "@/components/atoms/Select";
+import { RewardGlyph, type GlyphKind } from "@/components/illustrations/RewardGlyph";
 import { checkPrize, giftValue, makePrize, newPrizeId, prizeCondition, prizeDraft, prizeName, PRIZE_TEMPLATES, type PrizeDraft } from "@/demo/admin/wheel-prizes";
-import type { WheelPrize } from "@/demo/fixtures/wheel";
+import type { PrizeTemplate, WheelPrize } from "@/demo/fixtures/wheel";
 import { formatARS } from "@/lib/money";
 import { cn } from "@/lib/cn";
 import { useAdmin } from "@/stores/admin";
 import { EditDialog } from "../detail/EditDialog";
 import { useDemoSave } from "../useDemoSave";
+
+/** Ícono de cada plantilla (el mismo dibujo que lleva su gajo en la ruleta). */
+const TEMPLATE_GLYPH: Record<PrizeTemplate, GlyphKind> = { percent: "percent", fixed: "coin", shipping: "truck", sample: "sample", gift: "gift" };
 
 function Pesos({ id, label, value, error, hint, onChange }: { id: string; label: string; value: number; error?: string; hint?: string; onChange: (n: number) => void }) {
   return (
@@ -51,6 +55,7 @@ export function PrizeDialog({ open, onClose, onCreated }: { open: boolean; onClo
           {PRIZE_TEMPLATES.map((t) => (
             <label key={t.id} className={cn("flex cursor-pointer items-start gap-3 rounded-2xl p-3 ring-1 transition-colors", d.template === t.id ? "bg-primary/[0.07] ring-primary" : "bg-surface ring-ink/10 hover:bg-accent/40")}>
               <input type="radio" name="prize-template" value={t.id} checked={d.template === t.id} onChange={() => set(prizeDraft(t.id))} className="mt-1 h-4 w-4 accent-[var(--color-primary)]" />
+              <RewardGlyph kind={TEMPLATE_GLYPH[t.id]} size={26} color="currentColor" className="mt-0.5 shrink-0 text-volt-ink" />
               <span><span className="block font-bold">{t.label}</span><span className="text-xs text-muted">{t.hint}</span></span>
             </label>
           ))}
@@ -59,7 +64,7 @@ export function PrizeDialog({ open, onClose, onCreated }: { open: boolean; onClo
       <div className="grid gap-3 sm:grid-cols-2">
         {d.template === "percent" && <Pesos id="pz-value" label="Porcentaje (%)" value={d.value} error={errors.value} onChange={(value) => set({ value })} />}
         {d.template === "fixed" && <Pesos id="pz-value" label="Monto (ARS)" value={d.value} error={errors.value} onChange={(value) => set({ value })} />}
-        {d.template === "engraving" && <Pesos id="pz-value" label="Valor del grabado (ARS)" value={d.value} error={errors.value} hint="Es lo que se descuenta del carrito." onChange={(value) => set({ value })} />}
+        {d.template === "sample" && <Pesos id="pz-value" label="Valor de la muestra (ARS)" value={d.value} error={errors.value} hint="Por ejemplo, un sachet de pre-entreno. Es lo que se descuenta del carrito." onChange={(value) => set({ value })} />}
         {d.template === "gift" && (
           <Field id="pz-product" label="Producto que se regala" error={errors.productSlug} hint={gift ? `Vale ${formatARS(giftValue(gift))} (precio desde): eso se descuenta.` : undefined}>
             <Select id="pz-product" value={d.productSlug} onChange={(e) => set({ productSlug: e.target.value })} aria-invalid={!!errors.productSlug}>

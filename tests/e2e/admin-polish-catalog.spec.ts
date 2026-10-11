@@ -10,11 +10,11 @@ test.describe("escritorio con mouse", () => {
 
   test("8.3.18 insumos: buscar y filtrar pasan a la vista Excel; se edita con validación, lo calculado no, y la tabla coincide", async ({ page }) => {
     await page.goto("admin-demo/insumos/");
-    await page.getByRole("searchbox").fill("cera");
+    await page.getByRole("searchbox").fill("folleto");
     await page.getByRole("button", { name: "Ver en formato Excel" }).click();
     const grid = page.getByRole("grid", { name: "Insumos en formato Excel" });
     await expect(grid.getByRole("row")).toHaveCount(2);
-    const row = grid.getByRole("row").filter({ hasText: "Cera de soja" });
+    const row = grid.getByRole("row").filter({ hasText: "Folleto con tabla de dosis" });
     // "Piden los pedidos" se calcula con las recetas: no se edita.
     await row.getByRole("gridcell").nth(6).dblclick();
     await expect(page.getByLabel("Editar celda")).toHaveCount(0);
@@ -22,16 +22,16 @@ test.describe("escritorio con mouse", () => {
     await page.getByLabel("Editar celda").fill("-3");
     await page.keyboard.press("Enter");
     await expect(page.getByRole("alert").filter({ hasText: "No puede ser negativa" })).toBeVisible();
-    await page.getByLabel("Editar celda").fill("4.200");
+    await page.getByLabel("Editar celda").fill("1.500");
     await page.keyboard.press("Enter");
     await expect(page.getByText("1 cambio sin guardar")).toBeVisible();
     await page.getByRole("button", { name: "Guardar cambios" }).click();
     await expect(toast(page, "Cambios guardados")).toBeVisible();
     await page.getByRole("button", { name: "Volver a la tabla" }).click();
     await expect(page.getByRole("heading", { level: 1, name: "Insumos" })).toBeVisible();
-    await expect(page.getByLabel("Stock de Cera de soja").first()).toHaveValue("4200");
+    await expect(page.getByLabel("Stock de Folleto con tabla de dosis").first()).toHaveValue("1500");
     await page.reload();
-    await expect(page.getByLabel("Stock de Cera de soja").first()).toHaveValue("4200");
+    await expect(page.getByLabel("Stock de Folleto con tabla de dosis").first()).toHaveValue("1500");
     // Filtro de estado + Reiniciar.
     await page.getByRole("combobox", { name: "Estado" }).selectOption("reponer");
     await expect(page.getByText(/insumos de \d+/)).toBeVisible();
@@ -40,8 +40,8 @@ test.describe("escritorio con mouse", () => {
   });
 
   test("8.3.18 salir de la vista Excel con cambios pide confirmar y el borrador no se pierde", async ({ page }) => {
-    await page.goto("admin-demo/insumos/?formato=excel&q=cera");
-    const row = page.getByRole("grid").getByRole("row").filter({ hasText: "Cera de soja" });
+    await page.goto("admin-demo/insumos/?formato=excel&q=folleto");
+    const row = page.getByRole("grid").getByRole("row").filter({ hasText: "Folleto con tabla de dosis" });
     await row.getByRole("gridcell").nth(4).dblclick();
     await page.getByLabel("Editar celda").fill("900");
     await page.keyboard.press("Enter");
@@ -66,29 +66,29 @@ test.describe("escritorio con mouse", () => {
     await open.click();
     const dialog = page.getByRole("dialog", { name: "Nueva categoría" });
     await expect(dialog.getByLabel("Nombre")).toBeFocused();
-    await dialog.getByLabel("Nombre").fill("Mates");
+    await dialog.getByLabel("Nombre").fill("Packs");
     await page.keyboard.press("Escape");
     await expect(dialog).toBeHidden();
     await expect(open).toBeFocused();
     await open.click();
-    await expect(dialog.getByLabel("Nombre")).toHaveValue("Mates");
+    await expect(dialog.getByLabel("Nombre")).toHaveValue("Packs");
     await dialog.getByLabel("Nombre").fill("");
     await dialog.getByRole("button", { name: "Crear categoría" }).click();
     await expect(dialog.getByRole("alert")).toHaveText("Escribí un nombre para la categoría.");
-    await dialog.getByLabel("Nombre").fill("Velas");
+    await dialog.getByLabel("Nombre").fill("Proteínas");
     await expect(dialog.getByText("Ya hay una categoría con ese nombre")).toBeVisible();
-    await dialog.getByLabel("Nombre").fill("Mates y cocina");
-    await dialog.getByLabel("Descripción (opcional)").fill("Tablas y mates con nombre.");
+    await dialog.getByLabel("Nombre").fill("Packs y combos");
+    await dialog.getByLabel("Descripción (opcional)").fill("Proteína y creatina juntas, a mejor precio.");
     await dialog.getByRole("button", { name: "Crear categoría" }).click();
     await expect(dialog).toBeHidden();
-    await expect(toast(page, "Categoría “Mates y cocina” creada")).toBeVisible();
+    await expect(toast(page, "Categoría “Packs y combos” creada")).toBeVisible();
     await expect(page.getByText(`${before + 1} categorías`, { exact: true })).toBeVisible();
     await open.click();
     await expect(dialog.getByLabel("Nombre")).toHaveValue("");
     await page.keyboard.press("Escape");
     // Aparece en el selector de categoría del editor de productos.
-    await page.goto("admin-demo/productos/editar/?id=vela-caniche");
-    await expect(page.locator("select option", { hasText: "Mates y cocina" })).toHaveCount(1);
+    await page.goto("admin-demo/productos/editar/?id=overvolt-pre");
+    await expect(page.locator("select option", { hasText: "Packs y combos" })).toHaveCount(1);
   });
 
   test("8.3.22 orden global: con filtros no se reordena; en el orden de la tienda, Subir mueve y se guarda; la fila abre el detalle", async ({ page }) => {
@@ -98,32 +98,34 @@ test.describe("escritorio con mouse", () => {
     await expect(table.getByRole("button", { name: /^Subir / })).toHaveCount(0);
     await expect(table.getByText("Para cambiar el orden de la tienda")).toBeVisible();
     await table.getByRole("button", { name: "Reiniciar filtros" }).click();
-    await table.getByRole("button", { name: "Subir Comederos" }).click();
-    await expect(table.getByRole("row").nth(1)).toContainText("Comederos");
+    await table.getByRole("button", { name: "Subir Creatinas" }).click();
+    await expect(table.getByRole("row").nth(1)).toContainText("Creatinas");
     // El switch de la fila no navega.
-    await table.getByRole("switch", { name: "Destacar Velas" }).click();
+    await table.getByRole("switch", { name: "Destacar Aminoácidos" }).click();
     await expect(page).toHaveURL(/categorias\/$/);
     await page.reload();
-    await expect(table.getByRole("row").nth(1)).toContainText("Comederos");
-    await table.getByRole("row").filter({ hasText: "Velas" }).getByRole("cell").nth(3).click();
-    await expect(page.getByRole("heading", { level: 1, name: /Velas/ })).toBeVisible();
+    await expect(table.getByRole("row").nth(1)).toContainText("Creatinas");
+    await table.getByRole("row").filter({ hasText: "Aminoácidos" }).getByRole("cell").nth(3).click();
+    await expect(page.getByRole("heading", { level: 1, name: /Aminoácidos/ })).toBeVisible();
     await expect(page.getByRole("region", { name: /Productos \(\d+\)/ }).getByRole("link").first()).toBeVisible();
     await expect(page.getByRole("switch", { name: /Destacada/ })).toHaveAttribute("aria-checked", "true");
     await page.getByRole("link", { name: "Categorías" }).first().click();
-    await expect(page.getByRole("heading", { level: 1, name: /Categorías y personalización/ })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1, name: /^Categorías/ })).toBeVisible();
   });
 
   test("8.3.22 vista Excel de categorías: renombrar se guarda y el orden no cambia", async ({ page }) => {
     await page.goto("admin-demo/categorias/?formato=excel");
     const grid = page.getByRole("grid", { name: "Categorías en formato Excel" });
-    const row = grid.getByRole("row").filter({ hasText: "Velas" });
+    const row = grid.getByRole("row").filter({ hasText: "Aminoácidos" });
     const position = await row.getByRole("gridcell").nth(0).textContent();
     await row.getByRole("gridcell").nth(1).dblclick();
-    await page.getByLabel("Editar celda").fill("Velas aromáticas");
+    // El doble clic edita la celda que se tocó, con su valor actual (no la de otra fila).
+    await expect(page.getByLabel("Editar celda")).toHaveValue("Aminoácidos");
+    await page.getByLabel("Editar celda").fill("Aminoácidos y glutamina");
     await page.keyboard.press("Enter");
     await page.getByRole("button", { name: "Guardar cambios" }).click();
     await page.getByRole("button", { name: "Volver a la tabla" }).click();
-    const back = page.getByRole("region", { name: "Categorías en el orden de la tienda" }).getByRole("row").filter({ hasText: "Velas aromáticas" });
+    const back = page.getByRole("region", { name: "Categorías en el orden de la tienda" }).getByRole("row").filter({ hasText: "Aminoácidos y glutamina" });
     await expect(back).toBeVisible();
     await expect(back.getByRole("cell").nth(1)).toContainText(position!.trim());
   });

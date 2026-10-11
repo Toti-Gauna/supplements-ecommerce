@@ -21,7 +21,8 @@ interface Props<R> {
 /** La grilla de la vista Excel: teclado, rango con Shift, copiar y pegar con Excel, deshacer y edición validada. */
 export function SheetGrid<R>({ id, label, rows, rowKey, g, sort, onSort, onSave }: Props<R>) {
   const push = useToasts((s) => s.push);
-  const focusGrid = () => window.setTimeout(() => document.getElementById(id)?.focus(), 0);
+  // Sin desplazar la página: si la grilla no entra entera, enfocarla la movía y el segundo clic de un doble clic caía en otra fila.
+  const focusGrid = () => window.setTimeout(() => document.getElementById(id)?.focus({ preventScroll: true }), 0);
   const onGridKey = (e: KeyboardEvent<HTMLDivElement>) => {
     if ((e.target as HTMLElement).closest("input, select")) return;
     const mod = e.metaKey || e.ctrlKey;
@@ -69,7 +70,7 @@ export function SheetGrid<R>({ id, label, rows, rowKey, g, sort, onSort, onSave 
             const editing = g.editing && g.editing.pos.r === r && g.editing.pos.c === c ? g.editing : undefined;
             return (
               <div key={col.id} role="gridcell" aria-selected={g.inRange(r, c)} aria-readonly={!col.parse || undefined}
-                onMouseDown={(e) => { if (editing) return; e.preventDefault(); if (!g.commit()) return; if (active && !e.shiftKey) { g.startEdit({ r, c }); return; } g.select({ r, c }, e.shiftKey); document.getElementById(id)?.focus(); }}
+                onMouseDown={(e) => { if (editing) return; e.preventDefault(); if (!g.commit()) return; if (active && !e.shiftKey) { g.startEdit({ r, c }); return; } g.select({ r, c }, e.shiftKey); document.getElementById(id)?.focus({ preventScroll: true }); }}
                 onDoubleClick={() => g.startEdit({ r, c })} className={cn("flex-1 cursor-cell border-r border-line/50", col.width ?? "min-w-[8rem]", c === 0 && "sticky left-0 z-10 bg-surface font-semibold")}>
                 <SheetCell col={col} row={row} value={g.value(row, col)} active={active} selected={g.inRange(r, c)} dirty={g.isDirty(row, col)}
                   error={g.errors[g.key(row, col)]} editing={editing} onEditText={(text) => g.setEditing((x) => (x ? { ...x, text, error: undefined } : x))}

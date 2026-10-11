@@ -69,27 +69,27 @@ test.describe("escritorio con mouse", () => {
     await expect(page.getByRole("heading", { level: 1, name: /Diego Álvarez/ })).toBeVisible();
 
     await page.goto("admin-demo/productos/");
-    await page.getByRole("searchbox").fill("vela caniche");
-    await row("Vela caniche").getByRole("switch").click();
+    await page.getByRole("searchbox").fill("overvolt");
+    await row("Overvolt pre-entreno").getByRole("switch").click();
     await expect(page.getByRole("status").filter({ hasText: "Producto pausado" })).toBeVisible();
     await expect(page).toHaveURL(/admin-demo\/productos\/\?q=/);
-    await row("Vela caniche").getByRole("switch").click();
-    await row("Vela caniche").getByRole("cell").nth(2).click();
-    await expect(page.getByRole("heading", { level: 1, name: "Editar: Vela caniche" })).toBeVisible();
+    await row("Overvolt pre-entreno").getByRole("switch").click();
+    await row("Overvolt pre-entreno").getByRole("cell").nth(2).click();
+    await expect(page.getByRole("heading", { level: 1, name: "Editar: Overvolt pre-entreno" })).toBeVisible();
 
-    await page.goto("admin-demo/productos/?ver=variantes&q=caniche%20vainilla");
-    await page.getByRole("button", { name: "Sumar 1 a Vela caniche · Vainilla" }).click();
+    await page.goto("admin-demo/productos/?ver=variantes&q=overvolt%20frutos");
+    await page.getByRole("button", { name: "Sumar 1 a Overvolt pre-entreno · Frutos rojos" }).click();
     await expect(page).toHaveURL(/ver=variantes/);
-    await row("Vainilla").getByRole("cell").nth(3).click();
-    await expect(page.getByRole("heading", { level: 1, name: "Editar: Vela caniche" })).toBeVisible();
+    await row("Frutos rojos").getByRole("cell").nth(3).click();
+    await expect(page.getByRole("heading", { level: 1, name: "Editar: Overvolt pre-entreno" })).toBeVisible();
 
-    await page.goto("admin-demo/costos/?q=vela%20caniche");
-    await row("Vela caniche").getByRole("cell").nth(2).click();
-    await expect(page.getByRole("dialog", { name: "Costo de Vela caniche" })).toBeVisible();
+    await page.goto("admin-demo/costos/?q=overvolt");
+    await row("Overvolt pre-entreno").getByRole("cell").nth(2).click();
+    await expect(page.getByRole("dialog", { name: "Costo de Overvolt pre-entreno" })).toBeVisible();
 
-    await page.goto("admin-demo/insumos/?q=cera");
-    await row("Cera de soja").getByRole("cell").nth(4).click();
-    await expect(page.getByRole("dialog", { name: "Insumo Cera de soja" })).toBeVisible();
+    await page.goto("admin-demo/insumos/?q=folleto");
+    await row("Folleto con tabla de dosis").getByRole("cell").nth(4).click();
+    await expect(page.getByRole("dialog", { name: "Insumo Folleto con tabla de dosis" })).toBeVisible();
   });
 
   test("8.3.4 vista Excel: mismos filtros, solo lectura donde corresponde, Atrás vuelve a la tabla y el .xlsx lleva todas las filas filtradas", async ({ page }) => {
@@ -134,19 +134,29 @@ test("8.3.19 un solo módulo: menú sin Stock ni Planilla, “Ver stock” filtr
   await alert.click();
   await expect(page).toHaveURL(/ver=variantes/);
   await expect(page).toHaveURL(/stock=reponer/);
-  await expect(page.getByText(`${count} variantes de 40`)).toBeVisible();
+  await expect(page.getByText(`${count} variantes de 63`)).toBeVisible();
   await page.goto("admin-demo/stock/?vista=reponer");
   await expect(page).toHaveURL(/productos\/\?ver=variantes&stock=reponer/);
-  await expect(page.getByText(`${count} variantes de 40`)).toBeVisible();
+  await expect(page.getByText(`${count} variantes de 63`)).toBeVisible();
   // Importar sigue como acción del módulo.
   await page.getByRole("link", { name: "Importar Excel" }).click();
   await expect(page.getByRole("heading", { level: 1, name: /Importar desde Excel/ })).toBeVisible();
 });
 
 test("8.3.19 “a pedido” sigue igual en la tabla y en la vista Excel", async ({ page }) => {
+  // El catálogo de VOLTA no trae variantes a pedido: se pasan las dos de Pump Flow desde el editor.
+  await page.goto("admin-demo/productos/editar/?id=pump-flow");
+  for (const flavor of ["Uva", "Sandía"]) {
+    const variant = page.locator("#paso-variantes details").filter({ has: page.locator("summary", { hasText: flavor }) });
+    await variant.locator("summary").click();
+    await variant.getByLabel("A pedido (sin límite)").check();
+    await expect(variant.locator("summary")).toContainText("a pedido");
+  }
+  await page.getByRole("button", { name: "Guardar (solo en esta demo)" }).click();
+  await expect(page.getByRole("status").filter({ hasText: "Producto guardado" })).toBeVisible();
   await page.goto("admin-demo/productos/?ver=variantes&stock=made-to-order");
   const total = Number((await page.locator("section[aria-label='Stock por variante'] p[aria-live]").first().textContent())!.match(/\d+/)![0]);
-  expect(total).toBeGreaterThan(0);
+  expect(total).toBe(2);
   await page.goto("admin-demo/productos/?ver=variantes&stock=made-to-order&formato=excel");
   const grid = page.getByRole("grid", { name: "Productos y stock en formato Excel" });
   await expect(grid.getByRole("row")).toHaveCount(total + 1);

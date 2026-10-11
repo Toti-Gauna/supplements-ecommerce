@@ -14,35 +14,37 @@ test("importar Excel: planilla de ejemplo, vista previa con errores, importar, v
   await page.getByRole("button", { name: /Ver vista previa/ }).click();
   await expect(page.getByRole("cell", { name: /pesos enteros, sin centavos/ })).toBeVisible();
   await page.getByRole("button", { name: /Con cambios/ }).click();
-  await expect(page.getByRole("cell", { name: /Stock 12 → 9/ })).toBeVisible();
-  await page.getByRole("button", { name: /Importar 7 filas/ }).click();
+  await expect(page.getByRole("cell", { name: /Stock 24 → 40/ })).toBeVisible();
+  await page.getByRole("button", { name: /Importar 6 filas/ }).click();
   await expect(page.getByRole("heading", { name: "Catálogo actualizado" })).toBeVisible();
 
+  // El producto nuevo de la planilla aparece en su categoría de la tienda.
   await page.goto("categorias/");
-  await page.getByRole("link", { name: /Mates y cocina/ }).first().click();
-  await expect(page).toHaveURL(/c\/demo\/\?slug=mates-y-cocina/);
-  await expect(page.getByText("Tabla de picada con nombre")).toBeVisible();
+  await page.getByRole("link", { name: /Accesorios/ }).first().click();
+  await expect(page).toHaveURL(/c\/accesorios\/$/);
+  await expect(page.getByText("Guantes de entrenamiento")).toBeVisible();
 
   await page.goto("admin-demo/importar/");
   await page.getByRole("button", { name: "Deshacer importación" }).click();
   await expect(page.getByRole("dialog")).toContainText("también se pierde");
   await page.getByRole("dialog").getByRole("button", { name: "Deshacer" }).click();
   await expect(page.getByText(/Última importación/)).toHaveCount(0);
-  await page.goto("categorias/");
-  await expect(page.getByRole("link", { name: /Mates y cocina/ })).toHaveCount(0);
+  await page.goto("c/accesorios/");
+  await expect(page.getByText("Shaker VOLTA 700 ml").first()).toBeVisible();
+  await expect(page.getByText("Guantes de entrenamiento")).toHaveCount(0);
   assertNoExternal();
 });
 
 test("importar un CSV propio con ; y montos con $", async ({ page }) => {
   await page.goto("admin-demo/importar/");
-  const csv = "Producto;Variante;Precio;Stock\nVela caniche;Lavanda;$ 12.900;15\n";
+  const csv = "Producto;Variante;Precio;Stock\nBCAA 2:1:1;Uva;$ 28.900;15\n";
   await page.getByLabel("Elegir archivo de Excel o CSV").setInputFiles({ name: "stock.csv", mimeType: "text/csv", buffer: Buffer.from(csv) });
   await page.getByRole("button", { name: /Ver vista previa/ }).click();
-  await expect(page.getByRole("cell", { name: /Precio \$\s?11\.900 → \$\s?12\.900/ })).toBeVisible();
+  await expect(page.getByRole("cell", { name: /Precio \$\s?27\.900 → \$\s?28\.900/ })).toBeVisible();
   await page.getByRole("button", { name: /Importar 1 fila/ }).click();
   await page.goto("admin-demo/productos/?ver=variantes");
-  await page.getByLabel("Buscar producto o variante").fill("lavanda");
-  await expect(page.getByLabel("Unidades de Vela caniche · Lavanda").first()).toHaveValue("15");
+  await page.getByLabel("Buscar producto o variante").fill("uva");
+  await expect(page.getByLabel("Unidades de BCAA 2:1:1 · Uva").first()).toHaveValue("15");
 });
 
 test("pedidos: filtro de etapa, cambio en lote, ficha completa y exportar a Excel", async ({ page }) => {
@@ -74,11 +76,11 @@ test("pedidos: filtro de etapa, cambio en lote, ficha completa y exportar a Exce
 
 test("stock: sumar en la tabla se refleja en la ficha de la tienda", async ({ page }) => {
   await page.goto("admin-demo/productos/?ver=variantes");
-  await page.getByLabel("Buscar producto o variante").fill("caniche vainilla");
-  await page.getByRole("button", { name: "Sumar 1 a Vela caniche · Vainilla" }).first().click();
-  await expect(page.getByLabel("Unidades de Vela caniche · Vainilla").first()).toHaveValue("9");
-  await page.goto("p/vela-caniche/");
-  await expect(page.getByText(/En stock · 9 disponibles/)).toBeVisible();
+  await page.getByLabel("Buscar producto o variante").fill("overvolt frutos");
+  await page.getByRole("button", { name: "Sumar 1 a Overvolt pre-entreno · Frutos rojos" }).first().click();
+  await expect(page.getByLabel("Unidades de Overvolt pre-entreno · Frutos rojos").first()).toHaveValue("13");
+  await page.goto("p/overvolt-pre/");
+  await expect(page.getByText(/En stock · 13 disponibles/)).toBeVisible();
 });
 
 test("buscador del panel con Ctrl+K abre un pedido", async ({ page }) => {
@@ -97,9 +99,9 @@ test.describe("vista Excel de Productos y stock en escritorio", () => {
     // La ruta vieja de la Planilla lleva a la vista Excel del módulo unificado.
     await page.goto("admin-demo/planilla/");
     await expect(page.getByRole("heading", { level: 1, name: /Productos y stock · formato Excel/ })).toBeVisible();
-    await page.getByLabel("Buscar producto o variante").fill("vela caniche");
+    await page.getByLabel("Buscar producto o variante").fill("overvolt");
     const row = (text: string) => page.getByRole("row").filter({ hasText: text });
-    const stock = row("Vainilla").getByRole("gridcell").nth(4);
+    const stock = row("Frutos rojos").getByRole("gridcell").nth(4);
     await stock.click();
     await page.keyboard.type("abc");
     await page.keyboard.press("Enter");
@@ -107,8 +109,8 @@ test.describe("vista Excel de Productos y stock en escritorio", () => {
     await page.getByLabel("Editar celda").fill("20");
     await page.keyboard.press("Enter");
     await expect(page.getByText("1 cambio sin guardar")).toBeVisible();
-    // Pegar dos celdas (precio y stock) copiadas de Excel en la fila de Lavanda
-    await row("Lavanda").getByRole("gridcell").nth(3).click();
+    // Pegar dos celdas (precio y stock) copiadas de Excel en la fila de Limón
+    await row("Limón").getByRole("gridcell").nth(3).click();
     await page.evaluate(() => {
       const dt = new DataTransfer();
       dt.setData("text/plain", "$ 13.500\t7\n");
@@ -120,7 +122,7 @@ test.describe("vista Excel de Productos y stock en escritorio", () => {
     await page.keyboard.press("Control+y");
     await page.getByRole("button", { name: "Guardar cambios" }).click();
     await expect(page.getByText("Todo guardado")).toBeVisible();
-    await page.goto("p/vela-caniche/");
+    await page.goto("p/overvolt-pre/");
     await expect(page.getByText(/En stock · 20 disponibles/)).toBeVisible();
   });
 });

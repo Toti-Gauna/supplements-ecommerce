@@ -98,7 +98,7 @@ export function ProductionBoard() {
 
   return (
     <>
-      <AdminPageHeader title="Cola de producción">Los pedidos pagados en orden de entrega, con la vista previa que aprobó el cliente. Arrastrá la tarjeta, usá el botón de la etapa siguiente o “Mover etapa”: al entrar a producción se descuentan los insumos (una sola vez).</AdminPageHeader>
+      <AdminPageHeader title="Cola de producción">Los pedidos pagados en orden de entrega, con lo que lleva cada uno. Arrastrá la tarjeta, usá el botón de la etapa siguiente o “Mover etapa”: al entrar a producción se descuentan los insumos (una sola vez).</AdminPageHeader>
       {short.length > 0 && (
         <p role="status" className="mb-4 flex flex-wrap items-center gap-2 rounded-2xl bg-danger-soft p-3 text-sm font-bold text-danger">
           <TriangleAlert size={17} aria-hidden="true" /> No alcanzan {short.map((m) => m.name.toLowerCase()).join(", ")} para los pedidos en cola.

@@ -62,15 +62,15 @@ test.describe("escritorio con mouse", () => {
     await expect(pages.getByRole("button", { name: "Página siguiente" })).toBeDisabled();
     // Los cierres propios van aparte.
     await dialog.getByRole("button", { name: /Cierres del taller/ }).click();
-    await expect(dialog.getByRole("list", { name: "Cierres del taller" })).toContainText("Feria de diseño");
+    await expect(dialog.getByRole("list", { name: "Cierres del taller" })).toContainText("Inventario anual");
     // Cerrar un día con una entrega comprometida: se avisa y el pedido no se mueve.
     await dialog.getByLabel("Fecha del cierre").first().fill("2026-10-14");
-    await dialog.getByLabel("Motivo").first().fill("Mudanza del taller");
+    await dialog.getByLabel("Motivo").first().fill("Mudanza del local");
     await dialog.getByRole("button", { name: "Agregar cierre" }).click();
     const warn = dialog.getByRole("alertdialog", { name: "Cambio que toca entregas" });
-    await expect(warn).toContainText("VOL-000123 queda en un día cerrado (mié, 14 oct · Mudanza del taller).");
+    await expect(warn).toContainText("VOL-000123 queda en un día cerrado (mié, 14 oct · Mudanza del local).");
     await warn.getByRole("button", { name: "Cerrar igual" }).click();
-    await expect(dialog.getByRole("list", { name: "Cierres del taller" })).toContainText("Mudanza del taller");
+    await expect(dialog.getByRole("list", { name: "Cierres del taller" })).toContainText("Mudanza del local");
     // Editar el motivo y después quitarlo con confirmación.
     await dialog.getByRole("button", { name: "Editar el cierre del mié, 14 oct" }).click();
     await dialog.getByRole("form", { name: "Editar cierre del mié, 14 oct" }).getByLabel("Motivo").fill("Mudanza (de muestra)");
@@ -94,15 +94,15 @@ test.describe("escritorio con mouse", () => {
     await page.goto("admin-demo/calendario/");
     await openDay(page, "2026-10-06");
     const dialog = page.getByRole("dialog", { name: "Día martes, 6 de octubre" });
-    await expect(dialog.getByRole("region", { name: "Entradas del día" })).toContainText("Retirar filamento PLA en el proveedor");
+    await expect(dialog.getByRole("region", { name: "Entradas del día" })).toContainText("Recibir la entrega de Krono Nutrition");
     await dialog.getByRole("button", { name: "Nueva entrada" }).click();
     await dialog.getByRole("button", { name: "Guardar entrada" }).click();
     await expect(dialog.getByText("Escribí un título (2 letras o más).")).toBeVisible();
-    await dialog.getByLabel("Título").fill("Llamar al proveedor de cera");
-    await dialog.getByLabel("Notas (opcional)").fill("Pedir precio por 10 kg.");
+    await dialog.getByLabel("Título").fill("Llamar a la distribuidora");
+    await dialog.getByLabel("Notas (opcional)").fill("Pedir precio por 20 potes de whey.");
     await dialog.getByRole("button", { name: "Guardar entrada" }).click();
     await expect(toast(page, "Entrada agregada")).toBeVisible();
-    await expect(dialog.getByRole("region", { name: "Entradas del día" })).toContainText("Llamar al proveedor de cera");
+    await expect(dialog.getByRole("region", { name: "Entradas del día" })).toContainText("Llamar a la distribuidora");
     // Nota de un pedido, con vínculo.
     await dialog.getByRole("button", { name: "Nueva entrada" }).click();
     await dialog.getByLabel("Tipo").selectOption("pedido");
@@ -113,16 +113,16 @@ test.describe("escritorio con mouse", () => {
     await page.keyboard.press("Escape");
     // Persiste al recargar; editar cambia el título.
     await page.reload();
-    await expect(day(page, "2026-10-06").getByRole("button", { name: /^Llamar al proveedor de cera/ })).toBeVisible();
-    await day(page, "2026-10-06").getByRole("button", { name: /^Llamar al proveedor de cera/ }).click();
-    await dialog.getByLabel("Título").fill("Llamar al proveedor de cera (urgente)");
+    await expect(day(page, "2026-10-06").getByRole("button", { name: /^Llamar a la distribuidora/ })).toBeVisible();
+    await day(page, "2026-10-06").getByRole("button", { name: /^Llamar a la distribuidora/ }).click();
+    await dialog.getByLabel("Título").fill("Llamar a la distribuidora (urgente)");
     await dialog.getByRole("button", { name: "Guardar entrada" }).click();
     await expect(toast(page, "Entrada actualizada")).toBeVisible();
     await page.keyboard.press("Escape");
     // Arrastrar la entrada a otro día la mueve sin pedir confirmación (no es una fecha prometida).
-    await day(page, "2026-10-06").getByRole("button", { name: /^Retirar filamento/ }).dragTo(day(page, "2026-10-07"));
-    await expect(toast(page, /“Retirar filamento PLA en el proveedor” pasa al mié, 7 oct/)).toBeVisible();
-    await expect(day(page, "2026-10-07").getByRole("button", { name: /^Retirar filamento/ })).toBeVisible();
+    await day(page, "2026-10-06").getByRole("button", { name: /^Recibir la entrega/ }).dragTo(day(page, "2026-10-07"));
+    await expect(toast(page, /“Recibir la entrega de Krono Nutrition” pasa al mié, 7 oct/)).toBeVisible();
+    await expect(day(page, "2026-10-07").getByRole("button", { name: /^Recibir la entrega/ })).toBeVisible();
   });
 
   test("8.3.15 arrastrar un pedido pide confirmar y se refleja en el pedido; un sábado lo rechaza con el motivo; Reprogramar sin arrastrar confirma la sobrecarga", async ({ page }) => {
@@ -165,8 +165,9 @@ test.describe("escritorio con mouse", () => {
 
   test("8.3.16 Mover etapa y arrastrar actualizan estado y contadores; los insumos se descuentan una sola vez; un destino inválido explica por qué", async ({ page }) => {
     await page.goto("admin-demo/insumos/");
-    await page.getByLabel("Buscar insumo").fill("cera");
-    await expect(page.getByLabel("Stock de Cera de soja").first()).toHaveValue("5000");
+    // VOL-000113 (2 cajas de barras) usa una bolsa con logo por unidad.
+    await page.getByLabel("Buscar insumo").fill("bolsa");
+    await expect(page.getByLabel("Stock de Bolsa con logo").first()).toHaveValue("120");
     await page.goto("admin-demo/produccion/");
     const lane = (id: string) => page.locator(`section[data-column="${id}"]`);
     await expect(lane("queue").locator("> header")).toContainText("4");
@@ -187,8 +188,8 @@ test.describe("escritorio con mouse", () => {
     await expect(toast(page, "VOL-000110 pasó a “Terminación”")).toBeVisible();
     await expect(lane("finishing").getByRole("article", { name: "Pedido VOL-000110" })).toBeVisible();
     await page.goto("admin-demo/insumos/");
-    await page.getByLabel("Buscar insumo").fill("cera");
-    await expect(page.getByLabel("Stock de Cera de soja").first()).toHaveValue("3920");
+    await page.getByLabel("Buscar insumo").fill("bolsa");
+    await expect(page.getByLabel("Stock de Bolsa con logo").first()).toHaveValue("118");
   });
 });
 

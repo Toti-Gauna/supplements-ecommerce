@@ -37,7 +37,7 @@ test("8.3.1 cada barra abre su día: fecha, cantidad, total y pedidos; la tabla 
   await expect(bars.nth(i)).toHaveAttribute("aria-pressed", "true");
   // Recorrido A: barra → pedido del día → ficha → volver.
   await day.getByRole("link").first().click();
-  await expect(page.getByRole("heading", { level: 1, name: /VEL-/ })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: /VOL-/ })).toBeVisible();
   await page.goBack();
   await expect(chart(page)).toBeVisible();
 });
@@ -60,7 +60,7 @@ for (const [label, width, height, mobile] of [["escritorio", 1440, 900, false], 
       if (k > 0) expect(boxes[k]!.y).toBeGreaterThan(boxes[k - 1]!.y + boxes[k - 1]!.height - 1);
     }
     // Cada pedido: el código en una sola línea, con su estado e importe a la vista.
-    const rows = page.locator("section").filter({ has: page.getByRole("heading", { name: "Últimos pedidos" }) }).getByRole("link", { name: /VEL-/ });
+    const rows = page.locator("section").filter({ has: page.getByRole("heading", { name: "Últimos pedidos" }) }).getByRole("link", { name: /VOL-/ });
     await expect(rows).toHaveCount(4);
     for (const row of await rows.all()) {
       const code = row.locator("span.font-extrabold").first();

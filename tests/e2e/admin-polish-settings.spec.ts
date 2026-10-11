@@ -80,11 +80,11 @@ test.describe("escritorio con mouse", () => {
     expect(data.zones.find((z: { id: string }) => z.id === "local").postalCodes).toEqual(["7600", "7601"]);
     expect(data.zones.find((z: { id: string }) => z.id === "national").price).toBe(9800);
     // Descartar: confirma y vuelve a lo guardado.
-    const pickup = page.locator("section").filter({ has: page.getByRole("heading", { name: "Retiro en persona" }) });
+    const pickup = page.locator("section").filter({ has: page.getByRole("heading", { name: "Retiro en el local" }) });
     await pickup.getByLabel("Plazo que ve el comprador").fill("");
     await page.getByRole("button", { name: "Descartar" }).click();
     await page.getByRole("dialog", { name: "Descartar los cambios" }).getByRole("button", { name: "Descartar" }).click();
-    await expect(pickup.getByLabel("Plazo que ve el comprador")).toHaveValue("Coordinamos día y horario por WhatsApp");
+    await expect(pickup.getByLabel("Plazo que ve el comprador")).toHaveValue("Listo en 1 hora en días hábiles");
   });
 
   test("8.3.29 datos de cobro en su página usan la misma fuente que el modal de Pagos y la tienda sigue con el estilo Volta", async ({ page }) => {
@@ -95,8 +95,9 @@ test.describe("escritorio con mouse", () => {
     await page.goto("admin-demo/pagos/");
     await page.getByRole("button", { name: "Configurar datos de cobro" }).click();
     await expect(page.getByRole("dialog").getByLabel("Alias")).toHaveValue("volta.ajustes.demo");
+    // La tienda arranca en modo oscuro con el verde voltio de la marca: Ajustes no toca la paleta.
     await page.goto("");
-    expect(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--brand-primary").trim().toLowerCase())).toBe("#3a4527");
+    expect(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--brand-primary").trim().toLowerCase())).toBe("#c8ff2e");
   });
 });
 

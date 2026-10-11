@@ -67,7 +67,7 @@ test.describe("escritorio con mouse", () => {
     await dialog.getByRole("button", { name: "Guardar datos de cobro" }).click();
     await expect(dialog.getByText("Tiene que tener 22 dígitos.")).toBeVisible();
     await dialog.getByLabel("CBU / CVU").fill("0000003100000000000099");
-    await dialog.getByLabel("Alias").fill("volta.taller.demo");
+    await dialog.getByLabel("Alias").fill("volta.cobros.demo");
     await dialog.getByRole("button", { name: "Guardar datos de cobro" }).click();
     await expect(dialog).toBeHidden();
     await expect(toast(page, "Datos de cobro de muestra guardados")).toBeVisible();
@@ -75,30 +75,30 @@ test.describe("escritorio con mouse", () => {
     await expect(page.getByRole("button", { name: /Resueltos/ })).toHaveAttribute("aria-pressed", "true");
     await expect(page.getByRole("button", { name: /Por revisar/ })).toContainText("2");
     await page.goto("admin-demo/ajustes/cobro/");
-    await expect(page.getByLabel("Alias")).toHaveValue("volta.taller.demo");
+    await expect(page.getByLabel("Alias")).toHaveValue("volta.cobros.demo");
     await expect(page.getByLabel("CBU / CVU")).toHaveValue("0000003100000000000099");
     // Checkout demo con transferencia: muestra los datos nuevos.
-    await page.goto("p/home-spray/");
+    await page.goto("p/bcaa-211/");
     await page.getByRole("button", { name: "Agregar al carrito" }).last().click();
     await page.goto("checkout/");
     await page.getByLabel("Nombre y apellido").fill("Ana Prueba");
     await page.getByLabel("Email").fill("ana@ejemplo.com");
     await page.getByLabel("Teléfono / WhatsApp").fill("223 555-9999");
     await page.getByRole("button", { name: "Continuar a la entrega" }).click();
-    await page.getByText("Retiro en persona").click();
+    await page.getByText("Retiro en el local").click();
     await page.getByRole("button", { name: "Continuar al pago" }).click();
     await page.getByText("Transferencia bancaria").click();
     await page.getByRole("button", { name: "Revisar pedido" }).click();
     await page.getByRole("checkbox", { name: /Acepto los/ }).check();
     await page.getByRole("button", { name: "Confirmar pedido de demostración" }).click();
-    await expect(page.getByText("volta.taller.demo")).toBeVisible();
+    await expect(page.getByText("volta.cobros.demo")).toBeVisible();
   });
 
   test("8.3.5 reclamos: la lista abre la ficha completa; marcar en curso con confirmación y volver", async ({ page }) => {
     await page.goto("admin-demo/reclamos/");
     await page.getByRole("link", { name: /ARR-0007/ }).click();
     await expect(page.getByRole("heading", { level: 1, name: /ARR-0007/ })).toBeVisible();
-    await expect(page.getByRole("region", { name: "Mensaje del comprador" })).toContainText("Me arrepentí de la figura");
+    await expect(page.getByRole("region", { name: "Mensaje del comprador" })).toContainText("Me arrepentí del pre-entreno");
     await expect(page.getByRole("region", { name: "Pedido" }).getByRole("link", { name: "VOL-000119" })).toBeVisible();
     await page.getByRole("button", { name: "Marcar en curso" }).click();
     await confirm(page, "Marcar en curso");

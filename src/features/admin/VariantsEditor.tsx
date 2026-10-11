@@ -29,7 +29,7 @@ export function VariantsEditor({ variants, onChange, idPrefix }: { variants: Var
             </label>
             <label className="flex flex-col gap-1 text-sm font-bold">Tamaño / opción<Input value={v.size ?? ""} onChange={(e) => patch(i, { size: e.target.value || undefined })} placeholder="Mediano" /></label>
             <NumberField id={`${id}-delta`} label="Recargo" suffix="ARS" value={v.priceDelta} onChange={(n) => patch(i, { priceDelta: n })} />
-            <NumberField id={`${id}-lead`} label="Plazo propio" suffix="días hábiles" value={v.leadDays} onChange={(n) => patch(i, { leadDays: n || undefined })} hint="Vacío o 0 = el del producto (o 1 día si está en stock y no se personaliza). Usalo si, por ejemplo, el tamaño grande tarda más" />
+            <NumberField id={`${id}-lead`} label="Plazo propio" suffix="días hábiles" value={v.leadDays} onChange={(n) => patch(i, { leadDays: n || undefined })} hint="Vacío o 0 = el del producto (o 1 día si está en stock). Usalo si, por ejemplo, el tamaño grande tarda más" />
             <div className="flex flex-col gap-2">
               <label className="flex min-h-11 items-center gap-2 text-sm font-bold">
                 <input type="checkbox" checked={madeToOrder} onChange={(e) => patch(i, { stock: e.target.checked ? -1 : 0 })} className="h-5 w-5 accent-[var(--color-primary)]" />

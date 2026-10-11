@@ -90,7 +90,7 @@ export function MaterialsTable() {
   return (
     <>
       <AdminPageHeader title="Insumos" actions={<Button variant="secondary" size="sm" onClick={() => setCreating(true)}><Plus size={16} aria-hidden="true" /> Nuevo insumo</Button>}>
-        Filamento, madera, cera, LED y todo lo que usa el taller. “Piden los pedidos” suma las recetas de los pedidos pagados que todavía no entraron a producción; al pasarlos a producción se descuenta del stock.
+        Bolsas, cajas, precintos, regalos y todo lo que se usa para armar los pedidos. “Piden los pedidos” suma las recetas de los pedidos pagados que todavía no entraron a producción; al pasarlos a producción se descuenta del stock.
       </AdminPageHeader>
       <DataTable caption="Insumos del taller" noun="insumos" rows={all} columns={columns} state={state} {...table}
         rowKey={(r) => r.id} rowLabel={(r) => `Seleccionar ${r.name}`} onRowOpen={(r) => setOpen(r.id)} onExport={onExport} onExcel={() => state.setView("excel")} renderCard={Card} rowTone={(r) => (r.state === "short" ? "danger" : r.state === "low" ? "warning" : undefined)}

@@ -29,7 +29,7 @@ export function ProductMediaFields({ draft, onChange }: { draft: Product; onChan
         {error && <p role="alert" className="text-sm font-semibold text-danger">{error}</p>}
         {draft.photoDataUrl && <Button variant="danger" size="sm" className="self-start" onClick={() => onChange({ photoDataUrl: undefined })}><Trash2 size={16} aria-hidden="true" /> Quitar foto</Button>}
         <label className="flex flex-col gap-1 text-sm font-bold">Texto alternativo (alt)
-          <Input value={draft.imageAlt ?? ""} onChange={(e) => onChange({ imageAlt: e.target.value })} placeholder="Comedero rosa con forma de perro globo" />
+          <Input value={draft.imageAlt ?? ""} onChange={(e) => onChange({ imageAlt: e.target.value })} placeholder="Pote negro de whey sabor chocolate, 2 lb" />
           <span className="text-xs font-normal text-muted">Describe la foto para lectores de pantalla y buscadores.</span>
         </label>
       </div>

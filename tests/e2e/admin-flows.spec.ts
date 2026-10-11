@@ -10,29 +10,33 @@ async function confirmDialog(page: Page, button: string) {
 
 test("cambiar stock y pausar en el panel se refleja en la tienda; el reset vuelve a fixtures", async ({ page }) => {
   const assertNoExternal = guardNetwork(page);
-  await page.goto("admin-demo/productos/editar/?id=vela-caniche");
-  await expect(page.getByRole("heading", { name: /Editar: Vela caniche/ })).toBeVisible();
-  for (const s of await page.locator("details").filter({ hasText: /Vainilla|Lavanda/ }).all()) await s.locator("summary").click();
+  await page.goto("admin-demo/productos/editar/?id=overvolt-pre");
+  await expect(page.getByRole("heading", { name: /Editar: Overvolt pre-entreno/ })).toBeVisible();
+  for (const s of await page.locator("details").filter({ hasText: /Frutos rojos|Limón|Mango/ }).all()) await s.locator("summary").click();
   const stock = page.getByLabel("Stock (unidades)");
-  await stock.nth(0).fill("0");
-  await stock.nth(1).fill("0");
+  await expect(stock).toHaveCount(3);
+  for (let i = 0; i < 3; i++) await stock.nth(i).fill("0");
   await page.getByRole("button", { name: "Guardar (solo en esta demo)" }).click();
   await expect(page.getByRole("status").filter({ hasText: "Cambio guardado solo en esta demo" })).toBeVisible();
-  await page.goto("p/vela-caniche/");
+  await page.goto("p/overvolt-pre/");
   await expect(page.getByText(/Sin stock en esta variante/)).toBeVisible();
   await expect(page.getByRole("button", { name: "Agregar al carrito" }).first()).toBeDisabled();
 
   await page.goto("admin-demo/productos/");
-  await page.getByLabel("Buscar producto").fill("mdp");
-  await page.getByRole("listitem").filter({ hasText: "Pieza “I ♥ MDP”" }).getByRole("switch").click();
+  // Mass Gainer es el único producto de "Ganadores de peso": pausarlo esconde la categoría.
+  await page.getByLabel("Buscar producto").fill("mass");
+  await page.getByRole("listitem").filter({ hasText: "Mass Gainer 3 kg" }).getByRole("switch").click();
   await page.goto("categorias/");
-  await expect(page.getByRole("link", { name: /Souvenirs/ })).toHaveCount(0);
+  await expect(page.getByRole("link", { name: /Proteínas/ })).toBeVisible();
+  await expect(page.getByRole("link", { name: /Ganadores de peso/ })).toHaveCount(0);
 
   await page.goto("admin-demo/");
   page.once("dialog", (d) => d.accept());
   await page.getByRole("button", { name: "Reiniciar demo" }).click();
-  await page.goto("p/vela-caniche/");
-  await expect(page.getByText(/En stock/)).toBeVisible();
+  await page.goto("p/overvolt-pre/");
+  await expect(page.getByText("En stock · 12 disponibles")).toBeVisible();
+  await page.goto("categorias/");
+  await expect(page.getByRole("link", { name: /Ganadores de peso/ })).toBeVisible();
   assertNoExternal();
 });
 
@@ -62,14 +66,14 @@ test("pagos manuales: aprobar y rechazar con motivo sin declararlo pago real", a
 });
 
 test("un comprobante subido en la tienda queda en revisión en el panel, nunca pagado", async ({ page }) => {
-  await page.goto("p/home-spray/");
+  await page.goto("p/bcaa-211/");
   await page.getByRole("button", { name: "Agregar al carrito" }).last().click();
   await page.goto("checkout/");
   await page.getByLabel("Nombre y apellido").fill("Ana Prueba");
   await page.getByLabel("Email").fill("ana@ejemplo.com");
   await page.getByLabel("Teléfono / WhatsApp").fill("223 555-9999");
   await page.getByRole("button", { name: "Continuar a la entrega" }).click();
-  await page.getByText("Retiro en persona").click();
+  await page.getByText("Retiro en el local").click();
   await page.getByRole("button", { name: "Continuar al pago" }).click();
   await page.getByText("Transferencia bancaria").click();
   await page.getByRole("button", { name: "Revisar pedido" }).click();
@@ -96,16 +100,16 @@ test("cupón y misión creados en el panel funcionan en la tienda", async ({ pag
 
   await page.goto("admin-demo/misiones/");
   await page.getByRole("button", { name: "Nueva misión" }).click();
-  await page.getByLabel("Título", { exact: true }).fill("Comprá 3 velas");
-  await page.getByLabel("Premio", { exact: true }).fill("Vela mini de regalo");
+  await page.getByLabel("Título", { exact: true }).fill("Comprá 3 pre-entrenos");
+  await page.getByLabel("Premio", { exact: true }).fill("Shaker de regalo");
   await page.getByRole("button", { name: "Guardar misión" }).click();
-  await expect(page.getByRole("listitem").filter({ hasText: "Comprá 3 velas" })).toBeVisible();
+  await expect(page.getByRole("listitem").filter({ hasText: "Comprá 3 pre-entrenos" })).toBeVisible();
   await page.goto("cuenta/");
   await page.getByRole("button", { name: "Entrar a la cuenta demo" }).click();
   await page.getByRole("navigation", { name: "Secciones de la cuenta" }).getByRole("link", { name: /^Misiones/ }).click();
-  await expect(page.getByText("Comprá 3 velas")).toBeVisible();
+  await expect(page.getByText("Comprá 3 pre-entrenos")).toBeVisible();
 
-  await page.goto("p/vela-caniche/");
+  await page.goto("p/overvolt-pre/");
   await page.getByRole("button", { name: "Agregar al carrito" }).last().click();
   await page.goto("carrito/");
   await page.getByLabel("¿Tenés un código?").fill("feria15");

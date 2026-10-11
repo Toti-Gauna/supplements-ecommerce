@@ -1,0 +1,279 @@
+@import "tailwindcss";
+
+/*
+ * Escritorio con mouse (Polish 8.3.2): desde 1024 px y con puntero fino que puede pasar por encima. Ahí el panel usa
+ * la barra lateral colapsable; tablets y celulares (táctiles, sin hover) usan menú hamburguesa y barra inferior.
+ */
+@custom-variant desk (@media (width >= 64rem) and (hover: hover) and (pointer: fine));
+
+/*
+ * Sistema visual (PROVISIONAL). Valores de marca llegan como variables CSS desde
+ * src/config/brand.ts (en producción: tabla Setting). Display: Fraunces. Texto: Manrope.
+ */
+@theme inline {
+  --color-primary: var(--brand-primary);
+  --color-primary-hover: var(--brand-primary-hover);
+  --color-on-primary: var(--brand-on-primary);
+  --color-accent: var(--brand-accent);
+  --color-wood: var(--brand-wood);
+  --color-bg: var(--brand-background);
+  --color-surface: var(--brand-surface);
+  --color-ink: var(--brand-text);
+  --color-muted: var(--brand-muted);
+  --color-line: var(--brand-border);
+  --color-night: var(--c-night);
+  --color-night-2: var(--c-night-2);
+  --color-brass: #d2ad69;
+  --color-brass-ink: var(--c-brass-ink);
+  --color-clay: var(--c-clay);
+  --color-success: var(--c-success);
+  --color-success-soft: var(--c-success-soft);
+  --color-warning: var(--c-warning);
+  --color-warning-soft: var(--c-warning-soft);
+  --color-danger: var(--c-danger);
+  --color-danger-soft: var(--c-danger-soft);
+  --font-sans: var(--brand-font);
+  --font-display: var(--brand-display);
+  --font-script: "Caveat", cursive;
+  --radius-card: 1.75rem;
+  --shadow-card: var(--sh-card);
+  --shadow-lift: var(--sh-lift);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/*
+ * Tema claro / oscuro. El claro sale de brand.ts (variables en <html>); el oscuro las pisa con !important
+ * porque las de marca llegan como estilo en línea. data-theme lo pone un script antes de pintar.
+ */
+:root {
+  color-scheme: light;
+  --c-night: #1c2016;
+  --c-night-2: #262c1d;
+  --c-brass-ink: #7a5c26;
+  --c-clay: #b4573a;
+  --c-success: #2f6b3a;
+  --c-success-soft: #e4eedf;
+  --c-warning: #7a5200;
+  --c-warning-soft: #f8edd4;
+  --c-danger: #a1352a;
+  --c-danger-soft: #f8e3dd;
+  --sh-card: 0 1px 2px rgb(28 32 22 / 0.04), 0 18px 40px -22px rgb(28 32 22 / 0.28);
+  --sh-lift: 0 2px 4px rgb(28 32 22 / 0.05), 0 30px 60px -28px rgb(28 32 22 / 0.4);
+  --skeleton-a: #ebe2d1;
+  --skeleton-b: #f6f0e5;
+  --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%233a4527' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  --calendar: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%233a4527' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2'/%3E%3Cpath d='M16 2v4M8 2v4M3 10h18'/%3E%3C/svg%3E");
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --brand-primary: #c5d19e !important;
+  --brand-primary-hover: #d6e0b4 !important;
+  --brand-on-primary: #151910 !important;
+  --brand-accent: #262b20 !important;
+  --brand-wood: #b98b5c !important;
+  --brand-background: #121510 !important;
+  --brand-surface: #1b1f17 !important;
+  --brand-text: #ece6d8 !important;
+  --brand-muted: #a9a591 !important;
+  --brand-border: #2f3528 !important;
+  --c-night: #0a0c08;
+  --c-night-2: #16190f;
+  --c-brass-ink: #d9b878;
+  --c-clay: #e08a6c;
+  --c-success: #93d39f;
+  --c-success-soft: #1c2b1f;
+  --c-warning: #ebc77f;
+  --c-warning-soft: #2d2513;
+  --c-danger: #f3a497;
+  --c-danger-soft: #37201b;
+  --sh-card: 0 1px 0 rgb(255 255 255 / 0.03) inset, 0 18px 40px -22px rgb(0 0 0 / 0.7);
+  --sh-lift: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 30px 60px -24px rgb(0 0 0 / 0.85);
+  --skeleton-a: #1f241a;
+  --skeleton-b: #2a3023;
+  --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23c5d19e' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  --calendar: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23c5d19e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2'/%3E%3Cpath d='M16 2v4M8 2v4M3 10h18'/%3E%3C/svg%3E");
+}
+/* En oscuro, las bandas "noche" son más profundas que el fondo y llevan un filo sutil para separarse. */
+html[data-theme="dark"] .bg-night { box-shadow: inset 0 0 0 1px rgb(210 173 105 / 0.12); }
+
+@layer base {
+  /* Controles nativos con la estética de la tienda: el navegador sigue dibujando el selector, el calendario,
+     el teclado numérico y el selector de color (accesibles y conocidos), con nuestros colores, radios y foco. */
+  input, select, textarea, button { font: inherit; }
+  input[type="checkbox"], input[type="radio"], input[type="range"], progress { accent-color: var(--color-primary); }
+  input[type="checkbox"]:not(.sr-only), input[type="radio"]:not(.sr-only) { width: 1.2rem; height: 1.2rem; cursor: pointer; }
+  input[type="range"] { cursor: pointer; }
+  select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: var(--chevron);
+    background-repeat: no-repeat;
+    background-position: right 0.95rem center;
+    background-size: 1rem;
+    padding-right: 2.6rem !important;
+    cursor: pointer;
+  }
+  select option { background: var(--color-surface); color: var(--color-ink); }
+  input[type="date"], input[type="time"], input[type="datetime-local"] { cursor: pointer; }
+  input[type="date"]::-webkit-calendar-picker-indicator { cursor: pointer; opacity: 0.75; padding: 0.25rem; border-radius: 0.5rem; }
+  input[type="date"]::-webkit-calendar-picker-indicator:hover { opacity: 1; background: var(--color-accent); }
+  input[type="date"]::-webkit-date-and-time-value { text-align: left; }
+  /* Sin ancho intrínseco: no se sale de grillas ni tarjetas (Safari le da ~ancho fijo al date). */
+  input[type="date"] { min-width: 0; max-width: 100%; }
+  input[type="number"]::-webkit-inner-spin-button { opacity: 0.6; }
+  input[type="color"] { appearance: none; -webkit-appearance: none; padding: 0.25rem; cursor: pointer; }
+  input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+  input[type="color"]::-webkit-color-swatch { border: none; border-radius: 0.6rem; }
+  input[type="color"]::-moz-color-swatch { border: none; border-radius: 0.6rem; }
+  input[type="file"]::file-selector-button { font: inherit; }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+  body {
+    background: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
+  }
+  /* Grano de papel muy sutil: textura premium sin imágenes externas */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  :focus-visible {
+    outline: 2.5px solid var(--color-primary);
+    outline-offset: 3px;
+    border-radius: 0.6rem;
+  }
+  h1, h2, h3 {
+    text-wrap: balance;
+  }
+  ::selection {
+    background: var(--color-brass);
+    color: var(--color-night);
+  }
+}
+
+@utility font-display {
+  font-family: var(--font-display);
+  font-variation-settings: "opsz" 144;
+  letter-spacing: -0.02em;
+  font-weight: 420;
+}
+
+@utility eyebrow {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+@utility chevron-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='18' viewBox='0 0 28 18'%3E%3Cpath d='M2 16 14 4l12 12' fill='none' stroke='%233a4527' stroke-opacity='.06' stroke-width='3'/%3E%3C/svg%3E");
+}
+
+@utility glass {
+  background: color-mix(in oklab, var(--color-surface) 92%, transparent);
+  backdrop-filter: saturate(1.4) blur(18px);
+  -webkit-backdrop-filter: saturate(1.4) blur(18px);
+}
+
+/* Header fijo: su fondo se extiende hacia arriba y tapa la franja de la hora (Safari deja ver la página detrás). */
+@utility bleed-top {
+  &::before { content: ""; position: absolute; inset-inline: 0; bottom: 100%; height: 50vh; background: inherit; pointer-events: none; }
+}
+
+/* Campo con fichas de los emails: texto de ayuda cuando está vacío. */
+.chip-editor:empty::before { content: attr(data-placeholder); color: var(--color-muted); opacity: 0.7; pointer-events: none; }
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+/* ---------- Motion base (CSS: funciona antes de hidratar) ---------- */
+@keyframes fade-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pop { 0% { transform: scale(1); } 40% { transform: scale(1.3); } 100% { transform: scale(1); } }
+@keyframes shimmer { from { background-position: -200% 0; } to { background-position: 200% 0; } }
+@keyframes grow { from { width: var(--from, 0%); } to { width: var(--to, 0%); } }
+@keyframes confetti {
+  0% { opacity: 1; transform: translate(0, 0) rotate(0); }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) rotate(var(--rot)); }
+}
+@keyframes toast-in { from { opacity: 0; transform: translateY(12px) scale(0.98); } to { opacity: 1; transform: none; } }
+@keyframes rise { from { opacity: 0; transform: translateY(0.5em); filter: blur(6px); } to { opacity: 1; transform: none; filter: blur(0); } }
+@keyframes float-a { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-10px) rotate(-1deg); } }
+
+.animate-fade-up { animation: fade-up 520ms var(--ease-out-expo) both; }
+.animate-fade-in { animation: fade-in 320ms ease-out both; }
+.animate-pop { animation: pop 420ms var(--ease-out-expo); }
+.animate-toast { animation: toast-in 260ms var(--ease-out-expo) both; }
+.animate-rise { animation: rise 900ms var(--ease-out-expo) both; }
+/* backwards (no both): al terminar no queda un transform que convierta a la página en contenedor de los `fixed`. */
+.page-enter { animation: fade-up 480ms var(--ease-out-expo) backwards; }
+.skeleton {
+  background: linear-gradient(90deg, var(--skeleton-a) 0%, var(--skeleton-b) 50%, var(--skeleton-a) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out 3;
+}
+.progress-fill { animation: grow 1100ms var(--ease-out-expo) both; }
+/* La pantalla de carga de marca vive en app/splash.css. */
+.confetti-piece { animation: confetti 1000ms var(--ease-out-expo) both; }
+
+/* Letras y dijes del collar: se balancean colgados del cordón tres veces al aparecer o al cambiar y quedan quietos
+   (un balanceo sin fin redibujaba el SVG en cada cuadro y trababa el scroll de la ficha). */
+@keyframes collar-swing { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-3.5deg); } 75% { transform: rotate(3.5deg); } }
+.collar-swing { animation: collar-swing 2.8s ease-in-out 3; }
+
+/* Luces del aro de la ruleta: se encienden en cadena mientras gira y todas juntas al ganar. */
+@keyframes bulb-chase { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
+.bulb-chase { animation: bulb-chase .5s linear infinite; }
+@keyframes bulb-win { 0%, 100% { opacity: 1; } 50% { opacity: .25; } }
+.bulb-win { animation: bulb-win .35s steps(2) 6; }
+@keyframes confetti-fall {
+  0% { transform: translate3d(0, 0, 0) rotate(0); opacity: 1; }
+  85% { opacity: 1; }
+  100% { transform: translate3d(var(--drift), 105vh, 0) rotate(var(--spin)); opacity: 0; }
+}
+.confetti-fall { animation-name: confetti-fall; animation-timing-function: cubic-bezier(0.25, 0.4, 0.45, 1); animation-fill-mode: both; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+  .confetti-piece, .confetti-fall { display: none; }
+}
+
+/*
+ * Safari de iPhone/iPad: el campo de fecha nativo ignora el alto, no muestra placeholder ni ícono y se desborda.
+ * Se le saca la apariencia del sistema (el selector nativo del calendario sigue abriendo al tocar) y se dibuja
+ * el ícono con la estética de la tienda. El texto "dd/mm/aaaa" lo pone DateInput cuando está vacío.
+ */
+.date-placeholder { display: none; }
+@supports (-webkit-touch-callout: none) {
+  input[type="date"] {
+    -webkit-appearance: none;
+    appearance: none;
+    display: flex;
+    align-items: center;
+    background-image: var(--calendar);
+    background-repeat: no-repeat;
+    background-position: right 0.95rem center;
+    background-size: 1.1rem;
+    padding-right: 2.75rem !important;
+  }
+  input[type="date"]::-webkit-date-and-time-value { margin: 0; min-height: 1.5em; text-align: left; }
+  .date-placeholder { display: block; }
+}

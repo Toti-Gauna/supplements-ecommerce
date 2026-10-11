@@ -1,0 +1,102 @@
+/*
+ * Pantalla de carga de marca (en cada recarga, 5 s). Todo lo que se mueve es transform u opacity: lo anima la placa
+ * de video aunque el hilo principal esté ocupado armando la página, que en un celular de gama media es justo
+ * durante el splash. Nada de stroke-dashoffset, clip-path ni filtros animados: con el hilo ocupado se congelaban y
+ * aparecían de golpe (el aro a medio trazar, "Velma" cortado, el telón a los saltos).
+ * Cada capa se centra con left/top 50% y translate: no depende de cómo cada navegador alinea un absoluto en un grid.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  /* Lienzo oscuro mientras se ve el splash: si el primer cuadro tarda en pintarse, no asoma la tienda clara. */
+  html:not(.splash-done) { background-color: #13160e; }
+  html[data-season]:not(.splash-done) { background-color: var(--sp-from, #13160e); }
+}
+#volta-splash {
+  /* Radio del aro: las piezas van montadas sobre él, como cuentas. */
+  --orbit: min(36vmin, 250px);
+  --piece: clamp(64px, 17vmin, 120px);
+  /* Alto del logo + "Volta" (56 + 16 + 48 px; 64 + 16 + 72 en pantallas grandes): las escenas se ubican arriba o
+     abajo de él con calc(50% ± var(--brand-h) / 2), así no lo pisan en ningún tamaño. */
+  --brand-h: 120px;
+  position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; overflow: hidden;
+  /* Es un popover (capa superior): se anulan los estilos del navegador para que ocupe toda la pantalla. */
+  width: auto; height: auto; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; color: inherit;
+  background: radial-gradient(120% 80% at 50% 40%, #262c1d 0%, #1c2016 55%, #13160e 100%);
+  /* Sombra del borde de abajo: se ve recién cuando el telón sube. */
+  box-shadow: 0 40px 90px -20px rgb(0 0 0 / 0.5);
+  animation: splash-curtain 650ms cubic-bezier(0.7, 0, 0.2, 1) 4350ms both;
+}
+/* Capas fijas de principio a fin: si una capa se arma o se desarma cuando su animación arranca o termina (el telón,
+   la órbita a los 4,4 s), el navegador repinta el splash entero y un teléfono lento muestra un cuadro sin fondo. */
+#volta-splash, #volta-splash .splash-orbit, #volta-splash .splash-halo, #volta-splash .splash-card, #volta-splash .season-scene { will-change: transform; }
+.splash-done #volta-splash { display: none; }
+#volta-splash .splash-center { position: absolute; left: 50%; top: 50%; translate: -50% -50%; }
+
+/* Luz, rayos y polvo de oro */
+#volta-splash .splash-glow { width: 70vmin; height: 70vmin; border-radius: 9999px; background: radial-gradient(closest-side, rgb(210 173 105 / 0.22), transparent); animation: glow 2.4s ease-in-out 200ms both; }
+#volta-splash .splash-rays { width: 150vmax; height: 150vmax; opacity: 0; background: repeating-conic-gradient(from 0deg, rgb(210 173 105 / 0.07) 0deg 6deg, transparent 6deg 18deg); -webkit-mask: radial-gradient(closest-side, #000 20%, transparent 70%); mask: radial-gradient(closest-side, #000 20%, transparent 70%); will-change: transform; animation: fade-in 1.2s ease-out 300ms both, rays-spin 9s linear both; }
+#volta-splash .splash-dust { position: absolute; inset: 0; }
+#volta-splash .splash-dust span { position: absolute; width: var(--s); height: var(--s); border-radius: 9999px; background: #f3dca6; box-shadow: 0 0 8px #f3dca6; opacity: 0; animation: dust 2.4s ease-in-out var(--d) infinite; }
+
+/* Un solo aro dorado, concéntrico con el logo, por el centro de las piezas. Aparece abriéndose y una luz lo recorre. */
+#volta-splash .splash-halo { width: calc(var(--orbit) * 2); height: calc(var(--orbit) * 2); opacity: 0; animation: halo-in 1.3s var(--ease-out-expo) 250ms both; }
+#volta-splash .splash-halo::before { content: ""; position: absolute; inset: 0; border-radius: 9999px; border: 1px solid rgb(210 173 105 / 0.85); box-shadow: 0 0 14px rgb(243 220 166 / 0.22), inset 0 0 14px rgb(243 220 166 / 0.1); }
+#volta-splash .splash-sweep, #volta-splash .splash-comet { position: absolute; inset: -1px; border-radius: 9999px; opacity: 0; animation: sweep 1.9s cubic-bezier(0.45, 0, 0.2, 1) 450ms both; }
+#volta-splash .splash-sweep {
+  background: conic-gradient(from 0deg, transparent 0turn 0.7turn, rgb(255 244 214 / 0.95) 0.999turn, transparent 1turn);
+  -webkit-mask: radial-gradient(closest-side, transparent calc(100% - 3px), #000 calc(100% - 2px), #000 100%, transparent 100%);
+  mask: radial-gradient(closest-side, transparent calc(100% - 3px), #000 calc(100% - 2px), #000 100%, transparent 100%);
+}
+#volta-splash .splash-comet::after { content: ""; position: absolute; left: 50%; top: 0; width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; border-radius: 9999px; background: #fff6dc; box-shadow: 0 0 12px 4px rgb(243 220 166 / 0.75); }
+
+/* Las piezas del taller entran en órbita una a una, montadas sobre el aro */
+#volta-splash .splash-orbit { position: absolute; inset: 0; animation: orbit-spin 4.4s cubic-bezier(0.3, 0, 0.2, 1) both; }
+#volta-splash .splash-piece {
+  position: absolute; left: 50%; top: 50%; width: var(--piece); height: var(--piece);
+  margin: calc(var(--piece) / -2) 0 0 calc(var(--piece) / -2);
+  transform: rotate(var(--a)) translateX(var(--orbit)) rotate(calc(-1 * var(--a)));
+}
+#volta-splash .splash-card {
+  position: relative; display: block; height: 100%; overflow: hidden; border-radius: 26%;
+  box-shadow: 0 24px 50px -20px rgb(0 0 0 / 0.7), 0 0 0 1px rgb(210 173 105 / 0.35);
+  opacity: 0; transform: scale(0.4) translateY(18px);
+  animation: piece-in 700ms cubic-bezier(0.2, 1.4, 0.4, 1) calc(1500ms + var(--i) * 260ms) both, piece-float 2.2s ease-in-out calc(2300ms + var(--i) * 260ms);
+}
+#volta-splash .splash-gloss { position: absolute; inset: 0; z-index: 1; border-radius: inherit; background: linear-gradient(135deg, rgb(255 255 255 / 0.55), transparent 38%, transparent 70%, rgb(255 255 255 / 0.12)); mix-blend-mode: soft-light; pointer-events: none; }
+
+/* Logo: las dos mitades llegan desde arriba y desde abajo y encastran; después "Volta" sube detrás de una línea. */
+#volta-splash .splash-mark { position: relative; display: block; }
+#volta-splash .splash-mark svg { position: absolute; inset: 0; height: 100%; width: 100%; overflow: visible; }
+#volta-splash .mark-m { animation: mark-down 700ms var(--ease-out-expo) 150ms both; }
+#volta-splash .mark-v { animation: mark-up 700ms var(--ease-out-expo) 300ms both; }
+#volta-splash .splash-mark::after { content: ""; position: absolute; inset: -60%; border-radius: 9999px; background: radial-gradient(closest-side, rgb(243 220 166 / 0.45), transparent); opacity: 0; animation: mark-flash 900ms ease-out 650ms both; }
+/* El relleno con margen negativo agranda el recorte sin mover nada: no come el remate de la "V" ni la "l". */
+#volta-splash .splash-word { display: block; overflow: hidden; margin: calc(1rem - 0.1em) -0.08em -0.16em; padding: 0.1em 0.08em 0.16em; }
+#volta-splash .word { letter-spacing: -0.02em; animation: word-up 950ms var(--ease-out-expo) 620ms both; }
+#volta-splash .splash-city { position: absolute; bottom: calc(6% + env(safe-area-inset-bottom)); color: rgb(216 207 189 / 0.7); opacity: 0; animation: fade-in 500ms ease-out 900ms both; }
+
+@media (min-width: 640px) and (min-height: 561px) { #volta-splash { --brand-h: 152px; } }
+
+/* Pantallas bajas (celular apaisado): logo más chico y sin los rótulos, así el aro, las piezas y las escenas no lo pisan. */
+@media (max-height: 560px) {
+  #volta-splash .splash-mark { width: 3.5rem; height: 3.5rem; }
+  #volta-splash .word { font-size: 3rem; line-height: 1; }
+  #volta-splash .splash-city, #volta-splash .season-tag { display: none; }
+}
+
+@keyframes glow { from { opacity: 0; transform: scale(0.6); } to { opacity: 1; transform: scale(1); } }
+@keyframes rays-spin { from { transform: rotate(0deg); } to { transform: rotate(30deg); } }
+@keyframes dust { 0%, 100% { opacity: 0; transform: translateY(0) scale(0.6); } 50% { opacity: 0.9; transform: translateY(-14px) scale(1); } }
+@keyframes halo-in { from { opacity: 0; transform: scale(0.82); } to { opacity: 1; transform: scale(1); } }
+@keyframes sweep { 0% { opacity: 0; transform: rotate(-120deg); } 18%, 78% { opacity: 1; } 100% { opacity: 0; transform: rotate(250deg); } }
+@keyframes orbit-spin { from { transform: rotate(-24deg); } to { transform: rotate(10deg); } }
+@keyframes piece-in { to { opacity: 1; transform: scale(1) translateY(0); } }
+@keyframes piece-float { 50% { translate: 0 -6px; } }
+@keyframes mark-down { from { opacity: 0; transform: translateY(-34%) scale(0.92); } to { opacity: 1; transform: none; } }
+@keyframes mark-up { from { opacity: 0; transform: translateY(34%) scale(0.92); } to { opacity: 1; transform: none; } }
+@keyframes mark-flash { 0% { opacity: 0; transform: scale(0.5); } 35% { opacity: 1; } 100% { opacity: 0; transform: scale(1.15); } }
+@keyframes word-up { from { opacity: 0; transform: translateY(105%); } to { opacity: 1; transform: none; } }
+/* El telón sube entero (transform): antes era un recorte que se repintaba en cada cuadro. */
+@keyframes splash-curtain { to { transform: translate3d(0, calc(-100% - 140px), 0); } }
+
+/* Con "reducir movimiento" no hay pantalla de carga. Va al final: pisa el display de la regla de arriba. */
+@media (prefers-reduced-motion: reduce) { #volta-splash { display: none; } }

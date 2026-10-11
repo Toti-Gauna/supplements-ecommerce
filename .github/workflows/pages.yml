@@ -1,11 +1,12 @@
 # Demo estática de Volta → GitHub Pages (fase pre-seña).
-# Valida en cada PR; publica solo desde main o a mano. Sin secretos.
+# Valida en cada PR; publica desde main, desde las ramas de fase (fase-*, para mostrar una fase antes de mergearla)
+# o a mano. Hay un solo sitio: el último deploy es el que se ve. Sin secretos.
 # Cuando empiece el backend (post-seña) ver docs/demo-pages.md: el trigger pasa a la rama demo/pages.
 name: Demo Pages
 
 on:
   push:
-    branches: [main]
+    branches: [main, "fase-*"]
   pull_request:
   workflow_dispatch:
 
@@ -23,7 +24,8 @@ jobs:
   build:
     name: Lint, tipos, tests, export y e2e
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # ~300 e2e en celular: unos 12 minutos con 2 workers.
+    timeout-minutes: 40
     permissions:
       contents: read
       pages: read # configure-pages lee base_path/base_url del sitio

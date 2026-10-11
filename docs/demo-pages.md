@@ -18,15 +18,19 @@
 ## Workflow (`.github/workflows/pages.yml`)
 - PR: `npm ci` → lint → typecheck → unit → build → verificación del export → e2e Playwright móvil contra `out/` servido
   bajo el mismo subpath. No publica.
-- Push a `main` o ejecución manual: lo mismo + `upload-pages-artifact` + `deploy-pages` en el ambiente `github-pages`.
+- Push a `main`, push a una rama `fase-*` o ejecución manual: lo mismo + `upload-pages-artifact` + `deploy-pages` en el
+  ambiente `github-pages`. Las ramas de fase publican para mostrar una fase antes de mergearla; hay un solo sitio, así
+  que se ve el último deploy (al mergear, `main` vuelve a publicar).
 - Permisos mínimos: `contents: read` global; el build suma `pages: read`; solo el deploy tiene `pages: write` + `id-token: write`.
   Concurrencia por ref y un único deploy en curso. Sin secretos.
 
 ### Requisito en GitHub
 Settings → Pages → *Build and deployment* → **Source: GitHub Actions**. El workflow no habilita Pages ni cambia permisos
-por su cuenta (`enablement` desactivado). El ambiente `github-pages` por defecto solo acepta deploys desde `main`.
+por su cuenta (`enablement` desactivado). El ambiente `github-pages` por defecto solo acepta deploys desde `main`: para
+publicar desde las ramas de fase, en Settings → Environments → `github-pages` → *Deployment branches* agregar `fase-*`.
 
-**Este repo es privado**: GitHub Pages en repos privados requiere un plan pago (Pro, Team o Enterprise). Opciones:
+El repo de VOLTA es **público**, así que Pages funciona con el plan gratis. Si se duplica para un cliente en un repo
+**privado**, GitHub Pages requiere un plan pago (Pro, Team o Enterprise). Opciones:
 1. Hacer público el repo (como la tienda) y publicar con este mismo workflow.
 2. Publicar en Vercel, Netlify o Cloudflare Pages conectando el repo privado (gratis): build `npm run build`,
    carpeta de salida `out`, sin variables (o `PAGES_BASE_PATH` vacío). La demo es un export estático.

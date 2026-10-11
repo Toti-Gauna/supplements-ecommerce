@@ -40,7 +40,7 @@ export function Footer() {
           <Link href="/arrepentimiento/" className="w-fit rounded-full border border-on-night/40 px-4 py-2 text-sm font-bold text-on-night hover:bg-white/10">Botón de arrepentimiento</Link>
           <p>Vendedor: {brand.legalName ?? "razón social a confirmar"} · CUIT {brand.cuit ?? "a confirmar"}</p>
           <p className="flex flex-wrap gap-x-3">
-            <span>Demo de venta por Eclipse · paleta provisional</span>
+            <span>Demo de venta por Eclipse · marca de muestra</span>
             <ResetDemoButton className="font-bold text-volt underline underline-offset-2" />
             <Link href="/admin-demo/" className="font-semibold underline underline-offset-2 hover:text-white">Ver panel demo</Link>
           </p>

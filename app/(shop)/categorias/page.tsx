@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: "Categorías", description: "Todas la
 export default function CategoriesPage() {
   return (
     <>
-      <PageHeader title="Buscar más cosas">Todo el catálogo por categoría.</PageHeader>
+      <PageHeader title="Todas las categorías">Todo el catálogo, de las proteínas a los accesorios.</PageHeader>
       <div className="mb-8 max-w-xl"><SearchForm /></div>
       <CategoriesGrid />
     </>

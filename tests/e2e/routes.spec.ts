@@ -4,12 +4,12 @@ import { horizontalOverflow } from "./helpers";
 // Rutas relativas (sin "/" inicial) para respetar el basePath del baseURL.
 const ROUTES = [
   ["", "Destacados de Volta"],
-  ["buscar/?q=comedro", "Buscar"],
-  ["categorias/", "Buscar más cosas"],
-  ["c/comederos/", "Comederos"],
-  ["p/velador-con-foto/", "Velador con foto"],
-  ["crear/", "Crear mi producto personalizado"],
-  ["crear/collar-con-nombre/", "Collar con nombre y dijes de patita"],
+  ["buscar/?q=creatna", "Buscar"],
+  ["buscar/?objetivo=masa-muscular", "Buscar"],
+  ["categorias/", "Todas las categorías"],
+  ["c/proteinas/", "Proteínas"],
+  ["p/ionic-whey/", "Ionic Whey 100%"],
+  ["crear/", "Entrená por objetivo"],
   ["cupones/", "Mis cupones"],
   ["carrito/", "Tu carrito"],
   ["checkout/", "Checkout de demostración"],
@@ -39,8 +39,8 @@ test.describe("rutas directas y refresh bajo el subpath", () => {
   }
 
   test("sin barra final redirige y una ruta inexistente da 404 con la página de la tienda", async ({ page }) => {
-    const res = await page.goto("p/placa-nfc");
-    expect(page.url()).toMatch(/\/p\/placa-nfc\/$/);
+    const res = await page.goto("p/omega-3");
+    expect(page.url()).toMatch(/\/p\/omega-3\/$/);
     expect(res?.status()).toBe(200);
     const missing = await page.goto("p/no-existe/");
     expect(missing?.status()).toBe(404);

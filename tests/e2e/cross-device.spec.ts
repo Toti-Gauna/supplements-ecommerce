@@ -14,8 +14,8 @@ const DEVICES = [
 ] as const;
 
 const SHOP = [
-  ["", "Destacados de Volta"], ["buscar/?q=comedro", "Buscar"], ["categorias/", "Buscar más cosas"], ["c/comederos/", "Comederos"],
-  ["p/velador-con-foto/", "Velador con foto"], ["p/collar-con-nombre/", "Collar con nombre"], ["crear/", "Crear mi producto personalizado"],
+  ["", "Destacados de Volta"], ["buscar/?q=creatna", "Buscar"], ["categorias/", "Todas las categorías"], ["c/proteinas/", "Proteínas"],
+  ["p/ionic-whey/", "Ionic Whey 100%"], ["p/creatina-monohidrato/", "Creatina monohidrato"], ["crear/", "Entrená por objetivo"],
   ["cupones/", "Mis cupones"], ["favoritos/", "Favoritos"], ["carrito/", "Tu carrito"], ["checkout/", "Checkout de demostración"],
   ["checkout/confirmacion/", "Confirmación (demo)"], ["pedido/demo-volta/", "Seguimiento de tu pedido"], ["cuenta/", "Mi cuenta"],
   ["club/", "Comprás, sumás, ganás."], ["regalo/", "¿Te hicieron un regalo?"], ["preguntas/", "Preguntas frecuentes"], ["terminos/", "Términos y condiciones"],
@@ -24,7 +24,7 @@ const SHOP = [
 
 const ADMIN = [
   ["admin-demo/", "Buen día, Volta"], ["admin-demo/pedidos/", "Pedidos"], ["admin-demo/pedidos/detalle/?codigo=VOL-000123", "VOL-000123"],
-  ["admin-demo/pagos/", "Pagos manuales"], ["admin-demo/productos/", "Productos y stock"], ["admin-demo/categorias/", "Categorías y personalización"],
+  ["admin-demo/pagos/", "Pagos manuales"], ["admin-demo/productos/", "Productos y stock"], ["admin-demo/categorias/", "Categorías"],
   ["admin-demo/stock/", "Productos y stock"], ["admin-demo/planilla/", "Productos y stock · formato Excel"], ["admin-demo/importar/", "Importar desde Excel"],
   ["admin-demo/misiones/", "Misiones y premios"], ["admin-demo/cupones/", "Cupones"], ["admin-demo/emails/", "Emails automáticos"],
   ["admin-demo/calendario/", "Calendario de entregas"], ["admin-demo/produccion/", "Cola de producción"], ["admin-demo/costos/", "Costos y margen"],

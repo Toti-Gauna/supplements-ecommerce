@@ -1,7 +1,10 @@
 "use client";
 import { BellRing, Gift, LogOut, MapPin, Package, Sparkles, Trophy, type LucideIcon } from "lucide-react";
 import type { MouseEvent, ReactNode } from "react";
+import { LevelGlyph } from "@/components/illustrations/LevelGlyph";
+import { levelFor } from "@/demo/engine/club-levels";
 import { giftsFor } from "@/demo/engine/gifts";
+import { demoAccountProgress } from "@/demo/fixtures/commerce";
 import { demoGifts } from "@/demo/fixtures/gifts";
 import { cn } from "@/lib/cn";
 import { scrollBehavior } from "@/lib/scroll";
@@ -53,6 +56,8 @@ export function AccountDashboard({ user }: { user: { name: string; email: string
     if (panel && panel.getBoundingClientRect().top > window.innerHeight * 0.6) panel.scrollIntoView({ behavior: scrollBehavior(), block: "start" });
   };
   const first = user.name.split(" ")[0];
+  // Gasto de muestra de la cuenta demo (el mismo que muestra el Club).
+  const level = levelFor(demoAccountProgress["m-gasto"] ?? 0);
   return (
     <div className="grid grid-cols-[minmax(0,1fr)] gap-5 lg:grid-cols-[18rem_minmax(0,1fr)] lg:items-start lg:gap-8">
       <div className="flex flex-col gap-4 lg:sticky lg:top-24">
@@ -65,7 +70,9 @@ export function AccountDashboard({ user }: { user: { name: string; email: string
             </div>
           </div>
           <div className="mt-4 flex items-center justify-between gap-2 border-t border-white/10 pt-3">
-            <span className="text-xs font-bold uppercase tracking-wider text-volt">Cuenta demo</span>
+            <span className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-volt">
+              <LevelGlyph level={level.id} className="h-6 w-6 text-volt" />Nivel {level.name}
+            </span>
             <button type="button" onClick={logout} className="flex min-h-10 items-center gap-1.5 rounded-full border border-white/15 px-3.5 text-sm font-bold transition-colors hover:bg-white/10">
               <LogOut size={16} aria-hidden="true" /> Salir
             </button>

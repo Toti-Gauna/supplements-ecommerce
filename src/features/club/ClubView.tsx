@@ -7,6 +7,7 @@ import { demoAccountProgress } from "@/demo/fixtures/commerce";
 import { useAccount } from "@/stores/account";
 import { useDemoData } from "@/stores/admin";
 import { ClubHero } from "./ClubHero";
+import { ClubLevels } from "./ClubLevels";
 import { MissionCard } from "./MissionCard";
 import { MissionPath } from "./MissionPath";
 import { RewardsWallet } from "./RewardsWallet";
@@ -38,6 +39,11 @@ export function ClubView() {
   return (
     <div className="flex flex-col gap-14 sm:gap-20">
       <ClubHero missions={missions} done={done} />
+      <section aria-labelledby="niveles" className="rounded-[2rem] bg-night p-6 text-on-night sm:rounded-[2.5rem] sm:p-10 lg:p-14">
+        <p className="eyebrow text-volt">Niveles</p>
+        <h2 id="niveles" className="font-display mb-8 mt-2 scroll-mt-28 text-4xl leading-tight sm:text-5xl">Cargá tu batería</h2>
+        <ClubLevels spend={user ? (demoAccountProgress["m-gasto"] ?? 0) : 0} signedIn={Boolean(user)} />
+      </section>
       <section aria-labelledby="mis">
         <Heading id="mis" eyebrow="Misiones" title="Tus misiones">{user ? "Así vas con la cuenta demo." : "Sin cuenta el progreso arranca en cero."}</Heading>
         <ul className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">

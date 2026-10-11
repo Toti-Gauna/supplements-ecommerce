@@ -11,7 +11,7 @@ import { probability } from "@/demo/engine/wheel";
 import type { WheelConfig } from "@/demo/fixtures/wheel";
 import { cn } from "@/lib/cn";
 import { useAdmin } from "@/stores/admin";
-import { WheelDisc } from "../../club/WheelDisc";
+import { WheelDial } from "../../club/WheelDial";
 import { MARKETING, SubpageHeader } from "../marketing/SubpageHeader";
 import { useDemoSave } from "../useDemoSave";
 import { useSessionDraft } from "../useSessionDraft";
@@ -61,7 +61,7 @@ export function WheelAdmin() {
       )}
       <form noValidate className="flex flex-col gap-6" onSubmit={(e) => { e.preventDefault(); submit(); }}>
         <section aria-label="Vista previa de la ruleta" className="flex flex-col items-center gap-2 rounded-[1.75rem] bg-night px-4 py-6 text-on-night">
-          <div className="aspect-square w-[min(72vw,18rem)] rounded-full border-4 border-volt bg-night p-1"><WheelDisc segments={w.segments} /></div>
+          <WheelDial segments={w.segments} className="mt-2 w-[min(72vw,18rem)]" />
           <p className="text-sm font-semibold text-on-night/80">{w.active ? "Así se ve en la tienda" : "Pausada: no se muestra en la tienda"} · {w.segments.filter((s) => s.active).length} gajos activos</p>
         </section>
         <section aria-labelledby="w-config" className="flex flex-col gap-4 rounded-3xl bg-surface p-5 shadow-[var(--shadow-card)]">

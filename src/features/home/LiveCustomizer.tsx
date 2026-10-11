@@ -38,7 +38,7 @@ export function LiveCustomizer({ eyebrow }: { eyebrow: string }) {
           Escritorio: título y opciones a la izquierda; la vista previa a la derecha, fija mientras se baja. */}
       <div className="grid grid-cols-[minmax(0,1fr)] gap-x-14 gap-y-7 p-6 sm:p-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:grid-rows-[auto_1fr] lg:p-14">
         <Reveal>
-          <p className="eyebrow text-brass-ink">{eyebrow}</p>
+          <p className="eyebrow text-volt-ink">{eyebrow}</p>
           <h2 id="probalo" className="font-display mt-3 text-4xl leading-tight sm:text-5xl">Escribí el nombre. <span className="italic text-primary">Miralo al instante.</span></h2>
           <p className="mt-4 max-w-md text-muted">Así funciona el personalizador de cada producto: lo que ves es lo que aprobás.</p>
         </Reveal>
@@ -66,7 +66,7 @@ export function LiveCustomizer({ eyebrow }: { eyebrow: string }) {
             <DemoChoicesNote names={demo} />
           </div>
           <div className="mt-8 grid gap-3 xl:grid-cols-2">
-            <ButtonLink href="/crear/" size="lg" variant="dark" className="w-full px-4 text-[15px]"><Sparkles size={18} aria-hidden="true" className="shrink-0 text-brass" />Quiero mi producto personalizado</ButtonLink>
+            <ButtonLink href="/crear/" size="lg" variant="dark" className="w-full px-4 text-[15px]"><Sparkles size={18} aria-hidden="true" className="shrink-0 text-volt" />Quiero mi producto personalizado</ButtonLink>
             {product && <ButtonLink href={`/p/${product.slug}/#personalizar`} size="lg" variant="secondary" className="w-full px-4 text-[15px]">Personalizar este collar <ArrowRight size={18} aria-hidden="true" className="shrink-0 transition-transform group-hover/btn:translate-x-1" /></ButtonLink>}
           </div>
         </div>

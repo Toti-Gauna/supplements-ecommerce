@@ -32,8 +32,8 @@ export function FriendsScene() {
         // Los anillos rodean el logo (su tamaño sale del alto del logo): "Volta" entra en la zona donde se cruzan.
         <motion.svg key={side} viewBox="0 0 100 100" className="absolute left-1/2 top-1/2 -translate-y-1/2 overflow-visible" style={{ width: "calc(var(--brand-h) * 2.5)", height: "calc(var(--brand-h) * 2.5)" }}
           initial={{ x: `${-50 + side * 160}%`, opacity: 0 }} animate={{ x: `${-50 + side * 12.5}%`, opacity: 0.8 }} transition={{ duration: 1.6, delay: at(0.2), ease: EASE }}>
-          <motion.circle cx="50" cy="50" r="46" fill="none" stroke={i ? "#f3dca6" : "#b7d68f"} strokeWidth="1" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.8, delay: at(0.3), ease: EASE }}
-            style={{ filter: `drop-shadow(0 0 4px ${i ? "#f3dca6" : "#b7d68f"})` }} />
+          <motion.circle cx="50" cy="50" r="46" fill="none" stroke={i ? "#e3ff8f" : "#b7d68f"} strokeWidth="1" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1.8, delay: at(0.3), ease: EASE }}
+            style={{ filter: `drop-shadow(0 0 4px ${i ? "#e3ff8f" : "#b7d68f"})` }} />
         </motion.svg>
       ))}
       <svg viewBox="0 0 1200 200" preserveAspectRatio="none" className="absolute inset-x-0 bottom-0 h-[20%] w-full">
@@ -54,8 +54,8 @@ export function FriendsScene() {
         </svg>
         <Decor kind="mate" className="h-full w-full" />
       </motion.span>
-      <Burst x="50%" y="72%" delay={1.9} colors={["#ef9b6a", "#f3dca6", "#e86a7c"]} count={14} radius={18} />
-      <Burst x="50%" y="60%" delay={2.6} colors={["#f3dca6", "#b7d68f", "#ef9b6a", "#ffffff"]} count={26} radius={42} shape="streak" />
+      <Burst x="50%" y="72%" delay={1.9} colors={["#ef9b6a", "#e3ff8f", "#e86a7c"]} count={14} radius={18} />
+      <Burst x="50%" y="60%" delay={2.6} colors={["#e3ff8f", "#b7d68f", "#ef9b6a", "#ffffff"]} count={26} radius={42} shape="streak" />
     </>
   );
 }

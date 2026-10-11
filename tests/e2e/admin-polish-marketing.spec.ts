@@ -93,7 +93,7 @@ test.describe("escritorio con mouse", () => {
     await page.getByRole("dialog").getByRole("button", { name: "Descartar" }).click();
     await expect(page.getByLabel("Nombre interno")).toHaveValue("Gracias por tu compra");
     // La vista previa sigue reemplazando las fichas.
-    await expect(page.getByRole("region", { name: "Vista previa" }).getByText(/¡Gracias por tu compra, Julián! Pedido VEL-000121/)).toBeVisible();
+    await expect(page.getByRole("region", { name: "Vista previa" }).getByText(/¡Gracias por tu compra, Julián! Pedido VOL-000121/)).toBeVisible();
   });
 
   test("8.3.25 ruleta arriba; premio desde plantilla, elegido por lista y guardado; pesos en cero no se guardan; el borrador vuelve", async ({ page }) => {

@@ -9,7 +9,7 @@ interface PanelProps { open: boolean; checkout: boolean; onClose: () => void }
 function Unavailable({ open, onClose }: PanelProps) {
   return (
     <ImmersiveStage open={open} onClose={onClose} label="Ruleta de cupones">
-      <p className="max-w-xs text-center text-[#cfc6b3]">No pudimos cargar la ruleta. Revisá la conexión y probá de nuevo.</p>
+      <p className="max-w-xs text-center text-night-muted">No pudimos cargar la ruleta. Revisá la conexión y probá de nuevo.</p>
     </ImmersiveStage>
   );
 }

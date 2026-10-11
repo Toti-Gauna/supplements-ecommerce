@@ -8,7 +8,7 @@ import { WheelPrizeTicket } from "./WheelPrizeTicket";
 export function RewardsWallet() {
   const { user, usedRewards } = useAccount();
   const { coupon: prize } = useWheelPrize();
-  const engraving = { code: "PREMIO-MISION", type: "FIXED" as const, value: 0, description: "Grabado de nombre gratis" };
+  const engraving = { code: "PREMIO-MISION", type: "FIXED" as const, value: 0, description: "Envío gratis en la próxima compra" };
   const empty = !prize && !user;
   if (empty) return <p className="rounded-2xl border border-dashed border-line p-5 text-sm text-muted">Todavía no tenés premios. Girá la ruleta o completá una misión.</p>;
   return (

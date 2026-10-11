@@ -16,8 +16,8 @@ test.describe("escritorio con mouse", () => {
 
   test("8.3.5/8.3.6 ficha de pedido: ID, pago y producción por separado, próxima acción; cambiar estado con confirmación sincroniza la tabla y Volver conserva el filtro", async ({ page }) => {
     await page.goto("admin-demo/pedidos/?etapa=to-make");
-    await page.getByRole("row").filter({ hasText: "VEL-000122" }).getByRole("cell").nth(3).click();
-    await expect(page.getByRole("heading", { level: 1, name: /VEL-000122/ })).toBeVisible();
+    await page.getByRole("row").filter({ hasText: "VOL-000122" }).getByRole("cell").nth(3).click();
+    await expect(page.getByRole("heading", { level: 1, name: /VOL-000122/ })).toBeVisible();
     await expect(page.getByRole("navigation", { name: "Migas de pan" })).toContainText("Pedidos");
     await expect(page.getByText("Pago:", { exact: true })).toBeVisible();
     await expect(page.getByText(/Pago:\s*Pagado con Mercado Pago/)).toBeVisible();
@@ -28,19 +28,19 @@ test.describe("escritorio con mouse", () => {
     await expect(page.getByText(/Producción y entrega:\s*En producción/)).toBeVisible();
     // Recargar mantiene la entidad.
     await page.reload();
-    await expect(page.getByRole("heading", { level: 1, name: /VEL-000122/ })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1, name: /VOL-000122/ })).toBeVisible();
     // Volver lleva a la lista con su filtro; el pedido ya no está en "Para producir".
     await page.getByRole("link", { name: "Volver" }).click();
     await expect(page).toHaveURL(/pedidos\/\?etapa=to-make/);
-    await expect(page.getByRole("row").filter({ hasText: "VEL-000122" })).toHaveCount(0);
+    await expect(page.getByRole("row").filter({ hasText: "VOL-000122" })).toHaveCount(0);
   });
 
   test("8.3.7 comprobante a la izquierda y datos a la derecha; aprobar desde la ficha cambia estado y contadores; 8.3.8 sin auditoría", async ({ page }) => {
     await page.goto("admin-demo/pagos/");
     await expect(page.getByText("Auditoría de muestra")).toHaveCount(0);
     await expect(page.getByRole("button", { name: /Por revisar/ })).toContainText("2");
-    await page.getByRole("article", { name: "Pago de VEL-000124" }).getByRole("link", { name: "VEL-000124", exact: true }).click();
-    await expect(page.getByRole("heading", { level: 1, name: /VEL-000124/ })).toBeVisible();
+    await page.getByRole("article", { name: "Pago de VOL-000124" }).getByRole("link", { name: "VOL-000124", exact: true }).click();
+    await expect(page.getByRole("heading", { level: 1, name: /VOL-000124/ })).toBeVisible();
     const proof = (await page.getByRole("figure", { name: "Comprobante" }).boundingBox())!;
     const data = (await page.getByRole("region", { name: "Datos del pago" }).boundingBox())!;
     expect(proof.x + proof.width).toBeLessThanOrEqual(data.x);
@@ -99,7 +99,7 @@ test.describe("escritorio con mouse", () => {
     await page.getByRole("link", { name: /ARR-0007/ }).click();
     await expect(page.getByRole("heading", { level: 1, name: /ARR-0007/ })).toBeVisible();
     await expect(page.getByRole("region", { name: "Mensaje del comprador" })).toContainText("Me arrepentí de la figura");
-    await expect(page.getByRole("region", { name: "Pedido" }).getByRole("link", { name: "VEL-000119" })).toBeVisible();
+    await expect(page.getByRole("region", { name: "Pedido" }).getByRole("link", { name: "VOL-000119" })).toBeVisible();
     await page.getByRole("button", { name: "Marcar en curso" }).click();
     await confirm(page, "Marcar en curso");
     await expect(page.getByText(/Estado:\s*En curso/)).toBeVisible();
@@ -114,10 +114,10 @@ for (const [label, width, height, touch] of [["iPad vertical", 768, 1024, true],
     const ctx = await browser.newContext({ viewport: { width, height }, isMobile: touch, hasTouch: touch, reducedMotion: "reduce", locale: "es-AR" });
     const page = await ctx.newPage();
     const base = `http://localhost:${process.env.E2E_PORT ?? "4173"}${process.env.PAGES_BASE_PATH ?? ""}/`;
-    await page.goto(base + "admin-demo/pedidos/detalle/?codigo=VEL-000124");
+    await page.goto(base + "admin-demo/pedidos/detalle/?codigo=VOL-000124");
     await expect(page.getByRole("region", { name: "Próxima acción" })).toBeVisible();
     expect(await horizontalOverflow(page)).toBeLessThanOrEqual(0);
-    await page.goto(base + "admin-demo/pagos/detalle/?codigo=VEL-000124");
+    await page.goto(base + "admin-demo/pagos/detalle/?codigo=VOL-000124");
     const proof = (await page.getByRole("figure", { name: "Comprobante" }).boundingBox())!;
     const data = (await page.getByRole("region", { name: "Datos del pago" }).boundingBox())!;
     expect(data.y).toBeGreaterThanOrEqual(proof.y + proof.height - 1);

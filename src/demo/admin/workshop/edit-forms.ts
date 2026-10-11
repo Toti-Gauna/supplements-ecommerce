@@ -27,17 +27,21 @@ export function checkMaterial(d: MaterialDraft): { errors: Partial<Record<Materi
   return { errors, value: { name: d.name.trim(), unit: d.unit, costPerUnit: cost.value, minStock: min.value, supplier: d.supplier.trim() || undefined } };
 }
 
-export interface RecipeDraft { items: { materialId: string; qty: string }[]; machine: string; hand: string }
+/** `supplier`: costo de la mercadería al proveedor, en pesos ("" = sin cargar). */
+export interface RecipeDraft { supplier: string; items: { materialId: string; qty: string }[]; machine: string; hand: string }
 
 export function recipeDraft(r: Recipe): RecipeDraft {
-  return { items: r.items.map((i) => ({ materialId: i.materialId, qty: show(i.qty) })), machine: String(r.machineMinutes), hand: String(r.handMinutes) };
+  return { supplier: r.supplierCost !== undefined ? String(r.supplierCost) : "", items: r.items.map((i) => ({ materialId: i.materialId, qty: show(i.qty) })), machine: String(r.machineMinutes), hand: String(r.handMinutes) };
 }
 
 const minutes = (t: string): number | null => (/^\d+$/.test(t.trim()) ? Number(t.trim()) : null);
 
-/** Cantidades mayores que 0 (con coma decimal) y minutos enteros de 0 en adelante. */
+/** Costo de proveedor en pesos enteros (o vacío), cantidades mayores que 0 (con coma decimal) y minutos enteros. */
 export function checkRecipe(d: RecipeDraft): { errors: Record<string, string>; value?: Recipe } {
   const errors: Record<string, string> = {};
+  const supplierText = d.supplier.trim();
+  const supplier = supplierText ? parseMoney(supplierText) : null;
+  if (supplier && !supplier.ok) errors.supplier = supplier.error;
   const items = d.items.map((i) => {
     const q = parseQty(i.qty, true);
     if (!q.ok) errors[`item:${i.materialId}`] = q.error;
@@ -49,7 +53,8 @@ export function checkRecipe(d: RecipeDraft): { errors: Record<string, string>; v
   if (machine === null) errors.machine = "Minutos enteros, 0 o más.";
   if (hand === null) errors.hand = "Minutos enteros, 0 o más.";
   if (Object.keys(errors).length) return { errors };
-  return { errors, value: { items, machineMinutes: machine!, handMinutes: hand! } };
+  const supplierCost = supplier?.ok ? supplier.value : undefined;
+  return { errors, value: { ...(supplierCost !== undefined ? { supplierCost } : {}), items, machineMinutes: machine!, handMinutes: hand! } };
 }
 
 /** Precio de prueba: pesos enteros mayores que 0. */

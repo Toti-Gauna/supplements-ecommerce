@@ -84,7 +84,7 @@ export function useStudioAssets(req: AssetRequest): { stage: React.ReactNode; as
   }, [key]);
   const stage = (
     <div ref={ref} aria-hidden="true" className="pointer-events-none fixed -left-[9999px] top-0 h-0 w-0 overflow-hidden">
-      {req.products.map((p) => <div key={p.slug} data-asset={`p:${p.slug}`} className="h-40 w-40"><ProductArt art={p.art} tint={p.tint} label={p.name} showBadge={false} /></div>)}
+      {req.products.map((p) => <div key={p.slug} data-asset={`p:${p.slug}`} className="h-40 w-40"><ProductArt art={p.art} pack={p.pack} tint={p.tint} label={p.name} showBadge={false} /></div>)}
       {req.hero && <div data-asset="hero" className="h-24 w-24"><Decor kind={req.hero} /></div>}
       {req.cast.map((c, i) => <div key={i} data-asset={`cast:${i}`} className="w-32"><VoltaPup who={c.who} pose="stand" outfit={c.outfit} flip={c.flip} pup={c.pup} /></div>)}
       {req.particles.map((k) => <div key={k} data-asset={`d:${k}`} className="h-12 w-12"><Decor kind={k} /></div>)}

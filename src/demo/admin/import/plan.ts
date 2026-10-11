@@ -42,7 +42,7 @@ function resolveCategory(w: Work, name: string): Category {
   if (found) return found;
   const created: Category = {
     slug: uniqueSlug(name, (s) => w.categories.some((c) => c.slug === s)), name: name.trim(), description: "",
-    art: "dachshund", featured: false, sortOrder: Math.max(0, ...w.categories.map((c) => c.sortOrder)) + 1,
+    art: "tub", featured: false, sortOrder: Math.max(0, ...w.categories.map((c) => c.sortOrder)) + 1,
   };
   w.categories = [...w.categories, created];
   w.newCategories.push(created.name);
@@ -92,7 +92,7 @@ export function buildImportPlan(rows: Cell[][], headerIndex: number, mapping: Co
       const label = r.variant || "Único";
       if (stock === null) plan.warnings.push("Sin stock indicado: queda a pedido");
       w.products.push({
-        slug, name: r.product.trim(), short: r.description, description: r.description || r.product.trim(), categorySlug: cat.slug, basePrice: price!,
+        slug, name: r.product.trim(), short: r.description, description: r.description || r.product.trim(), categorySlug: cat.slug, brand: "", basePrice: price!,
         art: cat.art, gallery: ["front"], variants: [{ id: `${slug}-${slugify(label)}`, label, priceDelta: 0, stock: stock ?? -1 }],
         faqs: [], featured: false, isNew: true, soldCount: 0, tags: [], active: visible ?? true, imageAlt: r.product.trim(),
       });

@@ -51,9 +51,9 @@ export function ProductPreview() {
       </p>
       <ProductDetail preview product={{ ...product, name: product.name.trim() || "Producto sin nombre" }} />
       <aside aria-label="Vista previa sin publicar"
-        className="fixed inset-x-3 bottom-[calc(0.625rem+env(safe-area-inset-bottom))] z-40 mx-auto flex max-w-md items-center gap-3 rounded-[1.75rem] bg-night/95 p-2 pl-4 text-[#f6f1e8] shadow-[0_18px_40px_-14px_rgb(0_0_0/0.55)] ring-1 ring-white/10 backdrop-blur-xl sm:bottom-6">
-        <Eye size={20} aria-hidden="true" className="shrink-0 text-brass" />
-        <p className="min-w-0 flex-1 text-sm font-bold leading-tight">Vista previa<span className="block text-xs font-semibold text-[#f6f1e8]/80 sm:inline"><span className="max-sm:hidden"> · </span>sin publicar</span></p>
+        className="fixed inset-x-3 bottom-[calc(0.625rem+env(safe-area-inset-bottom))] z-40 mx-auto flex max-w-md items-center gap-3 rounded-[1.75rem] bg-night/95 p-2 pl-4 text-on-night shadow-[0_18px_40px_-14px_rgb(0_0_0/0.55)] ring-1 ring-white/10 backdrop-blur-xl sm:bottom-6">
+        <Eye size={20} aria-hidden="true" className="shrink-0 text-volt" />
+        <p className="min-w-0 flex-1 text-sm font-bold leading-tight">Vista previa<span className="block text-xs font-semibold text-on-night/80 sm:inline"><span className="max-sm:hidden"> · </span>sin publicar</span></p>
         <Button variant="secondary" onClick={back} className="min-h-11 shrink-0 px-4"><ArrowLeft size={16} aria-hidden="true" />{label}</Button>
       </aside>
     </>

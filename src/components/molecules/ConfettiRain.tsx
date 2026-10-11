@@ -2,7 +2,7 @@
 import { createPortal } from "react-dom";
 import { useEffect, useState, type CSSProperties } from "react";
 
-const COLORS = ["#d2ad69", "#f3dca6", "#3a4527", "#e88aa0", "#8cbfe0", "#fffdf8", "#b4573a"];
+const COLORS = ["#c8ff2e", "#e3ff8f", "#3a4527", "#e88aa0", "#8cbfe0", "#fffdf8", "#b4573a"];
 // Posiciones y tiempos fijos (sin Math.random): el render es estable y no hay diferencias de hidratación.
 const PIECES = Array.from({ length: 72 }, (_, i) => ({
   left: (i * 37) % 100,

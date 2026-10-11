@@ -9,7 +9,7 @@ import { formatARS } from "@/lib/money";
 /** Sello de las opciones que son ejemplos de la demo (Volta todavía no las confirmó). */
 function DemoTag({ on }: { on: boolean }) {
   return (
-    <span className={cn("rounded-full px-1.5 py-px text-[10px] font-extrabold uppercase tracking-wide", on ? "bg-bg/20 text-bg" : "bg-brass/25 text-brass-ink")}>
+    <span className={cn("rounded-full px-1.5 py-px text-[10px] font-extrabold uppercase tracking-wide", on ? "bg-bg/20 text-bg" : "bg-volt/25 text-volt-ink")}>
       Demo<span className="sr-only"> (ejemplo de la demo, sin confirmar por el taller)</span>
     </span>
   );
@@ -100,7 +100,7 @@ export function DemoChoicesNote({ names }: { names: string[] }) {
   if (!names.length) return null;
   return (
     <p role="status" className="flex items-start gap-2 rounded-2xl bg-accent/60 p-3 text-[13px] text-ink">
-      <FlaskConical size={16} aria-hidden="true" className="mt-0.5 shrink-0 text-brass-ink" />
+      <FlaskConical size={16} aria-hidden="true" className="mt-0.5 shrink-0 text-volt-ink" />
       <span><strong>Ejemplo de la demo:</strong> {names.join(", ")}. Volta todavía no lo confirmó; antes de fabricar, el taller te avisa si se puede hacer.</span>
     </p>
   );

@@ -15,7 +15,7 @@ export function GiftPreview({ draft, productName }: { draft: LineGift; productNa
   const message = draft.message.trim();
   return (
     <div style={{ "--g-from": c.from, "--g-to": c.to, "--g-accent": c.accent } as CSSProperties}
-      className="relative flex h-full flex-col overflow-hidden rounded-[1.75rem] bg-[linear-gradient(150deg,var(--g-from),var(--g-to))] p-5 text-[#f6f1e8] sm:p-6">
+      className="relative flex h-full flex-col overflow-hidden rounded-[1.75rem] bg-[linear-gradient(150deg,var(--g-from),var(--g-to))] p-5 text-on-night sm:p-6">
       <p className="eyebrow text-[color:var(--g-accent)]">Vista previa · así lo recibe</p>
       <div aria-hidden="true" className="mx-auto my-3 aspect-square w-[min(55%,11rem)]">
         <Scene key={draft.occasion} hits={0} total={5} opened={false} reduce />

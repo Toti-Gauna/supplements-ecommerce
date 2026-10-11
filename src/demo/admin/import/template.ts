@@ -22,13 +22,12 @@ export function catalogSheet(products: Product[], categories: Category[]): Cell[
  */
 export const SAMPLE_SHEET: Cell[][] = [
   ["Rubro", "Artículo", "Modelo", "Precio de venta", "Cantidad", "Activo"],
-  ["Comederos", "Comedero perro globo", "Rosa · Mediano", "$ 18.500", "a pedido", "sí"],
-  ["Comederos", "Comedero elevado hueso", "Natural", "$ 33.500", 9, "sí"],
-  ["Velas", "Vela caniche", "Vainilla", "$ 11.900", 14, "sí"],
-  ["Velas", "Vela caniche", "Lavanda", "$ 11.900", 4, "sí"],
-  ["Velas", "Vela en lata pintada", "Navidad (rojo y oro)", "$ 9.900", 20, "sí"],
-  ["Mates y cocina", "Tabla de picada con nombre", "Grande (40 cm)", "$ 24.000", 6, "sí"],
-  ["Mates y cocina", "Tabla de picada con nombre", "Chica (30 cm)", "$ 19.500", 10, "sí"],
-  ["Placas NFC", "Placa NFC con tu imagen", "Cuadrada 6 cm", "$ 13.500", 30, "sí"],
-  ["Deco", "Perro salchicha geométrico", "", "$ 15.990,50", 3, "sí"],
+  ["Proteínas", "Ionic Whey 100%", "Chocolate · 2 lb (907 g)", "$ 54.900", 30, "sí"],
+  ["Proteínas", "Ionic Whey 100%", "Vainilla · 2 lb (907 g)", "$ 54.900", 18, "sí"],
+  ["Creatinas", "Creatina monohidrato micronizada", "Sin sabor · 300 g", "$ 29.900", 40, "sí"],
+  ["Pre-entrenos", "Overvolt pre-entreno", "Sandía", "$ 36.900", 12, "sí"],
+  ["Barras y snacks", "Barra de cereal proteica", "Coco", "$ 2.400", "a pedido", "sí"],
+  ["Accesorios", "Guantes de entrenamiento", "Talle M", "$ 14.500", 6, "sí"],
+  ["Accesorios", "Guantes de entrenamiento", "Talle L", "$ 14.500", 4, "sí"],
+  ["Vitaminas y salud", "Vitamina D3 2000 UI", "60 cápsulas", "$ 12.990,50", 10, "sí"],
 ];

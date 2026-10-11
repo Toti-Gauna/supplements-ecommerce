@@ -21,7 +21,7 @@ interface Props {
 }
 
 /** Ruta ilustrada del taller a tu casa: la línea avanza según la etapa. Sin mapas externos. */
-export function RouteMap({ progress, traveler, accent = "#d2ad69", delivered = false }: Props) {
+export function RouteMap({ progress, traveler, accent = "#c8ff2e", delivered = false }: Props) {
   const ref = useRef<SVGPathElement>(null);
   const [dot, setDot] = useState({ x: 40, y: 150 });
   useEffect(() => {
@@ -36,7 +36,7 @@ export function RouteMap({ progress, traveler, accent = "#d2ad69", delivered = f
   const who = traveler ? `${traveler.label} lleva el pedido: ` : "";
   return (
     <div className="relative overflow-hidden rounded-3xl bg-night-2" role="img"
-      aria-label={`${who}${delivered ? "llegó a tu casa" : `${Math.round(progress * 100)}% del camino entre el taller y tu casa`} (ilustrativo)`}>
+      aria-label={`${who}${delivered ? "llegó a tu casa" : `${Math.round(progress * 100)}% del camino entre el local y tu casa`} (ilustrativo)`}>
       <div className="relative">
         <svg viewBox={`0 0 ${W} ${H}`} className="block w-full" aria-hidden="true">
           <defs><pattern id="route-grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" fill="none" stroke="#fff" strokeOpacity=".05" /></pattern></defs>
@@ -74,8 +74,8 @@ export function RouteMap({ progress, traveler, accent = "#d2ad69", delivered = f
       </div>
       {/* En el celular los rótulos van en una fila debajo del recorrido, para no tapar la salida ni al viajero. */}
       <div className="flex justify-between gap-2 px-3 pb-3 sm:contents">
-        <span className="flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-xs font-bold text-[#f6f1e8] sm:absolute sm:bottom-3 sm:left-3"><Store size={14} aria-hidden="true" /> Taller Volta · MdP</span>
-        <span className={cn("flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold transition-colors duration-500 sm:absolute sm:right-3 sm:top-3", delivered ? "bg-[#f6f1e8] text-night" : "bg-white/10 text-[#f6f1e8]")}>
+        <span className="flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-xs font-bold text-on-night sm:absolute sm:bottom-3 sm:left-3"><Store size={14} aria-hidden="true" /> Local Volta · MdP</span>
+        <span className={cn("flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold transition-colors duration-500 sm:absolute sm:right-3 sm:top-3", delivered ? "bg-on-night text-night" : "bg-white/10 text-on-night")}>
           {delivered ? <Check size={14} aria-hidden="true" /> : <Home size={14} aria-hidden="true" />} {delivered ? "Llegó a tu casa" : "Tu casa"}
         </span>
       </div>

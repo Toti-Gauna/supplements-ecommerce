@@ -60,7 +60,7 @@ export function GiftModal({ open, onClose, productName, choices, choice, onChoic
           <div className="grid gap-6 p-5 pt-6 sm:p-8 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
             <div className="flex flex-col gap-4">
               <div className="pr-12">
-                <p className="eyebrow text-brass-ink">Es para regalar</p>
+                <p className="eyebrow text-volt-ink">Es para regalar</p>
                 <h2 className="font-display mt-2 text-3xl leading-tight">{productName}</h2>
                 <p className="mt-2 text-sm text-muted">Al confirmar el pedido te damos un link y un código para mandarle. Lo abre a golpes, con una escena de la ocasión.</p>
               </div>
@@ -103,7 +103,7 @@ export function GiftModal({ open, onClose, productName, choices, choice, onChoic
         {/* Acciones siempre a la vista, también con el teclado del celular abierto. */}
         <div className="flex flex-col gap-2 border-t border-line bg-surface p-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:flex-row sm:justify-end sm:px-8">
           <Button type="submit" size="lg"><Gift size={18} aria-hidden="true" /> Agregar regalo al carrito</Button>
-          <Button variant="dark" size="lg" onClick={() => submit("buy")()}><Zap size={18} aria-hidden="true" className="text-brass" /> Regalar y pagar ahora</Button>
+          <Button variant="dark" size="lg" onClick={() => submit("buy")()}><Zap size={18} aria-hidden="true" className="text-volt" /> Regalar y pagar ahora</Button>
         </div>
       </form>
     </Sheet>

@@ -49,7 +49,7 @@ function Window({ x, lit }: { x: number; lit: boolean }) {
 function Leaf() {
   return (
     <>
-      <path d="M116 238V174A34 34 0 0 1 150 140V238Z" fill="url(#in-wood)" stroke="#3e2412" strokeWidth="1" />
+      <path d="M116 238V174A34 34 0 0 1 150 140V238Z" fill="url(#in-ion)" stroke="#3e2412" strokeWidth="1" />
       <path d="M121 176A29 29 0 0 1 145 146.5V176Z" fill="#000" opacity=".18" />
       <rect x="121" y="182" width="24" height="24" rx="1.5" fill="#000" opacity=".2" /><rect x="121" y="212" width="24" height="21" rx="1.5" fill="#000" opacity=".2" />
       <path d="M121 206h24M121 233h24" stroke="#fff" strokeOpacity=".16" />
@@ -77,7 +77,7 @@ export default function IndependenceGift({ hits, total, opened, reduce }: GiftSc
         <radialGradient id="in-sky" cx=".5" cy=".42" r=".5"><stop offset="0" stopColor="#24508a" stopOpacity=".75" /><stop offset=".6" stopColor="#0a1830" stopOpacity=".5" /><stop offset="1" stopColor="#0a1830" stopOpacity="0" /></radialGradient>
         <linearGradient id="in-wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#fbf7ee" /><stop offset="1" stopColor="#e3d8c0" /></linearGradient>
         <linearGradient id="in-col" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#d9cdb3" /><stop offset=".4" stopColor="#fbf7ee" /><stop offset="1" stopColor="#cbbd9f" /></linearGradient>
-        <linearGradient id="in-wood" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#5a341c" /><stop offset=".6" stopColor="#7a4a2a" /><stop offset="1" stopColor="#6a3e22" /></linearGradient>
+        <linearGradient id="in-ion" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#5a341c" /><stop offset=".6" stopColor="#7a4a2a" /><stop offset="1" stopColor="#6a3e22" /></linearGradient>
         <radialGradient id="in-inside" cx=".5" cy=".62" r=".7"><stop offset="0" stopColor="#fffbe8" /><stop offset=".45" stopColor="#ffe9a8" /><stop offset="1" stopColor="#e0a94a" /></radialGradient>
         <radialGradient id="in-slit"><stop offset="0" stopColor="#fff4d0" stopOpacity=".95" /><stop offset=".4" stopColor={GOLD} stopOpacity=".45" /><stop offset="1" stopColor={GOLD} stopOpacity="0" /></radialGradient>
         <linearGradient id="in-floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#ffe9a8" stopOpacity=".85" /><stop offset="1" stopColor={GOLD} stopOpacity="0" /></linearGradient>

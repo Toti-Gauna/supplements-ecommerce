@@ -85,7 +85,7 @@ export function ProductionCard({ order, column, today, onMove, onDragStart, onDr
           const per = l.personalization;
           return (
             <li key={l.id} className="flex gap-3">
-              {p && <div className="w-14 shrink-0"><LineThumb art={p.art} tint={v?.colorHex} name={p.name} personalization={per} zone={demoData().textZones[p.art]} /></div>}
+              {p && <div className="w-14 shrink-0"><LineThumb art={p.art} pack={p.pack} tint={v?.colorHex} name={p.name} personalization={per} zone={demoData().textZones[p.art]} /></div>}
               <div className="min-w-0 flex-1 text-sm">
                 <p className="font-bold leading-snug">{l.quantity} × {p?.name ?? l.productSlug}</p>
                 {v && <p className="text-muted">{v.label}</p>}

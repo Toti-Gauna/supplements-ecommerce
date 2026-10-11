@@ -60,9 +60,9 @@ export function WheelAdmin() {
         </div>
       )}
       <form noValidate className="flex flex-col gap-6" onSubmit={(e) => { e.preventDefault(); submit(); }}>
-        <section aria-label="Vista previa de la ruleta" className="flex flex-col items-center gap-2 rounded-[1.75rem] bg-night px-4 py-6 text-[#f6f1e8]">
-          <div className="aspect-square w-[min(72vw,18rem)] rounded-full border-4 border-brass bg-night p-1"><WheelDisc segments={w.segments} /></div>
-          <p className="text-sm font-semibold text-[#f6f1e8]/80">{w.active ? "Así se ve en la tienda" : "Pausada: no se muestra en la tienda"} · {w.segments.filter((s) => s.active).length} gajos activos</p>
+        <section aria-label="Vista previa de la ruleta" className="flex flex-col items-center gap-2 rounded-[1.75rem] bg-night px-4 py-6 text-on-night">
+          <div className="aspect-square w-[min(72vw,18rem)] rounded-full border-4 border-volt bg-night p-1"><WheelDisc segments={w.segments} /></div>
+          <p className="text-sm font-semibold text-on-night/80">{w.active ? "Así se ve en la tienda" : "Pausada: no se muestra en la tienda"} · {w.segments.filter((s) => s.active).length} gajos activos</p>
         </section>
         <section aria-labelledby="w-config" className="flex flex-col gap-4 rounded-3xl bg-surface p-5 shadow-[var(--shadow-card)]">
           <h2 id="w-config" className="font-bold">Visibilidad y vigencia</h2>

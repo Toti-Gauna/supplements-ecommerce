@@ -52,7 +52,7 @@ export function buildCaption({ theme, offer: rawOffer, products, format, variant
   const keyword = keywordFor(products);
   const lines: string[] = [hook.hook, ""];
   if (theme) lines.push(`Especial ${theme.name}: ${theme.subtitle}`);
-  else lines.push(`${STUDIO_BRAND.title}, hechos a mano en ${STUDIO_BRAND.city}.`);
+  else lines.push(`${STUDIO_BRAND.title}. Originales, con lote y vencimiento, en ${STUDIO_BRAND.city}.`);
   if (products.length) {
     lines.push("");
     for (const p of products) lines.push(showPrice ? `• ${p.name}: ${formatARS(p.price)}${offer && p.offerPrice !== null ? ` (con el cupón, ${formatARS(p.offerPrice)})` : ""}` : `• ${p.name}`);

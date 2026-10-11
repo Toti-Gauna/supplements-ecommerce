@@ -54,28 +54,28 @@ export function AuthPanel() {
   const fieldError = (k: keyof Errors, hint = false) => ({ "aria-invalid": errors[k] ? (true as const) : undefined, "aria-describedby": describedBy(`auth-${k}`, errors[k], hint) });
   return (
     <div className="grid overflow-hidden rounded-[2.5rem] bg-surface shadow-[var(--shadow-card)] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
-      <aside className="relative flex flex-col gap-6 overflow-hidden bg-night p-6 text-[#f6f1e8] sm:p-10">
-        <div aria-hidden="true" className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-[radial-gradient(closest-side,rgb(210_173_105/0.28),transparent)]" />
+      <aside className="relative flex flex-col gap-6 overflow-hidden bg-night p-6 text-on-night sm:p-10">
+        <div aria-hidden="true" className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-[radial-gradient(closest-side,rgb(139_114_255/0.4),transparent)]" />
         <div className="relative">
-          <p className="eyebrow text-brass">Cuenta Volta</p>
-          <h2 className="font-display mt-3 text-3xl leading-tight sm:text-5xl">Todo lo tuyo, <span className="italic text-brass">en un lugar.</span></h2>
+          <p className="eyebrow text-volt">Cuenta Volta</p>
+          <h2 className="font-display mt-3 text-3xl leading-tight sm:text-5xl">Todo lo tuyo, <span className="italic text-volt">en un lugar.</span></h2>
         </div>
         <ul className="relative flex flex-col gap-3 max-sm:hidden">
           {BENEFITS.map(({ icon: Icon, text }) => (
-            <li key={text} className="flex items-center gap-3 text-[15px]"><span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white/10"><Icon size={17} aria-hidden="true" className="text-brass" /></span>{text}</li>
+            <li key={text} className="flex items-center gap-3 text-[15px]"><span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white/10"><Icon size={17} aria-hidden="true" className="text-volt" /></span>{text}</li>
           ))}
         </ul>
         <div aria-hidden="true" className="relative mt-auto flex items-end gap-2 pt-4 max-sm:hidden">
           <span className="block w-24 sm:w-28"><VoltaPup who="lola" pose="wave" animated className="w-full" /></span>
           <span className="block w-24 sm:w-28"><VoltaPup who="pancho" pose="stand" flip animated className="w-full" /></span>
         </div>
-        <p className="relative -mt-2 text-xs text-[#cfc6b3] sm:mt-0">Demo: no hay registro real y nada sale de este navegador.</p>
+        <p className="relative -mt-2 text-xs text-night-muted sm:mt-0">Demo: no hay registro real y nada sale de este navegador.</p>
       </aside>
       <div className="flex flex-col gap-5 p-6 sm:p-10">
         <div role="group" aria-label="Ingresar o crear cuenta" className="grid grid-cols-2 gap-1 rounded-full bg-bg p-1">
           {(["login", "signup"] as const).map((m) => (
             <button key={m} type="button" aria-pressed={mode === m} onClick={() => switchTo(m)}
-              className={cn("min-h-11 rounded-full text-sm font-bold transition-colors", mode === m ? "bg-night text-[#f6f1e8] shadow-[var(--shadow-card)]" : "text-muted hover:text-ink")}>
+              className={cn("min-h-11 rounded-full text-sm font-bold transition-colors", mode === m ? "bg-night text-on-night shadow-[var(--shadow-card)]" : "text-muted hover:text-ink")}>
               {m === "login" ? "Iniciar sesión" : "Crear cuenta"}
             </button>
           ))}

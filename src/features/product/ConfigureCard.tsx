@@ -34,8 +34,8 @@ export function ConfigureCard({ product, sel, draft, quantity, max, stockNote, o
     <section id="personalizar" aria-label="Configurá tu pieza" className="flex scroll-mt-28 flex-col gap-5 rounded-[1.75rem] border border-line bg-surface p-5 shadow-[var(--shadow-card)] sm:p-6">
       {(sel.colorOptions.length > 0 || sel.sizeOptions.length > 0) && (
         <div className="flex flex-col gap-5">
-          {sel.colorOptions.length > 0 && <VariantPicker legend="Color" options={sel.colorOptions} value={sel.color} onChange={sel.chooseColor} swatches />}
-          {sel.sizeOptions.length > 0 && <VariantPicker legend={tmpl?.collar ? "Talle" : "Opción"} options={sel.sizeOptions} value={sel.size}
+          {sel.colorOptions.length > 0 && <VariantPicker legend={product.optionNames?.color ?? "Sabor"} options={sel.colorOptions} value={sel.color} onChange={sel.chooseColor} swatches />}
+          {sel.sizeOptions.length > 0 && <VariantPicker legend={tmpl?.collar ? "Talle" : product.optionNames?.size ?? "Tamaño"} options={sel.sizeOptions} value={sel.size}
             onChange={(size) => { sel.chooseSize(size); if (draft.collar?.neckCm !== undefined) draft.setCollar({ ...draft.collar, neckCm: undefined }); }} />}
         </div>
       )}
@@ -44,7 +44,7 @@ export function ConfigureCard({ product, sel, draft, quantity, max, stockNote, o
           {(sel.colorOptions.length > 0 || sel.sizeOptions.length > 0) && divider}
           <div>
             <div className="mb-4 flex items-start gap-3">
-              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-night text-brass"><Sparkles size={16} aria-hidden="true" /></span>
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-night text-volt"><Sparkles size={16} aria-hidden="true" /></span>
               <div>
                 <h2 className="font-display text-[1.6rem] leading-tight">{tmpl.collar ? "Armá tu collar" : TITLE[tmpl.kind]}</h2>
                 <p className="text-sm text-muted">La vista previa se actualiza en vivo{tmpl.surcharge > 0 ? ` · personalización ${formatARS(tmpl.surcharge)} incluida` : ""}.</p>

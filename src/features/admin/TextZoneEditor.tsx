@@ -25,7 +25,7 @@ export function TextZoneEditor() {
   const zone = draft ?? zones[product.art] ?? { x: 100, y: 180, w: 200, h: 40, cover: "#ffffff" };
   return (
     <div className="grid grid-cols-[minmax(0,1fr)] gap-4 md:grid-cols-[minmax(0,320px)_minmax(0,1fr)]">
-      <TextPreview art={product.art} tint={product.variants[0]?.colorHex} text="Ñoqui" fontFamily={FONT_FAMILIES.Redondeada!} color="#3d4a2a" zone={zone} label={`Zona de texto de ${product.name}`} className="w-full overflow-hidden rounded-2xl" />
+      <TextPreview art={product.art} pack={product.pack} tint={product.variants[0]?.colorHex} text="Ñoqui" fontFamily={FONT_FAMILIES.Redondeada!} color="#3d4a2a" zone={zone} label={`Zona de texto de ${product.name}`} className="w-full overflow-hidden rounded-2xl" />
       <div className="flex flex-col gap-3">
         <label className="flex flex-col gap-1 text-sm font-bold">Producto
           <Select value={product.slug} onChange={(e) => { setSlug(e.target.value); setDraft(null); }}>{textProducts.map((p) => <option key={p.slug} value={p.slug}>{p.name}</option>)}</Select>

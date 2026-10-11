@@ -1,6 +1,7 @@
 "use client";
 import { Moon, Sun } from "lucide-react";
 import { useSyncExternalStore } from "react";
+import { brand } from "@/config/brand";
 import { cn } from "@/lib/cn";
 
 export const THEME_KEY = "volta-theme";
@@ -11,9 +12,9 @@ function subscribe(cb: () => void) {
   return () => mo.disconnect();
 }
 
-/** Cambia entre modo claro y oscuro (la primera vez sigue al sistema). Se recuerda en este navegador. */
+/** Cambia entre modo claro y oscuro (la primera vez, el de la marca). Se recuerda en este navegador. */
 export function ThemeToggle({ className, withLabel }: { className?: string; withLabel?: boolean }) {
-  const dark = useSyncExternalStore(subscribe, () => document.documentElement.dataset.theme === "dark", () => false);
+  const dark = useSyncExternalStore(subscribe, () => document.documentElement.dataset.theme === "dark", () => brand.defaultMode === "dark");
   const toggle = () => {
     const next = dark ? "light" : "dark";
     document.documentElement.dataset.theme = next;
@@ -30,4 +31,4 @@ export function ThemeToggle({ className, withLabel }: { className?: string; with
 }
 
 /** Se ejecuta en <head> antes de pintar: evita el destello del tema equivocado. */
-export const themeScript = `try{var t=localStorage.getItem("${THEME_KEY}");if(t!=="light"&&t!=="dark"){t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}document.documentElement.dataset.theme=t}catch(e){}`;
+export const themeScript = `try{var t=localStorage.getItem("${THEME_KEY}");if(t!=="light"&&t!=="dark"){t="${brand.defaultMode}"}document.documentElement.dataset.theme=t}catch(e){}`;

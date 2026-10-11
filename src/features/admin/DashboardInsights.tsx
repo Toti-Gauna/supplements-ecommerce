@@ -19,7 +19,7 @@ export function TopProducts({ orders }: { orders: AdminOrder[] }) {
           return (
             <li key={t.slug} className="flex items-center gap-3">
               <span className="font-display w-5 text-lg text-muted">{i + 1}</span>
-              {p && <ProductArt art={p.art} tint={p.variants[0]?.colorHex} label="" showBadge={false} className="h-11 w-11 shrink-0 rounded-xl" />}
+              {p && <ProductArt art={p.art} pack={p.pack} tint={p.variants[0]?.colorHex} label="" showBadge={false} className="h-11 w-11 shrink-0 rounded-xl" />}
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-bold">{p?.name ?? t.slug}</p>
                 <div className="mt-1 h-1.5 rounded-full bg-accent" aria-hidden="true"><div className="h-full rounded-full bg-primary" style={{ width: `${(t.units / max) * 100}%` }} /></div>
@@ -44,13 +44,13 @@ export function ClubPerformance() {
     { icon: Gift, label: "Premios de ruleta emitidos", value: prizes.length, note: wheel.active ? "ruleta activa" : "ruleta pausada" },
   ];
   return (
-    <section aria-labelledby="club" className="rounded-3xl bg-night p-5 text-[#f6f1e8]">
-      <h2 id="club" className="font-display mb-4 text-2xl">Club Volta <span className="font-sans text-sm text-[#cfc6b3]">(demo)</span></h2>
+    <section aria-labelledby="club" className="rounded-3xl bg-night p-5 text-on-night">
+      <h2 id="club" className="font-display mb-4 text-2xl">Club Volta <span className="font-sans text-sm text-night-muted">(demo)</span></h2>
       <ul className="grid gap-3 sm:grid-cols-3">
         {rows.map(({ icon: Icon, label, value, note }) => (
           <li key={label} className="flex items-center gap-3 rounded-2xl bg-white/5 p-3">
-            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-brass text-night"><Icon size={18} aria-hidden="true" /></span>
-            <span className="min-w-0 flex-1 text-sm"><span className="block font-bold">{label}</span><span className="text-xs text-[#cfc6b3]">{note}</span></span>
+            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-volt text-night"><Icon size={18} aria-hidden="true" /></span>
+            <span className="min-w-0 flex-1 text-sm"><span className="block font-bold">{label}</span><span className="text-xs text-night-muted">{note}</span></span>
             <span className="font-display text-3xl tabular-nums">{value}</span>
           </li>
         ))}
@@ -66,7 +66,7 @@ export function ActivityFeed({ audit }: { audit: AuditEntry[] }) {
       <ol className="flex flex-col gap-0 border-l-2 border-line pl-4">
         {audit.slice(0, 7).map((a) => (
           <li key={a.id} className="relative pb-3 text-sm">
-            <span aria-hidden="true" className="absolute -left-[21px] top-1.5 h-2.5 w-2.5 rounded-full bg-brass" />
+            <span aria-hidden="true" className="absolute -left-[21px] top-1.5 h-2.5 w-2.5 rounded-full bg-volt" />
             <p className="font-bold">{a.action}</p>
             <p className="text-xs text-muted">{a.entity} · {formatDateTime(a.at)}</p>
           </li>

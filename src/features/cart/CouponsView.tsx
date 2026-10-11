@@ -23,11 +23,11 @@ export function CouponsView() {
       {hasCart && <Link href="/carrito/" className="inline-flex w-fit items-center gap-2 font-bold text-primary underline underline-offset-4">Ver mi carrito con el cupón <ArrowRight size={16} aria-hidden="true" /></Link>}
       <section aria-labelledby="ganar" className="grid gap-4 md:grid-cols-2">
         <h2 id="ganar" className="font-display text-3xl md:col-span-2">Cómo ganar más</h2>
-        <div className="flex flex-col gap-3 rounded-[1.75rem] bg-night p-6 text-[#f6f1e8]">
-          <Gift size={24} aria-hidden="true" className="text-brass" />
+        <div className="flex flex-col gap-3 rounded-[1.75rem] bg-night p-6 text-on-night">
+          <Gift size={24} aria-hidden="true" className="text-volt" />
           <p className="font-display text-2xl">Ruleta de cupones</p>
-          <p className="text-sm text-[#cfc6b3]">{spun ? "Ya giraste en este navegador: tu premio está arriba." : "Un giro gratis. También aparece cuando vas a pagar."}</p>
-          {wheelActive && !spun && <button type="button" onClick={() => setWheel(true)} className="mt-auto w-fit rounded-full bg-[#fffdf8] px-5 py-2.5 text-sm font-bold text-night">Girar ahora</button>}
+          <p className="text-sm text-night-muted">{spun ? "Ya giraste en este navegador: tu premio está arriba." : "Un giro gratis. También aparece cuando vas a pagar."}</p>
+          {wheelActive && !spun && <button type="button" onClick={() => setWheel(true)} className="mt-auto w-fit rounded-full bg-on-night px-5 py-2.5 text-sm font-bold text-night">Girar ahora</button>}
         </div>
         <Link href="/club/" className="flex flex-col gap-3 rounded-[1.75rem] bg-surface p-6 shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-lift)]">
           <Trophy size={24} aria-hidden="true" className="text-primary" />

@@ -4,11 +4,12 @@ import { useId, useState } from "react";
 import { Button } from "@/components/atoms/Button";
 import { Input } from "@/components/atoms/Field";
 import { Select } from "@/components/atoms/Select";
+import { CONTAINER_LABEL } from "@/components/illustrations/supplements";
 import { checkImageFile, checkImageSize, FRAME_DEFAULT, frame, SLIDE_IMAGE, SLIDE_LIMITS } from "@/demo/admin/content-slides";
 import type { ArtKey, CarouselSlide } from "@/demo/types";
 import { readImage } from "@/lib/image";
 
-const ARTS: [ArtKey, string][] = [["lamp-photo", "Velador con foto"], ["bowl-dog", "Comedero"], ["diffuser", "Difusor"], ["nfc-plate", "Placa NFC"], ["collar", "Collar"], ["candle-poodle", "Vela caniche"], ["dachshund", "Salchicha geométrico"]];
+const ARTS: [ArtKey, string][] = (Object.keys(CONTAINER_LABEL) as ArtKey[]).map((k) => [k, CONTAINER_LABEL[k]]);
 
 interface Props { slide: CarouselSlide; onChange: (p: Partial<CarouselSlide>) => void }
 
@@ -55,7 +56,7 @@ export function SlideImageField({ slide, onChange }: Props) {
         </label>
       )}
       <div className="flex flex-wrap items-center gap-2">
-        <label htmlFor={id} className="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full border-2 border-dashed border-wood bg-surface px-4 text-sm font-bold text-primary hover:bg-accent has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary/50">
+        <label htmlFor={id} className="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full border-2 border-dashed border-ion bg-surface px-4 text-sm font-bold text-primary hover:bg-accent has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary/50">
           <ImageUp size={18} aria-hidden="true" />{busy ? "Procesando…" : img ? "Reemplazar imagen" : "Subir imagen propia"}
           <input id={id} type="file" accept={SLIDE_IMAGE.types.join(",")} className="sr-only" aria-describedby={`${id}-hint${error ? ` ${id}-error` : ""}`} onChange={(e) => void take(e.target)} />
         </label>

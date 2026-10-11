@@ -76,7 +76,7 @@ export function createCatalogActions(set: Set): CatalogActions {
         const base = slugify(name);
         slug = base;
         for (let n = 2; s.data.categories.some((c) => c.slug === slug); n++) slug = `${base}-${n}`;
-        const category: Category = { slug, name: name.trim(), description: extra.description?.trim() ?? "", art: "dachshund", featured: !!extra.featured, sortOrder: Math.max(0, ...s.data.categories.map((c) => c.sortOrder)) + 1 };
+        const category: Category = { slug, name: name.trim(), description: extra.description?.trim() ?? "", art: "tub", featured: !!extra.featured, sortOrder: Math.max(0, ...s.data.categories.map((c) => c.sortOrder)) + 1 };
         return { data: { ...s.data, categories: [...s.data.categories, category] }, audit: log(s, "Categoría creada", category.name) };
       });
       return slug;

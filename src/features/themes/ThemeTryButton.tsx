@@ -20,8 +20,8 @@ export function ThemeTryButton() {
   return (
     <>
       <button type="button" onClick={() => setOpen(true)} aria-haspopup="dialog"
-        className={`animate-fade-up fixed left-4 z-30 inline-flex items-center gap-2 rounded-full bg-night px-3.5 py-2.5 text-[13px] font-bold sm:px-4 sm:py-3 sm:text-sm text-[#f6f1e8] shadow-lg ring-1 ring-brass/40 transition-transform hover:-translate-y-0.5 ${bottom}`}>
-        <Sparkles size={18} aria-hidden="true" className="text-brass" />
+        className={`animate-fade-up fixed left-4 z-30 inline-flex items-center gap-2 rounded-full bg-night px-3.5 py-2.5 text-[13px] font-bold sm:px-4 sm:py-3 sm:text-sm text-on-night shadow-lg ring-1 ring-volt/40 transition-transform hover:-translate-y-0.5 ${bottom}`}>
+        <Sparkles size={18} aria-hidden="true" className="text-volt" />
         Probar temáticas
       </button>
       <ThemePicker open={open} onClose={() => setOpen(false)} />

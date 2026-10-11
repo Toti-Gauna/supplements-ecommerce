@@ -22,7 +22,7 @@ export function ClubHero({ missions, done }: { missions: Mission[]; done: number
   const { user, login } = useAccount();
   const { theme } = useCurrentTheme();
   const skin = theme ? skinOf(theme.id) : null;
-  const accent = skin?.accent ?? "#d2ad69";
+  const accent = skin?.accent ?? "#c8ff2e";
   // Próximo premio: la misión más avanzada que falta completar (sin cuenta, todas arrancan en cero).
   const next = missions
     .map((m) => previewMission(m, user ? (demoAccountProgress[m.id] ?? 0) : 0, { units: 0, total: 0 }))
@@ -35,8 +35,8 @@ export function ClubHero({ missions, done }: { missions: Mission[]; done: number
   ];
   return (
     <section aria-labelledby="club-title" style={{ "--club-accent": accent } as CSSProperties}
-      className="relative overflow-hidden rounded-[2rem] bg-night px-6 py-10 text-[#f6f1e8] sm:rounded-[2.5rem] sm:px-10 sm:py-14 lg:px-14 lg:py-16">
-      <div aria-hidden="true" className="pointer-events-none absolute -right-32 -top-40 h-[30rem] w-[30rem] rounded-full bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--club-accent)_30%,transparent),transparent)]" />
+      className="relative overflow-hidden rounded-[2rem] bg-night px-6 py-10 text-on-night sm:rounded-[2.5rem] sm:px-10 sm:py-14 lg:px-14 lg:py-16">
+      <div aria-hidden="true" className="pointer-events-none absolute -right-32 -top-40 h-[30rem] w-[30rem] rounded-full bg-[radial-gradient(closest-side,rgb(139_114_255/0.4),transparent)]" />
       <div aria-hidden="true" className="pointer-events-none absolute -bottom-48 -left-24 h-96 w-96 rounded-full bg-[radial-gradient(closest-side,rgb(255_255_255/0.06),transparent)]" />
       <div className="relative grid gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:items-center lg:gap-14">
         <div>
@@ -44,7 +44,7 @@ export function ClubHero({ missions, done }: { missions: Mission[]; done: number
           <h1 id="club-title" className="font-display animate-rise mt-4 text-[clamp(2.7rem,6.5vw,5.2rem)] leading-[0.98]" style={{ animationDelay: "120ms" }}>
             Comprás, sumás, <span className="italic text-[color:var(--club-accent)]">ganás.</span>
           </h1>
-          <p className="animate-rise mt-5 max-w-lg text-lg text-[#cfc6b3]" style={{ animationDelay: "220ms" }}>Misiones simples, premios en producto y una ruleta para tu próxima compra.</p>
+          <p className="animate-rise mt-5 max-w-lg text-lg text-night-muted" style={{ animationDelay: "220ms" }}>Misiones simples, premios en producto y una ruleta para tu próxima compra.</p>
           <div className="animate-rise mt-8 flex flex-wrap items-center gap-3" style={{ animationDelay: "300ms" }}>
             {user ? (
               <span className="inline-flex min-h-12 items-center gap-2 rounded-full bg-white/10 px-5 text-sm font-bold"><Sparkles size={16} aria-hidden="true" className="text-[color:var(--club-accent)]" /> Progreso de {user.name.split(" ")[0]}</span>
@@ -58,7 +58,7 @@ export function ClubHero({ missions, done }: { missions: Mission[]; done: number
           <dl className="mt-10 grid max-w-xl grid-cols-3 gap-2.5 sm:gap-3">
             {metrics.map((m) => (
               <div key={m.label} className="flex flex-col-reverse gap-1 rounded-2xl border border-white/10 bg-white/[0.05] p-3 sm:p-4">
-                <dt className="text-[11px] leading-tight text-[#cfc6b3] sm:text-xs">{m.label}</dt>
+                <dt className="text-[11px] leading-tight text-night-muted sm:text-xs">{m.label}</dt>
                 <dd className="font-display text-3xl leading-none sm:text-4xl"><Counter value={m.value} /></dd>
               </div>
             ))}
@@ -71,18 +71,18 @@ export function ClubHero({ missions, done }: { missions: Mission[]; done: number
           <p className="eyebrow text-[color:var(--club-accent)]">Tu próximo premio</p>
           {next ? (
             <div className="mt-5 flex items-center gap-5">
-              <ProgressRing pct={next.pctAfter} size={112} stroke={9} tone="brass" label={`Progreso hacia ${next.mission.reward}`}>
+              <ProgressRing pct={next.pctAfter} size={112} stroke={9} tone="volt" label={`Progreso hacia ${next.mission.reward}`}>
                 <span className="font-display text-3xl tabular-nums">{next.pctAfter}%</span>
               </ProgressRing>
               <div className="min-w-0">
                 <p className="font-display text-2xl leading-tight sm:text-3xl">{next.mission.reward}</p>
-                <p className="mt-1 text-sm text-[#cfc6b3]">{next.mission.title} · {formatMissionValue(next.mission, next.after)} de {formatMissionValue(next.mission, next.mission.threshold)}</p>
+                <p className="mt-1 text-sm text-night-muted">{next.mission.title} · {formatMissionValue(next.mission, next.after)} de {formatMissionValue(next.mission, next.mission.threshold)}</p>
               </div>
             </div>
           ) : (
             <p className="font-display mt-4 text-2xl">¡Completaste todas las misiones!</p>
           )}
-          <p className="mt-6 border-t border-white/10 pt-4 text-xs text-[#cfc6b3]">{user ? "Progreso de ejemplo de la cuenta demo." : "Sin cuenta el progreso arranca en cero."}</p>
+          <p className="mt-6 border-t border-white/10 pt-4 text-xs text-night-muted">{user ? "Progreso de ejemplo de la cuenta demo." : "Sin cuenta el progreso arranca en cero."}</p>
         </div>
       </div>
     </section>

@@ -41,7 +41,7 @@ test.describe("escritorio con mouse", () => {
     await page.keyboard.press("Escape");
     await expect(page.getByText("2 por día", { exact: true })).toBeVisible();
     // Los pedidos siguen en su fecha.
-    await expect(day(page, "2026-10-08").getByRole("button", { name: /^VEL-000113,/ })).toBeVisible();
+    await expect(day(page, "2026-10-08").getByRole("button", { name: /^VOL-000113,/ })).toBeVisible();
   });
 
   test("8.3.14 feriados de a 10 por página y navegables; cierre propio que toca una entrega se confirma y queda marcada; editar y quitar", async ({ page }) => {
@@ -68,7 +68,7 @@ test.describe("escritorio con mouse", () => {
     await dialog.getByLabel("Motivo").first().fill("Mudanza del taller");
     await dialog.getByRole("button", { name: "Agregar cierre" }).click();
     const warn = dialog.getByRole("alertdialog", { name: "Cambio que toca entregas" });
-    await expect(warn).toContainText("VEL-000123 queda en un día cerrado (mié, 14 oct · Mudanza del taller).");
+    await expect(warn).toContainText("VOL-000123 queda en un día cerrado (mié, 14 oct · Mudanza del taller).");
     await warn.getByRole("button", { name: "Cerrar igual" }).click();
     await expect(dialog.getByRole("list", { name: "Cierres del taller" })).toContainText("Mudanza del taller");
     // Editar el motivo y después quitarlo con confirmación.
@@ -79,7 +79,7 @@ test.describe("escritorio con mouse", () => {
     await page.keyboard.press("Escape");
     const banner = page.getByRole("status").filter({ hasText: "1 pedido quedó en un día cerrado" });
     await expect(banner).toBeVisible();
-    await expect(day(page, "2026-10-14").getByRole("button", { name: /^VEL-000123, .*en un día cerrado/ })).toBeVisible();
+    await expect(day(page, "2026-10-14").getByRole("button", { name: /^VOL-000123, .*en un día cerrado/ })).toBeVisible();
     await page.getByRole("button", { name: "Capacidad y feriados" }).click();
     await dialog.getByRole("button", { name: /Días cerrados y feriados/ }).click();
     await dialog.getByRole("button", { name: /Cierres del taller/ }).click();
@@ -107,9 +107,9 @@ test.describe("escritorio con mouse", () => {
     await dialog.getByRole("button", { name: "Nueva entrada" }).click();
     await dialog.getByLabel("Tipo").selectOption("pedido");
     await dialog.getByLabel("Título").fill("Confirmar dirección");
-    await dialog.getByLabel("Pedido").selectOption("VEL-000123");
+    await dialog.getByLabel("Pedido").selectOption("VOL-000123");
     await dialog.getByRole("button", { name: "Guardar entrada" }).click();
-    await expect(dialog.getByRole("link", { name: "VEL-000123" })).toBeVisible();
+    await expect(dialog.getByRole("link", { name: "VOL-000123" })).toBeVisible();
     await page.keyboard.press("Escape");
     // Persiste al recargar; editar cambia el título.
     await page.reload();
@@ -127,27 +127,27 @@ test.describe("escritorio con mouse", () => {
 
   test("8.3.15 arrastrar un pedido pide confirmar y se refleja en el pedido; un sábado lo rechaza con el motivo; Reprogramar sin arrastrar confirma la sobrecarga", async ({ page }) => {
     await page.goto("admin-demo/calendario/");
-    const chip = () => page.getByRole("button", { name: /^VEL-000114,/ });
+    const chip = () => page.getByRole("button", { name: /^VOL-000114,/ });
     await chip().dragTo(day(page, "2026-10-10"));
     await expect(toast(page, /Sábado sin taller: el taller no trabaja ese día/)).toBeVisible();
     await chip().dragTo(day(page, "2026-10-13"));
-    const confirm = page.getByRole("dialog", { name: "Mover VEL-000114" });
+    const confirm = page.getByRole("dialog", { name: "Mover VOL-000114" });
     await confirm.getByRole("button", { name: "Cancelar" }).click();
-    await expect(day(page, "2026-10-07").getByRole("button", { name: /^VEL-000114,/ })).toBeVisible();
+    await expect(day(page, "2026-10-07").getByRole("button", { name: /^VOL-000114,/ })).toBeVisible();
     await chip().dragTo(day(page, "2026-10-13"));
     await confirm.getByRole("button", { name: "Mover al mar, 13 oct" }).click();
-    await expect(day(page, "2026-10-13").getByRole("button", { name: /^VEL-000114,/ })).toHaveCount(1);
-    await expect(page.locator('[data-code="VEL-000114"]')).toHaveCount(1);
+    await expect(day(page, "2026-10-13").getByRole("button", { name: /^VOL-000114,/ })).toHaveCount(1);
+    await expect(page.locator('[data-code="VOL-000114"]')).toHaveCount(1);
     // Reprogramar con botones (teclado, iPad): un día completo pide confirmar antes de sobrecargarlo.
     await chip().click();
-    const sheet = page.getByRole("dialog", { name: "Entrega VEL-000114" });
+    const sheet = page.getByRole("dialog", { name: "Entrega VOL-000114" });
     await sheet.getByLabel("Elegir otra fecha").fill("2026-10-08");
     await sheet.getByRole("button", { name: "Mover", exact: true }).click();
     const full = sheet.getByRole("alertdialog", { name: "Día completo" });
     await expect(full).toContainText("Ya tiene 3 de 3 pedidos");
     await full.getByRole("button", { name: "Mover igual" }).click();
-    await expect(toast(page, /VEL-000114 pasa al jue, 8 oct/)).toBeVisible();
-    await page.goto("admin-demo/pedidos/detalle/?codigo=VEL-000114");
+    await expect(toast(page, /VOL-000114 pasa al jue, 8 oct/)).toBeVisible();
+    await page.goto("admin-demo/pedidos/detalle/?codigo=VOL-000114");
     await expect(page.getByLabel("Fecha comprometida de entrega")).toHaveValue("2026-10-08");
   });
 
@@ -158,7 +158,7 @@ test.describe("escritorio con mouse", () => {
     await day(page, "2026-10-09").locator("> button").focus();
     await page.keyboard.press("Enter");
     const dialog = page.getByRole("dialog", { name: "Día viernes, 9 de octubre" });
-    await expect(dialog.getByRole("region", { name: "Entregas del día" })).toContainText("VEL-000110");
+    await expect(dialog.getByRole("region", { name: "Entregas del día" })).toContainText("VOL-000110");
     await page.keyboard.press("Escape");
     await expect(dialog).toBeHidden();
   });
@@ -170,22 +170,22 @@ test.describe("escritorio con mouse", () => {
     await page.goto("admin-demo/produccion/");
     const lane = (id: string) => page.locator(`section[data-column="${id}"]`);
     await expect(lane("queue").locator("> header")).toContainText("4");
-    const card = page.getByRole("article", { name: "Pedido VEL-000113" });
+    const card = page.getByRole("article", { name: "Pedido VOL-000113" });
     await card.getByRole("button", { name: "Mover etapa" }).click();
-    await card.getByRole("button", { name: "Mover VEL-000113 a Terminación" }).click();
+    await card.getByRole("button", { name: "Mover VOL-000113 a Terminación" }).click();
     await expect(toast(page, /Se descontaron sus insumos/)).toBeVisible();
     await expect(lane("queue").locator("> header")).toContainText("3");
-    await expect(lane("finishing").getByRole("article", { name: "Pedido VEL-000113" })).toBeVisible();
+    await expect(lane("finishing").getByRole("article", { name: "Pedido VOL-000113" })).toBeVisible();
     // Volver a máquina por el menú no vuelve a descontar.
-    await page.getByRole("article", { name: "Pedido VEL-000113" }).getByRole("button", { name: "Mover etapa" }).click();
-    await page.getByRole("button", { name: "Mover VEL-000113 a En máquina" }).click();
-    await expect(lane("machine").getByRole("article", { name: "Pedido VEL-000113" })).toBeVisible();
+    await page.getByRole("article", { name: "Pedido VOL-000113" }).getByRole("button", { name: "Mover etapa" }).click();
+    await page.getByRole("button", { name: "Mover VOL-000113 a En máquina" }).click();
+    await expect(lane("machine").getByRole("article", { name: "Pedido VOL-000113" })).toBeVisible();
     // Arrastrar a la cola no se puede y lo explica; a la etapa siguiente sí.
-    await page.getByRole("article", { name: "Pedido VEL-000110" }).dragTo(lane("queue"));
+    await page.getByRole("article", { name: "Pedido VOL-000110" }).dragTo(lane("queue"));
     await expect(toast(page, "Un pedido en producción no vuelve a la cola.")).toBeVisible();
-    await page.getByRole("article", { name: "Pedido VEL-000110" }).dragTo(lane("finishing"));
-    await expect(toast(page, "VEL-000110 pasó a “Terminación”")).toBeVisible();
-    await expect(lane("finishing").getByRole("article", { name: "Pedido VEL-000110" })).toBeVisible();
+    await page.getByRole("article", { name: "Pedido VOL-000110" }).dragTo(lane("finishing"));
+    await expect(toast(page, "VOL-000110 pasó a “Terminación”")).toBeVisible();
+    await expect(lane("finishing").getByRole("article", { name: "Pedido VOL-000110" })).toBeVisible();
     await page.goto("admin-demo/insumos/");
     await page.getByLabel("Buscar insumo").fill("cera");
     await expect(page.getByLabel("Stock de Cera de soja").first()).toHaveValue("3920");
@@ -211,7 +211,7 @@ for (const [label, width, height, touch, pinned] of [
     expect(await horizontalOverflow(page)).toBeLessThanOrEqual(0);
     if (width < 1024) {
       await page.getByRole("group", { name: "Etapa" }).getByRole("button", { name: /^Listo/ }).click();
-      await expect(page.getByRole("article", { name: "Pedido VEL-000120" })).toBeInViewport();
+      await expect(page.getByRole("article", { name: "Pedido VOL-000120" })).toBeInViewport();
     }
     await page.goto(base() + "admin-demo/calendario/");
     await page.getByRole("button", { name: "Capacidad y feriados" }).click();

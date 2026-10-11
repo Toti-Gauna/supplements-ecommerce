@@ -65,7 +65,7 @@ export function CartLineItem({ line, onQuantity, onRemove }: { line: CartLineVie
 /** Marca de regalo en la línea: para quién es y de parte de quién. */
 export function GiftTag({ gift }: { gift: LineGift }) {
   return (
-    <p className="mt-0.5 flex items-center gap-1.5 text-[13px] font-bold text-brass-ink">
+    <p className="mt-0.5 flex items-center gap-1.5 text-[13px] font-bold text-volt-ink">
       <Gift size={14} aria-hidden="true" /> Regalo para {gift.to} · de {gift.from}
     </p>
   );

@@ -47,7 +47,7 @@ describe("métricas del panel demo", () => {
     expect(top[0]!.units).toBeGreaterThanOrEqual(top[1]!.units);
   });
   it("filtra por código, estado y fecha", () => {
-    expect(filterOrders(orders, { q: "000123", status: "ALL", from: "", to: "" }).map((o) => o.code)).toEqual(["VEL-000123"]);
+    expect(filterOrders(orders, { q: "000123", status: "ALL", from: "", to: "" }).map((o) => o.code)).toEqual(["VOL-000123"]);
     expect(filterOrders(orders, { q: "", status: "PAYMENT_REVIEW", from: "", to: "" })).toHaveLength(2);
     expect(filterOrders(orders, { q: "", status: "ALL", from: "2026-10-03", to: "2026-10-04" })).toHaveLength(3);
   });
@@ -56,16 +56,17 @@ describe("métricas del panel demo", () => {
 describe("los cambios del panel se reflejan en la tienda", () => {
   it("stock en 0 deja la variante sin stock", () => {
     const data = defaultDemoData();
-    data.products = data.products.map((p) => (p.slug === "vela-caniche" ? { ...p, variants: p.variants.map((v) => ({ ...v, stock: 0 })) } : p));
+    data.products = data.products.map((p) => (p.slug === "overvolt-pre" ? { ...p, variants: p.variants.map((v) => ({ ...v, stock: 0 })) } : p));
     setDemoData(data);
-    const p = getProduct("vela-caniche")!;
+    const p = getProduct("overvolt-pre")!;
     expect(availability(p, p.variants[0]!)).toEqual({ kind: "out-of-stock" });
   });
   it("un producto desactivado sale de los listados y su categoría vacía se oculta", () => {
     const data = defaultDemoData();
-    data.products = data.products.map((p) => (p.categorySlug === "souvenirs" ? { ...p, active: false } : p));
+    expect(visibleCategories().map((c) => c.slug)).toContain("accesorios");
+    data.products = data.products.map((p) => (p.categorySlug === "accesorios" ? { ...p, active: false } : p));
     setDemoData(data);
-    expect(visibleCategories().map((c) => c.slug)).not.toContain("souvenirs");
+    expect(visibleCategories().map((c) => c.slug)).not.toContain("accesorios");
   });
   it("un cupón pausado o agotado se rechaza", () => {
     const data = defaultDemoData();

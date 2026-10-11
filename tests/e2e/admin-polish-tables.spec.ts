@@ -59,10 +59,10 @@ test.describe("escritorio con mouse", () => {
   test("8.3.4 toda la fila abre la entidad correcta; checkbox, switches y botones de adentro no navegan", async ({ page }) => {
     const row = (text: string) => page.getByRole("row").filter({ hasText: text });
     await page.goto("admin-demo/pedidos/");
-    await row("VEL-000124").getByLabel("Seleccionar VEL-000124").check();
+    await row("VOL-000124").getByLabel("Seleccionar VOL-000124").check();
     await expect(page).toHaveURL(/admin-demo\/pedidos\/$/);
-    await row("VEL-000124").getByRole("cell").nth(3).click();
-    await expect(page.getByRole("heading", { level: 1, name: /VEL-000124/ })).toBeVisible();
+    await row("VOL-000124").getByRole("cell").nth(3).click();
+    await expect(page.getByRole("heading", { level: 1, name: /VOL-000124/ })).toBeVisible();
 
     await page.goto("admin-demo/usuarios/");
     await row("Diego Álvarez").getByRole("cell").nth(2).click();

@@ -90,18 +90,18 @@ export interface CalendarEvent {
 }
 
 export const calendarEvents: CalendarEvent[] = [
-  { id: "ev-filamento", date: "2026-10-06", title: "Retirar filamento PLA en el proveedor", kind: "tarea", notes: "3 rollos negros y 2 blancos (de muestra)." },
-  { id: "ev-retiro-113", date: "2026-10-08", title: "Ana retira los souvenirs", kind: "pedido", orderCode: "VEL-000113", notes: "Avisarle por WhatsApp cuando estén listos." },
+  { id: "ev-filamento", date: "2026-10-06", title: "Recibir la entrega de Krono Nutrition", kind: "tarea", notes: "12 Isolate Zero y 20 BCAA (de muestra). Controlar lotes y vencimientos." },
+  { id: "ev-retiro-113", date: "2026-10-08", title: "Ana retira el pedido del gimnasio", kind: "pedido", orderCode: "VOL-000113", notes: "Avisarle por WhatsApp cuando esté armado." },
 ];
 
 export const workshopSettings: WorkshopSettings = {
   dailyCapacity: 3,
   closedWeekdays: [0, 6],
-  closures: [...AR_HOLIDAYS, { date: "2026-11-06", name: "Feria de diseño (taller cerrado, de muestra)", kind: "cierre" }],
-  machineHourCost: 1500,
+  closures: [...AR_HOLIDAYS, { date: "2026-11-06", name: "Inventario anual (local cerrado, de muestra)", kind: "cierre" }],
+  machineHourCost: 0,
   handHourCost: 4500,
-  targetMarginPct: 50,
-  repurchaseDays: { velas: 45, hogar: 30 },
+  targetMarginPct: 35,
+  repurchaseDays: { proteinas: 30, creatinas: 60, "pre-entrenos": 30, aminoacidos: 30, ganadores: 20, salud: 60 },
 };
 
 export type MaterialUnit = "g" | "ml" | "u" | "m" | "plancha";
@@ -121,27 +121,17 @@ export interface Material {
   supplier?: string;
 }
 
-/** Insumos de MUESTRA: precios y proveedores inventados. */
+/** Insumos de MUESTRA (embalaje y regalos con la compra): precios y proveedores inventados. */
 export const materials: Material[] = [
-  { id: "pla", name: "Filamento PLA", unit: "g", costPerUnit: 25, stock: 3200, minStock: 1000, supplier: "Proveedor 3D (muestra)" },
-  { id: "petg", name: "Filamento PETG apto alimentos", unit: "g", costPerUnit: 32, stock: 900, minStock: 1000, supplier: "Proveedor 3D (muestra)" },
-  { id: "mdf3", name: "MDF 3 mm (plancha 60 × 40)", unit: "plancha", costPerUnit: 3200, stock: 14, minStock: 6, supplier: "Maderera (muestra)" },
-  { id: "pino", name: "Madera de pino cepillada", unit: "m", costPerUnit: 4800, stock: 6, minStock: 3, supplier: "Maderera (muestra)" },
-  { id: "led", name: "Base LED con cable USB", unit: "u", costPerUnit: 2800, stock: 4, minStock: 5, supplier: "Electrónica (muestra)" },
-  { id: "cera", name: "Cera de soja", unit: "g", costPerUnit: 12, stock: 5000, minStock: 2000, supplier: "Insumos velas (muestra)" },
-  { id: "esencia", name: "Esencia aromática", unit: "ml", costPerUnit: 55, stock: 380, minStock: 250, supplier: "Insumos velas (muestra)" },
-  { id: "lata", name: "Lata para vela", unit: "u", costPerUnit: 900, stock: 22, minStock: 10 },
-  { id: "pabilo", name: "Pabilo con base", unit: "u", costPerUnit: 120, stock: 140, minStock: 40 },
-  { id: "chip", name: "Chip NFC NTAG213", unit: "u", costPerUnit: 650, stock: 30, minStock: 15, supplier: "Electrónica (muestra)" },
-  { id: "vinilo", name: "Impresión sobre vinilo", unit: "u", costPerUnit: 700, stock: 25, minStock: 10 },
-  { id: "paracord", name: "Paracord 550", unit: "m", costPerUnit: 450, stock: 48, minStock: 20 },
-  { id: "hebilla", name: "Hebilla y argolla", unit: "u", costPerUnit: 600, stock: 12, minStock: 10 },
-  { id: "pintura", name: "Pintura acrílica", unit: "ml", costPerUnit: 18, stock: 600, minStock: 200 },
-  { id: "bowl", name: "Bowl de acero inoxidable", unit: "u", costPerUnit: 3500, stock: 6, minStock: 4 },
-  { id: "flores", name: "Flores secas", unit: "u", costPerUnit: 350, stock: 30, minStock: 20 },
-  { id: "envase-spray", name: "Envase spray 250 ml", unit: "u", costPerUnit: 1200, stock: 20, minStock: 10 },
-  { id: "envase-difusor", name: "Frasco y varillas", unit: "u", costPerUnit: 1800, stock: 9, minStock: 8 },
-  { id: "packaging", name: "Caja y papel de seda", unit: "u", costPerUnit: 750, stock: 40, minStock: 20 },
+  { id: "caja-chica", name: "Caja de envío chica", unit: "u", costPerUnit: 650, stock: 80, minStock: 40, supplier: "Packaging (muestra)" },
+  { id: "caja-grande", name: "Caja de envío grande", unit: "u", costPerUnit: 950, stock: 18, minStock: 20, supplier: "Packaging (muestra)" },
+  { id: "bolsa", name: "Bolsa con logo", unit: "u", costPerUnit: 320, stock: 120, minStock: 50, supplier: "Packaging (muestra)" },
+  { id: "folleto", name: "Folleto con tabla de dosis", unit: "u", costPerUnit: 90, stock: 300, minStock: 100, supplier: "Imprenta (muestra)" },
+  { id: "sticker", name: "Sticker VOLTA", unit: "u", costPerUnit: 60, stock: 500, minStock: 100, supplier: "Imprenta (muestra)" },
+  { id: "precinto", name: "Precinto de seguridad", unit: "u", costPerUnit: 40, stock: 400, minStock: 150 },
+  { id: "cinta", name: "Cinta de embalar", unit: "m", costPerUnit: 12, stock: 600, minStock: 200 },
+  { id: "sachet-muestra", name: "Sachet de muestra (regalo)", unit: "u", costPerUnit: 450, stock: 26, minStock: 30, supplier: "Distribuidora (muestra)" },
+  { id: "shaker-regalo", name: "Shaker de regalo para combos", unit: "u", costPerUnit: 2100, stock: 6, minStock: 10, supplier: "Distribuidora (muestra)" },
 ];
 
 export interface RecipeItem {
@@ -150,31 +140,42 @@ export interface RecipeItem {
   qty: number;
 }
 
-/** Receta de costo de un producto: insumos por unidad, minutos de máquina y de trabajo a mano. */
+/** Costo de un producto: lo que se le paga al proveedor, el embalaje y los minutos de armado. */
 export interface Recipe {
+  /** Costo de la mercadería al proveedor (variante más barata), en pesos enteros. */
+  supplierCost?: number;
   items: RecipeItem[];
   machineMinutes: number;
   handMinutes: number;
 }
 
-/** Recetas de MUESTRA por producto. Los productos sin receta aparecen como "sin costo cargado". */
+/** Costos de MUESTRA por producto (la marca propia deja más margen). Los productos sin costo aparecen como "sin costo cargado". */
 export const recipes: Record<string, Recipe> = {
-  "comedero-perro-globo": { items: [{ materialId: "petg", qty: 180 }, { materialId: "packaging", qty: 1 }], machineMinutes: 300, handMinutes: 30 },
-  "comedero-elevado-madera": { items: [{ materialId: "pino", qty: 0.6 }, { materialId: "bowl", qty: 2 }, { materialId: "packaging", qty: 1 }], machineMinutes: 45, handMinutes: 90 },
-  "collar-con-nombre": { items: [{ materialId: "paracord", qty: 1.2 }, { materialId: "hebilla", qty: 1 }, { materialId: "pla", qty: 25 }, { materialId: "packaging", qty: 1 }], machineMinutes: 90, handMinutes: 40 },
-  "placa-nfc": { items: [{ materialId: "pla", qty: 35 }, { materialId: "chip", qty: 1 }, { materialId: "vinilo", qty: 1 }, { materialId: "packaging", qty: 1 }], machineMinutes: 80, handMinutes: 15 },
-  "placa-nfc-instagram": { items: [{ materialId: "pla", qty: 30 }, { materialId: "chip", qty: 1 }, { materialId: "vinilo", qty: 1 }], machineMinutes: 70, handMinutes: 10 },
-  "velador-con-foto": { items: [{ materialId: "pla", qty: 160 }, { materialId: "led", qty: 1 }, { materialId: "packaging", qty: 1 }], machineMinutes: 600, handMinutes: 30 },
-  "velador-pintado-a-mano": { items: [{ materialId: "pla", qty: 220 }, { materialId: "led", qty: 1 }, { materialId: "pintura", qty: 40 }, { materialId: "packaging", qty: 1 }], machineMinutes: 720, handMinutes: 300 },
-  "colgador-de-correa": { items: [{ materialId: "mdf3", qty: 0.5 }, { materialId: "pintura", qty: 15 }, { materialId: "packaging", qty: 1 }], machineMinutes: 25, handMinutes: 45 },
-  "salchicha-geometrico": { items: [{ materialId: "mdf3", qty: 0.4 }], machineMinutes: 20, handMinutes: 25 },
-  "figura-persona-y-perro": { items: [{ materialId: "mdf3", qty: 0.6 }, { materialId: "pintura", qty: 20 }], machineMinutes: 30, handMinutes: 40 },
-  "vela-caniche": { items: [{ materialId: "cera", qty: 220 }, { materialId: "esencia", qty: 15 }, { materialId: "pabilo", qty: 1 }, { materialId: "mdf3", qty: 0.05 }], machineMinutes: 5, handMinutes: 25 },
-  "vela-en-lata": { items: [{ materialId: "cera", qty: 180 }, { materialId: "esencia", qty: 12 }, { materialId: "pabilo", qty: 1 }, { materialId: "lata", qty: 1 }, { materialId: "pintura", qty: 8 }], machineMinutes: 0, handMinutes: 35 },
-  "vela-souvenir-flores": { items: [{ materialId: "cera", qty: 90 }, { materialId: "esencia", qty: 5 }, { materialId: "pabilo", qty: 1 }, { materialId: "flores", qty: 2 }, { materialId: "pino", qty: 0.05 }], machineMinutes: 6, handMinutes: 15 },
-  "home-spray": { items: [{ materialId: "esencia", qty: 25 }, { materialId: "envase-spray", qty: 1 }], machineMinutes: 0, handMinutes: 8 },
-  "difusor": { items: [{ materialId: "esencia", qty: 30 }, { materialId: "envase-difusor", qty: 1 }], machineMinutes: 0, handMinutes: 8 },
-  "pieza-i-love-mdp": { items: [{ materialId: "mdf3", qty: 0.25 }, { materialId: "pintura", qty: 12 }], machineMinutes: 12, handMinutes: 30 },
+  "ionic-whey": { supplierCost: 26400, items: [{ materialId: "caja-chica", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }, { materialId: "cinta", qty: 1.2 }], machineMinutes: 0, handMinutes: 6 },
+  "isolate-zero": { supplierCost: 43500, items: [{ materialId: "caja-chica", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }, { materialId: "cinta", qty: 1.2 }], machineMinutes: 0, handMinutes: 6 },
+  "proteina-vegana": { supplierCost: 29300, items: [{ materialId: "caja-chica", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }, { materialId: "cinta", qty: 1.2 }], machineMinutes: 0, handMinutes: 6 },
+  "night-casein": { supplierCost: 38900, items: [{ materialId: "caja-chica", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }, { materialId: "cinta", qty: 1.2 }], machineMinutes: 0, handMinutes: 6 },
+  "mass-gainer": { supplierCost: 35300, items: [{ materialId: "caja-grande", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }, { materialId: "cinta", qty: 1.2 }], machineMinutes: 0, handMinutes: 6 },
+  "creatina-monohidrato": { supplierCost: 14400, items: [{ materialId: "caja-chica", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }, { materialId: "cinta", qty: 1.2 }], machineMinutes: 0, handMinutes: 6 },
+  "creatina-gomitas": { supplierCost: 16800, items: [{ materialId: "caja-chica", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }, { materialId: "cinta", qty: 1.2 }], machineMinutes: 0, handMinutes: 6 },
+  "creatina-brava": { supplierCost: 15900, items: [{ materialId: "caja-chica", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }, { materialId: "cinta", qty: 1.2 }], machineMinutes: 0, handMinutes: 6 },
+  "overvolt-pre": { supplierCost: 22100, items: [{ materialId: "caja-chica", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }, { materialId: "cinta", qty: 1.2 }], machineMinutes: 0, handMinutes: 6 },
+  "pump-flow": { supplierCost: 22800, items: [{ materialId: "caja-chica", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }, { materialId: "cinta", qty: 1.2 }], machineMinutes: 0, handMinutes: 6 },
+  "bcaa-211": { supplierCost: 16700, items: [{ materialId: "caja-chica", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }, { materialId: "cinta", qty: 1.2 }], machineMinutes: 0, handMinutes: 6 },
+  "glutamina": { supplierCost: 12000, items: [{ materialId: "caja-chica", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }, { materialId: "cinta", qty: 1.2 }], machineMinutes: 0, handMinutes: 6 },
+  "l-carnitina": { supplierCost: 13100, items: [{ materialId: "caja-chica", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }, { materialId: "cinta", qty: 1.2 }], machineMinutes: 0, handMinutes: 6 },
+  "termo-cut": { supplierCost: 15500, items: [{ materialId: "caja-chica", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }, { materialId: "cinta", qty: 1.2 }], machineMinutes: 0, handMinutes: 6 },
+  "multivitaminico": { supplierCost: 8100, items: [{ materialId: "bolsa", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }], machineMinutes: 0, handMinutes: 3 },
+  "omega-3": { supplierCost: 11300, items: [{ materialId: "bolsa", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }], machineMinutes: 0, handMinutes: 3 },
+  "magnesio-bisglicinato": { supplierCost: 10500, items: [{ materialId: "bolsa", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }], machineMinutes: 0, handMinutes: 3 },
+  "colageno": { supplierCost: 14300, items: [{ materialId: "caja-chica", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }, { materialId: "cinta", qty: 1.2 }], machineMinutes: 0, handMinutes: 6 },
+  "barra-proteica": { supplierCost: 1400, items: [{ materialId: "bolsa", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }], machineMinutes: 0, handMinutes: 3 },
+  "alfajor-proteico": { supplierCost: 9500, items: [{ materialId: "bolsa", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }], machineMinutes: 0, handMinutes: 3 },
+  "mantequilla-mani": { supplierCost: 5900, items: [{ materialId: "bolsa", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }], machineMinutes: 0, handMinutes: 3 },
+  "electrolitos": { supplierCost: 6200, items: [{ materialId: "bolsa", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }], machineMinutes: 0, handMinutes: 3 },
+  "gel-energetico": { supplierCost: 7100, items: [{ materialId: "bolsa", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }], machineMinutes: 0, handMinutes: 3 },
+  "shaker-volta": { supplierCost: 4300, items: [{ materialId: "bolsa", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }], machineMinutes: 0, handMinutes: 3 },
+  "magnesio-tiza": { supplierCost: 2400, items: [{ materialId: "bolsa", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }], machineMinutes: 0, handMinutes: 3 },
 };
 
 export type PetSpecies = "perro" | "gato" | "otro";
@@ -200,11 +201,11 @@ export interface CustomerProfile {
   birthday?: string;
 }
 
-/** Fichas FICTICIAS por email (en minúsculas). Mascotas y fechas inventadas. */
+/** Fichas FICTICIAS por email (en minúsculas). Notas y fechas inventadas. */
 export const customerProfiles: Record<string, CustomerProfile> = {
-  "diego.a@ejemplo.com": { pets: [{ id: "p1", name: "Ñoqui", species: "perro", breed: "Mestizo", birthday: "10-09" }], notes: [{ at: "2026-09-29T10:00:00-03:00", text: "Prefiere que le escriban por WhatsApp a la tarde." }] },
-  "julian.p@ejemplo.com": { pets: [{ id: "p2", name: "Kira", species: "perro", breed: "Ovejero alemán", birthday: "01-15" }], notes: [] },
-  "vale.s@ejemplo.com": { pets: [{ id: "p3", name: "Tomate", species: "gato", breed: "Naranja", birthday: "10-21" }, { id: "p4", name: "Luna", species: "perro", breed: "Caniche", birthday: "03-02" }], notes: [{ at: "2026-09-28T09:30:00-03:00", text: "Tuvo un problema con el comedero: ofrecerle un cupón en la próxima." }], birthday: "11-12" },
-  "martin.g@ejemplo.com": { pets: [{ id: "p5", name: "Pancho", species: "perro", breed: "Salchicha" }], notes: [] },
-  "lucia.f@ejemplo.com": { pets: [{ id: "p6", name: "Mora", species: "gato", birthday: "10-30" }], notes: [] },
+  "diego.a@ejemplo.com": { pets: [], notes: [{ at: "2026-09-29T10:00:00-03:00", text: "Prefiere que le escriban por WhatsApp a la tarde." }] },
+  "julian.p@ejemplo.com": { pets: [], notes: [], birthday: "01-15" },
+  "vale.s@ejemplo.com": { pets: [], notes: [{ at: "2026-09-28T09:30:00-03:00", text: "Le llegó un pote con el precinto roto: ofrecerle un cupón en la próxima." }], birthday: "11-12" },
+  "martin.g@ejemplo.com": { pets: [], notes: [] },
+  "lucia.f@ejemplo.com": { pets: [], notes: [], birthday: "10-30" },
 };

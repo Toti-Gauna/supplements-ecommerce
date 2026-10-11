@@ -1,5 +1,6 @@
 import type { Product } from "../types";
-import { homeProducts } from "./products-home";
-import { petProducts } from "./products-pets";
+import { performanceProducts } from "./products-performance";
+import { proteinProducts } from "./products-protein";
+import { wellnessProducts } from "./products-wellness";
 
-export const products: Product[] = [...petProducts, ...homeProducts];
+export const products: Product[] = [...proteinProducts, ...performanceProducts, ...wellnessProducts];

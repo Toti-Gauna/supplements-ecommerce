@@ -40,7 +40,7 @@ export function RecipeSheet({ product, onClose }: { product: Product | null; onC
   const trialCheck = trial ? checkTrialPrice(trial) : null;
   const test = trialCheck?.ok ? trialCheck.value : newPrice ?? price;
   const margin = marginPct(test, cost.total);
-  const state = recipe.items.length || recipe.machineMinutes || recipe.handMinutes ? marginState(margin, settings.targetMarginPct) : "missing";
+  const state = recipe.supplierCost || recipe.items.length || recipe.machineMinutes || recipe.handMinutes ? marginState(margin, settings.targetMarginPct) : "missing";
   const suggested = suggestedPrice(cost.total, settings.targetMarginPct);
   const dirty = JSON.stringify(draft) !== JSON.stringify(recipeDraft(saved)) || newPrice !== null;
   const set = (patch: Partial<RecipeDraft>) => { setDraft({ ...draft, ...patch }); setErrors({}); };
@@ -57,10 +57,16 @@ export function RecipeSheet({ product, onClose }: { product: Product | null; onC
   const row = (label: string, value: number, strong = false) => <p className={cn("flex justify-between gap-3", strong && "border-t border-line pt-2 font-extrabold")}><span className={strong ? "" : "text-muted"}>{label}</span><span className="tabular-nums">{formatARS(value)}</span></p>;
   return (
     <EditDialog open title={`Costo de ${product.name}`} heading={product.name} dirty={dirty} onSave={submit} onClose={onClose}
-      intro="Modificá materiales, tiempos y precio de prueba para estimar el margen. Nada se guarda hasta que tocás Guardar.">
+      intro="Modificá el costo del proveedor, el embalaje, los tiempos y el precio de prueba para estimar el margen. Nada se guarda hasta que tocás Guardar.">
       <div className="@container grid gap-4 @min-[44rem]:grid-cols-2">
+        <section aria-labelledby="r-supplier" className={cn(block, "@min-[44rem]:col-span-2")}>
+          <h3 id="r-supplier" className="mb-2 font-bold">Mercadería</h3>
+          <Field id="r-supplier-cost" label="Costo del proveedor por unidad (pesos)" error={errors.supplier} hint="Lo que le pagás a la marca o a la distribuidora por la presentación más barata.">
+            <Input id="r-supplier-cost" inputMode="numeric" value={draft.supplier} onChange={(e) => set({ supplier: e.target.value })} aria-invalid={!!errors.supplier} aria-describedby={describedBy("r-supplier-cost", errors.supplier, true)} />
+          </Field>
+        </section>
         <section aria-labelledby="r-items" className={cn(block, "@min-[44rem]:col-span-2")}>
-          <h3 id="r-items" className="mb-2 font-bold">Insumos por unidad</h3>
+          <h3 id="r-items" className="mb-2 font-bold">Embalaje e insumos por unidad</h3>
           {draft.items.length ? (
             <ul className="flex flex-col divide-y divide-line">
               {draft.items.map((it) => {
@@ -99,7 +105,7 @@ export function RecipeSheet({ product, onClose }: { product: Product | null; onC
           <h3 id="r-time" className="mb-2 font-bold">Tiempos</h3>
           <div className="grid gap-3 @min-[24rem]:grid-cols-2">
             {(["machine", "hand"] as const).map((k) => (
-              <Field key={k} id={`r-${k}`} label={k === "machine" ? "Máquina (minutos)" : "Trabajo a mano (minutos)"} error={errors[k]} hint={`${formatARS(k === "machine" ? settings.machineHourCost : settings.handHourCost)} la hora`}>
+              <Field key={k} id={`r-${k}`} label={k === "machine" ? "Máquina (minutos)" : "Armado (minutos)"} error={errors[k]} hint={`${formatARS(k === "machine" ? settings.machineHourCost : settings.handHourCost)} la hora`}>
                 <Input id={`r-${k}`} inputMode="numeric" value={draft[k]} onChange={(e) => set({ [k]: e.target.value })} aria-invalid={!!errors[k]} aria-describedby={describedBy(`r-${k}`, errors[k], true)} />
               </Field>
             ))}
@@ -107,9 +113,10 @@ export function RecipeSheet({ product, onClose }: { product: Product | null; onC
         </section>
         <section aria-labelledby="r-calc" className={cn(block, "flex flex-col gap-1.5 text-sm")}>
           <h3 id="r-calc" className="mb-1 text-base font-bold">Cálculo</h3>
-          {row("Insumos", cost.materials)}
+          {row("Mercadería (proveedor)", cost.merchandise)}
+          {row("Embalaje e insumos", cost.materials)}
           {row("Máquina", cost.machine)}
-          {row("Trabajo a mano", cost.hand)}
+          {row("Armado", cost.hand)}
           {row("Costo por unidad", cost.total, true)}
           {cost.missing.length > 0 && <p className="text-xs font-bold text-warning">Hay insumos de la receta que ya no están en la lista.</p>}
         </section>

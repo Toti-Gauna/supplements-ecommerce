@@ -37,7 +37,7 @@ export function ImportUpload({ busy, error, last, onFile, onSample, onTemplate, 
         <span className="max-w-md text-sm text-muted">o tocá para elegirlo. Sirve .xlsx o .csv, con categorías, productos, variantes, precios y stock. Se lee en este navegador: el archivo no se sube a ningún lado.</span>
         <input type="file" accept=".xlsx,.csv,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" className="sr-only" aria-label="Elegir archivo de Excel o CSV"
           onChange={(e) => { const f = e.target.files?.[0]; if (f) onFile(f); e.target.value = ""; }} />
-        <span className="inline-flex items-center gap-2 rounded-full bg-night px-5 py-3 text-sm font-bold text-[#f6f1e8]"><FileSpreadsheet size={16} aria-hidden="true" /> Elegir archivo</span>
+        <span className="inline-flex items-center gap-2 rounded-full bg-night px-5 py-3 text-sm font-bold text-on-night"><FileSpreadsheet size={16} aria-hidden="true" /> Elegir archivo</span>
       </label>
       {error && <p role="alert" className="rounded-2xl bg-danger-soft px-4 py-3 text-sm font-semibold text-danger">{error}</p>}
       <div className="grid gap-3 sm:grid-cols-2">
@@ -46,7 +46,7 @@ export function ImportUpload({ busy, error, last, onFile, onSample, onTemplate, 
           <span><span className="block font-bold">Bajar mi catálogo como plantilla</span><span className="text-sm text-muted">Un Excel con todos tus productos y stock. Lo editás y lo volvés a subir.</span></span>
         </button>
         <button type="button" onClick={onSample} className="flex items-start gap-3 rounded-3xl bg-surface p-4 text-left shadow-[var(--shadow-card)] hover:ring-1 hover:ring-primary">
-          <Sparkles size={20} aria-hidden="true" className="mt-0.5 shrink-0 text-brass" />
+          <Sparkles size={20} aria-hidden="true" className="mt-0.5 shrink-0 text-volt" />
           <span><span className="block font-bold">Probar con una planilla de ejemplo</span><span className="text-sm text-muted">Como la que muchos talleres tienen hoy: columnas con otros nombres, montos con $ y una fila con error.</span></span>
         </button>
       </div>

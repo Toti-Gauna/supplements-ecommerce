@@ -21,17 +21,17 @@ export function MissionPath({ missions }: { missions: Mission[] }) {
             <li key={m.id} className="flex flex-col items-stretch sm:flex-1 sm:flex-row sm:items-center">
               <motion.div initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.15 }}
                 className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-4 sm:flex-1">
-                <span className="font-display grid h-10 w-10 shrink-0 place-items-center rounded-full bg-brass text-night">{i + 1}</span>
-                <span className="min-w-0"><span className="block font-bold">{m.title}</span><span className="flex items-center gap-1 text-xs text-[#cfc6b3]"><Gift size={12} aria-hidden="true" />{m.reward}</span></span>
+                <span className="font-display grid h-10 w-10 shrink-0 place-items-center rounded-full bg-volt text-night">{i + 1}</span>
+                <span className="min-w-0"><span className="block font-bold">{m.title}</span><span className="flex items-center gap-1 text-xs text-night-muted"><Gift size={12} aria-hidden="true" />{m.reward}</span></span>
               </motion.div>
               {i < chain.length - 1 && (
-                <span aria-hidden="true" className="mx-auto h-6 w-px bg-gradient-to-b from-brass to-transparent sm:mx-0 sm:h-px sm:w-10 sm:bg-gradient-to-r" />
+                <span aria-hidden="true" className="mx-auto h-6 w-px bg-gradient-to-b from-volt to-transparent sm:mx-0 sm:h-px sm:w-10 sm:bg-gradient-to-r" />
               )}
             </li>
           ))}
         </ol>
       ))}
-      <p className="text-sm text-[#cfc6b3]">Lo que sobra al completar una misión pasa a la siguiente de la cadena.</p>
+      <p className="text-sm text-night-muted">Lo que sobra al completar una misión pasa a la siguiente de la cadena.</p>
     </div>
   );
 }

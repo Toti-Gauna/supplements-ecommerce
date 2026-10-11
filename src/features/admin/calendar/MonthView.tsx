@@ -66,13 +66,13 @@ export function MonthView({ cursor, today, days, events, cal, capacity, dnd, onD
               return (
                 <td key={day} {...dnd.zone(day)} data-day={day}
                   className={cn("relative h-16 rounded-xl align-top transition-colors sm:h-32",
-                    dnd.over === day ? "bg-accent ring-2 ring-primary" : closed ? "bg-[repeating-linear-gradient(135deg,transparent_0_6px,rgb(28_32_22/0.04)_6px_12px)]" : outside ? "bg-surface/55" : "bg-surface",
+                    dnd.over === day ? "bg-accent ring-2 ring-primary" : closed ? "bg-[repeating-linear-gradient(135deg,transparent_0_6px,rgb(0_0_0/0.04)_6px_12px)]" : outside ? "bg-surface/55" : "bg-surface",
                     !closed && "shadow-[var(--shadow-card)]", invalid && "opacity-60")}>
                   <button type="button" onClick={() => onDay(day)} aria-label={dayLabel(day, list, evs, closed, capacity)}
                     className="absolute inset-0 rounded-xl hover:bg-accent/30 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary" />
                   <div className="pointer-events-none relative flex items-center gap-1 px-1.5 pt-1.5">
                     <span className={cn("grid h-6 min-w-6 place-items-center rounded-full px-1 text-xs font-extrabold tabular-nums",
-                      day === today ? "bg-night text-[#f6f1e8]" : closed || outside ? "text-muted" : "text-ink")}>{Number(day.slice(8))}</span>
+                      day === today ? "bg-night text-on-night" : closed || outside ? "text-muted" : "text-ink")}>{Number(day.slice(8))}</span>
                     {!closed && day >= today && list.length > 0 && (
                       <span className={cn("ml-auto hidden rounded-full px-1.5 text-[10px] font-extrabold tabular-nums sm:inline", used >= capacity ? "bg-warning-soft text-warning" : "bg-bg text-muted")}>{capacityText(used, capacity)}</span>
                     )}
@@ -82,7 +82,7 @@ export function MonthView({ cursor, today, days, events, cal, capacity, dnd, onD
                   {chips.length > 0 && (
                     <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-2 flex justify-center gap-0.5 sm:hidden">
                       {list.slice(0, 4).map((e) => <span key={e.order.code} className={cn("h-1.5 w-1.5 rounded-full", e.late || e.blocked ? "bg-danger" : e.counts ? "bg-primary" : "bg-muted/50")} />)}
-                      {evs.slice(0, 2).map((e) => <span key={e.id} className="h-1.5 w-1.5 rounded-full bg-brass-ink" />)}
+                      {evs.slice(0, 2).map((e) => <span key={e.id} className="h-1.5 w-1.5 rounded-full bg-volt-ink" />)}
                     </span>
                   )}
                   <ul className="pointer-events-none relative hidden flex-col gap-1 px-1.5 pb-1.5 pt-1 sm:flex">

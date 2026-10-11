@@ -70,7 +70,7 @@ export function OrdersTable() {
       description: skipped ? `${skipped} quedaron igual porque su estado actual no lo permite.` : "Cambio guardado solo en esta demo." });
     clear();
   };
-  const table = { searchLabel: "Código o cliente", searchPlaceholder: "VEL-000123, nombre o email", searchText: search, filters: FILTERS };
+  const table = { searchLabel: "Código o cliente", searchPlaceholder: "VOL-000123, nombre o email", searchText: search, filters: FILTERS };
   if (state.view === "excel") {
     return <TableExcel id="orders" title="Pedidos" noun="pedidos" state={state} rows={orders} {...table} spec={specFromColumns(orderColumns, (o) => o.code)}
       onExport={(rows) => onExport(toSheet(orderColumns, rows), "filtered")} />;

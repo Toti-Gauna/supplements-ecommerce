@@ -16,7 +16,7 @@ export function Tulip({ className }: DecorProps) {
 export function Paw({ className }: DecorProps) {
   return (
     <svg viewBox="0 0 64 64" aria-hidden="true" className={className}>
-      <g fill="#f3dca6">
+      <g fill="#e3ff8f">
         <path d="M32 30c-9 0-17 11-17 18 0 6 5 8 9 7 3-1 5-2 8-2s5 1 8 2c4 1 9-1 9-7 0-7-8-18-17-18z" />
         <ellipse cx="14" cy="27" rx="5.5" ry="7" transform="rotate(-20 14 27)" /><ellipse cx="25" cy="15" rx="5.5" ry="7.5" transform="rotate(-6 25 15)" />
         <ellipse cx="39" cy="15" rx="5.5" ry="7.5" transform="rotate(6 39 15)" /><ellipse cx="50" cy="27" rx="5.5" ry="7" transform="rotate(20 50 27)" />
@@ -57,9 +57,9 @@ export function PriceTag({ className }: DecorProps) {
 export function Bag({ className }: DecorProps) {
   return (
     <svg viewBox="0 0 64 64" aria-hidden="true" className={className}>
-      <path d="M24 20v-4a8 8 0 0 1 16 0v4" stroke="#f3dca6" strokeWidth="3.5" fill="none" />
-      <path d="M12 20h40l-3 38H15z" fill="#2b2b30" stroke="#f3dca6" strokeWidth="2" />
-      <text x="32" y="45" fontSize="12" fontWeight="900" textAnchor="middle" fill="#f3dca6" fontFamily="system-ui, sans-serif">SALE</text>
+      <path d="M24 20v-4a8 8 0 0 1 16 0v4" stroke="#e3ff8f" strokeWidth="3.5" fill="none" />
+      <path d="M12 20h40l-3 38H15z" fill="#2b2b30" stroke="#e3ff8f" strokeWidth="2" />
+      <text x="32" y="45" fontSize="12" fontWeight="900" textAnchor="middle" fill="#e3ff8f" fontFamily="system-ui, sans-serif">SALE</text>
     </svg>
   );
 }

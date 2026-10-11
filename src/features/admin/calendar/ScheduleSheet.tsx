@@ -70,7 +70,7 @@ export function ScheduleSheet({ order, orders, settings, today, late, movable, w
                   const v = p?.variants.find((x) => x.id === l.variantId);
                   return (
                     <li key={l.id} className="flex items-center gap-3 text-sm">
-                      {p && <div className="w-12 shrink-0"><LineThumb art={p.art} tint={v?.colorHex} name={p.name} personalization={l.personalization} zone={demoData().textZones[p.art]} /></div>}
+                      {p && <div className="w-12 shrink-0"><LineThumb art={p.art} pack={p.pack} tint={v?.colorHex} name={p.name} personalization={l.personalization} zone={demoData().textZones[p.art]} /></div>}
                       <span className="min-w-0 flex-1"><span className="block font-semibold">{l.quantity} × {p?.name ?? l.productSlug}</span><span className="text-muted">{v?.label}</span></span>
                     </li>
                   );
@@ -86,7 +86,7 @@ export function ScheduleSheet({ order, orders, settings, today, late, movable, w
                   <button type="button" className={step} disabled={!day} onClick={() => day && move(nextWorkday(day, cal))}>Día hábil siguiente <ChevronRight size={16} aria-hidden="true" /></button>
                 </div>
                 {free && free !== day && (
-                  <button type="button" className={step} onClick={() => move(free)}><Sparkles size={16} aria-hidden="true" className="text-brass-ink" /> Primera fecha libre: {formatDay(free)}</button>
+                  <button type="button" className={step} onClick={() => move(free)}><Sparkles size={16} aria-hidden="true" className="text-volt-ink" /> Primera fecha libre: {formatDay(free)}</button>
                 )}
                 <PickDate key={`${order.code}-${day}`} id="schedule-date" label="Elegir otra fecha" min={today} value={day ?? ""} action="Mover" onPick={move} />
                 {overload && (

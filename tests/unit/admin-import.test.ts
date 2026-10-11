@@ -1,11 +1,28 @@
 import { describe, expect, it } from "vitest";
 import { defaultDemoData } from "@/demo/engine/source";
-import { parseCsv, parseMoney, parseStock, parseYesNo, slugify } from "@/demo/admin/import/cells";
+import { parseCsv, parseMoney, parseStock, parseYesNo, slugify, type Cell } from "@/demo/admin/import/cells";
 import { detectMapping, findHeaderRow } from "@/demo/admin/import/columns";
 import { buildImportPlan } from "@/demo/admin/import/plan";
 import { catalogSheet, SAMPLE_SHEET } from "@/demo/admin/import/template";
 
 const data = () => { const d = defaultDemoData(); return { products: d.products, categories: d.categories }; };
+
+/**
+ * Planilla como la de SAMPLE_SHEET (columnas con otros nombres, "$" y puntos), con el catálogo de suplementos:
+ * una fila igual, cuatro cambios, un producto nuevo con dos variantes, un sabor nuevo y un precio con centavos.
+ */
+const SHEET: Cell[][] = [
+  ["Rubro", "Artículo", "Modelo", "Precio de venta", "Cantidad", "Activo"],
+  ["Proteínas", "Ionic Whey 100%", "Chocolate · 2 lb (907 g)", "$ 54.900", 18, "sí"],
+  ["Proteínas", "Isolate Zero", "Chocolate", "$ 74.000", 6, "sí"],
+  ["Pre-entrenos", "Overvolt pre-entreno", "Mango", "$ 36.900", 14, "sí"],
+  ["Pre-entrenos", "Overvolt pre-entreno", "Limón", "$ 36.900", 4, "sí"],
+  ["Creatinas", "Creatina en gomitas", "Limón", "$ 34.900", 20, "sí"],
+  ["Combos", "Combo fuerza", "Creatina 500 g + shaker", "$ 50.000", 6, "sí"],
+  ["Combos", "Combo fuerza", "Creatina 300 g + shaker", "$ 34.000", 10, "sí"],
+  ["Vitaminas y salud", "Omega 3 1000 mg", "60 cápsulas", "$ 18.900", 30, "sí"],
+  ["Accesorios", "Magnesio en bloque (tiza)", "", "$ 4.990,50", 3, "sí"],
+];
 
 describe("celdas de la planilla", () => {
   it("precios en pesos enteros, con $ y puntos de miles", () => {
@@ -43,23 +60,24 @@ describe("plan de importación", () => {
     expect(findHeaderRow([["Mi lista de stock"], ...SAMPLE_SHEET])).toBe(1);
   });
   it("crea, actualiza, deja igual y marca errores sin aplicarlos", () => {
-    const plan = buildImportPlan(SAMPLE_SHEET, 0, detectMapping(SAMPLE_SHEET[0]!), data());
+    const plan = buildImportPlan(SHEET, 0, detectMapping(SHEET[0]!), data());
     expect(plan.counts).toEqual({ "create-product": 1, "create-variant": 2, update: 4, unchanged: 1, error: 1 });
-    expect(plan.newCategories).toEqual(["Mates y cocina"]);
-    const tabla = plan.next.products.find((p) => p.name === "Tabla de picada con nombre")!;
-    expect(tabla.basePrice).toBe(24000);
-    expect(tabla.variants.map((v) => [v.label, v.priceDelta, v.stock])).toEqual([["Grande (40 cm)", 0, 6], ["Chica (30 cm)", -4500, 10]]);
-    const bowl = plan.next.products.find((p) => p.slug === "comedero-elevado-madera")!;
+    expect(plan.newCategories).toEqual(["Combos"]);
+    const combo = plan.next.products.find((p) => p.name === "Combo fuerza")!;
+    expect(combo.basePrice).toBe(50000);
+    expect(combo.variants.map((v) => [v.label, v.priceDelta, v.stock])).toEqual([["Creatina 500 g + shaker", 0, 6], ["Creatina 300 g + shaker", -16000, 10]]);
+    const iso = plan.next.products.find((p) => p.slug === "isolate-zero")!;
     // Precio de una variante de un producto con varias: cambia la diferencia, no el precio base
-    expect(bowl.variants[0]).toMatchObject({ stock: 9, priceDelta: 1500 });
-    expect(bowl.basePrice).toBe(32000);
+    expect(iso.variants[0]).toMatchObject({ id: "iz-chocolate-2lb", stock: 6, priceDelta: 1500 });
+    expect(iso.basePrice).toBe(72500);
+    expect(plan.next.products.find((p) => p.slug === "creatina-gomitas")!.variants.map((v) => v.label)).toContain("Limón");
     const error = plan.rows.find((r) => r.action === "error")!;
     expect(error.line).toBe(10);
     expect(error.errors[0]).toMatch(/pesos enteros/);
-    expect(plan.next.products.find((p) => p.slug === "salchicha-geometrico")!.basePrice).toBe(data().products.find((p) => p.slug === "salchicha-geometrico")!.basePrice);
+    expect(plan.next.products.find((p) => p.slug === "magnesio-tiza")!.basePrice).toBe(data().products.find((p) => p.slug === "magnesio-tiza")!.basePrice);
   });
   it("pide la variante cuando el producto tiene varias", () => {
-    const rows = [["Producto", "Stock"], ["Vela caniche", 3]];
+    const rows = [["Producto", "Stock"], ["Ionic Whey 100%", 3]];
     const plan = buildImportPlan(rows, 0, detectMapping(rows[0]!), data());
     expect(plan.rows[0]!.errors[0]).toMatch(/indicá cuál/);
   });
@@ -72,13 +90,13 @@ describe("plan de importación", () => {
   });
   it("con nombres repetidos pide el código; con código actualiza el correcto y permite renombrar", () => {
     const d = data();
-    d.products.push({ ...structuredClone(d.products.find((p) => p.slug === "difusor")!), slug: "difusor-2" });
-    const rows = [["Producto", "Stock"], ["Difusor de varillas Volta", 4]];
+    d.products.push({ ...structuredClone(d.products.find((p) => p.slug === "creatina-brava")!), slug: "creatina-brava-2" });
+    const rows = [["Producto", "Stock"], ["Creatina Brava 100% pura", 4]];
     expect(buildImportPlan(rows, 0, detectMapping(rows[0]!), d).rows[0]!.errors[0]).toMatch(/columna Código/);
-    const withCode = [["Código", "Producto", "Stock"], ["difusor-2", "Difusor XL", 4]];
+    const withCode = [["Código", "Producto", "Stock"], ["creatina-brava-2", "Creatina Brava XL", 4]];
     const plan = buildImportPlan(withCode, 0, detectMapping(withCode[0]!), d);
-    expect(plan.next.products.find((p) => p.slug === "difusor-2")).toMatchObject({ name: "Difusor XL", variants: [expect.objectContaining({ stock: 4 })] });
-    expect(plan.next.products.find((p) => p.slug === "difusor")!.variants[0]!.stock).toBe(10);
+    expect(plan.next.products.find((p) => p.slug === "creatina-brava-2")).toMatchObject({ name: "Creatina Brava XL", variants: [expect.objectContaining({ stock: 4 })] });
+    expect(plan.next.products.find((p) => p.slug === "creatina-brava")!.variants[0]!.stock).toBe(16);
   });
   it("producto nuevo sin categoría o sin precio no entra", () => {
     const rows = [["Producto", "Precio", "Categoría"], ["Mate", "", "Cocina"], ["Termo", "$ 9.000", ""]];

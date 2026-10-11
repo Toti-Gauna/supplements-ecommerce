@@ -7,7 +7,7 @@ const HEART = "M32 32C24 27 17 22 17 15.5 17 11 20.5 8 24.5 8c3.5 0 6.5 2.5 7.5 
 export function Champagne({ className }: DecorProps) {
   const glass = (rot: number, cx: number) => (
     <g transform={`rotate(${rot} ${cx} 40)`}>
-      <path d={`M${cx - 8} 12h16l-2 20a6 6 0 0 1-12 0z`} fill="#f3dca6" />
+      <path d={`M${cx - 8} 12h16l-2 20a6 6 0 0 1-12 0z`} fill="#e3ff8f" />
       <path d={`M${cx - 7.4} 18h14.8`} stroke="#fff" strokeWidth="1.5" opacity=".7" />
       <path d={`M${cx} 38v14M${cx - 6} 54h12`} stroke="#f6f1e8" strokeWidth="3" strokeLinecap="round" />
     </g>
@@ -25,7 +25,7 @@ export function Firework({ className }: DecorProps) {
   return (
     <svg viewBox="0 0 64 64" aria-hidden="true" className={className}>
       <g strokeWidth="3" strokeLinecap="round">
-        {[0, 45, 90, 135, 180, 225, 270, 315].map((r, i) => <path key={r} transform={`rotate(${r} 32 32)`} d="M32 8v11" stroke={i % 2 ? "#f3dca6" : "#ff7aa8"} />)}
+        {[0, 45, 90, 135, 180, 225, 270, 315].map((r, i) => <path key={r} transform={`rotate(${r} 32 32)`} d="M32 8v11" stroke={i % 2 ? "#e3ff8f" : "#ff7aa8"} />)}
       </g>
       {[22.5, 112.5, 202.5, 292.5].map((r) => <circle key={r} transform={`rotate(${r} 32 32)`} cx="32" cy="10" r="2" fill="#8fd3ff" />)}
       <circle cx="32" cy="32" r="4" fill="#ffd34d" />
@@ -37,8 +37,8 @@ export function PartyHat({ className }: DecorProps) {
   return (
     <svg viewBox="0 0 64 64" aria-hidden="true" className={className}>
       <path d="M32 8l18 46H14z" fill="#6c4cc4" />
-      <circle cx="27" cy="38" r="2.5" fill="#f3dca6" /><circle cx="37" cy="44" r="2.5" fill="#ff7aa8" /><circle cx="33" cy="26" r="2.5" fill="#8fd3ff" /><circle cx="24" cy="48" r="2" fill="#8fd3ff" />
-      <rect x="11" y="51" width="42" height="7" rx="3.5" fill="#f3dca6" />
+      <circle cx="27" cy="38" r="2.5" fill="#e3ff8f" /><circle cx="37" cy="44" r="2.5" fill="#ff7aa8" /><circle cx="33" cy="26" r="2.5" fill="#8fd3ff" /><circle cx="24" cy="48" r="2" fill="#8fd3ff" />
+      <rect x="11" y="51" width="42" height="7" rx="3.5" fill="#e3ff8f" />
       <circle cx="32" cy="7" r="5" fill="#ff7aa8" />
     </svg>
   );

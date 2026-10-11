@@ -8,8 +8,8 @@ export default function VoltaGift({ hits, total, opened, reduce }: GiftSceneProp
   return (
     <SceneFrame overlay={!reduce && (
       <>
-        {hits > 0 && !opened && <Debris key={hits} seed={hits} colors={["#d2ad69", "#f3dca6", "#56663d"]} shape={hits % 2 ? "star" : "ribbon"} count={8} y={42} />}
-        {opened && <RevealBurst colors={["#f3dca6", "#d2ad69", "#56663d", "#fff4d6"]} shapes={["star", "ribbon", "dot"]} y={44} />}
+        {hits > 0 && !opened && <Debris key={hits} seed={hits} colors={["#c8ff2e", "#e3ff8f", "#56663d"]} shape={hits % 2 ? "star" : "ribbon"} count={8} y={42} />}
+        {opened && <RevealBurst colors={["#e3ff8f", "#c8ff2e", "#56663d", "#fff4d6"]} shapes={["star", "ribbon", "dot"]} y={44} />}
       </>
     )}>
       <SceneStyle id="volta" css={CSS} />
@@ -19,7 +19,7 @@ export default function VoltaGift({ hits, total, opened, reduce }: GiftSceneProp
         <linearGradient id="vg-ribbon" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#56663d" /><stop offset=".5" stopColor="#3d4a2a" /><stop offset="1" stopColor="#2c3620" /></linearGradient>
         <linearGradient id="vg-ray" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stopColor="#fff4d6" stopOpacity=".95" /><stop offset="1" stopColor="#fff4d6" stopOpacity="0" /></linearGradient>
       </defs>
-      <Glow color="#d2ad69" hits={hits} total={total} opened={opened} />
+      <Glow color="#c8ff2e" hits={hits} total={total} opened={opened} />
       <ellipse cx="150" cy="258" rx="86" ry="10" fill="#000" opacity=".35" />
 
       {/* Rayos de luz que escapan por la tapa (crecen con cada golpe, estallan al abrir). */}
@@ -57,8 +57,8 @@ export default function VoltaGift({ hits, total, opened, reduce }: GiftSceneProp
 
       {/* Etiqueta de bronce que se balancea. */}
       <g className="vg-tag" style={{ transform: `rotate(${opened ? 0 : [0, 12, -16, 20, -24][hits] ?? 0}deg)` }}>
-        <path d="M158 132 Q182 150 196 168" stroke="#8a6a2e" strokeWidth="1.5" fill="none" />
-        <circle cx="200" cy="176" r="13" fill="#d2ad69" stroke="#8a6a2e" strokeWidth="1.5" />
+        <path d="M158 132 Q182 150 196 168" stroke="#6b8f00" strokeWidth="1.5" fill="none" />
+        <circle cx="200" cy="176" r="13" fill="#c8ff2e" stroke="#6b8f00" strokeWidth="1.5" />
         <text x="200" y="181" textAnchor="middle" fontFamily="var(--font-display, serif)" fontSize="13" fontWeight="700" fill="#4a3a1c">V</text>
       </g>
     </SceneFrame>

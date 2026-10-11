@@ -52,16 +52,16 @@ export function AccountDashboard({ user }: { user: { name: string; email: string
   return (
     <div className="grid grid-cols-[minmax(0,1fr)] gap-5 lg:grid-cols-[18rem_minmax(0,1fr)] lg:items-start lg:gap-8">
       <div className="flex flex-col gap-4 lg:sticky lg:top-24">
-        <div className="rounded-[2rem] bg-night p-5 text-[#f6f1e8] shadow-[var(--shadow-card)]">
+        <div className="rounded-[2rem] bg-night p-5 text-on-night shadow-[var(--shadow-card)]">
           <div className="flex items-center gap-4">
-            <span aria-hidden="true" className="font-display grid h-14 w-14 shrink-0 place-items-center rounded-full bg-brass text-2xl text-night">{first?.[0]?.toUpperCase()}</span>
+            <span aria-hidden="true" className="font-display grid h-14 w-14 shrink-0 place-items-center rounded-full bg-volt text-2xl text-night">{first?.[0]?.toUpperCase()}</span>
             <div className="min-w-0">
               <p className="font-display text-2xl leading-tight">Hola, {first}</p>
-              <p className="break-all text-sm text-[#cfc6b3]">{user.email}</p>
+              <p className="break-all text-sm text-night-muted">{user.email}</p>
             </div>
           </div>
           <div className="mt-4 flex items-center justify-between gap-2 border-t border-white/10 pt-3">
-            <span className="text-xs font-bold uppercase tracking-wider text-brass">Cuenta demo</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-volt">Cuenta demo</span>
             <button type="button" onClick={logout} className="flex min-h-10 items-center gap-1.5 rounded-full border border-white/15 px-3.5 text-sm font-bold transition-colors hover:bg-white/10">
               <LogOut size={16} aria-hidden="true" /> Salir
             </button>
@@ -75,11 +75,11 @@ export function AccountDashboard({ user }: { user: { name: string; email: string
                 <li key={id} className={cn(i === sections.length - 1 && "max-md:col-span-2")}>
                   <a href={`#${id}`} aria-current={on ? "true" : undefined} onClick={(e) => open(e, id)}
                     className={cn("flex h-full min-h-20 items-center gap-2.5 rounded-[1.6rem] border p-3 transition-[background-color,border-color,box-shadow] sm:gap-3 sm:p-3.5 md:flex-col md:items-start lg:min-h-16 lg:flex-row lg:items-center lg:py-3",
-                      on ? "border-night bg-night text-[#f6f1e8] shadow-[var(--shadow-card)]" : "border-line bg-surface hover:border-ink/30")}>
-                    <span className={cn("grid h-9 w-9 shrink-0 place-items-center rounded-full sm:h-10 sm:w-10", on ? "bg-brass text-night" : "bg-accent text-primary")}><Icon size={19} aria-hidden="true" /></span>
+                      on ? "border-night bg-night text-on-night shadow-[var(--shadow-card)]" : "border-line bg-surface hover:border-ink/30")}>
+                    <span className={cn("grid h-9 w-9 shrink-0 place-items-center rounded-full sm:h-10 sm:w-10", on ? "bg-volt text-night" : "bg-accent text-primary")}><Icon size={19} aria-hidden="true" /></span>
                     <span className="min-w-0">
                       <span className="block font-bold leading-tight">{title}</span>
-                      <span className={cn("block text-xs", on ? "text-[#cfc6b3]" : "text-muted")}>{summary}</span>
+                      <span className={cn("block text-xs", on ? "text-night-muted" : "text-muted")}>{summary}</span>
                     </span>
                   </a>
                 </li>

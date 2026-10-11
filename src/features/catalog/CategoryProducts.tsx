@@ -23,7 +23,7 @@ export function CategoryProducts({ categorySlug, hadProducts }: { categorySlug: 
   const sort = hydrated ? storedSort : "relevance";
   const cards = sortProducts(productsInCategory(categorySlug), sort).map(toCard);
   if (cards.length === 0 || !hadProducts) {
-    return <EmptyState title="Todavía no hay productos acá" action={<ButtonLink href="/categorias/">Ver otras categorías</ButtonLink>}>Estamos preparando piezas nuevas.</EmptyState>;
+    return <EmptyState title="Todavía no hay productos acá" action={<ButtonLink href="/categorias/">Ver otras categorías</ButtonLink>}>Estamos sumando productos nuevos.</EmptyState>;
   }
   return (
     <>

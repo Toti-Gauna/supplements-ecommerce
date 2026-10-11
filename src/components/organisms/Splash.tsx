@@ -1,45 +1,51 @@
 import type { CSSProperties } from "react";
 import { ProductArt } from "@/components/illustrations/ProductArt";
-import { LOGO_M, LOGO_STROKE, LOGO_V, LOGO_VIEWBOX } from "@/components/atoms/Logo";
+import { LOGO_BOLT, LOGO_STROKE_PATH, LOGO_VIEWBOX } from "@/components/atoms/Logo";
 import { brand } from "@/config/brand";
 import type { ArtKey } from "@/demo/types";
 import { ThemeSplashScene } from "@/features/themes/ThemeSplashScene";
 
-/** Piezas que orbitan el logo (ángulo en grados alrededor del centro). */
-const PIECES: { art: ArtKey; angle: number; tint?: string }[] = [
-  { art: "lamp-photo", angle: -90 },
-  { art: "bowl-dog", angle: -18, tint: "#e88aa0" },
-  { art: "nfc-plate", angle: 54 },
-  { art: "candle-poodle", angle: 126 },
-  { art: "collar", angle: 198 },
+/** Envases que orbitan el logo (ángulo en grados alrededor del centro). */
+const PIECES: { art: ArtKey; angle: number; tint: string }[] = [
+  { art: "tub", angle: -90, tint: "#5a3220" },
+  { art: "jar", angle: -18, tint: "#e8e4d8" },
+  { art: "shaker", angle: 54, tint: "#8b72ff" },
+  { art: "caps", angle: 126, tint: "#ffd23f" },
+  { art: "pouch", angle: 198, tint: "#c8ff2e" },
 ];
 
-/** Polvo dorado: posición (%), retraso (ms) y tamaño (px), fijos para que el HTML sea siempre igual. */
-const DUST: [number, number, number, number][] = Array.from({ length: 26 }, (_, i) => {
+/** Chispas: posición (%), retraso (ms) y tamaño (px), fijos para que el HTML sea siempre igual. */
+const SPARKS: [number, number, number, number][] = Array.from({ length: 26 }, (_, i) => {
   const r = (k: number) => { const x = Math.sin((i + 1) * 12.9898 * k + 78.233) * 43758.5453; return x - Math.floor(x); };
   return [Math.round(r(1) * 100), Math.round(r(2) * 100), Math.round(400 + r(3) * 2600), Math.round(2 + r(4) * 3)];
 });
 
+/** Diez celdas de la batería que se cargan una por una. */
+const CELLS = Array.from({ length: 10 }, (_, i) => i);
+
 /**
- * Pantalla de carga de marca en cada recarga (HTML + CSS; se ve aunque no haya JS). En 5 s: un aro dorado se abre y
- * una luz lo recorre, con polvo de oro y rayos; las dos mitades del logo encastran, "Volta" sube detrás de una
- * línea, las piezas del taller entran en órbita montadas sobre el aro y un telón la retira (sin barra de carga ni
- * botón "Saltar", pedido de Ignacio). Estilos y por qué todo es transform/opacity: app/splash.css. Durante una
- * temática cambia de colores y suma su escena (ThemeSplashScene). Con "reducir movimiento" no se muestra.
+ * Pantalla de carga "Cargando energía" en cada recarga (HTML + CSS; se ve aunque no haya JS). En 5 s: una línea de
+ * pulso cruza la pantalla, el trazo de la "V" sube y el rayo cae con un fogonazo, la batería se carga de 0 a 100,
+ * los envases entran en órbita sobre un aro eléctrico y un telón la retira. Todo es transform/opacity (app/splash.css).
+ * Durante una temática cambia de colores y suma su escena (ThemeSplashScene). Con "reducir movimiento" no se muestra.
  *
  * Va en la capa superior del navegador (popover, abierto por el script de abajo apenas se lee la etiqueta, antes de
- * pintar): ahí no compite con ningún z-index. En Safari del iPad, al recargar a mitad de página, el contenido se
- * dibujaba por encima del splash (se veían las tarjetas sobre su fondo, con el logo y los corazones detrás).
+ * pintar): ahí no compite con ningún z-index.
  */
 export function Splash() {
   return (
     <>
     <div id="volta-splash" role="presentation" popover="manual">
+      <div aria-hidden="true" className="splash-grid" />
       <div aria-hidden="true" className="splash-center splash-glow" />
-      <div aria-hidden="true" className="splash-center splash-rays" />
+      <div aria-hidden="true" className="splash-pulse">
+        <span className="pulse-track">
+          <svg viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0 60H540l14-30 18 66 22-92 20 80 14-24H1200" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinejoin="round" vectorEffect="non-scaling-stroke" /></svg>
+        </span>
+      </div>
       <div aria-hidden="true" className="splash-center splash-halo"><span className="splash-sweep" /><span className="splash-comet" /></div>
-      <div aria-hidden="true" className="splash-dust">
-        {DUST.map((d, i) => <span key={i} style={{ left: `${d[0]}%`, top: `${d[1]}%`, "--d": `${d[2]}ms`, "--s": `${d[3]}px` } as CSSProperties} />)}
+      <div aria-hidden="true" className="splash-sparks">
+        {SPARKS.map((d, i) => <span key={i} style={{ left: `${d[0]}%`, top: `${d[1]}%`, "--d": `${d[2]}ms`, "--s": `${d[3]}px` } as CSSProperties} />)}
       </div>
       <div aria-hidden="true" className="splash-orbit">
         {PIECES.map((p, i) => (
@@ -48,17 +54,22 @@ export function Splash() {
           </span>
         ))}
       </div>
+      <div aria-hidden="true" className="splash-flash" />
       <ThemeSplashScene />
       <div aria-hidden="true" className="splash-brand relative z-10 flex flex-col items-center">
-        <span className="splash-mark h-14 w-14 text-brass sm:h-16 sm:w-16">
-          <svg viewBox={LOGO_VIEWBOX} className="mark-m"><path d={LOGO_M} fill="none" stroke="currentColor" strokeWidth={LOGO_STROKE} /></svg>
-          <svg viewBox={LOGO_VIEWBOX} className="mark-v"><path d={LOGO_V} fill="none" stroke="currentColor" strokeWidth={LOGO_STROKE} /></svg>
+        <span className="splash-mark h-16 w-16 sm:h-20 sm:w-20">
+          <svg viewBox={LOGO_VIEWBOX} className="mark-m"><path d={LOGO_STROKE_PATH} fill="#eef1f5" /></svg>
+          <svg viewBox={LOGO_VIEWBOX} className="mark-v"><path d={LOGO_BOLT} fill="#c8ff2e" /></svg>
         </span>
         <span className="splash-word">
-          <span className="word font-display block text-5xl text-[#f6f1e8] sm:text-7xl">{brand.name}</span>
+          <span className="word font-display font-wide block text-5xl uppercase tracking-[0.08em] text-on-night sm:text-7xl">{brand.name}</span>
+        </span>
+        <span className="splash-battery" aria-hidden="true">
+          <span className="battery-cells">{CELLS.map((i) => <span key={i} style={{ "--i": i } as CSSProperties} />)}</span>
+          <span className="battery-count font-lab"><span className="count-strip">{CELLS.concat(10).map((i) => <span key={i}>{i * 10}%</span>)}</span></span>
         </span>
       </div>
-      <p aria-hidden="true" className="splash-city eyebrow">Objetos con alma · {brand.city}</p>
+      <p aria-hidden="true" className="splash-city eyebrow">{brand.descriptor} · {brand.city}</p>
     </div>
     <script dangerouslySetInnerHTML={{ __html: splashOpenScript }} />
     </>

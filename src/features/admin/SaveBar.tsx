@@ -23,7 +23,7 @@ interface Props {
  */
 export function SaveBar({ dirty, label, discardText, onDiscard, onSave, status }: Props) {
   return (
-    <div data-save-bar className={cn("z-20 mt-6 flex flex-wrap items-center gap-2 rounded-[1.5rem] bg-surface/95 p-3 shadow-[0_18px_40px_-18px_rgb(28_32_22/0.45)] ring-1 ring-ink/[0.08] backdrop-blur", dirty && "sticky bottom-[calc(5.25rem+env(safe-area-inset-bottom))] desk:bottom-4")}>
+    <div data-save-bar className={cn("z-20 mt-6 flex flex-wrap items-center gap-2 rounded-[1.5rem] bg-surface/95 p-3 shadow-[0_18px_40px_-18px_rgb(0_0_0/0.45)] ring-1 ring-ink/[0.08] backdrop-blur", dirty && "sticky bottom-[calc(5.25rem+env(safe-area-inset-bottom))] desk:bottom-4")}>
       <p role="status" className={cn("min-w-0 basis-full text-xs font-bold sm:flex-1 sm:basis-auto", dirty ? "text-warning" : "text-muted")}>
         {status ?? (dirty ? "Cambios sin guardar. Se conservan si salís y volvés a esta página." : "Sin cambios.")}
       </p>

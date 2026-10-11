@@ -9,7 +9,7 @@ import { Bubbles, Constellation, FireworksLoop, PawTrail, Rings, Watermark } fro
 const FX: Record<SeasonId, () => ReactNode> = {
   navidad: () => <Bokeh colors={["#e5544a", "#f3c84c", "#4fb36a", "#ffe9a8"]} count={14} size={[6, 16]} />,
   halloween: () => <><Fog color="rgb(150 110 190 / 0.22)" /><Bokeh colors={["#ff8a1f"]} count={6} size={[4, 9]} /></>,
-  "ano-nuevo": () => <FireworksLoop colors={["#f3dca6", "#ff7aa8", "#8fd3ff", "#ffe9a8"]} />,
+  "ano-nuevo": () => <FireworksLoop colors={["#e3ff8f", "#ff7aa8", "#8fd3ff", "#ffe9a8"]} />,
   "black-friday": () => <LightSweeps color="rgb(243 220 166 / 0.10)" />,
   orgullo: () => <><Rainbow /><Bokeh colors={PRIDE} count={12} size={[8, 18]} /></>,
   "revolucion-de-mayo": () => <SunRays color="rgb(246 197 76 / 0.16)" />,
@@ -21,7 +21,7 @@ const FX: Record<SeasonId, () => ReactNode> = {
   "dia-del-animal": () => <PawTrail />,
   "hot-sale": () => <HeatGlow color="rgb(255 110 40 / 0.35)" />,
   "dia-del-padre": () => <Constellation />,
-  "dia-del-amigo": () => <Rings colors={["#b7d68f", "#f3dca6", "#ef9b6a"]} />,
+  "dia-del-amigo": () => <Rings colors={["#b7d68f", "#e3ff8f", "#ef9b6a"]} />,
   "dia-del-nino": () => <Bokeh colors={["#ffd34d", "#4fb3e8", "#ef5b5b", "#7bd389"]} count={10} size={[8, 18]} />,
   "dia-de-la-madre": () => <Watermark kind="flower" color="rgb(245 168 198 / 0.16)" />,
 };

@@ -123,8 +123,8 @@ export function DeliveryCalendar() {
       <ul aria-label="Referencias de color" className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-xs font-semibold text-muted">
         {LEGEND.map((l) => <li key={l.status} className="flex items-center gap-1.5"><span aria-hidden="true" className={cn("h-3.5 w-5 rounded", STATUS_TONE[l.status])} />{l.label}</li>)}
         <li className="flex items-center gap-1.5"><span aria-hidden="true" className="h-3.5 w-5 rounded border border-danger bg-danger-soft" />Atrasado</li>
-        <li className="flex items-center gap-1.5"><span aria-hidden="true" className="h-3.5 w-5 rounded border border-dashed border-brass-ink/45 bg-bg" />Entrada propia</li>
-        <li className="flex items-center gap-1.5"><span aria-hidden="true" className="h-3.5 w-5 rounded bg-[repeating-linear-gradient(135deg,transparent_0_3px,rgb(28_32_22/0.15)_3px_6px)]" />Taller cerrado</li>
+        <li className="flex items-center gap-1.5"><span aria-hidden="true" className="h-3.5 w-5 rounded border border-dashed border-volt-ink/45 bg-bg" />Entrada propia</li>
+        <li className="flex items-center gap-1.5"><span aria-hidden="true" className="h-3.5 w-5 rounded bg-[repeating-linear-gradient(135deg,transparent_0_3px,rgb(0_0_0/0.15)_3px_6px)]" />Taller cerrado</li>
       </ul>
 
       <ScheduleSheet key={current?.code} order={current} orders={orders} settings={settings} today={today} late={!!currentEntry?.late} movable={currentEntry?.movable ?? false}

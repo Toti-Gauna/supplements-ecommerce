@@ -57,7 +57,7 @@ export function searchProducts(query: string, products: Product[], categories: C
     const category = categories.find((c) => c.slug === product.categorySlug);
     const fields = [
       { text: product.name, weight: 3 },
-      { text: `${category?.name ?? ""} ${product.tags.join(" ")}`, weight: 2 },
+      { text: `${category?.name ?? ""} ${product.brand} ${product.tags.join(" ")} ${(product.goals ?? []).join(" ").replace(/-/g, " ")}`, weight: 2 },
       { text: `${product.short} ${product.description}`, weight: 1 },
     ].map((f) => ({ words: words(f.text), weight: f.weight }));
     let score = 0;

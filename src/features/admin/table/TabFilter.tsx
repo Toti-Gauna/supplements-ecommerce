@@ -9,7 +9,7 @@ export function TabFilter<T extends string>({ label, tabs, value, onChange }: { 
       {tabs.map((t) => (
         <button key={t.id} type="button" aria-pressed={value === t.id} onClick={() => onChange(t.id)}
           className={cn("inline-flex h-10 shrink-0 items-center gap-2 rounded-full px-4 text-sm font-bold transition-colors",
-            value === t.id ? "bg-night text-[#f6f1e8] shadow-[var(--shadow-card)]" : "bg-surface text-ink/75 ring-1 ring-ink/10 hover:bg-accent")}>
+            value === t.id ? "bg-night text-on-night shadow-[var(--shadow-card)]" : "bg-surface text-ink/75 ring-1 ring-ink/10 hover:bg-accent")}>
           {t.label}
           {t.count !== undefined && <span className={cn("grid h-5 min-w-5 place-items-center rounded-full px-1.5 text-[11px] tabular-nums", value === t.id ? "bg-white/15" : "bg-accent")}>{t.count}</span>}
         </button>

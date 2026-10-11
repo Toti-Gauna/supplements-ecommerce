@@ -71,11 +71,11 @@ export function ImmersiveStage({ open, onClose, label, glow = ["#3d4a2a", "#c9a7
   return createPortal(
     <div ref={root} role="dialog" aria-modal="true" aria-label={label} tabIndex={-1}
       style={{ "--glow-a": glow[0], "--glow-b": glow[1] } as CSSProperties}
-      className={cn("immersive-stage fixed inset-0 z-[80] flex flex-col overflow-hidden text-[#f6f1e8] outline-none", className)}>
+      className={cn("immersive-stage fixed inset-0 z-[80] flex flex-col overflow-hidden text-on-night outline-none", className)}>
       <div aria-hidden="true" className="immersive-backdrop absolute inset-0" />
       {!lockExit && (
         <button type="button" onClick={onClose}
-          className="absolute right-[max(1rem,env(safe-area-inset-right))] top-[max(1rem,env(safe-area-inset-top))] z-20 flex h-11 items-center gap-1.5 rounded-full bg-white/10 px-4 text-sm font-bold text-[#f6f1e8] ring-1 ring-white/15 transition hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f6f1e8]">
+          className="absolute right-[max(1rem,env(safe-area-inset-right))] top-[max(1rem,env(safe-area-inset-top))] z-20 flex h-11 items-center gap-1.5 rounded-full bg-white/10 px-4 text-sm font-bold text-on-night ring-1 ring-white/15 transition hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-on-night">
           <X size={18} aria-hidden="true" /> {exitLabel}
         </button>
       )}

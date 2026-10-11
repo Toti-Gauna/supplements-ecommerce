@@ -18,7 +18,7 @@ export function Pagination({ page, pages, from, to, total, noun, onPage }: Props
           <span key={n} className="flex items-center gap-1">
             {i > 0 && n - nums[i - 1]! > 1 && <span aria-hidden="true" className="px-1 text-muted">…</span>}
             <button type="button" onClick={() => onPage(n)} aria-label={`Página ${n}`} aria-current={n === page ? "page" : undefined}
-              className={cn(btn, n === page ? "bg-night text-[#f6f1e8]" : "hover:bg-accent")}>{n}</button>
+              className={cn(btn, n === page ? "bg-night text-on-night" : "hover:bg-accent")}>{n}</button>
           </span>
         ))}
         <button type="button" onClick={() => onPage(page + 1)} disabled={page === pages} aria-label="Página siguiente" className={cn(btn, "hover:bg-accent")}><ChevronRight size={18} aria-hidden="true" /></button>

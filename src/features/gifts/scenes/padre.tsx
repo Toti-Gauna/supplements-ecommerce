@@ -14,7 +14,7 @@ const SPARKS = [{ x: 86, y: 74, s: 1 }, { x: 214, y: 102, s: 0.8 }, { x: 108, y:
 function Screw({ a }: { a: number }) {
   return (
     <>
-      <circle r="6.6" fill="url(#pd-screw)" stroke="#8a6a2e" strokeWidth="1" />
+      <circle r="6.6" fill="url(#pd-screw)" stroke="#6b8f00" strokeWidth="1" />
       <path d="M-3.6 0H3.6M0-3.6V3.6" stroke="#6b4f1e" strokeWidth="1.7" strokeLinecap="round" transform={`rotate(${a})`} />
     </>
   );

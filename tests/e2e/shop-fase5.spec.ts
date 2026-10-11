@@ -82,7 +82,7 @@ test("microinteracciones: la cantidad rueda sin duplicar el número y el corazó
   await page.goto("p/vela-caniche/");
   await page.keyboard.press("Escape");
   await page.getByRole("button", { name: /Guardar .* en favoritos/ }).first().click();
-  await expect(page.locator("button[aria-pressed='true'] .bg-clay").first()).toBeAttached();
+  await expect(page.locator("button[aria-pressed='true'] .bg-ember").first()).toBeAttached();
   await page.getByRole("button", { name: "Agregar al carrito" }).last().click();
   await page.goto("carrito/");
   await page.keyboard.press("Escape");

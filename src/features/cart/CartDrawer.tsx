@@ -55,7 +55,7 @@ export function CartDrawer() {
                 if (!product || !variant) return null;
                 return (
                   <motion.li layout key={q.line.id} className="flex gap-3 rounded-2xl bg-surface p-3">
-                    <div className="w-16 shrink-0"><LineThumb art={product.art} tint={variant.colorHex} name={product.name} personalization={q.line.personalization} zone={demoData().textZones[product.art]} /></div>
+                    <div className="w-16 shrink-0"><LineThumb art={product.art} pack={product.pack} tint={variant.colorHex} name={product.name} personalization={q.line.personalization} zone={demoData().textZones[product.art]} /></div>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-bold">{product.name}</p>
                       <p className="truncate text-xs text-muted">{variant.label}{q.line.personalization?.text ? ` · “${q.line.personalization.text}”` : ""}</p>

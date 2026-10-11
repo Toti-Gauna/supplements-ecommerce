@@ -37,7 +37,7 @@ export function CheckoutGift({ onPayNow }: { onPayNow: () => void }) {
   return (
     <section aria-labelledby="es-regalo" className="rounded-2xl border border-line bg-surface p-4">
       <div className="flex items-start gap-3">
-        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-accent text-brass-ink"><Gift size={19} aria-hidden="true" /></span>
+        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-accent text-volt-ink"><Gift size={19} aria-hidden="true" /></span>
         <div className="min-w-0 flex-1">
           <h3 id="es-regalo" className="font-bold">¿Es para regalo?</h3>
           {gifts.length === 0 ? (

@@ -40,7 +40,7 @@ export function SalesChart({ title, bars, selected = null, onSelect, detail }: P
             <button key={b.key} type="button" onClick={() => onSelect?.(b.key)} aria-pressed={on}
               aria-label={`${b.label}: ${formatARS(b.amount)}, ${pedidos(b.orders)} (demo)`}
               className="group relative flex h-full flex-1 items-end justify-center rounded-t-md outline-none focus-visible:ring-2 focus-visible:ring-primary/50">
-              <span aria-hidden="true" className={cn("block w-full max-w-10 rounded-t-[4px] transition-[opacity,background-color]", on ? "bg-brass-ink" : "bg-primary group-hover:opacity-85")}
+              <span aria-hidden="true" className={cn("block w-full max-w-10 rounded-t-[4px] transition-[opacity,background-color]", on ? "bg-volt-ink" : "bg-primary group-hover:opacity-85")}
                 style={{ height: b.amount > 0 ? `${Math.max(3, (b.amount / max) * 100)}%` : "2px", opacity: b.amount > 0 || on ? 1 : 0.25 }} />
             </button>
           );

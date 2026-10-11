@@ -50,10 +50,10 @@ describe("ayudas con las reglas del engine (8.3.10)", () => {
 });
 
 describe("modales de Costos e Insumos (8.3.17)", () => {
-  const [cera] = defaultAdminData().workshop.materials.filter((m) => m.id === "cera");
+  const [box] = defaultAdminData().workshop.materials.filter((m) => m.id === "caja-chica");
   it("insumo: nombre obligatorio, costo en pesos enteros, mínimo según la unidad", () => {
-    const base = materialDraft(cera);
-    expect(checkMaterial(base).value).toMatchObject({ name: cera!.name, costPerUnit: cera!.costPerUnit });
+    const base = materialDraft(box);
+    expect(checkMaterial(base).value).toMatchObject({ name: box!.name, costPerUnit: box!.costPerUnit, supplier: box!.supplier });
     expect(checkMaterial({ ...base, name: " " }).errors.name).toBeTruthy();
     expect(checkMaterial({ ...base, cost: "12,50" }).errors.cost).toMatch(/costo|centavos/);
     expect(checkMaterial({ ...base, cost: "-3" }).errors.cost).toBeTruthy();
@@ -62,14 +62,21 @@ describe("modales de Costos e Insumos (8.3.17)", () => {
     expect(checkMaterial({ ...base, supplier: "  " }).value?.supplier).toBeUndefined();
   });
   it("receta: cantidades mayores que 0, minutos enteros y precio de prueba positivo", () => {
-    const recipe = defaultAdminData().workshop.recipes["comedero-perro-globo"]!;
+    const recipe = defaultAdminData().workshop.recipes["ionic-whey"]!;
     const d = recipeDraft(recipe);
     expect(checkRecipe(d).value).toEqual(recipe);
+    expect(checkRecipe({ ...d, supplier: "" }).value?.supplierCost).toBeUndefined();
+    expect(checkRecipe({ ...d, supplier: "abc" }).errors.supplier).toBeTruthy();
     expect(checkRecipe({ ...d, items: [{ ...d.items[0]!, qty: "0" }] }).errors[`item:${d.items[0]!.materialId}`]).toMatch(/mayor que 0/);
     expect(checkRecipe({ ...d, machine: "-5" }).errors.machine).toBeTruthy();
     expect(checkRecipe({ ...d, hand: "" }).errors.hand).toBeTruthy();
     expect(checkTrialPrice("$ 11.500")).toEqual({ ok: true, value: 11500 });
     expect(checkTrialPrice("0").ok).toBe(false);
+  });
+  it("receta: editar sin cambios conserva el costo del proveedor", () => {
+    const recipe = defaultAdminData().workshop.recipes["ionic-whey"]!;
+    expect(recipe.supplierCost).toBe(26400);
+    expect(checkRecipe(recipeDraft(recipe)).value).toEqual(recipe);
   });
 });
 

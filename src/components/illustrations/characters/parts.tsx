@@ -3,7 +3,7 @@ import type { PupOutfit, PupPose } from "./types";
 /** Piezas comunes a los dos personajes: patas, sombreros, corbata y pañuelo. */
 export const INK = "#2a1a12";
 export const OLIVE = "#3a4527";
-export const BRASS = "#d2ad69";
+export const BRASS = "#c8ff2e";
 
 /** Clase de cada pata según la pose: al caminar se alternan; al saludar, la delantera cercana se levanta. */
 export function legClass(pose: PupPose, leg: "front-near" | "front-far" | "back-near" | "back-far"): string {

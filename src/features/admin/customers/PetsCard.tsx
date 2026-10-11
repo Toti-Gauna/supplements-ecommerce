@@ -18,7 +18,7 @@ export function PetsCard({ email, profile }: { email: string; profile: CustomerP
   const save = useDemoSave();
   const [pet, setPet] = useState({ name: "", species: "perro" as PetSpecies, breed: "", birthday: "" });
   return (
-    <Panel title="Mascotas" action={<PawPrint size={18} aria-hidden="true" className="text-brass-ink" />}>
+    <Panel title="Mascotas" action={<PawPrint size={18} aria-hidden="true" className="text-volt-ink" />}>
       {profile.pets.length ? (
         <ul className="mb-4 flex flex-col divide-y divide-line">
           {profile.pets.map((p) => (

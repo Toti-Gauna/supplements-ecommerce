@@ -1,4 +1,4 @@
-import type { Category, Product, Variant } from "../types";
+import type { Category, Goal, Product, Variant } from "../types";
 import { demoData, STATIC_CATEGORY_SLUGS, STATIC_PRODUCT_SLUGS } from "./source";
 import type { CollarConfig } from "../fixtures/collar";
 import { collarSurcharge, describeCollar } from "./collar";
@@ -53,6 +53,15 @@ export function bestSellers(limit = 4): Product[] {
 
 export function newArrivals(limit = 4): Product[] {
   return activeProducts().filter((p) => p.isNew).slice(0, limit);
+}
+
+/** Productos de un objetivo, los más vendidos primero. */
+export function productsForGoal(goal: Goal): Product[] {
+  return activeProducts().filter((p) => p.goals?.includes(goal)).sort((a, b) => b.soldCount - a.soldCount);
+}
+
+export function goalHref(goal: Goal): string {
+  return `/buscar/?objetivo=${goal}`;
 }
 
 export function personalizableProducts(): Product[] {

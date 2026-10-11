@@ -1,5 +1,5 @@
 "use client";
-import { Eye, Gift, ShieldCheck, ShoppingBag, Undo2, Zap } from "lucide-react";
+import { Gift, ShieldCheck, ShoppingBag, Undo2, Zap } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/atoms/Button";
 import { FLOATING_BAR } from "@/components/organisms/bottomBars";
@@ -26,7 +26,7 @@ import { useProductPurchase } from "./useProductPurchase";
 import { useVariantSelection } from "./useVariantSelection";
 
 const KIND_LABEL = { TEXT: "Personalizable con nombre", PHOTO: "Personalizable con tu foto", PHOTO_REFERENCE: "Pintado desde tu foto" };
-const TRUST = [{ icon: Eye, t: "Vista previa antes de pagar" }, { icon: ShieldCheck, t: "Mercado Pago, QR o transferencia" }, { icon: Undo2, t: "Botón de arrepentimiento" }];
+const TRUST = [{ icon: ShieldCheck, t: "Original, con lote y vencimiento" }, { icon: Zap, t: "Cadete en el día en Mar del Plata" }, { icon: Undo2, t: "Botón de arrepentimiento" }];
 
 function stockNote(a: Availability): string {
   return a.kind === "in-stock" ? `(${a.units} disponibles)` : a.kind === "made-to-order" ? "Hecho a pedido" : "Sin stock";
@@ -69,8 +69,8 @@ export function ProductDetail({ product: initial, preview = false }: { product: 
   const actions = (
     <div className="flex flex-col gap-3">
       <Button size="lg" disabled={!canBuy} onClick={() => purchase("cart")} className="w-full max-sm:hidden"><ShoppingBag size={18} aria-hidden="true" />Agregar al carrito</Button>
-      <Button size="lg" variant="dark" disabled={!canBuy} onClick={() => purchase("buy")} className="w-full"><Zap size={18} aria-hidden="true" className="text-brass" />Comprar ahora</Button>
-      <Button size="lg" variant="secondary" disabled={!canBuy} onClick={openGift} className="w-full"><Gift size={18} aria-hidden="true" className="text-brass-ink" />Regalar ahora</Button>
+      <Button size="lg" variant="dark" disabled={!canBuy} onClick={() => purchase("buy")} className="w-full"><Zap size={18} aria-hidden="true" className="text-volt" />Comprar ahora</Button>
+      <Button size="lg" variant="secondary" disabled={!canBuy} onClick={openGift} className="w-full"><Gift size={18} aria-hidden="true" className="text-volt-ink" />Regalar ahora</Button>
       {preview
         ? <p className="text-center text-xs font-bold text-warning">Vista previa: comprar y regalar están apagados.</p>
         : <p className="text-center text-xs text-muted">Para regalar: le mandás un link o un código y lo abre a golpes, sin ver el precio.</p>}
@@ -83,7 +83,7 @@ export function ProductDetail({ product: initial, preview = false }: { product: 
           terminar esta sección (no acompaña a los detalles ni invade las recomendaciones). En el celular, flujo natural. */}
       <div className="grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-14">
         <div className="flex flex-col gap-4 lg:sticky lg:top-24 lg:self-start">
-          <ProductGallery art={product.art} views={product.gallery} tint={sel.variant.colorHex} name={product.name} photoUrl={product.photoDataUrl} alt={product.imageAlt} live={live} />
+          <ProductGallery art={product.art} pack={product.pack} views={product.gallery} tint={sel.variant.colorHex} name={product.name} photoUrl={product.photoDataUrl} alt={product.imageAlt} live={live} />
           {inactive && !preview ? (
             <p role="status" className="rounded-2xl bg-warning-soft p-3 text-sm font-bold text-warning">Este producto está pausado desde el panel demo y no se puede comprar.</p>
           ) : <StockMeter availability={avail} />}
@@ -91,7 +91,7 @@ export function ProductDetail({ product: initial, preview = false }: { product: 
         <div className="flex flex-col gap-6">
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
-              <p className="eyebrow text-brass-ink">{category?.name}{tmpl ? ` · ${KIND_LABEL[tmpl.kind]}` : ""}{product.isNew ? " · Nuevo" : ""}</p>
+              <p className="eyebrow text-volt-ink">{category?.name}{tmpl ? ` · ${KIND_LABEL[tmpl.kind]}` : ""}{product.isNew ? " · Nuevo" : ""}</p>
               <h1 className="font-display mt-3 text-[clamp(2.1rem,4.5vw,3.4rem)] leading-[1.02]">{product.name}</h1>
               <p className="mt-3 text-lg text-muted">{product.short}</p>
               {product.soldCount > 0 && <p className="mt-2 text-sm font-semibold text-muted">+{product.soldCount} vendidos (muestra)</p>}

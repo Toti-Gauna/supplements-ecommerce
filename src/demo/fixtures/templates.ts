@@ -48,7 +48,7 @@ export interface TextZone {
 export const textZones: Record<string, TextZone> = {
   "bowl-dog": { x: 125, y: 252, w: 150, h: 36 },
   collar: { x: 118, y: 273, w: 164, h: 38, cover: "#ffffff" },
-  "bowl-wood": { x: 96, y: 203, w: 208, h: 28, cover: "tint" },
+  "bowl-ion": { x: 96, y: 203, w: 208, h: 28, cover: "tint" },
   "leash-hanger": { x: 84, y: 180, w: 232, h: 32, cover: "tint" },
 };
 

@@ -43,7 +43,7 @@ export function CartView() {
   if (quote.lines.length === 0) {
     return (
       <div className="flex flex-col gap-12">
-        <EmptyState title="Tu carrito está vacío" action={<ButtonLink href="/">Ver productos</ButtonLink>}>Agregá algo o creá tu producto personalizado.</EmptyState>
+        <EmptyState title="Tu carrito está vacío" action={<ButtonLink href="/">Ver productos</ButtonLink>}>Sumá tu proteína, tu creatina o lo que necesites para entrenar.</EmptyState>
         <MiniRecommendations title="Lo más elegido" products={recommendForCart([], 6)} />
       </div>
     );

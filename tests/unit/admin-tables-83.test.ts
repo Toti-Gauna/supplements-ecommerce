@@ -37,9 +37,12 @@ describe("filtros de las tablas (8.3.4)", () => {
 describe("vistas Excel (8.3.4, 8.3.18, 8.3.19, 8.3.22)", () => {
   const admin = defaultAdminData();
   it("Productos y stock: a pedido se muestra como texto y lo que vuelve a su valor sale del borrador", () => {
-    const stock = stockRows(admin.data.products, admin.data.categories);
+    // Ningún producto del catálogo es a pedido: el shaker pasa a pedido solo para esta prueba.
+    const products = admin.data.products.map((p) => (p.slug === "shaker-volta" ? { ...p, variants: p.variants.map((v) => ({ ...v, stock: -1 })) } : p));
+    const stock = stockRows(products, admin.data.categories);
     const spec = productSheetSpec(admin.data.categories);
     const toOrder = stock.find((r) => r.stock < 0)!;
+    expect(toOrder.productSlug).toBe("shaker-volta");
     expect(specText(spec.columns.find((c) => c.id === "stock")!, toOrder.stock, toOrder)).toBe("a pedido");
     expect(specPrune(spec, stock, { [cellKey(toOrder.key, "stock")]: -1, [cellKey(toOrder.key, "price")]: toOrder.price + 100 })).toEqual({ [cellKey(toOrder.key, "price")]: toOrder.price + 100 });
   });

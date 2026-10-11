@@ -64,7 +64,7 @@ export function DataTableToolbar<T>(p: Props<T>) {
                 </button>
               )}
             </span>
-            <button type="submit" className={cn(shape, "border-night bg-night text-[#f6f1e8] hover:bg-night/90")}>Buscar</button>
+            <button type="submit" className={cn(shape, "border-night bg-night text-on-night hover:bg-night/90")}>Buscar</button>
           </span>
         </div>
         {p.filters.map((f, i) => control(f, i, "bar"))}

@@ -2,8 +2,10 @@ import type { Material, Recipe, WorkshopSettings } from "../../fixtures/workshop
 import type { Category, Product } from "../../types";
 import { productMinPrice } from "../stock";
 
-/** Costo por unidad de un producto según su receta: insumos + horas de máquina + horas a mano. Pesos enteros. */
+/** Costo por unidad de un producto: mercadería del proveedor + embalaje + horas de máquina y de armado. Pesos enteros. */
 export interface CostBreakdown {
+  /** Lo que se le paga al proveedor. */
+  merchandise: number;
   lines: { material: Material; qty: number; cost: number }[];
   materials: number;
   machine: number;
@@ -25,7 +27,8 @@ export function recipeCost(recipe: Recipe, materials: Material[], settings: Work
   const mats = lines.reduce((s, l) => s + l.cost, 0);
   const machine = Math.round((recipe.machineMinutes / 60) * settings.machineHourCost);
   const hand = Math.round((recipe.handMinutes / 60) * settings.handHourCost);
-  return { lines, materials: mats, machine, hand, total: mats + machine + hand, missing };
+  const merchandise = recipe.supplierCost ?? 0;
+  return { merchandise, lines, materials: mats, machine, hand, total: merchandise + mats + machine + hand, missing };
 }
 
 /** Precio que deja el margen buscado sobre el precio de venta, redondeado hacia arriba a $100. */

@@ -21,8 +21,8 @@ test("compra en la tienda: los emails de compra y de diseño recibido aparecen e
 
   await page.goto("admin-demo/emails/?vista=enviados");
   const inbox = page.getByRole("region", { name: "Bandeja de salida" });
-  await expect(inbox.getByRole("button", { name: /Recibimos tu diseño.*VEL-DEMO-0001/ })).toBeVisible();
-  await inbox.getByRole("button", { name: /¡Gracias por tu compra, .*VEL-DEMO-0001/ }).click();
+  await expect(inbox.getByRole("button", { name: /Recibimos tu diseño.*VOL-DEMO-0001/ })).toBeVisible();
+  await inbox.getByRole("button", { name: /¡Gracias por tu compra, .*VOL-DEMO-0001/ }).click();
   const mail = page.getByRole("dialog", { name: /Email: ¡Gracias por tu compra/ });
   await expect(mail.getByRole("article")).toContainText("1 × Collar con nombre y dijes de patita");
   await expect(mail.getByRole("article")).toContainText("“Simba”");
@@ -35,14 +35,14 @@ test("pasar un pedido a producción manda su email; pausado no sale", async ({ p
   await page.getByRole("switch", { name: "Se envía solo: Listo para entregar" }).click();
   await expect(toast(page, "“Listo para entregar” pausado")).toBeVisible();
   await page.goto("admin-demo/produccion/");
-  await page.getByRole("button", { name: "Pasar VEL-000113 a En máquina" }).click();
+  await page.getByRole("button", { name: "Pasar VOL-000113 a En máquina" }).click();
   await page.getByRole("group", { name: "Etapa" }).getByRole("button", { name: /^Terminación/ }).click();
-  await page.getByRole("button", { name: "Pasar VEL-000115 a Listo" }).click();
-  await expect(toast(page, "VEL-000115 pasó a “Listo”")).toBeVisible();
-  await page.goto("admin-demo/pedidos/detalle/?codigo=VEL-000113");
-  await expect(page.getByRole("button", { name: /VEL-000113 está en producción/ })).toBeVisible();
-  await page.goto("admin-demo/pedidos/detalle/?codigo=VEL-000115");
-  await expect(page.getByRole("button", { name: /VEL-000115 está listo/ })).toHaveCount(0);
+  await page.getByRole("button", { name: "Pasar VOL-000115 a Listo" }).click();
+  await expect(toast(page, "VOL-000115 pasó a “Listo”")).toBeVisible();
+  await page.goto("admin-demo/pedidos/detalle/?codigo=VOL-000113");
+  await expect(page.getByRole("button", { name: /VOL-000113 está en producción/ })).toBeVisible();
+  await page.goto("admin-demo/pedidos/detalle/?codigo=VOL-000115");
+  await expect(page.getByRole("button", { name: /VOL-000115 está listo/ })).toHaveCount(0);
 });
 
 test.describe("editor en escritorio", () => {

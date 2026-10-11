@@ -20,10 +20,10 @@ export function ProductAccordions({ product }: { product: Product }) {
       <Item title="Descripción" open>{product.description}</Item>
       <Item title="Detalles y medidas">
         {d && d.lengthCm ? <p>{d.lengthCm} × {d.widthCm} × {d.heightCm} cm · {d.weightG} g (con caja).</p> : <p>Medidas a confirmar por Volta.</p>}
-        {product.madeToOrderDays ? <p className="mt-1">Se fabrica a pedido en {product.madeToOrderDays} días hábiles desde la confirmación del pago.</p> : <p className="mt-1">Listo para despachar.</p>}
+        {product.madeToOrderDays ? <p className="mt-1">Por encargo: llega al local en {product.madeToOrderDays} días hábiles desde la confirmación del pago.</p> : <p className="mt-1">Listo para despachar.</p>}
       </Item>
       <Item title="Envíos, retiro y cambios">
-        <p>Cadete en Mar del Plata, envío al resto del país o retiro en persona. Los productos personalizados pueden estar exceptuados del arrepentimiento (ver términos).</p>
+        <p>Cadete en el día en Mar del Plata, envío al resto del país o retiro en el local. Por higiene, los suplementos abiertos o sin precinto no tienen cambio (ver términos).</p>
       </Item>
       {product.faqs.length > 0 && (
         <Item title="Preguntas frecuentes">

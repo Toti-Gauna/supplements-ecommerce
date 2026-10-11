@@ -39,7 +39,7 @@ function EditorForm({ initial, onClose }: { initial: SeasonalTheme; onClose: () 
   return (
     <form noValidate onSubmit={(e) => { e.preventDefault(); submit(); }} className="flex min-h-0 flex-1 flex-col">
       <div className="px-6 pb-3 pt-6">
-        <p className="eyebrow text-brass-ink">Temática</p>
+        <p className="eyebrow text-volt-ink">Temática</p>
         <h2 className="font-display mt-1 text-3xl">{t.name}</h2>
       </div>
       <div className="flex flex-1 flex-col gap-4 overflow-y-auto px-6 pb-6 [&>*]:shrink-0">

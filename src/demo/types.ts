@@ -1,14 +1,15 @@
 import type { CollarSpec } from "./fixtures/collar";
+import type { ContainerKind, PackStyle } from "@/components/illustrations/supplements/types";
+
+export type { PackStyle };
 
 /** Tipos del catálogo de demo. Espejan el modelo de la especificación técnica (sección 4). */
 
 export type PersonalizationKind = "TEXT" | "PHOTO" | "PHOTO_REFERENCE";
 export type PaymentMethod = "CHECKOUT_PRO" | "BANK_TRANSFER" | "QR_MANUAL";
 export type FulfillmentType = "PICKUP" | "LOCAL_DELIVERY" | "SHIPPING";
-export type ArtKey =
-  | "bowl-dog" | "bowl-wood" | "collar" | "nfc-plate" | "nfc-social" | "lamp-photo"
-  | "lamp-painted" | "leash-hanger" | "dachshund" | "figure-pair" | "candle-poodle"
-  | "home-spray" | "diffuser" | "mdp-sign" | "candle-tin" | "candle-bowl" | "label-guide";
+/** Envase de la ilustración (librería SVG de suplementos, `src/components/illustrations/supplements`). */
+export type ArtKey = ContainerKind;
 export type ArtView = "front" | "detail" | "context";
 
 export interface Category {
@@ -23,9 +24,13 @@ export interface Category {
 export interface Variant {
   id: string;
   label: string;
+  /** Sabor (o color en accesorios). Se elige con una muestra de color. */
   color?: string;
   colorHex?: string;
+  /** Tamaño o presentación (1 lb, 2 lb, 60 cápsulas…). */
   size?: string;
+  /** Servicios que trae esta presentación (precio por servicio y "cuánto te dura"). */
+  servings?: number;
   priceDelta: number;
   /** -1 = a pedido (sin límite), 0 = sin stock */
   stock: number;
@@ -55,12 +60,52 @@ export interface PersonalizationTemplate {
   collar?: CollarSpec;
 }
 
+/** Objetivos de entrenamiento: filtran el catálogo y arman stacks. */
+export type Goal = "masa-muscular" | "fuerza" | "energia" | "recuperacion" | "definicion" | "salud" | "resistencia";
+
+/** Sellos del rótulo. */
+export type ProductBadge = "sin-tacc" | "vegano" | "sin-azucar" | "keto" | "marca-propia" | "sin-cafeina";
+
+/** Momento del día en que se toma (línea de "Cómo tomarlo"). */
+export type UsageMoment = "manana" | "pre" | "intra" | "post" | "noche" | "comida";
+
+export interface NutritionRow {
+  label: string;
+  /** Por porción, con unidad ("24 g"). */
+  serving: string;
+  /** Por 100 g, si aplica. */
+  per100?: string;
+  /** % del valor diario. */
+  dv?: string;
+  /** Subrenglón (saturadas, trans, azúcares). */
+  sub?: boolean;
+}
+
+/** Información nutricional con formato de rótulo argentino. Valores de MUESTRA. */
+export interface Nutrition {
+  /** "1 scoop (30 g)". */
+  serving: string;
+  rows: NutritionRow[];
+  ingredients: string;
+  allergens?: string;
+}
+
+export interface Usage {
+  moments: UsageMoment[];
+  /** Cómo se prepara o se toma, en una frase. */
+  text: string;
+  /** Gramos (o unidades) por servicio. */
+  dose?: string;
+}
+
 export interface Product {
   slug: string;
   name: string;
   short: string;
   description: string;
   categorySlug: string;
+  /** Marca (propia o de muestra). */
+  brand: string;
   basePrice: number;
   madeToOrderDays?: number;
   art: ArtKey;
@@ -78,6 +123,16 @@ export interface Product {
   /** Foto cargada desde el panel demo (data URL, solo en este navegador). */
   photoDataUrl?: string;
   dims?: { lengthCm: number; widthCm: number; heightCm: number; weightG: number };
+  /** Envase de la marca (ilustración). Sin esto, el de la marca propia. */
+  pack?: PackStyle;
+  goals?: Goal[];
+  badges?: ProductBadge[];
+  nutrition?: Nutrition;
+  usage?: Usage;
+  /** Lote y vencimiento de muestra (AAAA-MM). */
+  lot?: { code: string; expires: string };
+  /** Nombres de las opciones en la ficha (por defecto "Sabor" y "Tamaño"). */
+  optionNames?: { color?: string; size?: string };
 }
 
 export interface Coupon {

@@ -32,8 +32,8 @@ export function DeliveryEstimate({ product, variant }: { product: Product; varia
         <span>
           <span className="font-bold">Lo tenemos listo el {formatDay(est.day, "long")}</span>
           <span className="block text-muted">
-            {est.leadDays === 1 ? "Sale al día hábil siguiente." : `Se fabrica en ${est.leadDays} días hábiles.`}
-            {est.fullDays.length > 0 && ` Los días anteriores el taller ya está completo: es la primera fecha con lugar.`}
+            {est.leadDays === 1 ? "Sale al día hábil siguiente." : `Se prepara en ${est.leadDays} días hábiles.`}
+            {est.fullDays.length > 0 && ` Los días anteriores el reparto ya está completo: es la primera fecha con lugar.`}
           </span>
         </span>
       </p>

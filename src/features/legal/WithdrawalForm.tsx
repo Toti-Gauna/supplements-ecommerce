@@ -40,7 +40,7 @@ export function WithdrawalForm() {
       addClaim({ code: claimCode, type: "WITHDRAWAL", orderCode: data.orderCode || undefined, name: data.name, email: data.email, message: data.message });
       setCode(claimCode);
     })} className="flex flex-col gap-4 rounded-[var(--radius-card)] border border-line bg-surface p-5">
-      <Field id="w-order" label="Código de pedido (si lo tenés)" hint="Ej.: VEL-000123">
+      <Field id="w-order" label="Código de pedido (si lo tenés)" hint="Ej.: VOL-000123">
         <Input id="w-order" aria-describedby="w-order-hint" {...form.register("orderCode")} />
       </Field>
       <Field id="w-name" label="Nombre y apellido" error={e.name?.message}>

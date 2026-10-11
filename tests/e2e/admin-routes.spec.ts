@@ -2,8 +2,8 @@ import { expect, test } from "@playwright/test";
 import { horizontalOverflow } from "./helpers";
 
 const ADMIN_ROUTES = [
-  ["admin-demo/", "Buen día, Volta"], ["admin-demo/pedidos/", "Pedidos"], ["admin-demo/pedidos/detalle/?codigo=VEL-000123", "VEL-000123"],
-  ["admin-demo/pagos/", "Pagos manuales"], ["admin-demo/pagos/detalle/?codigo=VEL-000123", "VEL-000123"], ["admin-demo/reclamos/detalle/?id=c1", "ARR-0007"], ["admin-demo/productos/", "Productos y stock"], ["admin-demo/productos/editar/?id=vela-caniche", "Editar: Vela caniche"],
+  ["admin-demo/", "Buen día, Volta"], ["admin-demo/pedidos/", "Pedidos"], ["admin-demo/pedidos/detalle/?codigo=VOL-000123", "VOL-000123"],
+  ["admin-demo/pagos/", "Pagos manuales"], ["admin-demo/pagos/detalle/?codigo=VOL-000123", "VOL-000123"], ["admin-demo/reclamos/detalle/?id=c1", "ARR-0007"], ["admin-demo/productos/", "Productos y stock"], ["admin-demo/productos/editar/?id=vela-caniche", "Editar: Vela caniche"],
   ["admin-demo/categorias/", "Categorías y personalización"], ["admin-demo/categorias/detalle/?slug=velas", "Velas"], ["admin-demo/stock/", "Productos y stock"], ["admin-demo/planilla/", "Productos y stock · formato Excel"], ["admin-demo/importar/", "Importar desde Excel"], ["admin-demo/misiones/", "Misiones y premios"], ["admin-demo/cupones/", "Cupones"], ["admin-demo/emails/", "Emails automáticos"], ["admin-demo/emails/editar/?id=tpl-order-created", "Gracias por tu compra"],
   ["admin-demo/calendario/", "Calendario de entregas"], ["admin-demo/produccion/", "Cola de producción"], ["admin-demo/costos/", "Costos y margen"], ["admin-demo/insumos/", "Insumos"],
   ["admin-demo/usuarios/ficha/?email=diego.a@ejemplo.com", "Diego Álvarez"],

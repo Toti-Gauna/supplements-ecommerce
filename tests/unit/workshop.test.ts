@@ -17,6 +17,14 @@ import { AR_HOLIDAYS, workshopSettings } from "@/demo/fixtures/workshop";
 beforeEach(() => setDemoData(defaultDemoData()));
 const cal = calendarOf(workshopSettings);
 
+/** Ningún producto del catálogo es a pedido: el Mass Gainer banana (sin stock) pasa a encargarse al proveedor, con 10 días hábiles. */
+function withMadeToOrderBanana() {
+  const data = defaultDemoData();
+  setDemoData({ ...data, products: data.products.map((p) => (p.slug === "mass-gainer" ? { ...p, madeToOrderDays: 10, variants: p.variants.map((v) => (v.id === "mg-banana-3kg" ? { ...v, stock: -1 } : v)) } : p)) });
+}
+const wheyLine = { id: "a", productSlug: "ionic-whey", variantId: "iw-chocolate-2lb", quantity: 1 };
+const bananaLine = { id: "b", productSlug: "mass-gainer", variantId: "mg-banana-3kg", quantity: 1 };
+
 describe("días hábiles y feriados", () => {
   it("salta fines de semana y feriados argentinos", () => {
     expect(isWorkday("2026-10-12", cal)).toBe(false);
@@ -54,31 +62,40 @@ describe("plazos y capacidad", () => {
   const admin = defaultAdminData();
   const settings = admin.workshop.settings;
   it("plazo por variante, por producto y de stock", () => {
-    const vela = getProduct("vela-caniche")!;
-    const placa = getProduct("placa-nfc")!;
-    expect(lineLeadDays(vela, vela.variants[0], false)).toBe(1);
-    expect(lineLeadDays(placa, placa.variants[0], true)).toBe(4);
-    expect(lineLeadDays(placa, { ...placa.variants[0]!, leadDays: 6 }, true)).toBe(6);
-    expect(orderLeadDays([{ id: "a", productSlug: "vela-caniche", variantId: "vc-vainilla", quantity: 1 }, { id: "b", productSlug: "velador-con-foto", variantId: "vcf-m", quantity: 1 }])).toBe(10);
+    const whey = getProduct("ionic-whey")!;
+    const onOrder = { ...whey.variants[0]!, stock: -1 };
+    expect(lineLeadDays(whey, whey.variants[0], false)).toBe(1);
+    expect(lineLeadDays(whey, onOrder, false)).toBe(3);
+    expect(lineLeadDays({ ...whey, madeToOrderDays: 4 }, onOrder, false)).toBe(4);
+    expect(lineLeadDays({ ...whey, madeToOrderDays: 4 }, whey.variants[0], true)).toBe(4);
+    expect(lineLeadDays(whey, { ...onOrder, leadDays: 6 }, false)).toBe(6);
+    withMadeToOrderBanana();
+    expect(orderLeadDays([wheyLine, bananaLine])).toBe(10);
   });
   it("los días completos y el feriado corren la próxima fecha disponible", () => {
     const load = loadByDay(admin.orders);
     expect(load.get("2026-10-08")).toBe(3);
     expect(load.get("2026-10-09")).toBe(3);
-    // Placa NFC: 4 días hábiles desde el domingo 4 → jueves 8, completo; viernes 9, completo; lunes 12, feriado → martes 13
-    const est = estimateForProduct(getProduct("placa-nfc")!, undefined, DEMO_TODAY, admin.orders, settings);
+    // Encargo al proveedor de 4 días hábiles desde el domingo 4 → jueves 8, completo; viernes 9, completo; lunes 12, feriado → martes 13
+    const whey = { ...getProduct("ionic-whey")!, madeToOrderDays: 4 };
+    const onOrder = { ...whey.variants[0]!, stock: -1 };
+    const est = estimateForProduct(whey, onOrder, DEMO_TODAY, admin.orders, settings);
     expect(est).toMatchObject({ leadDays: 4, earliest: "2026-10-08", day: "2026-10-13", fullDays: ["2026-10-08", "2026-10-09"] });
-    expect(estimateForProduct(getProduct("placa-nfc")!, undefined, DEMO_TODAY, admin.orders, { ...settings, dailyCapacity: 5 }).day).toBe("2026-10-08");
+    expect(estimateForProduct(whey, onOrder, DEMO_TODAY, admin.orders, { ...settings, dailyCapacity: 5 }).day).toBe("2026-10-08");
+    // Lo que está en stock sale al día hábil siguiente
+    expect(estimateForProduct(whey, whey.variants[0], DEMO_TODAY, admin.orders, settings)).toMatchObject({ leadDays: 1, day: "2026-10-05" });
   });
   it("promesa de un pedido nuevo y ventanas de entrega", () => {
-    const p = promiseFor([{ id: "a", productSlug: "vela-caniche", variantId: "vc-vainilla", quantity: 1 }], DEMO_TODAY, admin.orders, settings);
+    const p = promiseFor([wheyLine], DEMO_TODAY, admin.orders, settings);
     expect(p.day).toBe("2026-10-05");
     const w = deliveryWindows("2026-10-09", settings);
     expect(w.find((x) => x.id === "pickup")).toMatchObject({ from: "2026-10-09", to: "2026-10-13" });
     expect(w.find((x) => x.id === "shipping")!.to).toBe("2026-10-21");
   });
   it("reprogramar: nunca a un día cerrado o pasado; avisa sobrecarga y plazo", () => {
-    const order = admin.orders.find((o) => o.code === "VEL-000122")!;
+    withMadeToOrderBanana();
+    // VOL-000122 con un Mass Gainer banana encargado al proveedor (10 días hábiles)
+    const order = { ...admin.orders.find((o) => o.code === "VOL-000122")!, lines: [bananaLine] };
     expect(checkReschedule(order, "2026-10-12", DEMO_TODAY, admin.orders, settings)).toMatchObject({ ok: false, error: expect.stringMatching(/Diversidad/) });
     expect(checkReschedule(order, "2026-10-01", DEMO_TODAY, admin.orders, settings).ok).toBe(false);
     const full = checkReschedule(order, "2026-10-08", DEMO_TODAY, admin.orders, settings);
@@ -93,36 +110,44 @@ describe("costos, insumos, producción y recordatorios", () => {
   const admin = defaultAdminData();
   const { materials, recipes, settings, profiles } = admin.workshop;
   it("costo de receta en pesos enteros y precio sugerido", () => {
-    const c = recipeCost(recipes["vela-caniche"]!, materials, settings);
-    // 220 g cera × 12 + 15 ml × 55 + pabilo 120 + 0,05 plancha × 3200 = 2640 + 825 + 120 + 160
-    expect(c.materials).toBe(3745);
-    expect(c.machine).toBe(125);
-    expect(c.hand).toBe(1875);
-    expect(c.total).toBe(5745);
-    expect(suggestedPrice(5745, 50)).toBe(11500);
-    expect(marginPct(11900, 5745)).toBe(52);
+    const c = recipeCost(recipes["ionic-whey"]!, materials, settings);
+    // Proveedor 26.400 + embalaje (caja chica 650 + folleto 90 + precinto 40 + 1,2 m de cinta × 12 = 14) + 6 min de armado a $4.500 la hora
+    expect(c.merchandise).toBe(26400);
+    expect(c.materials).toBe(794);
+    expect(c.machine).toBe(0);
+    expect(c.hand).toBe(450);
+    expect(c.total).toBe(27644);
+    expect(suggestedPrice(27644, 35)).toBe(42600);
+    expect(marginPct(54900, 27644)).toBe(50);
     expect(marginPct(0, 10)).toBeNull();
   });
   it("tabla de márgenes con estados y precio desde", () => {
-    const rows = costRows(admin.data.products, admin.data.categories, recipes, materials, settings);
-    expect(rows.find((r) => r.slug === "guia-etiquetas-velas")!.state).toBe("missing");
+    // Un producto recién creado en el panel todavía no tiene costo cargado
+    const fresh = { ...admin.data.products[0]!, slug: "producto-nuevo" };
+    const rows = costRows([...admin.data.products, fresh], admin.data.categories, recipes, materials, settings);
+    expect(rows.filter((r) => r.state === "missing").map((r) => r.slug)).toEqual(["producto-nuevo"]);
     expect(rows.every((r) => r.state === "missing" || Number.isInteger(r.cost!.total))).toBe(true);
-    const comedero = admin.data.products.find((p) => p.slug === "comedero-perro-globo")!;
-    expect(basePriceFor(comedero, 20000)).toBe(20000);
+    // "Desde": el precio más bajo entre las variantes (Ionic Whey 2 lb, $54.900)
+    expect(rows.find((r) => r.slug === "ionic-whey")).toMatchObject({ price: 54900, margin: 50, state: "ok" });
+    const whey = admin.data.products.find((p) => p.slug === "ionic-whey")!;
+    expect(basePriceFor(whey, 50000)).toBe(50000);
   });
   it("insumos comprometidos por pedidos pagados y descuento al producir", () => {
     const need = committedNeeds(admin.orders, recipes);
-    // VEL-000113: 12 velas souvenir × 90 g de cera
-    expect(need.get("cera")).toBe(1080);
+    // Pagados: VOL-000122 (Isolate) y VOL-000111 (colágeno) van en caja chica; VOL-000113 (2 cajas de barras) y VOL-000109 (alfajores), en bolsa
+    expect(need.get("caja-chica")).toBe(2);
+    expect(need.get("bolsa")).toBe(3);
+    expect(need.get("folleto")).toBe(5);
     const rows = materialRows(materials, admin.orders, recipes);
-    const led = rows.find((m) => m.id === "led")!;
-    expect(led.committed).toBe(1);
-    expect(led.state).toBe("low");
-    expect(reorderQty(led)).toBe(7);
-    const order = admin.orders.find((o) => o.code === "VEL-000113")!;
+    expect(rows.find((m) => m.id === "caja-chica")).toMatchObject({ committed: 2, available: 78, state: "ok" });
+    const sachet = rows.find((m) => m.id === "sachet-muestra")!;
+    expect(sachet.committed).toBe(0);
+    expect(sachet.state).toBe("low");
+    expect(reorderQty(sachet)).toBe(34);
+    const order = admin.orders.find((o) => o.code === "VOL-000113")!;
     const after = consumeMaterials(materials, orderNeeds(order.lines, recipes));
-    expect(after.find((m) => m.id === "cera")!.stock).toBe(5000 - 1080);
-    expect(applyMaterialOp(materials, ["led"], { kind: "add", qty: 10 }).find((m) => m.id === "led")!.stock).toBe(14);
+    expect(after.find((m) => m.id === "bolsa")!.stock).toBe(120 - 2);
+    expect(applyMaterialOp(materials, ["sachet-muestra"], { kind: "add", qty: 10 }).find((m) => m.id === "sachet-muestra")!.stock).toBe(36);
   });
   it("tablero de producción: solo hacia adelante, terminación puede volver a máquina", () => {
     expect(columnOf({ status: "PAID" })).toBe("queue");
@@ -139,17 +164,21 @@ describe("costos, insumos, producción y recordatorios", () => {
   it("recordatorios: cumpleaños de mascotas y recompra dentro de los próximos 30 días", () => {
     expect(nextOccurrence("10-09", DEMO_TODAY)).toBe("2026-10-09");
     expect(nextOccurrence("01-15", DEMO_TODAY)).toBe("2027-01-15");
-    const list = customerReminders(customerRows(admin.users, admin.orders), profiles, admin.data.products, settings, DEMO_TODAY);
+    // Las fichas de muestra ya no traen mascotas: se cargan acá (el panel las sigue aceptando).
+    const diego = "diego.a@ejemplo.com";
+    const withPets = { ...profiles, [diego]: { ...profiles[diego]!, pets: [{ id: "p-noqui", name: "Ñoqui", species: "perro" as const, birthday: "10-09" }, { id: "p-kira", name: "Kira", species: "gato" as const, birthday: "12-20" }] } };
+    const list = customerReminders(customerRows(admin.users, admin.orders), withPets, admin.data.products, settings, DEMO_TODAY);
     expect(list[0]).toMatchObject({ kind: "pet-birthday", date: "2026-10-09", title: "Cumple de Ñoqui", inDays: 5 });
-    expect(list.some((r) => r.kind === "repurchase" && r.title === "Recompra: Difusor de varillas Volta" && r.date === "2026-10-27")).toBe(true);
+    // VOL-000119 (29/9): pre-entreno, recompra a los 30 días
+    expect(list.some((r) => r.kind === "repurchase" && r.title === "Recompra: Overvolt pre-entreno" && r.date === "2026-10-29")).toBe(true);
     expect(list.every((r) => r.inDays <= 30)).toBe(true);
     expect(list.some((r) => r.title === "Cumple de Kira")).toBe(false);
   });
   it("exporta las entregas a .ics de día completo", () => {
-    const ics = toIcs([{ uid: "VEL-000121", day: "2026-10-08", title: "Entrega VEL-000121, Julián", description: "Colgador; 1 u.\nRetira" }], new Date("2026-10-04T12:00:00Z"));
+    const ics = toIcs([{ uid: "VOL-000121", day: "2026-10-08", title: "Entrega VOL-000121, Julián", description: "Colgador; 1 u.\nRetira" }], new Date("2026-10-04T12:00:00Z"));
     expect(ics).toMatch(/^BEGIN:VCALENDAR\r\n/);
     expect(ics).toContain("DTSTART;VALUE=DATE:20261008\r\nDTEND;VALUE=DATE:20261009");
-    expect(ics).toContain("SUMMARY:Entrega VEL-000121\\, Julián");
+    expect(ics).toContain("SUMMARY:Entrega VOL-000121\\, Julián");
     expect(ics).toContain("DESCRIPTION:Colgador\\; 1 u.\\nRetira");
     expect(ics).toContain("DTSTAMP:20261004T120000Z");
     expect(ics.trimEnd().endsWith("END:VCALENDAR")).toBe(true);
@@ -167,21 +196,21 @@ describe("casos de la revisión", () => {
 
   it("los insumos se descuentan una vez aunque el pedido pase por un reclamo, y conserva la etapa", () => {
     const h = harness();
-    expect(h.actions.moveProduction("VEL-000113", "machine")).toBeNull();
-    expect(stock(h.get(), "cera")).toBe(5000 - 1080);
-    expect(h.actions.moveProduction("VEL-000113", "finishing")).toBeNull();
-    expect(h.actions.transition("VEL-000113", "IN_CLAIM")).toBe(true);
-    expect(h.actions.transition("VEL-000113", "IN_PRODUCTION")).toBe(true);
-    const o = h.get().orders.find((x) => x.code === "VEL-000113")!;
+    expect(h.actions.moveProduction("VOL-000113", "machine")).toBeNull();
+    expect(stock(h.get(), "bolsa")).toBe(120 - 2);
+    expect(h.actions.moveProduction("VOL-000113", "finishing")).toBeNull();
+    expect(h.actions.transition("VOL-000113", "IN_CLAIM")).toBe(true);
+    expect(h.actions.transition("VOL-000113", "IN_PRODUCTION")).toBe(true);
+    const o = h.get().orders.find((x) => x.code === "VOL-000113")!;
     expect(o.stage).toBe("finishing");
-    expect(stock(h.get(), "cera")).toBe(5000 - 1080);
+    expect(stock(h.get(), "bolsa")).toBe(120 - 2);
   });
   it("no reprograma lo que ya salió del taller o se cerró", () => {
     const h = harness();
-    expect(h.actions.rescheduleOrder("VEL-000118", "2026-10-13").ok).toBe(false);
-    expect(h.actions.rescheduleOrder("VEL-000117", "2026-10-13").ok).toBe(false);
-    expect(h.actions.rescheduleOrder("VEL-000122", "2026-10-27").ok).toBe(true);
-    expect(h.get().orders.find((o) => o.code === "VEL-000122")!.promisedDate).toBe("2026-10-27");
+    expect(h.actions.rescheduleOrder("VOL-000118", "2026-10-13").ok).toBe(false);
+    expect(h.actions.rescheduleOrder("VOL-000117", "2026-10-13").ok).toBe(false);
+    expect(h.actions.rescheduleOrder("VOL-000122", "2026-10-27").ok).toBe(true);
+    expect(h.get().orders.find((o) => o.code === "VOL-000122")!.promisedDate).toBe("2026-10-27");
   });
   it("precio sugerido exacto con cualquier margen entero", () => {
     expect(suggestedPrice(350, 30)).toBe(500);

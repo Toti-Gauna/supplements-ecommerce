@@ -2,7 +2,10 @@ import { describe, expect, it } from "vitest";
 import { decodeGift, encodeGift } from "@/demo/engine/gift-link";
 import { cleanGift, giftProblem, giftsFor, giftsFromLines, makeGiftCode, normalizeGiftCode, type Gift } from "@/demo/engine/gifts";
 import { getProduct } from "@/demo/engine/catalog";
+import { defaultDemoData, setDemoData } from "@/demo/engine/source";
 import { demoGifts, sampleGifts } from "@/demo/fixtures/gifts";
+import { engravingTemplate } from "@/demo/fixtures/templates";
+import type { Product } from "@/demo/types";
 import { GIFT_SCENE_NAMES } from "@/features/gifts/scenes";
 
 const seq = (values: number[]) => { let i = 0; return () => values[i++ % values.length]!; };
@@ -81,15 +84,25 @@ describe("regalos de una cuenta", () => {
 
 describe("regalos de un pedido", () => {
   it("cada línea marcada como regalo genera uno con código, sin precio y con el detalle de lo personalizado", () => {
+    // Ningún producto del catálogo se personaliza: un shaker grabado armado acá.
+    const engravedShaker: Product = {
+      slug: "shaker-grabado", name: "Shaker grabado", short: "", description: "", categorySlug: "accesorios", brand: "VOLTA Lab",
+      basePrice: 8900, art: "shaker", gallery: ["front"], faqs: [], featured: false, isNew: false, soldCount: 0, tags: [],
+      variants: [{ id: "sg-grafito", label: "Grafito", priceDelta: 0, stock: 5 }],
+      personalization: engravingTemplate,
+    };
+    const data = defaultDemoData();
+    setDemoData({ ...data, products: [...data.products, engravedShaker] });
     const lines = [
-      { id: "a", productSlug: "home-spray", variantId: "home-spray-lavanda", quantity: 1, gift: { to: " Sofi ", from: "Lu", message: "Hola", occasion: "navidad" as const } },
-      { id: "b", productSlug: "vela-caniche", variantId: "x", quantity: 1 },
-      { id: "c", productSlug: "comedero-perro-globo", variantId: "y", quantity: 2, personalization: { kind: "TEXT" as const, text: "Toby", approvedAt: "2026-10-09" }, gift: { to: "Ana", from: "Lu", message: "", occasion: "volta" as const } },
+      { id: "a", productSlug: "electrolitos", variantId: "ev-limon-x10", quantity: 1, gift: { to: " Sofi ", from: "Lu", message: "Hola", occasion: "navidad" as const } },
+      { id: "b", productSlug: "ionic-whey", variantId: "iw-chocolate-2lb", quantity: 1 },
+      { id: "c", productSlug: "shaker-grabado", variantId: "sg-grafito", quantity: 2, personalization: { kind: "TEXT" as const, text: "Toby", approvedAt: "2026-10-09" }, gift: { to: "Ana", from: "Lu", message: "", occasion: "volta" as const } },
     ];
-    const gifts = giftsFromLines(lines, { orderCode: "VEL-1", now: new Date("2026-10-10T10:00:00Z"), eta: "2026-10-16", random: seq([0.2, 0.4]) });
+    const gifts = giftsFromLines(lines, { orderCode: "VOL-1", now: new Date("2026-10-10T10:00:00Z"), eta: "2026-10-16", random: seq([0.2, 0.4]) });
     expect(gifts).toHaveLength(2);
-    expect(gifts[0]).toMatchObject({ to: "Sofi", from: "Lu", occasion: "navidad", orderCode: "VEL-1", eta: "2026-10-16", item: { slug: "home-spray", name: "Home spray Volta" } });
-    expect(gifts[1]!.item.detail).toBe("Texto: “Toby”");
+    expect(gifts[0]).toMatchObject({ to: "Sofi", from: "Lu", occasion: "navidad", orderCode: "VOL-1", eta: "2026-10-16", item: { slug: "electrolitos", name: "Electro Volt sobres", variant: "Limón" } });
+    expect(gifts[0]!.item.detail).toBeUndefined();
+    expect(gifts[1]!.item).toMatchObject({ slug: "shaker-grabado", variant: "Grafito", detail: "Texto: “Toby”" });
     for (const g of gifts) { expect(normalizeGiftCode(g.code)).toBe(g.code); expect(JSON.stringify(g)).not.toMatch(/price|precio/i); }
   });
 });

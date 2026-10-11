@@ -18,7 +18,7 @@ export function OrderLines({ lines, mobileLimit }: { lines: CartLine[]; mobileLi
         const p = q.line.personalization;
         return (
           <li key={q.line.id} className={cn("flex items-center gap-3 rounded-2xl bg-bg p-2.5", mobileLimit !== undefined && i >= mobileLimit && "max-sm:hidden")}>
-            <div className="w-16 shrink-0"><LineThumb art={product.art} tint={variant?.colorHex} name={product.name} personalization={p} zone={demoData().textZones[product.art]} /></div>
+            <div className="w-16 shrink-0"><LineThumb art={product.art} pack={product.pack} tint={variant?.colorHex} name={product.name} personalization={p} zone={demoData().textZones[product.art]} /></div>
             <div className="min-w-0 flex-1 text-sm">
               <p className="font-bold">{q.line.quantity} × {product.name}</p>
               <p className="text-muted">{variant?.label}{p?.text ? ` · “${p.text}”` : ""}{p ? " · vista previa aprobada" : ""}</p>

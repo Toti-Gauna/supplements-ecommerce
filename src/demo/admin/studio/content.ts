@@ -1,7 +1,7 @@
 import { bestSellers, fromPrice, getProduct } from "../../engine/catalog";
 import { offerPrice, themeOffer, themeProducts, type ThemeOffer } from "../../engine/themes";
 import { STUDIO_BRAND } from "../../fixtures/studio";
-import type { ArtKey, Product, SeasonalTheme } from "../../types";
+import type { ArtKey, Product, SeasonalTheme, PackStyle } from "../../types";
 
 /** Textos editables de una pieza (arrancan con los de la temática; el dueño los cambia). */
 export interface StudioTexts {
@@ -18,6 +18,7 @@ export interface StudioProduct {
   short: string;
   categorySlug: string;
   art: ArtKey;
+  pack?: PackStyle;
   tint?: string;
   photoDataUrl?: string;
   personalizable: boolean;
@@ -47,7 +48,7 @@ export function suggestedProducts(theme: SeasonalTheme | null): string[] {
 export function toStudioProduct(product: Product, offer: ThemeOffer | null): StudioProduct {
   const price = fromPrice(product);
   return {
-    slug: product.slug, name: product.name, short: product.short, categorySlug: product.categorySlug, art: product.art,
+    slug: product.slug, name: product.name, short: product.short, categorySlug: product.categorySlug, art: product.art, pack: product.pack,
     tint: product.variants[0]?.colorHex, photoDataUrl: product.photoDataUrl, personalizable: Boolean(product.personalization),
     price, offerPrice: offerPrice(price, offer),
   };

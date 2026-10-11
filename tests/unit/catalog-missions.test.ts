@@ -6,16 +6,20 @@ import { missions } from "@/demo/fixtures/commerce";
 
 describe("catálogo", () => {
   it("oculta categorías vacías", () => {
-    expect(visibleCategories().map((c) => c.slug)).not.toContain("tablas");
+    expect(visibleCategories().map((c) => c.slug)).not.toContain("indumentaria");
   });
   it("distingue a pedido, en stock y sin stock", () => {
-    const bowl = getProduct("comedero-elevado-madera")!;
-    expect(availability(bowl, bowl.variants[0]!)).toEqual({ kind: "in-stock", units: 12 });
-    expect(availability(bowl, bowl.variants[1]!)).toEqual({ kind: "out-of-stock" });
-    const lamp = getProduct("velador-con-foto")!;
-    expect(availability(lamp, lamp.variants[0]!).kind).toBe("made-to-order");
-    expect(isPurchasable(bowl.variants[0]!, 13)).toBe(false);
-    expect(isPurchasable(lamp.variants[0]!, 9)).toBe(true);
+    const iso = getProduct("isolate-zero")!;
+    const [chocolate, vainilla] = iso.variants;
+    expect(chocolate!.id).toBe("iz-chocolate-2lb");
+    expect(availability(iso, chocolate!)).toEqual({ kind: "in-stock", units: 9 });
+    expect(vainilla!.id).toBe("iz-vainilla-2lb");
+    expect(availability(iso, vainilla!)).toEqual({ kind: "out-of-stock" });
+    // Hoy ningún producto del catálogo es a pedido, pero el motor lo sigue soportando (stock -1).
+    const aPedido = { ...chocolate!, stock: -1 };
+    expect(availability({ ...iso, madeToOrderDays: 5 }, aPedido)).toEqual({ kind: "made-to-order", days: 5 });
+    expect(isPurchasable(chocolate!, 10)).toBe(false);
+    expect(isPurchasable(aPedido, 9)).toBe(true);
   });
 });
 

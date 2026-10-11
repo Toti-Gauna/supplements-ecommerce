@@ -6,7 +6,7 @@ export function AvailabilityNote({ availability }: { availability: Availability 
     return (
       <p className="flex items-center gap-2 text-sm font-semibold text-ink">
         <CalendarClock size={18} className="text-primary" aria-hidden="true" />
-        A pedido{availability.days ? ` · se fabrica en ${availability.days} días hábiles` : ""}
+        Por encargo{availability.days ? ` · llega en ${availability.days} días hábiles` : ""}
       </p>
     );
   }

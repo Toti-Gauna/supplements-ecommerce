@@ -10,18 +10,25 @@ describe("búsqueda", () => {
     expect(normalize("Iluminación  ÚNICA")).toBe("iluminacion unica");
   });
   it("encuentra sin acentos lo que tiene acento", () => {
-    expect(slugs("iluminacion")).toContain("velador-con-foto");
+    // El gel solo se relaciona con "Hidratación" por el nombre de su categoría.
+    expect(slugs("hidratacion")).toContain("gel-energetico");
+    expect(slugs("proteinas")).toEqual(expect.arrayContaining(["ionic-whey", "isolate-zero", "proteina-vegana", "night-casein"]));
   });
-  it("tolera errores: 'comedro' encuentra comederos", () => {
-    const found = slugs("comedro");
-    expect(found).toContain("comedero-perro-globo");
-    expect(found).toContain("comedero-elevado-madera");
+  it("tolera errores: 'cretina' encuentra creatinas", () => {
+    const found = slugs("cretina");
+    expect(found).toContain("creatina-monohidrato");
+    expect(found).toContain("creatina-gomitas");
+    expect(found).toContain("creatina-brava");
   });
   it("busca por categoría y por etiquetas", () => {
-    expect(slugs("nfc")).toEqual(expect.arrayContaining(["placa-nfc", "placa-nfc-instagram"]));
+    expect(slugs("aminoacidos")).toEqual(expect.arrayContaining(["bcaa-211", "glutamina"]));
+  });
+  it("busca por marca y por objetivo", () => {
+    expect(slugs("krono")).toEqual(expect.arrayContaining(["isolate-zero", "bcaa-211", "colageno", "l-carnitina"]));
+    expect(slugs("recuperacion")).toEqual(expect.arrayContaining(["night-casein", "glutamina", "magnesio-bisglicinato"]));
   });
   it("sin resultados devuelve lista vacía y sugiere un término", () => {
     expect(slugs("zzzzqqq")).toEqual([]);
-    expect(suggestTerm("lampra", products)).toBe("lampara");
+    expect(suggestTerm("glutamna", products)).toBe("glutamina");
   });
 });

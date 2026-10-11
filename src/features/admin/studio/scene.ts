@@ -10,8 +10,8 @@ import type { AssetRequest, StudioAssets } from "./assets";
 import type { StudioLook, StudioScene } from "./render/types";
 
 /** Sin temática: la noche de la marca (colores de la configuración) con polvo dorado. */
-const BRAND_SKIN: Pick<ThemeSkin, "from" | "to" | "accent" | "accentInk"> = { from: brand.colors.text, to: brand.colors.primary, accent: "#d2ad69", accentInk: brand.colors.text };
-const BRAND_LAYERS: AmbientLayer[] = [{ particles: [{ dot: "#d2ad69" }, { dot: "#f6e7c4" }], motion: "twinkle", count: 18, size: [3, 7], duration: [3, 6], opacity: 0.8 }];
+const BRAND_SKIN: Pick<ThemeSkin, "from" | "to" | "accent" | "accentInk"> = { from: brand.colors.text, to: brand.colors.primary, accent: "#c8ff2e", accentInk: brand.colors.text };
+const BRAND_LAYERS: AmbientLayer[] = [{ particles: [{ dot: "#c8ff2e" }, { dot: "#f1ffc4" }], motion: "twinkle", count: 18, size: [3, 7], duration: [3, 6], opacity: 0.8 }];
 
 export function layersFor(themeId: SeasonId | null): AmbientLayer[] {
   return themeId ? AMBIENT[themeId] : BRAND_LAYERS;

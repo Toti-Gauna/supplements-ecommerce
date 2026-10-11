@@ -28,7 +28,7 @@ export function Dashboard() {
     <div className="flex flex-col gap-8">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="eyebrow text-brass-ink">Panel demo · {formatDate(DEMO_TODAY)}</p>
+          <p className="eyebrow text-volt-ink">Panel demo · {formatDate(DEMO_TODAY)}</p>
           <h1 className="font-display mt-2 text-4xl sm:text-5xl">Buen día, Volta <span className="font-sans align-middle text-sm font-bold text-warning">(demo)</span></h1>
           <p className="mt-2 text-muted">Tenés <strong className="text-ink">{counts.PAYMENT_REVIEW} comprobantes</strong> por revisar y <strong className="text-ink">{active} pedidos</strong> en marcha. Datos ficticios.</p>
         </div>

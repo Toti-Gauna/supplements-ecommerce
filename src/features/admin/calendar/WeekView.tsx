@@ -19,7 +19,7 @@ export function WeekView({ cursor, today, days, events, cal, capacity, dnd, onDa
         return (
           <li key={day} {...dnd.zone(day)} data-day={day}
             className={cn("relative flex min-h-24 flex-col gap-2 rounded-2xl p-2.5 transition-colors lg:min-h-[22rem]",
-              dnd.over === day ? "bg-accent ring-2 ring-primary" : closed ? "bg-[repeating-linear-gradient(135deg,transparent_0_6px,rgb(28_32_22/0.04)_6px_12px)]" : "bg-surface",
+              dnd.over === day ? "bg-accent ring-2 ring-primary" : closed ? "bg-[repeating-linear-gradient(135deg,transparent_0_6px,rgb(0_0_0/0.04)_6px_12px)]" : "bg-surface",
               !closed && "shadow-[var(--shadow-card)]", dnd.blockOf(day) && "opacity-60")}>
             <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
               <h3 className="min-w-0">

@@ -24,7 +24,7 @@ export function PrideFlag({ className }: DecorProps) {
     <svg viewBox="0 0 64 64" aria-hidden="true" className={className}>
       <defs><clipPath id={clip}><path d={wave} /></clipPath></defs>
       <path d="M12 6v54" stroke="#d8c08a" strokeWidth="3" strokeLinecap="round" />
-      <circle cx="12" cy="5" r="2.6" fill="#f3dca6" />
+      <circle cx="12" cy="5" r="2.6" fill="#e3ff8f" />
       <g clipPath={`url(#${clip})`}>{PRIDE.map((c, i) => <rect key={c} x="12" y={7 + i * 5.6} width="48" height="5.8" fill={c} />)}</g>
       <path d={wave} fill="none" stroke="#000" strokeOpacity=".12" />
     </svg>

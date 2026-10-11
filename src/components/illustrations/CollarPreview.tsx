@@ -59,7 +59,7 @@ export function CollarPreview({ text, font, letterColor, config, className, labe
     <div className={cn("relative overflow-hidden", !compact && "rounded-[1.5rem] bg-[radial-gradient(120%_90%_at_50%_0%,#fffaf1,#efe6d4)]", className)}>
       <svg viewBox="0 18 400 290" role="img" aria-label={label ?? `Vista previa del collar ${name}`} className="h-full w-full">
         <defs>
-          <linearGradient id={`${uid}-metal`} x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#f6e2b0" /><stop offset=".5" stopColor="#d2ad69" /><stop offset="1" stopColor="#9a7434" /></linearGradient>
+          <linearGradient id={`${uid}-metal`} x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#f6e2b0" /><stop offset=".5" stopColor="#c8ff2e" /><stop offset="1" stopColor="#9a7434" /></linearGradient>
           <linearGradient id={`${uid}-buckle`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#4a4d50" /><stop offset="1" stopColor="#1e2022" /></linearGradient>
           <filter id={`${uid}-drop`} x="-20%" y="-20%" width="140%" height="160%"><feDropShadow dx="0" dy="3" stdDeviation="2.4" floodColor="#1c2016" floodOpacity=".28" /></filter>
         </defs>
@@ -129,7 +129,7 @@ export function CollarPreview({ text, font, letterColor, config, className, labe
       {!compact && (
         <span className="absolute bottom-3 left-3 flex flex-wrap gap-1.5">
           <span className="rounded-full bg-white/85 px-2.5 py-0.5 text-[11px] font-semibold text-[#4f5545]">Vista previa ilustrativa</span>
-          {note && <span className="rounded-full bg-[#2b2f22]/85 px-2.5 py-0.5 text-[11px] font-semibold text-[#f3dca6]">{note}</span>}
+          {note && <span className="rounded-full bg-[#2b2f22]/85 px-2.5 py-0.5 text-[11px] font-semibold text-volt-soft">{note}</span>}
         </span>
       )}
     </div>

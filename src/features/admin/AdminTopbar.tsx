@@ -30,7 +30,7 @@ export function AdminTopbar({ onMenu, onSearch }: { onMenu: () => void; onSearch
         <span>Panel de demostración · datos ficticios<span className="hidden font-semibold sm:inline"> · Sin login a propósito: no es seguro ni sirve como acceso real.</span></span>
       </p>
       <div className="flex h-14 items-center gap-3 px-4 lg:h-16 lg:px-10">
-        <button type="button" onClick={onMenu} aria-label="Abrir menú del panel" className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-night text-brass shadow-[var(--shadow-card)] desk:hidden">
+        <button type="button" onClick={onMenu} aria-label="Abrir menú del panel" className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-night text-volt shadow-[var(--shadow-card)] desk:hidden">
           <Menu size={20} aria-hidden="true" />
         </button>
         <div className="flex min-w-0 flex-1 items-center gap-2">

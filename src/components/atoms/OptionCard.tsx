@@ -19,7 +19,7 @@ export function OptionCard({ name, value, checked, onChange, title, description,
     <label
       className={cn(
         "flex cursor-pointer items-start gap-3 rounded-3xl border-2 bg-surface p-5 transition-all duration-200 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary/50",
-        checked ? "border-primary bg-accent/30 shadow-[var(--shadow-card)]" : "border-transparent shadow-[0_1px_2px_rgb(28_32_22/0.06)] hover:border-ink/15",
+        checked ? "border-primary bg-accent/30 shadow-[var(--shadow-card)]" : "border-transparent shadow-[0_1px_2px_rgb(0_0_0/0.06)] hover:border-ink/15",
         disabled && "cursor-not-allowed opacity-60",
       )}
     >

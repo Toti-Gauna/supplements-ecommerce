@@ -1,10 +1,11 @@
-import type { ArtKey } from "@/demo/types";
+import type { ArtKey, PackStyle } from "@/demo/types";
 import type { TextZone } from "@/demo/fixtures/templates";
 import { ProductArt } from "@/components/illustrations/ProductArt";
 import { cn } from "@/lib/cn";
 
 interface TextPreviewProps {
   art: ArtKey;
+  pack?: PackStyle;
   tint?: string;
   text: string;
   fontFamily: string;
@@ -15,7 +16,7 @@ interface TextPreviewProps {
 }
 
 /** Vista previa SVG del texto sobre la pieza. Se actualiza en cada tecla. */
-export function TextPreview({ art, tint, text, fontFamily, color, zone, label, className }: TextPreviewProps) {
+export function TextPreview({ art, pack, tint, text, fontFamily, color, zone, label, className }: TextPreviewProps) {
   const chars = Math.max(1, [...text].length);
   const fontSize = Math.min(zone.h * 0.82, (zone.w / chars) * 1.6);
   const cover = zone.cover === "tint" ? tint : zone.cover;
@@ -24,7 +25,7 @@ export function TextPreview({ art, tint, text, fontFamily, color, zone, label, c
   const halo = ground && contrast(color, ground) < 2.2 ? (luminance(color) > 0.4 ? "#3a4527" : "#fffdf8") : undefined;
   return (
     <div className={cn("relative", className)}>
-      <ProductArt art={art} tint={tint} label={label} className="aspect-square" />
+      <ProductArt art={art} pack={pack} tint={tint} label={label} className="aspect-square" />
       <svg viewBox="0 0 400 400" aria-hidden="true" className="pointer-events-none absolute inset-0 h-full w-full">
         {cover && <rect x={zone.x} y={zone.y} width={zone.w} height={zone.h} rx="8" fill={cover} />}
         <text

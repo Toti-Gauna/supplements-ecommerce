@@ -10,19 +10,19 @@ import { emailTemplates } from "@/demo/fixtures/emails";
 beforeEach(() => setDemoData(defaultDemoData()));
 const tpl = (id: string) => emailTemplates.find((t) => t.id === id)!;
 
-function harness() {
-  let state: AdminData = defaultAdminData();
+function harness(seed: (s: AdminData) => AdminData = (s) => s) {
+  let state: AdminData = seed(defaultAdminData());
   const set = (fn: (s: AdminData) => Partial<AdminData>) => { state = { ...state, ...fn(state) }; };
   const get = () => state;
   return { orders: createOrdersActions(set, get), emails: createEmailActions(set, get), get };
 }
 
 describe("render de plantillas", () => {
-  const order = defaultAdminData().orders.find((o) => o.code === "VEL-000121")!;
+  const order = defaultAdminData().orders.find((o) => o.code === "VOL-000121")!;
   const ctx = contextForOrder(order);
   it("las fichas se reemplazan por datos reales, nunca quedan llaves", () => {
     const mail = renderEmail(tpl("tpl-payment-approved"), ctx);
-    expect(mail.subject).toBe("Pago aprobado: pedido VEL-000121");
+    expect(mail.subject).toBe("Pago aprobado: pedido VOL-000121");
     const text = plainText(mail);
     expect(text).toContain("Hola Julián");
     expect(text).toContain("jueves, 8 de octubre");
@@ -37,9 +37,12 @@ describe("render de plantillas", () => {
   it("bloques del pedido completos y omitidos cuando no hay pedido", () => {
     const mail = renderEmail(tpl("tpl-order-created"), ctx);
     const card = mail.blocks.find((b) => b.type === "order-card");
-    expect(card).toMatchObject({ code: "VEL-000121", fulfillment: "Cadete en Mar del Plata", status: "En producción" });
+    expect(card).toMatchObject({ code: "VOL-000121", fulfillment: "Cadete en Mar del Plata", status: "En producción" });
     const products = mail.blocks.find((b) => b.type === "products");
-    expect(products).toMatchObject({ lines: [{ name: "Colgador de correa con silueta", quantity: 1, detail: "“Kira” · Clásica" }] });
+    expect(products).toMatchObject({ lines: [{ name: "Creatina monohidrato micronizada", variant: "Sin sabor · 500 g", quantity: 1 }] });
+    // El detalle de lo personalizado sale de la línea (hoy ningún producto del catálogo se personaliza)
+    const engraved = { ...order, lines: [{ ...order.lines[0]!, personalization: { kind: "TEXT" as const, text: "Kira", font: "Clásica", approvedAt: "" } }] };
+    expect(renderEmail(tpl("tpl-order-created"), contextForOrder(engraved)).blocks.find((b) => b.type === "products")).toMatchObject({ lines: [{ detail: "“Kira” · Clásica" }] });
     const pet = renderEmail(tpl("tpl-pet-birthday"), { customerName: "Diego Álvarez", email: "d@e.com", pet: { name: "Ñoqui" } });
     expect(pet.subject).toBe("¡Feliz cumple, Ñoqui! 🎂");
     expect(renderEmail({ ...tpl("tpl-pet-birthday"), blocks: [{ id: "x", type: "order-card" }] }, { customerName: "D", email: "d" }).blocks).toEqual([]);
@@ -70,24 +73,30 @@ describe("disparadores y bandeja de salida", () => {
     const before = h.get().emails.outbox.length;
     expect(before).toBeGreaterThan(5);
     expect(h.get().emails.outbox.every((m, i, all) => i === 0 || Date.parse(all[i - 1]!.at) >= Date.parse(m.at))).toBe(true);
-    h.orders.moveProduction("VEL-000113", "machine");
+    h.orders.moveProduction("VOL-000113", "machine");
     const [mail] = h.get().emails.outbox;
-    expect(mail).toMatchObject({ trigger: "in-production", orderCode: "VEL-000113", to: "ana.l@ejemplo.com" });
-    expect(mail!.email.subject).toContain("VEL-000113 está en producción");
+    expect(mail).toMatchObject({ trigger: "in-production", orderCode: "VOL-000113", to: "ana.l@ejemplo.com" });
+    expect(mail!.email.subject).toContain("VOL-000113 está en producción");
     h.emails.setEmailTemplateActive("tpl-ready", false);
-    expect(h.orders.moveProduction("VEL-000113", "ready")).toBeNull();
-    expect(h.get().orders.find((o) => o.code === "VEL-000113")!.status).toBe("READY");
+    expect(h.orders.moveProduction("VOL-000113", "ready")).toBeNull();
+    expect(h.get().orders.find((o) => o.code === "VOL-000113")!.status).toBe("READY");
     expect(h.get().emails.outbox[0]!.trigger).toBe("in-production");
     // Un reclamo y la vuelta a pagado no reenvían "Pago aprobado"
-    const paid = () => h.get().emails.outbox.filter((m) => m.orderCode === "VEL-000122" && m.trigger === "payment-approved").length;
+    const paid = () => h.get().emails.outbox.filter((m) => m.orderCode === "VOL-000122" && m.trigger === "payment-approved").length;
     const before122 = paid();
-    expect(h.orders.transition("VEL-000122", "IN_CLAIM")).toBe(true);
-    expect(h.orders.transition("VEL-000122", "PAID")).toBe(true);
+    expect(h.orders.transition("VOL-000122", "IN_CLAIM")).toBe(true);
+    expect(h.orders.transition("VOL-000122", "PAID")).toBe(true);
     expect(paid()).toBe(before122);
   });
   it("prueba, cumpleaños de mascota y plantilla restaurada", () => {
-    const h = harness();
-    expect(h.emails.sendTestEmail("tpl-shipped", "VEL-000119")).toBe(true);
+    // Las fichas de muestra ya no traen mascotas: Diego tiene una cargada solo para esta prueba.
+    const h = harness((s) => {
+      const diego = s.workshop.profiles["diego.a@ejemplo.com"]!;
+      const profiles = { ...s.workshop.profiles, "diego.a@ejemplo.com": { ...diego, pets: [{ id: "p1", name: "Ñoqui", species: "perro" as const, birthday: "10-09" }] } };
+      return { ...s, workshop: { ...s.workshop, profiles } };
+    });
+    expect(harness().emails.sendPetBirthdayEmail("diego.a@ejemplo.com", "Diego Álvarez", "p1", "2026")).toBe("off");
+    expect(h.emails.sendTestEmail("tpl-shipped", "VOL-000119")).toBe(true);
     expect(h.get().emails.outbox[0]).toMatchObject({ test: true, to: "taller@volta.demo" });
     expect(h.emails.sendPetBirthdayEmail("diego.a@ejemplo.com", "Diego Álvarez", "p1", "2026")).toBe("sent");
     expect(h.get().emails.outbox[0]!.email.subject).toBe("¡Feliz cumple, Ñoqui! 🎂");

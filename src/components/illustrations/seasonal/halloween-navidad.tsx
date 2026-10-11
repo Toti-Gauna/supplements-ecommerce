@@ -75,7 +75,7 @@ export function Ornament({ className }: DecorProps) {
       <path d="M32 2v10" stroke="#c9a24f" strokeWidth="2" />
       <rect x="26.5" y="10" width="11" height="8" rx="2" fill="#c9a24f" />
       <circle cx="32" cy="39" r="21" fill="#d33a32" />
-      <path d="M12 36q20 9 40 0M13 45q19 8 38 0" stroke="#f3dca6" strokeWidth="3" fill="none" />
+      <path d="M12 36q20 9 40 0M13 45q19 8 38 0" stroke="#e3ff8f" strokeWidth="3" fill="none" />
       <ellipse cx="23" cy="29" rx="4" ry="6.5" fill="#fff" opacity=".35" transform="rotate(32 23 29)" />
     </svg>
   );
@@ -86,8 +86,8 @@ export function Gift({ className }: DecorProps) {
     <svg viewBox="0 0 64 64" aria-hidden="true" className={className}>
       <rect x="10" y="27" width="44" height="31" rx="3" fill="#d33a32" />
       <rect x="7" y="19" width="50" height="10" rx="3" fill="#e5544a" />
-      <rect x="28" y="19" width="8" height="39" fill="#f3dca6" />
-      <path d="M32 19c-6-11-17-11-15-3 1 4 8 3 15 3zm0 0c6-11 17-11 15-3-1 4-8 3-15 3z" fill="#f3dca6" />
+      <rect x="28" y="19" width="8" height="39" fill="#e3ff8f" />
+      <path d="M32 19c-6-11-17-11-15-3 1 4 8 3 15 3zm0 0c6-11 17-11 15-3-1 4-8 3-15 3z" fill="#e3ff8f" />
     </svg>
   );
 }

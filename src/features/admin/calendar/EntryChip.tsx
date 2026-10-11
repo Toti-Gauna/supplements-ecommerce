@@ -11,7 +11,7 @@ export const STATUS_TONE: Partial<Record<OrderStatus, string>> = {
   PAYMENT_REVIEW: "border border-dashed border-warning bg-warning-soft text-ink",
   PAID: "border border-success/40 bg-success-soft text-ink",
   IN_PRODUCTION: "border border-primary bg-primary text-on-primary",
-  READY: "border border-wood/50 bg-accent text-ink",
+  READY: "border border-ion/50 bg-accent text-ink",
   SHIPPED: "border border-line bg-bg text-muted",
   DELIVERED: "border border-line bg-bg text-muted",
 };

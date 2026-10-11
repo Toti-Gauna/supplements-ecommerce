@@ -14,9 +14,9 @@ type Part = "capacidad" | "cierres";
 function EntryCard({ id, icon, title, summary, open, onClick }: { id: Part; icon: ReactNode; title: string; summary: string; open: boolean; onClick: () => void }) {
   return (
     <button type="button" onClick={onClick} aria-expanded={open} aria-controls={`taller-${id}`} data-autofocus={id === "capacidad" ? true : undefined}
-      className={cn("flex items-center gap-3 rounded-3xl p-4 text-left ring-1 transition-colors", open ? "bg-night text-[#f6f1e8] ring-night" : "bg-surface ring-ink/10 hover:bg-accent/50")}>
-      <span aria-hidden="true" className={cn("grid h-11 w-11 shrink-0 place-items-center rounded-2xl", open ? "bg-white/10 text-brass" : "bg-accent text-primary")}>{icon}</span>
-      <span className="min-w-0 flex-1"><span className="block font-extrabold">{title}</span><span className={cn("block text-xs", open ? "text-[#f6f1e8]/80" : "text-muted")}>{summary}</span></span>
+      className={cn("flex items-center gap-3 rounded-3xl p-4 text-left ring-1 transition-colors", open ? "bg-night text-on-night ring-night" : "bg-surface ring-ink/10 hover:bg-accent/50")}>
+      <span aria-hidden="true" className={cn("grid h-11 w-11 shrink-0 place-items-center rounded-2xl", open ? "bg-white/10 text-volt" : "bg-accent text-primary")}>{icon}</span>
+      <span className="min-w-0 flex-1"><span className="block font-extrabold">{title}</span><span className={cn("block text-xs", open ? "text-on-night/80" : "text-muted")}>{summary}</span></span>
       <ChevronDown size={18} aria-hidden="true" className={cn("shrink-0 transition-transform motion-reduce:transition-none", open && "rotate-180")} />
     </button>
   );

@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { personalizableProducts, visibleCategories } from "@/demo/engine/catalog";
+import { visibleCategories } from "@/demo/engine/catalog";
 import { products } from "@/demo/fixtures/products";
 import { SITE_URL } from "@/lib/base-path";
 
@@ -10,7 +10,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/", "/buscar/", "/categorias/", "/crear/", "/favoritos/", "/preguntas/", "/terminos/", "/privacidad/", "/arrepentimiento/",
     ...visibleCategories().map((c) => `/c/${c.slug}/`),
     ...products.map((p) => `/p/${p.slug}/`),
-    ...personalizableProducts().map((p) => `/crear/${p.slug}/`),
   ];
   return paths.map((path) => ({ url: `${SITE_URL}${path}` }));
 }

@@ -14,44 +14,47 @@ describe("estudio de contenido", () => {
     const madre = theme("dia-de-la-madre");
     expect(studioTexts(madre)).toMatchObject({ eyebrow: "Especial Día de la Madre", title: madre.headline, subtitle: madre.subtitle });
     expect(suggestedProducts(madre)).toEqual(madre.productSlugs.slice(0, 3));
-    expect(studioTexts(null).title).toBe("Objetos con alma");
+    expect(studioTexts(null).title).toBe("Cargá tu mejor versión");
     expect(suggestedProducts(null)).toHaveLength(3);
   });
 
   it("precio y precio con el cupón salen del engine, en pesos enteros", () => {
     const madre = theme("dia-de-la-madre");
     const offer = studioOffer(madre);
-    const [p] = studioProducts(["vela-caniche"], offer);
+    const [p] = studioProducts(["creatina-monohidrato"], offer);
+    expect(p!.price).toBe(29900);
     expect(Number.isInteger(p!.price)).toBe(true);
     expect(p!.offerPrice).toBe(Math.round(p!.price * 0.85));
     // Cupón con mínimo (Black Friday): no hay precio por producto, la oferta va como condición.
-    const [q] = studioProducts(["vela-caniche"], studioOffer(theme("black-friday")));
+    const [q] = studioProducts(["creatina-monohidrato"], studioOffer(theme("black-friday")));
     expect(q!.offerPrice).toBeNull();
     expect(offerLine(studioOffer(theme("black-friday")))).toBe("25% OFF con el código BLACK25 (desde $30.000 de compra)");
-    expect(studioProducts(["no-existe", "vela-caniche"], offer).map((x) => x.slug)).toEqual(["vela-caniche"]);
+    expect(studioProducts(["no-existe", "creatina-monohidrato"], offer).map((x) => x.slug)).toEqual(["creatina-monohidrato"]);
   });
 
   it("el texto sugerido usa un gancho que corresponde al producto, pide un comentario y pocos hashtags", () => {
     const madre = theme("dia-de-la-madre");
     const offer = studioOffer(madre);
-    const lamp = studioProducts(["velador-con-foto"], offer);
-    expect(hooksFor(lamp)[0]!.id).toBe("foto");
-    expect(keywordFor(lamp)).toBe("LAMPARA");
-    const { text } = buildCaption({ theme: madre, offer, products: lamp, format: "story", variant: 0 });
-    expect(text.split("\n")[0]).toBe("Me mandaron esta foto… y mirá en qué la convertimos.");
-    expect(text).toContain("Comentá LAMPARA");
+    const creatine = studioProducts(["creatina-monohidrato"], offer);
+    expect(hooksFor(creatine)[0]!.id).toBe("mito");
+    expect(keywordFor(creatine)).toBe("CREATINA");
+    const { text } = buildCaption({ theme: madre, offer, products: creatine, format: "story", variant: 0 });
+    expect(text.split("\n")[0]).toBe("No, la creatina no te hace retener agua debajo de la piel.");
+    expect(text).toContain("Comentá CREATINA");
     expect(text).toContain("15% OFF con el código MAMA15");
     expect(text).toContain("#DíaDeLaMadre");
     expect(text.match(/#/g)).toHaveLength(3);
-    expect(hooksFor(studioProducts(["placa-nfc"], null))[0]!.id).toBe("nfc");
-    expect(hooksFor(studioProducts(["comedero-perro-globo"], null))[0]!.id).toBe("pov");
+    expect(hooksFor(studioProducts(["overvolt-pre"], null))[0]!.id).toBe("pre");
+    expect(hooksFor(studioProducts(["ionic-whey"], null))[0]!.id).toBe("scoop");
+    // Sin un gancho propio de su categoría, arranca con los genéricos.
+    expect(hooksFor(studioProducts(["omega-3"], null))[0]!.id).toBe("precio");
     // "Otra idea" rota entre los ganchos que aplican, sin salirse de la lista.
-    const ids = [0, 1, 2, 3, 4, 5, 6, 7].map((v) => buildCaption({ theme: null, offer: null, products: lamp, format: "post", variant: v }).hook.id);
-    expect(new Set(ids).size).toBe(hooksFor(lamp).length);
-    expect(buildCaption({ theme: null, offer: null, products: lamp, format: "carousel", variant: 0 }).text).toContain("Cómo pedir el tuyo: 1)");
+    const ids = [0, 1, 2, 3, 4, 5, 6, 7].map((v) => buildCaption({ theme: null, offer: null, products: creatine, format: "post", variant: v }).hook.id);
+    expect(new Set(ids).size).toBe(hooksFor(creatine).length);
+    expect(buildCaption({ theme: null, offer: null, products: creatine, format: "carousel", variant: 0 }).text).toContain("Cómo pedir el tuyo: 1)");
     expect(themeHashtag(theme("dia-de-la-independencia"))).toBe("#9DeJulio");
     // El texto sigue a la pieza: sin precio ni oferta si se apagaron.
-    const quiet = buildCaption({ theme: madre, offer, products: lamp, format: "post", variant: 0, showPrice: false, showOffer: false }).text;
+    const quiet = buildCaption({ theme: madre, offer, products: creatine, format: "post", variant: 0, showPrice: false, showOffer: false }).text;
     expect(quiet).not.toContain("$");
     expect(quiet).not.toContain("MAMA15");
   });

@@ -15,7 +15,7 @@ import { useCart } from "@/stores/cart";
 import { useRecentSearches } from "@/stores/recentSearches";
 import { useUi } from "@/stores/ui";
 
-const TRENDING = ["comedero", "lámpara con foto", "nfc", "collar", "vela", "regalo"];
+const TRENDING = ["whey", "creatina", "pre entreno", "vegano", "omega 3", "alfajor proteico"];
 
 /** Buscador superpuesto: recientes, tendencias, recomendados y resultados en vivo mientras escribís. */
 export function SearchModal() {
@@ -39,7 +39,7 @@ export function SearchModal() {
         <label htmlFor="search-modal" className="sr-only">Buscar productos</label>
         <div className="relative">
           <Search size={20} aria-hidden="true" className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted" />
-          <input id="search-modal" data-autofocus type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Comedero, lámpara, nfc…" autoComplete="off" enterKeyHint="search"
+          <input id="search-modal" data-autofocus type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Whey, creatina, pre…" autoComplete="off" enterKeyHint="search"
             className="min-h-13 w-full rounded-full border-2 border-ink/10 bg-surface pl-12 pr-4 text-[17px] outline-none transition-colors focus:border-primary" />
         </div>
       </form>
@@ -57,7 +57,7 @@ export function SearchModal() {
             )}
             <section aria-labelledby="tendencias">
               <h2 id="tendencias" className="eyebrow mb-3 text-muted">Lo más buscado</h2>
-              <ul className="flex flex-wrap gap-2">{TRENDING.map((t) => <li key={t}><button type="button" onClick={() => setQ(t)} className={chip}><TrendingUp size={14} aria-hidden="true" className="text-brass-ink" />{t}</button></li>)}</ul>
+              <ul className="flex flex-wrap gap-2">{TRENDING.map((t) => <li key={t}><button type="button" onClick={() => setQ(t)} className={chip}><TrendingUp size={14} aria-hidden="true" className="text-volt-ink" />{t}</button></li>)}</ul>
             </section>
             <section aria-labelledby="sugeridos">
               <h2 id="sugeridos" className="eyebrow mb-3 text-muted">{lines.length ? "Combina con tu carrito" : "Recomendados"}</h2>
@@ -68,7 +68,7 @@ export function SearchModal() {
           <section aria-label="Resultados">
             <p role="status" className="mb-3 text-sm text-muted">{results.length} {results.length === 1 ? "resultado" : "resultados"} para “{q}”</p>
             <ul className="grid grid-cols-[minmax(0,1fr)] gap-2">{results.slice(0, 6).map((r) => <ResultRow key={r.product.slug} product={r.product} onPick={pick} />)}</ul>
-            {results.length > 6 && <button type="button" onClick={() => goSearch(q)} className="mt-4 w-full rounded-2xl bg-night py-3 text-sm font-bold text-[#f6f1e8]">Ver los {results.length} resultados</button>}
+            {results.length > 6 && <button type="button" onClick={() => goSearch(q)} className="mt-4 w-full rounded-2xl bg-night py-3 text-sm font-bold text-on-night">Ver los {results.length} resultados</button>}
           </section>
         ) : (
           <div role="status" className="rounded-3xl bg-surface p-6 text-center">
@@ -85,10 +85,10 @@ function ResultRow({ product: p, onPick }: { product: Product; onPick: () => voi
   return (
     <li>
       <Link href={productHref(p.slug)} onClick={onPick} className="group flex items-center gap-3 rounded-2xl p-2 transition-colors hover:bg-surface">
-        <ProductVisual art={p.art} photoUrl={p.photoDataUrl} tint={p.variants[0]?.colorHex} label="" showBadge={false} className="h-16 w-16 shrink-0 overflow-hidden rounded-xl" />
+        <ProductVisual art={p.art} pack={p.pack} photoUrl={p.photoDataUrl} tint={p.variants[0]?.colorHex} label="" showBadge={false} className="h-16 w-16 shrink-0 overflow-hidden rounded-xl" />
         <span className="min-w-0 flex-1">
           <span className="block truncate font-bold">{p.name}</span>
-          <span className="block text-xs text-muted">{getCategory(p.categorySlug)?.name}{p.personalization ? " · Personalizable" : ""}</span>
+          <span className="block text-xs text-muted">{getCategory(p.categorySlug)?.name} · {p.brand}</span>
         </span>
         <span className="shrink-0 text-right text-sm font-extrabold tabular-nums">{formatARS(fromPrice(p))}</span>
         <ArrowUpRight size={16} aria-hidden="true" className="shrink-0 text-muted transition-transform group-hover:rotate-45" />

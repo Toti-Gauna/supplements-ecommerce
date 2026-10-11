@@ -1,6 +1,5 @@
 /**
- * Estudio de contenido (Fase 6, pedido de Ignacio, fuera de la especificación): formatos de Instagram, ganchos para
- * Reels y carruseles tomados de la página "Mejoras y diferenciación" de Notion, y textos fijos de marca.
+ * Estudio de contenido: formatos de Instagram, ganchos para Reels y carruseles de suplementos, y textos fijos de marca.
  * Los ganchos son propuestas sin testear: el dueño mide cuál retiene más en los primeros 3 segundos.
  */
 import { brand } from "@/config/brand";
@@ -28,23 +27,23 @@ export interface StudioHook {
 }
 
 export const STUDIO_HOOKS: StudioHook[] = [
-  { id: "foto", name: "De la foto al producto", hook: "Me mandaron esta foto… y mirá en qué la convertimos.", closer: "Comentá {KEYWORD} y te paso cómo pedir el tuyo.", categories: ["iluminacion", "deco"], personalizable: true },
-  { id: "pov", name: "Reacción del perro", hook: "POV: te dieron el plato más lindo del barrio.", closer: "Elegí el color del tuyo en la tienda.", categories: ["comederos"] },
-  { id: "collar", name: "Reacción del perro", hook: "POV: estrenás collar con tu nombre y todo el parque te mira.", closer: "Comentá {KEYWORD} y armá el tuyo con vista previa.", categories: ["collares"] },
-  { id: "casi", name: "Pedido de un cliente", hook: "Este pedido casi lo hago mal…", closer: "Ahora ves tu pieza antes de pagar. Comentá {KEYWORD}.", categories: [], personalizable: true },
-  { id: "nfc", name: "NFC", hook: "Mirá lo que pasa si acercás el celu.", closer: "Comentá NFC y te cuento cómo funciona.", categories: ["placas-nfc"] },
-  { id: "proceso", name: "Proceso", hook: "Así nace tu pieza, de la máquina a tu casa.", closer: "Comentá {KEYWORD} y te mostramos la tuya terminada.", categories: [] },
-  { id: "mito", name: "Mito", hook: "No, no es plástico barato.", closer: "Precio y plazo de fabricación en la tienda: link en la bio.", categories: ["comederos", "deco", "souvenirs"] },
+  { id: "mito", name: "Mito", hook: "No, la creatina no te hace retener agua debajo de la piel.", closer: "Comentá {KEYWORD} y te paso cómo tomarla.", categories: ["creatinas"] },
+  { id: "scoop", name: "Prueba en cámara", hook: "Mirá cómo se disuelve en 10 segundos. Sin grumos.", closer: "Comentá {KEYWORD} y te mandamos el link.", categories: ["proteinas", "ganadores"] },
+  { id: "pre", name: "Antes y después del pre", hook: "Llegué del laburo sin ganas… y a los 20 minutos esto.", closer: "Comentá {KEYWORD} y te digo cuál te conviene.", categories: ["pre-entrenos"] },
+  { id: "precio", name: "Precio por servicio", hook: "¿Cuánto te sale cada scoop de verdad? Hicimos la cuenta.", closer: "Comentá {KEYWORD} y te pasamos la tabla.", categories: [] },
+  { id: "stack", name: "Stack del cliente", hook: "Un cliente nos pidió esto para ganar masa. Este es su stack.", closer: "Comentá STACK y te armamos el tuyo.", categories: [] },
+  { id: "lote", name: "Original", hook: "Cómo saber si tu suplemento es original en 3 segundos.", closer: "Todos nuestros potes tienen lote y vencimiento a la vista. Link en la bio.", categories: [] },
+  { id: "snack", name: "Antojo", hook: "Alfajor con 15 g de proteína. Sí, existe.", closer: "Comentá {KEYWORD} y te lo mandamos hoy.", categories: ["snacks"] },
 ];
 
 /** Palabra para pedir en comentarios (el DM automático responde con el link a esa línea). */
 export const STUDIO_KEYWORDS: Record<string, string> = {
-  iluminacion: "LAMPARA", comederos: "COMEDERO", collares: "COLLAR", "placas-nfc": "NFC", velas: "VELA", hogar: "AROMA",
-  deco: "DECO", souvenirs: "SOUVENIR", emprendedores: "GUIA", tablas: "TABLA",
+  proteinas: "WHEY", creatinas: "CREATINA", "pre-entrenos": "PRE", aminoacidos: "BCAA", ganadores: "MASA", definicion: "DEFINIR",
+  salud: "SALUD", snacks: "SNACK", hidratacion: "HIDRATAR", accesorios: "SHAKER", indumentaria: "ROPA",
 };
 
-/** "Cómo pedir el tuyo en 4 pasos" (carrusel sugerido en la página de mejoras). */
-export const STUDIO_STEPS = ["Elegí tu pieza y subí tu foto", "Mirá la vista previa y aprobala", "Pagá como prefieras", "Seguí tu pedido hasta tu casa"];
+/** "Cómo pedir el tuyo en 4 pasos". */
+export const STUDIO_STEPS = ["Elegí tu objetivo y tu sabor", "Mirá cuánto te dura el pote", "Pagá como prefieras", "Te llega hoy en Mar del Plata"];
 
 /** Consejos de publicación (página de mejoras: horario, comentarios, hashtags, link en la bio). */
 export const STUDIO_TIPS = [
@@ -55,7 +54,7 @@ export const STUDIO_TIPS = [
 
 /** Textos de marca (nombre y ciudad salen de la configuración de la marca; en producción, de la tabla Setting). */
 export const STUDIO_BRAND = {
-  name: brand.name, city: brand.city, eyebrow: `${brand.name} · ${brand.city}`, title: "Objetos con alma",
-  subtitle: `Hechos a mano en ${brand.city}, con el nombre o la foto que quieras.`, cta: "Pedilo en la tienda · link en la bio",
-  handMade: "Hecho a mano", closing: "Link en la bio · Envíos y retiro: mirá las opciones en la tienda.",
+  name: brand.name, city: brand.city, eyebrow: `${brand.name} · ${brand.city}`, title: "Cargá tu mejor versión",
+  subtitle: `Suplementos originales con lote y vencimiento a la vista. Cadete en el día en ${brand.city}.`, cta: "Pedilo en la tienda · link en la bio",
+  handMade: "Original", closing: "Link en la bio · Cadete en el día y envíos a todo el país.",
 };

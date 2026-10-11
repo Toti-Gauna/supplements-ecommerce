@@ -38,13 +38,13 @@ test("cambiar stock y pausar en el panel se refleja en la tienda; el reset vuelv
 
 test("pagos manuales: aprobar y rechazar con motivo sin declararlo pago real", async ({ page }) => {
   await page.goto("admin-demo/pagos/");
-  const card123 = page.getByRole("article").filter({ hasText: "VEL-000123" });
+  const card123 = page.getByRole("article").filter({ hasText: "VOL-000123" });
   await card123.getByRole("button", { name: "Aprobar" }).click();
   await expect(page.getByRole("dialog")).toContainText("verificaste el ingreso");
   await confirmDialog(page, "Aprobar (demo)");
-  await expect(page.getByRole("article").filter({ hasText: "VEL-000123" })).toHaveCount(0);
+  await expect(page.getByRole("article").filter({ hasText: "VOL-000123" })).toHaveCount(0);
 
-  const card124 = page.getByRole("article").filter({ hasText: "VEL-000124" });
+  const card124 = page.getByRole("article").filter({ hasText: "VOL-000124" });
   await card124.getByRole("button", { name: "Rechazar" }).click();
   await page.getByRole("dialog").getByRole("button", { name: "Rechazar" }).click();
   await expect(page.getByRole("dialog").getByRole("alert")).toContainText("Escribí el motivo");
@@ -55,7 +55,7 @@ test("pagos manuales: aprobar y rechazar con motivo sin declararlo pago real", a
   await expect(page.getByText("Motivo: El monto no coincide")).toBeVisible();
   // 8.3.8: sin "Auditoría de muestra"; el registro sigue en el historial del pedido.
   await expect(page.getByText("Auditoría de muestra")).toHaveCount(0);
-  await page.goto("admin-demo/pedidos/detalle/?codigo=VEL-000123");
+  await page.goto("admin-demo/pedidos/detalle/?codigo=VOL-000123");
   await expect(page.getByText("Pagado").first()).toBeVisible();
   await expect(page.getByText(/Comprobante aprobado tras verificar el ingreso \(simulado\)/)).toBeVisible();
   await expect(page.getByText(/acreditad/i)).toHaveCount(0);
@@ -77,7 +77,7 @@ test("un comprobante subido en la tienda queda en revisión en el panel, nunca p
   await page.getByRole("button", { name: "Confirmar pedido de demostración" }).click();
   await page.getByLabel("Subir comprobante (demo)").setInputFiles({ name: "transferencia.pdf", mimeType: "application/pdf", buffer: Buffer.from("%PDF demo") });
   await page.goto("admin-demo/pagos/");
-  const card = page.getByRole("article").filter({ hasText: "VEL-DEMO-0001" });
+  const card = page.getByRole("article").filter({ hasText: "VOL-DEMO-0001" });
   await expect(card).toContainText("Comprobante en revisión");
   await expect(card).toContainText("transferencia.pdf");
   await expect(card.getByText("Pagado", { exact: true }).filter({ visible: true })).toHaveCount(0);
@@ -115,7 +115,7 @@ test("cupón y misión creados en el panel funcionan en la tienda", async ({ pag
 });
 
 test("teclado: navegación del panel y diálogo que se cierra con Escape", async ({ page }) => {
-  await page.goto("admin-demo/pedidos/detalle/?codigo=VEL-000121");
+  await page.goto("admin-demo/pedidos/detalle/?codigo=VOL-000121");
   const ready = page.getByRole("button", { name: "Listo" });
   await ready.focus();
   await page.keyboard.press("Enter");
@@ -126,7 +126,7 @@ test("teclado: navegación del panel y diálogo que se cierra con Escape", async
   await page.keyboard.press("Tab");
   await page.keyboard.press("Tab");
   await page.keyboard.press("Enter");
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("VEL-000121");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("VOL-000121");
   await expect(page.getByText("Listo").first()).toBeVisible();
 });
 
@@ -151,7 +151,7 @@ test("celular: menú hamburguesa del panel y paginado de pedidos", async ({ page
   await pages.getByRole("button", { name: "Página 2" }).click();
   await expect(pages).toContainText("11–");
   await expect(pages).toContainText("página 2 de 2");
-  await page.getByLabel("Código o cliente").fill("VEL-000123");
+  await page.getByLabel("Código o cliente").fill("VOL-000123");
   await expect(pages).toBeHidden();
   // Pestañas inferiores: acceso directo y "Más" abre el menú completo
   await page.getByRole("navigation", { name: "Accesos rápidos del panel" }).getByRole("link", { name: "Productos" }).click();

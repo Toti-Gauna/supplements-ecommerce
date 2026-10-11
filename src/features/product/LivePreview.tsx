@@ -20,7 +20,7 @@ export function LivePreview({ product, tint, draft }: { product: Product; tint?:
   }
   if (kind === "TEXT") {
     return (
-      <TextPreview art={product.art} tint={tint} text={draft.text.text || "Tu texto"} fontFamily={FONT_FAMILIES[draft.text.font] ?? FONT_FAMILIES.Redondeada!}
+      <TextPreview art={product.art} pack={product.pack} tint={tint} text={draft.text.text || "Tu texto"} fontFamily={FONT_FAMILIES[draft.text.font] ?? FONT_FAMILIES.Redondeada!}
         color={draft.text.color} zone={zone} label={`Vista previa de ${product.name}`} className="h-full w-full [&>div]:h-full" />
     );
   }
@@ -29,7 +29,7 @@ export function LivePreview({ product, tint, draft }: { product: Product; tint?:
     if (url) return <PhotoLive mask={draft.tmpl!.mask ?? "arch"} draft={{ ...draft.photo, url }} onChange={draft.setPhoto} stageRef={draft.stageRef} />;
     return (
       <div className="relative h-full w-full">
-        <ProductArt art={product.art} tint={tint} label={product.name} className="h-full w-full opacity-60 [&>svg]:h-full" />
+        <ProductArt art={product.art} pack={product.pack} tint={tint} label={product.name} className="h-full w-full opacity-60 [&>svg]:h-full" />
         <p className="absolute inset-x-6 bottom-6 flex items-center justify-center gap-2 rounded-2xl bg-surface/90 p-3 text-center text-sm font-bold shadow-[var(--shadow-card)]">
           <ImagePlus size={18} aria-hidden="true" className="text-primary" />Subí tu foto y mirala acá en la pieza
         </p>

@@ -69,7 +69,7 @@ export interface DataTableProps<T> {
   rows: T[];
   columns: Column<T>[];
   rowKey: (row: T) => string;
-  /** Texto para el checkbox de selección ("Seleccionar VEL-000123"). */
+  /** Texto para el checkbox de selección ("Seleccionar VOL-000123"). */
   rowLabel: (row: T) => string;
   /** Texto en el que busca el buscador de la tabla. */
   searchText: (row: T) => string;

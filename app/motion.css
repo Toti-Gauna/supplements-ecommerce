@@ -57,7 +57,7 @@
 }
 .immersive-stage > :not(.immersive-backdrop) { animation: stage-rise 520ms var(--ease-out-expo) 80ms both; }
 /* Sobre el fondo casi negro, el anillo de foco va en crema (el de la tienda, oliva, no llega a 3:1). */
-.immersive-stage :focus-visible { outline-color: #f3dca6; }
+.immersive-stage :focus-visible { outline-color: #e3ff8f; }
 @keyframes stage-in { from { opacity: 0; } }
 @keyframes stage-rise { from { opacity: 0; transform: translateY(14px) scale(0.98); } }
 /* Con el escenario abierto, los fondos animados de la tienda se pausan (no se ven y gastan batería). */

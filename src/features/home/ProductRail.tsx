@@ -19,8 +19,8 @@ export function ProductRail({ id, eyebrow, title, accent, products, href }: Prop
   return (
     <section aria-labelledby={id}>
       <Reveal className="mb-6 flex items-end justify-between gap-4">
-        <div>
-          <p className="eyebrow text-brass-ink">{eyebrow}</p>
+        <div className="min-w-0">
+          <p className="eyebrow text-volt-ink">{eyebrow}</p>
           <h2 id={id} className="font-display mt-2 text-3xl sm:text-5xl">{title} {accent && <span className="italic text-primary">{accent}</span>}</h2>
         </div>
         <div className="flex shrink-0 items-center gap-2">

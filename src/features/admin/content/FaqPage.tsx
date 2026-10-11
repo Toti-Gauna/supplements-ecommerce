@@ -39,7 +39,7 @@ export function FaqPage() {
           <li key={i}>
             <fieldset className="flex min-w-0 flex-col gap-3 rounded-3xl bg-surface p-4 shadow-[var(--shadow-card)] sm:p-5">
               <legend className="sr-only">Pregunta {i + 1}</legend>
-              <p aria-hidden="true" className="flex items-center gap-2 border-b border-line pb-3 text-[11px] font-extrabold uppercase tracking-[0.16em] text-brass-ink">
+              <p aria-hidden="true" className="flex items-center gap-2 border-b border-line pb-3 text-[11px] font-extrabold uppercase tracking-[0.16em] text-volt-ink">
                 <span className="grid h-7 w-7 place-items-center rounded-full bg-accent text-xs text-primary">{i + 1}</span>Pregunta frecuente
               </p>
               <label className="flex flex-col gap-1 text-sm font-bold">Pregunta<Input value={f.q} onChange={(e) => patch(i, { q: e.target.value })} /></label>

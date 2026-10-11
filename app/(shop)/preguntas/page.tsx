@@ -11,7 +11,7 @@ export default function FaqPage() {
       <PageHeader title="Preguntas frecuentes">Lo que más nos preguntan antes de comprar.</PageHeader>
       <FaqView />
       <div className="mt-8 flex flex-wrap gap-3">
-        <ButtonLink href="/crear/">Crear mi producto</ButtonLink>
+        <ButtonLink href="/categorias/">Ver productos</ButtonLink>
         <ButtonLink href="/arrepentimiento/" variant="secondary">Botón de arrepentimiento</ButtonLink>
       </div>
     </div>

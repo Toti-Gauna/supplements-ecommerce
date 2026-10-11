@@ -15,7 +15,7 @@ import { ShopMenu } from "./ShopMenu";
 
 export const NAV = [
   { href: "/categorias/", label: "Tienda" },
-  { href: "/crear/", label: "Crear el tuyo" },
+  { href: "/crear/", label: "Por objetivo" },
   { href: "/club/", label: "Club Volta" },
   { href: "/preguntas/", label: "Ayuda" },
 ];
@@ -49,7 +49,7 @@ export function Header() {
   }
   const icon = "grid h-11 w-11 place-items-center rounded-full text-ink transition-colors hover:bg-ink/5";
   return (
-    <header ref={ref} data-shop-header className={cn(stuck && "max-lg:bleed-top", "sticky top-[env(safe-area-inset-top)] z-40 bg-surface lg:glass border-b transition-[border-color,box-shadow] duration-300", compact ? "border-line shadow-[0_8px_30px_-20px_rgb(28_32_22/0.35)]" : "border-transparent")}>
+    <header ref={ref} data-shop-header className={cn(stuck && "max-lg:bleed-top", "sticky top-[env(safe-area-inset-top)] z-40 bg-surface lg:glass border-b transition-[border-color,box-shadow] duration-300", compact ? "border-line shadow-[0_8px_30px_-20px_rgb(0_0_0/0.35)]" : "border-transparent")}>
       <div className={cn("mx-auto flex max-w-7xl items-center gap-2 px-4 transition-[height] duration-300 sm:px-6", compact ? "h-16" : "h-[4.5rem] lg:h-20")}>
         <button type="button" onClick={() => setMenu(true)} aria-label="Abrir menú" className={cn(icon, "-ml-2 lg:hidden")}><Menu size={22} aria-hidden="true" /></button>
         <Link href="/" aria-label="Volta, ir al inicio" className="shrink-0"><ThemeLogo /></Link>
@@ -58,7 +58,7 @@ export function Header() {
             <Link key={n.href} href={n.href} aria-current={pathname.startsWith(n.href) ? "page" : undefined}
               className={cn("relative rounded-full px-4 py-2 text-[15px] font-semibold transition-colors hover:text-primary", pathname.startsWith(n.href) ? "text-primary" : "text-ink/80")}>
               {n.label}
-              {pathname.startsWith(n.href) && <span className="absolute inset-x-4 -bottom-0.5 h-0.5 rounded-full bg-brass" />}
+              {pathname.startsWith(n.href) && <span className="absolute inset-x-4 -bottom-0.5 h-0.5 rounded-full bg-volt" />}
             </Link>
           ))}
         </nav>

@@ -1,14 +1,32 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { collarLineDetail, getProduct, unitPrice } from "@/demo/engine/catalog";
+import { collarLineDetail, unitPrice } from "@/demo/engine/catalog";
 import { collarPieces, collarSurcharge, describeCollar, sizeForNeck } from "@/demo/engine/collar";
 import { quoteCart } from "@/demo/engine/pricing";
 import { defaultDemoData, setDemoData } from "@/demo/engine/source";
 import { collarPresets, collarSpec, defaultCollarConfig } from "@/demo/fixtures/collar";
+import { collarTemplate } from "@/demo/fixtures/templates";
+import type { Product } from "@/demo/types";
 
-beforeEach(() => setDemoData(defaultDemoData()));
+/** Ningún producto del catálogo usa el configurador: se prueba con un collar armado acá, con un talle por variante. */
+const product: Product = {
+  slug: "collar-con-nombre", name: "Collar con nombre", short: "", description: "", categorySlug: "accesorios", brand: "VOLTA Lab",
+  basePrice: 14900, art: "box", gallery: ["front"], faqs: [], featured: false, isNew: false, soldCount: 0, tags: [],
+  variants: [
+    { id: "col-xs", label: "Mini (20–27 cm)", priceDelta: 0, stock: -1 },
+    { id: "col-s", label: "Chico (28–35 cm)", priceDelta: 0, stock: -1 },
+    { id: "col-m", label: "Mediano (36–45 cm)", priceDelta: 1500, stock: -1 },
+    { id: "col-l", label: "Grande (46–55 cm)", priceDelta: 2500, stock: -1 },
+    { id: "col-xl", label: "Extra grande (56–65 cm)", priceDelta: 3500, stock: -1 },
+  ],
+  personalization: collarTemplate,
+};
+
+beforeEach(() => {
+  const data = defaultDemoData();
+  setDemoData({ ...data, products: [...data.products, product] });
+});
 
 describe("configurador de collar", () => {
-  const product = getProduct("collar-con-nombre")!;
   it("recargos en pesos enteros por formato, material y dije", () => {
     expect(collarSurcharge(collarSpec, defaultCollarConfig)).toBe(0);
     const config = { ...defaultCollarConfig, format: "joined" as const, material: "biothane" as const, charm: "phone" as const };
@@ -38,7 +56,7 @@ describe("configurador de collar", () => {
     expect(collarPieces("Ñoqui Jr", defaultCollarConfig)).toEqual(["Ñ", "O", "Q", "U", "I", "J", "R"]);
     expect(collarPieces("Ñoqui", { ...defaultCollarConfig, format: "joined" })).toEqual(["Ñoqui"]);
     expect(collarLineDetail({ productSlug: "collar-con-nombre", personalization: { kind: "TEXT", approvedAt: "", collar: defaultCollarConfig } })).toMatch(/^Letras sueltas/);
-    expect(collarLineDetail({ productSlug: "vela-caniche" })).toBe("");
+    expect(collarLineDetail({ productSlug: "ionic-whey" })).toBe("");
   });
   it("las combinaciones listas usan opciones válidas", () => {
     for (const p of collarPresets) {

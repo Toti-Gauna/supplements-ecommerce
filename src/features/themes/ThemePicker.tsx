@@ -22,7 +22,7 @@ export function ThemePicker({ open, onClose }: { open: boolean; onClose: () => v
   return (
     <Sheet open={open} onClose={onClose} title="Probar temáticas">
       <div className="px-6 pb-3 pt-6">
-        <p className="eyebrow text-brass-ink">Fechas especiales</p>
+        <p className="eyebrow text-volt-ink">Fechas especiales</p>
         <h2 className="font-display mt-1 text-3xl">Probar temáticas</h2>
         <p className="mt-2 text-sm text-muted">Mirá cómo se ve la tienda en cada fecha comercial: colores, pantalla de carga, fondos animados y ofertas. Solo cambia en este navegador.</p>
       </div>
@@ -37,7 +37,7 @@ export function ThemePicker({ open, onClose }: { open: boolean; onClose: () => v
             {previewId === null && <Check size={18} aria-hidden="true" className="text-primary" />}
           </button>
           <button type="button" onClick={() => pick("original")} aria-pressed={previewId === "original"} aria-label="Probar Original" className={option(previewId === "original")}>
-            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-night"><LogoMark className="h-6 w-6 text-brass" /></span>
+            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-night"><LogoMark className="h-6 w-6 text-volt" /></span>
             <span className="min-w-0 flex-1">
               <strong className="block text-[15px]">Original</strong>
               <span className="block text-xs text-muted">Volta sin temática</span>

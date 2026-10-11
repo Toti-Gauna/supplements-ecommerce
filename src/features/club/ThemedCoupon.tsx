@@ -22,7 +22,7 @@ export function ThemedCoupon({ coupon, label, occasion }: { coupon: Coupon | und
   const copy = () => { void navigator.clipboard?.writeText(code).then(() => toast({ tone: "success", title: "Código copiado", description: code }), () => {}); };
   return (
     <div className="themed-coupon relative w-[min(88vw,420px)] text-left" style={{ "--c-from": c.from, "--c-to": c.to, "--c-accent": c.accent, "--c-ink": c.ink } as CSSProperties}>
-      <div className="relative flex min-h-[9.5rem] overflow-hidden rounded-[1.6rem] bg-[linear-gradient(135deg,var(--c-from),var(--c-to))] text-[#f6f1e8] shadow-[0_40px_90px_-30px_rgb(0_0_0/0.9)] ring-1 ring-white/15">
+      <div className="relative flex min-h-[9.5rem] overflow-hidden rounded-[1.6rem] bg-[linear-gradient(135deg,var(--c-from),var(--c-to))] text-on-night shadow-[0_40px_90px_-30px_rgb(0_0_0/0.9)] ring-1 ring-white/15">
         {/* Talón: valor grande sobre un guilloché del color de acento y las decoraciones de la fecha. */}
         <div className="relative grid w-[38%] shrink-0 place-items-center overflow-hidden bg-black/25 px-2 py-4 text-center">
           <svg aria-hidden="true" viewBox="0 0 120 150" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 h-full w-full opacity-35">

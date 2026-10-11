@@ -75,7 +75,7 @@ export function EditorStepper({ layout, checks, current, tried, onGo }: Props) {
           return (
             <li key={s.id} className="shrink-0">
               <button type="button" onClick={() => onGo(s.id)} aria-current={on ? "step" : undefined} aria-label={`${i + 1}. ${s.label}, ${STATUS_TEXT[status]}`}
-                className={cn("flex h-10 items-center gap-2 rounded-full pl-1.5 pr-3 text-sm font-bold ring-1", on ? "bg-night text-[#f6f1e8] ring-night" : "bg-surface ring-ink/10")}>
+                className={cn("flex h-10 items-center gap-2 rounded-full pl-1.5 pr-3 text-sm font-bold ring-1", on ? "bg-night text-on-night ring-night" : "bg-surface ring-ink/10")}>
                 <Dot n={i + 1} status={status} current={on} />{s.short}
               </button>
             </li>

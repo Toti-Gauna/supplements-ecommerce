@@ -10,7 +10,7 @@ const PEEK = [44, 26, 14, 6, 0];
 /** Huellitas en el piso: una por golpe, caminando hacia la cucha. */
 const PRINTS = [[32, 282, 70], [54, 268, 100], [78, 284, 75], [100, 270, 105]];
 const BONES = [[-120, -120, -200], [130, -110, 240], [-150, -10, -160], [150, -20, 200], [-40, -160, 120], [60, -165, -140]];
-const bone = <><rect x="-8" y="-2.6" width="16" height="5.2" fill="#f3dca6" />{[[-8, -2.6], [-8, 2.6], [8, -2.6], [8, 2.6]].map(([x, y]) => <circle key={`${x}${y}`} cx={x} cy={y} r="3.3" fill="#f3dca6" />)}</>;
+const bone = <><rect x="-8" y="-2.6" width="16" height="5.2" fill="#e3ff8f" />{[[-8, -2.6], [-8, 2.6], [8, -2.6], [8, 2.6]].map(([x, y]) => <circle key={`${x}${y}`} cx={x} cy={y} r="3.3" fill="#e3ff8f" />)}</>;
 const paw = <><ellipse cy="2" rx="4.6" ry="3.8" /><circle cx="-4.6" cy="-3.4" r="1.9" /><circle cx="-1.6" cy="-5.8" r="1.9" /><circle cx="1.8" cy="-5.8" r="1.9" /><circle cx="4.8" cy="-3.4" r="1.9" /></>;
 
 /** Cara del cachorro (colores de Pancho): orejas caídas que se mueven, ojos con brillo y, contento, la lengua afuera. */
@@ -52,10 +52,10 @@ export default function AnimalGift({ hits, total, opened, reduce }: GiftScenePro
   return (
     <SceneFrame overlay={!reduce && (
       <>
-        {hits > 0 && !opened && <Debris key={hits} seed={hits * 13} colors={["#c99258", "#8e3b24", "#f3dca6"]} shape="square" count={7} y={34} spread={0.7} size={5} />}
+        {hits > 0 && !opened && <Debris key={hits} seed={hits * 13} colors={["#c99258", "#8e3b24", "#e3ff8f"]} shape="square" count={7} y={34} spread={0.7} size={5} />}
         {opened && (
           <>
-            <RevealBurst colors={["#f3dca6", "#ff8fa3", "#d2ad69", "#ffffff"]} shapes={["heart", "dot", "star"]} y={38} />
+            <RevealBurst colors={["#e3ff8f", "#ff8fa3", "#c8ff2e", "#ffffff"]} shapes={["heart", "dot", "star"]} y={38} />
             {Array.from({ length: 7 }, (_, i) => (
               <span key={i} className="an-cu-heart absolute h-3.5 w-3.5" style={{ left: `${36 + rand(i) * 30}%`, top: `${28 + rand(i + 5) * 10}%`, animationDelay: `${450 + i * 120}ms`, "--drift": `${(rand(i * 7) - 0.5) * 90}px` } as CSSProperties} />
             ))}
@@ -65,25 +65,25 @@ export default function AnimalGift({ hits, total, opened, reduce }: GiftScenePro
     )}>
       <SceneStyle id="dia-del-animal" css={CSS} />
       <defs>
-        <linearGradient id="an-cu-wood" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#d09a60" /><stop offset=".6" stopColor="#b07a45" /><stop offset="1" stopColor="#7f5230" /></linearGradient>
+        <linearGradient id="an-cu-ion" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#d09a60" /><stop offset=".6" stopColor="#b07a45" /><stop offset="1" stopColor="#7f5230" /></linearGradient>
         <linearGradient id="an-cu-roof" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#c0623e" /><stop offset=".5" stopColor="#9c4a2c" /><stop offset="1" stopColor="#6e2f1b" /></linearGradient>
         <linearGradient id="an-cu-hole" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#0f0a06" /><stop offset="1" stopColor="#2a1c10" /></linearGradient>
-        <linearGradient id="an-cu-bowl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#e6c487" /><stop offset=".6" stopColor="#d2ad69" /><stop offset="1" stopColor="#8a6a2e" /></linearGradient>
+        <linearGradient id="an-cu-bowl" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#e6c487" /><stop offset=".6" stopColor="#c8ff2e" /><stop offset="1" stopColor="#6b8f00" /></linearGradient>
         <clipPath id="an-cu-door"><path d={DOOR} /></clipPath>
       </defs>
-      <Glow color="#f3dca6" hits={hits} total={total} opened={opened} />
+      <Glow color="#e3ff8f" hits={hits} total={total} opened={opened} />
       <ellipse cx="160" cy="258" rx="108" ry="10" fill="#000" opacity=".35" />
 
       {/* Huellitas: aparecen de a una, como sellos. */}
       {PRINTS.map(([x, y, r], i) => (
-        <g key={x} transform={`translate(${x} ${y}) rotate(${r}) scale(1.25)`}><g className={`an-cu-print ${hits > i || opened ? "is-on" : ""}`} fill="#f3dca6">{paw}</g></g>
+        <g key={x} transform={`translate(${x} ${y}) rotate(${r}) scale(1.25)`}><g className={`an-cu-print ${hits > i || opened ? "is-on" : ""}`} fill="#e3ff8f">{paw}</g></g>
       ))}
 
       {/* Platito con hueso: el hueso salta con cada golpe. */}
       <g className={beat && `an-cu-hop-${beat}`}>
         <g transform="translate(241 238) rotate(-8)">{bone}</g>
       </g>
-      <path d="M216 242H266L259 257H223Z" fill="url(#an-cu-bowl)" /><ellipse cx="241" cy="242" rx="25" ry="4" fill="#8a6a2e" /><path d="M222 247H260" stroke="#fff" strokeOpacity=".3" strokeWidth="2" />
+      <path d="M216 242H266L259 257H223Z" fill="url(#an-cu-bowl)" /><ellipse cx="241" cy="242" rx="25" ry="4" fill="#6b8f00" /><path d="M222 247H260" stroke="#fff" strokeOpacity=".3" strokeWidth="2" />
       <text x="241" y="254" textAnchor="middle" fontFamily="var(--font-display, serif)" fontSize="7" fontWeight="700" fill="#5b4318" letterSpacing="1">P</text>
 
       {/* La cucha: se sacude con cada golpe (alterna la animación para que se reinicie). */}
@@ -102,7 +102,7 @@ export default function AnimalGift({ hits, total, opened, reduce }: GiftScenePro
         )}
 
         {/* Paredes de madera con el cartel y la puerta. */}
-        <rect x="84" y="150" width="124" height="106" fill="url(#an-cu-wood)" />
+        <rect x="84" y="150" width="124" height="106" fill="url(#an-cu-ion)" />
         {[163, 176, 189, 202, 215, 228, 241].map((y) => <path key={y} d={`M84 ${y}H208`} stroke="#6e4527" strokeOpacity=".35" strokeWidth="1.2" />)}
         <rect x="84" y="150" width="124" height="5" fill="#6e4527" /><rect x="84" y="150" width="6" height="106" fill="#6e4527" opacity=".7" /><rect x="202" y="150" width="6" height="106" fill="#5a381f" opacity=".8" />
         <path d={DOOR} fill="url(#an-cu-hole)" stroke="#6e4527" strokeWidth="4" />
@@ -118,17 +118,17 @@ export default function AnimalGift({ hits, total, opened, reduce }: GiftScenePro
           <path d="M133 254v2.4M136 254.4v2.6M139 254v2.4M153 254v2.4M156 254.4v2.6M159 254v2.4" stroke="#6e3f26" strokeWidth=".9" strokeLinecap="round" />
         </g>
         <g className="an-cu-sign" style={{ transform: `rotate(${opened ? -3 : pick([-2, 4, -6, 7, -9])}deg)` }}>
-          <rect x="108" y="161" width="76" height="21" rx="3" fill="#f3dca6" stroke="#8a6a2e" strokeWidth="1.5" />
+          <rect x="108" y="161" width="76" height="21" rx="3" fill="#e3ff8f" stroke="#6b8f00" strokeWidth="1.5" />
           <text x="146" y="176" textAnchor="middle" fontFamily="var(--font-display, serif)" fontSize="11.5" fontWeight="800" fill="#3a2a14" letterSpacing="1.5">PANCHO</text>
-          <circle cx="113" cy="171.5" r="1.5" fill="#8a6a2e" /><circle cx="179" cy="171.5" r="1.5" fill="#8a6a2e" />
+          <circle cx="113" cy="171.5" r="1.5" fill="#6b8f00" /><circle cx="179" cy="171.5" r="1.5" fill="#6b8f00" />
         </g>
 
         {/* Techo a dos aguas con el frontón: se afloja con los golpes y al abrir se levanta. */}
         <g className={`an-cu-roof ${opened ? "is-open" : ""}`} style={{ transform: opened ? undefined : `translateY(${pick([0, -1, -2, -4, -7])}px) rotate(${pick([0, -1, 1.5, -2, 2.5])}deg)` }}>
           <g className={beat && `an-cu-rattle-${beat}`}>
-            <path d="M84 151L146 95L208 151Z" fill="url(#an-cu-wood)" /><path d="M115 151V123M146 151V96M177 151V123" stroke="#6e4527" strokeOpacity=".35" strokeWidth="1.2" />
+            <path d="M84 151L146 95L208 151Z" fill="url(#an-cu-ion)" /><path d="M115 151V123M146 151V96M177 151V123" stroke="#6e4527" strokeOpacity=".35" strokeWidth="1.2" />
             <circle cx="146" cy="128" r="11" fill="#2e2216" stroke="#6e4527" strokeWidth="2.5" />
-            <g transform="translate(146 129) scale(1.05)" fill="#f3dca6">{paw}</g>
+            <g transform="translate(146 129) scale(1.05)" fill="#e3ff8f">{paw}</g>
             <path d={ROOF} fill="url(#an-cu-roof)" />
             <path d="M139 84L66 149M153 84L226 149" stroke="#5a2414" strokeOpacity=".5" strokeWidth="2" strokeDasharray="9 5" />
             <path d="M146 72L58 151M146 72L234 151" stroke="#d97a52" strokeOpacity=".6" strokeWidth="1.5" />

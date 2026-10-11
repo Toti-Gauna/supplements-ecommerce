@@ -21,7 +21,7 @@ function WheelPrizeItem() {
 export function OrdersSection({ lastOrder }: { lastOrder: DemoOrder | null }) {
   const orders = [
     ...(lastOrder ? [{ code: lastOrder.code, status: "Pendiente de pago", total: lastOrder.quote.total, href: `/pedido/${lastOrder.token}/` }] : []),
-    { code: "VEL-DEMO-0000", status: "Entregado", total: 30400, href: "/pedido/demo-volta/" },
+    { code: "VOL-DEMO-0000", status: "Entregado", total: 30400, href: "/pedido/demo-volta/" },
   ];
   return (
     <ul className="flex flex-col gap-2">
@@ -52,7 +52,7 @@ export function MissionsSection() {
 }
 
 const REWARDS = [
-  { id: "r-grabado", title: "Grabado de nombre gratis", expires: "30/11/2026" },
+  { id: "r-grabado", title: "Envío gratis en la próxima compra", expires: "30/11/2026" },
   { id: "r-viejo", title: "10% en tu próxima compra", expires: "15/09/2026", expired: true },
 ];
 

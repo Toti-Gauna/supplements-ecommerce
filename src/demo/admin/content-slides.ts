@@ -39,7 +39,7 @@ export function checkImageSize(width: number, height: number): string | null {
 }
 
 export function newSlide(id: string): CarouselSlide {
-  return { id, title: "Nueva diapositiva", subtitle: "", ctaLabel: "Ver más", ctaHref: "/categorias/", art: "dachshund", active: true };
+  return { id, title: "Nueva diapositiva", subtitle: "", ctaLabel: "Ver más", ctaHref: "/categorias/", art: "tub", active: true };
 }
 
 /** Errores de una diapositiva para guardar (textos largos, botón vacío, imagen sin descripción). */

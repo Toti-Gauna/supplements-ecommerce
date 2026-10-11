@@ -102,7 +102,7 @@ function DayBody({ day, eventId, today, entries, onReschedule }: Omit<Props, "da
               <ul className="flex flex-col gap-2">
                 {events.map((e) => (
                   <li key={e.id} className="flex flex-wrap items-start gap-3 rounded-2xl bg-surface p-3 text-sm shadow-[var(--shadow-card)]">
-                    {e.kind === "pedido" ? <Link2 size={16} aria-hidden="true" className="mt-0.5 text-brass-ink" /> : <StickyNote size={16} aria-hidden="true" className="mt-0.5 text-brass-ink" />}
+                    {e.kind === "pedido" ? <Link2 size={16} aria-hidden="true" className="mt-0.5 text-volt-ink" /> : <StickyNote size={16} aria-hidden="true" className="mt-0.5 text-volt-ink" />}
                     <span className="min-w-0 flex-1 basis-40">
                       <span className="block font-bold">{e.title}</span>
                       <span className="block text-xs text-muted">{EVENT_KIND_LABEL[e.kind]}{e.orderCode && <> · <Link href={`/admin-demo/pedidos/detalle/?codigo=${e.orderCode}`} className="font-bold text-primary underline">{e.orderCode}</Link></>}</span>

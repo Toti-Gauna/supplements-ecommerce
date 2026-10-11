@@ -24,7 +24,7 @@ export function newBlock(type: EmailBlockType): EmailBlock {
     case "heading": return { id, type, content: [{ kind: "text", text: "Título nuevo" }] };
     case "text": return { id, type, content: [{ kind: "text", text: "Escribí acá el mensaje." }] };
     case "button": return { id, type, label: [{ kind: "text", text: "Ver mi pedido" }], link: "tracking" };
-    case "image": return { id, type, art: "dachshund", caption: [] };
+    case "image": return { id, type, art: "tub", caption: [] };
     default: return { id, type } as EmailBlock;
   }
 }

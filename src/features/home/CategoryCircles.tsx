@@ -34,7 +34,7 @@ export function CategoryCircles() {
               <li key={c.slug} className="w-[var(--cat)] shrink-0 snap-start">
                 <Link href={categoryHref(c.slug)} className="group flex flex-col items-center gap-2 text-center">
                   <span className="relative block aspect-square w-full overflow-hidden rounded-full bg-accent shadow-[var(--shadow-card)] ring-1 ring-line transition-all duration-500 group-hover:shadow-[var(--shadow-lift)] group-hover:ring-2 group-hover:ring-primary">
-                    {top && <ProductArt art={top.art} tint={top.variants[0]?.colorHex} label="" showBadge={false} className="h-full w-full scale-110 transition-transform duration-700 group-hover:scale-125 [&>svg]:h-full" />}
+                    {top && <ProductArt art={top.art} pack={top.pack} tint={top.variants[0]?.colorHex} label="" showBadge={false} className="h-full w-full scale-110 transition-transform duration-700 group-hover:scale-125 [&>svg]:h-full" />}
                   </span>
                   <span className="text-[13px] font-bold leading-tight">{c.name}</span>
                 </Link>

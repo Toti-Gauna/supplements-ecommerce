@@ -18,17 +18,17 @@ import { travelerFor } from "./tracking/Travelers";
 import { SAMPLE_STATES, timelineFor, type SampleStateId } from "./tracking-states";
 
 const SAMPLE_LINES: CartLine[] = [
-  { id: "s1", productSlug: "collar-con-nombre", variantId: "col-m", quantity: 1, personalization: { kind: "TEXT", text: "Ñoqui", font: "Redondeada", color: "#3d4a2a", colorName: "Verde oliva", approvedAt: "2026-10-02T10:14:00Z" } },
-  { id: "s2", productSlug: "vela-caniche", variantId: "vc-vainilla", quantity: 1 },
-  { id: "s3", productSlug: "comedero-perro-globo", variantId: "cpg-rosa-m", quantity: 1, personalization: { kind: "TEXT", text: "Ñoqui", font: "Manuscrita", color: "#1f1f1f", colorName: "Negro", approvedAt: "2026-10-02T10:14:00Z" } },
-  { id: "s4", productSlug: "placa-nfc-instagram", variantId: "pnig-oliva", quantity: 2 },
+  { id: "s1", productSlug: "ionic-whey", variantId: "iw-chocolate-2lb", quantity: 1 },
+  { id: "s2", productSlug: "creatina-monohidrato", variantId: "cm-sin-sabor-300", quantity: 1 },
+  { id: "s3", productSlug: "shaker-volta", variantId: "sh-voltio", quantity: 1 },
+  { id: "s4", productSlug: "barra-proteica", variantId: "bp-mani-u", quantity: 2 },
 ];
 
 const STATE_COPY: Record<SampleStateId, { title: string; eta: string; progress: number; note: string }> = {
-  pending: { title: "Esperando tu comprobante", eta: "Se calcula cuando Volta confirme el pago", progress: 0.04, note: "Subí el comprobante: Volta verifica el ingreso y arranca la producción." },
-  production: { title: "En producción", eta: "Llega entre el jue 8 y el vie 9 de oct", progress: 0.38, note: "Tu pieza se está fabricando con la vista previa que aprobaste." },
-  ready: { title: "Listo", eta: "Sale del taller mañana, jue 8 de oct", progress: 0.58, note: "Tu pieza está terminada y embalada. Coordinamos la entrega por WhatsApp." },
-  shipped: { title: "En camino", eta: "Llega mañana, vie 9 de oct", progress: 0.82, note: "Ya salió del taller. El cadete te escribe antes de llegar." },
+  pending: { title: "Esperando tu comprobante", eta: "Se calcula cuando Volta confirme el pago", progress: 0.04, note: "Subí el comprobante: Volta verifica el ingreso y arma tu pedido." },
+  production: { title: "Armando tu pedido", eta: "Llega entre el jue 8 y el vie 9 de oct", progress: 0.38, note: "Estamos preparando tu pedido: controlamos lote y vencimiento de cada producto." },
+  ready: { title: "Listo", eta: "Sale del local mañana, jue 8 de oct", progress: 0.58, note: "Tu pedido está armado y precintado. Coordinamos la entrega por WhatsApp." },
+  shipped: { title: "En camino", eta: "Llega mañana, vie 9 de oct", progress: 0.82, note: "Ya salió del local. El cadete te escribe antes de llegar." },
   delivered: { title: "Entregado", eta: "Llegó el vie 9 de oct", progress: 1, note: "Llegó a tu casa. ¡Que lo disfrutes! Si querés, contanos cómo quedó." },
 };
 
@@ -48,18 +48,18 @@ export function TrackingView() {
     <div className="flex flex-col gap-6 sm:gap-8">
       <OrderItemsCard code={code} lines={order?.lines.length ? order.lines : SAMPLE_LINES} sample={!order?.lines.length} />
       {stateId === "pending" && (
-        <section aria-labelledby="comprobante" className="flex flex-col gap-3 rounded-[2rem] border-2 border-dashed border-brass-ink/40 bg-surface p-5 sm:p-6">
+        <section aria-labelledby="comprobante" className="flex flex-col gap-3 rounded-[2rem] border-2 border-dashed border-volt-ink/40 bg-surface p-5 sm:p-6">
           <h2 id="comprobante" className="font-display text-2xl">Falta el comprobante</h2>
           <ProofUpload orderCode={order?.code} />
         </section>
       )}
-      <section className="grid grid-cols-[minmax(0,1fr)] gap-6 overflow-hidden rounded-[2.5rem] bg-night p-6 text-[#f6f1e8] sm:p-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
+      <section className="grid grid-cols-[minmax(0,1fr)] gap-6 overflow-hidden rounded-[2.5rem] bg-night p-6 text-on-night sm:p-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
         <div className="flex flex-col gap-4">
-          <p className="eyebrow text-brass">Pedido {code} · seguimiento de demostración</p>
-          <p className="text-sm text-[#cfc6b3]">Estado actual</p>
+          <p className="eyebrow text-volt">Pedido {code} · seguimiento de demostración</p>
+          <p className="text-sm text-night-muted">Estado actual</p>
           <h2 key={stateId} className="font-display animate-rise -mt-3 text-5xl leading-none sm:text-6xl">{copy.title}</h2>
-          <p className="text-[#cfc6b3]">{copy.note}</p>
-          <p className="mt-auto rounded-2xl bg-white/5 px-4 py-3 text-sm"><span className="block text-xs text-[#cfc6b3]">Entrega estimada (muestra)</span><strong>{copy.eta}</strong></p>
+          <p className="text-night-muted">{copy.note}</p>
+          <p className="mt-auto rounded-2xl bg-white/5 px-4 py-3 text-sm"><span className="block text-xs text-night-muted">Entrega estimada (muestra)</span><strong>{copy.eta}</strong></p>
         </div>
         <RouteMap progress={copy.progress} traveler={traveler} accent={accent} delivered={stateId === "delivered"} />
       </section>
@@ -72,7 +72,7 @@ export function TrackingView() {
           <legend className="sr-only">Estado del pedido de muestra</legend>
           <div className="flex flex-wrap gap-2">
             {SAMPLE_STATES.map((s) => (
-              <label key={s.id} className={cn("min-h-11 cursor-pointer content-center rounded-full border px-4 text-sm font-bold transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary/50", s.id === stateId ? "border-night bg-night text-[#f6f1e8]" : "border-ink/15 bg-surface text-muted hover:text-ink")}>
+              <label key={s.id} className={cn("min-h-11 cursor-pointer content-center rounded-full border px-4 text-sm font-bold transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary/50", s.id === stateId ? "border-night bg-night text-on-night" : "border-ink/15 bg-surface text-muted hover:text-ink")}>
                 <input type="radio" name="sample-state" className="sr-only" checked={s.id === stateId} onChange={() => setStateId(s.id)} />
                 {s.label}
               </label>

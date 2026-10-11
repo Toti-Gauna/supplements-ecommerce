@@ -24,21 +24,24 @@ describe("tablas del panel", () => {
 
 describe("stock y clientes", () => {
   const admin = defaultAdminData();
+  // Ningún producto del catálogo es a pedido: el shaker pasa a pedido solo para estas pruebas.
+  const products = admin.data.products.map((p) => (p.slug === "shaker-volta" ? { ...p, variants: p.variants.map((v) => ({ ...v, stock: -1 })) } : p));
   it("sumar y fijar stock en lote sin tocar lo que es a pedido", () => {
-    const keys = ["vela-caniche::vc-vainilla", "velador-con-foto::vcf-m"];
-    const next = applyStockOp(admin.data.products, keys, { kind: "add", units: 5 });
-    expect(next.find((p) => p.slug === "vela-caniche")!.variants[0]!.stock).toBe(13);
-    expect(next.find((p) => p.slug === "velador-con-foto")!.variants[0]!.stock).toBe(-1);
-    expect(applyStockOp(admin.data.products, keys, { kind: "set", stock: 0 }).find((p) => p.slug === "velador-con-foto")!.variants[0]!.stock).toBe(0);
+    const keys = ["ionic-whey::iw-chocolate-2lb", "shaker-volta::sh-grafito"];
+    const next = applyStockOp(products, keys, { kind: "add", units: 5 });
+    expect(next.find((p) => p.slug === "ionic-whey")!.variants[0]!.stock).toBe(23);
+    expect(next.find((p) => p.slug === "shaker-volta")!.variants[0]!.stock).toBe(-1);
+    expect(applyStockOp(products, keys, { kind: "set", stock: 0 }).find((p) => p.slug === "shaker-volta")!.variants[0]!.stock).toBe(0);
   });
   it("estados de stock y alertas", () => {
     expect([stockState(-1), stockState(0), stockState(2), stockState(10)]).toEqual(["made-to-order", "out", "low", "ok"]);
-    const low = lowStockRows(admin.data.products, admin.data.categories);
-    expect(low.some((r) => r.productSlug === "comedero-elevado-madera" && r.variantLabel === "Nogal")).toBe(true);
+    const low = lowStockRows(products, admin.data.categories);
+    expect(low.some((r) => r.productSlug === "isolate-zero" && r.variantLabel === "Vainilla" && r.state === "out")).toBe(true);
+    expect(low.some((r) => r.productSlug === "overvolt-pre" && r.variantLabel === "Mango" && r.state === "low")).toBe(true);
     expect(low.every((r) => r.stock >= 0 && r.stock <= 3)).toBe(true);
-    const lamp = admin.data.products.find((p) => p.slug === "velador-con-foto")!;
-    expect(productStockTotal(lamp)).toBeNull();
-    expect(inventoryValue(stockRows(admin.data.products, admin.data.categories))).toBeGreaterThan(0);
+    const shaker = products.find((p) => p.slug === "shaker-volta")!;
+    expect(productStockTotal(shaker)).toBeNull();
+    expect(inventoryValue(stockRows(products, admin.data.categories))).toBeGreaterThan(0);
   });
   it("une cuentas e invitados por email y calcula el total pagado", () => {
     const rows = customerRows(admin.users, admin.orders);
@@ -52,23 +55,24 @@ describe("stock y clientes", () => {
 describe("planilla", () => {
   const admin = defaultAdminData();
   const rows = stockRows(admin.data.products, admin.data.categories);
-  const vela = rows.filter((r) => r.productSlug === "vela-caniche");
+  const pre = rows.filter((r) => r.productSlug === "overvolt-pre");
   it("valida lo que se escribe en cada celda", () => {
     expect(parseCellInput("price", "$ 12.900", admin.data.categories)).toEqual({ ok: true, value: 12900 });
     expect(parseCellInput("stock", "a pedido", admin.data.categories)).toEqual({ ok: true, value: -1 });
-    expect(parseCellInput("categorySlug", "velas", admin.data.categories)).toEqual({ ok: true, value: "velas" });
+    expect(parseCellInput("categorySlug", "creatinas", admin.data.categories)).toEqual({ ok: true, value: "creatinas" });
     expect(parseCellInput("categorySlug", "Inventada", admin.data.categories).ok).toBe(false);
     expect(parseCellInput("productName", "  ", admin.data.categories).ok).toBe(false);
   });
   it("las columnas de producto se copian a todas sus variantes y se aplican de una vez", () => {
-    const edit = expandEdit(rows, vela[0]!.key, "productName", "Vela caniche XL");
-    expect(Object.keys(edit)).toHaveLength(vela.length);
-    const draft = { ...edit, [cellKey(vela[1]!.key, "price")]: 13900, [cellKey(vela[0]!.key, "stock")]: 2 };
-    const next = applyDraft(admin.data.products, rows, draft).find((p) => p.slug === "vela-caniche")!;
-    expect(next.name).toBe("Vela caniche XL");
-    expect(next.basePrice + next.variants[1]!.priceDelta).toBe(13900);
+    expect(pre).toHaveLength(3);
+    const edit = expandEdit(rows, pre[0]!.key, "productName", "Overvolt pre-entreno XL");
+    expect(Object.keys(edit)).toHaveLength(pre.length);
+    const draft = { ...edit, [cellKey(pre[1]!.key, "price")]: 38900, [cellKey(pre[0]!.key, "stock")]: 2 };
+    const next = applyDraft(admin.data.products, rows, draft).find((p) => p.slug === "overvolt-pre")!;
+    expect(next.name).toBe("Overvolt pre-entreno XL");
+    expect(next.basePrice + next.variants[1]!.priceDelta).toBe(38900);
     expect(next.variants[0]!.stock).toBe(2);
-    expect(pruneDraft(rows, { [cellKey(vela[0]!.key, "stock")]: vela[0]!.stock })).toEqual({});
+    expect(pruneDraft(rows, { [cellKey(pre[0]!.key, "stock")]: pre[0]!.stock })).toEqual({});
   });
   it("deshacer y rehacer", () => {
     let h = sheetReducer({ draft: {}, past: [], future: [] }, { type: "set", cells: { a: 1 } });

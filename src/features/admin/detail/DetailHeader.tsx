@@ -7,7 +7,7 @@ import { useBackHref } from "../listReturn";
 interface Props {
   /** Lista de la que viene la ficha ("/admin-demo/pedidos/") y su nombre. */
   list: { href: string; label: string };
-  /** ID visible (VEL-000123, el nombre del cliente…). */
+  /** ID visible (VOL-000123, el nombre del cliente…). */
   title: string;
   eyebrow?: string;
   /** Estados (chips) debajo del título. */

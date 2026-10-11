@@ -3,7 +3,7 @@ import { Lola, Pancho } from "@/components/illustrations/characters";
 import { Debris, Glow, RevealBurst, SceneFrame, SceneStyle } from "./kit";
 import type { GiftSceneProps } from "./types";
 
-const GREEN = "#4a6a2c", CREAM = "#f3dca6", EDGE = "#c9a96a", PINK = "#e86a7c";
+const GREEN = "#4a6a2c", CREAM = "#e3ff8f", EDGE = "#c9a96a", PINK = "#e86a7c";
 const KX = 150, KY = 144; // nudo del moño, arriba de la tapa
 // Boca de cada perro (en unidades de la escena) y cuánto tironea en cada golpe (alternados).
 const MOUTH = { pancho: [100, 222], lola: [209, 210] } as const;

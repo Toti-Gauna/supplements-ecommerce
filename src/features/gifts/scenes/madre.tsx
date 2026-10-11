@@ -43,7 +43,7 @@ export default function MotherGift({ hits, total, opened, reduce }: GiftScenePro
         <linearGradient id="mg-front" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stopColor="#a9496d" /><stop offset=".55" stopColor="#e07a98" /><stop offset="1" stopColor="#f8c3d1" /></linearGradient>
         <linearGradient id="mg-back" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stopColor="#8a3557" /><stop offset=".6" stopColor="#c95d82" /><stop offset="1" stopColor="#efa5bb" /></linearGradient>
         <linearGradient id="mg-paper" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#ead7b8" /><stop offset=".55" stopColor="#d9c09a" /><stop offset="1" stopColor="#bba07a" /></linearGradient>
-        <radialGradient id="mg-heart"><stop offset="0" stopColor="#fff4d6" /><stop offset=".6" stopColor="#ffe0a8" /><stop offset="1" stopColor="#d2ad69" /></radialGradient>
+        <radialGradient id="mg-heart"><stop offset="0" stopColor="#fff4d6" /><stop offset=".6" stopColor="#ffe0a8" /><stop offset="1" stopColor="#c8ff2e" /></radialGradient>
       </defs>
       <Glow color="#ffe0a8" hits={hits} total={total} opened={opened} />
       <ellipse cx="150" cy="268" rx="50" ry="7" fill="#000" opacity=".35" />
@@ -60,7 +60,7 @@ export default function MotherGift({ hits, total, opened, reduce }: GiftScenePro
           <circle cx="150" cy="128" r="13" fill="url(#mg-heart)" />
           {Array.from({ length: 9 }, (_, i) => {
             const a = (i / 9) * Math.PI * 2;
-            return <circle key={i} cx={150 + Math.cos(a) * 16} cy={128 + Math.sin(a) * 16} r="2.4" fill="#d2ad69" />;
+            return <circle key={i} cx={150 + Math.cos(a) * 16} cy={128 + Math.sin(a) * 16} r="2.4" fill="#c8ff2e" />;
           })}
         </g>
         {PETALS.map((p, i) => (p.back ? null : petal(p, i)))}

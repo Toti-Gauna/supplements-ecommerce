@@ -23,7 +23,7 @@ const RULES = [
 function Heading({ id, eyebrow, title, children }: { id: string; eyebrow: string; title: string; children?: ReactNode }) {
   return (
     <Reveal>
-      <p className="eyebrow text-brass-ink">{eyebrow}</p>
+      <p className="eyebrow text-volt-ink">{eyebrow}</p>
       <h2 id={id} className="font-display mt-2 scroll-mt-28 text-4xl leading-tight sm:text-5xl">{title}</h2>
       {children && <p className="mt-2 max-w-xl text-muted">{children}</p>}
     </Reveal>
@@ -45,11 +45,11 @@ export function ClubView() {
         </ul>
       </section>
       <section aria-labelledby="ruleta" className="grid items-center gap-10 rounded-[2rem] bg-surface p-6 shadow-[var(--shadow-card)] sm:rounded-[2.5rem] sm:p-10 lg:grid-cols-2 lg:p-14">
-        <Heading id="ruleta" eyebrow="Ruleta de cupones" title="Girá y llevate un premio">Envío gratis, grabado gratis, un llavero de regalo o un descuento para tu próxima compra. Todos los premios ganan.</Heading>
+        <Heading id="ruleta" eyebrow="Ruleta de cupones" title="Girá y llevate un premio">Envío gratis, un shaker de regalo, sachets de muestra o un descuento para tu próxima compra. Todos los premios ganan.</Heading>
         <WheelTeaser />
       </section>
-      <section aria-labelledby="path" className="rounded-[2rem] bg-night p-6 text-[#f6f1e8] sm:rounded-[2.5rem] sm:p-10 lg:p-14">
-        <p className="eyebrow text-brass">Cadenas</p>
+      <section aria-labelledby="path" className="rounded-[2rem] bg-night p-6 text-on-night sm:rounded-[2.5rem] sm:p-10 lg:p-14">
+        <p className="eyebrow text-volt">Cadenas</p>
         <h2 id="path" className="font-display mb-8 mt-2 text-4xl leading-tight sm:text-5xl">Camino de premios</h2>
         <MissionPath missions={missions} />
       </section>

@@ -112,7 +112,7 @@ function renderLines(lines: CartLine[]): RenderedLine[] {
     const per = l.personalization;
     const detail = per?.kind === "TEXT" && per.text ? `“${per.text}”${per.font ? ` · ${per.font}` : ""}` : per?.kind === "PHOTO" ? "Con tu foto" : per?.kind === "PHOTO_REFERENCE" ? "Pintado desde tu foto" : undefined;
     const collar = collarLineDetail(l);
-    return { name: p?.name ?? l.productSlug, variant: v?.label ?? "", quantity: l.quantity, art: p?.art ?? "dachshund", tint: v?.colorHex, detail: [detail, collar].filter(Boolean).join(" · ") || undefined };
+    return { name: p?.name ?? l.productSlug, variant: v?.label ?? "", quantity: l.quantity, art: p?.art ?? "tub", tint: v?.colorHex, detail: [detail, collar].filter(Boolean).join(" · ") || undefined };
   });
 }
 

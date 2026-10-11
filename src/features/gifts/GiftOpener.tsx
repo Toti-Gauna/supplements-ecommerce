@@ -80,10 +80,10 @@ export function GiftOpener({ scene, accent, onOpened, autoFocus }: Props) {
   return (
     <div className="flex w-full max-w-md flex-col items-center">
       <SceneStyle id="kit" css={KIT_CSS + OPENER_CSS} />
-      <p className="min-h-[1.5rem] text-center text-sm font-extrabold uppercase tracking-[0.18em] text-[#f3dca6] sm:text-base" aria-hidden="true">{opened ? "¡Se abrió!" : PROMPTS[Math.min(hits, PROMPTS.length - 1)]}</p>
+      <p className="min-h-[1.5rem] text-center text-sm font-extrabold uppercase tracking-[0.18em] text-volt-soft sm:text-base" aria-hidden="true">{opened ? "¡Se abrió!" : PROMPTS[Math.min(hits, PROMPTS.length - 1)]}</p>
       <button ref={button} type="button" onClick={hit} aria-disabled={opened}
         aria-label={opened ? "Regalo abierto" : `Golpeá el regalo para abrirlo. Faltan ${left} ${left === 1 ? "golpe" : "golpes"}.`}
-        className="gift-hit relative mt-3 aspect-square w-[min(80vw,46dvh,380px)] touch-manipulation rounded-[2rem] outline-none focus-visible:ring-4 focus-visible:ring-[#f3dca6]/70 aria-disabled:cursor-default">
+        className="gift-hit relative mt-3 aspect-square w-[min(80vw,46dvh,380px)] touch-manipulation rounded-[2rem] outline-none focus-visible:ring-4 focus-visible:ring-volt-soft/70 aria-disabled:cursor-default">
         <div ref={box} className="h-full w-full will-change-transform">
           <Scene hits={hits} total={GIFT_HITS} opened={opened} reduce={reduce} />
         </div>
@@ -93,13 +93,13 @@ export function GiftOpener({ scene, accent, onOpened, autoFocus }: Props) {
       </button>
       <div aria-hidden="true" className="mt-5 flex gap-2">
         {Array.from({ length: GIFT_HITS }, (_, i) => (
-          <span key={i} className={`h-2.5 w-2.5 rounded-full transition-all duration-300 ${i < hits ? "scale-110 bg-[#f3dca6]" : "bg-white/20"}`} />
+          <span key={i} className={`h-2.5 w-2.5 rounded-full transition-all duration-300 ${i < hits ? "scale-110 bg-volt-soft" : "bg-white/20"}`} />
         ))}
       </div>
       <p aria-live="polite" className="sr-only">{opened ? "¡Se abrió el regalo!" : hits > 0 ? `Faltan ${left} ${left === 1 ? "golpe" : "golpes"}.` : ""}</p>
       <div className="mt-4 h-10">
         {idle && !opened && (
-          <button type="button" onClick={() => { setHits(GIFT_HITS); playSound("hit"); }} className="rounded-full px-4 py-2 text-sm font-semibold text-[#cfc6b3] underline-offset-4 hover:text-white hover:underline">
+          <button type="button" onClick={() => { setHits(GIFT_HITS); playSound("hit"); }} className="rounded-full px-4 py-2 text-sm font-semibold text-night-muted underline-offset-4 hover:text-white hover:underline">
             Abrirlo de una vez
           </button>
         )}

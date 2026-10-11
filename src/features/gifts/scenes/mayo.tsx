@@ -60,7 +60,7 @@ export default function MayoGift({ hits, total, opened, reduce }: GiftSceneProps
           <stop offset="0" stopColor="#0a2540" stopOpacity=".5" /><stop offset=".28" stopColor="#0a2540" stopOpacity="0" /><stop offset=".4" stopColor="#fff" stopOpacity=".22" />
           <stop offset=".55" stopColor="#fff" stopOpacity="0" /><stop offset="1" stopColor="#0a2540" stopOpacity=".55" />
         </linearGradient>
-        <linearGradient id="my-wood" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#a8743f" /><stop offset="1" stopColor="#5a3820" /></linearGradient>
+        <linearGradient id="my-ion" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#a8743f" /><stop offset="1" stopColor="#5a3820" /></linearGradient>
       </defs>
       <circle cx="150" cy="150" r="150" fill="url(#my-sky)" />
       <Glow color={GOLD} hits={hits} total={total} opened={opened} />
@@ -79,7 +79,7 @@ export default function MayoGift({ hits, total, opened, reduce }: GiftSceneProps
 
       {/* Bastón y mango curvo de madera. */}
       <path d={`M150 ${TOP}V232`} stroke="#4a3220" strokeWidth="3.4" />
-      <path d="M150 226V240C150 257 127 259 125 243" stroke="url(#my-wood)" strokeWidth="8" strokeLinecap="round" fill="none" />
+      <path d="M150 226V240C150 257 127 259 125 243" stroke="url(#my-ion)" strokeWidth="8" strokeLinecap="round" fill="none" />
       <path d="M152 232v8c0 9-6 13-12 13" stroke="#e7c89b" strokeOpacity=".45" strokeWidth="1.6" strokeLinecap="round" fill="none" />
       <rect className="my-runner" x="145.5" y="-3" width="9" height="6" rx="2" fill="#3a2a1c" style={{ transform: `translateY(${TOP + 92 * sy}px)` }} />
 

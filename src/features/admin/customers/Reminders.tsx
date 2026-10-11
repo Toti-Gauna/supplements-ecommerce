@@ -46,7 +46,7 @@ export function ReminderList({ reminders }: { reminders: Reminder[] }) {
           <li key={r.id} className="@container rounded-2xl bg-bg p-3">
             <div className="flex flex-col gap-3 @min-[36rem]:flex-row @min-[36rem]:items-center">
               <span className="flex min-w-0 flex-1 items-start gap-3">
-                <span aria-hidden="true" className={cn("grid h-10 w-10 shrink-0 place-items-center rounded-full", r.kind === "repurchase" ? "bg-accent text-ink" : "bg-brass/25 text-brass-ink")}><Icon size={18} /></span>
+                <span aria-hidden="true" className={cn("grid h-10 w-10 shrink-0 place-items-center rounded-full", r.kind === "repurchase" ? "bg-accent text-ink" : "bg-volt/25 text-volt-ink")}><Icon size={18} /></span>
                 <span className="min-w-0 flex-1">
                   <span className="block font-bold">{r.title}</span>
                   <span className="text-sm text-muted">{REMINDER_LABEL[r.kind]} · {formatDay(r.date)} ({whenText(r.inDays)})</span>

@@ -125,8 +125,8 @@ html[data-season="ano-nuevo"] #volta-splash .mark-m { animation-delay: 1.65s; }
 html[data-season="ano-nuevo"] #volta-splash .mark-v { animation-delay: 1.8s; }
 html[data-season="ano-nuevo"] #volta-splash .splash-mark::after { animation-delay: 2.1s; }
 html[data-season="ano-nuevo"] #volta-splash .word { animation-delay: 1.95s; }
-html[data-season] #volta-splash .splash-glow { background: radial-gradient(closest-side, color-mix(in srgb, var(--sp-accent, #d2ad69) 30%, transparent), transparent); }
-html[data-season] #volta-splash .splash-mark { color: var(--sp-accent, #d2ad69); }
+html[data-season] #volta-splash .splash-glow { background: radial-gradient(closest-side, color-mix(in srgb, var(--sp-accent, #c8ff2e) 30%, transparent), transparent); }
+html[data-season] #volta-splash .splash-mark { color: var(--sp-accent, #c8ff2e); }
 /* San Valentín: el logo sube para que el grupo (corazón con el logo + la cena de Lola y Pancho) quede centrado.
    Está acá y no en la escena porque tiene que valer desde el primer cuadro, antes de que la escena se descargue. */
 html[data-season="san-valentin"] #volta-splash { --vl-h: min(80vmin, 330px); --vl-w: min(96vw, 440px); --vl-up: calc(var(--vl-h) * .03 + 4px + var(--vl-w) / 4); }

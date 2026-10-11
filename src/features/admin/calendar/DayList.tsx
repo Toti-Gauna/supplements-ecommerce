@@ -61,8 +61,8 @@ export function AgendaView({ entries, events, today, cal, capacity, onOpen, onEv
               {list.map((e) => <EntryRow key={e.order.code} entry={e} onOpen={onOpen} />)}
               {ahead.filter((e) => e.date === day).map((e) => (
                 <li key={e.id}>
-                  <button type="button" onClick={() => onEvent(e.id)} className="flex w-full items-center gap-3 rounded-2xl border border-dashed border-brass-ink/40 bg-bg p-3 text-left text-sm hover:bg-accent/40">
-                    {e.kind === "pedido" ? <Link2 size={16} aria-hidden="true" className="shrink-0 text-brass-ink" /> : <StickyNote size={16} aria-hidden="true" className="shrink-0 text-brass-ink" />}
+                  <button type="button" onClick={() => onEvent(e.id)} className="flex w-full items-center gap-3 rounded-2xl border border-dashed border-volt-ink/40 bg-bg p-3 text-left text-sm hover:bg-accent/40">
+                    {e.kind === "pedido" ? <Link2 size={16} aria-hidden="true" className="shrink-0 text-volt-ink" /> : <StickyNote size={16} aria-hidden="true" className="shrink-0 text-volt-ink" />}
                     <span className="min-w-0 flex-1"><span className="block font-bold">{e.title}</span>{e.orderCode && <span className="text-xs text-muted">{e.orderCode}</span>}</span>
                     <span className="text-xs font-bold text-primary">Editar</span>
                   </button>

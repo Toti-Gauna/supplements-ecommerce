@@ -38,3 +38,4 @@ Ante una duda de alcance: parar y preguntar a Ignacio, no decidir.
 - Modales, menús y paneles: usar `Sheet` (portal a `<body>`, foco atrapado, Escape). No montar `fixed` dentro del header.
 - Grillas con carriles desplazables: `grid-cols-[minmax(0,1fr)]` de base para no desbordar en 375 px.
 - Cada tarea declara archivos tocados, comportamiento, prueba ejecutada y decisiones abiertas.
+

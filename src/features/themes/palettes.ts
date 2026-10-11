@@ -10,15 +10,15 @@ export interface Palette {
   scheme: "light" | "dark";
   primary: string; primaryHover: string; onPrimary: string; accent: string;
   background: string; surface: string; text: string; muted: string; border: string;
-  night: string; night2: string; brassInk: string;
+  night: string; night2: string; voltInk: string;
   /** Degradado del estudio de fotos de los productos: arriba, medio, piso. */
   studio: [string, string, string];
 }
 
 type Pair = { light: Palette; dark: Palette };
 const p = (scheme: Palette["scheme"], v: string, studio: string): Palette => {
-  const [primary, primaryHover, onPrimary, accent, background, surface, text, muted, border, night, night2, brassInk] = v.split(" ") as [string, string, string, string, string, string, string, string, string, string, string, string];
-  return { scheme, primary, primaryHover, onPrimary, accent, background, surface, text, muted, border, night, night2, brassInk, studio: studio.split(" ") as [string, string, string] };
+  const [primary, primaryHover, onPrimary, accent, background, surface, text, muted, border, night, night2, voltInk] = v.split(" ") as [string, string, string, string, string, string, string, string, string, string, string, string];
+  return { scheme, primary, primaryHover, onPrimary, accent, background, surface, text, muted, border, night, night2, voltInk, studio: studio.split(" ") as [string, string, string] };
 };
 const immersive = (v: string, studio: string): Pair => { const d = p("dark", v, studio); return { light: d, dark: d }; };
 
@@ -26,8 +26,8 @@ const immersive = (v: string, studio: string): Pair => { const d = p("dark", v, 
 export const PALETTES: Record<SeasonId, Pair> = {
   halloween: immersive("#ffa64d #ffb96f #1d1426 #2a1f38 #120b1a #1c1228 #f2e9f7 #b7a8c6 #352646 #08050d #160e21 #ffb877", "#3d2554 #2b1a3d #1d1229"),
   navidad: immersive("#f3c84c #f7d777 #10251b #173a2b #0b1f16 #12291e #f1efe4 #aebfae #22412f #06140d #0e2219 #f3c84c", "#21503b #183d2d #10291f"),
-  "ano-nuevo": immersive("#f3dca6 #f8e8c4 #0d1330 #1b2448 #0a0f24 #121a36 #eeecf6 #aab0cc #263162 #05081a #0c1230 #f3dca6", "#28346f #1d2756 #131b3d"),
-  "black-friday": immersive("#f3dca6 #f8e8c4 #0b0b0d #1b1b1f #070708 #111113 #f2efe8 #a8a49b #2a2a2f #000000 #0e0e10 #f3dca6", "#2c2c31 #1d1d21 #121214"),
+  "ano-nuevo": immersive("#e3ff8f #f8e8c4 #0d1330 #1b2448 #0a0f24 #121a36 #eeecf6 #aab0cc #263162 #05081a #0c1230 #e3ff8f", "#28346f #1d2756 #131b3d"),
+  "black-friday": immersive("#e3ff8f #f8e8c4 #0b0b0d #1b1b1f #070708 #111113 #f2efe8 #a8a49b #2a2a2f #000000 #0e0e10 #e3ff8f", "#2c2c31 #1d1d21 #121214"),
   // Orgullo: noche violeta para que el arcoíris de las decoraciones y del fondo brille.
   orgullo: immersive("#ff9fd0 #ffbadd #2b0d22 #2a2145 #100c1e #19142c #f5f0fb #bcb2d2 #342b52 #07050f #140f26 #ffd27a", "#2f2656 #231c42 #18132f"),
   // 9 de Julio: noche azul de la Casa de Tucumán con fuegos celestes y dorados.
@@ -68,7 +68,7 @@ export const PALETTES: Record<SeasonId, Pair> = {
   },
   "dia-del-amigo": {
     light: p("light", "#44622a #3a5424 #fbfdf5 #e4ebcf #f1f4e2 #fbfdf5 #1a2014 #565e4c #dae2c3 #22381f #2f4a2a #7a5c26", "#eef2dc #e1e8c8 #d1dbb2"),
-    dark: p("dark", "#b7d68f #cbe3aa #121a0c #1f2a18 #0d120a #151d10 #edf1e4 #a9b39a #2c3a22 #060a04 #111a0c #f3dca6", "#2a3a20 #212e19 #182212"),
+    dark: p("dark", "#b7d68f #cbe3aa #121a0c #1f2a18 #0d120a #151d10 #edf1e4 #a9b39a #2c3a22 #060a04 #111a0c #e3ff8f", "#2a3a20 #212e19 #182212"),
   },
   "dia-del-nino": {
     light: p("light", "#17608c #134f74 #f6fbff #d9ecf8 #eaf5fc #f8fcff #122029 #4e5f6a #cfe3f0 #0b4468 #0f5884 #8a5a12", "#e3f2fc #cfe6f6 #b9d8ee"),
@@ -78,7 +78,7 @@ export const PALETTES: Record<SeasonId, Pair> = {
 
 /** Estados (éxito, aviso, error), sombras y esqueletos para paletas oscuras: los mismos del modo oscuro. */
 const DARK_EXTRAS = [
-  "color-scheme:dark", "--c-clay:#e08a6c", "--c-success:#93d39f", "--c-success-soft:#1c2b1f", "--c-warning:#ebc77f", "--c-warning-soft:#2d2513",
+  "color-scheme:dark", "--c-ember:#e08a6c", "--c-success:#93d39f", "--c-success-soft:#1c2b1f", "--c-warning:#ebc77f", "--c-warning-soft:#2d2513",
   "--c-danger:#f3a497", "--c-danger-soft:#37201b", "--amb-snow:#ffffff",
   "--sh-card:0 1px 0 rgb(255 255 255/0.04) inset,0 18px 40px -22px rgb(0 0 0/0.75)", "--sh-lift:0 1px 0 rgb(255 255 255/0.05) inset,0 30px 60px -24px rgb(0 0 0/0.9)",
 ];
@@ -92,7 +92,7 @@ function vars(c: Palette): string {
     `--brand-primary:${c.primary}!important`, `--brand-primary-hover:${c.primaryHover}!important`, `--brand-on-primary:${c.onPrimary}!important`,
     `--brand-accent:${c.accent}!important`, `--brand-background:${c.background}!important`, `--brand-surface:${c.surface}!important`,
     `--brand-text:${c.text}!important`, `--brand-muted:${c.muted}!important`, `--brand-border:${c.border}!important`,
-    `--c-night:${c.night}`, `--c-night-2:${c.night2}`, `--c-brass-ink:${c.brassInk}`,
+    `--c-night:${c.night}`, `--c-night-2:${c.night2}`, `--c-volt-ink:${c.voltInk}`,
     `--studio-1:${c.studio[0]}`, `--studio-2:${c.studio[1]}`, `--studio-3:${c.studio[2]}`,
     `--skeleton-a:${c.accent}`, `--skeleton-b:${c.surface}`,
     `--chevron:${icon(CHEVRON, c.primary)}`, `--calendar:${icon(CALENDAR, c.primary)}`,

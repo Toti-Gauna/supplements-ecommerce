@@ -71,7 +71,7 @@ describe("carrusel del inicio (8.3.28)", () => {
     const broken = { ...newSlide("s-x"), image: { src: "https://externo/foto.jpg", alt: "x", x: 1, y: 1, zoom: 1 } } as CarouselSlide;
     const [fixed] = normalizeSlides([broken]);
     expect(fixed!.image).toBeUndefined();
-    expect(fixed!.art).toBe("dachshund");
+    expect(fixed!.art).toBe("tub");
     expect(normalizeSlides(content.slides)).toEqual(content.slides);
     expect(isSlideList([broken])).toBe(false);
     expect(isSlideList([])).toBe(false);

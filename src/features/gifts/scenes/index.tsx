@@ -5,7 +5,7 @@ import type { GiftSceneId, GiftSceneProps } from "./types";
 
 /** Mientras baja la escena (pocos KB): un brillo quieto en su lugar, sin saltos de tamaño. */
 function Loading() {
-  return <div aria-hidden="true" className="h-full w-full rounded-full bg-[radial-gradient(closest-side,rgb(243_220_166/0.25),transparent)]" />;
+  return <div aria-hidden="true" className="h-full w-full rounded-full bg-[radial-gradient(closest-side,rgb(227_255_143/0.25),transparent)]" />;
 }
 
 /** Si la escena no llega (red cortada), queda un regalo simple que igual se abre: nunca se rompe la página. */

@@ -54,16 +54,16 @@ export function ConfirmationView() {
     <div className="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
       <div className="flex flex-col gap-6">
         {celebrate && <ConfettiRain />}
-        <section className="relative overflow-hidden rounded-[2.5rem] bg-night p-6 text-[#f6f1e8] sm:p-10">
+        <section className="relative overflow-hidden rounded-[2.5rem] bg-night p-6 text-on-night sm:p-10">
           <Celebration />
           <motion.span initial={{ scale: 0, rotate: -30 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: "spring", stiffness: 300, damping: 18, delay: 0.15 }}
-            className="grid h-16 w-16 place-items-center rounded-full bg-brass text-night"><Check size={30} aria-hidden="true" /></motion.span>
+            className="grid h-16 w-16 place-items-center rounded-full bg-volt text-night"><Check size={30} aria-hidden="true" /></motion.span>
           <p className="mt-5"><Badge tone="demo">PEDIDO DE DEMOSTRACIÓN · no es un pedido real</Badge></p>
           <h2 className="font-display animate-rise mt-4 text-4xl leading-tight sm:text-5xl">¡Gracias, {order.contact.name.split(" ")[0]}! Tu pedido de demostración está registrado</h2>
-          <p className="mt-3 text-[#cfc6b3]">Código <strong className="text-[#f6f1e8]">{order.code}</strong> · Estado de muestra: <strong className="text-[#f6f1e8]">pendiente de pago</strong>. No se cobró nada ni se envió ningún email.</p>
+          <p className="mt-3 text-night-muted">Código <strong className="text-on-night">{order.code}</strong> · Estado de muestra: <strong className="text-on-night">pendiente de pago</strong>. No se cobró nada ni se envió ningún email.</p>
           <ol className="mt-8 grid gap-3 text-sm sm:grid-cols-3">
-            {["Pagás o subís el comprobante", "Volta confirma y arranca el taller", "Seguís cada etapa con tu link"].map((t, i) => (
-              <li key={t} className="flex items-center gap-3 rounded-2xl bg-white/5 p-3"><span className="font-display grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white/10 text-brass">{i + 1}</span>{t}</li>
+            {["Pagás o subís el comprobante", "Volta confirma y arma tu pedido", "Seguís cada etapa con tu link"].map((t, i) => (
+              <li key={t} className="flex items-center gap-3 rounded-2xl bg-white/5 p-3"><span className="font-display grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white/10 text-volt">{i + 1}</span>{t}</li>
             ))}
           </ol>
         </section>

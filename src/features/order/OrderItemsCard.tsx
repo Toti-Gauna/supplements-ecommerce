@@ -20,7 +20,7 @@ export function OrderItemsCard({ code, lines, sample }: { code: string; lines: C
     <section aria-labelledby="items" className="rounded-[2rem] bg-surface p-4 shadow-[var(--shadow-card)] sm:p-6">
       <div className="mb-4 flex items-start justify-between gap-3 px-1">
         <div className="flex items-center gap-3">
-          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-night text-brass"><Package size={20} aria-hidden="true" /></span>
+          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-night text-volt"><Package size={20} aria-hidden="true" /></span>
           <div>
             <h2 id="items" className="font-bold leading-tight">{sample ? "Pedido de ejemplo" : "Tu pedido de demostración"}</h2>
             <p className="font-mono text-xs font-bold tracking-wider text-muted">{code}</p>
@@ -36,7 +36,7 @@ export function OrderItemsCard({ code, lines, sample }: { code: string; lines: C
       )}
       <Sheet open={open} onClose={() => setOpen(false)} title="Productos del pedido" side="bottom">
         <div className="overflow-y-auto px-5 pb-8 pt-6">
-          <p className="eyebrow text-brass-ink">{code}</p>
+          <p className="eyebrow text-volt-ink">{code}</p>
           <h2 className="font-display mt-1 text-3xl">{units} productos</h2>
           <div className="mt-5"><OrderLines lines={lines} /></div>
           <p className="mt-4 flex justify-between border-t border-line pt-4 font-bold"><span>Total de productos</span><span className="tabular-nums">{formatARS(total)}</span></p>

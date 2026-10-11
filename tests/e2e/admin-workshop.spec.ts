@@ -10,17 +10,17 @@ test.describe("calendario en escritorio", () => {
   test("arrastrar un pedido: el feriado lo rechaza, otro día lo acepta con confirmación y el .ics se descarga", async ({ page }) => {
     await page.goto("admin-demo/calendario/");
     await page.mouse.move(1400, 300);
-    const chip = page.getByRole("button", { name: /^VEL-000114,/ });
-    await expect(day(page, "2026-10-07").getByRole("button", { name: /^VEL-000114,/ })).toBeVisible();
+    const chip = page.getByRole("button", { name: /^VOL-000114,/ });
+    await expect(day(page, "2026-10-07").getByRole("button", { name: /^VOL-000114,/ })).toBeVisible();
     await chip.dragTo(day(page, "2026-10-12"));
     await expect(toast(page, /el taller no trabaja ese día/)).toBeVisible();
-    await expect(day(page, "2026-10-07").getByRole("button", { name: /^VEL-000114,/ })).toBeVisible();
+    await expect(day(page, "2026-10-07").getByRole("button", { name: /^VOL-000114,/ })).toBeVisible();
     await chip.dragTo(day(page, "2026-10-13"));
-    await page.getByRole("dialog", { name: "Mover VEL-000114" }).getByRole("button", { name: "Mover al mar, 13 oct" }).click();
-    await expect(toast(page, /VEL-000114 pasa al mar, 13 oct/)).toBeVisible();
-    await expect(day(page, "2026-10-13").getByRole("button", { name: /^VEL-000114,/ })).toBeVisible();
+    await page.getByRole("dialog", { name: "Mover VOL-000114" }).getByRole("button", { name: "Mover al mar, 13 oct" }).click();
+    await expect(toast(page, /VOL-000114 pasa al mar, 13 oct/)).toBeVisible();
+    await expect(day(page, "2026-10-13").getByRole("button", { name: /^VOL-000114,/ })).toBeVisible();
     // Un día completo no acepta el pedido arrastrado y dice por qué (sobrecargarlo es desde Reprogramar)
-    await page.getByRole("button", { name: /^VEL-000122,/ }).dragTo(day(page, "2026-10-08"));
+    await page.getByRole("button", { name: /^VOL-000122,/ }).dragTo(day(page, "2026-10-08"));
     await expect(toast(page, /completo \(3 de 3 pedidos\)/)).toBeVisible();
 
     const download = page.waitForEvent("download");
@@ -36,8 +36,8 @@ test.describe("calendario en escritorio", () => {
 test("reprogramar sin arrastrar: el atrasado pasa a la primera fecha libre", async ({ page }) => {
   await page.goto("admin-demo/calendario/");
   await page.getByRole("button", { name: "Agenda", exact: true }).click();
-  await page.getByRole("button", { name: "Reprogramar VEL-000115" }).click();
-  const sheet = page.getByRole("dialog", { name: "Entrega VEL-000115" });
+  await page.getByRole("button", { name: "Reprogramar VOL-000115" }).click();
+  const sheet = page.getByRole("dialog", { name: "Entrega VOL-000115" });
   await sheet.getByRole("button", { name: /Primera fecha libre/ }).click();
   await expect(sheet.getByRole("heading", { name: "Lunes, 5 de octubre" })).toBeVisible();
   await page.keyboard.press("Escape");
@@ -64,13 +64,13 @@ test("cola de producción: avanzar descuenta insumos y llega a Listo", async ({ 
   await page.getByLabel("Buscar insumo").fill("cera");
   await expect(page.getByLabel("Stock de Cera de soja").first()).toHaveValue("5000");
   await page.goto("admin-demo/produccion/");
-  await page.getByRole("button", { name: "Pasar VEL-000113 a En máquina" }).click();
+  await page.getByRole("button", { name: "Pasar VOL-000113 a En máquina" }).click();
   await expect(toast(page, /Se descontaron sus insumos/)).toBeVisible();
   await page.getByRole("button", { name: /Terminación/ }).first().click();
-  await page.getByRole("button", { name: "Pasar VEL-000115 a Listo" }).click();
-  await expect(toast(page, "VEL-000115 pasó a “Listo”")).toBeVisible();
+  await page.getByRole("button", { name: "Pasar VOL-000115 a Listo" }).click();
+  await expect(toast(page, "VOL-000115 pasó a “Listo”")).toBeVisible();
   await page.getByRole("group", { name: "Etapa" }).getByRole("button", { name: /^Listo/ }).click();
-  await expect(page.getByRole("article", { name: "Pedido VEL-000115" })).toBeVisible();
+  await expect(page.getByRole("article", { name: "Pedido VOL-000115" })).toBeVisible();
   await page.goto("admin-demo/insumos/");
   await page.getByLabel("Buscar insumo").fill("cera");
   await expect(page.getByLabel("Stock de Cera de soja").first()).toHaveValue("3920");

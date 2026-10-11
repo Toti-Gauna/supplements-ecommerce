@@ -1,6 +1,6 @@
 /**
- * "Productos que cuentan historias" del inicio. Historias ILUSTRATIVAS escritas para la demo:
- * no son clientes reales. Reemplazar por historias aprobadas por Volta (con permiso de cada cliente).
+ * "Ciencia simple" del inicio: notas cortas que explican un producto sin promesas. Textos ILUSTRATIVOS escritos para
+ * la demo, sin afirmaciones de salud: reemplazar por contenido revisado por la tienda (idealmente con su nutricionista).
  */
 export interface ProductStory {
   id: string;
@@ -11,8 +11,8 @@ export interface ProductStory {
 }
 
 export const productStories: ProductStory[] = [
-  { id: "st1", productSlug: "velador-con-foto", kicker: "Con tu foto", title: "La foto del primer viaje, ahora es luz", text: "Una foto de vacaciones encuadrada en el velador del living. La vista previa se aprobó antes de fabricarla." },
-  { id: "st2", productSlug: "comedero-perro-globo", kicker: "Con nombre", title: "Un comedero en el verde de la cocina", text: "Elegido en el color de la casa y con el nombre de la mascota en letra manuscrita." },
-  { id: "st3", productSlug: "placa-nfc", kicker: "Tecnología NFC", title: "Un toque y ya te siguen", text: "Una cafetería puso su logo en la placa: los clientes acercan el celular al mostrador y abren su Instagram. Sin apps ni baterías." },
-  { id: "st4", productSlug: "velador-pintado-a-mano", kicker: "Pintado a mano", title: "Un retrato pintado desde una foto", text: "Se envía una foto de referencia y notas; el taller la interpreta a mano, pieza única." },
+  { id: "st1", productSlug: "creatina-monohidrato", kicker: "Mito vs. dato", title: "La creatina no es solo para culturistas", text: "Es de los suplementos más estudiados. 5 g por día, todos los días: no hace falta la fase de carga ni tomarla solo los días de entreno." },
+  { id: "st2", productSlug: "ionic-whey", kicker: "Hacé la cuenta", title: "Cuánto te sale cada scoop", text: "Un pote de 5 lb trae 75 servicios. Dividí el precio por los servicios y compará: en cada ficha te lo mostramos hecho." },
+  { id: "st3", productSlug: "overvolt-pre", kicker: "Cafeína", title: "Pre-entreno: menos es más", text: "Con 200 mg de cafeína alcanza para la mayoría. Si entrenás de noche, hay opciones sin estimulantes para no perder el sueño." },
+  { id: "st4", productSlug: "electrolitos", kicker: "Verano en la costa", title: "Hidratarse no es solo tomar agua", text: "Cuando transpirás mucho perdés sodio y potasio. Un sobre en 500 ml durante el entreno largo hace la diferencia." },
 ];

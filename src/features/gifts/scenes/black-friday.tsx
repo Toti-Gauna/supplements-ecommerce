@@ -23,10 +23,10 @@ export default function BlackFridayGift({ hits, total, opened, reduce }: GiftSce
   return (
     <SceneFrame overlay={!reduce && (
       <>
-        {hits > 0 && !opened && <Debris key={hits} seed={hits + 100} colors={["#f3dca6", "#d4b06a", "#fff4d6"]} shape="star" count={6} x={47} y={55} spread={0.55} size={7} />}
+        {hits > 0 && !opened && <Debris key={hits} seed={hits + 100} colors={["#e3ff8f", "#d4b06a", "#fff4d6"]} shape="star" count={6} x={47} y={55} spread={0.55} size={7} />}
         {opened && (
           <>
-            <RevealBurst colors={["#f3dca6", "#fff4d6", "#d4b06a"]} shapes={["star"]} y={55} />
+            <RevealBurst colors={["#e3ff8f", "#fff4d6", "#d4b06a"]} shapes={["star"]} y={55} />
             {LOOT.map((l, i) => (
               <span key={i} className={`bf-loot absolute ${l.tag ? "bf-tag" : "bf-coin"}`} style={{ left: "50%", top: "55%", "--dx": `${l.dx}px`, "--dy": `${l.dy}px`, "--rot": `${l.rot}deg`, "--s": l.s, animationDelay: `${l.delay}ms` } as CSSProperties}>
                 {l.tag ? "%" : ""}
@@ -40,12 +40,12 @@ export default function BlackFridayGift({ hits, total, opened, reduce }: GiftSce
       <defs>
         <linearGradient id="bf-body" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#34343b" /><stop offset=".12" stopColor="#2a2a30" /><stop offset="1" stopColor="#111114" /></linearGradient>
         <linearGradient id="bf-door" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#2c2c33" /><stop offset="1" stopColor="#141417" /></linearGradient>
-        <linearGradient id="bf-gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#fff4d6" /><stop offset=".4" stopColor="#f3dca6" /><stop offset="1" stopColor="#a8823c" /></linearGradient>
-        <radialGradient id="bf-vault" cx=".5" cy=".55" r=".7"><stop offset="0" stopColor="#fff4d6" /><stop offset=".35" stopColor="#f3dca6" stopOpacity=".7" /><stop offset="1" stopColor="#3a2c12" stopOpacity="0" /></radialGradient>
-        <linearGradient id="bf-ray" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stopColor="#fff4d6" stopOpacity=".9" /><stop offset="1" stopColor="#f3dca6" stopOpacity="0" /></linearGradient>
+        <linearGradient id="bf-gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#fff4d6" /><stop offset=".4" stopColor="#e3ff8f" /><stop offset="1" stopColor="#a8823c" /></linearGradient>
+        <radialGradient id="bf-vault" cx=".5" cy=".55" r=".7"><stop offset="0" stopColor="#fff4d6" /><stop offset=".35" stopColor="#e3ff8f" stopOpacity=".7" /><stop offset="1" stopColor="#3a2c12" stopOpacity="0" /></radialGradient>
+        <linearGradient id="bf-ray" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stopColor="#fff4d6" stopOpacity=".9" /><stop offset="1" stopColor="#e3ff8f" stopOpacity="0" /></linearGradient>
         <filter id="bf-blur" filterUnits="userSpaceOnUse" x="0" y="0" width="300" height="300"><feGaussianBlur stdDeviation="3" /></filter>
       </defs>
-      <Glow color="#f3dca6" hits={hits} total={total} opened={opened} />
+      <Glow color="#e3ff8f" hits={hits} total={total} opened={opened} />
       <ellipse cx="150" cy="257" rx="100" ry="8" fill="#000" opacity=".5" />
 
       {/* Rayos de oro que salen al abrir. */}
@@ -64,10 +64,10 @@ export default function BlackFridayGift({ hits, total, opened, reduce }: GiftSce
         <rect x="82" y="96" width="136" height="134" rx="5" fill="#1a140a" />
         <rect x="82" y="96" width="136" height="134" rx="5" fill="url(#bf-vault)" />
         <rect x="86" y="168" width="128" height="4" fill="#5a4a2a" />
-        {[[104, 156], [136, 156], [168, 156], [120, 144], [152, 144]].map(([x, y]) => <path key={`${x}${y}`} d={BAR} fill="url(#bf-gold)" stroke="#8a6a2e" strokeWidth=".8" transform={`translate(${x} ${y})`} />)}
-        {STACKS.map(([x, n]) => Array.from({ length: n }, (_, k) => <ellipse key={`${x}-${k}`} cx={x} cy={224 - k * 4} rx="9" ry="3" fill="url(#bf-gold)" stroke="#8a6a2e" strokeWidth=".7" />))}
+        {[[104, 156], [136, 156], [168, 156], [120, 144], [152, 144]].map(([x, y]) => <path key={`${x}${y}`} d={BAR} fill="url(#bf-gold)" stroke="#6b8f00" strokeWidth=".8" transform={`translate(${x} ${y})`} />)}
+        {STACKS.map(([x, n]) => Array.from({ length: n }, (_, k) => <ellipse key={`${x}-${k}`} cx={x} cy={224 - k * 4} rx="9" ry="3" fill="url(#bf-gold)" stroke="#6b8f00" strokeWidth=".7" />))}
         <g transform="translate(184 206) rotate(-14)">
-          <path d="M-14 -10 H8 L16 0 L8 10 H-14 Z" fill="#f3dca6" stroke="#8a6a2e" strokeWidth="1" /><circle cx="9" cy="0" r="2" fill="#1a140a" />
+          <path d="M-14 -10 H8 L16 0 L8 10 H-14 Z" fill="#e3ff8f" stroke="#6b8f00" strokeWidth="1" /><circle cx="9" cy="0" r="2" fill="#1a140a" />
           <text x="-3" y="5" textAnchor="middle" fontSize="13" fontWeight="800" fill="#0b0b0d">%</text>
         </g>
       </g>
@@ -82,7 +82,7 @@ export default function BlackFridayGift({ hits, total, opened, reduce }: GiftSce
       </g>
 
       {/* Puerta: luz que se escapa por la junta, luces, dial, manija y placa. */}
-      <rect x="82" y="96" width="136" height="134" rx="6" fill="none" stroke="#f3dca6" strokeWidth="4" filter="url(#bf-blur)" style={{ opacity: opened ? 0 : [0, 0.15, 0.32, 0.55, 0.8][hits] ?? 0.8, transition: "opacity 500ms" }} />
+      <rect x="82" y="96" width="136" height="134" rx="6" fill="none" stroke="#e3ff8f" strokeWidth="4" filter="url(#bf-blur)" style={{ opacity: opened ? 0 : [0, 0.15, 0.32, 0.55, 0.8][hits] ?? 0.8, transition: "opacity 500ms" }} />
       <g className={`bf-door${open}`}>
         <rect x="82" y="96" width="136" height="134" rx="6" fill="url(#bf-door)" />
         <rect x="92" y="106" width="116" height="114" rx="4" fill="none" stroke="#3a3a42" strokeWidth="1.5" />
@@ -90,23 +90,23 @@ export default function BlackFridayGift({ hits, total, opened, reduce }: GiftSce
         <rect x="106" y="108" width="88" height="14" rx="7" fill="#0b0b0d" stroke="#3a3a42" />
         {LIGHTS.map((x, i) => (
           <g key={x}>
-            <circle cx={x} cy="115" r="8" fill="#f3dca6" filter="url(#bf-blur)" style={{ opacity: i < lit ? 0.9 : 0, transition: "opacity 300ms" }} />
-            <circle cx={x} cy="115" r="4" fill={i < lit ? "#fff4d6" : "#2a2116"} stroke={i < lit ? "#f3dca6" : "#3a3a42"} strokeWidth="1.2" style={{ transition: "fill 300ms" }} />
+            <circle cx={x} cy="115" r="8" fill="#e3ff8f" filter="url(#bf-blur)" style={{ opacity: i < lit ? 0.9 : 0, transition: "opacity 300ms" }} />
+            <circle cx={x} cy="115" r="4" fill={i < lit ? "#fff4d6" : "#2a2116"} stroke={i < lit ? "#e3ff8f" : "#3a3a42"} strokeWidth="1.2" style={{ transition: "fill 300ms" }} />
           </g>
         ))}
-        <path d="M142 128 L146 134 L138 134 Z" fill="#f3dca6" />
+        <path d="M142 128 L146 134 L138 134 Z" fill="#e3ff8f" />
         <circle cx="142" cy="166" r="31" fill="url(#bf-gold)" />
-        <circle cx="142" cy="166" r="31" fill="none" stroke="#8a6a2e" strokeWidth="1" />
+        <circle cx="142" cy="166" r="31" fill="none" stroke="#6b8f00" strokeWidth="1" />
         <g className="bf-dial" style={{ transform: `rotate(${DIAL[opened ? 5 : hits] ?? 0}deg)` }}>
           <circle cx="142" cy="166" r="25" fill="#141417" />
-          {TICKS.map((i) => <line key={i} x1="142" y1={i % 5 ? 144 : 142} x2="142" y2="147.5" stroke="#f3dca6" strokeWidth={i % 5 ? 0.9 : 1.6} transform={`rotate(${i * 12} 142 166)`} />)}
-          <circle cx="142" cy="166" r="12" fill="url(#bf-gold)" stroke="#8a6a2e" />
-          <rect x="140.5" y="155" width="3" height="9" rx="1.5" fill="#8a6a2e" />
+          {TICKS.map((i) => <line key={i} x1="142" y1={i % 5 ? 144 : 142} x2="142" y2="147.5" stroke="#e3ff8f" strokeWidth={i % 5 ? 0.9 : 1.6} transform={`rotate(${i * 12} 142 166)`} />)}
+          <circle cx="142" cy="166" r="12" fill="url(#bf-gold)" stroke="#6b8f00" />
+          <rect x="140.5" y="155" width="3" height="9" rx="1.5" fill="#6b8f00" />
         </g>
         <g className={`bf-handle${open}`} style={{ transform: opened ? undefined : `rotate(${[0, -10, 8, -14, 12][hits] ?? 0}deg)` }}>
-          <rect x="192" y="160" width="9" height="40" rx="4.5" fill="url(#bf-gold)" stroke="#8a6a2e" />
-          <circle cx="196.5" cy="166" r="8" fill="url(#bf-gold)" stroke="#8a6a2e" />
-          <circle cx="196.5" cy="166" r="3" fill="#8a6a2e" />
+          <rect x="192" y="160" width="9" height="40" rx="4.5" fill="url(#bf-gold)" stroke="#6b8f00" />
+          <circle cx="196.5" cy="166" r="8" fill="url(#bf-gold)" stroke="#6b8f00" />
+          <circle cx="196.5" cy="166" r="3" fill="#6b8f00" />
         </g>
         <rect x="108" y="206" width="84" height="14" rx="3" fill="url(#bf-gold)" />
         <text x="150" y="216.2" textAnchor="middle" fontSize="8.4" fontWeight="800" letterSpacing="1.6" fill="#0b0b0d">BLACK FRIDAY</text>
@@ -133,8 +133,8 @@ const CSS = `
 .bf-rays.is-open { animation: bf-rays 1.3s cubic-bezier(.16,1,.3,1) 320ms both; }
 @keyframes bf-rays { 0% { opacity: 0; transform: scale(.3) rotate(-10deg); } 40% { opacity: 1; } 100% { opacity: .7; transform: scale(1) rotate(0); } }
 .bf-loot { display: grid; place-items: center; opacity: 0; animation: bf-loot 1.2s cubic-bezier(.2,.7,.4,1) both; }
-.bf-coin { width: 16px; height: 16px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff4d6, #f3dca6 45%, #a8823c); box-shadow: inset 0 0 0 2px #c9a55a; }
-.bf-tag { width: 26px; height: 17px; border-radius: 3px 8px 8px 3px; background: #f3dca6; color: #0b0b0d; font: 800 12px/1 system-ui, sans-serif; box-shadow: inset 0 0 0 1px #8a6a2e; }
+.bf-coin { width: 16px; height: 16px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff4d6, #e3ff8f 45%, #a8823c); box-shadow: inset 0 0 0 2px #c9a55a; }
+.bf-tag { width: 26px; height: 17px; border-radius: 3px 8px 8px 3px; background: #e3ff8f; color: #0b0b0d; font: 800 12px/1 system-ui, sans-serif; box-shadow: inset 0 0 0 1px #6b8f00; }
 @keyframes bf-loot { 0% { opacity: 1; transform: translate(-50%,-50%) scale(.3) rotate(0); } 45% { opacity: 1; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(var(--s)) rotate(calc(var(--rot) * .6)); } 100% { opacity: 0; transform: translate(calc(-50% + var(--dx) * 1.25), calc(-50% + var(--dy) + 110px)) scale(var(--s)) rotate(var(--rot)); } }
 @media (prefers-reduced-motion: reduce) {
   .bf-dial, .bf-handle { transition: none; }

@@ -19,6 +19,8 @@ const nextConfig: NextConfig = {
   basePath,
   images: { unoptimized: true },
   reactStrictMode: true,
+  // Las reglas para agentes viven en AGENTS.md (a mano): que `next dev` no les agregue su bloque.
+  agentRules: false,
   env: {
     NEXT_PUBLIC_BASE_PATH: basePath,
     NEXT_PUBLIC_SITE_URL: (process.env.PAGES_SITE_URL ?? "").replace(/\/+$/, ""),

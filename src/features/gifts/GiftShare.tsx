@@ -29,19 +29,19 @@ export function GiftShare({ gift, compact }: { gift: GiftData; compact?: boolean
     catch { toast({ tone: "error", title: "No se pudo copiar", description: "Copialo a mano: " + value }); }
   };
   return (
-    <div className="rounded-[1.6rem] bg-night p-5 text-[#f6f1e8] sm:p-6">
+    <div className="rounded-[1.6rem] bg-night p-5 text-on-night sm:p-6">
       {!compact && (
         <div className="flex items-start gap-4">
-          <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-brass/20 text-brass"><Gift size={22} aria-hidden="true" /></span>
+          <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-volt/20 text-volt"><Gift size={22} aria-hidden="true" /></span>
           <div className="min-w-0">
-            <p className="eyebrow text-brass">Regalo listo para mandar</p>
+            <p className="eyebrow text-volt">Regalo listo para mandar</p>
             <p className="mt-1 font-bold">Para {gift.to} · {gift.item.name}</p>
-            <p className="mt-0.5 text-sm text-[#cfc6b3]">Se abre como: {sceneLabel(gift.occasion)}.{gift.eta ? ` Listo para entregar el ${formatDay(gift.eta)}.` : ""}</p>
+            <p className="mt-0.5 text-sm text-night-muted">Se abre como: {sceneLabel(gift.occasion)}.{gift.eta ? ` Listo para entregar el ${formatDay(gift.eta)}.` : ""}</p>
           </div>
         </div>
       )}
       <button type="button" onClick={() => void copy(gift.code, "Código copiado")} aria-label={`Copiar código ${gift.code}`}
-        className={`${compact ? "" : "mt-5 "}flex w-full items-center justify-center gap-2 rounded-2xl border border-dashed border-brass/60 px-4 py-3 font-mono text-lg font-extrabold tracking-[0.12em] text-brass transition hover:bg-white/5`}>
+        className={`${compact ? "" : "mt-5 "}flex w-full items-center justify-center gap-2 rounded-2xl border border-dashed border-volt/60 px-4 py-3 font-mono text-lg font-extrabold tracking-[0.12em] text-volt transition hover:bg-white/5`}>
         {gift.code} <Copy size={16} aria-hidden="true" />
       </button>
       <div className="mt-3 grid grid-cols-2 gap-2">
@@ -51,20 +51,20 @@ export function GiftShare({ gift, compact }: { gift: GiftData; compact?: boolean
         </a>
         {share ? (
           <button type="button" onClick={() => void navigator.share({ title: "Un regalo de Volta", text: shareText, url: giftUrl(gift) }).catch(() => {})}
-            className="flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#fffdf8] px-4 text-sm font-bold text-night hover:bg-white">
+            className="flex min-h-12 items-center justify-center gap-2 rounded-full bg-on-night px-4 text-sm font-bold text-night hover:bg-white">
             <Share2 size={17} aria-hidden="true" /> Compartir
           </button>
         ) : (
           <button type="button" onClick={() => void copy(giftUrl(gift), "Link copiado")}
-            className="flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#fffdf8] px-4 text-sm font-bold text-night hover:bg-white">
+            className="flex min-h-12 items-center justify-center gap-2 rounded-full bg-on-night px-4 text-sm font-bold text-night hover:bg-white">
             <Copy size={17} aria-hidden="true" /> Copiar link
           </button>
         )}
       </div>
-      <Link href={`${giftPath(gift)}&vista=previa`} className="mt-3 flex items-center justify-center gap-2 text-sm font-semibold text-[#cfc6b3] underline-offset-4 hover:text-white hover:underline">
+      <Link href={`${giftPath(gift)}&vista=previa`} className="mt-3 flex items-center justify-center gap-2 text-sm font-semibold text-night-muted underline-offset-4 hover:text-white hover:underline">
         <Eye size={16} aria-hidden="true" /> Ver cómo lo recibe
       </Link>
-      {gift.toEmail && <p className="mt-2 text-center text-xs text-[#cfc6b3]">También le aparece en su cuenta ({gift.toEmail}). En la demo no se manda ningún email.</p>}
+      {gift.toEmail && <p className="mt-2 text-center text-xs text-night-muted">También le aparece en su cuenta ({gift.toEmail}). En la demo no se manda ningún email.</p>}
     </div>
   );
 }

@@ -30,7 +30,7 @@ export const AMBIENT: Record<SeasonId, AmbientLayer[]> = {
     { particles: [{ dot: "#ff9a3c" }, { dot: "#c58bff" }], motion: "twinkle", count: 16, size: [3, 6], duration: [3, 6], opacity: 0.85 },
   ],
   "ano-nuevo": [
-    { particles: [{ paper: "#f3dca6" }, { paper: "#d2ad69" }, { paper: "#8fd3ff" }, { paper: "#ff7aa8" }], motion: "fall", count: 22, size: [6, 11], duration: [9, 16], opacity: 0.85 },
+    { particles: [{ paper: "#e3ff8f" }, { paper: "#c8ff2e" }, { paper: "#8fd3ff" }, { paper: "#ff7aa8" }], motion: "fall", count: 22, size: [6, 11], duration: [9, 16], opacity: 0.85 },
     { particles: [{ decor: "star" }], motion: "twinkle", count: 7, size: [10, 18], duration: [3, 5], opacity: 0.8 },
   ],
   "san-valentin": [{ particles: [{ decor: "heart" }], motion: "rise", count: 12, size: [12, 26], duration: [14, 22], opacity: 0.55 }],
@@ -59,9 +59,9 @@ export const AMBIENT: Record<SeasonId, AmbientLayer[]> = {
     { particles: [{ decor: "bone" }], motion: "rise", count: 4, size: [16, 24], duration: [18, 26], opacity: 0.4 },
   ],
   "hot-sale": [{ particles: [{ dot: "#ff8a3c" }, { dot: "#ffd34d" }], motion: "rise", count: 20, size: [3, 7], duration: [7, 13], opacity: 0.85 }],
-  "black-friday": [{ particles: [{ dot: "#f3dca6" }, { decor: "star" }], motion: "twinkle", count: 18, size: [4, 12], duration: [3, 6], opacity: 0.8 }],
+  "black-friday": [{ particles: [{ dot: "#e3ff8f" }, { decor: "star" }], motion: "twinkle", count: 18, size: [4, 12], duration: [3, 6], opacity: 0.8 }],
   "dia-del-padre": [{ particles: [{ decor: "star" }, { dot: "#e9c27a" }], motion: "twinkle", count: 12, size: [4, 12], duration: [3, 6], opacity: 0.6 }],
-  "dia-del-amigo": [{ particles: [{ paper: "#f3dca6" }, { paper: "#b7d68f" }, { paper: "#ef9b6a" }], motion: "fall", count: 16, size: [6, 10], duration: [11, 18], opacity: 0.7 }],
+  "dia-del-amigo": [{ particles: [{ paper: "#e3ff8f" }, { paper: "#b7d68f" }, { paper: "#ef9b6a" }], motion: "fall", count: 16, size: [6, 10], duration: [11, 18], opacity: 0.7 }],
   "dia-del-nino": [
     { particles: [{ decor: "balloon" }], motion: "rise", count: 7, size: [20, 34], duration: [14, 22], opacity: 0.6 },
     { particles: [{ paper: "#ffd34d" }, { paper: "#4fb3e8" }, { paper: "#ef5b5b" }], motion: "fall", count: 12, size: [6, 10], duration: [11, 18], opacity: 0.7 },

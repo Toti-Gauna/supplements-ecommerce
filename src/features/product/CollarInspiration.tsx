@@ -15,7 +15,7 @@ export function CollarInspiration({ spec, onPick }: { spec: CollarSpec; onPick: 
     <section aria-labelledby="collar-ideas" className="rounded-[1.75rem] bg-surface p-4 shadow-[var(--shadow-card)] sm:p-5">
       <div className="mb-3 flex items-end justify-between gap-3">
         <div>
-          <p className="eyebrow flex items-center gap-1.5 text-brass-ink"><Camera size={13} aria-hidden="true" /> Ideas para inspirarte</p>
+          <p className="eyebrow flex items-center gap-1.5 text-volt-ink"><Camera size={13} aria-hidden="true" /> Ideas para inspirarte</p>
           <h2 id="collar-ideas" className="font-display mt-1 text-2xl">Combinaciones listas</h2>
         </div>
         <p className="hidden text-right text-xs text-muted sm:block">Tocá una y la cambiás a tu gusto</p>

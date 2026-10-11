@@ -29,43 +29,43 @@ export const demoSettings: DemoSettings = {
   nationalTaxRate: 0.21,
   enabledMethods: ["CHECKOUT_PRO", "BANK_TRANSFER", "QR_MANUAL"],
   whatsappNumber: null,
-  brandColors: { primary: "#3a4527", accent: "#ece2cf", background: "#f6f1e8" },
+  brandColors: { primary: "#c8ff2e", accent: "#1a1f28", background: "#0a0c10" },
   legalName: null,
   cuit: null,
 };
 
 export const homeCta = {
-  title: "Crear mi producto personalizado",
-  text: "Texto, foto o foto de referencia. Mirá cómo queda y aprobalo antes de pagar.",
+  title: "Armá tu stack",
+  text: "Elegí tu objetivo y sumá proteína, creatina y pre. Te mostramos cuánto te dura cada pote y cuánto ahorrás.",
 };
 
 export const coupons: Coupon[] = [
   { code: "BIENVENIDA10", type: "PERCENT", value: 10, description: "10% en tu primera compra", active: true, usedCount: 23 },
-  { code: "FERIA2000", type: "FIXED", value: 2000, minSubtotal: 20000, description: "$2.000 desde $20.000 (cupón de feria)", active: true, maxUses: 50, usedCount: 12 },
+  { code: "FERIA2000", type: "FIXED", value: 2000, minSubtotal: 20000, description: "$2.000 desde $20.000 (cupón del gimnasio amigo)", active: true, maxUses: 50, usedCount: 12 },
   { code: "ENVIOGRATIS", type: "FREE_SHIPPING", value: 0, onlyRegistered: true, description: "Envío gratis, solo con cuenta", active: true, usedCount: 7 },
   { code: "INVIERNO", type: "PERCENT", value: 15, endsAt: "2026-08-31", description: "Cupón vencido de ejemplo", active: true, maxUses: 100, usedCount: 41 },
 ];
 
 export const missions: Mission[] = [
-  { id: "m-dos-productos", title: "Comprá 2 productos", description: "En uno o varios pedidos pagados.", type: "UNITS_COUNT", threshold: 2, reward: "Placa NFC de regalo", active: true, nextMissionId: "m-gasto", completedCount: 14 },
-  { id: "m-primera", title: "Primera compra con cuenta", description: "Tu primer pedido pagado con cuenta.", type: "ORDERS_COUNT", threshold: 1, reward: "Grabado de nombre gratis en la próxima", active: true, nextMissionId: null, completedCount: 31 },
-  { id: "m-gasto", title: "Sumá $100.000", description: "Acumulado en pedidos pagados.", type: "SPEND_TOTAL", threshold: 100000, reward: "Comedero de regalo", active: true, nextMissionId: null, completedCount: 4 },
+  { id: "m-dos-productos", title: "Comprá 2 productos", description: "En uno o varios pedidos pagados.", type: "UNITS_COUNT", threshold: 2, reward: "Shaker VOLTA de regalo", active: true, nextMissionId: "m-gasto", completedCount: 14 },
+  { id: "m-primera", title: "Primera compra con cuenta", description: "Tu primer pedido pagado con cuenta.", type: "ORDERS_COUNT", threshold: 1, reward: "Envío gratis en la próxima compra", active: true, nextMissionId: null, completedCount: 31 },
+  { id: "m-gasto", title: "Sumá $100.000", description: "Acumulado en pedidos pagados.", type: "SPEND_TOTAL", threshold: 100000, reward: "Creatina 300 g de regalo", active: true, nextMissionId: null, completedCount: 4 },
 ];
 
 /** Progreso de muestra de la cuenta demo, antes del pedido actual. */
 export const demoAccountProgress: Record<string, number> = { "m-dos-productos": 1, "m-primera": 0, "m-gasto": 58000 };
 
 export const shippingZones: ShippingZone[] = [
-  { id: "pickup", type: "PICKUP", name: "Retiro en persona", price: 0, etaText: "Coordinamos día y horario por WhatsApp" },
-  { id: "local", type: "LOCAL_DELIVERY", name: "Cadete en Mar del Plata", price: 3500, etaText: "24–48 h desde que está listo", postalCodes: ["7600", "7601", "7602", "7603", "7604", "7605", "7606", "7607", "7608", "7609", "7610", "7611", "7612"] },
+  { id: "pickup", type: "PICKUP", name: "Retiro en el local", price: 0, etaText: "Listo en 1 hora en días hábiles" },
+  { id: "local", type: "LOCAL_DELIVERY", name: "Cadete en Mar del Plata", price: 3500, etaText: "En el día si comprás antes de las 14 h", postalCodes: ["7600", "7601", "7602", "7603", "7604", "7605", "7606", "7607", "7608", "7609", "7610", "7611", "7612"] },
   { id: "national", type: "SHIPPING", name: "Envío al resto del país", price: 9800, etaText: "3–7 días hábiles por correo" },
 ];
 
 export const slides: CarouselSlide[] = [
-  { id: "s1", title: "Mirá tu pieza antes de pagar", subtitle: "Subí la foto, encuadrala y aprobá la vista previa.", ctaLabel: "Crear mi producto", ctaHref: "/crear/", art: "lamp-photo" },
-  { id: "s2", title: "Comederos en el color de tu casa", subtitle: "Impresos en 3D, con el nombre de tu mascota.", ctaLabel: "Ver comederos", ctaHref: "/c/comederos/", art: "bowl-dog" },
-  { id: "s3", title: "Nueva línea de aromas", subtitle: "Home spray y difusores Volta.", ctaLabel: "Ver aromas", ctaHref: "/c/hogar/", art: "diffuser" },
+  { id: "s1", title: "Cargá tu mejor versión", subtitle: "Proteínas, creatinas y pre-entrenos con lote y vencimiento a la vista.", ctaLabel: "Ver proteínas", ctaHref: "/c/proteinas/", art: "tub" },
+  { id: "s2", title: "Creatina: 5\u00a0g que se notan", subtitle: "La más estudiada para fuerza. Ahora también en gomitas.", ctaLabel: "Ver creatinas", ctaHref: "/c/creatinas/", art: "jar" },
+  { id: "s3", title: "Entrená con todo, recuperá mejor", subtitle: "Electrolitos, magnesio y omega 3 para volver mañana como nuevo.", ctaLabel: "Ver vitaminas y salud", ctaHref: "/c/salud/", art: "shaker" },
 ];
 
 export const DEMO_TRACKING_TOKEN = "demo-volta";
-export const DEMO_ORDER_CODE = "VEL-DEMO-0001";
+export const DEMO_ORDER_CODE = "VOL-DEMO-0001";

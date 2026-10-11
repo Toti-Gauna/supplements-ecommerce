@@ -3,6 +3,16 @@ import { withCurrentCollarSpec } from "@/demo/admin/templates";
 import { collarPieces, demoChoices, describeCollar, optionsFor, resolveCollar } from "@/demo/engine/collar";
 import { defaultDemoData } from "@/demo/engine/source";
 import { collarPresets, collarSpec, defaultCollarConfig, type CollarSpec } from "@/demo/fixtures/collar";
+import { collarTemplate } from "@/demo/fixtures/templates";
+import type { Product } from "@/demo/types";
+
+/** Ningún producto del catálogo usa el configurador: un collar mínimo armado acá. */
+const collarProduct: Product = {
+  slug: "collar-con-nombre", name: "Collar con nombre", short: "", description: "", categorySlug: "accesorios", brand: "VOLTA Lab",
+  basePrice: 14900, art: "box", gallery: ["front"], faqs: [], featured: false, isNew: false, soldCount: 0, tags: [],
+  variants: [{ id: "col-m", label: "Mediano (36–45 cm)", priceDelta: 1500, stock: -1 }],
+  personalization: collarTemplate,
+};
 
 /** Polish 8.2.4: estilos de letras, adornos, patrones del cordón y opciones marcadas como ejemplo de la demo. */
 describe("collar: estilos, patrones y adornos", () => {
@@ -47,7 +57,8 @@ describe("collar: estilos, patrones y adornos", () => {
     }
   });
   it("los datos guardados en el navegador con la configuración vieja del collar toman la vigente", () => {
-    const data = defaultDemoData();
+    const defaults = defaultDemoData();
+    const data = { ...defaults, products: [...defaults.products, collarProduct] };
     const stale = { ...collarSpec, patterns: undefined, designs: undefined } as unknown as CollarSpec;
     const saved = { ...data, products: data.products.map((p) => (p.personalization?.collar ? { ...p, personalization: { ...p.personalization, collar: stale, maxChars: 7 } } : p)) };
     const fresh = withCurrentCollarSpec(saved);

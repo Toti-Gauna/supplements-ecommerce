@@ -16,9 +16,9 @@ export function CouponForm({ subtotal, isRegistered, check, where = "tienda" }: 
   const [error, setError] = useState<string | null>(null);
   const setCoupons = useUi((s) => s.setCoupons);
   const picker = (
-    <button type="button" onClick={() => setCoupons(true)} className="flex w-full items-center gap-3 rounded-2xl bg-night px-4 py-3 text-left text-[#f6f1e8] transition-colors hover:bg-night-2">
-      <TicketPercent size={20} aria-hidden="true" className="shrink-0 text-brass" />
-      <span className="flex-1 text-sm font-bold">Elegir de mis cupones<span className="block text-xs font-semibold text-[#cfc6b3]">Los de la ruleta y los vigentes de la tienda</span></span>
+    <button type="button" onClick={() => setCoupons(true)} className="flex w-full items-center gap-3 rounded-2xl bg-night px-4 py-3 text-left text-on-night transition-colors hover:bg-night-2">
+      <TicketPercent size={20} aria-hidden="true" className="shrink-0 text-volt" />
+      <span className="flex-1 text-sm font-bold">Elegir de mis cupones<span className="block text-xs font-semibold text-night-muted">Los de la ruleta y los vigentes de la tienda</span></span>
       <ChevronRight size={18} aria-hidden="true" />
     </button>
   );

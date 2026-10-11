@@ -21,7 +21,7 @@ export function WheelTeaser() {
       </button>
       {hydrated && prize ? (
         <div className="w-full max-w-sm">
-          <p className="eyebrow mb-2 text-center text-brass-ink">Tu premio</p>
+          <p className="eyebrow mb-2 text-center text-volt-ink">Tu premio</p>
           <WheelPrizeTicket />
           <Button variant="secondary" className="mt-3 w-full" onClick={() => setWheel(true)}>Ver mi premio</Button>
         </div>

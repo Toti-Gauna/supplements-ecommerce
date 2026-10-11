@@ -8,7 +8,7 @@ export function StockMeter({ availability }: { availability: Availability }) {
     return (
       <div className="flex items-center gap-3 rounded-2xl bg-accent/50 px-4 py-3 text-sm">
         <CalendarClock size={20} aria-hidden="true" className="shrink-0 text-primary" />
-        <span><strong>Hecho a pedido</strong>{availability.days ? ` · se fabrica en ${availability.days} días hábiles` : ""}. Sin límite de unidades.</span>
+        <span><strong>Por encargo</strong>{availability.days ? ` · llega al local en ${availability.days} días hábiles` : ""}. Sin límite de unidades.</span>
       </div>
     );
   }

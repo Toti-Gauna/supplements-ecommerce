@@ -46,8 +46,8 @@ export function blockingErrors(p: Product, categories: Category[]): string[] {
 /** Producto nuevo en borrador: no existe en el catálogo hasta "Guardar" (8.3.21). Arranca pausado, como antes. */
 export function newProductDraft(slug: string, categories: Category[]): Product {
   return {
-    slug, name: "", short: "", description: "", categorySlug: [...categories].sort((a, b) => a.sortOrder - b.sortOrder)[0]?.slug ?? "",
-    basePrice: 0, art: "dachshund", gallery: ["front"], variants: [{ id: `${slug}-v1`, label: "Único", priceDelta: 0, stock: -1 }],
+    slug, name: "", short: "", description: "", brand: "", categorySlug: [...categories].sort((a, b) => a.sortOrder - b.sortOrder)[0]?.slug ?? "",
+    basePrice: 0, art: "tub", gallery: ["front"], variants: [{ id: `${slug}-v1`, label: "Único", priceDelta: 0, stock: -1 }],
     faqs: [], featured: false, isNew: true, soldCount: 0, tags: [], active: false, imageAlt: "",
   };
 }

@@ -44,10 +44,10 @@ export function ShopMenu({ active }: { active: boolean }) {
                   </li>
                 ))}
               </ul>
-              <Link href="/crear/" onClick={() => setOpen(false)} className="flex flex-col justify-between rounded-2xl bg-night p-4 text-[#f6f1e8]">
-                <span className="eyebrow text-brass">Personalizador</span>
-                <span className="font-display text-2xl leading-tight">Mirá tu pieza antes de pagar</span>
-                <span className="flex items-center gap-1 text-sm font-bold">Crear la mía <ArrowRight size={16} aria-hidden="true" /></span>
+              <Link href="/buscar/?objetivo=masa-muscular" onClick={() => setOpen(false)} className="flex flex-col justify-between rounded-2xl bg-night p-4 text-on-night ring-1 ring-volt/20">
+                <span className="eyebrow text-volt">Por objetivo</span>
+                <span className="font-display text-2xl leading-tight">Encontrá lo tuyo según tu objetivo</span>
+                <span className="flex items-center gap-1 text-sm font-bold text-volt">Ver objetivos <ArrowRight size={16} aria-hidden="true" /></span>
               </Link>
             </div>
           </motion.div>

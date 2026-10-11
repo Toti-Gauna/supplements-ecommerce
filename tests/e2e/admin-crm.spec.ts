@@ -50,12 +50,12 @@ test("pedidos: filtro de etapa, cambio en lote, ficha completa y exportar a Exce
   const stage = page.getByRole("combobox", { name: "Etapa" });
   await page.getByRole("button", { name: "Más filtros" }).click();
   await stage.selectOption("to-make");
-  await page.getByLabel("Seleccionar VEL-000122").first().check();
+  await page.getByLabel("Seleccionar VOL-000122").first().check();
   await page.getByRole("region", { name: "Acciones en lote" }).getByRole("button", { name: "Pasar a En producción" }).click();
   await expect(status(page, /1 pedido pasó a “En producción”/)).toBeVisible();
   await stage.selectOption("making");
-  await page.getByRole("button", { name: /VEL-000122/ }).first().click();
-  await expect(page.getByRole("heading", { level: 1, name: /VEL-000122/ })).toBeVisible();
+  await page.getByRole("button", { name: /VOL-000122/ }).first().click();
+  await expect(page.getByRole("heading", { level: 1, name: /VOL-000122/ })).toBeVisible();
   await expect(page.getByText("En producción").first()).toBeVisible();
   // Atrás vuelve a la tabla con el filtro puesto (vive en la URL).
   await page.goBack();
@@ -87,7 +87,7 @@ test("buscador del panel con Ctrl+K abre un pedido", async ({ page }) => {
   await page.keyboard.press("Control+k");
   await page.getByRole("combobox").fill("000124");
   await page.keyboard.press("Enter");
-  await expect(page).toHaveURL(/pedidos\/detalle\/\?codigo=VEL-000124/);
+  await expect(page).toHaveURL(/pedidos\/detalle\/\?codigo=VOL-000124/);
 });
 
 test.describe("vista Excel de Productos y stock en escritorio", () => {

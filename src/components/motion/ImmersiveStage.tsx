@@ -26,7 +26,7 @@ const noop = () => () => {};
  * ventana con marco: ocupa la pantalla entera y entra sin scroll. Accesible como diálogo: foco atrapado, Escape
  * sale, scroll de fondo bloqueado y el foco vuelve a donde estaba. Se monta en <body> por portal.
  */
-export function ImmersiveStage({ open, onClose, label, glow = ["#3d4a2a", "#c9a77a"], exitLabel = "Salir", lockExit, children, className }: Props) {
+export function ImmersiveStage({ open, onClose, label, glow = ["#1c1640", "#8b72ff"], exitLabel = "Salir", lockExit, children, className }: Props) {
   const root = useRef<HTMLDivElement>(null);
   const mounted = useSyncExternalStore(noop, () => true, () => false);
   const closeRef = useRef(onClose);

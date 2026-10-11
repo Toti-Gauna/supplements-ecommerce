@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 
-const COLORS = ["#3d4a2a", "#c9a77a", "#e88aa0", "#8cbfe0", "#e3a948"];
+// Confeti de la marca: voltio, plasma, ion, blanco y un rojo de disco olímpico.
+const COLORS = ["#c8ff2e", "#8b72ff", "#2ee6d6", "#eef1f5", "#ff5a4e"];
 const PIECES = Array.from({ length: 14 }, (_, i) => {
   const angle = (i / 14) * Math.PI * 2;
   return { dx: Math.cos(angle) * (60 + (i % 3) * 18), dy: Math.sin(angle) * (40 + (i % 4) * 12) - 20, rot: i * 47, color: COLORS[i % COLORS.length]! };

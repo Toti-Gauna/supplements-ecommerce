@@ -8,7 +8,7 @@ import type { Closure, ClosureKind } from "@/demo/fixtures/workshop";
 import { formatDay } from "@/lib/date";
 import { cn } from "@/lib/cn";
 
-export const KIND_LABEL: Record<ClosureKind, string> = { feriado: "Feriado nacional", "no-laborable": "Día no laborable", cierre: "Cierre del taller" };
+export const KIND_LABEL: Record<ClosureKind, string> = { feriado: "Feriado nacional", "no-laborable": "Día no laborable", cierre: "Cierre del local" };
 const action = "inline-flex h-10 items-center gap-1.5 rounded-full border border-ink/15 px-3.5 text-sm font-bold hover:bg-accent/50";
 
 /** Fecha de una fila: "jue, 8 oct · 2027" cuando no es el año en curso. */
@@ -16,15 +16,15 @@ function When({ date, today }: { date: string; today: string }) {
   return <span className="w-32 shrink-0 font-bold tabular-nums first-letter:uppercase">{formatDay(date)}{date.slice(0, 4) !== today.slice(0, 4) ? ` · ${date.slice(0, 4)}` : ""}</span>;
 }
 
-/** Feriado cargado: cerrado (se puede trabajar ese día) o abierto (se puede volver a cerrar). Los pasados no cambian. */
+/** Feriado cargado: cerrado (se puede despachar ese día) o abierto (se puede volver a cerrar). Los pasados no cambian. */
 export function HolidayRow({ row, today, onOpen, onClose }: { row: Closure & { closed: boolean; past: boolean }; today: string; onOpen: () => void; onClose: () => void }) {
   return (
     <li className={cn("flex flex-wrap items-center gap-x-3 gap-y-2 py-2.5 text-sm", row.past && "text-muted")}>
       <When date={row.date} today={today} />
       <span className="min-w-0 flex-1 basis-40"><span className="block">{row.name}</span>
-        <span className="text-xs text-muted">{KIND_LABEL[row.kind]} · {row.past ? "ya pasó" : row.closed ? "taller cerrado" : <strong className="text-success">el taller trabaja</strong>}</span></span>
+        <span className="text-xs text-muted">{KIND_LABEL[row.kind]} · {row.past ? "ya pasó" : row.closed ? "sin despachos" : <strong className="text-success">se despacha</strong>}</span></span>
       {!row.past && (row.closed
-        ? <button type="button" className={action} onClick={onOpen} aria-label={`Trabajar el ${formatDay(row.date)} (${row.name})`}>Trabajar ese día</button>
+        ? <button type="button" className={action} onClick={onOpen} aria-label={`Despachar el ${formatDay(row.date)} (${row.name})`}>Despachar ese día</button>
         : <button type="button" className={action} onClick={onClose} aria-label={`Volver a cerrar el ${formatDay(row.date)} (${row.name})`}>Volver a cerrar</button>)}
     </li>
   );
@@ -41,7 +41,7 @@ export function OwnClosureRow({ closure: c, today, editing, onEdit, onCancel, on
     return (
       <li className="py-2.5">
         <form className="grid grid-cols-[minmax(0,1fr)] gap-2 sm:grid-cols-[10rem_minmax(0,1fr)_auto]" aria-label={`Editar cierre del ${formatDay(c.date)}`}
-          onSubmit={(e) => { e.preventDefault(); setError(onSave({ ...c, date, name: name.trim() || "Cierre del taller" })); }}>
+          onSubmit={(e) => { e.preventDefault(); setError(onSave({ ...c, date, name: name.trim() || "Cierre del local" })); }}>
           <DateInput aria-label="Fecha del cierre" min={today} value={date} onChange={(e) => setDate(e.target.value)} />
           <Input aria-label="Motivo" value={name} onChange={(e) => setName(e.target.value)} />
           <span className="flex gap-2"><Button type="submit" size="sm">Guardar</Button><Button size="sm" variant="ghost" onClick={onCancel}>Cancelar</Button></span>

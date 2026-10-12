@@ -1,4 +1,5 @@
 "use client";
+import { Bike } from "lucide-react";
 import { closureFor, monthGrid, type WorkCalendar } from "@/demo/engine/workdays";
 import type { CalendarEvent } from "@/demo/fixtures/workshop";
 import { formatDay } from "@/lib/date";
@@ -31,7 +32,7 @@ export function capacityText(used: number, capacity: number): string {
 
 export function dayLabel(day: string, list: Entry[], events: CalendarEvent[], closed: { reason: string } | null, capacity: number): string {
   const used = list.filter((e) => e.counts).length;
-  return `${formatDay(day, "long")}${closed ? `, ${closed.reason}` : ""}: ${list.length} ${list.length === 1 ? "entrega" : "entregas"}${!closed ? `, ${capacityText(used, capacity).toLowerCase()} de capacidad` : ""}${events.length ? `, ${events.length} ${events.length === 1 ? "entrada" : "entradas"}` : ""}. Abrir el día`;
+  return `${formatDay(day, "long")}${closed ? `, ${closed.reason}` : ""}: ${list.length} ${list.length === 1 ? "despacho" : "despachos"}${!closed ? `, cadete ${capacityText(used, capacity).toLowerCase()}` : ""}${events.length ? `, ${events.length} ${events.length === 1 ? "entrada" : "entradas"}` : ""}. Abrir el día`;
 }
 
 /** Mientras se arrastra: el día bajo el cursor que no acepta muestra por qué (cerrado, completo, ya pasó). */
@@ -48,7 +49,7 @@ export function MonthView({ cursor, today, days, events, cal, capacity, dnd, onD
   const month = cursor.slice(0, 7);
   return (
     <table className="w-full table-fixed border-separate border-spacing-1 sm:border-spacing-1.5">
-      <caption className="sr-only">Entregas y entradas de {formatDay(cursor, "month")}. Tocá un día para ver o agregar entradas; arrastrá un pedido a otro día para reprogramarlo.</caption>
+      <caption className="sr-only">Despachos y entradas de {formatDay(cursor, "month")}. Tocá un día para ver o agregar entradas; arrastrá un pedido a otro día para reprogramarlo.</caption>
       <thead>
         <tr>{WEEKDAYS.map((d) => <th key={d} scope="col" className="pb-1 text-[11px] font-extrabold uppercase tracking-[0.12em] text-muted">{d}</th>)}</tr>
       </thead>
@@ -73,8 +74,8 @@ export function MonthView({ cursor, today, days, events, cal, capacity, dnd, onD
                   <div className="pointer-events-none relative flex items-center gap-1 px-1.5 pt-1.5">
                     <span className={cn("grid h-6 min-w-6 place-items-center rounded-full px-1 text-xs font-extrabold tabular-nums",
                       day === today ? "bg-night text-on-night" : closed || outside ? "text-muted" : "text-ink")}>{Number(day.slice(8))}</span>
-                    {!closed && day >= today && list.length > 0 && (
-                      <span className={cn("ml-auto hidden rounded-full px-1.5 text-[10px] font-extrabold tabular-nums sm:inline", used >= capacity ? "bg-warning-soft text-warning" : "bg-bg text-muted")}>{capacityText(used, capacity)}</span>
+                    {!closed && day >= today && used > 0 && (
+                      <span className={cn("ml-auto hidden items-center gap-0.5 rounded-full px-1.5 text-[10px] font-extrabold tabular-nums sm:inline-flex", used >= capacity ? "bg-warning-soft text-warning" : "bg-bg text-muted")}><Bike size={10} aria-hidden="true" />{capacityText(used, capacity)}</span>
                     )}
                   </div>
                   {closed?.closure && <p className="pointer-events-none absolute inset-x-1.5 bottom-1.5 hidden truncate text-[10px] font-bold text-muted sm:block">{closed.reason}</p>}

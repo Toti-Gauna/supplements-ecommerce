@@ -1,7 +1,8 @@
 "use client";
-import { AlarmClock, CalendarX2, GripVertical } from "lucide-react";
+import { AlarmClock, Bike, CalendarX2, Store, Truck } from "lucide-react";
 import { STATUS_LABEL, type OrderStatus } from "@/demo/engine/orders";
 import { cn } from "@/lib/cn";
+import { fulfillmentLabel } from "../OrderCard";
 import type { CalendarDnd } from "./dnd";
 import { firstName, type Entry } from "./entries";
 
@@ -18,14 +19,17 @@ export const STATUS_TONE: Partial<Record<OrderStatus, string>> = {
 
 export const LEGEND: { status: OrderStatus; label: string }[] = [
   { status: "PENDING_PAYMENT", label: "Sin cobrar" },
-  { status: "PAID", label: "Pagado, por fabricar" },
-  { status: "IN_PRODUCTION", label: "En producción" },
-  { status: "READY", label: "Listo para entregar" },
+  { status: "PAID", label: "Pagado, por preparar" },
+  { status: "IN_PRODUCTION", label: "En preparación" },
+  { status: "READY", label: "Listo para despachar" },
   { status: "DELIVERED", label: "Entregado" },
 ];
 
+/** Cómo sale el pedido: cadete (ocupa cupo), correo o retiro en el local. */
+export const FULFILLMENT_ICON = { LOCAL_DELIVERY: Bike, SHIPPING: Truck, PICKUP: Store } as const;
+
 export function entryLabel(e: Entry): string {
-  return `${e.order.code}, ${e.order.customer.name}, ${STATUS_LABEL[e.order.status]}${e.late ? ", atrasado" : ""}${e.blocked ? ", en un día cerrado" : ""}`;
+  return `${e.order.code}, ${e.order.customer.name}, ${fulfillmentLabel(e.order.fulfillment).toLowerCase()}, ${STATUS_LABEL[e.order.status]}${e.late ? ", atrasado" : ""}${e.blocked ? ", en un día cerrado" : ""}`;
 }
 
 interface Props {
@@ -40,6 +44,7 @@ interface Props {
 /** Pedido en el calendario: abre la ficha de entrega al tocarlo y se arrastra a otro día. */
 export function EntryChip({ entry: e, onOpen, dnd, variant = "compact" }: Props) {
   const draggable = e.movable && !!dnd;
+  const Via = FULFILLMENT_ICON[e.order.fulfillment];
   return (
     <button type="button" onClick={() => onOpen(e.order.code)} {...(draggable ? dnd.source({ kind: "order", code: e.order.code }) : {})}
       aria-label={entryLabel(e)} data-code={e.order.code}
@@ -49,13 +54,13 @@ export function EntryChip({ entry: e, onOpen, dnd, variant = "compact" }: Props)
         draggable && "cursor-grab active:cursor-grabbing")}>
       {variant === "compact" ? (
         <>
-          {e.late ? <AlarmClock size={12} aria-hidden="true" className="shrink-0" /> : e.blocked ? <CalendarX2 size={12} aria-hidden="true" className="shrink-0" /> : draggable && <GripVertical size={11} aria-hidden="true" className="shrink-0 opacity-50" />}
+          {e.late ? <AlarmClock size={12} aria-hidden="true" className="shrink-0" /> : e.blocked ? <CalendarX2 size={12} aria-hidden="true" className="shrink-0" /> : <Via size={11} aria-hidden="true" className="shrink-0 opacity-70" />}
           <span className="truncate">{e.order.code.slice(-3)} · {firstName(e.order.customer.name)}</span>
         </>
       ) : (
         <>
           <span className="flex items-center gap-1 whitespace-nowrap tabular-nums">
-            {e.late && <AlarmClock size={13} aria-hidden="true" />}
+            {e.late ? <AlarmClock size={13} aria-hidden="true" /> : <Via size={13} aria-hidden="true" />}
             {e.order.code}
           </span>
           <span className="truncate text-[11px] font-semibold opacity-80">{e.late ? "Atrasado" : e.blocked ? "Día cerrado: reprogramar" : STATUS_LABEL[e.order.status]}</span>

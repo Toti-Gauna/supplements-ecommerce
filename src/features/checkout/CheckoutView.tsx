@@ -59,9 +59,9 @@ export function CheckoutView() {
     const now = new Date();
     // El carrito se lee en el momento: desde "¿Es para regalo?" se puede marcar un regalo y confirmar en el mismo toque.
     const lines = useCart.getState().lines;
-    // Cada línea marcada como regalo genera su código y su link; la fecha estimada sale del calendario del taller.
+    // Cada línea marcada como regalo genera su código y su link; la fecha estimada sale del calendario de despachos.
     const { orders, workshop } = useAdmin.getState();
-    const gifts = giftsFromLines(lines, { orderCode: DEMO_ORDER_CODE, now, eta: promiseFor(lines, DEMO_TODAY, orders, workshop.settings, DEMO_ORDER_CODE).day, random: Math.random });
+    const gifts = giftsFromLines(lines, { orderCode: DEMO_ORDER_CODE, now, eta: promiseFor(lines, DEMO_TODAY, orders, workshop.settings, { fulfillment: checkout.fulfillment!, exceptCode: DEMO_ORDER_CODE }).day, random: Math.random });
     if (gifts.length) useGifts.getState().addSent(gifts);
     const order = {
       code: DEMO_ORDER_CODE, token: DEMO_TRACKING_TOKEN, createdAt: now.toISOString(), contact: checkout.contact,

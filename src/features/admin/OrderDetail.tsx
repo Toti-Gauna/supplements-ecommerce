@@ -23,7 +23,7 @@ import { paymentHref, PROOF_STATE, ProofActions } from "./payments/ProofActions"
 import { useDemoSave } from "./useDemoSave";
 
 /**
- * Ficha completa del pedido (8.3.5, 8.3.6): ID, estado de pago y de producción por separado y la próxima acción
+ * Ficha completa del pedido (8.3.5, 8.3.6): ID, estado de pago y de preparación por separado y la próxima acción
  * arriba; después cliente, productos, pago y entrega; historial, notas y emails. Dos columnas solo si el ancho real alcanza.
  */
 export function OrderDetail() {
@@ -40,7 +40,7 @@ export function OrderDetail() {
   return (
     <div className="@container flex flex-col gap-6">
       <DetailHeader list={{ href: "/admin-demo/pedidos/", label: "Pedidos" }} title={order.code} eyebrow={`Pedido ficticio · ${formatDateTime(order.createdAt)}`}
-        status={<><TrackChip label="Pago" value={pay.label} tone={pay.tone} /><TrackChip label="Producción y entrega" value={ful.label} tone={ful.tone} /></>}
+        status={<><TrackChip label="Pago" value={pay.label} tone={pay.tone} /><TrackChip label="Preparación y entrega" value={ful.label} tone={ful.tone} /></>}
         aside={<><p className="text-xs font-bold text-muted">Total</p><p className="text-3xl font-extrabold tabular-nums">{formatARS(order.total)}</p></>} />
       <section aria-labelledby="o-next" className="flex flex-col gap-3 rounded-[1.75rem] bg-surface p-5 shadow-[var(--shadow-card)] ring-2 ring-primary/15">
         <div>
@@ -57,7 +57,7 @@ export function OrderDetail() {
           <Panel title="Cliente" action={<Link href={profileHref(order.customer.email)} className="text-sm font-bold text-primary underline">Ver ficha del cliente</Link>}>
             <Facts items={[["Nombre", order.customer.name], ["Email", order.customer.email], ["Teléfono", order.customer.phone]]} />
           </Panel>
-          <Panel title="Productos, lote y servicios"><OrderItems lines={order.lines} /></Panel>
+          <Panel title="Productos, lote y servicios"><OrderItems lines={order.lines} lotCheck={order.lotCheck} /></Panel>
           <Panel title="Pago" action={manual && order.proof ? <Link href={paymentHref(order.code)} className="text-sm font-bold text-primary underline">Ver comprobante</Link> : undefined}>
             <Facts items={[
               ["Medio", paymentLabel(order.paymentMethod)],
@@ -69,7 +69,7 @@ export function OrderDetail() {
             <div className="mt-3"><ProofActions order={order} /></div>
           </Panel>
           <Panel title="Entrega">
-            <Facts items={[["Forma", fulfillmentLabel(order.fulfillment)], ...(order.address ? [["Dirección", order.address] as [string, string]] : []), ["Comprometido", order.promisedDate ? formatDate(order.promisedDate) : "Sin fecha"]]} />
+            <Facts items={[["Forma", fulfillmentLabel(order.fulfillment)], ...(order.address ? [["Dirección", order.address] as [string, string]] : []), ["Despacho", order.promisedDate ? formatDate(order.promisedDate) : "Sin fecha"]]} />
             <div className="mt-4"><PromiseDate order={order} /></div>
           </Panel>
         </div>

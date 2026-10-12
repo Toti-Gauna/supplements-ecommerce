@@ -21,9 +21,9 @@ describe("pago y producción por separado (8.3.5)", () => {
   });
   it("rechazado vuelve a esperar; pagado a mano y producción avanzan por separado", () => {
     expect(paymentTrack(withStatus("PENDING_PAYMENT", { paymentMethod: "QR_MANUAL", proof: { fileName: "x", receivedAt: "", status: "REJECTED", rejectReason: "monto" } })).label).toBe("Comprobante rechazado");
-    const making = withStatus("IN_PRODUCTION", { paymentMethod: "BANK_TRANSFER", stage: "finishing" });
+    const making = withStatus("IN_PRODUCTION", { paymentMethod: "BANK_TRANSFER", stage: "lot-check" });
     expect(paymentTrack(making)).toEqual({ label: "Pagado · aprobado a mano", tone: "success" });
-    expect(fulfillmentTrack(making).label).toBe("En producción · terminación");
+    expect(fulfillmentTrack(making).label).toBe("En preparación · control de lote");
     expect(fulfillmentTrack(withStatus("READY", { fulfillment: "PICKUP" })).label).toBe("Listo para retirar");
     expect(nextStep(withStatus("DELIVERED"))).toBeNull();
   });
@@ -35,9 +35,9 @@ describe("pago y producción por separado (8.3.5)", () => {
 
 describe("ayudas con las reglas del engine (8.3.10)", () => {
   it("VIP usa el umbral real y coincide con segmentOf", () => {
-    expect(SEGMENT_HELP.items[0]!.text).toContain(VIP_FROM.toLocaleString("es-AR"));
+    expect(SEGMENT_HELP.items.find((i) => i.term === "VIP")!.text).toContain(VIP_FROM.toLocaleString("es-AR"));
     expect(segmentOf(1, VIP_FROM)).toBe("VIP");
-    expect(segmentOf(2, VIP_FROM - 1)).toBe("Recurrente");
+    expect(segmentOf(2, VIP_FROM - 1)).toBe("Frecuente");
     expect(segmentOf(1, 10)).toBe("Nuevo");
     expect(segmentOf(0, 0)).toBe("Sin compras");
   });
@@ -61,19 +61,20 @@ describe("modales de Costos e Insumos (8.3.17)", () => {
     expect(checkMaterial({ ...base, unit: "u", min: "2,5" }).errors.min).toBeTruthy();
     expect(checkMaterial({ ...base, supplier: "  " }).value?.supplier).toBeUndefined();
   });
-  it("receta: cantidades mayores que 0, minutos enteros y precio de prueba positivo", () => {
+  it("costos: cantidades de embalaje mayores que 0, costos por presentación en pesos enteros y precio de prueba positivo", () => {
     const recipe = defaultAdminData().workshop.recipes["ionic-whey"]!;
     const d = recipeDraft(recipe);
     expect(checkRecipe(d).value).toEqual(recipe);
     expect(checkRecipe({ ...d, supplier: "" }).value?.supplierCost).toBeUndefined();
     expect(checkRecipe({ ...d, supplier: "abc" }).errors.supplier).toBeTruthy();
     expect(checkRecipe({ ...d, items: [{ ...d.items[0]!, qty: "0" }] }).errors[`item:${d.items[0]!.materialId}`]).toMatch(/mayor que 0/);
-    expect(checkRecipe({ ...d, machine: "-5" }).errors.machine).toBeTruthy();
-    expect(checkRecipe({ ...d, hand: "" }).errors.hand).toBeTruthy();
+    expect(checkRecipe({ ...d, variants: { ...d.variants, "iw-chocolate-5lb": "52.800,50" } }).errors["variant:iw-chocolate-5lb"]).toMatch(/enteros/);
+    // Vaciar el costo de una presentación vuelve a estimarlo por precio.
+    expect(checkRecipe({ ...d, variants: { ...d.variants, "iw-chocolate-5lb": "" } }).value?.variantCosts).not.toHaveProperty("iw-chocolate-5lb");
     expect(checkTrialPrice("$ 11.500")).toEqual({ ok: true, value: 11500 });
     expect(checkTrialPrice("0").ok).toBe(false);
   });
-  it("receta: editar sin cambios conserva el costo del proveedor", () => {
+  it("costos: editar sin cambios conserva el costo del proveedor y los de cada presentación", () => {
     const recipe = defaultAdminData().workshop.recipes["ionic-whey"]!;
     expect(recipe.supplierCost).toBe(26400);
     expect(checkRecipe(recipeDraft(recipe)).value).toEqual(recipe);

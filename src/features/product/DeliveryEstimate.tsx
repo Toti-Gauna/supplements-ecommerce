@@ -15,25 +15,25 @@ const ROWS = [
 ] as const;
 
 /**
- * Estimación con el calendario real del depósito: plazo de preparación en días hábiles, feriados y despachos por día.
- * Si los primeros días ya están completos en el panel, el comprador ve la próxima fecha con lugar.
+ * Estimación con el calendario real de despachos: plazo de preparación en días hábiles, feriados y el cupo del cadete.
+ * Si el cadete ya tiene completos los primeros días en el panel, el comprador ve la próxima fecha con lugar.
  */
 export function DeliveryEstimate({ product, variant }: { product: Product; variant: Variant }) {
   const hydrated = useHydrated();
   const orders = useAdmin((s) => s.orders);
   const settings = useAdmin((s) => s.workshop.settings);
   const est = estimateForProduct(product, variant, DEMO_TODAY, hydrated ? orders : [], settings);
-  const windows = deliveryWindows(est.day, settings);
+  const windows = deliveryWindows(est.earliest, settings, est.day);
   return (
     <div className="rounded-2xl border border-line p-4">
       <p className="eyebrow mb-3 text-muted">¿Cuándo llega?</p>
       <p className="mb-3 flex items-start gap-2.5 rounded-xl bg-bg p-3 text-sm">
         <CalendarCheck size={18} aria-hidden="true" className="mt-0.5 shrink-0 text-primary" />
         <span>
-          <span className="font-bold">Lo despachamos el {formatDay(est.day, "long")}</span>
+          <span className="font-bold">Lo despachamos el {formatDay(est.earliest, "long")}</span>
           <span className="block text-muted">
             {est.leadDays === 1 ? "En stock: sale al día hábil siguiente." : `Entra al depósito en ${est.leadDays} días hábiles.`}
-            {est.fullDays.length > 0 && ` Los días anteriores el reparto ya está completo: es la primera fecha con lugar.`}
+            {est.fullDays.length > 0 && ` Con cadete, el ${formatDay(est.day, "long")}: los días anteriores el reparto ya está completo.`}
           </span>
         </span>
       </p>
@@ -44,7 +44,7 @@ export function DeliveryEstimate({ product, variant }: { product: Product; varia
             <li key={id} className="flex items-center gap-3">
               <Icon size={18} aria-hidden="true" className="shrink-0 text-primary" />
               <span className="flex-1">{label}</span>
-              <span className="font-bold">{day(w.from)} – {day(w.to)}</span>
+              <span className="font-bold">{w.from === w.to ? day(w.from) : `${day(w.from)} – ${day(w.to)}`}</span>
             </li>
           );
         })}

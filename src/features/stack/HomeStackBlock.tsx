@@ -5,8 +5,9 @@ import { useRef, useState } from "react";
 import { ButtonLink } from "@/components/atoms/Button";
 import { DEFAULT_STACK_RULE } from "@/demo/engine/stack";
 import { defaultStack, stackSummary } from "@/demo/engine/stack-builder";
-import { goalById } from "@/demo/fixtures/goals";
+import { useGoal } from "../catalog/useGoals";
 import type { Goal } from "@/demo/types";
+import { splitAccent } from "@/lib/accent";
 import { formatARS } from "@/lib/money";
 import { useDemoData } from "@/stores/admin";
 import { GoalChips } from "./GoalChips";
@@ -23,7 +24,11 @@ const FIRST_GOAL: Goal = "fuerza";
 export function HomeStackBlock() {
   const catalog = useDemoData((d) => d.products);
   const rule = useDemoData((d) => d.settings.stack) ?? DEFAULT_STACK_RULE;
+  // Título y texto editables desde el panel (Contenido → Textos de inicio); lo que sigue a la coma va en voltio.
+  const cta = useDemoData((d) => d.content.homeCta);
+  const [lead, accent] = splitAccent(cta.title);
   const [goal, setGoal] = useState<Goal>(FIRST_GOAL);
+  const goalName = useGoal(goal)?.name;
   const shelfRef = useRef<HTMLDivElement>(null);
   const inView = useInView(shelfRef, { once: true, amount: 0.35 });
   const summary = stackSummary(defaultStack(goal, catalog), catalog, rule);
@@ -37,15 +42,15 @@ export function HomeStackBlock() {
         <div className="flex min-w-0 flex-col gap-6">
           <div>
             <p className="eyebrow text-volt">Armá tu stack · en vivo</p>
-            <h2 id="home-stack-title" className="font-display mt-2 text-3xl leading-tight sm:text-5xl">Tu estante, <span className="text-volt">según tu objetivo</span></h2>
+            <h2 id="home-stack-title" className="font-display mt-2 text-3xl leading-tight sm:text-5xl">{lead}{accent && <span className="text-volt">{accent}</span>}</h2>
             <p className="mt-3 max-w-md text-night-muted">
-              Tocá un objetivo y mirá el stack que te sugerimos.{rule.pct > 0 && ` Con ${rule.minCategories} categorías distintas tenés ${rule.pct} % off.`}
+              {cta.text}{rule.pct > 0 && ` Con ${rule.minCategories} categorías distintas tenés ${rule.pct} % off.`}
             </p>
           </div>
           <GoalChips tone="night" value={goal} onChange={setGoal} legend="Probá con un objetivo" />
         </div>
         <div ref={shelfRef} className="flex min-w-0 flex-col gap-5">
-          <StackShelf items={shelf} discountPct={discount && inView ? summary.stack.pct : 0} title={goalById(goal)?.name} />
+          <StackShelf items={shelf} discountPct={discount && inView ? summary.stack.pct : 0} title={goalName} />
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div aria-live="polite">
               <p className="eyebrow text-[10px] text-night-muted">{discount ? "Total con descuento stack" : "Total"}</p>

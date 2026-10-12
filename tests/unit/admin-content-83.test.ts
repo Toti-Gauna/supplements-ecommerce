@@ -1,12 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { checkImageFile, checkImageSize, checkSlide, frame, isSlideList, newSlide, normalizeSlides, SLIDE_LIMITS } from "@/demo/admin/content-slides";
-import { BADGE_EDGE, coverRatio, offerParts, overlaps, postLayout, storyBadge } from "@/demo/admin/studio/offer";
+import { BADGE_EDGE, coverRatio, offerParts, overlaps, postLayout, potRect, storyBadge } from "@/demo/admin/studio/offer";
 import { defaultDemoData } from "@/demo/engine/source";
 import type { CarouselSlide } from "@/demo/types";
+import { splitAccent } from "@/lib/accent";
 
 /** Polish 8.3 · Lote 7: cartel de oferta del Estudio y carrusel del inicio. */
 const { content } = defaultDemoData();
-const img = { src: "data:image/jpeg;base64,AAAA", alt: "Vela sobre la mesa", x: 50, y: 50, zoom: 1 };
+const img = { src: "data:image/jpeg;base64,AAAA", alt: "Pote de whey sobre la mesada", x: 50, y: 50, zoom: 1 };
 
 describe("cartel de oferta del Estudio (8.3.27)", () => {
   it("separa el valor de OFF y deja frases como 'Envío gratis' enteras", () => {
@@ -15,30 +16,28 @@ describe("cartel de oferta del Estudio (8.3.27)", () => {
     expect(offerParts("Envío gratis")).toEqual({ value: "Envío gratis", unit: "" });
   });
 
-  it("post 1:1: el cartel entra en la pieza, no pisa la columna de texto y apenas toca el borde de la tarjeta", () => {
+  it("post 1:1: el cartel entra en la pieza, no pisa la columna de texto y apenas roza el pote", () => {
     for (const badge of [{ w: 280, h: 230 }, { w: 320, h: 300 }, { w: 378, h: 360 }]) {
       const L = postLayout(1080, badge);
       expect(L.badge!.x + L.badge!.w).toBeLessThanOrEqual(1080 - BADGE_EDGE);
       expect(L.badge!.y).toBeGreaterThanOrEqual(BADGE_EDGE);
       // Titular, texto y precio van de x = 80 a 530.
       expect(overlaps(L.badge!, { x: 80, y: 100, w: 450, h: 760 })).toBe(false);
-      // Solo el margen de arriba de la tarjeta (el producto va centrado).
-      expect(coverRatio(L.card, L.badge!)).toBeLessThan(0.1);
-      expect(L.badge!.y + L.badge!.h - L.card.y).toBeLessThanOrEqual(48);
-      expect(L.card.h).toBeGreaterThanOrEqual(420);
+      // Solo puede rozar la tapa del pote (el producto se ve entero).
+      const pot = potRect(L.pot);
+      expect(coverRatio(pot, L.badge!)).toBeLessThan(0.05);
+      expect(pot.x).toBeGreaterThan(530);
+      expect(L.pot.size).toBeGreaterThanOrEqual(380);
     }
-    // La decoración se corre a la izquierda del cartel.
-    const wide = postLayout(1080, { w: 378, h: 360 });
-    expect(wide.hero.x + wide.hero.size).toBeLessThanOrEqual(wide.badge!.x + 16);
-    expect(postLayout(1080, null)).toMatchObject({ badge: null, card: { x: 560, y: 250, w: 430, h: 538 } });
+    expect(postLayout(1080, null)).toMatchObject({ badge: null, pot: { cx: 790, floorY: 830, size: 560 } });
   });
 
-  it("historia 9:16: el cartel queda dentro y solo se apoya en el costado de la tarjeta", () => {
-    const card = { x: 302, y: 820, w: 476, h: 580 };
-    const b = storyBadge(1080, card, { w: 312, h: 334 });
+  it("historia 9:16: el cartel queda dentro y solo se apoya en el costado del pote", () => {
+    const pot = potRect({ cx: 540, floorY: 1340, size: 640 });
+    const b = storyBadge(1080, pot, { w: 312, h: 334 });
     expect(b.x + b.w).toBeLessThanOrEqual(1080 - BADGE_EDGE);
-    expect(b.x).toBeGreaterThan(card.x + card.w * 0.8);
-    expect(coverRatio(card, b)).toBeLessThan(0.1);
+    expect(b.x).toBeGreaterThan(pot.x + pot.w * 0.8);
+    expect(coverRatio(pot, b)).toBeLessThan(0.1);
   });
 });
 
@@ -75,5 +74,15 @@ describe("carrusel del inicio (8.3.28)", () => {
     expect(normalizeSlides(content.slides)).toEqual(content.slides);
     expect(isSlideList([broken])).toBe(false);
     expect(isSlideList([])).toBe(false);
+  });
+});
+
+describe("textos de inicio", () => {
+  it("el bloque “Armá tu stack” arranca con textos de suplementos y pinta en voltio lo que sigue a la coma", () => {
+    expect(content.homeCta).toEqual({ title: "Tu estante, según tu objetivo", text: "Tocá un objetivo y mirá el stack que te sugerimos." });
+    expect(splitAccent(content.homeCta.title)).toEqual(["Tu estante, ", "según tu objetivo"]);
+    expect(splitAccent("Stack del mes")).toEqual(["Stack del mes", ""]);
+    expect(splitAccent("Más fuerza,")).toEqual(["Más fuerza,", ""]);
+    for (const f of content.faqs) expect(`${f.q} ${f.a}`).not.toMatch(/mascota|vela|collar|taller|a mano/i);
   });
 });

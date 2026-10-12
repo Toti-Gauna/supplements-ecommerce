@@ -1,7 +1,7 @@
 import type { CartLine } from "../engine/cart-types";
 import type { OrderStatus } from "../engine/orders";
 import type { FulfillmentType, PaymentMethod } from "../types";
-import type { ProductionStage } from "./workshop/production";
+import type { PrepStage } from "./workshop/preparation";
 
 export interface StatusLogEntry {
   at: string;
@@ -30,10 +30,12 @@ export interface AdminOrder {
   lines: CartLine[];
   total: number;
   proof?: PaymentProof;
-  /** Fecha comprometida de entrega (AAAA-MM-DD): ocupa un lugar del taller ese día. */
+  /** Fecha de despacho comprometida (AAAA-MM-DD): si va con el cadete, ocupa un lugar de su reparto ese día. */
   promisedDate?: string;
-  /** Etapa interna mientras está "En producción": en máquina o en terminación. */
-  stage?: ProductionStage;
+  /** Etapa interna mientras está "En preparación": armando o en control de lote. */
+  stage?: PrepStage;
+  /** Lote confirmado de cada línea (id de línea → lote) en el control de lote, antes de quedar listo. */
+  lotCheck?: Record<string, string>;
   notes: string[];
   log: StatusLogEntry[];
   /** Pedido que llegó desde el checkout de demostración de este navegador. */

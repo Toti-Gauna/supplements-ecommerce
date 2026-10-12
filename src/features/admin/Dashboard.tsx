@@ -14,6 +14,8 @@ import { OrderCard } from "./OrderCard";
 import { SalesByDay } from "./SalesByDay";
 import { StatusPipeline } from "./StatusPipeline";
 import { WorkshopStrip } from "./WorkshopStrip";
+import { RepurchaseWeek } from "./customers/RepurchaseWeek";
+import { ExpiringSoon } from "./lots/ExpiringSoon";
 
 export function Dashboard() {
   const orders = useAdmin((s) => s.orders);
@@ -40,7 +42,7 @@ export function Dashboard() {
       <section aria-label="Indicadores (demo)" className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
         <KpiTile className="col-span-2 sm:col-span-1" label="Ventas últimos 7 días" value={formatARS(sales.week)} delta={delta(sales.week, sales.prevWeek)} spark={sales.days.map((d) => d.amount)} />
         <KpiTile className="col-span-2 sm:col-span-1" label="Ticket promedio" value={formatARS(sales.avgTicket)} hint={`${sales.paidCount} pedidos pagados · demo`} />
-        <KpiTile label="Pedidos en marcha" value={<Counter value={active} />} hint="pagados, en producción, listos y enviados" />
+        <KpiTile label="Pedidos en marcha" value={<Counter value={active} />} hint="pagados, en preparación, listos y enviados" />
         <KpiTile label="Comprobantes a verificar" value={<Counter value={counts.PAYMENT_REVIEW} />} hint="transferencia y QR · demo" dark />
       </section>
       <section aria-labelledby="pipe">
@@ -48,6 +50,11 @@ export function Dashboard() {
         <StatusPipeline counts={counts} />
       </section>
       <WorkshopStrip />
+      {/* Lo que pide acción esta semana: recompras para avisar y lotes que vencen pronto para liquidar. */}
+      <div data-dashboard-actions className="grid grid-cols-[minmax(0,1fr)] gap-4 xl:grid-cols-2">
+        <RepurchaseWeek />
+        <ExpiringSoon />
+      </div>
       <div className="grid grid-cols-[minmax(0,1fr)] gap-4 xl:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
         <SalesByDay days={sales.days} orders={orders} />
         <TopProducts orders={orders} />

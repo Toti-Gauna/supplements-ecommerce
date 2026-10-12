@@ -1,4 +1,5 @@
 import type { Category, Product } from "../types";
+import { invalidLots } from "./lots";
 
 /**
  * Pasos del editor de producto (8.3.20) y su validación. "Completo" sale de validar los datos, no de haber pasado por
@@ -27,7 +28,8 @@ export function checkSteps(p: Product, categories: Category[]): Record<StepId, S
       warnings: [],
     },
     variantes: {
-      errors: p.variants.length === 0 ? ["Tiene que haber al menos una variante."] : p.variants.some((v) => !v.label.trim()) ? ["Cada variante necesita un nombre visible."] : [],
+      errors: p.variants.length === 0 ? ["Tiene que haber al menos una variante."] : p.variants.some((v) => !v.label.trim()) ? ["Cada variante necesita un nombre visible."]
+        : invalidLots(p).length ? ["Cada lote con unidades necesita código y mes de vencimiento."] : [],
       warnings: [],
     },
     envio: { errors: [], warnings: dims && dims.lengthCm > 0 && dims.widthCm > 0 && dims.heightCm > 0 && dims.weightG > 0 ? [] : ["Cargá largo, ancho, alto y peso para cotizar envíos."] },

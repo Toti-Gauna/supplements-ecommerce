@@ -1,4 +1,4 @@
-import { goalById } from "@/demo/fixtures/goals";
+import { goalInfo } from "@/demo/engine/goals";
 import { QUIZ_DAYS, QUIZ_RESTRICTIONS, QUIZ_TIMES, type QuizAnswers, type Restriction, type TrainingDays, type TrainingTime } from "@/demo/fixtures/stack-builder";
 import type { Goal } from "@/demo/types";
 
@@ -39,7 +39,7 @@ export function completeAnswers(d: QuizDraft): QuizAnswers | null {
 
 /** La respuesta en pocas palabras ("Fuerza", "3 o 4 días", "Sin restricciones"). */
 export function answerLabel(draft: QuizDraft, id: QuizStepId): string {
-  if (id === "goal") return draft.goal ? goalById(draft.goal)?.name ?? draft.goal : "";
+  if (id === "goal") return draft.goal ? goalInfo(draft.goal)?.name ?? draft.goal : "";
   if (id === "days") return QUIZ_DAYS.find((d) => d.value === draft.days)?.label ?? "";
   if (id === "time") return QUIZ_TIMES.find((t) => t.value === draft.time)?.label ?? "";
   if (!draft.restrictions) return "";

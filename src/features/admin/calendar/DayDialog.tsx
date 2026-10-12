@@ -21,7 +21,7 @@ type Mode = { view: true } | { form: EventDraft; id?: string } | { remove: Calen
 interface Props { day: string | null; eventId: string | null; today: string; entries: Entry[]; onClose: () => void; onReschedule: (code: string) => void }
 
 /**
- * Un día del calendario (8.3.15): sus entregas, sus entradas y si el taller trabaja. Desde acá se crean y editan
+ * Un día del calendario (8.3.15): sus despachos, sus entradas y si se despacha. Desde acá se crean y editan
  * entradas o se cierra el día, todo en el mismo modal (sin otro encima).
  */
 export function DayDialog({ day, eventId, today, entries, onClose, onReschedule }: Props) {
@@ -65,7 +65,7 @@ function DayBody({ day, eventId, today, entries, onReschedule }: Omit<Props, "da
     <div className="flex max-h-[94dvh] flex-col gap-4 overflow-y-auto p-5 pt-7 sm:max-h-[90dvh] sm:p-7">
       <header className="pr-12">
         <h2 className="font-display text-3xl first-letter:uppercase">{formatDay(day, "long")}</h2>
-        <p className="mt-1 text-sm font-bold text-muted">{closed ? `${closed.reason} · el taller no trabaja` : `Taller abierto · ${used} de ${settings.dailyCapacity} pedidos${used > settings.dailyCapacity ? " (sobrecargado)" : used === settings.dailyCapacity ? " (completo)" : ""}`}</p>
+        <p className="mt-1 text-sm font-bold text-muted">{closed ? (closed.closure ? `${closed.reason} · no se despacha` : closed.reason) : `Se despacha · cadete: ${used} de ${settings.dailyCapacity} pedidos${used > settings.dailyCapacity ? " (sobrecargado)" : used === settings.dailyCapacity ? " (completo)" : ""}`}</p>
       </header>
       {"form" in mode ? (
         <EventForm initial={mode.form} today={today} orders={linkable} allowClosure={!mode.id} editing={!!mode.id} onCancel={() => setMode({ view: true })} onSave={(d) => submit(d, mode.id)}
@@ -75,26 +75,26 @@ function DayBody({ day, eventId, today, entries, onReschedule }: Omit<Props, "da
           onConfirm={() => { const id = mode.remove.id; save("Entrada quitada", () => removeEvent(id)); setMode({ view: true }); }} />
       ) : "removeClosure" in mode ? (
         <InlineConfirm label="Quitar cierre" title={`¿Quitar “${mode.removeClosure.name}”?`} action="Quitar cierre" cancel="Cancelar" onCancel={() => setMode({ view: true })}
-          onConfirm={() => { const c = mode.removeClosure; save("Cierre quitado: el taller trabaja ese día", () => removeClosure(c.date)); setMode({ view: true }); }}>
-          <p>El taller vuelve a trabajar ese día y la tienda lo ofrece como fecha de entrega.</p>
+          onConfirm={() => { const c = mode.removeClosure; save("Cierre quitado: ese día se despacha", () => removeClosure(c.date)); setMode({ view: true }); }}>
+          <p>Vuelve a haber despachos ese día y la tienda lo ofrece como fecha.</p>
         </InlineConfirm>
       ) : "impact" in mode ? (
         <ImpactConfirm impact={mode.impact} action="Cerrar igual" onCancel={() => setMode({ view: true })}
-          onConfirm={() => { const c = mode.closure; save(`${formatDay(c.date)}: ${c.name}`, () => addClosure(c), "Las entregas de ese día quedaron marcadas para reprogramar."); setMode({ view: true }); }} />
+          onConfirm={() => { const c = mode.closure; save(`${formatDay(c.date)}: ${c.name}`, () => addClosure(c), "Los pedidos de ese día quedaron marcados para reprogramar."); setMode({ view: true }); }} />
       ) : (
         <>
           {closed?.closure && (
             <p className="flex flex-wrap items-center gap-2 rounded-2xl bg-surface p-3 text-sm shadow-[var(--shadow-card)]">
               <CalendarOff size={16} aria-hidden="true" className="text-muted" /><span className="min-w-0 flex-1 font-semibold">{closed.closure.name}</span>
               {isPresetHolidayDate(day)
-                ? day >= today && <Button size="sm" variant="secondary" onClick={() => { save(`${formatDay(day)}: el taller trabaja`, () => removeClosure(day)); }}>Trabajar ese día</Button>
+                ? day >= today && <Button size="sm" variant="secondary" onClick={() => { save(`${formatDay(day)}: se despacha`, () => removeClosure(day)); }}>Despachar ese día</Button>
                 : <Button size="sm" variant="ghost" onClick={() => setMode({ removeClosure: closed.closure! })}>Quitar cierre</Button>}
             </p>
           )}
-          {closed && !closed.closure && <p className="text-sm text-muted">Los días de trabajo se cambian en “Capacidad y feriados”.</p>}
-          <section aria-label="Entregas del día">
-            <h3 className="mb-2 font-bold">Entregas ({entries.length})</h3>
-            {entries.length ? <ul className="flex flex-col gap-2">{entries.map((e) => <EntryRow key={e.order.code} entry={e} onOpen={onReschedule} />)}</ul> : <p className="text-sm text-muted">No hay entregas comprometidas.</p>}
+          {closed && !closed.closure && <p className="text-sm text-muted">Los días de despacho se cambian en “Cupo del cadete y feriados”.</p>}
+          <section aria-label="Despachos del día">
+            <h3 className="mb-2 font-bold">Despachos ({entries.length})</h3>
+            {entries.length ? <ul className="flex flex-col gap-2">{entries.map((e) => <EntryRow key={e.order.code} entry={e} onOpen={onReschedule} />)}</ul> : <p className="text-sm text-muted">No hay despachos comprometidos.</p>}
           </section>
           <section aria-label="Entradas del día">
             <h3 className="mb-2 font-bold">Entradas ({events.length})</h3>
@@ -118,7 +118,7 @@ function DayBody({ day, eventId, today, entries, onReschedule }: Omit<Props, "da
             ) : <p className="text-sm text-muted">Sin entradas propias.</p>}
           </section>
           <div className="flex flex-wrap justify-end gap-2">
-            {!closed && day >= today && <Button variant="ghost" onClick={() => setMode({ form: { ...eventDraft(day), kind: "cierre" } })}><CalendarOff size={16} aria-hidden="true" /> Cerrar el taller este día</Button>}
+            {!closed && day >= today && <Button variant="ghost" onClick={() => setMode({ form: { ...eventDraft(day), kind: "cierre" } })}><CalendarOff size={16} aria-hidden="true" /> Cerrar el local este día</Button>}
             <Button onClick={() => setMode({ form: eventDraft(day) })}><Plus size={16} aria-hidden="true" /> Nueva entrada</Button>
           </div>
         </>

@@ -1,7 +1,7 @@
 "use client";
 import { useId, type CSSProperties } from "react";
 import { GoalGlyph } from "@/components/illustrations/GoalGlyph";
-import { goals } from "@/demo/fixtures/goals";
+import { useGoals } from "../catalog/useGoals";
 import type { Goal } from "@/demo/types";
 import { cn } from "@/lib/cn";
 
@@ -20,6 +20,7 @@ interface GoalChipsProps {
  */
 export function GoalChips({ value, onChange, legend = "Tu objetivo", tone = "surface", className }: GoalChipsProps) {
   const name = useId();
+  const goals = useGoals();
   const idle = tone === "night" ? "border-white/15 bg-white/[0.04] text-on-night hover:border-white/35" : "border-line bg-surface text-ink hover:border-ink/30";
   return (
     <fieldset className={cn("min-w-0", className)}>

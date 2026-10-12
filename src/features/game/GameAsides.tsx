@@ -1,11 +1,12 @@
+"use client";
 import { Check } from "lucide-react";
-import { gamePrizes, gameRules, type GameItemKind } from "@/demo/fixtures/game";
+import { gameRules, type GameItemKind } from "@/demo/fixtures/game";
 import { cn } from "@/lib/cn";
 import { GameGlyph } from "./art/GameGlyph";
+import { usePrizeTiers } from "./usePrizeTiers";
 
 const GOOD: GameItemKind[] = ["scoop", "capsule", "bolt", "golden"];
 const JUNK: GameItemKind[] = ["burger", "soda", "donut"];
-const tiers = [...gamePrizes.tiers].sort((a, b) => a.minScore - b.minScore);
 const aside = "hidden w-56 shrink-0 flex-col justify-center gap-3 px-6 lg:flex xl:w-64";
 
 /** En pantallas anchas, a la izquierda del campo: qué atrapar y qué esquivar (el mismo dibujo que cae). */
@@ -34,6 +35,7 @@ export function LegendAside() {
 
 /** A la derecha del campo: la escalera de premios con lo que ya se alcanzó en esta partida. */
 export function PrizeAside({ score }: { score: number }) {
+  const { tiers } = usePrizeTiers();
   return (
     <aside aria-label="Premios por puntaje" className={aside}>
       <p className="eyebrow text-volt">Premios</p>

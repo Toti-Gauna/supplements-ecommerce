@@ -2,10 +2,12 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { createCatalogActions, type CatalogActions } from "@/demo/admin/catalog-slice";
+import { createCustomerActions, type CustomerActions } from "@/demo/admin/customers-slice";
 import { normalizeSlides } from "@/demo/admin/content-slides";
 import { createDataActions, type DataActions } from "@/demo/admin/data-slice";
 import { auditEntry, defaultAdminData, type AdminData } from "@/demo/admin/defaults";
 import { createOrdersActions, type OrdersActions } from "@/demo/admin/orders-slice";
+import { createPurchasingActions, type PurchasingActions } from "@/demo/admin/purchasing-slice";
 import { withPrizeCatalog } from "@/demo/admin/wheel-prizes";
 import type { AdminClaim } from "@/demo/admin/types";
 import { createWorkshopActions, type WorkshopActions } from "@/demo/admin/workshop-slice";
@@ -13,7 +15,7 @@ import { createEmailActions, type EmailActions } from "@/demo/admin/emails-slice
 import { setDemoData, type DemoData } from "@/demo/engine/source";
 import { ADMIN_STORE_VERSION, demoStorage, STORAGE_PREFIX } from "./storage";
 
-export type AdminState = AdminData & OrdersActions & DataActions & CatalogActions & WorkshopActions & EmailActions & {
+export type AdminState = AdminData & OrdersActions & DataActions & CatalogActions & WorkshopActions & PurchasingActions & EmailActions & CustomerActions & {
   addClaim: (claim: Omit<AdminClaim, "id" | "status" | "createdAt">) => void;
   resetAdmin: () => void;
 };
@@ -30,7 +32,9 @@ export const useAdmin = create<AdminState>()(
       ...createDataActions(set),
       ...createCatalogActions(set),
       ...createWorkshopActions(set),
+      ...createPurchasingActions(set),
       ...createEmailActions(set, get),
+      ...createCustomerActions(set, get),
       addClaim: (claim) =>
         set((s) => ({
           claims: [{ ...claim, id: `c-${Date.now().toString(36)}`, status: "OPEN", createdAt: new Date().toISOString(), fromShop: true }, ...s.claims],
@@ -44,6 +48,9 @@ export const useAdmin = create<AdminState>()(
       // v6: temáticas de la Fase 5 (Orgullo en lugar de San Patricio y fechas patrias, con sus cupones).
       // v7: VOLTA, tienda de suplementos (catálogo, costos con proveedor, sin personalización, descuento stack).
       // v8: ruleta "Disco olímpico" con premios de suplementos (muestra y shaker de regalo en lugar de grabado y llavero).
+      // v10: panel de las Fases 6 y 7 (fichas sin mascotas, con objetivo y avisos de recompra; lotes y vencimientos por
+      // variante, último aumento de precios, objetivos editables; emails de suplementos y premios del juego editables;
+      // preparación con control de lote, cupo del cadete, costos sin horas de taller, proveedores y compras).
       // Al cambiar de versión la demo vuelve a los datos de muestra.
       version: ADMIN_STORE_VERSION,
       storage: demoStorage,
@@ -63,7 +70,7 @@ export const useAdmin = create<AdminState>()(
         data.content = { ...current.data.content, ...data.content, slides: Array.isArray(data.content?.slides) ? normalizeSlides(data.content.slides) : current.data.content.slides };
         return { ...current, ...p, data, workshop, emails: { ...current.emails, ...(p.emails ?? {}) } };
       },
-      partialize: (s) => ({ data: s.data, orders: s.orders, users: s.users, claims: s.claims, audit: s.audit, lastImport: s.lastImport, workshop: s.workshop, emails: s.emails }),
+      partialize: (s) => ({ data: s.data, orders: s.orders, users: s.users, claims: s.claims, audit: s.audit, lastImport: s.lastImport, lastPriceChange: s.lastPriceChange, workshop: s.workshop, emails: s.emails }),
     },
   ),
 );

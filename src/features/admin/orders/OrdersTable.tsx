@@ -63,11 +63,11 @@ export function OrdersTable() {
     legacy: { params: ["estado"], read: (p): Record<string, string> => { const t = tabForStatus(p.get("estado")); return t === "all" ? {} : { etapa: t }; } },
   });
   const bulkMove = (list: AdminOrder[], to: (typeof BULK_TARGETS)[number], clear: () => void) => {
-    const ok = list.filter((o) => canTransition(o.status, to, { fulfillment: o.fulfillment, trigger: "admin", prevStatus: o.prevStatus }));
-    for (const o of ok) transition(o.code, to, `Cambio en lote a ${STATUS_LABEL[to]}`);
+    // A Listo solo pasan los que tienen el lote de cada producto confirmado (control de lote, Fase 7).
+    const ok = list.filter((o) => canTransition(o.status, to, { fulfillment: o.fulfillment, trigger: "admin", prevStatus: o.prevStatus }) && transition(o.code, to, `Cambio en lote a ${STATUS_LABEL[to]}`));
     const skipped = list.length - ok.length;
     push({ tone: ok.length ? "success" : "error", title: ok.length ? `${ok.length} ${ok.length === 1 ? "pedido pasó" : "pedidos pasaron"} a “${STATUS_LABEL[to]}”` : "Ningún pedido podía pasar a ese estado",
-      description: skipped ? `${skipped} quedaron igual porque su estado actual no lo permite.` : "Cambio guardado solo en esta demo." });
+      description: skipped ? `${skipped} quedaron igual porque su estado actual no lo permite${to === "READY" ? " o les falta el control de lote" : ""}.` : "Cambio guardado solo en esta demo." });
     clear();
   };
   const table = { searchLabel: "Código o cliente", searchPlaceholder: "VOL-000123, nombre o email", searchText: search, filters: FILTERS };

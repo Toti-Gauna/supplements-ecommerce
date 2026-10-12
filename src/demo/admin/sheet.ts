@@ -1,6 +1,7 @@
 import { normalize } from "../engine/search";
 import type { Category, Product } from "../types";
 import { parseMoney, parseStock, parseYesNo, type Parsed } from "./import/cells";
+import { withStock } from "./lots";
 import type { StockRow } from "./stock";
 
 /** Planilla nativa del panel: columnas editables, validación, borrador con deshacer/rehacer y TSV de Excel. */
@@ -105,7 +106,7 @@ export function applyDraft(products: Product[], rows: StockRow[], draft: Draft):
     if (vi < 0) continue;
     const v = p.variants[vi]!;
     if (col === "variantLabel") p.variants[vi] = { ...v, label: String(value) };
-    if (col === "stock") p.variants[vi] = { ...v, stock: Number(value) };
+    if (col === "stock") p.variants[vi] = withStock(v, Number(value));
     if (col === "price") {
       if (p.variants.length === 1) { p.basePrice = Number(value); p.variants[vi] = { ...v, priceDelta: 0 }; }
       else p.variants[vi] = { ...v, priceDelta: Number(value) - p.basePrice };

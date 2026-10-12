@@ -1,4 +1,4 @@
-import { Ban, CheckCircle2, Clock, Hammer, PackageCheck, RotateCcw, Search, Truck, TriangleAlert, Wallet } from "lucide-react";
+import { Ban, CheckCircle2, Clock, PackageCheck, PackageOpen, RotateCcw, Search, Truck, TriangleAlert, Wallet } from "lucide-react";
 import { STATUS_LABEL, type OrderStatus } from "@/demo/engine/orders";
 import { Badge } from "@/components/atoms/Badge";
 
@@ -6,7 +6,7 @@ const STYLE: Record<OrderStatus, { tone: "neutral" | "success" | "warning" | "da
   PENDING_PAYMENT: { tone: "neutral", icon: Clock },
   PAYMENT_REVIEW: { tone: "warning", icon: Search },
   PAID: { tone: "success", icon: Wallet },
-  IN_PRODUCTION: { tone: "brand", icon: Hammer },
+  IN_PRODUCTION: { tone: "brand", icon: PackageOpen },
   READY: { tone: "success", icon: PackageCheck },
   SHIPPED: { tone: "brand", icon: Truck },
   DELIVERED: { tone: "success", icon: CheckCircle2 },

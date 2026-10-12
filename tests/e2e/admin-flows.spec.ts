@@ -13,9 +13,10 @@ test("cambiar stock y pausar en el panel se refleja en la tienda; el reset vuelv
   await page.goto("admin-demo/productos/editar/?id=overvolt-pre");
   await expect(page.getByRole("heading", { name: /Editar: Overvolt pre-entreno/ })).toBeVisible();
   for (const s of await page.locator("details").filter({ hasText: /Frutos rojos|Limón|Mango/ }).all()) await s.locator("summary").click();
-  const stock = page.getByLabel("Stock (unidades)");
-  await expect(stock).toHaveCount(3);
-  for (let i = 0; i < 3; i++) await stock.nth(i).fill("0");
+  // Con lotes, el stock de cada variante es la suma de sus lotes (Fase 6): se dejan los tres lotes en 0.
+  const units = page.getByLabel("Unidades", { exact: true });
+  await expect(units).toHaveCount(3);
+  for (let i = 0; i < 3; i++) await units.nth(i).fill("0");
   await page.getByRole("button", { name: "Guardar (solo en esta demo)" }).click();
   await expect(page.getByRole("status").filter({ hasText: "Cambio guardado solo en esta demo" })).toBeVisible();
   await page.goto("p/overvolt-pre/");
@@ -120,16 +121,21 @@ test("cupón y misión creados en el panel funcionan en la tienda", async ({ pag
 
 test("teclado: navegación del panel y diálogo que se cierra con Escape", async ({ page }) => {
   await page.goto("admin-demo/pedidos/detalle/?codigo=VOL-000121");
-  const ready = page.getByRole("button", { name: "Listo" });
+  // Pasar a Listo abre el control de lote (Fase 7): se marca el lote con la barra espaciadora y se confirma con teclado.
+  const ready = page.getByRole("button", { name: "Listo", exact: true });
   await ready.focus();
   await page.keyboard.press("Enter");
-  await expect(page.getByRole("dialog")).toBeVisible();
+  const dialog = page.getByRole("dialog", { name: "Control de lote de VOL-000121" });
+  await expect(dialog).toBeVisible();
   await page.keyboard.press("Escape");
-  await expect(page.getByRole("dialog")).toBeHidden();
+  await expect(dialog).toBeHidden();
   await ready.press("Enter");
+  await expect(dialog.getByRole("checkbox")).toBeFocused();
+  await page.keyboard.press("Space");
   await page.keyboard.press("Tab");
   await page.keyboard.press("Tab");
   await page.keyboard.press("Enter");
+  await expect(dialog).toBeHidden();
   await expect(page.getByRole("heading", { level: 1 })).toContainText("VOL-000121");
   await expect(page.getByText("Listo").first()).toBeVisible();
 });
@@ -154,7 +160,7 @@ test("celular: menú hamburguesa del panel y paginado de pedidos", async ({ page
   await expect(pages).toContainText("1–10 de");
   await pages.getByRole("button", { name: "Página 2" }).click();
   await expect(pages).toContainText("11–");
-  await expect(pages).toContainText("página 2 de 2");
+  await expect(pages).toContainText("página 2 de 3");
   await page.getByLabel("Código o cliente").fill("VOL-000123");
   await expect(pages).toBeHidden();
   // Pestañas inferiores: acceso directo y "Más" abre el menú completo

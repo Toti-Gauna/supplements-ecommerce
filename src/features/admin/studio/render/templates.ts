@@ -1,77 +1,38 @@
-import { beats, easeOutBack, easeOutExpo, productSlot, span } from "@/demo/admin/studio/timeline";
-import { formatARS } from "@/lib/money";
+import { STUDIO_BRAND } from "@/demo/fixtures/studio";
+import { postLayout, potRect, storyBadge } from "@/demo/admin/studio/offer";
+import { beats, easeOutBack, easeOutExpo, span } from "@/demo/admin/studio/timeline";
 import { drawBackdrop } from "./backdrop";
-import { postLayout, storyBadge } from "@/demo/admin/studio/offer";
+import { priceTag, stackTotal, tierLadder } from "./info";
 import { drawOfferBadge, offerBadge } from "./offer";
-import { DISPLAY, SANS, drawCard, drawLines, drawLogo, drawPill, fitLine, spaced, wrap } from "./paint";
-import { raster } from "./sprites";
+import { MONO, SANS, display, drawLines, drawLogo, drawPill, fitLine, spaced, wrap } from "./paint";
 import type { StudioScene } from "./types";
+import { drawVisual } from "./visual";
 
-/** Encabezado: bajada de la fecha, titular y texto, con entrada en cascada. Devuelve el y final. */
-function heading(ctx: CanvasRenderingContext2D, s: StudioScene, t: number, x: number, y: number, maxW: number, titleSize: number, align: CanvasTextAlign = "left") {
+/** Encabezado: bajada, titular expandido y texto, con entrada en cascada. Devuelve el y final. */
+export function heading(ctx: CanvasRenderingContext2D, s: StudioScene, t: number, x: number, y: number, maxW: number, titleSize: number, align: CanvasTextAlign = "left") {
   const b = beats(s.duration);
+  ctx.save();
   ctx.fillStyle = s.look.accent;
-  ctx.font = `800 ${Math.round(titleSize * 0.32)}px ${SANS}`;
+  ctx.font = `800 ${Math.round(titleSize * 0.3)}px ${MONO}`;
   drawLines(ctx, [fitLine(ctx, spaced(s.texts.eyebrow), maxW)], x, y, 0, easeOutExpo(span(t, b.eyebrow, 0.8)), align);
   ctx.fillStyle = "#ffffff";
-  ctx.font = `600 ${titleSize}px ${DISPLAY}`;
+  display(ctx, titleSize);
   let end = drawLines(ctx, wrap(ctx, s.texts.title, maxW, 3), x, y + titleSize * 1.15, titleSize * 1.04, easeOutExpo(span(t, b.title, 1)), align);
+  ctx.restore();
+  ctx.save();
   ctx.fillStyle = "rgba(255,255,255,0.86)";
   ctx.font = `500 ${Math.round(titleSize * 0.38)}px ${SANS}`;
   end = drawLines(ctx, wrap(ctx, s.texts.subtitle, maxW * 0.95, 3), x, end + titleSize * 0.18, titleSize * 0.5, easeOutExpo(span(t, b.title + 0.3, 1)), align);
+  ctx.restore();
   return end;
 }
 
-/** Cartel de oferta de la temática (si hay cupón y está a la vista), con su tamaño para ubicarlo. */
-function badgeFor(s: StudioScene, u: number, maxInner: number) {
-  return s.offer && s.showOffer ? offerBadge(s.offer, s.look, u, maxInner) : null;
+/** Cartel de oferta de la temática (solo en la plantilla de oferta, con cupón y a la vista). */
+export function badgeFor(s: StudioScene, u: number, maxInner: number) {
+  return s.template === "offer" && s.offer && s.showOffer ? offerBadge(s.offer, s.look, u, maxInner) : null;
 }
 
-/** Entra con rebote en su momento de la animación. */
-function badgeIn(s: StudioScene, t: number) {
-  return easeOutBack(span(t, beats(s.duration).offer, 0.7));
-}
-
-/** Nombre (hasta 2 líneas) y precio (tachado si hay precio con cupón). */
-function priceTag(ctx: CanvasRenderingContext2D, s: StudioScene, index: number, x: number, y: number, size: number, maxW: number, align: CanvasTextAlign, alpha: number, maxLines = 2) {
-  const p = s.products[index]?.data;
-  if (!p) return;
-  ctx.save();
-  ctx.globalAlpha *= alpha;
-  ctx.fillStyle = "#ffffff";
-  ctx.font = `600 ${size}px ${DISPLAY}`;
-  const end = drawLines(ctx, wrap(ctx, p.name, maxW, maxLines), x, y, size * 1.08, 1, align);
-  if (s.showPrice) {
-    const py = end + size * 0.3;
-    const deal = s.showOffer && p.offerPrice !== null;
-    ctx.textAlign = align; ctx.textBaseline = "alphabetic";
-    ctx.font = `800 ${size * 1.1}px ${SANS}`;
-    ctx.fillStyle = deal ? s.look.accent : "#ffffff";
-    const main = formatARS(deal ? p.offerPrice! : p.price);
-    ctx.fillText(main, x, py);
-    if (deal) {
-      const w = ctx.measureText(main).width;
-      ctx.font = `600 ${size * 0.7}px ${SANS}`;
-      ctx.fillStyle = "rgba(255,255,255,0.7)";
-      const old = formatARS(p.price), ow = ctx.measureText(old).width;
-      const ox = align === "center" ? x + w / 2 + 16 + ow / 2 : x + w + 18;
-      ctx.textAlign = align === "center" ? "center" : "left";
-      ctx.fillText(old, ox, py);
-      ctx.fillRect(ox - (align === "center" ? ow / 2 : 0), py - size * 0.24, ow, 3);
-    }
-  }
-  ctx.restore();
-}
-
-/** Decoración protagonista de la temática, flotando. */
-function heroArt(ctx: CanvasRenderingContext2D, s: StudioScene, t: number, x: number, y: number, size: number) {
-  const k = easeOutExpo(span(t, 0.6, 1.2));
-  const bob = Math.sin(t * 1.6) * size * 0.03;
-  ctx.save();
-  ctx.globalAlpha *= k;
-  if (s.hero) ctx.drawImage(raster(s.hero, size, size), x, y + bob + (1 - k) * 40);
-  ctx.restore();
-}
+export const badgeIn = (s: StudioScene, t: number) => easeOutBack(span(t, beats(s.duration).offer, 0.7));
 
 function cta(ctx: CanvasRenderingContext2D, s: StudioScene, t: number, x: number, y: number, size: number, align: "center" | "right", maxWidth: number) {
   const c = easeOutExpo(span(t, beats(s.duration).cta, 0.8));
@@ -81,39 +42,48 @@ function cta(ctx: CanvasRenderingContext2D, s: StudioScene, t: number, x: number
   ctx.restore();
 }
 
+/** Precio del pote a la vista, total del stack o premios del juego, según la plantilla. */
+export function details(ctx: CanvasRenderingContext2D, s: StudioScene, t: number, index: number, start: number, x: number, y: number, size: number, maxW: number, align: "left" | "center") {
+  const k = easeOutExpo(span(t, (s.template === "offer" || s.template === "product" ? start : beats(s.duration).offer) + 0.4, 0.8));
+  if (s.template === "stack") return stackTotal(ctx, s, x, y, size, align, k);
+  if (s.template === "game") return tierLadder(ctx, s, x, y - size, size * 0.85, align, k);
+  return priceTag(ctx, s, index, x, y, size, maxW, align, k, align === "center" ? 1 : 2);
+}
+
 export function drawPost(ctx: CanvasRenderingContext2D, s: StudioScene, t: number) {
   const { W } = s;
   const badge = badgeFor(s, 0.9, 320);
   const L = postLayout(W, badge);
   drawBackdrop(ctx, s.look, t, W, s.H);
-  heroArt(ctx, s, t, L.hero.x, L.hero.y, L.hero.size);
-  const slot = productSlot(t, s.duration, s.products.length);
-  const e = easeOutExpo(slot.enter);
-  drawCard(ctx, s.products[slot.index]?.img ?? null, L.card.x, L.card.y + (1 - e) * 80, L.card.w, L.card.h, { rotate: -3 + (1 - e) * 6, alpha: e });
+  drawLogo(ctx, 80, 64, 44, "#ffffff");
+  const shown = drawVisual(ctx, s, t, s.template === "stack" ? { cx: 770, floorY: 820, size: 300, width: 540 } : s.template === "game" ? { cx: 780, floorY: 820, size: 400, width: 460 } : { ...L.pot, width: L.pot.size * 0.72 });
   if (badge && L.badge) drawOfferBadge(ctx, badge, L.badge.x, L.badge.y, badgeIn(s, t));
-  heading(ctx, s, t, 80, 120, 450, 74);
-  priceTag(ctx, s, slot.index, 80, 740, 40, 440, "left", easeOutExpo(span(t, beats(s.duration).product + 0.4, 0.8)));
-  cta(ctx, s, t, W - 80, 920, 28, "right", 600);
-  drawLogo(ctx, 80, 935, 46, "#ffffff");
+  heading(ctx, s, t, 80, 200, 450, 70);
+  details(ctx, s, t, shown.index, shown.start, 80, 730, 40, 440, "left");
+  cta(ctx, s, t, W - 80, 930, 28, "right", 560);
+  ctx.save();
+  ctx.font = `700 22px ${MONO}`; ctx.fillStyle = "rgba(255,255,255,0.6)"; ctx.textAlign = "left"; ctx.textBaseline = "middle";
+  ctx.fillText(`${STUDIO_BRAND.handle} · ${STUDIO_BRAND.city}`.toUpperCase(), 80, 990);
+  ctx.restore();
 }
 
 /** Historia 9:16: fuera de la franja de arriba (≈250 px, el nombre de la cuenta) y de la de abajo (≈220 px, responder). */
 export function drawStory(ctx: CanvasRenderingContext2D, s: StudioScene, t: number) {
   const { W, H } = s;
   drawBackdrop(ctx, s.look, t, W, H);
-  heroArt(ctx, s, t, W * 0.74, 140, 180);
-  drawLogo(ctx, W / 2 - 115, 280, 44, "#ffffff");
-  const end = heading(ctx, s, t, W / 2, 400, 880, 92, "center");
-  const slot = productSlot(t, s.duration, s.products.length);
-  const e = easeOutExpo(slot.enter);
-  // La tarjeta arranca debajo del texto real y se achica si el texto es largo (nombre y precio siempre a la vista).
-  const top = Math.max(820, end + 50), bottom = 1400, ch = bottom - top, cw = Math.round(ch * 0.82);
-  drawCard(ctx, s.products[slot.index]?.img ?? null, (W - cw) / 2 + (1 - e) * 120, top, cw, ch, { rotate: -2 + (1 - e) * 5, alpha: e });
+  drawLogo(ctx, W / 2 - 115, 270, 44, "#ffffff");
+  const end = heading(ctx, s, t, W / 2, 400, 880, 88, "center");
+  // El visual arranca debajo del texto real y se achica si el texto es largo (precio siempre a la vista).
+  const floorY = 1340, top = Math.max(840, end + 60);
+  const size = Math.round(Math.min(640, (floorY - top) / 0.7));
+  const area = s.template === "stack" ? { size: Math.min(380, size * 0.62), width: 900 } : s.template === "game" ? { size: Math.min(560, ((floorY - top) / 164) * 130), width: 760 } : { size, width: size * 0.72 };
+  const shown = drawVisual(ctx, s, t, { cx: W / 2, floorY, ...area });
   const badge = badgeFor(s, 1, 330);
   if (badge) {
-    const b = storyBadge(W, { x: (W - cw) / 2, y: top, w: cw, h: ch }, badge);
+    const b = storyBadge(W, potRect({ cx: W / 2, floorY, size }), badge);
     drawOfferBadge(ctx, badge, b.x, b.y, badgeIn(s, t));
   }
-  priceTag(ctx, s, slot.index, W / 2, 1480, 50, 900, "center", e, 1);
-  cta(ctx, s, t, W / 2, 1625, 32, "center", 900);
+  details(ctx, s, t, shown.index, shown.start, W / 2, 1470, 50, 900, "center");
+  cta(ctx, s, t, W / 2, 1640, 32, "center", 900);
 }
+

@@ -2,11 +2,11 @@ import { rand } from "@/features/themes/AmbientField";
 import { backgroundSprite, blobSprite, raster } from "./sprites";
 import type { StudioLook } from "./types";
 
-/** Fondo animado de la temática en canvas: degradado, dos auroras que se mueven y las partículas de su `ambient`. */
+/** Fondo animado en canvas: degradado con grilla de puntos y pulso, dos auroras que se mueven y las partículas de su `ambient`. */
 export function drawBackdrop(ctx: CanvasRenderingContext2D, look: StudioLook, t: number, W: number, H: number) {
   ctx.drawImage(backgroundSprite(look.from, look.to, W, H), 0, 0);
   aurora(ctx, look.accent, W * (0.15 + 0.1 * Math.sin(t * 0.35)), H * (0.2 + 0.08 * Math.cos(t * 0.3)), Math.max(W, H) * 0.55, 0.16);
-  aurora(ctx, look.to, W * (0.9 - 0.12 * Math.sin(t * 0.27)), H * (0.85 - 0.06 * Math.sin(t * 0.4)), Math.max(W, H) * 0.6, 0.45);
+  aurora(ctx, look.glow, W * (0.9 - 0.12 * Math.sin(t * 0.27)), H * (0.55 - 0.06 * Math.sin(t * 0.4)), Math.max(W, H) * 0.6, 0.4);
   particles(ctx, look, t, W, H);
 }
 

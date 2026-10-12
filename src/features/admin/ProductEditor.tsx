@@ -6,6 +6,7 @@ import { ArrowLeft } from "lucide-react";
 import { Button, ButtonLink } from "@/components/atoms/Button";
 import { Sheet } from "@/components/motion/Sheet";
 import { EmptyState } from "@/components/molecules/EmptyState";
+import { withoutEmptyLots } from "@/demo/admin/lots";
 import { checkSteps, newProductDraft, PRODUCT_STEPS } from "@/demo/admin/product-steps";
 import type { Product } from "@/demo/types";
 import { useAdmin } from "@/stores/admin";
@@ -71,7 +72,7 @@ function Editor({ draftKey: key, origin, saved }: EditorProps) {
     const title = origin === "new" ? (d.active === false ? "Producto creado (pausado)" : "Producto creado") : "Producto guardado";
     done.current = true;
     clearSnapshot(key);
-    save(title, () => saveProduct(d));
+    save(title, () => saveProduct(withoutEmptyLots(d)));
     router.push(back);
   };
   const preview = () => { saveSnapshot(snapshot()); markPreview(key); router.push(previewHref(key)); };

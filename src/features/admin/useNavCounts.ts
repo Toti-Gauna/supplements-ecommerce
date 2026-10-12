@@ -9,14 +9,14 @@ import type { NavBadge } from "./nav";
 
 const IN_PROGRESS = new Set(["PAID", "IN_PRODUCTION", "READY", "SHIPPED"]);
 
-/** Contadores de la navegación: pedidos en marcha, comprobantes por revisar, reclamos abiertos y variantes para reponer. */
+/** Contadores de la navegación: pedidos en marcha y por preparar, comprobantes por revisar, reclamos abiertos y lo que hay que reponer. */
 export function useNavCounts(): Record<NavBadge, number> {
   const hydrated = useHydrated();
   const orders = useAdmin((s) => s.orders);
   const claims = useAdmin((s) => s.claims);
   const data = useAdmin((s) => s.data);
   const workshop = useAdmin((s) => s.workshop);
-  if (!hydrated) return { orders: 0, payments: 0, claims: 0, stock: 0, late: 0, materials: 0 };
+  if (!hydrated) return { orders: 0, payments: 0, claims: 0, stock: 0, late: 0, materials: 0, prep: 0 };
   return {
     orders: orders.filter((o) => IN_PROGRESS.has(o.status)).length,
     payments: orders.filter((o) => o.status === "PAYMENT_REVIEW").length,
@@ -24,5 +24,6 @@ export function useNavCounts(): Record<NavBadge, number> {
     stock: lowStockRows(data.products, data.categories, data.settings.lowStockThreshold).length,
     late: orders.filter((o) => isLate(o, DEMO_TODAY)).length,
     materials: materialRows(workshop.materials, orders, workshop.recipes).filter((m) => m.state !== "ok").length,
+    prep: orders.filter((o) => o.status === "PAID").length,
   };
 }

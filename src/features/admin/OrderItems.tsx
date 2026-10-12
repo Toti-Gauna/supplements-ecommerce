@@ -1,12 +1,16 @@
 "use client";
 import { LineThumb } from "@/components/organisms/LineThumb";
 import type { CartLine } from "@/demo/engine/cart-types";
+import { lotFor } from "@/demo/admin/workshop/lots";
 import { getProduct } from "@/demo/engine/catalog";
 import { quoteLines } from "@/demo/engine/pricing";
 import { formatARS } from "@/lib/money";
 
-/** Ítems del pedido con lo que hace falta para armarlo: sabor y presentación, lote y vencimiento a controlar. */
-export function OrderItems({ lines }: { lines: CartLine[] }) {
+/**
+ * Ítems del pedido con lo que hace falta para armarlo: sabor y presentación y el lote que sale (el que vence primero) o,
+ * después del control de lote, el que quedó registrado.
+ */
+export function OrderItems({ lines, lotCheck }: { lines: CartLine[]; lotCheck?: Record<string, string> }) {
   return (
     <ul className="flex flex-col gap-3">
       {quoteLines(lines).map(({ line, lineTotal }) => {
@@ -19,7 +23,7 @@ export function OrderItems({ lines }: { lines: CartLine[] }) {
             <div className="min-w-0 flex-1 basis-40 text-sm">
               <p className="font-bold">{line.quantity} × {product.name}</p>
               <p className="text-muted">Variante: {variant?.label ?? "—"}</p>
-              {product.lot && <p className="font-lab mt-1 text-xs text-muted">Lote {product.lot.code} · vence {product.lot.expires.split("-").reverse().join("/")}</p>}
+              <p className="font-lab mt-1 text-xs text-muted">{lotCheck?.[line.id] ? `Lote controlado: ${lotCheck[line.id]}` : `Sale: lote ${lotFor(product, variant).text}`}</p>
               {variant?.servings && variant.servings > 1 && <p className="font-lab text-xs text-muted">{variant.servings} servicios</p>}
               {line.gift && (
                 <p className="mt-2 rounded-xl bg-accent/60 px-3 py-2 text-[13px]">

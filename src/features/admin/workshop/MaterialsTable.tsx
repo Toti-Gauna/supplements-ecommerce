@@ -9,7 +9,7 @@ import type { Column, RowCardProps } from "@/components/organisms/data-table/typ
 import { applyMaterialDraft, materialSheetSpec } from "@/demo/admin/sheet-specs";
 import { MATERIAL_HELP } from "@/demo/admin/help";
 import type { FilterSpec } from "@/demo/admin/table";
-import { MATERIAL_STATE_LABEL, materialRows, reorderQty, type MaterialRow, type MaterialState } from "@/demo/admin/workshop/materials";
+import { MATERIAL_STATE_LABEL, materialRows, reorderQty, usesDecimals, type MaterialRow, type MaterialState } from "@/demo/admin/workshop/materials";
 import { UNIT_LABEL, UNIT_SHORT, type MaterialUnit } from "@/demo/fixtures/workshop";
 import { formatARS } from "@/lib/money";
 import { useAdmin } from "@/stores/admin";
@@ -32,7 +32,7 @@ export function MaterialChip({ state }: { state: MaterialState }) {
 
 const search = (r: MaterialRow) => `${r.name} ${r.supplier ?? ""}`;
 
-/** Insumos con stock propio (pedido de Ignacio, fuera de la especificación): cuánto queda, cuánto piden los pedidos y qué reponer. */
+/** Insumos de embalaje y regalo con stock propio (Fase 7): cuánto queda, cuánto piden los pedidos por preparar y qué reponer. */
 export function MaterialsTable() {
   const orders = useAdmin((s) => s.orders);
   const { materials, recipes } = useAdmin((s) => s.workshop);
@@ -62,7 +62,7 @@ export function MaterialsTable() {
   const columns: Column<MaterialRow>[] = [
     { id: "name", header: "Insumo", pinned: true, primary: true, cell: (r) => <span><span className="block font-bold">{r.name}</span>{r.supplier && <span className="text-xs text-muted">{r.supplier}</span>}</span>, sortValue: (r) => r.name, exportValue: (r) => r.name },
     { id: "cost", header: "Costo", align: "right", className: "whitespace-nowrap", cell: (r) => `${formatARS(r.costPerUnit)} / ${UNIT_SHORT[r.unit]}`, sortValue: (r) => r.costPerUnit, exportValue: (r) => r.costPerUnit },
-    { id: "stock", header: "En el taller", cell: (r) => <span className="inline-flex items-center gap-1.5"><InlineNumber value={r.stock} decimals={r.unit === "m" || r.unit === "plancha"} label={`Stock de ${r.name}`} onCommit={(n) => setStock(r, n)} /><span className="text-xs text-muted">{UNIT_SHORT[r.unit]}</span></span>, sortValue: (r) => r.stock, exportValue: (r) => r.stock },
+    { id: "stock", header: "En depósito", cell: (r) => <span className="inline-flex items-center gap-1.5"><InlineNumber value={r.stock} decimals={usesDecimals(r.unit)} label={`Stock de ${r.name}`} onCommit={(n) => setStock(r, n)} /><span className="text-xs text-muted">{UNIT_SHORT[r.unit]}</span></span>, sortValue: (r) => r.stock, exportValue: (r) => r.stock },
     { id: "committed", header: "Piden los pedidos", align: "right", cell: (r) => (r.committed ? qty(r.committed, r.unit) : "—"), sortValue: (r) => r.committed, exportValue: (r) => r.committed },
     { id: "available", header: "Queda", align: "right", cell: (r) => <span className={r.available < 0 ? "font-bold text-danger" : "font-bold"}>{qty(r.available, r.unit)}</span>, sortValue: (r) => r.available, exportValue: (r) => r.available },
     { id: "min", header: "Mínimo", align: "right", cell: (r) => qty(r.minStock, r.unit), sortValue: (r) => r.minStock, exportValue: (r) => r.minStock },
@@ -77,10 +77,10 @@ export function MaterialsTable() {
         <button type="button" onClick={onOpen} className="min-w-0 flex-1 text-left"><span className="block font-bold">{r.name}</span><span className="text-sm text-muted">{formatARS(r.costPerUnit)} / {UNIT_SHORT[r.unit]} · piden {qty(r.committed, r.unit)}</span></button>
         <MaterialChip state={r.state} />
       </div>
-      <div className="flex items-center gap-2 text-sm"><InlineNumber value={r.stock} decimals={r.unit === "m" || r.unit === "plancha"} label={`Stock de ${r.name}`} onCommit={(n) => setStock(r, n)} /><span className="text-muted">{UNIT_LABEL[r.unit]} · queda {qty(r.available, r.unit)}</span></div>
+      <div className="flex items-center gap-2 text-sm"><InlineNumber value={r.stock} decimals={usesDecimals(r.unit)} label={`Stock de ${r.name}`} onCommit={(n) => setStock(r, n)} /><span className="text-muted">{UNIT_LABEL[r.unit]} · queda {qty(r.available, r.unit)}</span></div>
     </div>
   );
-  const table = { searchLabel: "Buscar insumo", searchPlaceholder: "Filamento, cera, LED…", searchText: search, filters };
+  const table = { searchLabel: "Buscar insumo", searchPlaceholder: "Caja, cinta, precinto…", searchText: search, filters };
   if (state.view === "excel") {
     return (
       <TableExcel id="materials" title="Insumos" noun="insumos" state={state} rows={all} {...table} spec={materialSheetSpec} onExport={(rows) => onExport(toSheet(columns, rows), "filtered")}
@@ -89,10 +89,10 @@ export function MaterialsTable() {
   }
   return (
     <>
-      <AdminPageHeader title="Insumos" actions={<Button variant="secondary" size="sm" onClick={() => setCreating(true)}><Plus size={16} aria-hidden="true" /> Nuevo insumo</Button>}>
-        Bolsas, cajas, precintos, regalos y todo lo que se usa para armar los pedidos. “Piden los pedidos” suma las recetas de los pedidos pagados que todavía no entraron a producción; al pasarlos a producción se descuenta del stock.
+      <AdminPageHeader title="Insumos de embalaje" actions={<Button variant="secondary" size="sm" onClick={() => setCreating(true)}><Plus size={16} aria-hidden="true" /> Nuevo insumo</Button>}>
+        Cajas, bolsas, precintos, folletos, cinta y los regalos que se suman al armar los pedidos. “Piden los pedidos” suma el embalaje de los pedidos pagados que todavía no se empezaron a preparar; al empezar a armarlos se descuenta del stock.
       </AdminPageHeader>
-      <DataTable caption="Insumos del taller" noun="insumos" rows={all} columns={columns} state={state} {...table}
+      <DataTable caption="Insumos de embalaje y regalo" noun="insumos" rows={all} columns={columns} state={state} {...table}
         rowKey={(r) => r.id} rowLabel={(r) => `Seleccionar ${r.name}`} onRowOpen={(r) => setOpen(r.id)} onExport={onExport} onExcel={() => state.setView("excel")} renderCard={Card} rowTone={(r) => (r.state === "short" ? "danger" : r.state === "low" ? "warning" : undefined)}
         bulkActions={(list, clear) => <BulkButton onClick={() => buy(list, clear)}>Registrar compra para reponer</BulkButton>}
         footer={(list) => <p className="flex justify-end gap-6 border-t border-line px-5 py-3 text-sm text-muted">Valor de los insumos: <strong className="tabular-nums text-ink">{formatARS(list.reduce((s, r) => s + r.value, 0))}</strong></p>}

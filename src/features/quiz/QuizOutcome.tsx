@@ -3,7 +3,7 @@ import type { Ref } from "react";
 import { recommendStack } from "@/demo/engine/quiz";
 import { DEFAULT_STACK_RULE } from "@/demo/engine/stack";
 import { encodeStack, stackSummary } from "@/demo/engine/stack-builder";
-import { goalById } from "@/demo/fixtures/goals";
+import { useGoal } from "../catalog/useGoals";
 import type { QuizAnswers } from "@/demo/fixtures/stack-builder";
 import { useDemoData } from "@/stores/admin";
 import { QuizPickCard } from "./QuizPickCard";
@@ -29,7 +29,7 @@ export function QuizOutcome({ answers, titleRef, animate, onEdit, onRestart }: P
   const rule = useDemoData((d) => d.settings.stack) ?? DEFAULT_STACK_RULE;
   const result = recommendStack(answers, catalog);
   const summary = stackSummary(result.picks, catalog, rule);
-  const goal = goalById(answers.goal)?.name.toLowerCase() ?? answers.goal;
+  const goal = useGoal(answers.goal)?.name.toLowerCase() ?? answers.goal;
   return (
     <>
       <QuizStage eyebrow="¿Qué necesitás? · Tu resultado" title={`Tu stack para ${goal}`} titleRef={titleRef} step={RESULT_STEP}

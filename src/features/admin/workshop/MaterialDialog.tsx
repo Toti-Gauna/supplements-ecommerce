@@ -1,7 +1,9 @@
 "use client";
 import { useState } from "react";
 import { describedBy, Field, Input } from "@/components/atoms/Field";
+import { Select } from "@/components/atoms/Select";
 import { checkMaterial, materialDraft, type MaterialDraft, type MaterialField } from "@/demo/admin/workshop/edit-forms";
+import { usesDecimals } from "@/demo/admin/workshop/materials";
 import { UNIT_LABEL, UNIT_SHORT, type Material, type MaterialUnit } from "@/demo/fixtures/workshop";
 import { useAdmin } from "@/stores/admin";
 import { EditDialog } from "../detail/EditDialog";
@@ -33,18 +35,18 @@ export function MaterialDialog({ material, creating, onClose }: { material: Mate
   );
   return (
     <EditDialog open={open} title={material ? `Insumo ${material.name}` : "Nuevo insumo"} heading={material ? material.name : "Nuevo insumo"} dirty={dirty} canSave={dirty || !material} onSave={submit} onClose={onClose}
-      intro="Actualizá unidad, costo por unidad, stock mínimo y proveedor. El costo se usa en Costos y margen; el mínimo, para avisar qué reponer.">
+      intro="Actualizá unidad, costo por unidad, stock mínimo y proveedor. El costo se suma al embalaje en Costos y margen; el mínimo, para avisar qué reponer.">
       <div className="@container grid gap-4 @min-[36rem]:grid-cols-2">
         <Field id="m-name" label="Nombre" error={errors.name}>
-          <Input id="m-name" data-autofocus value={draft.name} onChange={(e) => set({ name: e.target.value })} placeholder="Filamento PLA" aria-invalid={!!errors.name} aria-describedby={describedBy("m-name", errors.name)} />
+          <Input id="m-name" data-autofocus value={draft.name} onChange={(e) => set({ name: e.target.value })} placeholder="Caja de envío mediana" aria-invalid={!!errors.name} aria-describedby={describedBy("m-name", errors.name)} />
         </Field>
         <Field id="m-unit" label="Unidad de medida">
-          <select id="m-unit" value={draft.unit} onChange={(e) => set({ unit: e.target.value as MaterialUnit })} className="h-12 rounded-2xl border border-ink/12 bg-surface px-3 text-base font-semibold">
+          <Select id="m-unit" value={draft.unit} onChange={(e) => set({ unit: e.target.value as MaterialUnit })}>
             {(Object.keys(UNIT_LABEL) as MaterialUnit[]).map((u) => <option key={u} value={u}>{UNIT_LABEL[u]}</option>)}
-          </select>
+          </Select>
         </Field>
         {field("cost", `Costo por ${UNIT_SHORT[draft.unit]} (pesos enteros)`, "Sin centavos, como el resto de la tienda.")}
-        {field("min", `Avisar para reponer con (${UNIT_LABEL[draft.unit]})`, draft.unit === "m" || draft.unit === "plancha" ? "Acepta decimales con coma." : "Cantidad entera.")}
+        {field("min", `Avisar para reponer con (${UNIT_LABEL[draft.unit]})`, usesDecimals(draft.unit) ? "Acepta decimales con coma." : "Cantidad entera.")}
         <Field id="m-supplier" label="Proveedor (opcional)" className="@min-[36rem]:col-span-2">
           <Input id="m-supplier" value={draft.supplier} onChange={(e) => set({ supplier: e.target.value })} placeholder="Nombre o comercio" />
         </Field>

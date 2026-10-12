@@ -64,7 +64,7 @@ export function CategoriesTable() {
       <div className="flex flex-wrap items-center justify-between gap-2">{order(c)}{reorder(c)}<Switch checked={c.featured} onChange={() => feature(c)} label="Destacada" ariaLabel={`Destacar ${c.name}`} /></div>
     </div>
   );
-  const table = { searchLabel: "Buscar categoría", searchPlaceholder: "Velas, comederos…", searchText: (c: CategoryRow) => c.name, filters: FILTERS };
+  const table = { searchLabel: "Buscar categoría", searchPlaceholder: "Proteínas, creatinas…", searchText: (c: CategoryRow) => c.name, filters: FILTERS };
   if (state.view === "excel") {
     return (
       <TableExcel id="categories" title="Categorías" noun="categorías" state={state} rows={rows} {...table} spec={categorySheetSpec} onExport={(list) => onExport(toSheet(columns, list), "filtered")}

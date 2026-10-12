@@ -5,9 +5,9 @@ import { horizontalOverflow } from "./helpers";
 /** Polish 8.3.4 (tabla común, filtros, 10 por página, fila → entidad, vista Excel y .xlsx) y 8.3.19 (Productos y stock). */
 
 const TABLES = [
-  ["admin-demo/pedidos/", "Pedidos", 5], ["admin-demo/usuarios/", "Clientes", 3], ["admin-demo/productos/", "Productos", 3],
-  ["admin-demo/productos/?ver=variantes", "Stock por variante", 3], ["admin-demo/costos/", "Costo y margen por producto", 2],
-  ["admin-demo/insumos/", "Insumos del taller", 3], ["admin-demo/categorias/", "Categorías en el orden de la tienda", 3],
+  ["admin-demo/pedidos/", "Pedidos", 5], ["admin-demo/usuarios/", "Clientes", 3], ["admin-demo/productos/", "Productos", 5],
+  ["admin-demo/productos/?ver=variantes", "Stock por variante", 5], ["admin-demo/costos/", "Costo y margen por producto", 2],
+  ["admin-demo/insumos/", "Insumos de embalaje y regalo", 3], ["admin-demo/categorias/", "Categorías en el orden de la tienda", 3],
 ] as const;
 const base = () => `http://localhost:${process.env.E2E_PORT ?? "4173"}${process.env.PAGES_BASE_PATH ?? ""}/`;
 const visibleFilters = (page: Page) => page.locator("form[role=search] select:visible, form[role=search] input[type=date]:visible");
@@ -40,16 +40,16 @@ test.describe("escritorio con mouse", () => {
   test("8.3.4 diez por página; filtrar en la página 2 deja una página válida; Reiniciar limpia todo", async ({ page }) => {
     await page.goto("admin-demo/pedidos/");
     const pages = page.getByRole("navigation", { name: "Páginas de pedidos" });
-    await expect(pages).toContainText("1–10 de 17 pedidos · página 1 de 2");
+    await expect(pages).toContainText("1–10 de 23 pedidos · página 1 de 3");
     await expect(bodyRows(page)).toHaveCount(10);
     await pages.getByRole("button", { name: "Página siguiente" }).click();
-    await expect(pages).toContainText("11–17 de 17 pedidos · página 2 de 2");
+    await expect(pages).toContainText("11–20 de 23 pedidos · página 2 de 3");
     await expect(page).toHaveURL(/pagina=2/);
     await page.getByRole("combobox", { name: "Etapa" }).selectOption("to-collect");
     await expect(pages).toBeHidden();
     const shown = await bodyRows(page).count();
     expect(shown).toBeGreaterThan(0);
-    await expect(page.getByText(`${shown} pedidos de 17`)).toBeVisible();
+    await expect(page.getByText(`${shown} pedidos de 23`)).toBeVisible();
     await expect(page).not.toHaveURL(/pagina=/);
     await page.getByRole("button", { name: "Reiniciar filtros" }).click();
     await expect(bodyRows(page)).toHaveCount(10);
@@ -94,11 +94,11 @@ test.describe("escritorio con mouse", () => {
 
   test("8.3.4 vista Excel: mismos filtros, solo lectura donde corresponde, Atrás vuelve a la tabla y el .xlsx lleva todas las filas filtradas", async ({ page }) => {
     await page.goto("admin-demo/pedidos/");
-    // Sin filtros: el archivo lleva los 17 pedidos aunque la página muestre 10.
+    // Sin filtros: el archivo lleva los 23 pedidos aunque la página muestre 10.
     const all = page.waitForEvent("download");
     await page.getByRole("button", { name: "Descargar Excel (.xlsx)" }).click();
     const sheet = await readXlsxFile((await (await all).path())!);
-    expect(sheet[0]!.data).toHaveLength(18);
+    expect(sheet[0]!.data).toHaveLength(24);
     expect(sheet[0]!.data[0]).toContain("Código");
 
     await page.getByRole("combobox", { name: "Etapa" }).selectOption("to-collect");

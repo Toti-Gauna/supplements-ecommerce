@@ -1,4 +1,7 @@
-import type { Category, Product, Variant } from "../types";
+import { DEMO_TODAY } from "../fixtures/admin-orders";
+import type { Category, Lot, Product, Variant } from "../types";
+import { firstOutLot } from "../engine/lots";
+import { hasClearance, variantLotRows, withStock, type LotRow } from "./lots";
 
 /** Stock por variante para las tablas, la planilla y las alertas del panel. */
 export const DEFAULT_LOW_STOCK = 3;
@@ -21,18 +24,27 @@ export interface StockRow {
   categoryName: string;
   variantId: string;
   variantLabel: string;
-  /** Precio final de la variante (base + diferencia), en pesos enteros. */
+  brand: string;
+  /** Precio de lista de la variante (base + diferencia), en pesos enteros. */
   price: number;
+  /** Costo del proveedor, si está cargado. */
+  cost?: number;
   stock: number;
   state: StockState;
   active: boolean;
+  /** Lote que sale primero (FEFO). */
+  lot?: Lot;
+  lots: number;
+  /** Lotes vencidos o que vencen en menos de 60 días, el más urgente primero. */
+  expiring: LotRow[];
+  onClearance: boolean;
 }
 
 export function variantPrice(product: Product, variant: Variant): number {
   return product.basePrice + variant.priceDelta;
 }
 
-export function stockRows(products: Product[], categories: Category[], low = DEFAULT_LOW_STOCK): StockRow[] {
+export function stockRows(products: Product[], categories: Category[], low = DEFAULT_LOW_STOCK, today = DEMO_TODAY): StockRow[] {
   const names = new Map(categories.map((c) => [c.slug, c.name]));
   return products.flatMap((p) =>
     p.variants.map((v) => ({
@@ -43,10 +55,16 @@ export function stockRows(products: Product[], categories: Category[], low = DEF
       categoryName: names.get(p.categorySlug) ?? p.categorySlug,
       variantId: v.id,
       variantLabel: v.label,
+      brand: p.brand,
       price: variantPrice(p, v),
+      cost: v.cost,
       stock: v.stock,
       state: stockState(v.stock, low),
       active: p.active !== false,
+      lot: firstOutLot(v),
+      lots: (v.lots ?? []).filter((l) => l.units > 0).length,
+      expiring: variantLotRows(p, v, today).filter((r) => r.state !== "ok"),
+      onClearance: hasClearance(v),
     })),
   );
 }
@@ -69,6 +87,11 @@ export function productStockState(product: Product, low = DEFAULT_LOW_STOCK): St
   return "made-to-order";
 }
 
+/** Margen sobre el precio de lista con el costo del proveedor, en % entero (null sin costo cargado). */
+export function stockMargin(r: Pick<StockRow, "price" | "cost">): number | null {
+  return r.cost && r.price > 0 ? Math.round(((r.price - r.cost) / r.price) * 100) : null;
+}
+
 /** Valor del inventario finito a precio de venta. */
 export function inventoryValue(rows: StockRow[]): number {
   return rows.reduce((sum, r) => sum + (r.stock > 0 ? r.stock * r.price : 0), 0);
@@ -88,8 +111,8 @@ export function applyStockOp(products: Product[], keys: string[], op: StockOp): 
     ...p,
     variants: p.variants.map((v) => {
       if (!set.has(`${p.slug}::${v.id}`)) return v;
-      if (op.kind === "set") return { ...v, stock: op.stock };
-      return v.stock < 0 ? v : { ...v, stock: Math.max(0, v.stock + op.units) };
+      if (op.kind === "set") return withStock(v, op.stock);
+      return v.stock < 0 ? v : withStock(v, Math.max(0, v.stock + op.units));
     }),
   }));
 }

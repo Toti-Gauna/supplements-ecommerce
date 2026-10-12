@@ -9,7 +9,7 @@ import { ListControls } from "../ListControls";
 import { CountedField } from "./CountedField";
 import { SlideImageField } from "./SlideImageField";
 
-const LINKS = [["/crear/", "Crear mi producto"], ["/categorias/", "Categorías"], ["/c/comederos/", "Comederos"], ["/c/placas-nfc/", "Placas NFC"], ["/c/iluminacion/", "Iluminación"], ["/c/hogar/", "Aromas"], ["/preguntas/", "Preguntas"]];
+const LINKS = [["/crear/", "Armá tu stack"], ["/crear/quiz/", "Quiz ¿Qué necesitás?"], ["/categorias/", "Categorías"], ["/c/proteinas/", "Proteínas"], ["/c/creatinas/", "Creatinas"], ["/c/pre-entrenos/", "Pre-entrenos"], ["/club/", "Club Volta"], ["/club/juego/", "Shaker Rush"], ["/preguntas/", "Preguntas"]];
 
 interface Props {
   slide: CarouselSlide;

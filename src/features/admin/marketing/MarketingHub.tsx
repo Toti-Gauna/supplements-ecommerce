@@ -1,4 +1,6 @@
 "use client";
+import { stackRuleLabel } from "@/demo/admin/stack-rule";
+import { DEFAULT_STACK_RULE } from "@/demo/engine/stack";
 import { ADMIN_NAV } from "../nav";
 import { useAdmin } from "@/stores/admin";
 import { AdminPageHeader } from "../AdminPageHeader";
@@ -8,6 +10,7 @@ const DESCRIPTION: Record<string, string> = {
   "/admin-demo/misiones/": "Retos de compra con un premio de un uso para el Club.",
   "/admin-demo/emails/": "Qué email sale en cada momento del pedido y la bandeja de salida.",
   "/admin-demo/cupones/": "Cupones del carrito, la ruleta y su catálogo de premios.",
+  "/admin-demo/descuento-stack/": "Cuánto se descuenta al sumar suplementos de varias categorías.",
   "/admin-demo/tematicas/": "Fechas especiales con paleta, cinta, cupón y ofertas.",
   "/admin-demo/estudio/": "Piezas para Instagram por fecha, en imagen y en video.",
   "/admin-demo/contenido/": "Carrusel de la portada, textos y preguntas frecuentes.",
@@ -15,12 +18,13 @@ const DESCRIPTION: Record<string, string> = {
 
 /** Marketing por tarjetas (8.3.24): una por herramienta, con el estado de un vistazo. Las entradas del menú siguen. */
 export function MarketingHub() {
-  const { missions, coupons, wheel } = useAdmin((s) => s.data);
+  const { missions, coupons, wheel, settings } = useAdmin((s) => s.data);
   const { templates } = useAdmin((s) => s.emails);
   const meta: Record<string, string> = {
     "/admin-demo/misiones/": `${missions.filter((m) => m.active !== false).length} de ${missions.length} activas`,
     "/admin-demo/emails/": `${templates.filter((t) => t.active).length} de ${templates.length} se envían solos`,
     "/admin-demo/cupones/": `${coupons.filter((c) => c.active !== false).length} cupones activos · ruleta ${wheel.active ? "visible" : "pausada"}`,
+    "/admin-demo/descuento-stack/": stackRuleLabel(settings.stack ?? DEFAULT_STACK_RULE),
   };
   return (
     <>

@@ -21,10 +21,12 @@ export function WhatsAppFab() {
       href={whatsappLink(whatsappMessage({ productName, page }))}
       target="_blank"
       rel="noopener noreferrer"
-      className={`fixed right-4 z-30 inline-flex items-center gap-2 rounded-full bg-[#1f6f43] px-4 py-3 text-sm font-bold text-white shadow-lg hover:bg-[#185a36] ${bar === "none" ? "bottom-5" : bar === "product" ? "bottom-[calc(6rem+env(safe-area-inset-bottom))] sm:bottom-6" : "bottom-[calc(5.5rem+env(safe-area-inset-bottom))] lg:bottom-6"}`}
+      className={`group fixed right-4 z-30 grid h-12 w-12 place-items-center rounded-full bg-[#1f6f43] text-sm font-bold text-white shadow-lg hover:bg-[#185a36] ${bar === "none" ? "bottom-5" : bar === "product" ? "bottom-[calc(6rem+env(safe-area-inset-bottom))] sm:bottom-6" : "bottom-[calc(5.5rem+env(safe-area-inset-bottom))] lg:bottom-6"}`}
     >
-      <MessageCircle size={20} aria-hidden="true" />
-      <span className="max-sm:sr-only">Consultar por WhatsApp</span>
+      <MessageCircle size={22} aria-hidden="true" />
+      {/* Solo el ícono, así no tapa los botones de compra que quedan abajo a la derecha (resumen del armador, tarjetas
+          de la ficha); el texto aparece como globo al pasar el mouse o con el foco, y siempre es el nombre del link. */}
+      <span className="pointer-events-none absolute right-full mr-2 whitespace-nowrap rounded-full bg-[#1f6f43] px-3 py-1.5 opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 max-sm:sr-only motion-reduce:transition-none">Consultar por WhatsApp</span>
     </a>
   );
 }

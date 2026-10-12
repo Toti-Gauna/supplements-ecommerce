@@ -18,7 +18,8 @@ interface Pick { product: Product; variant: Variant }
 
 /**
  * "Armá tu stack": este producto + los más vendidos de otras categorías con el mismo objetivo. Con suplementos de
- * N categorías distintas en el carrito, esas líneas tienen el descuento stack (regla del engine, editable en Ajustes).
+ * N categorías distintas en el carrito, esas líneas tienen el descuento stack (regla del engine, editable en el panel:
+ * Marketing → Descuento stack). Con 0 % no se promete descuento: queda como sugerencia de qué sumar.
  */
 export function StackOffer({ product, variant }: { product: Product; variant: Variant }) {
   const catalog = useDemoData((d) => d.products);
@@ -40,7 +41,7 @@ export function StackOffer({ product, variant }: { product: Product; variant: Va
   return (
     <section aria-labelledby="stack-title" className="rounded-[var(--radius-card)] p-5 edge-volt sm:p-6">
       <p className="eyebrow flex items-center gap-2 text-volt-ink"><Layers size={14} aria-hidden="true" />Armá tu stack</p>
-      <h2 id="stack-title" className="font-display mt-1 text-2xl">Sumá {rule.minCategories} categorías y llevate {rule.pct} % off</h2>
+      <h2 id="stack-title" className="font-display mt-1 text-2xl">{rule.pct > 0 ? `Sumá ${rule.minCategories} categorías y llevate ${rule.pct} % off` : "Sumá lo que va con este suplemento"}</h2>
       <ul className="mt-4 grid grid-cols-3 gap-2 sm:gap-3">
         {picks.map((p, i) => {
           const on = i === 0 || !off.includes(p.product.slug);
@@ -63,12 +64,12 @@ export function StackOffer({ product, variant }: { product: Product; variant: Va
           {result.discount > 0 ? (
             <><s className="text-muted">{formatARS(total)}</s> <strong className="font-lab text-lg text-volt-ink">{formatARS(total - result.discount)}</strong><span className="block text-xs font-bold text-success">Ahorrás {formatARS(result.discount)} con el stack</span></>
           ) : (
-            <><strong className="font-lab text-lg">{formatARS(total)}</strong><span className="block text-xs text-muted">Sumá {result.missing} categoría{result.missing === 1 ? "" : "s"} más para el {rule.pct} % off</span></>
+            <><strong className="font-lab text-lg">{formatARS(total)}</strong>{rule.pct > 0 && <span className="block text-xs text-muted">Sumá {result.missing} categoría{result.missing === 1 ? "" : "s"} más para el {rule.pct} % off</span>}</>
           )}
         </p>
         <Button onClick={addAll} disabled={chosen.length < 2}>Agregar {chosen.length} al carrito</Button>
       </div>
-      <p className="mt-3 text-xs text-muted">El descuento se aplica en el carrito cuando hay suplementos de {rule.minCategories} categorías distintas. <Link href={productHref(suggestions[0]!.slug)} className="font-bold text-primary underline">Ver {suggestions[0]!.name}</Link></p>
+      <p className="mt-3 text-xs text-muted">{rule.pct > 0 && `El descuento se aplica en el carrito cuando hay suplementos de ${rule.minCategories} categorías distintas. `}<Link href={productHref(suggestions[0]!.slug)} className="font-bold text-primary underline">Ver {suggestions[0]!.name}</Link></p>
     </section>
   );
 }

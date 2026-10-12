@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { motion } from "motion/react";
-import { ArrowUpRight, Gamepad2, Gift, Heart, PartyPopper, Target, TicketPercent, UserRound } from "lucide-react";
+import { ArrowUpRight, Gamepad2, Gift, Heart, Layers, PartyPopper, TicketPercent, UserRound } from "lucide-react";
 import { Logo } from "@/components/atoms/Logo";
 import { Sheet } from "@/components/motion/Sheet";
 import { ThemeToggle } from "@/components/atoms/ThemeToggle";
@@ -10,7 +10,7 @@ import { useDemoVersion } from "@/stores/admin";
 import { useUi } from "@/stores/ui";
 
 const LINKS = [
-  { href: "/crear/", label: "Por objetivo", icon: Target },
+  { href: "/crear/", label: "Armá tu stack", icon: Layers },
   { href: "/club/", label: "Club Volta", icon: Gift },
   { href: "/club/juego/", label: "Shaker Rush", icon: Gamepad2 },
   { href: "/favoritos/", label: "Favoritos", icon: Heart },

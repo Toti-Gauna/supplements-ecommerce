@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { BadgePercent, Boxes, Calculator, CalendarDays, Clapperboard, ClipboardList, Factory, LayoutDashboard, Mail, LifeBuoy, Megaphone, Palette, PartyPopper, Settings, Shapes, Spool, Target, Users, Wallet } from "lucide-react";
+import { BadgePercent, Boxes, Calculator, CalendarDays, Clapperboard, ClipboardList, Factory, Layers, LayoutDashboard, Mail, LifeBuoy, Megaphone, Palette, PartyPopper, Settings, Shapes, Spool, Target, Users, Wallet } from "lucide-react";
 
 export const ADMIN_GROUPS = ["Ventas", "Taller", "Catálogo", "Marketing", "Ajustes"] as const;
 
@@ -39,6 +39,8 @@ export const ADMIN_NAV: AdminNavItem[] = [
   { href: "/admin-demo/misiones/", label: "Misiones", short: "Misiones", icon: Target, group: "Marketing" },
   { href: "/admin-demo/emails/", label: "Emails automáticos", short: "Emails", icon: Mail, group: "Marketing" },
   { href: "/admin-demo/cupones/", label: "Cupones y ruleta", short: "Cupones", icon: BadgePercent, group: "Marketing" },
+  // Fase 3: regla del descuento stack (porcentaje y categorías distintas) que usan ficha, armador, quiz y carrito.
+  { href: "/admin-demo/descuento-stack/", label: "Descuento stack", short: "Stack", icon: Layers, group: "Marketing" },
   { href: "/admin-demo/tematicas/", label: "Temáticas", short: "Temáticas", icon: PartyPopper, group: "Marketing" },
   { href: "/admin-demo/estudio/", label: "Estudio de contenido", short: "Estudio", icon: Clapperboard, group: "Marketing" },
   { href: "/admin-demo/contenido/", label: "Contenido", short: "Contenido", icon: Palette, group: "Marketing" },

@@ -12,6 +12,7 @@ import { HeroCarousel } from "../home/HeroCarousel";
 import { GoalRail } from "../home/GoalRail";
 import { ProductRail } from "../home/ProductRail";
 import { ProductStories } from "../home/ProductStories";
+import { HomeStackBlock } from "../stack/HomeStackBlock";
 import { Values } from "../home/Values";
 import { ThemeBanner } from "../themes/ThemeBanner";
 import { ThemeOffersRail } from "../themes/ThemeOffersRail";
@@ -24,7 +25,7 @@ function Later({ size, children }: { size: number; children: ReactNode }) {
   return <div className="cv-auto cv-bleed" style={{ containIntrinsicSize: `auto ${size}px` }}>{children}</div>;
 }
 
-/** Inicio de tienda: carrusel (con la temática vigente primero), ofertas de la temática, beneficios, categorías, objetivos, recomendados, más vendidos, ciencia simple y novedades. */
+/** Inicio de tienda: carrusel (con la temática vigente primero), ofertas de la temática, beneficios, categorías, objetivos, "Armá tu stack" en vivo, recomendados, más vendidos, ciencia simple y novedades. */
 export function HomeSections() {
   const data = useDemoVersion();
   const hydrated = useHydrated();
@@ -43,6 +44,7 @@ export function HomeSections() {
       {theme && <ThemeOffersRail theme={theme} offer={offer} />}
       <CategoryCircles />
       <GoalRail />
+      <HomeStackBlock />
       <ProductRail id="recomendados" eyebrow="Elegidos para vos" title="Recomendados" products={recommended.map(toCard)} href="/categorias/" />
       <Later size={480}><ProductRail id="mas-vendidos" eyebrow="Los favoritos" title="Más vendidos" accent="de la semana" products={best.map(toCard)} href="/categorias/" /></Later>
       <Later size={640}><ProductStories /></Later>

@@ -142,7 +142,8 @@ Son cosas que hoy restan en cualquier demo y no conviene esperar al rediseño. E
 - **Insignia de campaña honesta:** "−30 % desde $ 40.000", o el precio con la condición.
 - **Panel:** celdas corridas en la vista Excel, total cortado, "Stock bajo · 139" por "1 variante baja", el número de
   email repetido, el menú con scroll oculto y el riel que se abre solo.
-- **Cupones de prueba de Velmar:** fuera FERIA2000 e INVIERNO, y fuera las pistas de cupones en el carrito.
+- **Cupones de prueba de Velmar:** FERIA2000 pasa a ENTRENA2000; INVIERNO queda solo en el panel como ejemplo de vencido
+  (el cliente no lo ve); fuera las pistas de cupones en el carrito.
 
 ---
 

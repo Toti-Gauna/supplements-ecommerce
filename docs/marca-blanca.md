@@ -33,8 +33,7 @@ Hay dos fichas listas:
 - Las otras marcas del catálogo (Krono Nutrition, Brava Sport, Ozono, Forja): son distribuidoras inventadas, como las
   que vende cualquier local. Ninguna es una marca real.
 - Las **temáticas** (Navidad, Día de la Madre, Black Friday…): tienen sus propios colores, pensados para cada fecha.
-- La ciudad de las entregas: zonas de cadete, códigos postales 7600–7612, teléfonos 223 y textos como "Cadete en el día
-  en Mar del Plata". La demo está armada para tiendas de Mar del Plata.
+- La ciudad de las entregas: zonas de cadete, códigos postales 7600–7612, teléfonos 223 y textos como "Cadete en Mar del Plata". La demo está armada para tiendas de Mar del Plata.
 - Productos, precios, clientes y pedidos de muestra (son ficticios).
 
 ## Paso a paso para una demo nueva (unos 15 minutos)

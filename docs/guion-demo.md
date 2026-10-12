@@ -9,7 +9,7 @@ cual en la demo.
   prospecto, ver [marca-blanca.md](marca-blanca.md)). Las rutas de abajo se suman al final de esa dirección.
 - VOLTA es una marca inventada. Si armaste la demo con la marca del prospecto, los nombres cambian pero los botones son
   los mismos.
-- El panel trabaja con una fecha fija: **domingo 4 de octubre de 2026**. Por eso "a Juan se le termina la whey el
+- El panel trabaja con una fecha fija: **lunes 5 de octubre de 2026**. Por eso "a Juan se le termina la whey el
   jueves" siempre dice lo mismo, el día que sea.
 
 ## Resumen minuto a minuto

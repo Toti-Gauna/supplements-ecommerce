@@ -44,6 +44,7 @@ export const useAdmin = create<AdminState>()(
       // v6: temáticas de la Fase 5 (Orgullo en lugar de San Patricio y fechas patrias, con sus cupones).
       // v7: VOLTA, tienda de suplementos (catálogo, costos con proveedor, sin personalización, descuento stack).
       // v8: ruleta "Disco olímpico" con premios de suplementos (muestra y shaker de regalo en lugar de grabado y llavero).
+      // v10: panel de la Fase 6 y 7 (lotes y vencimientos por variante, último aumento de precios, objetivos editables…).
       // Al cambiar de versión la demo vuelve a los datos de muestra.
       version: ADMIN_STORE_VERSION,
       storage: demoStorage,
@@ -63,7 +64,7 @@ export const useAdmin = create<AdminState>()(
         data.content = { ...current.data.content, ...data.content, slides: Array.isArray(data.content?.slides) ? normalizeSlides(data.content.slides) : current.data.content.slides };
         return { ...current, ...p, data, workshop, emails: { ...current.emails, ...(p.emails ?? {}) } };
       },
-      partialize: (s) => ({ data: s.data, orders: s.orders, users: s.users, claims: s.claims, audit: s.audit, lastImport: s.lastImport, workshop: s.workshop, emails: s.emails }),
+      partialize: (s) => ({ data: s.data, orders: s.orders, users: s.users, claims: s.claims, audit: s.audit, lastImport: s.lastImport, lastPriceChange: s.lastPriceChange, workshop: s.workshop, emails: s.emails }),
     },
   ),
 );

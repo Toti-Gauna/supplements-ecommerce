@@ -6,6 +6,7 @@ import { FLOATING_BAR } from "@/components/organisms/bottomBars";
 import { StockMeter } from "@/components/molecules/StockMeter";
 import { ProductGallery } from "@/components/organisms/ProductGallery";
 import { availability, getCategory, isPurchasable, maxQuantity, unitPrice, type Availability } from "@/demo/engine/catalog";
+import { variantClearance } from "@/demo/engine/lots";
 import type { Product } from "@/demo/types";
 import { cn } from "@/lib/cn";
 import { formatARS, withoutNationalTaxes } from "@/lib/money";
@@ -22,7 +23,7 @@ import { NutritionFacts } from "./NutritionFacts";
 import { ProductAccordions } from "./ProductAccordions";
 import { ServingCalculator } from "./ServingCalculator";
 import { StackOffer } from "./StackOffer";
-import { LotNote, ProductBadges, ServingPrice } from "./SupplementFacts";
+import { ClearanceTag, LotNote, ProductBadges, ServingPrice } from "./SupplementFacts";
 import { UsageTimeline } from "./UsageTimeline";
 import { useProductPurchase } from "./useProductPurchase";
 import { useVariantSelection } from "./useVariantSelection";
@@ -44,6 +45,7 @@ export function ProductDetail({ product: initial, preview = false }: { product: 
   const sel = useVariantSelection(product);
   const [qty, setQty] = useState(1);
   const price = unitPrice(product, sel.variant);
+  const clearance = variantClearance(product, sel.variant);
   const max = Math.max(1, maxQuantity(sel.variant));
   const quantity = Math.min(qty, max);
   const inactive = product.active === false;
@@ -98,13 +100,14 @@ export function ProductDetail({ product: initial, preview = false }: { product: 
             {!preview && <FavoriteButton slug={product.slug} name={product.name} className="mt-6 h-12 w-12 max-sm:hidden" />}
           </div>
           <div className="flex flex-wrap items-end gap-x-4 gap-y-1">
+            {clearance && <ClearanceTag clearance={clearance} />}
             <span className="text-4xl font-extrabold tabular-nums tracking-tight"><span key={price} className="animate-num">{formatARS(price)}</span></span>
             {settings.transferDiscountPct > 0 && <span className="mb-1 rounded-full bg-success-soft px-3 py-1 text-sm font-bold text-success">{formatARS(transferPrice)} con transferencia o QR</span>}
             <span className="w-full pt-2"><ServingPrice price={price} servings={sel.variant.servings} /></span>
             <span className="w-full text-xs text-muted">Precio sin impuestos nacionales: {formatARS(withoutNationalTaxes(price, settings.nationalTaxRate))} · precio de muestra</span>
           </div>
           <ConfigureCard product={product} sel={sel} quantity={quantity} max={max} stockNote={stockNote(avail)} onQuantity={setQty} actions={actions} />
-          <LotNote product={product} />
+          <LotNote product={product} variant={sel.variant} />
           <GiftModal open={giftOpen} onClose={() => setGiftOpen(false)} productName={product.name}
             onSubmit={(gift, mode) => { setGiftOpen(false); purchase(mode, gift); }} />
         </div>

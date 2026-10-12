@@ -34,6 +34,19 @@ export interface Variant {
   stock: number;
   /** Plazo de fabricación propio de la variante, en días hábiles (si no, el del producto). */
   leadDays?: number;
+  /** Lotes en el local. Con lotes, el stock es la suma de sus unidades y sale primero el que vence primero (FEFO). */
+  lots?: Lot[];
+  /** Costo del proveedor por unidad (pesos enteros). Lo actualiza la lista de precios del proveedor. */
+  cost?: number;
+}
+
+/** Lote de una variante: código del envase, vencimiento AAAA-MM (vence el último día del mes) y unidades. */
+export interface Lot {
+  code: string;
+  expires: string;
+  units: number;
+  /** Liquidación por vencimiento: % de descuento mientras este lote sea el que sale primero. */
+  clearancePct?: number;
 }
 
 export interface Faq {
@@ -111,7 +124,7 @@ export interface Product {
   badges?: ProductBadge[];
   nutrition?: Nutrition;
   usage?: Usage;
-  /** Lote y vencimiento de muestra (AAAA-MM). */
+  /** Lote representativo del producto (AAAA-MM). El de cada variante está en `variants[].lots`. */
   lot?: { code: string; expires: string };
   /** Nombres de las opciones en la ficha (por defecto "Sabor" y "Tamaño"). */
   optionNames?: { color?: string; size?: string };

@@ -1,5 +1,6 @@
 import type { ProductCardData } from "@/components/molecules/ProductCard";
 import { fromPrice, productHref } from "@/demo/engine/catalog";
+import { variantClearance } from "@/demo/engine/lots";
 import type { Product } from "@/demo/types";
 
 function stockNote(product: Product): string {
@@ -30,6 +31,7 @@ export function toCard(product: Product): ProductCardData {
     hasRange: deltas.size > 1,
     isNew: product.isNew,
     madeToOrder: product.variants.every((v) => v.stock < 0),
+    clearance: product.variants.some((v) => variantClearance(product, v)),
     stockNote: stockNote(product),
   };
 }

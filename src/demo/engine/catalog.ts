@@ -1,4 +1,5 @@
 import type { Category, Goal, Product, Variant } from "../types";
+import { variantClearance } from "./lots";
 import { demoData, STATIC_CATEGORY_SLUGS, STATIC_PRODUCT_SLUGS } from "./source";
 
 export type Availability = { kind: "made-to-order"; days?: number } | { kind: "in-stock"; units: number } | { kind: "out-of-stock" };
@@ -60,9 +61,14 @@ export function fromPrice(product: Product): number {
   return product.basePrice + Math.min(0, ...product.variants.map((v) => v.priceDelta));
 }
 
-/** Precio unitario de lista: base + recargo de la variante. */
-export function unitPrice(product: Product, variant: Variant): number {
+/** Precio de lista: base + recargo de la variante. */
+export function listPrice(product: Product, variant: Variant): number {
   return product.basePrice + variant.priceDelta;
+}
+
+/** Precio unitario que se cobra: el de lista o el de liquidación si el lote que sale primero está liquidado. */
+export function unitPrice(product: Product, variant: Variant): number {
+  return variantClearance(product, variant)?.price ?? listPrice(product, variant);
 }
 
 export function availability(product: Product, variant: Variant): Availability {

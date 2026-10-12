@@ -13,9 +13,10 @@ test("cambiar stock y pausar en el panel se refleja en la tienda; el reset vuelv
   await page.goto("admin-demo/productos/editar/?id=overvolt-pre");
   await expect(page.getByRole("heading", { name: /Editar: Overvolt pre-entreno/ })).toBeVisible();
   for (const s of await page.locator("details").filter({ hasText: /Frutos rojos|Limón|Mango/ }).all()) await s.locator("summary").click();
-  const stock = page.getByLabel("Stock (unidades)");
-  await expect(stock).toHaveCount(3);
-  for (let i = 0; i < 3; i++) await stock.nth(i).fill("0");
+  // Con lotes, el stock de cada variante es la suma de sus lotes (Fase 6): se dejan los tres lotes en 0.
+  const units = page.getByLabel("Unidades", { exact: true });
+  await expect(units).toHaveCount(3);
+  for (let i = 0; i < 3; i++) await units.nth(i).fill("0");
   await page.getByRole("button", { name: "Guardar (solo en esta demo)" }).click();
   await expect(page.getByRole("status").filter({ hasText: "Cambio guardado solo en esta demo" })).toBeVisible();
   await page.goto("p/overvolt-pre/");

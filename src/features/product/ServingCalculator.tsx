@@ -7,7 +7,7 @@ import { BatteryMeter } from "@/components/molecules/BatteryMeter";
 import { creatineGrams, PROTEIN_PER_KG, proteinFromLabel, proteinPlan, WEIGHT_RANGE } from "@/demo/engine/dose";
 import { daysLasting, reminderOn, runsOutOn } from "@/demo/engine/servings";
 import { DEMO_TODAY } from "@/demo/fixtures/admin-orders";
-import { goalById } from "@/demo/fixtures/goals";
+import { useGoals } from "../catalog/useGoals";
 import type { Goal, Product, Variant } from "@/demo/types";
 import { cn } from "@/lib/cn";
 import { formatDay } from "@/lib/date";
@@ -26,6 +26,7 @@ export function ServingCalculator({ product, variant }: { product: Product; vari
   const [weight, setWeight] = useState(75);
   const goals = (product.goals ?? []).filter((g) => PROTEIN_PER_KG[g]);
   const [goal, setGoal] = useState<Goal>(goals[0] ?? "masa-muscular");
+  const info = useGoals();
   const reminders = useReminders((s) => s.items);
   const save = useReminders((s) => s.save);
   const push = useToasts((s) => s.push);
@@ -63,7 +64,7 @@ export function ServingCalculator({ product, variant }: { product: Product; vari
           </label>
           {protein && goals.length > 0 && (
             <label className="flex flex-col gap-1 text-sm font-bold">Objetivo
-              <select value={goal} onChange={(e) => setGoal(e.target.value as Goal)} className={field}>{goals.map((g) => <option key={g} value={g}>{goalById(g)?.name}</option>)}</select>
+              <select value={goal} onChange={(e) => setGoal(e.target.value as Goal)} className={field}>{goals.map((g) => <option key={g} value={g}>{info.find((x) => x.id === g)?.name}</option>)}</select>
             </label>
           )}
         </div>

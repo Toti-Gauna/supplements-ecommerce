@@ -1,6 +1,7 @@
 import { categories } from "../fixtures/categories";
 import { coupons, demoSettings, homeCta, missions, shippingZones, slides, type DemoSettings } from "../fixtures/commerce";
 import { storeFaqs } from "../fixtures/content";
+import { goals, type GoalInfo } from "../fixtures/goals";
 import { products } from "../fixtures/products";
 import { seasonalThemes, themeCoupons, themeSettings } from "../fixtures/themes";
 import { defaultWheel, type WheelConfig } from "../fixtures/wheel";
@@ -21,6 +22,8 @@ export interface DemoData {
   content: { slides: CarouselSlide[]; homeCta: { title: string; text: string }; faqs: Faq[] };
   themes: SeasonalTheme[];
   themeSettings: ThemeSettings;
+  /** Objetivos de entrenamiento (nombre, bajada y color se editan en el panel → Categorías). */
+  goals: GoalInfo[];
 }
 
 export function defaultDemoData(): DemoData {
@@ -35,6 +38,7 @@ export function defaultDemoData(): DemoData {
     content: { slides: slides.map((s) => ({ ...s, active: true })), homeCta, faqs: storeFaqs },
     themes: seasonalThemes,
     themeSettings,
+    goals,
   });
 }
 

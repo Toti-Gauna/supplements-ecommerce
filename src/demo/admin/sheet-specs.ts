@@ -1,4 +1,5 @@
 import { UNIT_LABEL, type Material } from "../fixtures/workshop";
+import { formatExpiry } from "../engine/lots";
 import type { Category } from "../types";
 import type { CategoryRow } from "./categories";
 import { parseMoney, parseYesNo, type Parsed } from "./import/cells";
@@ -22,6 +23,9 @@ export function productSheetSpec(categories: Category[]): SheetSpec<StockRow> {
       { id: "price", label: COLUMN_LABEL.price, get: (r) => r.price, parse: parse("price"), numeric: true, money: true, width: "min-w-[7rem] sm:min-w-[8rem]" },
       { id: "stock", label: COLUMN_LABEL.stock, get: (r) => r.stock, parse: parse("stock"), numeric: true, text: (v) => (Number(v) < 0 ? "a pedido" : String(v)), width: "min-w-[6rem] sm:min-w-[7rem]" },
       { id: "active", label: COLUMN_LABEL.active, get: (r) => r.active, parse: parse("active"), input: "toggle", width: "min-w-[5rem]" },
+      // Solo lectura: la marca se cambia en la ficha y los lotes en las variantes del producto.
+      { id: "brand", label: "Marca", get: (r) => r.brand, width: "min-w-[8rem]" },
+      { id: "lot", label: "Lote que sale primero", get: (r) => (r.lot ? `${r.lot.code} · ${formatExpiry(r.lot.expires)}` : ""), width: "min-w-[10rem]" },
     ],
   };
 }

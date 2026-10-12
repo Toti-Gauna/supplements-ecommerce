@@ -6,14 +6,22 @@ import { ProductVisual } from "@/components/illustrations/ProductVisual";
 import type { Column } from "@/components/organisms/data-table/types";
 import { productMinPrice, productStockState, productStockTotal, STOCK_LABEL } from "@/demo/admin/stock";
 import { productHref } from "@/demo/engine/catalog";
+import { hasClearance } from "@/demo/admin/lots";
 import type { Category, Product } from "@/demo/types";
 import { formatARS } from "@/lib/money";
 import { StockChip } from "../table/StockChip";
+import { productExpiring } from "./catalogTable";
 
 export const minPrice = productMinPrice;
 
 export function ProductThumb({ product, size = "w-12" }: { product: Product; size?: string }) {
   return <ProductVisual art={product.art} pack={product.pack} photoUrl={product.photoDataUrl} tint={product.variants[0]?.colorHex} label="" showBadge={false} className={`aspect-square ${size} shrink-0 rounded-xl`} />;
+}
+
+/** Insignia de la fila: algún lote vence en menos de 60 días (o hay variantes en liquidación). */
+export function ExpiringBadge({ product }: { product: Product }) {
+  if (product.variants.some(hasClearance)) return <Badge tone="brand">En liquidación</Badge>;
+  return productExpiring(product) ? <Badge tone="warning">Vence pronto</Badge> : null;
 }
 
 export function productColumns(categories: Category[], low: number, onToggle: (p: Product) => void): Column<Product>[] {
@@ -22,7 +30,7 @@ export function productColumns(categories: Category[], low: number, onToggle: (p
   return [
     {
       id: "name", header: "Producto", pinned: true, primary: true, className: "min-w-[16rem]", sortValue: (p) => p.name, exportValue: (p) => p.name,
-      cell: (p) => <span className="flex items-center gap-3"><ProductThumb product={p} /><span className="flex flex-col"><span>{p.name}</span><span className="text-xs font-normal text-muted">{p.variants.length} {p.variants.length === 1 ? "variante" : "variantes"}</span></span></span>,
+      cell: (p) => <span className="flex items-center gap-3"><ProductThumb product={p} /><span className="flex flex-col items-start gap-0.5"><span>{p.name}</span><span className="text-xs font-normal text-muted">{p.variants.length} {p.variants.length === 1 ? "variante" : "variantes"}</span><ExpiringBadge product={p} /></span></span>,
     },
     { id: "category", header: "Categoría", cell: cat, sortValue: cat, exportValue: cat },
     { id: "price", header: "Precio desde", align: "right", cell: (p) => formatARS(minPrice(p)), sortValue: minPrice, exportValue: minPrice },

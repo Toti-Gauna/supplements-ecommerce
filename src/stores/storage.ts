@@ -3,7 +3,7 @@ import { createJSONStorage, type StateStorage } from "zustand/middleware";
 export const STORAGE_PREFIX = "volta-demo:";
 
 /** Versión del estado guardado del panel (la lee también el script del <head> de la tienda). */
-export const ADMIN_STORE_VERSION = 9;
+export const ADMIN_STORE_VERSION = 10;
 
 /** localStorage tolerante a modo privado / cuota llena: la demo sigue funcionando en memoria. */
 const memory = new Map<string, string>();

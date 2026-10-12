@@ -5,8 +5,8 @@ import { horizontalOverflow } from "./helpers";
 /** Polish 8.3.4 (tabla común, filtros, 10 por página, fila → entidad, vista Excel y .xlsx) y 8.3.19 (Productos y stock). */
 
 const TABLES = [
-  ["admin-demo/pedidos/", "Pedidos", 5], ["admin-demo/usuarios/", "Clientes", 3], ["admin-demo/productos/", "Productos", 3],
-  ["admin-demo/productos/?ver=variantes", "Stock por variante", 3], ["admin-demo/costos/", "Costo y margen por producto", 2],
+  ["admin-demo/pedidos/", "Pedidos", 5], ["admin-demo/usuarios/", "Clientes", 3], ["admin-demo/productos/", "Productos", 5],
+  ["admin-demo/productos/?ver=variantes", "Stock por variante", 5], ["admin-demo/costos/", "Costo y margen por producto", 2],
   ["admin-demo/insumos/", "Insumos del taller", 3], ["admin-demo/categorias/", "Categorías en el orden de la tienda", 3],
 ] as const;
 const base = () => `http://localhost:${process.env.E2E_PORT ?? "4173"}${process.env.PAGES_BASE_PATH ?? ""}/`;

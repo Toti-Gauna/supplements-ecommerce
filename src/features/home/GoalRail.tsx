@@ -6,7 +6,7 @@ import { GoalGlyph } from "@/components/illustrations/GoalGlyph";
 import { ProductArt } from "@/components/illustrations/ProductArt";
 import { Reveal } from "@/components/motion/Reveal";
 import { goalHref, productsForGoal } from "@/demo/engine/catalog";
-import { goals } from "@/demo/fixtures/goals";
+import { useGoals } from "../catalog/useGoals";
 import { useDemoVersion } from "@/stores/admin";
 
 /**
@@ -15,6 +15,7 @@ import { useDemoVersion } from "@/stores/admin";
  */
 export function GoalRail({ heading = true }: { heading?: boolean }) {
   useDemoVersion();
+  const goals = useGoals();
   const items = goals.map((g) => ({ g, list: productsForGoal(g.id) })).filter((x) => x.list.length > 0);
   return (
     <section aria-labelledby="goals-title">

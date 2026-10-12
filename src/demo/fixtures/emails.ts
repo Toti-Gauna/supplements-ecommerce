@@ -1,4 +1,5 @@
 import type { ArtKey, FulfillmentType } from "../types";
+import { brand } from "@/config/brand";
 
 /**
  * Emails automáticos de una tienda de suplementos (Fase 7): plantillas por bloques con datos dinámicos como fichas.
@@ -60,7 +61,7 @@ export type Inline = InlinePart[];
 export type ButtonLink = "tracking" | "shop" | "club" | "whatsapp" | "product";
 
 export const LINK_LABEL: Record<ButtonLink, string> = {
-  tracking: "Seguimiento del pedido", shop: "Tienda", club: "Club Volta", whatsapp: "WhatsApp de la tienda", product: "Ficha del producto que se termina",
+  tracking: "Seguimiento del pedido", shop: "Tienda", club: brand.club, whatsapp: "WhatsApp de la tienda", product: "Ficha del producto que se termina",
 };
 
 export type EmailBlock =

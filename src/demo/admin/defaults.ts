@@ -12,6 +12,7 @@ import type { ImportSnapshot } from "./catalog-slice";
 import type { AdminClaim, AdminOrder, AdminUser, AuditEntry, StatusLogEntry } from "./types";
 import { emailsForOrder, OUTBOX_LIMIT, triggersForNewOrder, triggersForTransition, type OutboxEmail } from "./emails/triggers";
 import type { PurchaseOrder } from "./workshop/purchasing";
+import { brand } from "@/config/brand";
 
 export interface AdminData {
   data: DemoData;
@@ -97,5 +98,5 @@ export function defaultAdminData(): AdminData {
 
 let seq = 0;
 export function auditEntry(action: string, entity: string): AuditEntry {
-  return { id: `a-${Date.now().toString(36)}-${++seq}`, at: new Date().toISOString(), actor: "Volta (demo)", action, entity };
+  return { id: `a-${Date.now().toString(36)}-${++seq}`, at: new Date().toISOString(), actor: `${brand.name} (demo)`, action, entity };
 }

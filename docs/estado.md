@@ -94,7 +94,7 @@
 - Temáticas **encendidas**: modo automático por fecha (octubre → Día de la Madre) y "Probar temáticas" visible.
   `ADMIN_STORE_VERSION` 9.
 
-## Fase 6 · Panel I · Ventas y catálogo ✅ (en revisión)
+## Fase 6 · Panel I · Ventas y catálogo ✅ (publicada)
 - **Clientes sin mascotas**: fichas con objetivo (editable o deducido de lo que compra), notas, cumpleaños y avisos
   de recompra ya mandados (`src/demo/fixtures/customers.ts`).
 - **Recompra calculada** (`src/demo/admin/repurchase.ts`): con los pedidos pagados, los servicios de la variante, la
@@ -114,7 +114,7 @@
 - **Inicio del panel**: "Recompras de la semana" y "Próximos a vencer" (con Liquidar) debajo de las tarjetas de
   Operaciones.
 
-## Fase 7 · Panel II · Operaciones y marketing ✅ (en revisión)
+## Fase 7 · Panel II · Operaciones y marketing ✅ (publicada)
 - **Taller → Operaciones**: Preparación, Calendario de despachos, Proveedores y compras, Costos y margen e Insumos
   de embalaje. `IN_PRODUCTION` se muestra "En preparación"; `/admin-demo/produccion/` lleva a la preparación.
 - **Preparación de pedidos**: Por preparar → Armando → **Control de lote** → Listo para despachar (arrastrar, botón
@@ -137,7 +137,30 @@
   del juego, con los potes animados; post, historia y carrusel en PNG y video con música sintetizada.
 - `ADMIN_STORE_VERSION` 10 (los datos del panel guardados en el navegador se reinician una vez).
 
-## Pendiente de Velmar (se resuelve en su fase)
-| Qué queda | Dónde se ve | Fase |
+## Fase 8 · Pulido premium y kit de venta ✅ (en revisión)
+- **Sonidos sintetizados** (`src/lib/sound-synth.ts`): carga eléctrica al agregar, clic de disco en la ruleta, golpes
+  en la bolsa del regalo que se vuelven más graves, error que avisa sin retar. Respetan el silencio guardado, no suenan
+  en el panel y se habilitan con el primer toque (también en iPhone).
+- **Microinteracciones**: la bolsa del header se sacude al cerrar el carrito y la marca de la pestaña activa se desliza
+  en las barras inferiores (CSS, sin medir layout).
+- **Rendimiento en celular de gama media** (CPU ×4, 375 px): en el inicio, −42 % de bloqueo y −35 % de nodos; HTML de
+  684 a 515 KB (degradés compartidos una sola vez, carruseles y header sin layouts forzados).
+- **Accesibilidad AA**: axe-core en 14 pantallas de tienda y panel, en claro y oscuro, más carrito, menú y checkout
+  (31 casos e2e). Corregidos nombres accesibles de tarjetas, foco en la fila de beneficios y contraste de la barra
+  inferior en modo claro.
+- Editor de producto: llegar con Tab a "Ver en tienda" ya no cambia el paso al volver.
+- **Marca blanca**: fichas de marca en `src/config/brands/` (VOLTA y "Nitro" de ejemplo) elegidas con
+  `NEXT_PUBLIC_BRAND`. Nombre, logo, favicon, imagen para compartir, colores, marca propia del catálogo, códigos de
+  pedido y guardado del navegador salen de la ficha. Tests de contraste AA, guardia contra "Volta" escrito en el código y
+  prueba completa con Nitro (`npm run check:marca`). Guía: `docs/marca-blanca.md`.
+- **Kit de venta**: guion de demo de 10 minutos (`docs/guion-demo.md`, con versión de 5 minutos, plan B y preguntas
+  típicas) y manual del dueño (`docs/manual-del-dueno.md`) con 22 capturas en `docs/img/`.
+- Para probar en iPhone y Android reales: sonidos con el primer toque y con el interruptor de silencio, fluidez del
+  inicio y del carrito en un Android de gama media, barra inferior en modo claro.
+
+## Pendiente
+| Qué queda | Dónde | Nota |
 |---|---|---|
-| Editor de producto: si se llega con Tab a "Ver en tienda", al volver abre en el último paso (con mouse no pasa) | Panel → Productos | 8 |
+| Separar los datos del panel de la tienda (≈ 75 KB que hoy viajan a todas las páginas) | Rendimiento | Cambio de arquitectura de la store persistida |
+| Logo propio del cliente (archivo SVG/PNG) y otra ciudad que no sea Mar del Plata | Marca blanca | Después de la seña |
+| QA en iPhone y Android reales | Toda la demo | Lo hace Ignacio |

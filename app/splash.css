@@ -21,7 +21,7 @@
   position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; overflow: hidden;
   /* Es un popover (capa superior): se anulan los estilos del navegador para que ocupe toda la pantalla. */
   width: auto; height: auto; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; color: inherit;
-  background: radial-gradient(120% 80% at 50% 42%, #1a1f2a 0%, #0c0f14 52%, #050608 100%);
+  background: radial-gradient(120% 80% at 50% 42%, color-mix(in srgb, var(--c-night-2), #fff 6%) 0%, var(--c-night-2) 52%, var(--c-night) 100%);
   box-shadow: 0 40px 90px -20px rgb(0 0 0 / 0.6);
   animation: splash-curtain 650ms cubic-bezier(0.7, 0, 0.2, 1) 4350ms both;
 }
@@ -33,30 +33,30 @@
 
 /* Grilla de laboratorio y halo violeta. */
 #volta-splash .splash-grid { position: absolute; inset: 0; opacity: 0.5; background-image: radial-gradient(circle at 1px 1px, rgb(255 255 255 / 0.09) 1px, transparent 1.5px); background-size: 26px 26px; -webkit-mask: radial-gradient(70% 60% at 50% 50%, #000 30%, transparent 75%); mask: radial-gradient(70% 60% at 50% 50%, #000 30%, transparent 75%); }
-#volta-splash .splash-glow { width: 80vmin; height: 80vmin; border-radius: 9999px; background: radial-gradient(closest-side, rgb(139 114 255 / 0.3), rgb(139 114 255 / 0.06) 60%, transparent); animation: glow 2.4s ease-in-out 200ms both; }
+#volta-splash .splash-glow { width: 80vmin; height: 80vmin; border-radius: 9999px; background: radial-gradient(closest-side, color-mix(in srgb, var(--brand-glow) 30%, transparent), color-mix(in srgb, var(--brand-glow) 6%, transparent) 60%, transparent); animation: glow 2.4s ease-in-out 200ms both; }
 
 /* Línea de pulso: la ventana entra desde la izquierda y la línea queda quieta (dos transform opuestos). */
-#volta-splash .splash-pulse { position: absolute; left: 0; right: 0; top: 50%; height: 120px; margin-top: -60px; overflow: hidden; color: #c8ff2e; animation: pulse-window 700ms cubic-bezier(0.6, 0, 0.2, 1) 80ms both, fade-out 320ms ease-in 760ms forwards; }
+#volta-splash .splash-pulse { position: absolute; left: 0; right: 0; top: 50%; height: 120px; margin-top: -60px; overflow: hidden; color: var(--brand-volt); animation: pulse-window 700ms cubic-bezier(0.6, 0, 0.2, 1) 80ms both, fade-out 320ms ease-in 760ms forwards; }
 #volta-splash .pulse-track { display: block; height: 100%; animation: pulse-track 700ms cubic-bezier(0.6, 0, 0.2, 1) 80ms both; }
-#volta-splash .pulse-track svg { width: 100%; height: 100%; filter: drop-shadow(0 0 6px rgb(200 255 46 / 0.8)); }
+#volta-splash .pulse-track svg { width: 100%; height: 100%; filter: drop-shadow(0 0 6px color-mix(in srgb, var(--brand-volt) 80%, transparent)); }
 
 /* Fogonazo cuando cae el rayo. */
-#volta-splash .splash-flash { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(circle at 50% 46%, rgb(227 255 143 / 0.42), rgb(200 255 46 / 0.08) 35%, transparent 62%); opacity: 0; animation: flash 520ms ease-out 860ms both; }
+#volta-splash .splash-flash { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(circle at 50% 46%, color-mix(in srgb, var(--brand-volt-soft) 42%, transparent), color-mix(in srgb, var(--brand-volt) 8%, transparent) 35%, transparent 62%); opacity: 0; animation: flash 520ms ease-out 860ms both; }
 
 /* Chispas que titilan. */
 #volta-splash .splash-sparks { position: absolute; inset: 0; }
-#volta-splash .splash-sparks span { position: absolute; width: var(--s); height: var(--s); border-radius: 1px; rotate: 45deg; background: #e3ff8f; box-shadow: 0 0 8px #c8ff2e; opacity: 0; animation: spark 2.2s ease-in-out var(--d) infinite; }
+#volta-splash .splash-sparks span { position: absolute; width: var(--s); height: var(--s); border-radius: 1px; rotate: 45deg; background: var(--brand-volt-soft); box-shadow: 0 0 8px var(--brand-volt); opacity: 0; animation: spark 2.2s ease-in-out var(--d) infinite; }
 
 /* Aro eléctrico concéntrico con el logo, por el centro de los envases. Se abre y un cometa lo recorre. */
 #volta-splash .splash-halo { width: calc(var(--orbit) * 2); height: calc(var(--orbit) * 2); opacity: 0; animation: halo-in 1.3s var(--ease-out-expo) 600ms both; }
-#volta-splash .splash-halo::before { content: ""; position: absolute; inset: 0; border-radius: 9999px; border: 1px solid rgb(200 255 46 / 0.55); box-shadow: 0 0 18px rgb(200 255 46 / 0.18), inset 0 0 18px rgb(139 114 255 / 0.14); }
+#volta-splash .splash-halo::before { content: ""; position: absolute; inset: 0; border-radius: 9999px; border: 1px solid color-mix(in srgb, var(--brand-volt) 55%, transparent); box-shadow: 0 0 18px color-mix(in srgb, var(--brand-volt) 18%, transparent), inset 0 0 18px color-mix(in srgb, var(--brand-glow) 14%, transparent); }
 #volta-splash .splash-sweep, #volta-splash .splash-comet { position: absolute; inset: -1px; border-radius: 9999px; opacity: 0; animation: sweep 1.9s cubic-bezier(0.45, 0, 0.2, 1) 750ms both; }
 #volta-splash .splash-sweep {
-  background: conic-gradient(from 0deg, transparent 0turn 0.7turn, rgb(227 255 143 / 0.95) 0.999turn, transparent 1turn);
+  background: conic-gradient(from 0deg, transparent 0turn 0.7turn, color-mix(in srgb, var(--brand-volt-soft) 95%, transparent) 0.999turn, transparent 1turn);
   -webkit-mask: radial-gradient(closest-side, transparent calc(100% - 3px), #000 calc(100% - 2px), #000 100%, transparent 100%);
   mask: radial-gradient(closest-side, transparent calc(100% - 3px), #000 calc(100% - 2px), #000 100%, transparent 100%);
 }
-#volta-splash .splash-comet::after { content: ""; position: absolute; left: 50%; top: 0; width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; border-radius: 9999px; background: #f4ffd6; box-shadow: 0 0 14px 5px rgb(200 255 46 / 0.75); }
+#volta-splash .splash-comet::after { content: ""; position: absolute; left: 50%; top: 0; width: 7px; height: 7px; margin: -3.5px 0 0 -3.5px; border-radius: 9999px; background: color-mix(in srgb, var(--brand-volt-soft) 45%, #fff); box-shadow: 0 0 14px 5px color-mix(in srgb, var(--brand-volt) 75%, transparent); }
 
 /* Los envases entran en órbita uno a uno, montados sobre el aro. */
 #volta-splash .splash-orbit { position: absolute; inset: 0; animation: orbit-spin 4.4s cubic-bezier(0.3, 0, 0.2, 1) both; }
@@ -67,7 +67,7 @@
 }
 #volta-splash .splash-card {
   position: relative; display: block; height: 100%; overflow: hidden; border-radius: 24%;
-  box-shadow: 0 24px 50px -20px rgb(0 0 0 / 0.8), 0 0 0 1px rgb(200 255 46 / 0.3);
+  box-shadow: 0 24px 50px -20px rgb(0 0 0 / 0.8), 0 0 0 1px color-mix(in srgb, var(--brand-volt) 30%, transparent);
   opacity: 0; transform: scale(0.4) translateY(18px);
   animation: piece-in 700ms cubic-bezier(0.2, 1.4, 0.4, 1) calc(1500ms + var(--i) * 260ms) both, piece-float 2.2s ease-in-out calc(2300ms + var(--i) * 260ms);
 }
@@ -78,18 +78,18 @@
 #volta-splash .splash-mark svg { position: absolute; inset: 0; height: 100%; width: 100%; overflow: visible; }
 #volta-splash .mark-m { animation: mark-up 650ms var(--ease-out-expo) 450ms both; }
 #volta-splash .mark-v { animation: bolt-strike 520ms cubic-bezier(0.3, 1.6, 0.5, 1) 750ms both; }
-#volta-splash .splash-mark::after { content: ""; position: absolute; inset: -70%; border-radius: 9999px; background: radial-gradient(closest-side, rgb(200 255 46 / 0.55), transparent); opacity: 0; animation: mark-flash 900ms ease-out 860ms both; }
+#volta-splash .splash-mark::after { content: ""; position: absolute; inset: -70%; border-radius: 9999px; background: radial-gradient(closest-side, color-mix(in srgb, var(--brand-volt) 55%, transparent), transparent); opacity: 0; animation: mark-flash 900ms ease-out 860ms both; }
 /* El relleno con margen negativo agranda el recorte sin mover nada: no come el remate de las letras. */
 #volta-splash .splash-word { display: block; overflow: hidden; margin: calc(0.9rem - 0.1em) -0.08em -0.16em; padding: 0.1em 0.08em 0.16em; }
 #volta-splash .word { animation: word-up 950ms var(--ease-out-expo) 950ms both; }
 
 /* Batería: diez celdas que se encienden en cadena y el porcentaje que sube de a 10. */
 #volta-splash .splash-battery { display: flex; align-items: center; gap: 0.75rem; margin-top: 1rem; opacity: 0; animation: fade-in 400ms ease-out 1000ms both; }
-#volta-splash .battery-cells { position: relative; display: flex; gap: 3px; padding: 4px; border: 1px solid rgb(200 255 46 / 0.45); border-radius: 6px; }
-#volta-splash .battery-cells::after { content: ""; position: absolute; right: -5px; top: 50%; width: 3px; height: 8px; margin-top: -4px; border-radius: 0 2px 2px 0; background: rgb(200 255 46 / 0.45); }
-#volta-splash .battery-cells span { position: relative; width: 9px; height: 14px; border-radius: 2px; background: rgb(200 255 46 / 0.12); }
-#volta-splash .battery-cells span::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: #c8ff2e; box-shadow: 0 0 8px rgb(200 255 46 / 0.8); opacity: 0; animation: cell-on 160ms ease-out calc(1150ms + var(--i) * 135ms) both; }
-#volta-splash .battery-count { display: block; height: 1.2em; overflow: hidden; font-size: 0.8rem; font-weight: 700; line-height: 1.2em; color: #e3ff8f; min-width: 3.4em; }
+#volta-splash .battery-cells { position: relative; display: flex; gap: 3px; padding: 4px; border: 1px solid color-mix(in srgb, var(--brand-volt) 45%, transparent); border-radius: 6px; }
+#volta-splash .battery-cells::after { content: ""; position: absolute; right: -5px; top: 50%; width: 3px; height: 8px; margin-top: -4px; border-radius: 0 2px 2px 0; background: color-mix(in srgb, var(--brand-volt) 45%, transparent); }
+#volta-splash .battery-cells span { position: relative; width: 9px; height: 14px; border-radius: 2px; background: color-mix(in srgb, var(--brand-volt) 12%, transparent); }
+#volta-splash .battery-cells span::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: var(--brand-volt); box-shadow: 0 0 8px color-mix(in srgb, var(--brand-volt) 80%, transparent); opacity: 0; animation: cell-on 160ms ease-out calc(1150ms + var(--i) * 135ms) both; }
+#volta-splash .battery-count { display: block; height: 1.2em; overflow: hidden; font-size: 0.8rem; font-weight: 700; line-height: 1.2em; color: var(--brand-volt-soft); min-width: 3.4em; }
 #volta-splash .count-strip { display: flex; flex-direction: column; animation: count-up 1350ms steps(10, end) 1150ms both; }
 #volta-splash .splash-city { position: absolute; bottom: calc(6% + env(safe-area-inset-bottom)); color: rgb(163 172 186 / 0.8); opacity: 0; animation: fade-in 500ms ease-out 1100ms both; }
 

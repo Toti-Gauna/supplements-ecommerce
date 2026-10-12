@@ -10,6 +10,7 @@ import { useDemoData } from "@/stores/admin";
 import { useThemePreview, type ThemePreview } from "@/stores/themePreview";
 import { reloadWithTheme } from "./reloadWithTheme";
 import { skinOf } from "./skins";
+import { brand } from "@/config/brand";
 
 /** Selector de "Probar temáticas": cambia solo la vista de este navegador; el panel define la real. */
 export function ThemePicker({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -40,7 +41,7 @@ export function ThemePicker({ open, onClose }: { open: boolean; onClose: () => v
             <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-night"><LogoMark className="h-6 w-6 text-volt" /></span>
             <span className="min-w-0 flex-1">
               <strong className="block text-[15px]">Original</strong>
-              <span className="block text-xs text-muted">Volta sin temática</span>
+              <span className="block text-xs text-muted">{brand.name} sin temática</span>
             </span>
             {previewId === "original" && <Check size={18} aria-hidden="true" className="text-primary" />}
           </button>

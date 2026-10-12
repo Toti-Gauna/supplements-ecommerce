@@ -12,7 +12,7 @@ export function GameHero({ onPlay }: { onPlay: () => void }) {
   const { hydrated, best, today } = useGameStats();
   return (
     <section aria-labelledby="game-title" className="relative grid items-center gap-6 overflow-hidden rounded-[2rem] bg-night p-6 text-on-night sm:rounded-[2.5rem] sm:p-10 lg:grid-cols-[1.1fr_1fr] lg:p-14">
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_60%_at_80%_20%,rgb(139_114_255/0.22),transparent_70%),radial-gradient(60%_50%_at_20%_100%,rgb(200_255_46/0.12),transparent_70%)]" />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_60%_at_80%_20%,color-mix(in_srgb,var(--brand-glow)_22%,transparent),transparent_70%),radial-gradient(60%_50%_at_20%_100%,color-mix(in_srgb,var(--brand-volt)_12%,transparent),transparent_70%)]" />
       <SoundToggle className="absolute right-4 top-4 z-10 h-11 w-11 rounded-full bg-white/10 ring-1 ring-white/15 hover:bg-white/20 sm:right-6 sm:top-6" />
       <div className="relative flex flex-col gap-5">
         <div>

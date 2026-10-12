@@ -1,3 +1,4 @@
+import { brand } from "@/config/brand";
 /**
  * Arte del "Disco olímpico" (Fase 4): colores reglamentarios de los discos de pesas, luces del aro y luz del escenario.
  * Son colores del dibujo SVG (no cambian con el modo claro/oscuro), por eso viven acá y no como tokens de la UI.
@@ -29,10 +30,10 @@ export const plateFor = (i: number) => PLATES[i % PLATES.length]!;
 export const LEDS = 24;
 
 /** Voltio, plasma e ion de la marca (los mismos de `docs/tono-visual.md`). */
-export const VOLT = "#c8ff2e";
-export const VOLT_SOFT = "#e3ff8f";
-export const PLASMA = "#8b72ff";
-export const ION = "#2ee6d6";
+export const VOLT = brand.signature.volt;
+export const VOLT_SOFT = brand.signature.voltSoft;
+export const PLASMA = brand.signature.plasma;
+export const ION = brand.signature.ion;
 
 /** Luz del escenario sin temática: ion profundo desde abajo y plasma detrás del disco. */
 export const STAGE_GLOW: [string, string] = ["#0f5f58", PLASMA];

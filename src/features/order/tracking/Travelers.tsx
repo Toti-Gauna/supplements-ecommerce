@@ -3,6 +3,7 @@ import { Decor, type DecorKind } from "@/components/illustrations/seasonal/Decor
 import type { SeasonId } from "@/demo/types";
 import { skinOf } from "@/features/themes/skins";
 import { Courier } from "./Courier";
+import { brand } from "@/config/brand";
 
 /** Quién lleva el pedido por el recorrido: lo que se dibuja, cómo se nombra y qué estalla al llegar. */
 export interface Traveler {
@@ -30,7 +31,7 @@ export function travelerFor(themeId: SeasonId | null): Traveler | null {
   const skin = skinOf(themeId);
   return {
     node: <Courier jacket={skin.accent} helmet={skin.to} hat={<Decor kind={skin.topper} className="h-full w-full" />} />,
-    label: `el cadete de VOLTA, ${OUTFIT[themeId]}`,
+    label: `el cadete de ${brand.mark}, ${OUTFIT[themeId]}`,
     motion: "walk",
     burst: skin.decor,
   };

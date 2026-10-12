@@ -1,8 +1,9 @@
 import type { PackStyle } from "./types";
+import { brand } from "@/config/brand";
 
 /**
- * Definiciones compartidas de la librería de envases. Los IDs son fijos y las definiciones idénticas en cada SVG
- * (se pueden repetir en la página). Sin variables CSS adentro de los dibujos: el Estudio de contenido los pasa a imagen.
+ * Definiciones compartidas de la librería de envases (IDs fijos). En la página van una sola vez (`GlobalArtDefs`); el
+ * SVG que se pasa a imagen (`PackShot` del Estudio de contenido) las trae adentro. Sin variables CSS en los dibujos.
  */
 export const DISPLAY_SVG = "'Archivo Variable','Arial Black',Arial,sans-serif";
 export const MONO_SVG = "'JetBrains Mono Variable',ui-monospace,Menlo,monospace";
@@ -27,9 +28,9 @@ export function PackDefs() {
       </linearGradient>
       {/* Filo de luz eléctrica del lado derecho: voltio arriba, plasma abajo. */}
       <linearGradient id="sp-rim" gradientUnits="userSpaceOnUse" x1="0" y1="60" x2="0" y2="340">
-        <stop offset="0" stopColor="#e3ff8f" />
-        <stop offset=".45" stopColor="#c8ff2e" />
-        <stop offset="1" stopColor="#8b72ff" stopOpacity=".2" />
+        <stop offset="0" stopColor={brand.signature.voltSoft} />
+        <stop offset=".45" stopColor={brand.signature.volt} />
+        <stop offset="1" stopColor={brand.signature.plasma} stopOpacity=".2" />
       </linearGradient>
       <linearGradient id="sp-glass" x1="0" y1="0" x2="1" y2="0">
         <stop offset="0" stopColor="#fff" stopOpacity=".05" />

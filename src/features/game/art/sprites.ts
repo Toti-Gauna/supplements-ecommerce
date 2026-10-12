@@ -1,4 +1,5 @@
 import type { GameItemKind } from "@/demo/fixtures/game";
+import { brand } from "@/config/brand";
 
 /**
  * Arte de Shaker Rush: cada objeto es una lista de capas (trazo SVG + color) en un lienzo de radio 20 centrado en
@@ -15,7 +16,7 @@ export interface Layer {
 }
 
 export const ART = {
-  volt: "#c8ff2e", voltSoft: "#e3ff8f", plasma: "#8b72ff", ion: "#2ee6d6", ink: "#eef1f5", night: "#0a0c10",
+  volt: brand.signature.volt, voltSoft: brand.signature.voltSoft, plasma: brand.signature.plasma, ion: brand.signature.ion, ink: "#eef1f5", night: "#0a0c10",
   cream: "#f1e7d0", gold: "#ffc93c", goldDeep: "#d98e0b", goldLight: "#fff3c4", ember: "#ff6b4a",
 };
 

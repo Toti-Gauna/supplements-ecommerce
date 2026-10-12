@@ -3,12 +3,24 @@ import { useEffect, useRef, useState } from "react";
 import type { StepId } from "@/demo/admin/product-steps";
 
 const html = () => document.documentElement;
-const padTop = () => parseFloat(html().style.scrollPaddingTop) || 0;
+const pad = (side: "top" | "bottom") => parseFloat(html().style.getPropertyValue(`--editor-pad-${side}`)) || 0;
+const padTop = () => pad("top");
+const VARS = ["--editor-top", "--editor-pad-top", "--editor-pad-bottom"];
+
+/** Corre la página lo justo para que el campo enfocado quede entre lo fijo de arriba y la barra de guardado. */
+function keepVisible(el: Element) {
+  const r = el.getBoundingClientRect();
+  const low = innerHeight - pad("bottom");
+  const by = r.bottom > low ? Math.min(r.bottom - low, r.top - padTop()) : r.top < padTop() ? r.top - padTop() : 0;
+  if (by) window.scrollBy({ top: by, behavior: "instant" });
+}
 
 /**
  * Navegación del editor por pasos (8.3.20). Mide lo que queda fijo arriba (barra del panel y pasos compactos) y abajo
- * (barra de guardado y pestañas) y lo pasa a `scroll-padding`: así ni los bloques ni un campo enfocado con Tab quedan
- * tapados. El paso actual sale de la posición del scroll o del campo enfocado; tocar un paso lleva a su bloque.
+ * (barra de guardado y pestañas): ni los bloques ni un campo enfocado con Tab quedan tapados. No va como
+ * `scroll-padding` de la página: los botones de las barras fijas caerían dentro de esa franja y, al llegarles con Tab,
+ * el navegador correría la página (y el paso) para "mostrarlos" (bug de la Fase 8: volvía en el último paso).
+ * El paso actual sale de la posición del scroll o del campo enfocado; tocar un paso lleva a su bloque.
  */
 export function useEditorNav(initial: StepId) {
   const [current, setCurrent] = useState<StepId>(initial);
@@ -27,8 +39,8 @@ export function useEditorNav(initial: StepId) {
       const steps = compact && getComputedStyle(compact).display !== "none" ? compact.offsetHeight : 0;
       const bottom = bar ? bar.offsetHeight + (parseFloat(getComputedStyle(bar).bottom) || 0) : 0;
       html().style.setProperty("--editor-top", `${top}px`);
-      html().style.scrollPaddingTop = `${top + steps + 16}px`;
-      html().style.scrollPaddingBottom = `${bottom + 16}px`;
+      html().style.setProperty("--editor-pad-top", `${top + steps + 16}px`);
+      html().style.setProperty("--editor-pad-bottom", `${bottom + 16}px`);
     };
     update();
     const ro = new ResizeObserver(update);
@@ -37,9 +49,7 @@ export function useEditorNav(initial: StepId) {
     return () => {
       ro.disconnect();
       window.removeEventListener("resize", update);
-      html().style.removeProperty("--editor-top");
-      html().style.scrollPaddingTop = "";
-      html().style.scrollPaddingBottom = "";
+      for (const v of VARS) html().style.removeProperty(v);
     };
   }, []);
 
@@ -68,6 +78,7 @@ export function useEditorNav(initial: StepId) {
       const step = (e.target as Element | null)?.closest?.<HTMLElement>("[data-step]")?.dataset.step;
       // Enfocar el título al tocar un paso no corta el viaje hacia ese paso.
       if (!step || (target.current && performance.now() < target.current.until)) return;
+      keepVisible(e.target as Element);
       target.current = { until: performance.now() + 400 };
       setCurrent(step as StepId);
     };

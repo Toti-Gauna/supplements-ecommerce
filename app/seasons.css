@@ -127,8 +127,8 @@ html[data-season] #volta-splash {
 }
 html[data-season] #volta-splash > .splash-orbit, html[data-season] #volta-splash .splash-city,
 html[data-season] #volta-splash .splash-rays, html[data-season] #volta-splash .splash-halo, html[data-season] #volta-splash .splash-dust { display: none; }
-html[data-season] #volta-splash .splash-glow { background: radial-gradient(closest-side, color-mix(in srgb, var(--sp-accent, #c8ff2e) 30%, transparent), transparent); }
-html[data-season] #volta-splash .splash-mark { color: var(--sp-accent, #c8ff2e); }
+html[data-season] #volta-splash .splash-glow { background: radial-gradient(closest-side, color-mix(in srgb, var(--sp-accent, var(--brand-volt)) 30%, transparent), transparent); }
+html[data-season] #volta-splash .splash-mark { color: var(--sp-accent, var(--brand-volt)); }
 /* La escena llega cuando baja su archivo (después de la carga inicial): entra fundida, no de golpe. */
 #volta-splash .season-scene { position: absolute; inset: 0; animation: fade-in 450ms ease-out both; }
 #volta-splash .season-tag { position: absolute; top: calc(9% + env(safe-area-inset-top)); color: var(--sp-accent); opacity: 0; animation: fade-up 700ms var(--ease-out-expo) 500ms both; }

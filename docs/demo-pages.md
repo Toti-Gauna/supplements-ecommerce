@@ -6,7 +6,7 @@
 - `basePath` sale de `PAGES_BASE_PATH`, que en CI entrega `actions/configure-pages` (`base_path`). En local queda vacío.
   `PAGES_SITE_URL` (`base_url`) se usa para sitemap, robots y Open Graph. No hay nombre de repo hardcodeado.
 - Rutas dinámicas con `generateStaticParams` + `dynamicParams = false`: `/c/[slug]`, `/p/[slug]`, `/crear/[slug]`,
-  `/pedido/[token]` (solo el token fijo `demo-volta`).
+  `/pedido/[token]` (solo el token fijo `demo-<id de marca>`: `demo-volta` con VOLTA; ver `marca-blanca.md`).
 - `sitemap.xml`, `robots.txt` y `og.png` son route handlers `force-static` generados en build.
 - La demo **no se indexa** (`noindex` + `robots.txt Disallow`): muestra precios y marcas de muestra.
   Para indexarla: `DEMO_INDEXABLE=true` (con la marca real del cliente). Nota: en un sitio de proyecto (`usuario.github.io/repo`)

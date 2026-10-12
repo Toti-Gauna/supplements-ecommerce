@@ -4,6 +4,7 @@ import { previewMission } from "@/demo/engine/missions";
 import { demoAccountProgress } from "@/demo/fixtures/commerce";
 import { useAccount } from "@/stores/account";
 import { useDemoData } from "@/stores/admin";
+import { brand } from "@/config/brand";
 
 /** Empujón de misión: cuánto falta para el premio con este carrito (ilustrativo). */
 export function CartMissionNudge({ units, total }: { units: number; total: number }) {
@@ -19,7 +20,7 @@ export function CartMissionNudge({ units, total }: { units: number; total: numbe
         <span className="text-xs font-extrabold">{p.pctAfter}%</span>
       </ProgressRing>
       <div className="min-w-0 text-sm">
-        <p className="eyebrow text-volt">Club Volta</p>
+        <p className="eyebrow text-volt">{brand.club}</p>
         <p className="font-bold">{p.after >= mission.threshold ? `¡Desbloqueás: ${mission.reward}!` : `Te falta ${unit} para: ${mission.reward}`}</p>
         <p className="text-xs text-night-muted">{isRegistered ? "Se acredita cuando el pago se confirma." : "Con cuenta, este pedido suma. (Ilustrativo)"}</p>
       </div>

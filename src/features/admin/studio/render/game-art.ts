@@ -2,6 +2,8 @@ import { easeOutExpo, span } from "@/demo/admin/studio/timeline";
 import type { GameItemKind } from "@/demo/fixtures/game";
 import { drawLayers, drawShaker } from "@/features/game/art/draw";
 import { SPRITES } from "@/features/game/art/sprites";
+import { brand } from "@/config/brand";
+import { alpha } from "@/lib/color";
 
 /**
  * Shaker Rush en la pieza: el shaker del juego (el mismo dibujo del canvas del juego) con el batido que sube y lo que
@@ -27,7 +29,7 @@ export function drawGameArt(ctx: CanvasRenderingContext2D, t: number, start: num
   // Halo voltio debajo del shaker.
   ctx.save();
   const halo = ctx.createRadialGradient(cx, top + 92 * scale, 0, cx, top + 92 * scale, 70 * scale);
-  halo.addColorStop(0, "rgba(200,255,46,0.32)"); halo.addColorStop(1, "rgba(200,255,46,0)");
+  halo.addColorStop(0, alpha(brand.signature.volt, 0.32)); halo.addColorStop(1, alpha(brand.signature.volt, 0));
   ctx.fillStyle = halo;
   ctx.fillRect(cx - 80 * scale, top + 40 * scale, 160 * scale, 100 * scale);
   ctx.restore();

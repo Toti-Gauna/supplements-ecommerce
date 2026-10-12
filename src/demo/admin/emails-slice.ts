@@ -2,6 +2,7 @@ import { emailTemplates, type EmailTemplate } from "../fixtures/emails";
 import { auditEntry, type AdminData } from "./defaults";
 import { sampleContext } from "./emails/context";
 import { composeEmails, pushOutbox } from "./emails/triggers";
+import { brand } from "@/config/brand";
 
 type Set = (fn: (s: AdminData) => Partial<AdminData>) => void;
 type Get = () => AdminData;
@@ -16,7 +17,7 @@ export interface EmailActions {
   clearOutbox: () => void;
 }
 
-export const TEST_INBOX = "tienda@volta.demo";
+export const TEST_INBOX = `tienda@${brand.demoDomain}`;
 
 export function createEmailActions(set: Set, get: Get): EmailActions {
   const edit = (action: string, entity: string, fn: (s: AdminData) => Partial<AdminData["emails"]>) =>

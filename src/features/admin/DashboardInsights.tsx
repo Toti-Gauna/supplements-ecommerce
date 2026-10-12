@@ -7,6 +7,7 @@ import { getProduct } from "@/demo/engine/catalog";
 import { formatDateTime } from "@/lib/date";
 import { useDemoData } from "@/stores/admin";
 import { GAME_COUPON_PREFIX } from "@/demo/engine/game-prize";
+import { brand } from "@/config/brand";
 
 export function TopProducts({ orders }: { orders: AdminOrder[] }) {
   const top = topProducts(orders, 5);
@@ -48,7 +49,7 @@ export function ClubPerformance() {
   ];
   return (
     <section aria-labelledby="club" className="rounded-3xl bg-night p-5 text-on-night">
-      <h2 id="club" className="font-display mb-4 text-2xl">Club Volta <span className="font-sans text-sm text-night-muted">(demo)</span></h2>
+      <h2 id="club" className="font-display mb-4 text-2xl">{brand.club} <span className="font-sans text-sm text-night-muted">(demo)</span></h2>
       <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {rows.map(({ icon: Icon, label, value, note }) => (
           <li key={label} className="flex items-center gap-3 rounded-2xl bg-white/5 p-3">

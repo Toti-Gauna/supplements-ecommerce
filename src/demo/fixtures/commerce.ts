@@ -1,4 +1,7 @@
 import type { CarouselSlide, Coupon, Mission, PaymentMethod, ShippingZone } from "../types";
+import { HOUSE_SHAKER } from "./house";
+import { brand } from "@/config/brand";
+import { ORDER_PREFIX } from "./house";
 
 export interface DemoSettings {
   transferDiscountPct: number;
@@ -31,10 +34,10 @@ export const demoSettings: DemoSettings = {
   transferHolder: "Titular de muestra",
   nationalTaxRate: 0.21,
   enabledMethods: ["CHECKOUT_PRO", "BANK_TRANSFER", "QR_MANUAL"],
-  whatsappNumber: null,
-  brandColors: { primary: "#c8ff2e", accent: "#1a1f28", background: "#0a0c10" },
-  legalName: null,
-  cuit: null,
+  whatsappNumber: brand.whatsappNumber,
+  brandColors: { primary: brand.colors.primary, accent: brand.colors.accent, background: brand.colors.background },
+  legalName: brand.legalName,
+  cuit: brand.cuit,
 };
 
 /** Bloque "Armá tu stack" del inicio (Contenido → Textos de inicio). Lo que va después de la coma se pinta en voltio. */
@@ -51,7 +54,7 @@ export const coupons: Coupon[] = [
 ];
 
 export const missions: Mission[] = [
-  { id: "m-dos-productos", title: "Comprá 2 productos", description: "En uno o varios pedidos pagados.", type: "UNITS_COUNT", threshold: 2, reward: "Shaker VOLTA de regalo", active: true, nextMissionId: "m-gasto", completedCount: 14 },
+  { id: "m-dos-productos", title: "Comprá 2 productos", description: "En uno o varios pedidos pagados.", type: "UNITS_COUNT", threshold: 2, reward: `${HOUSE_SHAKER} de regalo`, active: true, nextMissionId: "m-gasto", completedCount: 14 },
   { id: "m-primera", title: "Primera compra con cuenta", description: "Tu primer pedido pagado con cuenta.", type: "ORDERS_COUNT", threshold: 1, reward: "Envío gratis en la próxima compra", active: true, nextMissionId: null, completedCount: 31 },
   { id: "m-gasto", title: "Sumá $100.000", description: "Acumulado en pedidos pagados.", type: "SPEND_TOTAL", threshold: 100000, reward: "Creatina 300 g de regalo", active: true, nextMissionId: null, completedCount: 4 },
 ];
@@ -61,7 +64,7 @@ export const demoAccountProgress: Record<string, number> = { "m-dos-productos": 
 
 export const shippingZones: ShippingZone[] = [
   { id: "pickup", type: "PICKUP", name: "Retiro en el local", price: 0, etaText: "Listo en 1 hora en días hábiles" },
-  { id: "local", type: "LOCAL_DELIVERY", name: "Cadete en Mar del Plata", price: 3500, etaText: "En el día si comprás antes de las 14 h", postalCodes: ["7600", "7601", "7602", "7603", "7604", "7605", "7606", "7607", "7608", "7609", "7610", "7611", "7612"] },
+  { id: "local", type: "LOCAL_DELIVERY", name: `Cadete en ${brand.city}`, price: 3500, etaText: "En el día si comprás antes de las 14 h", postalCodes: ["7600", "7601", "7602", "7603", "7604", "7605", "7606", "7607", "7608", "7609", "7610", "7611", "7612"] },
   { id: "national", type: "SHIPPING", name: "Envío al resto del país", price: 9800, etaText: "3–7 días hábiles por correo" },
 ];
 
@@ -71,5 +74,5 @@ export const slides: CarouselSlide[] = [
   { id: "s3", title: "Entrená con todo, recuperá mejor", subtitle: "Electrolitos, magnesio y omega 3 para volver mañana como nuevo.", ctaLabel: "Ver vitaminas y salud", ctaHref: "/c/salud/", art: "shaker" },
 ];
 
-export const DEMO_TRACKING_TOKEN = "demo-volta";
-export const DEMO_ORDER_CODE = "VOL-DEMO-0001";
+export const DEMO_TRACKING_TOKEN = `demo-${brand.id}`;
+export const DEMO_ORDER_CODE = `${ORDER_PREFIX}-DEMO-0001`;

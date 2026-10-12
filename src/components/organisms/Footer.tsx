@@ -3,10 +3,11 @@ import { ArrowUpRight } from "lucide-react";
 import { brand } from "@/config/brand";
 import { Logo } from "@/components/atoms/Logo";
 import { ResetDemoButton } from "./ResetDemoButton";
+import { DEMO_TRACKING_TOKEN } from "@/demo/fixtures/commerce";
 
 const COLS = [
-  { title: "Tienda", links: [["/categorias/", "Todas las categorías"], ["/crear/", "Armá tu stack"], ["/club/", "Club Volta"], ["/club/juego/", "Shaker Rush"], ["/cupones/", "Mis cupones"], ["/regalo/", "Tengo un regalo"], ["/buscar/", "Buscar"]] },
-  { title: "Ayuda", links: [["/preguntas/", "Preguntas frecuentes"], ["/pedido/demo-volta/", "Seguir mi pedido (demo)"], ["/cuenta/", "Mi cuenta (demo)"]] },
+  { title: "Tienda", links: [["/categorias/", "Todas las categorías"], ["/crear/", "Armá tu stack"], ["/club/", brand.club], ["/club/juego/", "Shaker Rush"], ["/cupones/", "Mis cupones"], ["/regalo/", "Tengo un regalo"], ["/buscar/", "Buscar"]] },
+  { title: "Ayuda", links: [["/preguntas/", "Preguntas frecuentes"], [`/pedido/${DEMO_TRACKING_TOKEN}/`, "Seguir mi pedido (demo)"], ["/cuenta/", "Mi cuenta (demo)"]] },
   { title: "Legales", links: [["/terminos/", "Términos y condiciones"], ["/privacidad/", "Política de privacidad"], ["/arrepentimiento/", "Botón de arrepentimiento"]] },
 ];
 

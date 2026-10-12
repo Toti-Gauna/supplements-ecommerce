@@ -10,7 +10,7 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { brand, brandCss } from "@/config/brand";
 import { site } from "@/config/site";
-import { SITE_URL } from "@/lib/base-path";
+import { SITE_URL, withBase } from "@/lib/base-path";
 import { MotionRoot } from "@/components/motion/MotionRoot";
 import { ClientShell } from "@/components/organisms/ClientShell";
 import { Splash, splashScript } from "@/components/organisms/Splash";
@@ -24,6 +24,8 @@ export const metadata: Metadata = {
   title: { default: site.title, template: `%s · ${brand.name} (demo)` },
   description: site.description,
   robots: site.indexable ? undefined : { index: false, follow: false },
+  // Favicon con el símbolo y los colores de la marca, generado en build (app/brand-icon.svg/route.ts).
+  icons: { icon: [{ url: withBase("/brand-icon.svg"), type: "image/svg+xml" }] },
   openGraph: {
     type: "website", locale: "es_AR", siteName: brand.name, title: site.title, description: site.description,
     images: [{ url: `${SITE_URL}/og.png`, width: 1200, height: 630, alt: `${brand.name}, tienda online (demo)` }],

@@ -1,4 +1,5 @@
 import type { SeasonId } from "@/demo/types";
+import { CALENDAR_SVG, CHEVRON_SVG, cssIcon } from "@/lib/color";
 
 /**
  * Colores de la tienda durante cada temática (Fase 5). Pisan TODOS los
@@ -74,9 +75,6 @@ const DARK_EXTRAS = [
   "--sh-card:0 1px 0 rgb(255 255 255/0.04) inset,0 18px 40px -22px rgb(0 0 0/0.75)", "--sh-lift:0 1px 0 rgb(255 255 255/0.05) inset,0 30px 60px -24px rgb(0 0 0/0.9)",
 ];
 
-const icon = (svg: string, color: string) => `url("data:image/svg+xml,${encodeURIComponent(svg.replace("COLOR", color))}")`;
-const CHEVRON = "<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='COLOR' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><path d='m6 9 6 6 6-6'/></svg>";
-const CALENDAR = "<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='COLOR' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2'/><path d='M16 2v4M8 2v4M3 10h18'/></svg>";
 
 function vars(c: Palette): string {
   return [
@@ -86,7 +84,7 @@ function vars(c: Palette): string {
     `--c-night:${c.night}`, `--c-night-2:${c.night2}`, `--c-volt-ink:${c.voltInk}`,
     `--studio-1:${c.studio[0]}`, `--studio-2:${c.studio[1]}`, `--studio-3:${c.studio[2]}`,
     `--skeleton-a:${c.accent}`, `--skeleton-b:${c.surface}`,
-    `--chevron:${icon(CHEVRON, c.primary)}`, `--calendar:${icon(CALENDAR, c.primary)}`,
+    `--chevron:${cssIcon(CHEVRON_SVG, c.primary)}`, `--calendar:${cssIcon(CALENDAR_SVG, c.primary)}`,
     ...(c.scheme === "dark" ? DARK_EXTRAS : ["color-scheme:light"]),
   ].join(";");
 }

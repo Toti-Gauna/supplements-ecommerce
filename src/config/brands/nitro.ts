@@ -1,0 +1,56 @@
+import { defineBrand } from "./types";
+
+/**
+ * NITRO SUPLEMENTOS: segunda marca de EJEMPLO (inventada) para probar la marca blanca. Azul noche con naranja nitro y
+ * azul eléctrico. Se publica con `NEXT_PUBLIC_BRAND=nitro npm run build` (ver docs/marca-blanca.md).
+ */
+export const nitro = defineBrand({
+  id: "nitro",
+  name: "Nitro",
+  mark: "NITRO",
+  descriptor: "Suplementos",
+  tagline: "Suplementos para entrenar a fondo",
+  city: "Mar del Plata",
+  instagram: "nitro.suplementos.mdp",
+  whatsappNumber: null,
+  email: null,
+  legalName: null,
+  cuit: null,
+  houseBrand: "NITRO Labs",
+  logo: "bolt",
+  paletteStatus: "provisional",
+  defaultMode: "dark",
+  colors: {
+    primary: "#ff8a3d",
+    primaryHover: "#ffa66b",
+    onPrimary: "#0b0f1a",
+    accent: "#1a2236",
+    ion: "#4cc9f0",
+    plasma: "#3d8bff",
+    background: "#0b0f1a",
+    surface: "#121a2b",
+    text: "#eef2f8",
+    muted: "#9ba7bb",
+    border: "#24304a",
+    night: "#060912",
+    night2: "#0e1524",
+    voltInk: "#ff8a3d",
+  },
+  light: {
+    primary: "#0b0f1a",
+    primaryHover: "#1c2538",
+    onPrimary: "#ff8a3d",
+    accent: "#e6ebf3",
+    ion: "#0e7490",
+    plasma: "#2557d6",
+    background: "#f3f5f9",
+    surface: "#ffffff",
+    text: "#0b0f1a",
+    muted: "#525d70",
+    border: "#d7dde8",
+    night: "#0b0f1a",
+    night2: "#151d2e",
+    voltInk: "#a8430a",
+  },
+  signature: { volt: "#ff8a3d", voltSoft: "#ffb37f", plasma: "#3d8bff", ion: "#4cc9f0", onNight: "#eef2f8", nightMuted: "#a5b0c2" },
+});

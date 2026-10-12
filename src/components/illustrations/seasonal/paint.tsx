@@ -1,10 +1,12 @@
 import { useId } from "react";
+import { brand } from "@/config/brand";
 
 /** Props comunes de las decoraciones de temática (SVG propios, 64 × 64, sin imágenes externas). */
 export interface DecorProps { className?: string }
 
-/** Colores de VOLTA para el arte (hex dentro del SVG: el Estudio de contenido lo pasa a imagen). */
-export const INK = { volt: "#c8ff2e", voltSoft: "#e3ff8f", plasma: "#8b72ff", ion: "#2ee6d6", night: "#0b0e13", graphite: "#1a1f27" } as const;
+/** Colores de la marca para el arte (hex dentro del SVG: el Estudio de contenido lo pasa a imagen). */
+const S = brand.signature;
+export const INK = { volt: S.volt, voltSoft: S.voltSoft, plasma: S.plasma, ion: S.ion, night: "#0b0e13", graphite: "#1a1f27" } as const;
 
 /** Tipografías de la marca dentro del SVG (con respaldo si la fuente todavía no cargó). */
 export const DISPLAY = { fontFamily: "'Archivo Variable','Arial Black',sans-serif", fontWeight: 850 } as const;

@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { Decor } from "@/components/illustrations/seasonal/Decor";
 import { cn } from "@/lib/cn";
 import type { Traveler } from "./tracking/Travelers";
+import { brand } from "@/config/brand";
 
 const PATH = "M40 150 C 120 40, 210 190, 300 100 S 470 30, 560 90";
 const W = 600, H = 190;
@@ -21,7 +22,7 @@ interface Props {
 }
 
 /** Ruta ilustrada del local a tu casa: la línea avanza según la etapa. Sin mapas externos. */
-export function RouteMap({ progress, traveler, accent = "#c8ff2e", delivered = false }: Props) {
+export function RouteMap({ progress, traveler, accent = brand.signature.volt, delivered = false }: Props) {
   const ref = useRef<SVGPathElement>(null);
   const [dot, setDot] = useState({ x: 40, y: 150 });
   useEffect(() => {
@@ -75,7 +76,7 @@ export function RouteMap({ progress, traveler, accent = "#c8ff2e", delivered = f
       </div>
       {/* En el celular los rótulos van en una fila debajo del recorrido, para no tapar la salida ni al viajero. */}
       <div className="flex justify-between gap-2 px-3 pb-3 sm:contents">
-        <span className="flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-xs font-bold text-on-night sm:absolute sm:bottom-3 sm:left-3"><Store size={14} aria-hidden="true" /> Local Volta · MdP</span>
+        <span className="flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-xs font-bold text-on-night sm:absolute sm:bottom-3 sm:left-3"><Store size={14} aria-hidden="true" /> Local {brand.name} · {brand.city}</span>
         <span className={cn("flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold transition-colors duration-500 sm:absolute sm:right-3 sm:top-3", delivered ? "bg-on-night text-night" : "bg-white/10 text-on-night")}>
           {delivered ? <Check size={14} aria-hidden="true" /> : <Home size={14} aria-hidden="true" />} {delivered ? "Llegó a tu casa" : "Tu casa"}
         </span>

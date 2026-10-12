@@ -6,7 +6,7 @@ export type BottomBar = "nav" | "product" | "cart" | "preview" | "none";
 
 export function bottomBarFor(pathname: string): BottomBar {
   if (pathname.startsWith("/vista-previa")) return "preview";
-  if (pathname.startsWith("/p/") || /^\/crear\/[^/]+/.test(pathname)) return "product";
+  if (pathname.startsWith("/p/")) return "product";
   if (pathname.startsWith("/carrito")) return "cart";
   if (pathname.startsWith("/checkout")) return "none";
   return "nav";

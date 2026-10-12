@@ -15,7 +15,7 @@ const DEVICES = [
 
 const SHOP = [
   ["", "Destacados de Volta"], ["buscar/?q=creatna", "Buscar"], ["categorias/", "Todas las categorías"], ["c/proteinas/", "Proteínas"],
-  ["p/ionic-whey/", "Ionic Whey 100%"], ["p/creatina-monohidrato/", "Creatina monohidrato"], ["crear/", "Entrená por objetivo"],
+  ["p/ionic-whey/", "Ionic Whey 100%"], ["p/creatina-monohidrato/", "Creatina monohidrato"], ["crear/", "Armá tu stack"],
   ["cupones/", "Mis cupones"], ["favoritos/", "Favoritos"], ["carrito/", "Tu carrito"], ["checkout/", "Checkout de demostración"],
   ["checkout/confirmacion/", "Confirmación (demo)"], ["pedido/demo-volta/", "Seguimiento de tu pedido"], ["cuenta/", "Mi cuenta"],
   ["club/", "Comprás, sumás, ganás."], ["regalo/", "¿Te hicieron un regalo?"], ["preguntas/", "Preguntas frecuentes"], ["terminos/", "Términos y condiciones"],

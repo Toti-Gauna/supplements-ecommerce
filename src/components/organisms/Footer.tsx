@@ -5,7 +5,7 @@ import { Logo } from "@/components/atoms/Logo";
 import { ResetDemoButton } from "./ResetDemoButton";
 
 const COLS = [
-  { title: "Tienda", links: [["/categorias/", "Todas las categorías"], ["/crear/", "Por objetivo"], ["/club/", "Club Volta"], ["/club/juego/", "Shaker Rush"], ["/cupones/", "Mis cupones"], ["/regalo/", "Tengo un regalo"], ["/buscar/", "Buscar"]] },
+  { title: "Tienda", links: [["/categorias/", "Todas las categorías"], ["/crear/", "Armá tu stack"], ["/club/", "Club Volta"], ["/club/juego/", "Shaker Rush"], ["/cupones/", "Mis cupones"], ["/regalo/", "Tengo un regalo"], ["/buscar/", "Buscar"]] },
   { title: "Ayuda", links: [["/preguntas/", "Preguntas frecuentes"], ["/pedido/demo-volta/", "Seguir mi pedido (demo)"], ["/cuenta/", "Mi cuenta (demo)"]] },
   { title: "Legales", links: [["/terminos/", "Términos y condiciones"], ["/privacidad/", "Política de privacidad"], ["/arrepentimiento/", "Botón de arrepentimiento"]] },
 ];

@@ -4,7 +4,7 @@ import { Input, Textarea } from "@/components/atoms/Field";
 import { Select } from "@/components/atoms/Select";
 import { Switch } from "@/components/atoms/Switch";
 import { PRODUCT_STEPS, type StepCheck, type StepId } from "@/demo/admin/product-steps";
-import { goals } from "@/demo/fixtures/goals";
+import { goalList } from "@/demo/engine/goals";
 import type { Category, Product, ProductBadge } from "@/demo/types";
 import { cn } from "@/lib/cn";
 import { NumberField } from "../NumberField";
@@ -95,9 +95,9 @@ export function EditorSections({ d, set, checks, tried, categories, products, on
             <Input value={d.brand} list="marcas" onChange={(e) => set({ brand: e.target.value })} placeholder="VOLTA Lab" />
             <datalist id="marcas">{[...new Set(products.map((p) => p.brand).filter(Boolean))].map((b) => <option key={b} value={b} />)}</datalist>
           </label>
-          <Chips legend="Objetivos" options={goals.map((g) => [g.id, g.name] as const)} value={d.goals ?? []} onChange={(v) => set({ goals: v as Product["goals"] })} />
+          <Chips legend="Objetivos" options={goalList().map((g) => [g.id, g.name] as const)} value={d.goals ?? []} onChange={(v) => set({ goals: v as Product["goals"] })} />
           <Chips legend="Sellos del rótulo" options={BADGES} value={d.badges ?? []} onChange={(v) => set({ badges: v as ProductBadge[] })} />
-          <p className="text-xs text-muted">La tabla nutricional, el uso y el lote se cargan con la planilla del proveedor (Importar Excel).</p>
+          <p className="text-xs text-muted">La tabla nutricional y el uso vienen con la ficha del proveedor. Los lotes, vencimientos y costos se cargan en cada variante (o con la lista del proveedor en Importar Excel).</p>
         </>
       ))}
       {step("revision", (

@@ -1,7 +1,7 @@
 import { Info, Pencil } from "lucide-react";
 import type { CSSProperties } from "react";
 import { GoalGlyph } from "@/components/illustrations/GoalGlyph";
-import { goalById } from "@/demo/fixtures/goals";
+import { useGoal } from "../catalog/useGoals";
 import type { QuizAnswers } from "@/demo/fixtures/stack-builder";
 import { answerLabel, QUIZ_STEPS } from "./quiz-steps";
 
@@ -10,7 +10,7 @@ import { answerLabel, QUIZ_STEPS } from "./quiz-steps";
  * el quiz por esas respuestas ("Entrenás de noche: el pre va sin cafeína…").
  */
 export function QuizRecap({ answers, notes, onEdit }: { answers: QuizAnswers; notes: string[]; onEdit: (step: number) => void }) {
-  const hue = goalById(answers.goal)?.hue;
+  const hue = useGoal(answers.goal)?.hue;
   return (
     <div className="flex flex-col gap-4">
       <ul aria-label="Tus respuestas" className="grid grid-cols-2 gap-2">

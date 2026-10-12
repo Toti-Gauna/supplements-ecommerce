@@ -2,7 +2,7 @@
 import { LayoutGrid, Moon, Sun, Sunrise, type LucideIcon } from "lucide-react";
 import { BadgeGlyph } from "@/components/illustrations/BadgeGlyph";
 import { GoalGlyph } from "@/components/illustrations/GoalGlyph";
-import { goals } from "@/demo/fixtures/goals";
+import { useGoals } from "../catalog/useGoals";
 import { QUIZ_DAYS, QUIZ_RESTRICTIONS, QUIZ_TIMES, type Restriction, type TrainingDays, type TrainingTime } from "@/demo/fixtures/stack-builder";
 import { cn } from "@/lib/cn";
 import { QuizChoice } from "./QuizChoice";
@@ -29,6 +29,7 @@ interface Props {
 
 /** Las opciones de cada pregunta: objetivos con su ícono y color, días, horario y restricciones (con "Ninguna"). */
 export function QuizOptions({ step, draft, onAnswer }: Props) {
+  const goals = useGoals();
   if (step === "goal") {
     return (
       <div className="grid grid-cols-[minmax(0,1fr)] gap-2.5 min-[420px]:grid-cols-2 min-[420px]:[&>*:last-child:nth-child(odd)]:col-span-2">

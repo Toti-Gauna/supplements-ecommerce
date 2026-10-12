@@ -1,29 +1,33 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
-import { FileSpreadsheet, Plus, TriangleAlert } from "lucide-react";
-import { useEffect } from "react";
-import { ButtonLink } from "@/components/atoms/Button";
+import { FileSpreadsheet, Percent, Plus } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Button, ButtonLink } from "@/components/atoms/Button";
 import { EmptyState } from "@/components/molecules/EmptyState";
 import { DataTable, toSheet } from "@/components/organisms/data-table/DataTable";
+import { expiringLots, type LotRow } from "@/demo/admin/lots";
 import { applyDraft } from "@/demo/admin/sheet";
 import { productSheetSpec } from "@/demo/admin/sheet-specs";
 import { DEFAULT_LOW_STOCK, inventoryValue, lowStockRows, productStockState, stockRows, type StockOp, type StockRow } from "@/demo/admin/stock";
+import { DEMO_TODAY } from "@/demo/fixtures/admin-orders";
 import type { Product } from "@/demo/types";
 import { formatARS } from "@/lib/money";
 import { useAdmin } from "@/stores/admin";
 import { AdminPageHeader } from "../AdminPageHeader";
+import { ClearanceSheet } from "../lots/ClearanceSheet";
+import { PriceIncreaseSheet } from "../pricing/PriceIncreaseSheet";
 import { BulkButton, TabFilter } from "../table/TabFilter";
 import { TableExcel } from "../table/TableExcel";
 import { useExport } from "../table/useExport";
 import { useTableState } from "../table/useTableState";
 import { useDemoSave } from "../useDemoSave";
+import { CatalogAlerts } from "./CatalogAlerts";
 import { ProductCard, VariantCard } from "./catalogCards";
-import { productFilters, productSearch, variantColumns, variantFilters, variantSearch } from "./catalogTable";
+import { CATALOG_FILTER_IDS, productFilters, productSearch, variantColumns, variantFilters, variantSearch } from "./catalogTable";
 import { LowStockField } from "./LowStockField";
 import { productColumns } from "./productColumns";
 
 type Mode = "productos" | "variantes";
-const FILTER_IDS = ["categoria", "stock", "visibilidad"];
 const editor = (slug: string) => `/admin-demo/productos/editar/?id=${slug}`;
 const NEW_PRODUCT = "/admin-demo/productos/editar/?nuevo=1";
 const totals = (rows: StockRow[]) => (
@@ -34,22 +38,26 @@ const totals = (rows: StockRow[]) => (
 );
 
 /**
- * Productos y stock (8.3.19): un solo módulo con vista por producto o por variante, los mismos filtros, alertas de
- * reposición con umbral, edición de stock en la tabla, acciones en lote, importar y "Ver en formato Excel".
+ * Productos y stock (8.3.19 y Fase 6): vista por producto o por variante con los mismos filtros (marca y vencimiento
+ * incluidos), alertas de reposición y de lotes que vencen, liquidación, aumento masivo de precios, importar y Excel.
  */
 export function ProductsTable() {
   const router = useRouter();
   const params = useSearchParams();
-  const { data, toggleProductActive, setProductsActive, setProductsCategory, setVariantStock, bulkStock, updateProducts } = useAdmin();
+  const { data, lastPriceChange, toggleProductActive, setProductsActive, setProductsCategory, setVariantStock, bulkStock, updateProducts, undoBulkPrice } = useAdmin();
   const save = useDemoSave();
   const exportProducts = useExport("productos");
   const exportStock = useExport("stock");
+  const [clearing, setClearing] = useState<LotRow | null>(null);
+  const [pricing, setPricing] = useState(false);
   const low = data.settings.lowStockThreshold ?? DEFAULT_LOW_STOCK;
   const mode: Mode = params.get("ver") === "variantes" ? "variantes" : "productos";
-  const products = useTableState("products", { sort: { id: "name", dir: "asc" }, hidden: ["stockState"], filterIds: FILTER_IDS });
-  const variants = useTableState("stock", { sort: { id: "product", dir: "asc" }, filterIds: FILTER_IDS });
+  const setStock = (r: StockRow, stock: number) => save(`Stock de ${r.productName} · ${r.variantLabel}: ${stock < 0 ? "a pedido" : stock}`, () => setVariantStock(r.productSlug, r.variantId, stock));
+  const vColumns = variantColumns({ setStock, onClear: setClearing });
+  const products = useTableState("products", { sort: { id: "name", dir: "asc" }, hidden: ["stockState"], filterIds: CATALOG_FILTER_IDS });
+  const variants = useTableState("stock", { sort: { id: "product", dir: "asc" }, hidden: vColumns.filter((c) => c.defaultHidden).map((c) => c.id), filterIds: CATALOG_FILTER_IDS });
   const cats = [...data.categories].sort((a, b) => a.sortOrder - b.sortOrder);
-  const all = stockRows(data.products, data.categories, low);
+  const all = stockRows(data.products, data.categories, low, DEMO_TODAY);
   const reorder = lowStockRows(data.products, data.categories, low).length;
   const setMode = (m: Mode) => {
     const url = new URLSearchParams(window.location.search);
@@ -57,41 +65,39 @@ export function ProductsTable() {
     url.delete("pagina");
     window.history.replaceState(null, "", url.size ? `?${url}` : window.location.pathname);
   };
+  const showVariants = (filter: string, value: string) => { setMode("variantes"); variants.setFilter(filter, value); };
   const toggle = (p: Product) => save(p.active === false ? "Producto activado" : "Producto pausado", () => toggleProductActive(p.slug));
-  const setStock = (r: StockRow, stock: number) => save(`Stock de ${r.productName} · ${r.variantLabel}: ${stock < 0 ? "a pedido" : stock}`, () => setVariantStock(r.productSlug, r.variantId, stock));
   const bulk = (list: StockRow[], op: StockOp, label: string, clear: () => void) => { save(label, () => bulkStock(list.map((r) => r.key), op, label)); clear(); };
   // Enlaces viejos a "?nuevo=1" de la lista: el alta vive en el editor y no crea nada hasta guardar (8.3.21).
   useEffect(() => { if (params.get("nuevo") === "1") router.replace(NEW_PRODUCT); }, [params, router]);
 
-  const vFilters = variantFilters(cats);
+  const vFilters = variantFilters(cats, data.products);
   if (variants.view === "excel" || products.view === "excel") {
     return (
       <TableExcel id="catalog" title="Productos y stock" noun="variantes" state={variants} rows={all} filters={vFilters} searchText={variantSearch} searchLabel="Buscar producto o variante"
-        spec={productSheetSpec(cats)} summary={totals} onExport={(rows) => exportStock(toSheet(variantColumns(setStock), rows), "filtered")}
+        spec={productSheetSpec(cats)} summary={totals} onExport={(rows) => exportStock(toSheet(vColumns, rows), "filtered")}
         onSave={(dirty) => { const n = Object.keys(dirty).length; updateProducts(applyDraft(data.products, all, dirty), `Vista Excel: ${n} ${n === 1 ? "celda guardada" : "celdas guardadas"}`, "Catálogo"); return "Ya se ven en la tienda de este navegador."; }} />
     );
   }
   const modeSwitch = <TabFilter label="Mostrar" value={mode} onChange={setMode} tabs={[{ id: "productos", label: "Productos", count: data.products.length }, { id: "variantes", label: "Variantes", count: all.length }]} />;
-  const empty = <EmptyState title="Sin resultados">Probá con otro nombre, categoría o filtro de stock, o tocá “Reiniciar”.</EmptyState>;
+  const empty = <EmptyState title="Sin resultados">Probá con otro nombre, marca, categoría o filtro, o tocá “Reiniciar”.</EmptyState>;
   return (
     <>
       <AdminPageHeader title="Productos y stock" actions={(
         <div className="flex flex-wrap items-center gap-2">
           <LowStockField value={low} />
+          <Button variant="secondary" onClick={() => setPricing(true)}><Percent size={17} aria-hidden="true" /> Aumentar precios</Button>
           <ButtonLink href="/admin-demo/importar/" variant="secondary"><FileSpreadsheet size={17} aria-hidden="true" /> Importar Excel</ButtonLink>
           <ButtonLink href={NEW_PRODUCT}><Plus size={18} aria-hidden="true" /> Nuevo producto</ButtonLink>
         </div>
-      )}>Catálogo y stock en un solo lugar. “A pedido” = sin límite: la tienda no maneja cupos de fabricación, eso lo decide Volta.</AdminPageHeader>
-      {reorder > 0 && (
-        <button type="button" onClick={() => { setMode("variantes"); variants.setFilter("stock", "reponer"); }}
-          className="mb-4 flex w-full items-center gap-3 rounded-2xl bg-warning-soft px-4 py-3 text-left text-sm font-bold text-warning ring-1 ring-warning/30">
-          <TriangleAlert size={18} aria-hidden="true" /><span className="flex-1">{reorder} {reorder === 1 ? "variante necesita" : "variantes necesitan"} reposición (sin stock o con {low} o menos).</span><span className="underline">Ver stock</span>
-        </button>
-      )}
+      )}>Catálogo, stock por lote y precios en un solo lugar. “A pedido” = sin límite: se le pide al proveedor cuando entra la compra.</AdminPageHeader>
+      <CatalogAlerts reorder={reorder} low={low} expiring={expiringLots(data.products, DEMO_TODAY)} lastPrice={lastPriceChange}
+        onReorder={() => showVariants("stock", "reponer")} onExpiring={() => showVariants("vence", "pronto")}
+        onUndoPrice={() => save("Aumento deshecho", undoBulkPrice, "Los precios volvieron a como estaban. Solo en esta demo.")} />
       {mode === "productos" ? (
         <DataTable caption="Productos" noun="productos" rows={data.products} columns={productColumns(data.categories, low, toggle)} state={products}
-          filters={productFilters(cats, low)} rowKey={(p) => p.slug} rowLabel={(p) => `Seleccionar ${p.name}`} searchText={productSearch}
-          searchLabel="Buscar producto" searchPlaceholder="Comedero, velador…" toolbarEnd={modeSwitch} rowHref={(p) => editor(p.slug)} onExport={exportProducts} onExcel={() => variants.setView("excel")}
+          filters={productFilters(cats, low, data.products)} rowKey={(p) => p.slug} rowLabel={(p) => `Seleccionar ${p.name}`} searchText={productSearch}
+          searchLabel="Buscar producto" searchPlaceholder="Whey, creatina, Brava…" toolbarEnd={modeSwitch} rowHref={(p) => editor(p.slug)} onExport={exportProducts} onExcel={() => variants.setView("excel")}
           renderCard={(c) => <ProductCard {...c} categories={data.categories} low={low} onVisible={toggle} />}
           rowTone={(p) => (productStockState(p, low) === "out" && p.active !== false ? "danger" : productStockState(p, low) === "low" ? "warning" : undefined)}
           footer={(list) => <p className="flex flex-wrap justify-end gap-x-6 gap-y-1 border-t border-line px-5 py-3 text-sm">{totals(stockRows(list, data.categories, low))}</p>}
@@ -106,10 +112,10 @@ export function ProductsTable() {
             </>
           )} empty={empty} />
       ) : (
-        <DataTable caption="Stock por variante" noun="variantes" rows={all} columns={variantColumns(setStock)} state={variants} filters={vFilters}
+        <DataTable caption="Stock por variante" noun="variantes" rows={all} columns={vColumns} state={variants} filters={vFilters}
           rowKey={(r) => r.key} rowLabel={(r) => `Seleccionar ${r.productName} · ${r.variantLabel}`} searchText={variantSearch}
-          searchLabel="Buscar producto o variante" searchPlaceholder="Vela, lavanda, comederos…" toolbarEnd={modeSwitch} rowHref={(r) => editor(r.productSlug)} onExport={exportStock} onExcel={() => variants.setView("excel")}
-          renderCard={(c) => <VariantCard {...c} setStock={setStock} />} rowTone={(r) => (r.state === "out" && r.active ? "danger" : r.state === "low" ? "warning" : undefined)}
+          searchLabel="Buscar producto o variante" searchPlaceholder="Whey vainilla, lote VL-2603…" toolbarEnd={modeSwitch} rowHref={(r) => editor(r.productSlug)} onExport={exportStock} onExcel={() => variants.setView("excel")}
+          renderCard={(c) => <VariantCard {...c} setStock={setStock} onClear={setClearing} />} rowTone={(r) => (r.state === "out" && r.active ? "danger" : r.state === "low" ? "warning" : undefined)}
           footer={(list) => <p className="flex flex-wrap justify-end gap-x-6 gap-y-1 border-t border-line px-5 py-3 text-sm">{totals(list)}</p>}
           bulkActions={(list, clear) => (
             <>
@@ -119,6 +125,8 @@ export function ProductsTable() {
             </>
           )} empty={empty} />
       )}
+      <ClearanceSheet lot={clearing} onClose={() => setClearing(null)} />
+      <PriceIncreaseSheet open={pricing} onClose={() => setPricing(false)} />
     </>
   );
 }

@@ -1,7 +1,8 @@
-import { ShieldCheck } from "lucide-react";
+import { ShieldCheck, Timer } from "lucide-react";
 import { BadgeGlyph } from "@/components/illustrations/BadgeGlyph";
+import { firstOutLot, formatExpiry, type Clearance } from "@/demo/engine/lots";
 import { pricePerServing } from "@/demo/engine/servings";
-import type { ProductBadge, Product } from "@/demo/types";
+import type { ProductBadge, Product, Variant } from "@/demo/types";
 import { formatARS } from "@/lib/money";
 
 const BADGE_LABEL: Record<ProductBadge, string> = {
@@ -33,18 +34,30 @@ export function ServingPrice({ price, servings }: { price: number; servings?: nu
   );
 }
 
-/** Lote y vencimiento del envase disponible (confianza: "es original y no está por vencer"). */
-export function LotNote({ product }: { product: Product }) {
-  if (!product.lot) return null;
-  const [y, m] = product.lot.expires.split("-");
+/** Lote y vencimiento del envase que te llevás: el lote de la variante que sale primero (FEFO). */
+export function LotNote({ product, variant }: { product: Product; variant: Variant }) {
+  const lot = firstOutLot(variant) ?? product.lot;
+  if (!lot) return null;
   return (
     <p className="font-lab flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted">
       <ShieldCheck size={15} aria-hidden="true" className="text-success" />
-      <span>Lote <strong className="text-ink">{product.lot.code}</strong></span>
+      <span>Lote <strong className="text-ink">{lot.code}</strong></span>
       <span aria-hidden="true">·</span>
-      <span>Vence <strong className="text-ink">{m}/{y}</strong></span>
+      <span>Vence <strong className="text-ink">{formatExpiry(lot.expires)}</strong></span>
       <span aria-hidden="true">·</span>
       <span>{product.brand}</span>
     </p>
+  );
+}
+
+/** Liquidación por vencimiento: precio de lista tachado y el sello con el vencimiento del lote. */
+export function ClearanceTag({ clearance }: { clearance: Clearance }) {
+  return (
+    <span className="flex w-full flex-wrap items-center gap-x-3 gap-y-1">
+      <span className="font-lab inline-flex items-center gap-1.5 rounded-full bg-warning-soft px-3 py-1 text-xs font-extrabold text-warning ring-1 ring-warning/30">
+        <Timer size={14} aria-hidden="true" />Liquidación · vence {formatExpiry(clearance.lot.expires)}
+      </span>
+      <span className="text-sm text-muted"><span className="sr-only">Precio de lista: </span><s className="font-semibold tabular-nums">{formatARS(clearance.listPrice)}</s> <strong className="text-ink">−{clearance.pct} %</strong> · quedan {clearance.lot.units} a este precio</span>
+    </span>
   );
 }

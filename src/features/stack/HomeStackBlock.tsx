@@ -5,7 +5,7 @@ import { useRef, useState } from "react";
 import { ButtonLink } from "@/components/atoms/Button";
 import { DEFAULT_STACK_RULE } from "@/demo/engine/stack";
 import { defaultStack, stackSummary } from "@/demo/engine/stack-builder";
-import { goalById } from "@/demo/fixtures/goals";
+import { useGoal } from "../catalog/useGoals";
 import type { Goal } from "@/demo/types";
 import { formatARS } from "@/lib/money";
 import { useDemoData } from "@/stores/admin";
@@ -24,6 +24,7 @@ export function HomeStackBlock() {
   const catalog = useDemoData((d) => d.products);
   const rule = useDemoData((d) => d.settings.stack) ?? DEFAULT_STACK_RULE;
   const [goal, setGoal] = useState<Goal>(FIRST_GOAL);
+  const goalName = useGoal(goal)?.name;
   const shelfRef = useRef<HTMLDivElement>(null);
   const inView = useInView(shelfRef, { once: true, amount: 0.35 });
   const summary = stackSummary(defaultStack(goal, catalog), catalog, rule);
@@ -45,7 +46,7 @@ export function HomeStackBlock() {
           <GoalChips tone="night" value={goal} onChange={setGoal} legend="Probá con un objetivo" />
         </div>
         <div ref={shelfRef} className="flex min-w-0 flex-col gap-5">
-          <StackShelf items={shelf} discountPct={discount && inView ? summary.stack.pct : 0} title={goalById(goal)?.name} />
+          <StackShelf items={shelf} discountPct={discount && inView ? summary.stack.pct : 0} title={goalName} />
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div aria-live="polite">
               <p className="eyebrow text-[10px] text-night-muted">{discount ? "Total con descuento stack" : "Total"}</p>

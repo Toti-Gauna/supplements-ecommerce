@@ -2,12 +2,14 @@
 import { ChevronRight } from "lucide-react";
 import { Switch } from "@/components/atoms/Switch";
 import type { RowCardProps } from "@/components/organisms/data-table/types";
-import { productStockState, productStockTotal, type StockRow } from "@/demo/admin/stock";
+import type { LotRow } from "@/demo/admin/lots";
+import { productStockState, productStockTotal, stockMargin, type StockRow } from "@/demo/admin/stock";
 import type { Category, Product } from "@/demo/types";
 import { formatARS } from "@/lib/money";
 import { StockChip } from "../table/StockChip";
+import { LotCell } from "../lots/LotBadge";
 import { StockEditor } from "../stock/StockEditor";
-import { minPrice, ProductThumb } from "./productColumns";
+import { ExpiringBadge, minPrice, ProductThumb } from "./productColumns";
 
 /** Tarjetas del celular para Productos y stock: tocar la tarjeta abre la ficha; el switch y el stock no navegan. */
 export function ProductCard({ row: p, selected, onToggle, onOpen, categories, low, onVisible }: RowCardProps<Product> & { categories: Category[]; low: number; onVisible: (p: Product) => void }) {
@@ -20,7 +22,7 @@ export function ProductCard({ row: p, selected, onToggle, onOpen, categories, lo
           <span className="min-w-0 flex-1">
             <span className="block font-bold leading-tight">{p.name}</span>
             <span className="text-sm text-muted">{categories.find((c) => c.slug === p.categorySlug)?.name} · desde {formatARS(minPrice(p))}</span>
-            <span className="mt-1 block"><StockChip state={productStockState(p, low)} units={productStockTotal(p)} /></span>
+            <span className="mt-1 flex flex-wrap gap-1"><StockChip state={productStockState(p, low)} units={productStockTotal(p)} /><ExpiringBadge product={p} /></span>
           </span>
           <ChevronRight size={18} aria-hidden="true" className="mt-1 shrink-0 text-muted" />
         </button>
@@ -30,14 +32,15 @@ export function ProductCard({ row: p, selected, onToggle, onOpen, categories, lo
   );
 }
 
-export function VariantCard({ row: r, selected, onToggle, onOpen, setStock }: RowCardProps<StockRow> & { setStock: (r: StockRow, stock: number) => void }) {
+export function VariantCard({ row: r, selected, onToggle, onOpen, setStock, onClear }: RowCardProps<StockRow> & { setStock: (r: StockRow, stock: number) => void; onClear: (lot: LotRow) => void }) {
   return (
     <div className={`flex flex-col gap-3 rounded-3xl bg-bg p-3 ring-1 ${selected ? "ring-primary" : "ring-ink/[0.06]"}`}>
       <div className="flex items-start gap-3">
         <input type="checkbox" checked={selected} onChange={onToggle} aria-label={`Seleccionar ${r.productName} · ${r.variantLabel}`} className="mt-1 h-5 w-5 accent-primary" />
-        <button type="button" onClick={onOpen} className="min-w-0 flex-1 text-left"><span className="block font-bold">{r.productName}</span><span className="text-sm text-muted">{r.variantLabel} · {formatARS(r.price)}</span></button>
+        <button type="button" onClick={onOpen} className="min-w-0 flex-1 text-left"><span className="block font-bold">{r.productName}</span><span className="text-sm text-muted">{r.variantLabel} · {formatARS(r.price)}</span>{r.cost ? <span className="block text-xs text-muted">Costo {formatARS(r.cost)} · margen {stockMargin(r)} %</span> : null}</button>
         <StockChip state={r.state} />
       </div>
+      <div className="pl-8"><LotCell row={r} onClear={onClear} /></div>
       <StockEditor value={r.stock} label={`${r.productName} · ${r.variantLabel}`} onChange={(s) => setStock(r, s)} />
     </div>
   );

@@ -30,6 +30,8 @@ export interface ProductCardData {
   isNew: boolean;
   madeToOrder: boolean;
   stockNote: string;
+  /** Alguna variante está en liquidación por vencimiento (el precio se ve en la ficha). */
+  clearance?: boolean;
   /** Oferta de temática: precio con el cupón y su sello (colores de la temática). */
   deal?: { price: number | null; label: string; bg: string; ink: string };
 }
@@ -54,6 +56,7 @@ export function ProductCard({ product, priority }: { product: ProductCardData; p
         <div className="absolute left-3 top-3 flex flex-wrap gap-1.5">
           {product.deal && <span className="rounded-full px-2.5 py-1 text-[11px] font-extrabold shadow-sm" style={{ background: product.deal.bg, color: product.deal.ink }}>{product.deal.label}</span>}
           {product.isNew && <span className="rounded-full bg-night px-2.5 py-1 text-[11px] font-bold text-on-night">Nuevo</span>}
+          {product.clearance && <span className="rounded-full bg-warning-soft px-2.5 py-1 text-[11px] font-extrabold text-warning shadow-sm">Liquidación</span>}
         </div>
         {full && (
           <button type="button" onClick={() => quickAdd(full)} aria-label={`Agregar ${product.name} al carrito`}

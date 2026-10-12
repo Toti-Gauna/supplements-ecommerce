@@ -6,6 +6,7 @@ import { adminClaims, adminUsers } from "../fixtures/admin-people";
 import { emailTemplates, type EmailTemplate } from "../fixtures/emails";
 import { customerProfiles, type CustomerProfile } from "../fixtures/customers";
 import { calendarEvents, materials, recipes, workshopSettings, type CalendarEvent, type Material, type Recipe, type WorkshopSettings } from "../fixtures/workshop";
+import type { PriceUndo } from "./bulk-price";
 import type { ImportSnapshot } from "./catalog-slice";
 import type { AdminClaim, AdminOrder, AdminUser, AuditEntry, StatusLogEntry } from "./types";
 import { emailsForOrder, OUTBOX_LIMIT, triggersForNewOrder, triggersForTransition, type OutboxEmail } from "./emails/triggers";
@@ -18,6 +19,8 @@ export interface AdminData {
   audit: AuditEntry[];
   /** Última importación de Excel, para deshacerla. */
   lastImport: ImportSnapshot | null;
+  /** Último aumento masivo de precios, para deshacerlo. */
+  lastPriceChange: PriceUndo | null;
   /** Taller: calendario y capacidad, insumos, recetas de costo y fichas de clientes (solo del panel). */
   workshop: WorkshopData;
   /** Emails automáticos: plantillas y bandeja de salida simulada (nada se envía). */
@@ -78,6 +81,7 @@ export function defaultAdminData(): AdminData {
     claims: structuredClone(adminClaims),
     audit: [{ id: "a0", at: "2026-10-04T08:00:00-03:00", actor: "Sistema (demo)", action: "Datos de muestra cargados", entity: "Panel" }],
     lastImport: null,
+    lastPriceChange: null,
     workshop: structuredClone({ settings: workshopSettings, materials, recipes, profiles: customerProfiles, events: calendarEvents }),
     emails: { templates, outbox: seedOutbox(orders, templates) },
   };

@@ -1,5 +1,5 @@
 import { GOAL_SLOTS, QUIZ_RESTRICTIONS, type QuizAnswers, type Restriction, type StackSlotId } from "../fixtures/stack-builder";
-import { goalById } from "../fixtures/goals";
+import { goalInfo } from "./goals";
 import type { Product } from "../types";
 import { defaultStack, type StackPick } from "./stack-builder";
 
@@ -49,7 +49,7 @@ export function recommendStack(answers: QuizAnswers, catalog: Product[]): QuizRe
     const labels = answers.restrictions.map((r) => { const l = QUIZ_RESTRICTIONS.find((x) => x.value === r)?.label ?? r; return l.charAt(0).toLowerCase() + l.slice(1); });
     notes.push(`Solo productos ${new Intl.ListFormat("es", { type: "conjunction" }).format(labels)}.`);
   }
-  const goal = goalById(answers.goal)?.name.toLowerCase() ?? answers.goal;
+  const goal = goalInfo(answers.goal)?.name.toLowerCase() ?? answers.goal;
   const picks = defaultStack(answers.goal, catalog, restrictions, slots).map((pick): QuizPick => {
     const product = catalog.find((p) => p.slug === pick.slug)!;
     const reasons = [pick.slot === "extra" ? EXTRA_REASON[product.categorySlug] ?? SLOT_REASON.extra : SLOT_REASON[pick.slot]];

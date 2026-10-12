@@ -8,17 +8,19 @@ import { SearchForm } from "@/components/molecules/SearchForm";
 import { bestSellers, categoryHref, featuredCategories, goalHref, productsForGoal } from "@/demo/engine/catalog";
 import { searchProducts, suggestTerm } from "@/demo/engine/search";
 import { activeProducts } from "@/demo/engine/catalog";
-import { goalById, goals } from "@/demo/fixtures/goals";
+import { goalInfo } from "@/demo/engine/goals";
 import type { Goal } from "@/demo/types";
 import { GoalGlyph } from "@/components/illustrations/GoalGlyph";
 import { cn } from "@/lib/cn";
 import { useDemoVersion } from "@/stores/admin";
 import { toCard } from "./mappers";
+import { useGoals } from "./useGoals";
 
 /** Filtro por objetivo (`?objetivo=`): chips arriba y la grilla de ese objetivo, sin necesidad de escribir. */
 function GoalView({ goal }: { goal: Goal }) {
   useDemoVersion();
-  const info = goalById(goal)!;
+  const goals = useGoals();
+  const info = goals.find((g) => g.id === goal)!;
   const list = productsForGoal(goal);
   return (
     <div className="flex flex-col gap-6">
@@ -42,7 +44,7 @@ function GoalView({ goal }: { goal: Goal }) {
 export function SearchView() {
   const params = useSearchParams();
   const goal = params.get("objetivo");
-  if (goal && goalById(goal as Goal)) return <GoalView goal={goal as Goal} />;
+  if (goal && goalInfo(goal as Goal)) return <GoalView goal={goal as Goal} />;
   return <TextSearch />;
 }
 

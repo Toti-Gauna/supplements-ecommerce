@@ -61,7 +61,7 @@ describe("plan de importación", () => {
   });
   it("crea, actualiza, deja igual y marca errores sin aplicarlos", () => {
     const plan = buildImportPlan(SHEET, 0, detectMapping(SHEET[0]!), data());
-    expect(plan.counts).toEqual({ "create-product": 1, "create-variant": 2, update: 4, unchanged: 1, error: 1 });
+    expect(plan.counts).toEqual({ "create-product": 1, "create-variant": 2, update: 4, unchanged: 1, skip: 0, error: 1 });
     expect(plan.newCategories).toEqual(["Combos"]);
     const combo = plan.next.products.find((p) => p.name === "Combo fuerza")!;
     expect(combo.basePrice).toBe(50000);

@@ -1,14 +1,16 @@
 import { normalize } from "../../engine/search";
 import { formatARS } from "@/lib/money";
 import type { Category, Product } from "../../types";
+import { withStock } from "../lots";
 import { cellText, parseMoney, parseStock, parseYesNo, slugify, type Cell } from "./cells";
 import type { ColumnMapping } from "./columns";
+import type { SheetKind } from "./supplier-columns";
 
 /**
  * Plan de importación: qué hace cada fila de la planilla (crear, actualizar, nada o error) y cómo queda el
  * catálogo. Se calcula sobre copias; el panel aplica `next` de una vez y guarda el estado anterior para deshacer.
  */
-export type RowAction = "create-product" | "create-variant" | "update" | "unchanged" | "error";
+export type RowAction = "create-product" | "create-variant" | "update" | "unchanged" | "skip" | "error";
 
 export interface PlanRow {
   line: number;
@@ -21,10 +23,14 @@ export interface PlanRow {
 }
 
 export interface ImportPlan {
+  /** Catálogo de la tienda (crea y actualiza) o lista de un proveedor (solo costo y precio de lo que ya vendés). */
+  kind: SheetKind;
   rows: PlanRow[];
   newCategories: string[];
   counts: Record<RowAction, number>;
   next: { products: Product[]; categories: Category[] };
+  /** Una línea para el aviso, la auditoría y "Última importación". */
+  summary: string;
 }
 
 interface Work { products: Product[]; categories: Category[]; newCategories: string[] }
@@ -130,12 +136,13 @@ export function buildImportPlan(rows: Cell[][], headerIndex: number, mapping: Co
         plan.changes.push(`Precio ${formatARS(current)} → ${formatARS(price)}`);
       }
       const nv = next.variants[vi]!;
-      if (stock !== null && stock !== nv.stock) { next.variants[vi] = { ...nv, stock }; plan.changes.push(`Stock ${stockText(nv.stock)} → ${stockText(stock)}`); }
+      if (stock !== null && stock !== nv.stock) { next.variants[vi] = withStock(nv, stock); plan.changes.push(`Stock ${stockText(nv.stock)} → ${stockText(stock)}`); }
       if (plan.changes.length) plan.action = "update";
     } else if (plan.changes.length) plan.action = "update";
     w.products[idx] = next;
   });
-  const counts = { "create-product": 0, "create-variant": 0, update: 0, unchanged: 0, error: 0 } as Record<RowAction, number>;
+  const counts = { "create-product": 0, "create-variant": 0, update: 0, unchanged: 0, skip: 0, error: 0 } as Record<RowAction, number>;
   for (const r of out) counts[r.action] += 1;
-  return { rows: out, newCategories: w.newCategories, counts, next: { products: w.products, categories: w.categories } };
+  const summary = `${counts["create-product"]} productos nuevos, ${counts["create-variant"]} variantes nuevas, ${counts.update} actualizados`;
+  return { kind: "catalog", rows: out, newCategories: w.newCategories, counts, next: { products: w.products, categories: w.categories }, summary };
 }

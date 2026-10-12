@@ -1,16 +1,17 @@
 import { describe, expect, it } from "vitest";
 import { decodeGift, encodeGift } from "@/demo/engine/gift-link";
-import { cleanGift, giftProblem, giftsFor, giftsFromLines, makeGiftCode, normalizeGiftCode, type Gift } from "@/demo/engine/gifts";
+import { cleanGift, giftProblem, giftsFor, giftsFromLines, makeGiftCode, normalizeGiftCode, withKnownOccasion, type Gift } from "@/demo/engine/gifts";
 import { getProduct } from "@/demo/engine/catalog";
 import { defaultDemoData, setDemoData } from "@/demo/engine/source";
 import { demoGifts, sampleGifts } from "@/demo/fixtures/gifts";
-import { GIFT_SCENE_NAMES } from "@/features/gifts/scenes";
+import { seasonalThemes } from "@/demo/fixtures/themes";
+import { BAG_VARIANT_IDS, bagName, bagPhrase, bagVariant } from "@/features/gifts/scenes/variants";
 
 const seq = (values: number[]) => { let i = 0; return () => values[i++ % values.length]!; };
 const gift: Gift = {
   code: makeGiftCode(seq([0.1, 0.5, 0.9, 0.3, 0.7, 0.2, 0.6])), from: "Lucía", to: "Sofía", toEmail: "sofia@ejemplo.com",
-  message: "¡Feliz día, ma! 🐶 Te quiero", occasion: "dia-de-la-madre",
-  item: { slug: "collar-con-nombre", name: "Collar con nombre", variant: "Talle M", detail: "Nombre: TOTO" },
+  message: "¡Feliz día, ma! 💪 Te quiero", occasion: "dia-de-la-madre",
+  item: { slug: "colageno", name: "Colágeno hidrolizado + vitamina C", variant: "Frutos rojos", detail: "30 servicios" },
   createdAt: "2026-10-09T15:00:00.000Z", eta: "2026-10-16",
 };
 
@@ -97,9 +98,12 @@ describe("regalos de un pedido", () => {
   });
 });
 
+const occasions = ["volta", ...seasonalThemes.map((t) => t.id)];
+
 describe("regalos de prueba", () => {
-  it("hay uno por cada escena, con código válido y único, producto y variante del catálogo, sin cuenta", () => {
-    expect(new Set(sampleGifts.map((g) => g.occasion))).toEqual(new Set(Object.keys(GIFT_SCENE_NAMES)));
+  it("hay uno por cada bolsa con variante propia, con código válido y único, producto y variante del catálogo, sin cuenta", () => {
+    const withVariant = occasions.filter((o) => BAG_VARIANT_IDS.includes(o));
+    expect(new Set(sampleGifts.map((g) => g.occasion))).toEqual(new Set(withVariant));
     const codes = [...demoGifts, ...sampleGifts].map((g) => g.code);
     expect(new Set(codes).size).toBe(codes.length);
     for (const g of sampleGifts) {
@@ -108,5 +112,27 @@ describe("regalos de prueba", () => {
       expect(getProduct(g.item.slug)?.variants.some((v) => v.label === g.item.variant)).toBe(true);
       expect(decodeGift(encodeGift(g))).toEqual(g);
     }
+  });
+});
+
+describe("bolsa de boxeo por ocasión", () => {
+  it("cada ocasión tiene su bolsa con nombre, y una temática sin variante (o nueva) usa la bolsa VOLTA", () => {
+    for (const o of occasions) expect(bagName(o)).toMatch(/^Bolsa /);
+    expect(bagVariant("carnaval")).toEqual(bagVariant("volta"));
+    expect(bagVariant("volta").detail).toBe("volta");
+    expect(bagVariant("navidad").detail).toBe("navidad");
+  });
+  it("cada fecha con variante tiene un detalle propio", () => {
+    const details = BAG_VARIANT_IDS.map((id) => bagVariant(id).detail);
+    expect(new Set(details).size).toBe(details.length);
+  });
+  it("un regalo guardado con una temática que ya no existe se abre con la bolsa VOLTA", () => {
+    expect(withKnownOccasion(gift)).toBe(gift);
+    const stale = { ...gift, occasion: "dia-del-animal-que-no-esta" } as unknown as Gift;
+    expect(withKnownOccasion(stale)).toEqual({ ...gift, occasion: "volta" });
+  });
+  it("la bolsa dentro de una frase va en minúscula, salvo la marca", () => {
+    expect(bagPhrase("volta")).toBe("una bolsa de boxeo VOLTA");
+    expect(bagPhrase("san-valentin")).toBe("una bolsa con corazones bordados");
   });
 });

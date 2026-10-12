@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { VoltaPup, type CastId, type PupOutfit } from "@/components/illustrations/characters";
 import { ProductArt } from "@/components/illustrations/ProductArt";
 import { Decor, type DecorKind } from "@/components/illustrations/seasonal/Decor";
 import type { StudioProduct } from "@/demo/admin/studio/content";
@@ -10,13 +9,12 @@ import type { Img } from "./render/types";
 export interface AssetRequest {
   products: StudioProduct[];
   hero: DecorKind | null;
-  cast: { who: CastId; outfit?: PupOutfit; flip?: boolean; pup?: boolean }[];
   particles: DecorKind[];
 }
 
-export interface StudioAssets { products: Record<string, Img>; hero: Img | null; cast: Img[]; particles: Record<string, Img> }
+export interface StudioAssets { products: Record<string, Img>; hero: Img | null; particles: Record<string, Img> }
 
-const EMPTY: StudioAssets = { products: {}, hero: null, cast: [], particles: {} };
+const EMPTY: StudioAssets = { products: {}, hero: null, particles: {} };
 
 /** SVG del DOM → imagen (data URL, mismo origen: el canvas no queda bloqueado para exportar). */
 export async function svgToImage(svg: SVGSVGElement, w: number, h: number): Promise<Img> {
@@ -50,14 +48,14 @@ export function useStudioAssets(req: AssetRequest): { stage: React.ReactNode; as
   const ref = useRef<HTMLDivElement>(null);
   const [assets, setAssets] = useState<StudioAssets>(EMPTY);
   const [loadedKey, setLoadedKey] = useState<string | null>(null);
-  const key = JSON.stringify([req.products.map((p) => [p.slug, p.tint, Boolean(p.photoDataUrl)]), req.hero, req.cast, req.particles]);
+  const key = JSON.stringify([req.products.map((p) => [p.slug, p.tint, Boolean(p.photoDataUrl)]), req.hero, req.particles]);
   useEffect(() => {
     let alive = true;
     const root = ref.current;
     if (!root) return;
     const pick = (sel: string) => root.querySelector<SVGSVGElement>(`[data-asset="${sel}"] svg`);
     void (async () => {
-      const out: StudioAssets = { products: {}, hero: null, cast: [], particles: {} };
+      const out: StudioAssets = { products: {}, hero: null, particles: {} };
       for (const p of req.products) {
         const svg = pick(`p:${p.slug}`);
         // La foto cargada en el panel manda; si no abre, vuelve a la ilustración.
@@ -66,11 +64,6 @@ export function useStudioAssets(req: AssetRequest): { stage: React.ReactNode; as
       }
       const hero = req.hero ? pick("hero") : null;
       if (hero) out.hero = await safe(() => svgToImage(hero, 480, 480));
-      for (let i = 0; i < req.cast.length; i++) {
-        const svg = pick(`cast:${i}`);
-        const img = svg ? await safe(() => svgToImage(svg, 520, 400)) : null;
-        if (img) out.cast.push(img);
-      }
       for (const kind of req.particles) {
         const svg = pick(`d:${kind}`);
         const img = svg ? await safe(() => svgToImage(svg, 96, 96)) : null;
@@ -86,7 +79,6 @@ export function useStudioAssets(req: AssetRequest): { stage: React.ReactNode; as
     <div ref={ref} aria-hidden="true" className="pointer-events-none fixed -left-[9999px] top-0 h-0 w-0 overflow-hidden">
       {req.products.map((p) => <div key={p.slug} data-asset={`p:${p.slug}`} className="h-40 w-40"><ProductArt art={p.art} pack={p.pack} tint={p.tint} label={p.name} showBadge={false} /></div>)}
       {req.hero && <div data-asset="hero" className="h-24 w-24"><Decor kind={req.hero} /></div>}
-      {req.cast.map((c, i) => <div key={i} data-asset={`cast:${i}`} className="w-32"><VoltaPup who={c.who} pose="stand" outfit={c.outfit} flip={c.flip} pup={c.pup} /></div>)}
       {req.particles.map((k) => <div key={k} data-asset={`d:${k}`} className="h-12 w-12"><Decor kind={k} /></div>)}
     </div>
   );

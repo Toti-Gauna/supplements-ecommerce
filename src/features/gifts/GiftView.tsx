@@ -23,7 +23,7 @@ function findByCode(code: string, pools: Gift[][]): Gift | null {
 
 /**
  * /regalo/: abre un regalo con el link (?g=), con el código (?c=) o pide el código. Al entrar todo se oscurece y
- * aparece el regalo para abrir a golpes; adentro está el producto (sin precio) y el mensaje.
+ * aparece la bolsa de boxeo para abrir a golpes; adentro está el producto (sin precio) y el mensaje.
  */
 export function GiftView() {
   const params = useSearchParams();
@@ -81,8 +81,8 @@ function GiftExperience({ gift, preview }: { gift: Gift; preview: boolean }) {
           <GiftCard gift={gift} saved={isSaved} preview={preview} onSave={() => save(gift)} onReplay={() => setOpen(false)} />
         ) : (
           <>
-            <p className="font-display mb-4 max-w-sm text-center text-[clamp(1.5rem,6vw,2.1rem)] leading-tight">{gift.to}, {gift.from} te mandó un regalo</p>
-            <GiftOpener key={String(open)} scene={gift.occasion} accent={colors.accent} onOpened={done} autoFocus={open === false} />
+            <p className="font-display mb-4 max-w-sm text-center text-[clamp(1.5rem,6vw,2.1rem)] leading-tight">{gift.to}, te llegó un regalo de {gift.from}</p>
+            <GiftOpener key={String(open)} occasion={gift.occasion} accent={colors.accent} onOpened={done} autoFocus={open === false} />
           </>
         )}
       </ImmersiveStage>

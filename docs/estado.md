@@ -3,7 +3,7 @@
 ## Fase 0 · Base técnica ✅
 - Código de Velmar copiado (tienda, panel, ruleta, regalos, temáticas, tests y workflow de Pages) y renombrado a Volta:
   claves `volta-demo:*`, `volta-ui:*`, `volta-theme`, token de seguimiento `demo-volta`, códigos `VOL-000123`.
-- Temáticas apagadas (`themeSettings.mode = "off"`, sin botón "Probar temáticas") hasta la Fase 5.
+- Temáticas apagadas (`themeSettings.mode = "off"`, sin botón "Probar temáticas") hasta la Fase 5 (ya encendidas).
 - Documentación original en `docs/referencia-velmar/`.
 
 ## Fase 1 · Identidad eléctrica y catálogo ✅
@@ -44,7 +44,7 @@
 - Tests: 236 unitarios y 297 e2e adaptados a VOLTA (se borraron solo los del configurador de collar), más los nuevos
   de descuento stack y aviso de recompra.
 
-## Fase 3 · Armá tu stack + Quiz ✅ (en revisión)
+## Fase 3 · Armá tu stack + Quiz ✅
 - Hecha después de la 4, a pedido de Ignacio.
 - **Motor** (`src/demo/engine/stack-builder.ts`, `quiz.ts`, `src/demo/fixtures/stack-builder.ts`): cuatro lugares del
   estante (base de proteína, creatina, pre-entreno, extra), qué arma cada objetivo, opciones por objetivo y
@@ -76,10 +76,27 @@
 - Confeti y escenario inmersivo con los colores de VOLTA.
 - Falta probar en un teléfono real (Safari de iPhone: audio después del primer toque y arrastre sin rebote).
 
+## Fase 5 · Regalos y temáticas fitness ✅ (en revisión)
+- **Regalo a golpes contra una bolsa de boxeo** (`src/features/gifts/scenes/`): una sola escena SVG con la bolsa VOLTA
+  colgando; cada golpe la balancea, suelta tiza y abre una costura con luz; en el quinto el frente se rompe y sale el
+  pote "Edición regalo" antes del producto real. Variante por fecha (moño navideño, "Versión 2027", guantes del Día del
+  Padre, calabaza musculosa, "precio secreto" de Black Friday…). Quien recibe nunca ve el precio.
+- Regalos de prueba (código para `/regalo/`): VOLTA `REGALO-VE1M-AR7X`, Madre `REGALO-MADR-E26B`, Halloween
+  `REGALO-HA11-0WEP`, CyberMonday `REGALO-CYB3-R725`, Black Friday `REGALO-B1AC-KFRW`, Navidad `REGALO-NAV1-DADP`,
+  Año Nuevo `REGALO-AN02-027S`, San Valentín `REGALO-AM0R-014M`, Vuelta al gym `REGALO-GYM0-D1AN`, Hot Sale
+  `REGALO-H0TS-A1EX`, Padre `REGALO-PADR-E26D`, Amigo `REGALO-AM1G-0S2S`, Verano `REGALO-VERA-N0SZ`.
+- **12 temáticas fitness** (fuera las de Velmar): Día de la Madre, Halloween "Monster pump", CyberMonday, Black Friday,
+  Navidad, Año Nuevo "Versión 2027", Vuelta al gym, San Valentín, Hot Sale, Día del Padre, Día del Amigo "compañero de
+  gym" y Operación verano. Cada una con paleta clara y oscura, banner, cinta, adorno del logo, guirnalda, fondo con FX,
+  cupón, cinco productos en oferta y **pantalla de carga propia** (que no pisa el logo; e2e en tres tamaños).
+- 36 decoraciones SVG fitness nuevas; fuera Lola y Pancho: en el seguimiento va un cadete VOLTA en bici vestido según
+  la fecha.
+- Temáticas **encendidas**: modo automático por fecha (octubre → Día de la Madre) y "Probar temáticas" visible.
+  `ADMIN_STORE_VERSION` 9.
+
 ## Pendiente de Velmar (se resuelve en su fase)
 | Qué queda | Dónde se ve | Fase |
 |---|---|---|
-| Escenas de regalo y temáticas con los personajes de Velmar (y los colores oliva de la ocasión "volta" del regalo) | `/regalo/`, temáticas (apagadas), viajeros del seguimiento | 5 |
 | Emails, recordatorios y email de cumpleaños de mascotas, cola de producción, insumos y calendario "del taller" | Panel | 6 y 7 |
 | Editor de producto: si se llega con Tab a "Ver en tienda", al volver abre en el último paso (con mouse no pasa) | Panel → Productos | 6 |
 | Estudio de contenido con decoraciones de Velmar | Panel → Estudio | 7 |

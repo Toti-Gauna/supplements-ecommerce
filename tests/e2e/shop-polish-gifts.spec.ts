@@ -1,27 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
-import { sampleGifts } from "../../src/demo/fixtures/gifts";
 import { guardNetwork, horizontalOverflow } from "./helpers";
 
-/** Polish 8.2 · Lote 7: el cachorro del Día del Animal (8.2.15) y el regalo en un modal compartido (8.2.16). */
-
-test("8.2.15 Día del Animal: un cachorro asoma por la puerta de la cucha golpe a golpe (ya no la cola) y sale al abrir", async ({ page }) => {
-  const g = sampleGifts.find((x) => x.occasion === "dia-del-animal")!;
-  await page.goto(`regalo/?c=${g.code}`);
-  const stage = page.getByRole("dialog", { name: `Regalo de ${g.from} para ${g.to}` });
-  const peek = stage.locator("[data-peek]");
-  await expect(peek).toHaveAttribute("data-peek", "0");
-  const hit = stage.getByRole("button", { name: /Golpeá el regalo para abrirlo/ });
-  for (let i = 1; i <= 4; i++) {
-    await hit.click();
-    await expect(peek).toHaveAttribute("data-peek", String(i));
-  }
-  // Asomado del todo: patitas en el umbral y cara contenta (la lengua afuera).
-  await expect(stage.locator(".an-cu-paws.is-on")).toHaveCount(1);
-  await expect(stage.locator("[data-peek] path[fill='#e86a7c']")).toHaveCount(1);
-  await hit.click();
-  await expect(peek).toHaveAttribute("data-peek", "out");
-  await expect(stage.getByText(g.message, { exact: false })).toBeVisible();
-});
+/** Polish 8.2 · Lote 7: el regalo en un modal compartido (8.2.16). La bolsa de boxeo se prueba en gifts-bag.spec.ts. */
 
 const giftDialog = (page: Page) => page.getByRole("dialog", { name: "Es para regalar" });
 
@@ -41,10 +21,10 @@ test("8.2.16 modal centrado con vista previa: Escape y Cerrar, foco, fondo quiet
   // La vista previa acompaña lo que se escribe.
   await modal.getByLabel("Para", { exact: true }).fill("Sofía");
   await modal.getByLabel("Mensaje").fill("Para tus salidas a correr");
-  await modal.getByLabel("Ocasión").selectOption("dia-del-animal");
+  await modal.getByLabel("Ocasión").selectOption("san-valentin");
   await expect(modal.getByText("Para Sofía")).toBeVisible();
   await expect(modal.getByText("“Para tus salidas a correr”")).toBeVisible();
-  await expect(modal.getByText("La cucha de Pancho", { exact: true })).toBeVisible();
+  await expect(modal.getByText("Bolsa con corazones bordados", { exact: true })).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(modal).toBeHidden();
   await expect(trigger).toBeFocused();
@@ -52,7 +32,7 @@ test("8.2.16 modal centrado con vista previa: Escape y Cerrar, foco, fondo quiet
   // Al reabrir, todo sigue; el botón Cerrar está a la vista y también cierra.
   await trigger.click();
   await expect(modal.getByLabel("Para", { exact: true })).toHaveValue("Sofía");
-  await expect(modal.getByLabel("Ocasión")).toHaveValue("dia-del-animal");
+  await expect(modal.getByLabel("Ocasión")).toHaveValue("san-valentin");
   await modal.getByRole("button", { name: "Cerrar" }).click();
   await expect(modal).toBeHidden();
 });

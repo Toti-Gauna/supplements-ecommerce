@@ -5,7 +5,6 @@ import "@fontsource/caveat/600.css";
 import "./globals.css";
 import "./splash.css";
 import "./seasons.css";
-import "./characters.css";
 import "./motion.css";
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";

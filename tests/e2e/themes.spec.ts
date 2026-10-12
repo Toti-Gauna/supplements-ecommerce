@@ -3,29 +3,31 @@ import { guardNetwork } from "./helpers";
 
 test("probar temáticas: Halloween cambia cinta, logo, carrusel y ofertas; el cupón queda en el carrito", async ({ page }) => {
   const assertNoExternal = guardNetwork(page);
-  // Hasta la Fase 5 el botón arranca oculto: se prende desde el panel para mostrarle la demo al cliente.
+  // Desde la Fase 5 el botón arranca prendido (para mostrarle la demo al cliente) y la tienda va por fecha.
   await page.goto("admin-demo/tematicas/");
-  const tryButton = page.getByRole("switch", { name: /Probar temáticas/ });
-  await expect(tryButton).not.toBeChecked();
-  await tryButton.click();
-  await expect(tryButton).toBeChecked();
+  await expect(page.getByRole("switch", { name: /Probar temáticas/ })).toBeChecked();
+  await expect(page.getByLabel("Modo", { exact: true })).toHaveValue("auto");
   // El panel deja puesta una temática (Navidad fija) para ver que "Original" la tapa solo en este navegador.
   await page.getByLabel("Modo", { exact: true }).selectOption("fixed");
   await page.getByLabel("Temática fija").selectOption("navidad");
   await page.goto("");
   await page.getByRole("button", { name: "Probar temáticas" }).click();
   const picker = page.getByRole("dialog", { name: "Probar temáticas" });
+  await expect(picker.getByRole("button", { name: /^Probar / })).toHaveCount(13);
   await picker.getByRole("button", { name: "Probar Halloween" }).click();
   await expect(picker).toBeHidden();
 
   // Elegir recarga la página (sale la pantalla de carga de temporada) y toda la tienda toma la paleta.
-  await expect(page.locator("[data-theme-ribbon='halloween']")).toContainText("BOO20");
+  await expect(page.locator("[data-theme-ribbon='halloween']")).toContainText("MONSTER20");
   await expect(page.locator("html")).toHaveAttribute("data-season", "halloween");
-  await expect(page.getByRole("heading", { name: "Truco o regalo" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Monster pump" })).toBeVisible();
+  // El logo lleva los cuernitos de la fecha y la guirnalda, lamparitas.
+  await expect(page.locator("[data-shop-header] a[aria-label='Volta, ir al inicio'] svg")).toHaveCount(2);
+  await expect(page.locator("[data-garland='lights']")).toHaveCount(1);
   const rail = page.locator("section").filter({ has: page.getByRole("heading", { name: /Ofertas de Halloween/ }) });
   await expect(rail.getByText("20% OFF").first()).toBeVisible();
 
-  await page.getByRole("button", { name: "Usar BOO20" }).click();
+  await page.getByRole("button", { name: "Usar MONSTER20" }).click();
   await expect(page.getByRole("button", { name: "Cupón en tu carrito" })).toBeDisabled();
 
   // Se recuerda al recargar y se sale desde la cinta
@@ -59,13 +61,12 @@ test("el panel edita la temática y su modo; la tienda lo refleja", async ({ pag
 
   await page.getByLabel("Modo", { exact: true }).selectOption("fixed");
   await page.getByLabel("Temática fija").selectOption("navidad");
-  // El botón "Probar temáticas" arranca oculto hasta la Fase 5: se prende acá y se apaga al final.
-  await page.getByRole("switch", { name: /Probar temáticas/ }).click();
   await page.goto("");
   await expect(page.getByRole("heading", { name: "Feliz Navidad con energía" })).toBeVisible();
   await expect(page.locator("[data-theme-ribbon='navidad']")).toContainText("NAVIDAD15");
   await expect(page.getByRole("button", { name: "Probar temáticas" })).toBeVisible();
 
+  // Sin temática y sin el botón de la demo: la tienda vuelve a VOLTA de siempre.
   await page.goto("admin-demo/tematicas/");
   await page.getByLabel("Modo", { exact: true }).selectOption("off");
   await page.getByRole("switch", { name: /Probar temáticas/ }).click();
@@ -74,4 +75,23 @@ test("el panel edita la temática y su modo; la tienda lo refleja", async ({ pag
   await expect(page.locator("[data-theme-banner]")).toHaveCount(0);
   await expect(page.locator("[data-theme-ribbon]")).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Probar temáticas" })).toHaveCount(0);
+});
+
+test("modo automático: la tienda sale sola con la temática de la fecha", async ({ page }) => {
+  await page.addInitScript(() => localStorage.removeItem("volta-demo:theme-preview"));
+  for (const [day, id, heading] of [
+    ["2026-10-12", "dia-de-la-madre", "Para la que nunca para"],
+    ["2026-11-03", "cyber-monday", "Overclock de precios"],
+    ["2027-02-20", "vuelta-al-gym", "Volvió la rutina"],
+  ] as const) {
+    await page.clock.setFixedTime(new Date(`${day}T12:00:00-03:00`));
+    await page.goto("");
+    await expect(page.locator("html")).toHaveAttribute("data-season", id);
+    await expect(page.getByRole("heading", { name: heading })).toBeVisible();
+  }
+  // Entre fechas no hay temática.
+  await page.clock.setFixedTime(new Date("2027-04-15T12:00:00-03:00"));
+  await page.goto("");
+  await expect(page.getByRole("heading", { name: "Comprá por categoría" })).toBeVisible();
+  await expect(page.locator("[data-theme-ribbon]")).toHaveCount(0);
 });

@@ -1,21 +1,22 @@
 import type { ComponentType } from "react";
-import { Balloon, Bag, Bone, Fedora, Flame, Kite, Mate, Mustache, Paw, PriceTag, Tie, Tulip } from "./everyday";
-import { BunnyEars, Champagne, EasterEgg, Firework, Heart, LoveLetter, PartyHat, Star } from "./celebrate";
-import { Bat, Ghost, Gift, Ornament, Pumpkin, SantaHat, Snowflake, Tree, WitchHat } from "./halloween-navidad";
-import { Bandera, Cabildo, CasaTucuman, Empanada, Escarapela, Paraguas, SolDeMayo } from "./patrias";
-import { PrideFlag, PrideHeart, RainbowArc } from "./pride";
-import type { DecorProps } from "./types";
+import { Gift, Gloves, Heart, Medal, PulseHeart, Trophy, Flower } from "./awards";
+import { Bag, Battery, Calendar, Chip, Flame, Tag, Update } from "./commerce";
+import { Bolt, Dumbbell, Kettlebell, Plate, Scoop, ShakerCup, Sneaker, Spark, Stopwatch } from "./gym";
+import { Bat, Firework, Horns, MusclePumpkin, Ornament, PartyHat, PlateTree, SantaHat, Snowflake } from "./holidays";
+import type { DecorProps } from "./paint";
+import { Bottle, Sun, Sunglasses, Wave } from "./summer";
 
-/** Decoraciones de temáticas (SVG propios, sin imágenes externas). */
+/**
+ * Decoraciones fitness de las temáticas (SVG propios con la estética de laboratorio de VOLTA: acero, goma negra,
+ * voltio, plasma e ion). Se usan en el banner, la cinta, el logo, el fondo, la pantalla de carga y el Estudio.
+ */
 export const DECOR = {
-  "witch-hat": WitchHat, pumpkin: Pumpkin, bat: Bat, ghost: Ghost,
-  "santa-hat": SantaHat, tree: Tree, ornament: Ornament, gift: Gift, snowflake: Snowflake,
-  champagne: Champagne, firework: Firework, "party-hat": PartyHat, star: Star,
-  heart: Heart, "love-letter": LoveLetter, rainbow: RainbowArc, "pride-flag": PrideFlag, "pride-heart": PrideHeart,
-  "easter-egg": EasterEgg, "bunny-ears": BunnyEars,
-  tulip: Tulip, paw: Paw, bone: Bone, flame: Flame, "price-tag": PriceTag, bag: Bag,
-  tie: Tie, mustache: Mustache, fedora: Fedora, mate: Mate, balloon: Balloon, kite: Kite,
-  escarapela: Escarapela, "sol-de-mayo": SolDeMayo, cabildo: Cabildo, empanada: Empanada, paraguas: Paraguas, bandera: Bandera, "casa-tucuman": CasaTucuman,
+  dumbbell: Dumbbell, kettlebell: Kettlebell, plate: Plate, shaker: ShakerCup, scoop: Scoop, bolt: Bolt, spark: Spark,
+  stopwatch: Stopwatch, sneaker: Sneaker, medal: Medal, trophy: Trophy, heart: Heart, "pulse-heart": PulseHeart,
+  gloves: Gloves, flower: Flower, gift: Gift, "muscle-pumpkin": MusclePumpkin, bat: Bat, horns: Horns,
+  "santa-hat": SantaHat, ornament: Ornament, "plate-tree": PlateTree, snowflake: Snowflake, firework: Firework,
+  "party-hat": PartyHat, tag: Tag, bag: Bag, flame: Flame, chip: Chip, battery: Battery, calendar: Calendar,
+  update: Update, sun: Sun, wave: Wave, bottle: Bottle, sunglasses: Sunglasses,
 } satisfies Record<string, ComponentType<DecorProps>>;
 
 export type DecorKind = keyof typeof DECOR;

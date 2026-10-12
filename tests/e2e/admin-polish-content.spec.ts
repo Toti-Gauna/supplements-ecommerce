@@ -21,22 +21,23 @@ test.describe("escritorio con mouse", () => {
   test.beforeEach(async ({ page }) => { await page.mouse.move(1240, 400); });
 
   test("8.3.26 Temáticas: la temática fija aparece solo en modo fijo y las tarjetas siguen al modo", async ({ page }) => {
+    // La fecha de la demo: octubre de 2026 (sale el Día de la Madre y la próxima es Halloween).
+    await page.clock.setFixedTime(new Date("2026-10-12T12:00:00-03:00"));
     await page.goto("admin-demo/tematicas/");
     await expect(page.getByRole("link", { name: "Volver a Marketing" })).toBeVisible();
     await expect(page.getByRole("heading", { level: 1, name: /Temáticas/ })).toBeVisible();
     const mode = page.getByLabel("Modo", { exact: true });
-    // Hasta la Fase 5 la tienda arranca sin temática (docs/plan-por-fases.md).
-    await expect(mode).toHaveValue("off");
-    await expect(page.getByLabel("Temática fija")).toHaveCount(0);
-    await mode.selectOption("auto");
+    // Desde la Fase 5 la tienda arranca en automático por fecha, con las doce temáticas fitness.
     await expect(mode).toHaveValue("auto");
+    await expect(page.getByRole("list", { name: "Temáticas por fecha" }).getByRole("listitem")).toHaveCount(12);
     // En automático no hay selector de temática fija: no se confunde con la que sale por fecha.
     await expect(page.getByLabel("Temática fija")).toHaveCount(0);
     await expect(page.getByText(/usa sola la temática cuyas fechas incluyen hoy/)).toBeVisible();
-    await expect(page.getByText("Próxima por fecha")).toBeVisible();
+    const today = page.locator("p").filter({ hasText: "Hoy ve el cliente" });
+    await expect(today).toContainText("Día de la Madre");
+    await expect(page.locator("p").filter({ hasText: "Próxima por fecha" })).toContainText("Halloween");
     await mode.selectOption("fixed");
     await page.getByLabel("Temática fija").selectOption("navidad");
-    const today = page.locator("p").filter({ hasText: "Hoy ve el cliente" });
     await expect(today).toContainText("Navidad");
     await expect(today).toContainText("Temática fija, sin importar la fecha");
     await expect(page.locator("p").filter({ hasText: "Próxima por fecha" })).toContainText("En modo fijo no cambia sola: sigue Navidad.");

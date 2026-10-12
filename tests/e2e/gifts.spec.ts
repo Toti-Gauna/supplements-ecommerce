@@ -30,7 +30,7 @@ test("regalar: ficha → carrito → checkout → link que se abre a golpes, sin
   await sheet.getByLabel("De parte de").fill("Lucía");
   await sheet.getByLabel("Mensaje").fill("¡Feliz Navidad! Para que arranques el 2027 con todo 🎄");
   await sheet.getByLabel("Ocasión").selectOption("navidad");
-  await expect(sheet.getByText("Se abre como: el regalo de Papá Noel.")).toBeVisible();
+  await expect(sheet.getByText("Lo abre a golpes contra una bolsa navideña con moño y gorrito.")).toBeVisible();
   await sheet.getByRole("button", { name: "Agregar regalo al carrito" }).click();
   await expect(page.getByRole("dialog", { name: "Carrito" })).toBeVisible();
 
@@ -50,16 +50,17 @@ test("regalar: ficha → carrito → checkout → link que se abre a golpes, sin
   const href = await ready.getByRole("link", { name: "Ver cómo lo recibe" }).getAttribute("href");
   const link = href!.replace("&vista=previa", "");
 
-  // Quien lo recibe (otro navegador): todo oscuro, el regalo y "Golpeá el regalo para abrirlo"
+  // Quien lo recibe (otro navegador): todo oscuro y la bolsa de boxeo navideña para abrir a golpes
   const other = await page.context().browser()!.newContext({ viewport: page.viewportSize()!, isMobile: true, hasTouch: true, locale: "es-AR", reducedMotion: "no-preference" });
   const friend = await other.newPage();
   await friend.goto(new URL(link, page.url()).toString());
   await friend.keyboard.press("Escape");
   const stage = friend.getByRole("dialog", { name: "Regalo de Lucía para Sofía" });
-  await expect(stage.getByText("Golpeá el regalo para abrirlo")).toBeVisible();
-  const gift = stage.getByRole("button", { name: /Golpeá el regalo para abrirlo/ });
+  await expect(stage.getByText("¡Pegale a la bolsa!")).toBeVisible();
+  await expect(stage.locator("[data-variant]")).toHaveAttribute("data-variant", "navidad");
+  const gift = stage.getByRole("button", { name: /Golpeá la bolsa para abrir el regalo/ });
   for (let i = 0; i < 5; i++) await gift.click();
-  await expect(stage.getByText("Lucía te regaló")).toBeVisible({ timeout: 6000 });
+  await expect(stage.getByText("Regalo de Lucía")).toBeVisible({ timeout: 6000 });
   await expect(stage.getByRole("heading", { name: "BCAA 2:1:1" })).toBeVisible();
   await expect(stage.getByText("¡Feliz Navidad! Para que arranques el 2027 con todo 🎄")).toBeVisible();
   await expect(stage.getByText(/\$\s?\d/)).toHaveCount(0);
@@ -102,11 +103,12 @@ test("un link de regalo cortado o editado no abre nada", async ({ page }) => {
   await expect(page.getByRole("dialog")).toHaveCount(0);
 });
 
-test("los 17 regalos de prueba se abren con su código, cada uno con su escena", async ({ page }) => {
+test("los regalos de prueba se abren con su código, cada uno con la bolsa de su ocasión", async ({ page }) => {
   test.setTimeout(120_000);
   for (const g of sampleGifts) {
     await page.goto(`regalo/?c=${g.code}`);
     const stage = page.getByRole("dialog", { name: `Regalo de ${g.from} para ${g.to}` });
+    await expect(stage.locator("[data-variant]"), g.occasion).toHaveAttribute("data-variant", g.occasion);
     await stage.getByRole("button", { name: "Abrirlo de una vez" }).click();
     await expect(stage.getByText(g.message, { exact: false }), g.occasion).toBeVisible();
     await expect(stage.getByRole("heading", { name: g.item.name })).toBeVisible();

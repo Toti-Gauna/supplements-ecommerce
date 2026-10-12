@@ -1,6 +1,7 @@
 "use client";
 import { create } from "zustand";
 import type { LineGift } from "@/demo/engine/cart-types";
+import { withKnownOccasion } from "@/demo/engine/gifts";
 import type { GiftOccasion } from "@/demo/types";
 
 /**
@@ -25,7 +26,7 @@ export const useGiftDraft = create<GiftDraftState>()((set) => ({
   touched: false,
   patch: (patch) => set((s) => ({ draft: { ...s.draft, ...patch }, touched: true })),
   prime: (suggested, existing) => set((s) => {
-    if (existing) return { draft: { ...EMPTY, ...existing }, touched: true };
+    if (existing) return { draft: withKnownOccasion({ ...EMPTY, ...existing }), touched: true };
     if (s.touched) return {};
     return { draft: { ...EMPTY, from: s.draft.from || suggested.from || "", occasion: suggested.occasion } };
   }),

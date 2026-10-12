@@ -34,13 +34,15 @@ test("8.2.11 Original: los cinco estados se prueban, cambian la vista y la entre
   await expect(page.getByRole("region", { name: "Etapas del pedido" }).locator("[aria-current=step]")).toContainText("Enviado");
 });
 
-for (const [id, who] of [["navidad", "Papá Noel en su trineo"], ["halloween", "una bruja en su escoba"], ["dia-del-padre", /Lola|Pancho/], ["san-valentin", "una carta de amor"], ["pascuas", "un huevo de Pascua"], ["dia-de-la-independencia", "la bandera"]] as const) {
-  test(`8.2.11 temática ${id}: el pedido lo lleva su personaje`, async ({ page }) => {
+for (const [id, who] of [["navidad", "con gorro de Papá Noel"], ["halloween", "con cuernitos"], ["dia-del-padre", "con su medalla"], ["san-valentin", "con un corazón"], ["cyber-monday", "con un chip en el casco"], ["operacion-verano", "con el sol de la costa"]] as const) {
+  test(`8.2.11 temática ${id}: el pedido lo lleva el cadete de VOLTA ${who}`, async ({ page }) => {
     await preview(page, id);
     await page.goto("pedido/demo-volta/");
     const traveler = page.locator("[data-trk-traveler]");
     await expect(traveler).toHaveCount(1);
-    await expect(traveler).toHaveAttribute("data-trk-traveler", who);
+    await expect(traveler).toHaveAttribute("data-trk-traveler", `el cadete de VOLTA, ${who}`);
+    // El cadete en bici con la caja de VOLTA y, arriba del casco, el adorno de la fecha.
+    await expect(traveler.locator("svg")).toHaveCount(2);
     await expect(page.getByRole("img", { name: /lleva el pedido/ })).toBeVisible();
   });
 }

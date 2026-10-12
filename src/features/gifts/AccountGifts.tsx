@@ -7,7 +7,7 @@ import { demoGifts } from "@/demo/fixtures/gifts";
 import { useGifts } from "@/stores/gifts";
 import { GiftShare } from "./GiftShare";
 import { occasionColors } from "./occasion";
-import { GIFT_SCENE_NAMES } from "./scenes";
+import { bagName } from "./scenes";
 
 /** "Mis regalos" en la cuenta: los que me mandaron (se abren sin el link) y los que regalé (para volver a mandarlos). */
 export function AccountGifts({ email }: { email: string }) {
@@ -29,8 +29,8 @@ export function AccountGifts({ email }: { email: string }) {
                   <span className={`grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-white/15 ${isNew ? "gift-tile-new" : ""}`}><GiftIcon size={26} aria-hidden="true" style={{ color: c.accent }} /></span>
                   <span className="min-w-0">
                     <span className="block text-xs font-bold uppercase tracking-wider opacity-80">{isNew ? "Sin abrir" : "Abierto"} · de {g.from}</span>
-                    <span className="block font-bold leading-snug">{isNew ? GIFT_SCENE_NAMES[g.occasion] : g.item.name}</span>
-                    <span className="mt-0.5 block text-sm opacity-85">{isNew ? "Tocá para abrirlo" : "Ver el regalo y el mensaje"}</span>
+                    <span className="block font-bold leading-snug">{isNew ? bagName(g.occasion) : g.item.name}</span>
+                    <span className="mt-0.5 block text-sm opacity-85">{isNew ? "Tocá y abrilo a golpes" : "Ver el regalo y el mensaje"}</span>
                   </span>
                 </Link>
               </li>

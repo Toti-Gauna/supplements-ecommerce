@@ -11,7 +11,7 @@ describe("paletas de temáticas", () => {
         for (const [fg, bg, label] of [
           [c.text, c.background, "texto/fondo"], [c.text, c.surface, "texto/superficie"], [c.muted, c.surface, "apagado/superficie"],
           [c.muted, c.background, "apagado/fondo"], [c.primary, c.surface, "primario/superficie"], [c.primary, c.background, "primario/fondo"],
-          [c.onPrimary, c.primary, "texto sobre primario"], [c.voltInk, c.background, "dorado/fondo"], [c.text, c.accent, "texto/acento"],
+          [c.onPrimary, c.primary, "texto sobre primario"], [c.voltInk, c.background, "acento de texto/fondo"], [c.text, c.accent, "texto/acento"],
         ] as const) expect(contrastRatio(fg, bg), `${label} ${fg} sobre ${bg}`).toBeGreaterThanOrEqual(4.5);
       });
     }

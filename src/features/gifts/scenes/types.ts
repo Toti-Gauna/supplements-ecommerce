@@ -3,19 +3,18 @@ import type { GiftOccasion } from "@/demo/types";
 /** Golpes para abrir un regalo. */
 export const GIFT_HITS = 5;
 
-/** Una escena por temática, más la de Volta (sin temática). */
-export type GiftSceneId = GiftOccasion;
-
 /**
- * Contrato de una escena de apertura (pedido de Ignacio, fuera de la especificación). La escena solo dibuja: el
- * escenario (`GiftOpener`) maneja los toques, el sonido, la vibración, el sacudón de cada golpe y la accesibilidad.
+ * Contrato de la escena de apertura. La escena solo dibuja: el escenario (`GiftOpener`) maneja los toques, el sonido,
+ * la vibración, el sacudón de cada golpe y la accesibilidad.
  */
 export interface GiftSceneProps {
-  /** Golpes dados, de 0 a `total`. Cada golpe tiene que dejar una huella visible (grieta, pétalo, cinta…). */
+  /** Ocasión del regalo: viste la bolsa (colores de la temática y un detalle propio de la fecha). */
+  occasion: GiftOccasion;
+  /** Golpes dados, de 0 a `total`. Cada golpe deja una huella visible (balanceo, tiza, una costura que se abre). */
   hits: number;
   total: number;
-  /** Se dio el último golpe: la escena hace su apertura una sola vez (≤ 1,4 s) y queda abierta. */
+  /** Se dio el último golpe: la bolsa se abre una sola vez (≤ 1,4 s), sale el pote y queda abierta. */
   opened: boolean;
-  /** "Reducir movimiento": sin partículas ni recorridos; los cambios de estado pueden ser fundidos cortos. */
+  /** "Reducir movimiento": sin partículas ni recorridos; los cambios de estado son fundidos cortos. */
   reduce: boolean;
 }

@@ -1,14 +1,15 @@
 "use client";
 import { useReducedMotion } from "motion/react";
+import dynamic from "next/dynamic";
 import type { ComponentType } from "react";
-import { useState, useSyncExternalStore } from "react";
-import { seasonalThemes, themeCoupons } from "@/demo/fixtures/themes";
+import { useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
+import { demoData } from "@/demo/engine/source";
+import { themeOffer } from "@/demo/engine/themes";
 import type { SeasonId } from "@/demo/types";
 import { AMBIENT } from "./ambient";
 import { AmbientField } from "./AmbientField";
 import { SKINS } from "./skins";
-import dynamic from "next/dynamic";
-import { SceneClock, splashElapsed } from "./splash/kit";
+import { SceneClock, splashElapsed, type SceneProps } from "./splash/kit";
 
 const noop = () => () => {};
 const readSeason = () => (document.documentElement.dataset.season as SeasonId | undefined) ?? null;
@@ -23,44 +24,41 @@ function subscribeCurtain(cb: () => void) {
 }
 const readCurtain = () => document.documentElement.classList.contains("splash-done")
   || Boolean(document.getElementById("volta-splash")?.getAnimations?.().some((a) => (a as CSSAnimation).animationName === "splash-curtain" && a.playState === "finished"));
-const hotSalePct = themeCoupons.find((c) => c.themeId === "hot-sale")?.value ?? 30;
 
+type Scene = ComponentType<SceneProps>;
 /**
  * La escena se monta cuando ya bajó su archivo: el reloj se mide en ese momento (y no antes), así sus retrasos
  * negativos arrancan donde corresponde y llega a su final antes del telón.
  */
-function clocked(Scene: ComponentType): ComponentType {
-  return function ClockedScene() {
+function clocked(Inner: Scene): Scene {
+  return function ClockedScene(props: SceneProps) {
     const [offset] = useState(splashElapsed);
-    return <SceneClock.Provider value={offset}><Scene /></SceneClock.Provider>;
+    return <SceneClock.Provider value={offset}><Inner {...props} /></SceneClock.Provider>;
   };
 }
 // Si el archivo no llega (red cortada, versión vieja abierta), la escena simplemente no aparece: es decorativa.
-const lazy = (load: () => Promise<ComponentType>) => dynamic(() => load().then(clocked, () => function NoScene() { return null; }), { ssr: false });
+const lazy = (load: () => Promise<Scene>) => dynamic(() => load().then(clocked, () => function NoScene() { return null; }), { ssr: false });
 
-/** Una escena distinta por festividad (motion graphics); cada visita descarga solo la de su fecha. */
-const SCENES: Record<SeasonId, ComponentType> = {
-  navidad: lazy(() => import("./splash/night").then((m) => m.ChristmasScene)),
-  halloween: lazy(() => import("./splash/night").then((m) => m.HalloweenScene)),
-  "ano-nuevo": lazy(() => import("./splash/celebration").then((m) => m.NewYearScene)),
-  "black-friday": lazy(() => import("./splash/celebration").then((m) => m.BlackFridayScene)),
-  "hot-sale": lazy(() => import("./splash/celebration").then((m) => function HotSale() { return <m.HotSaleScene discount={hotSalePct} />; })),
-  "san-valentin": lazy(() => import("./splash/valentine").then((m) => m.ValentineScene)),
-  "dia-de-la-madre": lazy(() => import("./splash/mothers").then((m) => m.MothersScene)),
-  pascuas: lazy(() => import("./splash/easter").then((m) => m.EasterScene)),
-  orgullo: lazy(() => import("./splash/pride").then((m) => m.PrideScene)),
-  "revolucion-de-mayo": lazy(() => import("./splash/patrias").then((m) => m.MayoScene)),
-  "dia-de-la-bandera": lazy(() => import("./splash/patrias").then((m) => m.BanderaScene)),
-  "dia-de-la-independencia": lazy(() => import("./splash/patrias").then((m) => m.IndependenciaScene)),
-  "dia-del-animal": lazy(() => import("./splash/play").then((m) => m.AnimalScene)),
-  "dia-del-nino": lazy(() => import("./splash/play").then((m) => m.KidsScene)),
-  "dia-del-padre": lazy(() => import("./splash/cast").then((m) => m.FathersScene)),
-  "dia-del-amigo": lazy(() => import("./splash/cast").then((m) => m.FriendsScene)),
+/** Una escena propia por fecha (motion graphics en CSS); cada visita descarga solo la de su temática. */
+const SCENES: Record<SeasonId, Scene> = {
+  "dia-de-la-madre": lazy(() => import("./splash/charge").then((m) => m.MothersScene)),
+  "vuelta-al-gym": lazy(() => import("./splash/charge").then((m) => m.BackToGymScene)),
+  navidad: lazy(() => import("./splash/circle").then((m) => m.ChristmasScene)),
+  "operacion-verano": lazy(() => import("./splash/circle").then((m) => m.SummerScene)),
+  "black-friday": lazy(() => import("./splash/sale").then((m) => m.BlackFridayScene)),
+  "hot-sale": lazy(() => import("./splash/sale").then((m) => m.HotSaleScene)),
+  "cyber-monday": lazy(() => import("./splash/cyber").then((m) => m.CyberScene)),
+  "ano-nuevo": lazy(() => import("./splash/party").then((m) => m.NewYearScene)),
+  "san-valentin": lazy(() => import("./splash/party").then((m) => m.ValentineScene)),
+  halloween: lazy(() => import("./splash/crew").then((m) => m.HalloweenScene)),
+  "dia-del-padre": lazy(() => import("./splash/crew").then((m) => m.FathersScene)),
+  "dia-del-amigo": lazy(() => import("./splash/crew").then((m) => m.FriendsScene)),
 };
 
 /**
  * Escena de temporada dentro de la pantalla de carga. El script del <head> ya marcó `data-season` (colores del
- * fondo sin parpadeo); esto suma la animación propia de cada fecha sobre las partículas de su fondo.
+ * fondo sin parpadeo); esto suma la animación propia de cada fecha alrededor del logo compacto, cuya caja se mide
+ * para que ninguna pieza lo pise (ver splash/rig.tsx).
  */
 export function ThemeSplashScene() {
   const id = useSyncExternalStore(noop, readSeason, () => null);
@@ -68,14 +66,24 @@ export function ThemeSplashScene() {
   // corriendo escondidas el resto de la visita.
   const done = useSyncExternalStore(subscribeCurtain, readCurtain, () => false);
   const reduce = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    const brand = document.querySelector("#volta-splash .splash-brand")?.getBoundingClientRect();
+    const el = ref.current;
+    if (!brand || !el || !brand.width) return;
+    el.style.setProperty("--bw", `${Math.ceil(brand.width / 2)}px`);
+    el.style.setProperty("--bh", `${Math.ceil(brand.height / 2)}px`);
+    el.style.setProperty("--bd", `${Math.ceil(Math.hypot(brand.width, brand.height) / 2)}px`);
+  }, [id, done, reduce]);
   if (!id || !SKINS[id] || done || reduce) return null;
   const Scene = SCENES[id];
-  const name = seasonalThemes.find((t) => t.id === id)?.name ?? "";
+  const theme = demoData().themes.find((t) => t.id === id);
+  const offer = theme ? themeOffer(theme)?.label ?? null : null;
   return (
-    <div aria-hidden="true" className="season-scene">
+    <div ref={ref} aria-hidden="true" className="season-scene" data-scene={id}>
       <AmbientField layers={AMBIENT[id]} density={1.2} className="absolute inset-0" />
-      <Scene />
-      <p className="season-tag eyebrow left-1/2 -translate-x-1/2 whitespace-nowrap">Especial {name}</p>
+      <Scene offer={offer} />
+      <p className="season-tag eyebrow left-1/2 -translate-x-1/2 whitespace-nowrap">Especial {theme?.name ?? ""}</p>
     </div>
   );
 }

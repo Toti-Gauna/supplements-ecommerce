@@ -9,7 +9,7 @@ const ROUTES = [
   ["categorias/", "Todas las categorías"],
   ["c/proteinas/", "Proteínas"],
   ["p/ionic-whey/", "Ionic Whey 100%"],
-  ["crear/", "Entrená por objetivo"],
+  ["crear/", "Armá tu stack"],
   ["cupones/", "Mis cupones"],
   ["carrito/", "Tu carrito"],
   ["checkout/", "Checkout de demostración"],

@@ -15,7 +15,7 @@ import { ShopMenu } from "./ShopMenu";
 
 export const NAV = [
   { href: "/categorias/", label: "Tienda" },
-  { href: "/crear/", label: "Por objetivo" },
+  { href: "/crear/", label: "Armá tu stack" },
   { href: "/club/", label: "Club Volta" },
   { href: "/club/juego/", label: "Shaker Rush" },
   { href: "/preguntas/", label: "Ayuda" },

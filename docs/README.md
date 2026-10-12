@@ -4,6 +4,7 @@
 |---|---|
 | [plan-por-fases.md](plan-por-fases.md) | **Fuente de verdad**: qué entra en cada fase, cómo se hace y cómo se muestra |
 | [plan-rediseno.md](plan-rediseno.md) | Rediseño UX/UI en 4 fases (R1–R4) para que la demo deje de parecerse a Velmar |
+| [analisis-ux/](analisis-ux/README.md) | Análisis completo de la web (tienda, compra, temáticas y regalos, panel y benchmark) que sostiene el rediseño |
 | [estado.md](estado.md) | Qué está hecho, fase por fase, y qué queda pendiente de Velmar |
 | [demo-pages.md](demo-pages.md) | Export estático, workflow de GitHub Pages (repo privado: opciones) y corte a producción |
 | [tono-visual.md](tono-visual.md) | Paleta, tipografía, logo, envases SVG y pantalla de carga |

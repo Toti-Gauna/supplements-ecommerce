@@ -8,14 +8,16 @@ import { formatDate } from "@/lib/date";
 import { useToasts } from "@/stores/toast";
 import { occasionColors } from "../gifts/occasion";
 import { SKINS } from "../themes/skins";
+import { COUPON_COLORS } from "./wheel-art";
 
 /**
  * Cupón ganado en la ruleta, con estética de ticket y la ropa de la festividad vigente (colores y decoraciones de la
- * temática; sin temática, el de Volta en noche y bronce). Talón con el valor, perforación y el detalle con el código.
+ * temática; sin temática, el de VOLTA en noche y plasma con el valor en voltio). Talón con el valor, perforación y el
+ * detalle con el código.
  */
 export function ThemedCoupon({ coupon, label, occasion }: { coupon: Coupon | undefined; label: string; occasion: GiftOccasion }) {
   const toast = useToasts((s) => s.push);
-  const c = occasionColors(occasion);
+  const c = occasion === "volta" ? COUPON_COLORS : occasionColors(occasion);
   const decor = occasion === "volta" ? [] : SKINS[occasion].decor.slice(0, 3);
   const value = coupon ? shortValue(coupon.type, coupon.value, coupon.description) : label;
   const code = coupon?.code ?? "";

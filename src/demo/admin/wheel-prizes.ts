@@ -3,31 +3,38 @@ import type { PrizeKind, PrizeTemplate, WheelConfig, WheelPrize, WheelSegment } 
 
 /**
  * Catálogo de premios de la ruleta (8.3.25). Las plantillas son solo las que el engine ya convierte en cupón
- * (porcentaje, monto fijo, envío gratis; el grabado y el producto de regalo se entregan como monto fijo). No se
+ * (porcentaje, monto fijo, envío gratis; la muestra y el producto de regalo se entregan como monto fijo). No se
  * inventan stock ni reglas: el cupón sigue saliendo de `prizeCoupon` con los datos del gajo.
  */
 export const PRIZE_TEMPLATES: { id: PrizeTemplate; label: string; hint: string; kind: PrizeKind }[] = [
   { id: "percent", label: "Porcentaje de descuento", hint: "Un % sobre los productos del carrito.", kind: "PERCENT" },
   { id: "fixed", label: "Monto fijo de descuento", hint: "Pesos que se descuentan del carrito.", kind: "FIXED" },
   { id: "shipping", label: "Envío gratis", hint: "El envío no se cobra.", kind: "FREE_SHIPPING" },
-  { id: "engraving", label: "Grabado gratis", hint: "Se descuenta el valor del grabado.", kind: "FIXED" },
+  { id: "sample", label: "Muestra de regalo", hint: "Un sachet o una muestra: se descuenta su valor.", kind: "FIXED" },
   { id: "gift", label: "Producto de regalo", hint: "Se descuenta el precio de un producto del catálogo.", kind: "FIXED" },
 ];
+
+/** Valor de referencia de una muestra (un sachet de pre-entreno), en pesos enteros. */
+export const SAMPLE_VALUE = 2500;
 
 export interface PrizeDraft { template: PrizeTemplate; value: number; minSubtotal: number; productSlug: string }
 
 export const prizeDraft = (template: PrizeTemplate = "percent"): PrizeDraft =>
-  ({ template, value: template === "percent" ? 10 : template === "engraving" ? 2500 : template === "fixed" ? 3000 : 0, minSubtotal: 0, productSlug: "" });
+  ({ template, value: template === "percent" ? 10 : template === "sample" ? SAMPLE_VALUE : template === "fixed" ? 3000 : 0, minSubtotal: 0, productSlug: "" });
 
 const pesos = (n: number) => `$${n.toLocaleString("es-AR")}`;
+
+/** Nombre corto de un producto para regalarlo: sin la medida del final ("Shaker VOLTA 700 ml" → "Shaker VOLTA"). */
+export const giftName = (name: string) => name.replace(/\s+\d+(?:[.,]\d+)?\s?(?:ml|l|g|kg|mg|lb)$/i, "");
 
 /** Nombre visible, armado con la plantilla y los datos. */
 export function prizeName(d: PrizeDraft, products: Product[]): string {
   if (d.template === "percent") return `${d.value}% OFF`;
   if (d.template === "fixed") return `${pesos(d.value)} OFF`;
   if (d.template === "shipping") return "Envío gratis";
-  if (d.template === "engraving") return "Grabado gratis";
-  return `${products.find((p) => p.slug === d.productSlug)?.name ?? "Producto"} de regalo`;
+  if (d.template === "sample") return "Muestra de regalo";
+  const product = products.find((p) => p.slug === d.productSlug);
+  return `${product ? giftName(product.name) : "Producto"} de regalo`;
 }
 
 /** Precio "desde" de un producto: lo que vale regalarlo. */
@@ -37,7 +44,7 @@ export const giftValue = (p: Product) => p.basePrice + Math.min(0, ...p.variants
 export function checkPrize(d: PrizeDraft, products: Product[], prizes: WheelPrize[]): Record<string, string> {
   const errors: Record<string, string> = {};
   if (d.template === "percent" && (!Number.isInteger(d.value) || d.value < 1 || d.value > 100)) errors.value = "El porcentaje va de 1 a 100.";
-  if ((d.template === "fixed" || d.template === "engraving") && (!Number.isInteger(d.value) || d.value < 1)) errors.value = "Un monto en pesos enteros, mayor a 0.";
+  if ((d.template === "fixed" || d.template === "sample") && (!Number.isInteger(d.value) || d.value < 1)) errors.value = "Un monto en pesos enteros, mayor a 0.";
   if (d.template === "gift" && !products.some((p) => p.slug === d.productSlug)) errors.productSlug = "Elegí el producto que se regala.";
   if (!Number.isInteger(d.minSubtotal) || d.minSubtotal < 0) errors.minSubtotal = "La compra mínima es 0 o más pesos enteros.";
   const name = prizeName(d, products);
@@ -66,7 +73,7 @@ export function assignPrize(s: WheelSegment, p: WheelPrize): WheelSegment {
 function inferTemplate(s: WheelSegment): PrizeTemplate {
   if (s.kind === "FREE_SHIPPING") return "shipping";
   if (s.kind === "PERCENT") return "percent";
-  if (/grabado/i.test(s.label)) return "engraving";
+  if (/muestra|sachet/i.test(s.label)) return "sample";
   return /de regalo$/i.test(s.label) ? "gift" : "fixed";
 }
 

@@ -11,6 +11,7 @@ import { useAdmin } from "@/stores/admin";
 import { useDemoSave } from "../useDemoSave";
 import { ThemeMiniPreview } from "./ThemeMiniPreview";
 import { ThemeProductsField } from "./ThemeProductsField";
+import { GAME_COUPON_PREFIX } from "@/demo/engine/game-prize";
 
 /** Edición de una temática en un panel lateral, con vista previa del banner en vivo. */
 export function ThemeEditor({ id, onClose }: { id: SeasonId | null; onClose: () => void }) {
@@ -23,7 +24,7 @@ export function ThemeEditor({ id, onClose }: { id: SeasonId | null; onClose: () 
 }
 
 function EditorForm({ initial, onClose }: { initial: SeasonalTheme; onClose: () => void }) {
-  const coupons = useAdmin((s) => s.data.coupons).filter((c) => !c.code.startsWith("RULETA"));
+  const coupons = useAdmin((s) => s.data.coupons).filter((c) => !c.code.startsWith("RULETA") && !c.code.startsWith(GAME_COUPON_PREFIX));
   const saveTheme = useAdmin((s) => s.saveTheme);
   const save = useDemoSave();
   const [t, setT] = useState(initial);

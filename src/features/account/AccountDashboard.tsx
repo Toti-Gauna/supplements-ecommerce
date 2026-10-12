@@ -1,13 +1,17 @@
 "use client";
 import { BellRing, Gift, LogOut, MapPin, Package, Sparkles, Trophy, type LucideIcon } from "lucide-react";
 import type { MouseEvent, ReactNode } from "react";
+import { LevelGlyph } from "@/components/illustrations/LevelGlyph";
+import { levelFor } from "@/demo/engine/club-levels";
 import { giftsFor } from "@/demo/engine/gifts";
+import { demoAccountProgress } from "@/demo/fixtures/commerce";
 import { demoGifts } from "@/demo/fixtures/gifts";
 import { cn } from "@/lib/cn";
 import { scrollBehavior } from "@/lib/scroll";
 import { useAccount } from "@/stores/account";
 import { useDemoData } from "@/stores/admin";
 import { useCheckout } from "@/stores/checkout";
+import { useGameCodes } from "@/stores/game";
 import { useGifts } from "@/stores/gifts";
 import { useReminders } from "@/stores/reminders";
 import { useWheelPrize } from "../club/useWheelPrize";
@@ -33,7 +37,11 @@ export function AccountDashboard({ user }: { user: { name: string; email: string
   const received = giftsFor(user.email, { addressed: [...demoGifts, ...sent], saved });
   const unopened = received.filter((g) => !opened.includes(g.code)).length;
   const { status: prizeStatus } = useWheelPrize();
-  const rewards = availableRewards(usedRewards) + (prizeStatus && prizeStatus !== "utilizado" ? 1 : 0);
+  // Cupones de Shaker Rush que todavía se pueden usar (no agotados).
+  const gameCodes = useGameCodes();
+  const coupons = useDemoData((d) => d.coupons);
+  const gameLeft = gameCodes.filter((code) => { const c = coupons.find((x) => x.code === code); return c && !(c.maxUses !== undefined && (c.usedCount ?? 0) >= c.maxUses); }).length;
+  const rewards = availableRewards(usedRewards) + (prizeStatus && prizeStatus !== "utilizado" ? 1 : 0) + gameLeft;
   const reminders = useReminders((s) => s.items.length);
   const [tab, select] = useAccountTab();
   const sections: Section[] = [
@@ -41,7 +49,7 @@ export function AccountDashboard({ user }: { user: { name: string; email: string
     { id: "recompras", title: "Recompras", icon: BellRing, summary: reminders ? plural(reminders, "aviso", "avisos") : "Sin avisos", intro: "Te avisamos antes de que se termine el pote y lo recomprás en un toque.", body: <RepurchaseSection /> },
     { id: "regalos", title: "Mis regalos", icon: Gift, summary: unopened ? plural(unopened, "sin abrir", "sin abrir") : plural(received.length, "regalo", "regalos"), intro: "Los que te mandaron se abren sin el link; los que hiciste, para volver a mandarlos.", body: <AccountGifts email={user.email} /> },
     { id: "misiones", title: "Misiones", icon: Sparkles, summary: plural(missions.length, "activa", "activas"), intro: "Tus compras suman a cada misión (progreso de ejemplo).", body: <MissionsSection /> },
-    { id: "premios", title: "Premios", icon: Trophy, summary: rewards ? plural(rewards, "disponible", "disponibles") : "Sin premios para usar", intro: "El premio de la ruleta y los de las misiones, de un solo uso.", body: <RewardsSection used={usedRewards} onUse={markRewardUsed} /> },
+    { id: "premios", title: "Premios", icon: Trophy, summary: rewards ? plural(rewards, "disponible", "disponibles") : "Sin premios para usar", intro: "Los cupones de la ruleta y de Shaker Rush y los premios de las misiones, de un solo uso.", body: <RewardsSection used={usedRewards} onUse={markRewardUsed} /> },
     { id: "direcciones", title: "Direcciones", icon: MapPin, summary: "1 guardada", intro: "Donde te llegan los pedidos.", body: <AddressesSection /> },
   ];
   const current = sections.find((s) => s.id === tab)!;
@@ -53,6 +61,8 @@ export function AccountDashboard({ user }: { user: { name: string; email: string
     if (panel && panel.getBoundingClientRect().top > window.innerHeight * 0.6) panel.scrollIntoView({ behavior: scrollBehavior(), block: "start" });
   };
   const first = user.name.split(" ")[0];
+  // Gasto de muestra de la cuenta demo (el mismo que muestra el Club).
+  const level = levelFor(demoAccountProgress["m-gasto"] ?? 0);
   return (
     <div className="grid grid-cols-[minmax(0,1fr)] gap-5 lg:grid-cols-[18rem_minmax(0,1fr)] lg:items-start lg:gap-8">
       <div className="flex flex-col gap-4 lg:sticky lg:top-24">
@@ -65,7 +75,9 @@ export function AccountDashboard({ user }: { user: { name: string; email: string
             </div>
           </div>
           <div className="mt-4 flex items-center justify-between gap-2 border-t border-white/10 pt-3">
-            <span className="text-xs font-bold uppercase tracking-wider text-volt">Cuenta demo</span>
+            <span className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-volt">
+              <LevelGlyph level={level.id} className="h-6 w-6 text-volt" />Nivel {level.name}
+            </span>
             <button type="button" onClick={logout} className="flex min-h-10 items-center gap-1.5 rounded-full border border-white/15 px-3.5 text-sm font-bold transition-colors hover:bg-white/10">
               <LogOut size={16} aria-hidden="true" /> Salir
             </button>

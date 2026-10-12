@@ -3,6 +3,7 @@ import { Plus } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
+import { glyphFor, RewardGlyph } from "@/components/illustrations/RewardGlyph";
 import { prizeCondition, PRIZE_TEMPLATES } from "@/demo/admin/wheel-prizes";
 import { useAdmin } from "@/stores/admin";
 import { MARKETING, SubpageHeader } from "../marketing/SubpageHeader";
@@ -23,7 +24,10 @@ export function PrizesAdmin() {
           const uses = segments.filter((s) => s.prizeId === p.id);
           return (
             <li key={p.id} className="flex flex-col gap-2 rounded-3xl bg-surface p-4 shadow-[var(--shadow-card)]">
-              <div className="flex flex-wrap items-center gap-2"><p className="text-lg font-extrabold">{p.name}</p><Badge>{PRIZE_TEMPLATES.find((t) => t.id === p.template)?.label}</Badge></div>
+              <div className="flex flex-wrap items-center gap-2">
+                <RewardGlyph kind={glyphFor(p.kind, p.name)} size={30} color="currentColor" className="shrink-0 text-volt-ink" />
+                <p className="text-lg font-extrabold">{p.name}</p><Badge>{PRIZE_TEMPLATES.find((t) => t.id === p.template)?.label}</Badge>
+              </div>
               <p className="text-sm text-muted">Cupón de un uso, {prizeCondition(p)}.</p>
               <p className="text-sm">{uses.length ? <>En la ruleta: <strong>{uses.length} {uses.length === 1 ? "gajo" : "gajos"}</strong>{uses.some((s) => !s.active) ? " (alguno pausado)" : ""}</> : <span className="text-muted">Todavía no está en ningún gajo.</span>}</p>
             </li>

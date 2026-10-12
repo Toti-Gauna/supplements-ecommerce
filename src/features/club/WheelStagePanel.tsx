@@ -1,24 +1,27 @@
 "use client";
-import { BookmarkPlus, Check, ShoppingBag } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect, useId, useRef, type CSSProperties } from "react";
 import { ImmersiveStage } from "@/components/motion/ImmersiveStage";
-import { Celebration } from "@/components/molecules/Celebration";
-import { PRIZE_STATUS_LABEL } from "@/demo/engine/wheel-prize";
 import { useAccount } from "@/stores/account";
 import { useToasts } from "@/stores/toast";
 import { changeCoupon } from "../cart/coupon-actions";
 import { occasionColors } from "../gifts/occasion";
 import { useCurrentTheme } from "../themes/useCurrentTheme";
-import { ThemedCoupon } from "./ThemedCoupon";
+import { STAGE_GLOW } from "./wheel-art";
 import { useWheelPrize } from "./useWheelPrize";
 import { useWheelSpin } from "./useWheelSpin";
 import { WheelDial } from "./WheelDial";
+import { WheelPrizeReveal } from "./WheelPrizeReveal";
+import { WheelStageDecor } from "./WheelStageDecor";
+
+/** Tamaño del disco: entero en la pantalla del celular (ancho) y en la del escritorio (alto). */
+const DIAL_SIZE = { "--dial": "min(82vw, 54dvh, 500px)" } as CSSProperties;
 
 /**
- * Ruleta a pantalla completa (pedido de Ignacio): todo se oscurece y queda solo la ruleta, entera en la pantalla.
- * Al ganar, la ruleta da paso al cupón de la festividad con "Aplicar ahora", "Guardar para después" y "Salir".
- * En modo "checkout" (al ir a pagar) aplicar o guardar siguen al pago.
+ * Ruleta "Disco olímpico" a pantalla completa (pedido de Ignacio): todo se oscurece y queda el disco, entero en la
+ * pantalla, con su halo, el pulso y el polvo de tiza. Al frenar, el gajo ganador brilla un instante y da paso al
+ * cupón de la festividad con "Aplicar ahora", "Guardar para después" y "Salir". En modo "checkout" (al ir a pagar)
+ * aplicar o guardar siguen al pago.
  */
 export default function WheelStagePanel({ open, checkout, onClose }: { open: boolean; checkout: boolean; onClose: () => void }) {
   const router = useRouter();
@@ -29,7 +32,8 @@ export default function WheelStagePanel({ open, checkout, onClose }: { open: boo
   const toast = useToasts((s) => s.push);
   const { status } = useWheelPrize();
   const setChoice = useAccount((s) => s.setWheelPrizeChoice);
-  const { shown, prize, spinning, justWon, wheel } = state;
+  const { shown, prize, spinning, justWon, landed, won, wheel } = state;
+  const prizesId = useId();
   const applyBtn = useRef<HTMLButtonElement>(null);
   // Al frenar, el disco desaparece: el foco pasa a "Aplicar ahora" (si no, se caería al fondo de la página).
   useEffect(() => { if (justWon) applyBtn.current?.focus({ preventScroll: true }); }, [justWon]);
@@ -47,43 +51,28 @@ export default function WheelStagePanel({ open, checkout, onClose }: { open: boo
     if (changed) toast({ tone: "info", title: "Guardado en Mis cupones", description: shown.code, action: { label: "Ver cupones", href: "/cupones/" } });
     next();
   };
-  const used = status === "utilizado", applied = status === "aplicado";
+  const landedNow = landed !== null;
+  const announce = spinning && !landedNow ? "Girando…" : (landedNow || justWon) && won ? `Te tocó: ${won.label}` : "";
+  const prizeList = [...new Set(wheel.segments.filter((s) => s.active).map((s) => s.label))].join(", ");
   return (
-    <ImmersiveStage open={open} onClose={onClose} label="Ruleta de cupones" glow={[colors.from, colors.to]} lockExit={spinning}>
+    <ImmersiveStage open={open} onClose={onClose} label="Ruleta de cupones" glow={occasion === "volta" ? STAGE_GLOW : [colors.from, colors.to]} lockExit={spinning}>
       {/* Siempre montado, para que el lector de pantalla anuncie el giro y el premio. */}
-      <p aria-live="polite" className="sr-only">{spinning ? "Girando…" : justWon && shown ? `Te tocó: ${shown.label}` : ""}</p>
+      <p aria-live="polite" className="sr-only">{announce}</p>
       {shown ? (
-        <div className="wheel-win relative flex w-full max-w-md flex-col items-center text-center">
-          {justWon && <Celebration />}
-          <p className="eyebrow text-volt-soft">{justWon ? "¡Ganaste!" : "Tu premio"}</p>
-          <h2 className="font-display mb-6 mt-2 text-[clamp(1.9rem,8vw,2.6rem)] leading-tight">{shown.label}</h2>
-          <ThemedCoupon coupon={prize} label={shown.label} occasion={occasion} />
-          {!justWon && status && <p className="mt-4 rounded-full bg-white/10 px-4 py-1.5 text-sm font-bold text-on-night">{PRIZE_STATUS_LABEL[status]}</p>}
-          <div className="mt-7 grid w-full gap-2">
-            {used ? null : applied ? (
-              <button ref={applyBtn} type="button" onClick={next} className="flex min-h-14 items-center justify-center gap-2 rounded-full bg-volt-soft px-6 text-base font-bold text-night hover:brightness-105">
-                <Check size={18} aria-hidden="true" /> {checkout ? "Seguir al pago" : "Listo, ya está aplicado"}
-              </button>
-            ) : (
-              <button ref={applyBtn} type="button" onClick={apply} className="flex min-h-14 items-center justify-center gap-2 rounded-full bg-volt-soft px-6 text-base font-bold text-night hover:brightness-105">
-                <ShoppingBag size={18} aria-hidden="true" /> Aplicar ahora
-              </button>
-            )}
-            {!used && status !== "guardado" && (
-              <button type="button" onClick={keep} className="flex min-h-12 items-center justify-center gap-2 rounded-full bg-white/10 px-6 font-bold text-on-night ring-1 ring-white/15 hover:bg-white/20">
-                <BookmarkPlus size={18} aria-hidden="true" /> Guardar para después
-              </button>
-            )}
-            <button type="button" onClick={onClose} className="min-h-11 rounded-full px-6 text-sm font-semibold text-night-muted hover:text-white">Salir</button>
-          </div>
-        </div>
+        <WheelPrizeReveal shown={shown} coupon={prize} status={status} occasion={occasion} justWon={justWon} checkout={checkout}
+          applyRef={applyBtn} onApply={apply} onKeep={keep} onNext={next} onClose={onClose} />
       ) : (
-        <div className="flex w-full flex-col items-center text-center">
-          <p className="eyebrow text-volt-soft">{checkout ? "Antes de pagar" : "Club Volta"}</p>
+        <div className="flex w-full flex-col items-center text-center" style={DIAL_SIZE}>
+          <p className="eyebrow text-volt-soft">{checkout ? "Antes de pagar · Disco VOLTA" : "Club VOLTA · Disco olímpico"}</p>
           <h2 className="font-display mt-1 text-[clamp(1.7rem,7vw,2.4rem)] leading-tight">{checkout ? "Probá tu suerte" : "Girá y ganá"}</h2>
-          <WheelDial state={state} discRef={state.bindDisc} segments={wheel.segments} className="mt-8 w-[min(80vw,52dvh,440px)]" />
-          <p className="mt-8 min-h-[1.25rem] text-sm font-semibold text-night-muted">
-            {spinning ? "Girando…" : wheel.active ? "Tocá el centro o arrastrá la ruleta para girarla" : "La ruleta está pausada"}
+          <div className="relative -mx-5 -my-[calc(var(--dial)*0.06)] flex w-[calc(100%+2.5rem)] justify-center overflow-clip py-[calc(var(--dial)*0.13)]">
+            <WheelStageDecor spinning={spinning && !landedNow} landed={landedNow} />
+            <WheelDial state={state} discRef={state.bindDisc} segments={wheel.segments} describedBy={prizesId} className="w-[var(--dial)]" />
+          </div>
+          <p id={prizesId} className="sr-only">Premios posibles: {prizeList}.</p>
+          <p className="mt-1 min-h-[1.5rem] text-sm font-semibold text-night-muted">
+            {landedNow && won ? <span className="font-display text-base text-volt">¡Te tocó {won.label}!</span>
+              : spinning ? "Girando…" : wheel.active ? "Tocá el centro o arrastrá el disco para girarlo" : "La ruleta está pausada"}
           </p>
           {checkout && !spinning && <button type="button" onClick={next} className="mt-2 min-h-11 rounded-full px-5 text-sm font-semibold text-night-muted underline-offset-4 hover:text-white hover:underline">Continuar sin girar</button>}
         </div>

@@ -1,12 +1,11 @@
 # Demo estática de Volta → GitHub Pages (fase pre-seña).
-# Valida en cada PR; publica desde main, desde las ramas de fase (fase-*, para mostrar una fase antes de mergearla)
-# o a mano. Hay un solo sitio: el último deploy es el que se ve. Sin secretos.
+# Valida en cada PR; publica desde main (el ambiente github-pages solo acepta main). Sin secretos.
 # Cuando empiece el backend (post-seña) ver docs/demo-pages.md: el trigger pasa a la rama demo/pages.
 name: Demo Pages
 
 on:
   push:
-    branches: [main, "fase-*"]
+    branches: [main]
   pull_request:
   workflow_dispatch:
 

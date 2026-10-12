@@ -20,7 +20,7 @@
 - Panel: misma estructura con la piel eléctrica; pedidos, clientes, reclamos, costos (con costo de proveedor) e
   insumos (embalaje y regalos) con datos de suplementos.
 
-## Fase 2 · Ficha de suplemento y stack ✅ (en revisión)
+## Fase 2 · Ficha de suplemento y stack ✅ (publicada)
 - Fuera la personalización de Velmar (texto, foto, collar, plantillas, `/crear/[slug]`, Konva): dominio, tienda, panel
   y tests. El panel "Categorías y personalización" queda como **Categorías**.
 - Ficha nueva: galería (estudio, detalle con scoop/cápsulas/gomitas y gimnasio), sellos (vegano, sin TACC…), precio por
@@ -44,11 +44,29 @@
 - Tests: 236 unitarios y 297 e2e adaptados a VOLTA (se borraron solo los del configurador de collar), más los nuevos
   de descuento stack y aviso de recompra.
 
+## Fase 3 · Armá tu stack + Quiz ⏸
+- Pendiente: Ignacio pidió pasar antes a la Fase 4.
+
+## Fase 4 · Gamificación ✅ (en revisión)
+- **Niveles del Club**: Novato → Atleta → Élite → Bestia por gasto acumulado (`src/demo/fixtures/club.ts`, motor en
+  `src/demo/engine/club-levels.ts`). Sección "Cargá tu batería" en el Club y el nivel junto al nombre en Mi cuenta.
+- **Ruleta "Disco olímpico"**: disco de pesas SVG (rojo, azul, amarillo y verde con sus kilos), aro con 24 LED, maza de
+  acero con "Girar" y traba de barra como puntero; se gira tocando, arrastrando con fuerza o con Enter. Pausa de 1,3 s
+  con el gajo ganador marcado antes del cupón. Premios de suplementos: la plantilla `sample` ("Muestra de regalo")
+  reemplaza al grabado y el shaker VOLTA al llavero (`ADMIN_STORE_VERSION` 8).
+- **Juego "Shaker Rush"** en `/club/juego/`: canvas 2D a 60 fps, shaker con dedo, mouse o flechas; scoops, cápsulas y
+  rayos suman, la chatarra saca vidas; rayo ×2, scoop dorado, combo hasta ×4, 3 vidas y 45 s. Premios por puntaje
+  (300 → 5 %, 800 → 10 %, 1500 → envío gratis), **un cupón por día por navegador** (hora argentina), código
+  `SHAKER…` que se aplica al carrito y aparece en Mis cupones, la billetera del Club y Mi cuenta. Motor y premios en
+  funciones puras con semilla (`src/demo/engine/game*.ts`). Sonidos sintetizados y vibración en Android.
+- Integración: Shaker Rush en el inicio, el Club, el menú (escritorio, celular y pie) y el panel (insignia y conteo).
+- Confeti y escenario inmersivo con los colores de VOLTA.
+- Falta probar en un teléfono real (Safari de iPhone: audio después del primer toque y arrastre sin rebote).
+
 ## Pendiente de Velmar (se resuelve en su fase)
 | Qué queda | Dónde se ve | Fase |
 |---|---|---|
-| Escenas de regalo y temáticas con los personajes de Velmar | `/regalo/`, temáticas (apagadas) | 5 |
-| Ruleta con estética dorada de Velmar y premios "Grabado gratis" y "Llavero de regalo" | Club, al ir a pagar | 4 |
+| Escenas de regalo y temáticas con los personajes de Velmar (y los colores oliva de la ocasión "volta" del regalo) | `/regalo/`, temáticas (apagadas), viajeros del seguimiento | 5 |
 | Emails, recordatorios y email de cumpleaños de mascotas, cola de producción, insumos y calendario "del taller" | Panel | 6 y 7 |
 | Editor de producto: si se llega con Tab a "Ver en tienda", al volver abre en el último paso (con mouse no pasa) | Panel → Productos | 6 |
 | Estudio de contenido con decoraciones de Velmar | Panel → Estudio | 7 |

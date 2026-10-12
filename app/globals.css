@@ -261,11 +261,11 @@ html[data-theme="light"] {
 /* La pantalla de carga de marca vive en app/splash.css. */
 .confetti-piece { animation: confetti 1000ms var(--ease-out-expo) both; }
 
-/* Luces del aro de la ruleta: se encienden en cadena mientras gira y todas juntas al ganar. */
-@keyframes bulb-chase { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
-.bulb-chase { animation: bulb-chase .5s linear infinite; }
-@keyframes bulb-win { 0%, 100% { opacity: 1; } 50% { opacity: .25; } }
-.bulb-win { animation: bulb-win .35s steps(2) 6; }
+/* LED del aro del disco olímpico: cometas que corren mientras gira (solo mientras gira) y todas titilan al ganar. */
+@keyframes led-chase { 0% { opacity: 1; } 14% { opacity: .85; } 42% { opacity: .16; } 100% { opacity: .1; } }
+.led-chase { animation: led-chase .8s linear infinite; }
+@keyframes led-win { 0%, 100% { opacity: 1; } 50% { opacity: .12; } }
+.led-win { animation: led-win .26s steps(2) 5 both; }
 @keyframes confetti-fall {
   0% { transform: translate3d(0, 0, 0) rotate(0); opacity: 1; }
   85% { opacity: 1; }

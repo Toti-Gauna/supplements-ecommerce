@@ -25,7 +25,7 @@ export function VariantsEditor({ variants, onChange, idPrefix }: { variants: Var
             <label className="flex flex-col gap-1 text-sm font-bold">Nombre visible<Input value={v.label} onChange={(e) => patch(i, { label: e.target.value })} /></label>
             <label className="flex flex-col gap-1 text-sm font-bold">Color<Input value={v.color ?? ""} onChange={(e) => patch(i, { color: e.target.value || undefined })} placeholder="Rosa" /></label>
             <label className="flex flex-col gap-1 text-sm font-bold">Muestra de color
-              <input type="color" value={v.colorHex ?? "#c9a77a"} onChange={(e) => patch(i, { colorHex: e.target.value })} className="h-11 w-full rounded-xl border border-line bg-surface" />
+              <input type="color" value={v.colorHex ?? "#8b72ff"} onChange={(e) => patch(i, { colorHex: e.target.value })} className="h-11 w-full rounded-xl border border-line bg-surface" />
             </label>
             <label className="flex flex-col gap-1 text-sm font-bold">Tamaño / opción<Input value={v.size ?? ""} onChange={(e) => patch(i, { size: e.target.value || undefined })} placeholder="Mediano" /></label>
             <NumberField id={`${id}-delta`} label="Recargo" suffix="ARS" value={v.priceDelta} onChange={(n) => patch(i, { priceDelta: n })} />

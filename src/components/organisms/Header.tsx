@@ -17,11 +17,14 @@ export const NAV = [
   { href: "/categorias/", label: "Tienda" },
   { href: "/crear/", label: "Por objetivo" },
   { href: "/club/", label: "Club Volta" },
+  { href: "/club/juego/", label: "Shaker Rush" },
   { href: "/preguntas/", label: "Ayuda" },
 ];
 
 export function Header() {
   const pathname = usePathname();
+  // El link más específico que coincide es el actual (en /club/juego/ es Shaker Rush, no Club Volta).
+  const current = NAV.filter((n) => pathname.startsWith(n.href)).sort((a, b) => b.href.length - a.href.length)[0]?.href;
   const hydrated = useHydrated();
   const units = useCart((s) => s.lines.reduce((sum, l) => sum + l.quantity, 0));
   const { openCart, setMenu, setSearch } = useUi();
@@ -55,10 +58,10 @@ export function Header() {
         <Link href="/" aria-label="Volta, ir al inicio" className="shrink-0"><ThemeLogo /></Link>
         <nav aria-label="Principal" className="ml-8 hidden items-center gap-1 lg:flex">
           {NAV.map((n) => n.href === "/categorias/" ? <ShopMenu key={n.href} active={pathname.startsWith("/c") || pathname.startsWith("/p")} /> : (
-            <Link key={n.href} href={n.href} aria-current={pathname.startsWith(n.href) ? "page" : undefined}
-              className={cn("relative rounded-full px-4 py-2 text-[15px] font-semibold transition-colors hover:text-primary", pathname.startsWith(n.href) ? "text-primary" : "text-ink/80")}>
+            <Link key={n.href} href={n.href} aria-current={current === n.href ? "page" : undefined}
+              className={cn("relative rounded-full px-4 py-2 text-[15px] font-semibold transition-colors hover:text-primary", current === n.href ? "text-primary" : "text-ink/80")}>
               {n.label}
-              {pathname.startsWith(n.href) && <span className="absolute inset-x-4 -bottom-0.5 h-0.5 rounded-full bg-volt" />}
+              {current === n.href && <span className="absolute inset-x-4 -bottom-0.5 h-0.5 rounded-full bg-volt" />}
             </Link>
           ))}
         </nav>

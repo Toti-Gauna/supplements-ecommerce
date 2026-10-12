@@ -18,16 +18,17 @@
 ## Workflow (`.github/workflows/pages.yml`)
 - PR: `npm ci` → lint → typecheck → unit → build → verificación del export → e2e Playwright móvil contra `out/` servido
   bajo el mismo subpath. No publica.
-- Push a `main`, push a una rama `fase-*` o ejecución manual: lo mismo + `upload-pages-artifact` + `deploy-pages` en el
-  ambiente `github-pages`. Las ramas de fase publican para mostrar una fase antes de mergearla; hay un solo sitio, así
-  que se ve el último deploy (al mergear, `main` vuelve a publicar).
+- Push a `main` o ejecución manual: lo mismo + `upload-pages-artifact` + `deploy-pages` en el ambiente `github-pages`.
+  Cada fase se trabaja en su rama `fase-*`, se valida en el PR y se publica al mergearla a `main`.
 - Permisos mínimos: `contents: read` global; el build suma `pages: read`; solo el deploy tiene `pages: write` + `id-token: write`.
   Concurrencia por ref y un único deploy en curso. Sin secretos.
 
 ### Requisito en GitHub
 Settings → Pages → *Build and deployment* → **Source: GitHub Actions**. El workflow no habilita Pages ni cambia permisos
-por su cuenta (`enablement` desactivado). El ambiente `github-pages` por defecto solo acepta deploys desde `main`: para
-publicar desde las ramas de fase, en Settings → Environments → `github-pages` → *Deployment branches* agregar `fase-*`.
+por su cuenta (`enablement` desactivado). El ambiente `github-pages` por defecto solo acepta deploys desde `main` (un
+deploy desde otra rama falla en 2 s sin logs). Si alguna vez se quiere publicar una rama antes de mergearla: Settings →
+Environments → `github-pages` → *Deployment branches* → agregar la rama, y correr el workflow a mano sobre ella.
+Demo publicada: https://toti-gauna.github.io/supplements-ecommerce/
 
 El repo de VOLTA es **público**, así que Pages funciona con el plan gratis. Si se duplica para un cliente en un repo
 **privado**, GitHub Pages requiere un plan pago (Pro, Team o Enterprise). Opciones:

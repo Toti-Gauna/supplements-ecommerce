@@ -7,14 +7,16 @@ import { demoAccountProgress } from "@/demo/fixtures/commerce";
 import { useAccount } from "@/stores/account";
 import { useDemoData } from "@/stores/admin";
 import { ClubHero } from "./ClubHero";
+import { ClubLevels } from "./ClubLevels";
 import { MissionCard } from "./MissionCard";
 import { MissionPath } from "./MissionPath";
 import { RewardsWallet } from "./RewardsWallet";
 import { WheelTeaser } from "./WheelTeaser";
+import { GameTeaser } from "../game/GameTeaser";
 
 const RULES = [
   { icon: Receipt, text: "Solo suman pedidos pagados." },
-  { icon: CalendarClock, text: "Cada premio es de un uso y vence." },
+  { icon: CalendarClock, text: "Cada premio es de un uso y vence. Shaker Rush da un cupón por día." },
   { icon: Layers, text: "Lo que sobra pasa a la misión siguiente." },
   { icon: ShieldCheck, text: "Ilustrativo: en la tienda real se calcula en el servidor." },
 ];
@@ -38,6 +40,11 @@ export function ClubView() {
   return (
     <div className="flex flex-col gap-14 sm:gap-20">
       <ClubHero missions={missions} done={done} />
+      <section aria-labelledby="niveles" className="rounded-[2rem] bg-night p-6 text-on-night sm:rounded-[2.5rem] sm:p-10 lg:p-14">
+        <p className="eyebrow text-volt">Niveles</p>
+        <h2 id="niveles" className="font-display mb-8 mt-2 scroll-mt-28 text-4xl leading-tight sm:text-5xl">Cargá tu batería</h2>
+        <ClubLevels spend={user ? (demoAccountProgress["m-gasto"] ?? 0) : 0} signedIn={Boolean(user)} />
+      </section>
       <section aria-labelledby="mis">
         <Heading id="mis" eyebrow="Misiones" title="Tus misiones">{user ? "Así vas con la cuenta demo." : "Sin cuenta el progreso arranca en cero."}</Heading>
         <ul className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -48,13 +55,16 @@ export function ClubView() {
         <Heading id="ruleta" eyebrow="Ruleta de cupones" title="Girá y llevate un premio">Envío gratis, un shaker de regalo, sachets de muestra o un descuento para tu próxima compra. Todos los premios ganan.</Heading>
         <WheelTeaser />
       </section>
+      <section aria-label="Juego Shaker Rush" id="juego" className="scroll-mt-28">
+        <GameTeaser />
+      </section>
       <section aria-labelledby="path" className="rounded-[2rem] bg-night p-6 text-on-night sm:rounded-[2.5rem] sm:p-10 lg:p-14">
         <p className="eyebrow text-volt">Cadenas</p>
         <h2 id="path" className="font-display mb-8 mt-2 text-4xl leading-tight sm:text-5xl">Camino de premios</h2>
         <MissionPath missions={missions} />
       </section>
       <section aria-labelledby="wallet" className="flex flex-col gap-8">
-        <Heading id="wallet" eyebrow="Billetera" title="Tus premios">Los cupones de la ruleta y los premios de tus misiones.</Heading>
+        <Heading id="wallet" eyebrow="Billetera" title="Tus premios">Los cupones de la ruleta y de Shaker Rush, y los premios de tus misiones.</Heading>
         <RewardsWallet />
         <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {RULES.map(({ icon: Icon, text }) => (

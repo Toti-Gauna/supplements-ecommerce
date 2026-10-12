@@ -8,6 +8,7 @@ import { formatDate } from "@/lib/date";
 import { useAccount } from "@/stores/account";
 import { useDemoVersion } from "@/stores/admin";
 import { useCart } from "@/stores/cart";
+import { useGameCodes } from "@/stores/game";
 import { useToasts } from "@/stores/toast";
 import { useWheelPrize } from "../club/useWheelPrize";
 import { useCurrentTheme } from "../themes/useCurrentTheme";
@@ -18,16 +19,19 @@ const STATUS_LABEL: Record<Exclude<WalletStatus, "available">, string> = {
   "min-subtotal": "Te falta para el mínimo", "needs-account": "Con cuenta demo", expired: "Vencido", used: "Ya usado", paused: "Pausado",
 };
 
-/** Cupones para elegir sin escribir el código: el de la ruleta y los vigentes de la tienda. */
+const BADGE = { ruleta: "Ganado en la ruleta", juego: "Ganado en Shaker Rush" } as const;
+
+/** Cupones para elegir sin escribir el código: el de la ruleta, los de Shaker Rush y los vigentes de la tienda. */
 export function CouponWallet({ onApplied, compact, where = "tienda" }: { onApplied?: () => void; compact?: boolean; where?: "checkout" | "tienda" }) {
   useDemoVersion();
   const { quote, isRegistered } = useCartQuote();
   const wheelCode = useAccount((s) => (s.wheelSpinning ? null : s.wheelPrize?.code ?? null));
   const couponCode = useCart((s) => s.couponCode);
+  const gameCodes = useGameCodes();
   const { status: prizeStatus } = useWheelPrize();
   const toast = useToasts((s) => s.push);
   const { theme } = useCurrentTheme();
-  const items = walletCoupons({ subtotal: quote.subtotal, isRegistered, now: new Date(), wheelCode, themeId: theme?.id });
+  const items = walletCoupons({ subtotal: quote.subtotal, isRegistered, now: new Date(), wheelCode, gameCodes, themeId: theme?.id });
   return (
     <ul className={compact ? "flex flex-col gap-3" : "grid gap-4 md:grid-cols-2"}>
       {items.map(({ coupon, origin, status, message }) => {
@@ -36,7 +40,7 @@ export function CouponWallet({ onApplied, compact, where = "tienda" }: { onAppli
         const meta = [origin === "ruleta" && prizeStatus ? PRIZE_STATUS_LABEL[prizeStatus] : null, coupon.minSubtotal ? `Desde $${coupon.minSubtotal.toLocaleString("es-AR")}` : null, coupon.endsAt ? `Vence ${formatDate(coupon.endsAt)}` : null, coupon.maxUses === 1 ? "1 uso" : null].filter(Boolean).join(" · ");
         return (
           <li key={coupon.code}>
-            <CouponTicket coupon={coupon} badge={origin === "ruleta" ? "Ganado en la ruleta" : coupon.onlyRegistered ? "Solo con cuenta" : undefined} meta={meta || undefined}
+            <CouponTicket coupon={coupon} badge={origin !== "tienda" ? BADGE[origin] : coupon.onlyRegistered ? "Solo con cuenta" : undefined} meta={meta || undefined}
               dimmed={status === "expired" || status === "used" || status === "paused"}
               action={status === "available" ? (
                 applied ? (

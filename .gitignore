@@ -157,3 +157,6 @@ test-results/
 .env*
 !.env.example
 tests/e2e/zz-*.spec.ts
+
+# Worktrees de agentes de Claude Code (copias de trabajo temporales)
+.claude/worktrees/

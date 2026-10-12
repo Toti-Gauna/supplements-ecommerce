@@ -53,6 +53,11 @@ y distinta de las que hay hoy (negro + rojo agresivo, o blanco clínico). Todo s
 - **Estante del armador** (`src/features/stack/shelf/`): vitrina noche con LED voltio, halo plasma y un cono de luz por
   lugar; los potes caen con rebote, los lugares vacíos son siluetas punteadas y con el descuento se prende el filo de
   neón con el sello "Stack −10 %".
+- **Bolsa de boxeo del regalo** (`src/features/gifts/scenes/`): cuelga de su cadena con la marca VOLTA; cada golpe
+  la balancea, suelta tiza y abre una costura con luz; en el último sale el pote "Edición regalo". Una variante por fecha.
+- **Temáticas fitness** (`src/features/themes/`, `src/components/illustrations/seasonal/`): cada fecha tiñe la estética
+  eléctrica con su paleta y suma decoraciones propias (mancuerna, pesa rusa, disco, medalla, trofeo, guantes, calabaza
+  musculosa, arbolito de discos, chip…), guirnalda, fondo con FX y una pantalla de carga que rodea al logo compacto.
 - **Niveles del club** (`LevelGlyph`): un disco visto de frente con una batería que se carga una celda por nivel
   (Novato, Atleta, Élite, Bestia; Bestia suma el rayo).
 - Fondo con grano fino y grilla de puntos; bandas oscuras con filo voltio muy sutil; botón primario con destello.

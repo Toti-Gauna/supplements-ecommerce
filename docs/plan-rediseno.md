@@ -145,7 +145,7 @@ regalar un suplemento sea una experiencia que la gente quiera compartir.
   - productos de la campaña en el rack;
   - cupón como "ticket de acceso";
   - kit de piezas para Instagram sincronizado con el Estudio.
-- **Calidad sobre cantidad:**
+- **Alcance (decidido: las 12 al máximo, ver "Decisiones"):**
   - 4 campañas insignia hechas a nivel máximo: **Black Friday / CyberMonday**, **Hot Sale**, **Vuelta al gym /
     Operación verano** y **Navidad / Año Nuevo**;
   - las otras fechas (Madre, Padre, Amigo, San Valentín, Halloween) con un tratamiento consistente y más liviano.
@@ -235,14 +235,15 @@ mañana mismo.
 4. **Entrega:** PR por fase con capturas antes/después y un recorrido corto para mostrar. Al mergear se publica en
    Pages.
 
-## Qué decide Ignacio antes de arrancar
-1. La **dirección visual**: elegir entre las 2 o 3 propuestas de R1.
-2. **Funcionalidades nuevas** que aparecen en el plan (cada una suma tiempo):
-   - comparador de suplementos;
-   - gift card con monto;
-   - elegir sabor al canjear un regalo;
-   - "Modo mostrador" en el panel.
-3. **Temáticas:** confirmar las 4 campañas insignia y si las otras fechas quedan con el tratamiento liviano.
-4. **Regalo:** bolsa de boxeo rehecha, locker o las dos.
-5. **Orden:** propuesta R1 → R2 → R3 → R4. Se puede adelantar R3 si hay que mostrar una fecha puntual, por ejemplo
-   Black Friday, a fines de noviembre.
+## Decisiones de Ignacio (12/10/2026)
+- **Funcionalidades nuevas aprobadas (todas):**
+  - comparador de suplementos (R2);
+  - gift card con monto (R3);
+  - elegir sabor o tamaño al canjear un regalo (R3);
+  - "Modo mostrador" en el panel (R4).
+- **Apertura del regalo:** las dos experiencias, la bolsa de boxeo rehecha y el locker con combinación. Quien regala
+  elige cuál.
+- **Temáticas:** **las 12 fechas al máximo nivel**, sin tratamiento liviano. Cada una es una campaña completa: key
+  visual, drop, cuenta regresiva, ticket de cupón, kit de Instagram y pantalla de carga.
+- **Orden:** R1 → R2 → R3 → R4.
+- **Pendiente:** elegir la dirección visual entre las 2 o 3 propuestas, que es el primer paso de R1.

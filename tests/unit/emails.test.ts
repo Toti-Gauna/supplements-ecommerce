@@ -37,7 +37,7 @@ describe("render de plantillas", () => {
   it("bloques del pedido completos y omitidos cuando no hay pedido", () => {
     const mail = renderEmail(tpl("tpl-order-created"), ctx);
     const card = mail.blocks.find((b) => b.type === "order-card");
-    expect(card).toMatchObject({ code: "VOL-000121", fulfillment: "Cadete en Mar del Plata", status: "En producción" });
+    expect(card).toMatchObject({ code: "VOL-000121", fulfillment: "Cadete en Mar del Plata", status: "En preparación" });
     const products = mail.blocks.find((b) => b.type === "products");
     // El detalle de cada línea son los servicios del envase.
     expect(products).toMatchObject({ lines: [{ name: "Creatina monohidrato micronizada", variant: "Sin sabor · 500 g", quantity: 1, detail: "100 servicios" }] });
@@ -71,12 +71,13 @@ describe("disparadores y bandeja de salida", () => {
     const before = h.get().emails.outbox.length;
     expect(before).toBeGreaterThan(5);
     expect(h.get().emails.outbox.every((m, i, all) => i === 0 || Date.parse(all[i - 1]!.at) >= Date.parse(m.at))).toBe(true);
-    h.orders.moveProduction("VOL-000113", "machine");
+    h.orders.movePreparation("VOL-000113", "picking");
     const [mail] = h.get().emails.outbox;
     expect(mail).toMatchObject({ trigger: "in-production", orderCode: "VOL-000113", to: "ana.l@ejemplo.com" });
     expect(mail!.email.subject).toContain("VOL-000113 está en producción");
     h.emails.setEmailTemplateActive("tpl-ready", false);
-    expect(h.orders.moveProduction("VOL-000113", "ready")).toBeNull();
+    // Listo para despachar: con el lote de cada línea confirmado (control de lote, Fase 7).
+    expect(h.orders.confirmLots("VOL-000113", { a: "VL-2609-B · vence 03/2027" })).toBeNull();
     expect(h.get().orders.find((o) => o.code === "VOL-000113")!.status).toBe("READY");
     expect(h.get().emails.outbox[0]!.trigger).toBe("in-production");
     // Un reclamo y la vuelta a pagado no reenvían "Pago aprobado"

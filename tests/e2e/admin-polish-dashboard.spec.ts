@@ -65,7 +65,7 @@ for (const [label, width, height, mobile] of [["escritorio", 1440, 900, false], 
     for (const row of await rows.all()) {
       const code = row.locator("span.font-extrabold").first();
       expect(await code.evaluate((el) => el.getBoundingClientRect().height)).toBeLessThan(30);
-      await expect(row.getByText(/Pendiente de pago|Comprobante en revisión|Pagado|En producción|Listo|Enviado|Entregado|Cancelado|En reclamo/).filter({ visible: true })).toHaveCount(1);
+      await expect(row.getByText(/Pendiente de pago|Comprobante en revisión|Pagado|En preparación|Listo|Enviado|Entregado|Cancelado|En reclamo/).filter({ visible: true })).toHaveCount(1);
       await expect(row.getByText(/\$\s?[\d.]+/)).toBeVisible();
     }
     expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(0);

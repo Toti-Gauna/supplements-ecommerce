@@ -42,7 +42,7 @@ export function createWorkshopActions(set: Set): WorkshopActions {
     });
 
   return {
-    saveWorkshopSettings: (patch) => edit("Ajustes del taller", Object.keys(patch).join(", "), (w) => ({ settings: { ...w.settings, ...patch } })),
+    saveWorkshopSettings: (patch) => edit("Ajustes de despachos y costos", Object.keys(patch).join(", "), (w) => ({ settings: { ...w.settings, ...patch } })),
     addClosure: (c) => edit(`Día cerrado: ${c.name}`, c.date, (w) => ({
       settings: { ...w.settings, closures: [...w.settings.closures.filter((x) => x.date !== c.date), c].sort((a, b) => a.date.localeCompare(b.date)) },
     })),

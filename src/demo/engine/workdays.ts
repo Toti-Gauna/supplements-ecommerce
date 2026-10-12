@@ -1,8 +1,8 @@
 import type { Closure } from "../fixtures/workshop";
 
 /**
- * Días hábiles del taller sobre fechas AAAA-MM-DD (sin horas ni zona horaria: un día es un día).
- * Cerrado = día de la semana sin trabajo, feriado, día no laborable o cierre propio.
+ * Días de despacho del local sobre fechas AAAA-MM-DD (sin horas ni zona horaria: un día es un día).
+ * Cerrado = día de la semana sin despachos, feriado, día no laborable o cierre propio.
  */
 export interface WorkCalendar {
   closedWeekdays: number[];
@@ -28,12 +28,12 @@ export function daysBetween(from: string, to: string): number {
   return Math.round((toUtc(to).getTime() - toUtc(from).getTime()) / 86_400_000);
 }
 
-/** Motivo por el que el taller no trabaja ese día, o null si es hábil. */
+/** Motivo por el que el local no despacha ese día, o null si es hábil. */
 export function closureFor(day: string, cal: WorkCalendar): { reason: string; closure?: Closure } | null {
   const closure = cal.closures.find((c) => c.date === day);
   if (closure) return { reason: closure.name, closure };
   const wd = weekday(day);
-  return cal.closedWeekdays.includes(wd) ? { reason: `${WEEKDAY[wd]![0]!.toUpperCase()}${WEEKDAY[wd]!.slice(1)} sin taller` } : null;
+  return cal.closedWeekdays.includes(wd) ? { reason: `${WEEKDAY[wd]![0]!.toUpperCase()}${WEEKDAY[wd]!.slice(1)} sin despachos` } : null;
 }
 
 export function isWorkday(day: string, cal: WorkCalendar): boolean {

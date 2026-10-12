@@ -6,6 +6,7 @@ import { normalizeSlides } from "@/demo/admin/content-slides";
 import { createDataActions, type DataActions } from "@/demo/admin/data-slice";
 import { auditEntry, defaultAdminData, type AdminData } from "@/demo/admin/defaults";
 import { createOrdersActions, type OrdersActions } from "@/demo/admin/orders-slice";
+import { createPurchasingActions, type PurchasingActions } from "@/demo/admin/purchasing-slice";
 import { withPrizeCatalog } from "@/demo/admin/wheel-prizes";
 import type { AdminClaim } from "@/demo/admin/types";
 import { createWorkshopActions, type WorkshopActions } from "@/demo/admin/workshop-slice";
@@ -13,7 +14,7 @@ import { createEmailActions, type EmailActions } from "@/demo/admin/emails-slice
 import { setDemoData, type DemoData } from "@/demo/engine/source";
 import { ADMIN_STORE_VERSION, demoStorage, STORAGE_PREFIX } from "./storage";
 
-export type AdminState = AdminData & OrdersActions & DataActions & CatalogActions & WorkshopActions & EmailActions & {
+export type AdminState = AdminData & OrdersActions & DataActions & CatalogActions & WorkshopActions & PurchasingActions & EmailActions & {
   addClaim: (claim: Omit<AdminClaim, "id" | "status" | "createdAt">) => void;
   resetAdmin: () => void;
 };
@@ -30,6 +31,7 @@ export const useAdmin = create<AdminState>()(
       ...createDataActions(set),
       ...createCatalogActions(set),
       ...createWorkshopActions(set),
+      ...createPurchasingActions(set),
       ...createEmailActions(set, get),
       addClaim: (claim) =>
         set((s) => ({
@@ -44,6 +46,7 @@ export const useAdmin = create<AdminState>()(
       // v6: temáticas de la Fase 5 (Orgullo en lugar de San Patricio y fechas patrias, con sus cupones).
       // v7: VOLTA, tienda de suplementos (catálogo, costos con proveedor, sin personalización, descuento stack).
       // v8: ruleta "Disco olímpico" con premios de suplementos (muestra y shaker de regalo en lugar de grabado y llavero).
+      // v10 (Fase 7, Operaciones): preparación con control de lote, cupo del cadete, costos sin horas de taller, proveedores.
       // Al cambiar de versión la demo vuelve a los datos de muestra.
       version: ADMIN_STORE_VERSION,
       storage: demoStorage,

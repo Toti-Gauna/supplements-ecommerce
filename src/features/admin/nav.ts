@@ -1,12 +1,12 @@
 import type { LucideIcon } from "lucide-react";
-import { BadgePercent, Boxes, Calculator, CalendarDays, Clapperboard, ClipboardList, Factory, Layers, LayoutDashboard, Mail, LifeBuoy, Megaphone, Palette, PartyPopper, Settings, Shapes, Spool, Target, Users, Wallet } from "lucide-react";
+import { BadgePercent, Boxes, Calculator, CalendarDays, Clapperboard, ClipboardList, Layers, LayoutDashboard, Mail, LifeBuoy, Megaphone, PackageCheck, PackageOpen, Palette, PartyPopper, Settings, Shapes, Target, Users, Wallet, Warehouse } from "lucide-react";
 
-export const ADMIN_GROUPS = ["Ventas", "Taller", "Catálogo", "Marketing", "Ajustes"] as const;
+export const ADMIN_GROUPS = ["Ventas", "Operaciones", "Catálogo", "Marketing", "Ajustes"] as const;
 
-export type NavBadge = "orders" | "payments" | "claims" | "stock" | "late" | "materials";
+export type NavBadge = "orders" | "payments" | "claims" | "stock" | "late" | "materials" | "prep";
 
 /** Texto para lectores de pantalla después del número del contador. */
-export const BADGE_TEXT: Record<NavBadge, string> = { orders: "en marcha", payments: "por revisar", claims: "abiertos", stock: "para reponer", late: "atrasados", materials: "para reponer" };
+export const BADGE_TEXT: Record<NavBadge, string> = { orders: "en marcha", payments: "por revisar", claims: "abiertos", stock: "para reponer", late: "atrasados", materials: "para reponer", prep: "por preparar" };
 
 export interface AdminNavItem {
   href: string;
@@ -26,10 +26,12 @@ export const ADMIN_NAV: AdminNavItem[] = [
   { href: "/admin-demo/pagos/", label: "Pagos manuales", short: "Pagos", icon: Wallet, group: "Ventas", badge: "payments", tab: true },
   { href: "/admin-demo/usuarios/", label: "Clientes", short: "Clientes", icon: Users, group: "Ventas" },
   { href: "/admin-demo/reclamos/", label: "Reclamos", short: "Reclamos", icon: LifeBuoy, group: "Ventas", badge: "claims" },
-  { href: "/admin-demo/calendario/", label: "Calendario de entregas", short: "Calendario", icon: CalendarDays, group: "Taller", badge: "late" },
-  { href: "/admin-demo/produccion/", label: "Cola de producción", short: "Producción", icon: Factory, group: "Taller" },
-  { href: "/admin-demo/costos/", label: "Costos y margen", short: "Costos", icon: Calculator, group: "Taller" },
-  { href: "/admin-demo/insumos/", label: "Insumos", short: "Insumos", icon: Spool, group: "Taller", badge: "materials" },
+  // Fase 7: Operaciones de una tienda que compra a proveedores y revende (antes, el taller de Velmar).
+  { href: "/admin-demo/preparacion/", label: "Preparación", short: "Preparación", icon: PackageCheck, group: "Operaciones", badge: "prep" },
+  { href: "/admin-demo/calendario/", label: "Calendario de despachos", short: "Calendario", icon: CalendarDays, group: "Operaciones", badge: "late" },
+  { href: "/admin-demo/proveedores/", label: "Proveedores y compras", short: "Compras", icon: Warehouse, group: "Operaciones" },
+  { href: "/admin-demo/costos/", label: "Costos y margen", short: "Costos", icon: Calculator, group: "Operaciones" },
+  { href: "/admin-demo/insumos/", label: "Insumos de embalaje", short: "Insumos", icon: PackageOpen, group: "Operaciones", badge: "materials" },
   // 8.3.19: un solo módulo. Stock es su vista por variante, la Planilla es "Ver en formato Excel" e importar es una
   // acción de la pantalla; las rutas anteriores siguen llevando acá.
   { href: "/admin-demo/productos/", label: "Productos y stock", short: "Productos", icon: Boxes, group: "Catálogo", badge: "stock", tab: true },
@@ -49,7 +51,10 @@ export const ADMIN_NAV: AdminNavItem[] = [
 
 
 /** Rutas sin entrada propia en el menú: se marcan como parte de otra sección. */
-const BELONGS_TO: [string, string][] = [["/admin-demo/importar", "/admin-demo/productos/"], ["/admin-demo/stock", "/admin-demo/productos/"], ["/admin-demo/planilla", "/admin-demo/productos/"]];
+const BELONGS_TO: [string, string][] = [
+  ["/admin-demo/importar", "/admin-demo/productos/"], ["/admin-demo/stock", "/admin-demo/productos/"], ["/admin-demo/planilla", "/admin-demo/productos/"],
+  ["/admin-demo/produccion", "/admin-demo/preparacion/"],
+];
 
 export function isActive(pathname: string, href: string): boolean {
   const path = BELONGS_TO.find(([from]) => pathname.startsWith(from))?.[1] ?? pathname;

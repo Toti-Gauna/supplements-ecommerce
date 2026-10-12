@@ -32,15 +32,18 @@ test("compra en la tienda: el email de compra aparece en la bandeja y es el úni
   assertNoExternal();
 });
 
-test("pasar un pedido a producción manda su email; pausado no sale", async ({ page }) => {
+test("empezar a preparar un pedido manda su email; pausado no sale", async ({ page }) => {
   await page.goto("admin-demo/emails/");
   await page.getByRole("switch", { name: "Se envía solo: Listo para entregar" }).click();
   await expect(toast(page, "“Listo para entregar” pausado")).toBeVisible();
-  await page.goto("admin-demo/produccion/");
-  await page.getByRole("button", { name: "Pasar VOL-000113 a En máquina" }).click();
-  await page.getByRole("group", { name: "Etapa" }).getByRole("button", { name: /^Terminación/ }).click();
-  await page.getByRole("button", { name: "Pasar VOL-000115 a Listo" }).click();
-  await expect(toast(page, "VOL-000115 pasó a “Listo”")).toBeVisible();
+  await page.goto("admin-demo/preparacion/");
+  await page.getByRole("button", { name: "Pasar VOL-000113 a Armando" }).click();
+  await page.getByRole("group", { name: "Etapa" }).getByRole("button", { name: /^Control de lote/ }).click();
+  await page.getByRole("button", { name: "Controlar lotes de VOL-000115" }).click();
+  const lots = page.getByRole("dialog", { name: "Control de lote de VOL-000115" });
+  await lots.getByRole("checkbox").check();
+  await lots.getByRole("button", { name: "Listo para despachar" }).click();
+  await expect(toast(page, "VOL-000115 está listo para despachar")).toBeVisible();
   await page.goto("admin-demo/pedidos/detalle/?codigo=VOL-000113");
   await expect(page.getByRole("button", { name: /VOL-000113 está en producción/ })).toBeVisible();
   await page.goto("admin-demo/pedidos/detalle/?codigo=VOL-000115");

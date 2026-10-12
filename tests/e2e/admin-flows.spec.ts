@@ -120,16 +120,21 @@ test("cupón y misión creados en el panel funcionan en la tienda", async ({ pag
 
 test("teclado: navegación del panel y diálogo que se cierra con Escape", async ({ page }) => {
   await page.goto("admin-demo/pedidos/detalle/?codigo=VOL-000121");
-  const ready = page.getByRole("button", { name: "Listo" });
+  // Pasar a Listo abre el control de lote (Fase 7): se marca el lote con la barra espaciadora y se confirma con teclado.
+  const ready = page.getByRole("button", { name: "Listo", exact: true });
   await ready.focus();
   await page.keyboard.press("Enter");
-  await expect(page.getByRole("dialog")).toBeVisible();
+  const dialog = page.getByRole("dialog", { name: "Control de lote de VOL-000121" });
+  await expect(dialog).toBeVisible();
   await page.keyboard.press("Escape");
-  await expect(page.getByRole("dialog")).toBeHidden();
+  await expect(dialog).toBeHidden();
   await ready.press("Enter");
+  await expect(dialog.getByRole("checkbox")).toBeFocused();
+  await page.keyboard.press("Space");
   await page.keyboard.press("Tab");
   await page.keyboard.press("Tab");
   await page.keyboard.press("Enter");
+  await expect(dialog).toBeHidden();
   await expect(page.getByRole("heading", { level: 1 })).toContainText("VOL-000121");
   await expect(page.getByText("Listo").first()).toBeVisible();
 });

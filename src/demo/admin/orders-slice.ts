@@ -1,4 +1,5 @@
-import { checkReschedule, promiseFor, type RescheduleCheck } from "../engine/delivery";
+import { promiseFor } from "../engine/delivery";
+import { checkReschedule, type RescheduleCheck } from "../engine/reschedule";
 import { canTransition, STATUS_LABEL, type OrderStatus, type TransitionTrigger } from "../engine/orders";
 import { DEMO_TODAY } from "../fixtures/admin-orders";
 import type { DemoOrder } from "@/stores/checkout";
@@ -7,9 +8,11 @@ import { auditEntry, type AdminData } from "./defaults";
 import type { AdminOrder } from "./types";
 import { consumeMaterials, orderNeeds } from "./workshop/materials";
 import { emailsForOrder, pushOutbox, triggersForNewOrder, triggersForTransition, type OutboxEmail } from "./emails/triggers";
-import { productionMove, PRODUCTION_COLUMNS, type ProductionColumn } from "./workshop/production";
+import { missingLots, prepLabel, prepMove, type PrepColumn } from "./workshop/preparation";
 
 type Set = (fn: (s: AdminData) => Partial<AdminData>) => void;
+
+const INVALID = "Esa transición no corresponde al estado actual del pedido.";
 
 export interface OrdersActions {
   syncShopOrder: (order: DemoOrder) => void;
@@ -21,13 +24,16 @@ export interface OrdersActions {
   addNote: (code: string, text: string) => void;
   /** Reprograma la entrega validando días cerrados; devuelve los avisos (día sobrecargado, antes del plazo). */
   rescheduleOrder: (code: string, day: string) => RescheduleCheck;
-  /** Mueve un pedido en la cola de producción; devuelve el motivo si no se puede. */
-  moveProduction: (code: string, to: ProductionColumn) => string | null;
+  /** Mueve un pedido en el tablero de preparación; devuelve el motivo si no se puede. */
+  movePreparation: (code: string, to: PrepColumn) => string | null;
+  /** Control de lote: guarda el lote que sale de cada línea y pasa el pedido a Listo para despachar. */
+  confirmLots: (code: string, lots: Record<string, string>) => string | null;
 }
 
 /**
  * Aplica una transición válida (spec 5.2) y registra historial + auditoría. Devuelve false si no corresponde.
- * Al entrar a producción desde "pagado" el pedido pasa a "en máquina" (salvo otra etapa) y descuenta sus insumos.
+ * Al empezar a prepararse desde "pagado" el pedido pasa a "Armando" (salvo otra etapa) y descuenta sus insumos de
+ * embalaje. A "Listo" solo llega con el lote de cada línea confirmado.
  */
 function move(set: Set, code: string, to: OrderStatus, trigger: TransitionTrigger, patch: (o: AdminOrder) => Partial<AdminOrder>, action: string): boolean {
   let ok = false;
@@ -36,13 +42,15 @@ function move(set: Set, code: string, to: OrderStatus, trigger: TransitionTrigge
     let mails: OutboxEmail[] = [];
     const orders = s.orders.map((o) => {
       if (o.code !== code || !canTransition(o.status, to, { fulfillment: o.fulfillment, trigger, prevStatus: o.prevStatus })) return o;
-      ok = true;
       const prevStatus = to === "IN_CLAIM" ? o.status : o.status === "IN_CLAIM" ? null : o.prevStatus;
       const next: AdminOrder = { ...o, ...patch(o), status: to, prevStatus, log: [...o.log, { at: new Date().toISOString(), from: o.status, to, note: action }] };
-      if (to === "IN_PRODUCTION") next.stage ??= "machine";
-      // Los insumos se descuentan una sola vez: al pasar de pagado a producción (no al volver de un reclamo).
+      // Control de lote: sin el lote de cada línea confirmado, el pedido no queda listo.
+      if (to === "READY" && o.status === "IN_PRODUCTION" && missingLots(next).length) return o;
+      ok = true;
+      if (to === "IN_PRODUCTION") next.stage ??= "picking";
+      // El embalaje se descuenta una sola vez: al empezar a preparar un pedido pagado (no al volver de un reclamo).
       if (to === "IN_PRODUCTION" && o.status === "PAID") materials = consumeMaterials(materials, orderNeeds(o.lines, s.workshop.recipes));
-      // La etapa se conserva durante un reclamo para volver a la misma columna; se borra al salir de producción.
+      // La etapa se conserva durante un reclamo para volver a la misma columna; se borra al salir de preparación.
       if (to !== "IN_PRODUCTION" && to !== "IN_CLAIM") delete next.stage;
       // Emails automáticos del cambio de estado (bandeja de salida simulada).
       mails = emailsForOrder(s.emails.templates, triggersForTransition(o.status, to), next, new Date().toISOString());
@@ -62,7 +70,7 @@ export function createOrdersActions(set: Set, get: () => AdminData): OrdersActio
         const created: AdminOrder = {
           code: order.code, createdAt: order.createdAt, customer: order.contact, userId: order.asAccount ? "u-demo" : null,
           status: "PENDING_PAYMENT", fulfillment: order.fulfillment, paymentMethod: order.paymentMethod, lines: order.lines,
-          total: order.quote.total, notes: [], fromShop: true, promisedDate: promiseFor(order.lines, DEMO_TODAY, s.orders, s.workshop.settings, order.code).day, log: [{ at: order.createdAt, from: null, to: "PENDING_PAYMENT", note: "Checkout de demostración" }],
+          total: order.quote.total, notes: [], fromShop: true, promisedDate: promiseFor(order.lines, DEMO_TODAY, s.orders, s.workshop.settings, { fulfillment: order.fulfillment, exceptCode: order.code }).day, log: [{ at: order.createdAt, from: null, to: "PENDING_PAYMENT", note: "Checkout de demostración" }],
         };
         const mails = emailsForOrder(s.emails.templates, triggersForNewOrder(), created, order.createdAt);
         return { orders: [created, ...s.orders.filter((o) => o.code !== order.code)], emails: { ...s.emails, outbox: pushOutbox(s.emails.outbox, mails) } };
@@ -91,20 +99,22 @@ export function createOrdersActions(set: Set, get: () => AdminData): OrdersActio
       });
       return result;
     },
-    moveProduction: (code, to) => {
-      let error: string | null = "No se encontró el pedido.";
+    movePreparation: (code, to) => {
       const order = get().orders.find((o) => o.code === code);
-      if (!order) return error;
-      const m = productionMove(order, to);
+      if (!order) return "No se encontró el pedido.";
+      const m = prepMove(order, to);
       if (!m.ok) return m.error;
-      const label = PRODUCTION_COLUMNS.find((c) => c.id === to)!.label;
-      if (m.status !== order.status) {
-        error = move(set, code, m.status, "admin", () => (m.stage ? { stage: m.stage } : {}), `Producción: ${label}`) ? null : "Esa transición no corresponde al estado actual del pedido.";
-      } else {
-        set((s) => ({ orders: s.orders.map((o) => (o.code === code ? { ...o, stage: m.stage } : o)), audit: [auditEntry(`Producción: ${label}`, code), ...s.audit].slice(0, 80) }));
-        error = null;
-      }
-      return error;
+      const action = `Preparación: ${prepLabel(to)}`;
+      if (m.status !== order.status) return move(set, code, m.status, "admin", () => (m.stage ? { stage: m.stage } : {}), action) ? null : INVALID;
+      set((s) => ({ orders: s.orders.map((o) => (o.code === code ? { ...o, stage: m.stage } : o)), audit: [auditEntry(action, code), ...s.audit].slice(0, 80) }));
+      return null;
+    },
+    confirmLots: (code, lots) => {
+      const order = get().orders.find((o) => o.code === code);
+      if (!order) return "No se encontró el pedido.";
+      if (order.status !== "IN_PRODUCTION") return "Solo se controlan los lotes de un pedido en preparación.";
+      if (missingLots({ ...order, lotCheck: lots }).length) return "Falta confirmar el lote de algún producto.";
+      return move(set, code, "READY", "admin", () => ({ lotCheck: lots }), "Lotes controlados: listo para despachar") ? null : INVALID;
     },
   };
 }

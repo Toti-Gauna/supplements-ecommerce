@@ -7,7 +7,8 @@ import { StatusBadge } from "@/components/molecules/StatusBadge";
 import { LineThumb } from "@/components/organisms/LineThumb";
 import type { AdminOrder } from "@/demo/admin/types";
 import { getProduct } from "@/demo/engine/catalog";
-import { calendarOf, checkReschedule, loadByDay, nextFreeDayFor, orderLeadDays } from "@/demo/engine/delivery";
+import { calendarOf, loadByDay, nextFreeDayFor, orderLeadDays, usesCadete } from "@/demo/engine/delivery";
+import { checkReschedule } from "@/demo/engine/reschedule";
 import { closureFor, nextWorkday, prevWorkday } from "@/demo/engine/workdays";
 import type { WorkshopSettings } from "@/demo/fixtures/workshop";
 import { formatDay } from "@/lib/date";
@@ -30,8 +31,8 @@ interface Props {
 }
 
 /**
- * Ficha de entrega: qué lleva el pedido, su fecha y cómo moverla (alternativa a arrastrar, para teclado y celular).
- * Llevarlo a un día completo se confirma antes (8.3.15).
+ * Ficha de despacho: qué lleva el pedido, su fecha y cómo moverla (alternativa a arrastrar, para teclado y celular).
+ * Llevar un pedido con cadete a un día completo se confirma antes (8.3.15).
  */
 export function ScheduleSheet({ order, orders, settings, today, late, movable, warnings, onMove, onClose }: Props) {
   const cal = calendarOf(settings);
@@ -47,16 +48,16 @@ export function ScheduleSheet({ order, orders, settings, today, late, movable, w
   };
   const step = "inline-flex h-11 items-center justify-center gap-1 rounded-full border border-ink/15 px-3 text-sm font-bold hover:bg-accent/50 disabled:opacity-40";
   return (
-    <Sheet open={!!order} onClose={onClose} title={order ? `Entrega ${order.code}` : "Entrega"} side="right" className="max-w-lg bg-bg">
+    <Sheet open={!!order} onClose={onClose} title={order ? `Despacho ${order.code}` : "Despacho"} side="right" className="max-w-lg bg-bg">
       {order && (
         <div className="flex h-full flex-col overflow-y-auto">
           <header className="border-b border-line bg-surface px-6 pb-5 pt-6 pr-16">
-            <p className="eyebrow text-muted">Entrega comprometida</p>
+            <p className="eyebrow text-muted">Despacho comprometido</p>
             <h2 className="font-display mt-1 text-3xl first-letter:uppercase">{day ? formatDay(day, "long") : "Sin fecha"}</h2>
             <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-muted">
               <StatusBadge status={order.status} />
               {late && <span className="font-bold text-danger">Atrasado</span>}
-              {day && day >= today && !closureFor(day, cal) && <span>{capacityText(used, settings.dailyCapacity)} ese día</span>}
+              {day && day >= today && !closureFor(day, cal) && usesCadete(order) && <span>Cadete: {capacityText(used, settings.dailyCapacity)} ese día</span>}
             </div>
           </header>
           <div className="flex flex-col gap-5 p-6">
@@ -75,7 +76,7 @@ export function ScheduleSheet({ order, orders, settings, today, late, movable, w
                   );
                 })}
               </ul>
-              <p className="mt-3 text-xs text-muted">Plazo de fabricación: {orderLeadDays(order.lines)} días hábiles.</p>
+              <p className="mt-3 text-xs text-muted">Plazo de preparación: {orderLeadDays(order.lines)} {orderLeadDays(order.lines) === 1 ? "día hábil" : "días hábiles"}.</p>
             </section>
             {movable ? (
               <section aria-labelledby="move-title" className="flex flex-col gap-3 rounded-3xl bg-surface p-4 shadow-[var(--shadow-card)]">
@@ -89,7 +90,7 @@ export function ScheduleSheet({ order, orders, settings, today, late, movable, w
                 )}
                 <PickDate key={`${order.code}-${day}`} id="schedule-date" label="Elegir otra fecha" min={today} value={day ?? ""} action="Mover" onPick={move} />
                 {overload && (
-                  <InlineConfirm label="Día completo" title={`El ${formatDay(overload)} ya está completo`} action="Mover igual" cancel="Elegir otro día"
+                  <InlineConfirm label="Día completo" title={`El ${formatDay(overload)} el cadete ya está completo`} action="Mover igual" cancel="Elegir otro día"
                     onCancel={() => setOverload(null)} onConfirm={() => { const d = overload; setOverload(null); onMove(order.code, d); }}>
                     <p>Ya tiene {loadByDay(orders, order.code).get(overload) ?? 0} de {settings.dailyCapacity} pedidos: con este queda sobrecargado.</p>
                   </InlineConfirm>
@@ -101,7 +102,7 @@ export function ScheduleSheet({ order, orders, settings, today, late, movable, w
                 )}
                 <p className="text-xs text-muted">En escritorio también podés arrastrar el pedido a otro día del calendario. En producción, el cliente recibiría un aviso con la fecha nueva.</p>
               </section>
-            ) : <p className="text-sm text-muted">Este pedido ya salió del taller: su fecha no se reprograma.</p>}
+            ) : <p className="text-sm text-muted">Este pedido ya salió o está cerrado: su fecha no se reprograma.</p>}
             <Link href={`/admin-demo/pedidos/detalle/?codigo=${order.code}`} className="inline-flex items-center gap-1.5 self-start text-sm font-bold text-primary underline">
               Abrir el pedido completo <ArrowUpRight size={15} aria-hidden="true" />
             </Link>

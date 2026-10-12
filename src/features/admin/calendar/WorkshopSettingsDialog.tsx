@@ -13,7 +13,7 @@ type Part = "capacidad" | "cierres";
 
 function EntryCard({ id, icon, title, summary, open, onClick }: { id: Part; icon: ReactNode; title: string; summary: string; open: boolean; onClick: () => void }) {
   return (
-    <button type="button" onClick={onClick} aria-expanded={open} aria-controls={`taller-${id}`} data-autofocus={id === "capacidad" ? true : undefined}
+    <button type="button" onClick={onClick} aria-expanded={open} aria-controls={id === "capacidad" ? "despachos-cupo" : "despachos-cierres"} data-autofocus={id === "capacidad" ? true : undefined}
       className={cn("flex items-center gap-3 rounded-3xl p-4 text-left ring-1 transition-colors", open ? "bg-night text-on-night ring-night" : "bg-surface ring-ink/10 hover:bg-accent/50")}>
       <span aria-hidden="true" className={cn("grid h-11 w-11 shrink-0 place-items-center rounded-2xl", open ? "bg-white/10 text-volt" : "bg-accent text-primary")}>{icon}</span>
       <span className="min-w-0 flex-1"><span className="block font-extrabold">{title}</span><span className={cn("block text-xs", open ? "text-on-night/80" : "text-muted")}>{summary}</span></span>
@@ -23,8 +23,8 @@ function EntryCard({ id, icon, title, summary, open, onClick }: { id: Part; icon
 }
 
 /**
- * Capacidad y días del taller en un modal centrado (8.3.14; en el celular ocupa la pantalla). Dos tarjetas de entrada y
- * la sección elegida debajo, en el mismo modal. Cerrar con capacidad sin guardar pide confirmar.
+ * Cupo del cadete y días de despacho en un modal centrado (8.3.14; en el celular ocupa la pantalla). Dos tarjetas de
+ * entrada y la sección elegida debajo, en el mismo modal. Cerrar con el cupo sin guardar pide confirmar.
  */
 export function WorkshopSettingsDialog({ open, onClose, today }: { open: boolean; onClose: () => void; today: string }) {
   const settings = useAdmin((s) => s.workshop.settings);
@@ -40,18 +40,18 @@ export function WorkshopSettingsDialog({ open, onClose, today }: { open: boolean
     setPart(part === p ? null : p);
   };
   return (
-    <Sheet open={open} onClose={request} title="Capacidad y días del taller" side="dialog" className="bg-bg max-sm:h-dvh max-sm:max-h-dvh max-sm:rounded-none sm:w-[min(94vw,780px)]">
+    <Sheet open={open} onClose={request} title="Cadete y días de despacho" side="dialog" className="bg-bg max-sm:h-dvh max-sm:max-h-dvh max-sm:rounded-none sm:w-[min(94vw,780px)]">
       <div className="flex max-h-dvh flex-col gap-4 overflow-y-auto p-5 pt-7 sm:max-h-[90dvh] sm:p-7">
         <div className="pr-12">
-          <h2 className="font-display text-3xl">Capacidad y días del taller</h2>
+          <h2 className="font-display text-3xl">Cadete y días de despacho</h2>
           <p className="mt-1 text-sm text-muted">Elegí qué ajustar. Los cambios cuentan para el calendario y para las fechas que ofrece la tienda.</p>
         </div>
         <div className="grid gap-3 sm:grid-cols-2">
-          <EntryCard id="capacidad" icon={<Gauge size={20} />} title="Capacidad y horarios" summary={scheduleText(settings)} open={part === "capacidad"} onClick={() => choose("capacidad")} />
+          <EntryCard id="capacidad" icon={<Gauge size={20} />} title="Cupo del cadete y días" summary={scheduleText(settings)} open={part === "capacidad"} onClick={() => choose("capacidad")} />
           <EntryCard id="cierres" icon={<CalendarOff size={20} />} title="Días cerrados y feriados" summary={`${holidays} feriados por delante · ${own} ${own === 1 ? "cierre propio" : "cierres propios"}`} open={part === "cierres"} onClick={() => choose("cierres")} />
         </div>
         {asking && (
-          <InlineConfirm label="Cambios sin guardar" title="Tenés cambios de capacidad sin guardar." action="Descartar cambios" onCancel={() => setAsking(false)} onConfirm={close} />
+          <InlineConfirm label="Cambios sin guardar" title="Tenés cambios del cupo sin guardar." action="Descartar cambios" onCancel={() => setAsking(false)} onConfirm={close} />
         )}
         {part === "capacidad" && <CapacitySection today={today} onDirty={setDirty} />}
         {part === "cierres" && <ClosuresSection today={today} />}

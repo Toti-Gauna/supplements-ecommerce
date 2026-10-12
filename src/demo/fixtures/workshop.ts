@@ -1,3 +1,6 @@
+import { brand } from "@/config/brand";
+import { HOUSE_SHAKER_SLUG } from "./house";
+import { ORDER_PREFIX } from "./house";
 /**
  * Datos de Operaciones para la demo: calendario de despachos, cupo del cadete, insumos de embalaje y costos. Las fichas
  * de clientes viven en `customers.ts`. Todo es de MUESTRA: costos, proveedores y fechas son inventados.
@@ -85,7 +88,7 @@ export interface CalendarEvent {
 
 export const calendarEvents: CalendarEvent[] = [
   { id: "ev-entrega-krono", date: "2026-10-06", title: "Recibir la entrega de Krono Nutrition", kind: "tarea", notes: "12 Isolate Zero y 20 BCAA (de muestra). Controlar lotes y vencimientos." },
-  { id: "ev-retiro-113", date: "2026-10-08", title: "Ana retira el pedido del gimnasio", kind: "pedido", orderCode: "VOL-000113", notes: "Avisarle por WhatsApp cuando esté armado." },
+  { id: "ev-retiro-113", date: "2026-10-08", title: "Ana retira el pedido del gimnasio", kind: "pedido", orderCode: `${ORDER_PREFIX}-000113`, notes: "Avisarle por WhatsApp cuando esté armado." },
 ];
 
 export const workshopSettings: WorkshopSettings = {
@@ -119,7 +122,7 @@ export const materials: Material[] = [
   { id: "caja-grande", name: "Caja de envío grande", unit: "u", costPerUnit: 950, stock: 18, minStock: 20, supplier: "Packaging (muestra)" },
   { id: "bolsa", name: "Bolsa con logo", unit: "u", costPerUnit: 320, stock: 120, minStock: 50, supplier: "Packaging (muestra)" },
   { id: "folleto", name: "Folleto con tabla de dosis", unit: "u", costPerUnit: 90, stock: 300, minStock: 100, supplier: "Imprenta (muestra)" },
-  { id: "sticker", name: "Sticker VOLTA", unit: "u", costPerUnit: 60, stock: 500, minStock: 100, supplier: "Imprenta (muestra)" },
+  { id: "sticker", name: `Sticker ${brand.mark}`, unit: "u", costPerUnit: 60, stock: 500, minStock: 100, supplier: "Imprenta (muestra)" },
   { id: "precinto", name: "Precinto de seguridad", unit: "u", costPerUnit: 40, stock: 400, minStock: 150 },
   { id: "cinta", name: "Cinta de embalar", unit: "m", costPerUnit: 12, stock: 600, minStock: 200 },
   { id: "sachet-muestra", name: "Sachet de muestra (regalo)", unit: "u", costPerUnit: 450, stock: 26, minStock: 30, supplier: "Distribuidora (muestra)" },
@@ -167,6 +170,6 @@ export const recipes: Record<string, Recipe> = {
   "mantequilla-mani": { supplierCost: 5900, items: [{ materialId: "bolsa", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }] },
   "electrolitos": { supplierCost: 6200, items: [{ materialId: "bolsa", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }] },
   "gel-energetico": { supplierCost: 7100, items: [{ materialId: "bolsa", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }] },
-  "shaker-volta": { supplierCost: 4300, items: [{ materialId: "bolsa", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }] },
+  [HOUSE_SHAKER_SLUG]: { supplierCost: 4300, items: [{ materialId: "bolsa", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }] },
   "magnesio-tiza": { supplierCost: 2400, items: [{ materialId: "bolsa", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }] },
 };

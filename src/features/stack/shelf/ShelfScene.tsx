@@ -1,4 +1,5 @@
 import { motion } from "motion/react";
+import { brand } from "@/config/brand";
 
 /** Lienzo del estante (800 × 400): cuatro lugares de 200 de ancho y el piso de la repisa en y = 312. */
 export const SHELF_W = 800;
@@ -20,26 +21,26 @@ export function ShelfDefs({ ids }: { ids: ShelfIds }) {
       </linearGradient>
       <pattern id={ids.dots} width="18" height="18" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r=".9" fill="#fff" opacity=".09" /></pattern>
       <radialGradient id={ids.plasma} cx=".5" cy=".82" r=".62">
-        <stop offset="0" stopColor="#8b72ff" stopOpacity=".34" /><stop offset=".6" stopColor="#8b72ff" stopOpacity=".07" /><stop offset="1" stopColor="#8b72ff" stopOpacity="0" />
+        <stop offset="0" stopColor={brand.signature.plasma} stopOpacity=".34" /><stop offset=".6" stopColor={brand.signature.plasma} stopOpacity=".07" /><stop offset="1" stopColor={brand.signature.plasma} stopOpacity="0" />
       </radialGradient>
       {/* Cono de luz de cada lugar: blanco voltio arriba, se apaga antes de la repisa. */}
       <radialGradient id={ids.cone} cx=".5" cy="0" r="1.15" gradientTransform="matrix(.55 0 0 1 .225 0)">
-        <stop offset="0" stopColor="#f2ffc4" stopOpacity=".5" /><stop offset=".45" stopColor="#c8ff2e" stopOpacity=".14" /><stop offset="1" stopColor="#c8ff2e" stopOpacity="0" />
+        <stop offset="0" stopColor={brand.signature.voltSoft} stopOpacity=".5" /><stop offset=".45" stopColor={brand.signature.volt} stopOpacity=".14" /><stop offset="1" stopColor={brand.signature.volt} stopOpacity="0" />
       </radialGradient>
       <linearGradient id={ids.led} x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stopColor="#c8ff2e" stopOpacity=".3" /><stop offset="1" stopColor="#c8ff2e" stopOpacity="0" />
+        <stop offset="0" stopColor={brand.signature.volt} stopOpacity=".3" /><stop offset="1" stopColor={brand.signature.volt} stopOpacity="0" />
       </linearGradient>
       <linearGradient id={ids.plank} x1="0" y1="0" x2="0" y2="1">
         <stop offset="0" stopColor="#262d39" /><stop offset="1" stopColor="#151a22" />
       </linearGradient>
       <linearGradient id={ids.edge} x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0" stopColor="#8b72ff" /><stop offset=".5" stopColor="#c8ff2e" /><stop offset="1" stopColor="#2ee6d6" />
+        <stop offset="0" stopColor={brand.signature.plasma} /><stop offset=".5" stopColor={brand.signature.volt} /><stop offset="1" stopColor={brand.signature.ion} />
       </linearGradient>
       <linearGradient id={ids.spill} x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stopColor="#c8ff2e" stopOpacity=".2" /><stop offset=".35" stopColor="#8b72ff" stopOpacity=".1" /><stop offset="1" stopColor="#8b72ff" stopOpacity="0" />
+        <stop offset="0" stopColor={brand.signature.volt} stopOpacity=".2" /><stop offset=".35" stopColor={brand.signature.plasma} stopOpacity=".1" /><stop offset="1" stopColor={brand.signature.plasma} stopOpacity="0" />
       </linearGradient>
       <radialGradient id={ids.pool} cx=".5" cy=".5" r=".5">
-        <stop offset="0" stopColor="#e3ff8f" stopOpacity=".7" /><stop offset=".5" stopColor="#c8ff2e" stopOpacity=".22" /><stop offset="1" stopColor="#c8ff2e" stopOpacity="0" />
+        <stop offset="0" stopColor={brand.signature.voltSoft} stopOpacity=".7" /><stop offset=".5" stopColor={brand.signature.volt} stopOpacity=".22" /><stop offset="1" stopColor={brand.signature.volt} stopOpacity="0" />
       </radialGradient>
       <linearGradient id={ids.pulse} x1="0" y1="0" x2="1" y2="0">
         <stop offset="0" stopColor="#fff" stopOpacity="0" /><stop offset=".5" stopColor="#f6ffd6" /><stop offset="1" stopColor="#fff" stopOpacity="0" />
@@ -57,7 +58,7 @@ export function ShelfBackdrop({ ids }: { ids: ShelfIds }) {
       <rect width={SHELF_W} height="400" fill={`url(#${ids.plasma})`} />
       <g stroke="#fff" strokeOpacity=".05">{[200, 400, 600].map((x) => <path key={x} d={`M${x} 34V302`} />)}</g>
       <rect x="24" y="26" width="752" height="80" fill={`url(#${ids.led})`} opacity=".5" />
-      <rect x="24" y="22" width="752" height="4" rx="2" fill="#c8ff2e" opacity=".85" />
+      <rect x="24" y="22" width="752" height="4" rx="2" fill={brand.signature.volt} opacity=".85" />
       <rect x="24" y="22" width="752" height="1.4" fill="#f6ffd6" opacity=".9" />
     </g>
   );
@@ -78,7 +79,7 @@ export function ShelfPlank({ ids, complete, reduce }: { ids: ShelfIds; complete:
       <rect x="4" y="318" width="792" height="2.5" fill={`url(#${ids.edge})`} opacity=".55" />
       <motion.g initial={false} animate={{ opacity: complete ? 1 : 0 }} transition={{ duration: reduce ? 0 : 0.5 }}>
         <rect x="4" y="310" width="792" height="18" fill={`url(#${ids.led})`} opacity=".9" transform="rotate(180 400 319)" />
-        <rect x="4" y="318" width="792" height="3" fill="#c8ff2e" />
+        <rect x="4" y="318" width="792" height="3" fill={brand.signature.volt} />
         <rect x="4" y="321" width="792" height="22" fill={`url(#${ids.led})`} />
       </motion.g>
       {complete && !reduce && (

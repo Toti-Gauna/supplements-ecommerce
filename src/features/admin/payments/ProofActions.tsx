@@ -5,6 +5,7 @@ import type { AdminOrder } from "@/demo/admin/types";
 import { formatARS } from "@/lib/money";
 import { useAdmin } from "@/stores/admin";
 import { useDemoSave } from "../useDemoSave";
+import { brand } from "@/config/brand";
 
 /**
  * Aprobar o rechazar un comprobante (simulado y siempre a mano), o simular que llegó uno. Aprobar exige confirmar que
@@ -26,7 +27,7 @@ export function ProofActions({ order }: { order: AdminOrder }) {
   if (order.proof?.status !== "IN_REVIEW") return null;
   return (
     <div className="flex flex-col gap-2">
-      <p className="rounded-xl bg-warning-soft p-2.5 text-xs font-bold text-warning">Antes de aprobar, Volta verifica el ingreso en su cuenta. En la demo no hay cuenta real: aprobar solo cambia el estado local.</p>
+      <p className="rounded-xl bg-warning-soft p-2.5 text-xs font-bold text-warning">Antes de aprobar, {brand.name} verifica el ingreso en su cuenta. En la demo no hay cuenta real: aprobar solo cambia el estado local.</p>
       <div className="flex flex-wrap gap-2">
         <ConfirmButton size="sm" title={`Aprobar comprobante de ${order.code}`} confirmLabel="Aprobar (demo)"
           description={<>¿Confirmás que verificaste el ingreso de <strong>{formatARS(order.total)}</strong>? El pedido pasa a <strong>Pagado</strong> en esta demo y queda en el historial.</>}

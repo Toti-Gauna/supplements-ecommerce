@@ -2,6 +2,7 @@ import type { Product } from "../types";
 import { FLAVOR, pack } from "./brands";
 import { actives, nutrition } from "./nutrition";
 import { FAQ, flavorGrid } from "./variants";
+import { HOUSE_BRAND } from "./house";
 
 const zero = { kcal: 0, carbs: 0, protein: 0, fat: 0, sodium: 0 };
 
@@ -10,8 +11,8 @@ export const performanceProducts: Product[] = [
   {
     slug: "creatina-monohidrato", name: "Creatina monohidrato micronizada", short: "5 g por día. La más estudiada para fuerza",
     description: "Creatina monohidrato pura y micronizada: se disuelve fácil y no tiene sabor. Es el suplemento con más evidencia para mejorar la fuerza y el rendimiento en esfuerzos cortos e intensos.",
-    categorySlug: "creatinas", brand: "VOLTA Lab", basePrice: 29900, art: "jar", gallery: ["front", "detail", "context"],
-    pack: pack.volta({ line: "CREATINA", sub: "MONOHIDRATO · 5 G" }),
+    categorySlug: "creatinas", brand: HOUSE_BRAND, basePrice: 29900, art: "jar", gallery: ["front", "detail", "context"],
+    pack: pack.house({ line: "CREATINA", sub: "MONOHIDRATO · 5 G" }),
     variants: flavorGrid("cm", [["Sin sabor", FLAVOR.natural]], [{ size: "300 g", key: "300", servings: 60, delta: 0 }, { size: "500 g", key: "500", servings: 100, delta: 16000 }], (_, s) => (s === "300" ? 24 : 10)),
     goals: ["fuerza", "masa-muscular"], badges: ["marca-propia", "vegano", "sin-tacc"],
     usage: { moments: ["manana", "post"], text: "5 g por día, todos los días (también los que no entrenás), con agua o en tu batido.", dose: "1 medida (5 g)" },
@@ -24,8 +25,8 @@ export const performanceProducts: Product[] = [
   {
     slug: "creatina-gomitas", name: "Creatina en gomitas", short: "3 gomitas = 3 g de creatina. Sin shaker",
     description: "La misma creatina monohidrato en gomitas masticables con sabor a fruta. Para llevar en la mochila y no cortar nunca la toma diaria.",
-    categorySlug: "creatinas", brand: "VOLTA Lab", basePrice: 34900, art: "gummies", gallery: ["front", "detail"],
-    pack: pack.volta({ line: "GUMMIES", sub: "CREATINA · 90 U" }),
+    categorySlug: "creatinas", brand: HOUSE_BRAND, basePrice: 34900, art: "gummies", gallery: ["front", "detail"],
+    pack: pack.house({ line: "GUMMIES", sub: "CREATINA · 90 U" }),
     variants: flavorGrid("cg", [["Frutos rojos", FLAVOR.frutosRojos], ["Naranja", FLAVOR.naranja]], [{ size: "90 gomitas", key: "90", servings: 30, delta: 0 }], (f) => (f === "Naranja" ? 3 : 14)),
     goals: ["fuerza"], badges: ["marca-propia", "sin-tacc"],
     usage: { moments: ["manana"], text: "3 gomitas por día, en cualquier momento.", dose: "3 gomitas" },
@@ -90,8 +91,8 @@ export const performanceProducts: Product[] = [
   {
     slug: "glutamina", name: "Glutamina micronizada", short: "Recuperación y defensas, sin sabor",
     description: "L-glutamina pura en polvo, sin sabor, para sumar a tu batido después de entrenar.",
-    categorySlug: "aminoacidos", brand: "VOLTA Lab", basePrice: 24900, art: "jar", gallery: ["front", "detail"],
-    pack: pack.volta({ line: "GLUTAMINA", sub: "300 G · 60 SERV" }),
+    categorySlug: "aminoacidos", brand: HOUSE_BRAND, basePrice: 24900, art: "jar", gallery: ["front", "detail"],
+    pack: pack.house({ line: "GLUTAMINA", sub: "300 G · 60 SERV" }),
     variants: flavorGrid("gl", [["Sin sabor", FLAVOR.natural]], [{ size: "300 g", key: "300", servings: 60, delta: 0 }], () => 13),
     goals: ["recuperacion", "salud"], badges: ["marca-propia", "vegano", "sin-tacc"],
     usage: { moments: ["post", "noche"], text: "5 g después de entrenar o antes de dormir.", dose: "5 g" },

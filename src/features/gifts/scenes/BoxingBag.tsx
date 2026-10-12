@@ -4,13 +4,14 @@ import { BAG_CSS } from "./bag-css";
 import { BagDefs, Cap, Cavity, Chain, FrontStraps, Leather, PANEL, SEAMS, SeamSlit, Skin } from "./bag-parts";
 import { RevealGlow, TubReveal } from "./bag-reveal";
 import { ANO_NUEVO, DIA_DE_LA_MADRE, DIA_DEL_AMIGO, DIA_DEL_PADRE, NAVIDAD, SAN_VALENTIN } from "./details-gifts";
-import { BLACK_FRIDAY, CYBER_MONDAY, HALLOWEEN, HOT_SALE, OPERACION_VERANO, VOLTA, VUELTA_AL_GYM } from "./details-sales";
+import { BLACK_FRIDAY, CYBER_MONDAY, HALLOWEEN, HOT_SALE, OPERACION_VERANO, BRAND_BAG, VUELTA_AL_GYM } from "./details-sales";
 import { ChalkDust, KIT_CSS, SceneStyle } from "./kit";
 import type { GiftSceneProps } from "./types";
 import { bagVariant, type BagDetail } from "./variants";
+import { brand } from "@/config/brand";
 
 const DETAILS: Record<BagDetail, BagDecor> = {
-  volta: VOLTA, navidad: NAVIDAD, "ano-nuevo": ANO_NUEVO, "san-valentin": SAN_VALENTIN, "dia-de-la-madre": DIA_DE_LA_MADRE,
+  volta: BRAND_BAG, navidad: NAVIDAD, "ano-nuevo": ANO_NUEVO, "san-valentin": SAN_VALENTIN, "dia-de-la-madre": DIA_DE_LA_MADRE,
   "dia-del-padre": DIA_DEL_PADRE, "dia-del-amigo": DIA_DEL_AMIGO, halloween: HALLOWEEN, "black-friday": BLACK_FRIDAY,
   "cyber-monday": CYBER_MONDAY, "hot-sale": HOT_SALE, "vuelta-al-gym": VUELTA_AL_GYM, "operacion-verano": OPERACION_VERANO,
 };
@@ -83,7 +84,7 @@ export default function BoxingBag({ occasion, hits, total, opened, reduce }: Gif
       {!reduce && (
         <div aria-hidden="true" className="pointer-events-none absolute inset-0">
           {hits > 0 && !opened && <ChalkDust key={hits} seed={hits} x={dust.x} y={dust.y} />}
-          {opened && <ChalkDust seed={42} x={dust.x} y={dust.y} count={22} spread={1.7} sparks={[c.accent, "#ffffff", "#c8ff2e"]} />}
+          {opened && <ChalkDust seed={42} x={dust.x} y={dust.y} count={22} spread={1.7} sparks={[c.accent, "#ffffff", brand.signature.volt]} />}
         </div>
       )}
     </div>

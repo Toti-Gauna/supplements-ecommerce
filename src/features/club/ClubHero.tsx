@@ -11,6 +11,7 @@ import type { Mission } from "@/demo/types";
 import { skinOf } from "@/features/themes/skins";
 import { useCurrentTheme } from "@/features/themes/useCurrentTheme";
 import { useAccount } from "@/stores/account";
+import { brand } from "@/config/brand";
 
 const DEMO_USER = { name: "Sofía Demo", email: "sofia.demo@ejemplo.com" };
 
@@ -22,7 +23,7 @@ export function ClubHero({ missions, done }: { missions: Mission[]; done: number
   const { user, login } = useAccount();
   const { theme } = useCurrentTheme();
   const skin = theme ? skinOf(theme.id) : null;
-  const accent = skin?.accent ?? "#c8ff2e";
+  const accent = skin?.accent ?? brand.signature.volt;
   // Próximo premio: la misión más avanzada que falta completar (sin cuenta, todas arrancan en cero).
   const next = missions
     .map((m) => previewMission(m, user ? (demoAccountProgress[m.id] ?? 0) : 0, { units: 0, total: 0 }))
@@ -36,11 +37,11 @@ export function ClubHero({ missions, done }: { missions: Mission[]; done: number
   return (
     <section aria-labelledby="club-title" style={{ "--club-accent": accent } as CSSProperties}
       className="relative overflow-hidden rounded-[2rem] bg-night px-6 py-10 text-on-night sm:rounded-[2.5rem] sm:px-10 sm:py-14 lg:px-14 lg:py-16">
-      <div aria-hidden="true" className="pointer-events-none absolute -right-32 -top-40 h-[30rem] w-[30rem] rounded-full bg-[radial-gradient(closest-side,rgb(139_114_255/0.4),transparent)]" />
+      <div aria-hidden="true" className="pointer-events-none absolute -right-32 -top-40 h-[30rem] w-[30rem] rounded-full bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--brand-glow)_40%,transparent),transparent)]" />
       <div aria-hidden="true" className="pointer-events-none absolute -bottom-48 -left-24 h-96 w-96 rounded-full bg-[radial-gradient(closest-side,rgb(255_255_255/0.06),transparent)]" />
       <div className="relative grid gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:items-center lg:gap-14">
         <div>
-          <p className="eyebrow animate-rise text-[color:var(--club-accent)]">Club Volta{theme ? ` · ${theme.name}` : ""}</p>
+          <p className="eyebrow animate-rise text-[color:var(--club-accent)]">{brand.club}{theme ? ` · ${theme.name}` : ""}</p>
           <h1 id="club-title" className="font-display animate-rise mt-4 text-[clamp(2.7rem,6.5vw,5.2rem)] leading-[0.98]" style={{ animationDelay: "120ms" }}>
             Comprás, sumás, <span className="italic text-[color:var(--club-accent)]">ganás.</span>
           </h1>

@@ -7,6 +7,7 @@ import { useDemoData } from "@/stores/admin";
 import type { PaymentMethod } from "@/demo/types";
 import { formatARS } from "@/lib/money";
 import { ProofUpload } from "./ProofUpload";
+import { brand } from "@/config/brand";
 
 function CheckoutProMock({ total }: { total: number }) {
   const [returned, setReturned] = useState(false);
@@ -53,7 +54,7 @@ export function PaymentInstructions({ method, total, code }: { method: PaymentMe
       {method === "BANK_TRANSFER" ? <TransferData total={total} code={code} /> : (
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <SampleQr />
-          <p className="text-sm text-muted">Escaneás el QR de Volta con tu billetera, pagás {formatARS(total)} con la referencia <strong>{code}</strong> y subís el comprobante. Volta revisa el ingreso y aprueba el pedido a mano.</p>
+          <p className="text-sm text-muted">Escaneás el QR de {brand.name} con tu billetera, pagás {formatARS(total)} con la referencia <strong>{code}</strong> y subís el comprobante. {brand.name} revisa el ingreso y aprueba el pedido a mano.</p>
         </div>
       )}
       <p className="text-sm text-muted">Tenés {hours} h para subir el comprobante (en la tienda real, después se libera la reserva).</p>

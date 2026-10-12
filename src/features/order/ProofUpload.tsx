@@ -2,6 +2,7 @@
 import { FileCheck2, Upload } from "lucide-react";
 import { useId, useState } from "react";
 import { useAdmin } from "@/stores/admin";
+import { brand } from "@/config/brand";
 
 const ACCEPT = ["image/jpeg", "image/png", "image/webp", "application/pdf"];
 
@@ -18,7 +19,7 @@ export function ProofUpload({ orderCode }: { orderCode?: string }) {
     return (
       <div role="status" className="flex items-start gap-3 rounded-2xl bg-warning-soft p-4 text-sm text-warning">
         <FileCheck2 size={20} aria-hidden="true" className="shrink-0" />
-        <p><strong>Comprobante cargado (demo): {file}.</strong> El pago queda <strong>en revisión</strong>. En la tienda real, Volta verifica el ingreso en su cuenta y recién ahí aprueba el pedido. Subir un comprobante no confirma el pago.</p>
+        <p><strong>Comprobante cargado (demo): {file}.</strong> El pago queda <strong>en revisión</strong>. En la tienda real, {brand.name} verifica el ingreso en su cuenta y recién ahí aprueba el pedido. Subir un comprobante no confirma el pago.</p>
       </div>
     );
   }

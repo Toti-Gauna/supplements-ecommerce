@@ -12,6 +12,7 @@ import { cn } from "@/lib/cn";
 import { MUSIC_LABEL, type StudioMusic } from "./music";
 import { TemplatePicker } from "./TemplatePicker";
 import type { useStudioPiece } from "./useStudioPiece";
+import { brand } from "@/config/brand";
 
 export interface StudioControlsProps {
   piece: ReturnType<typeof useStudioPiece>;
@@ -48,7 +49,7 @@ export function StudioControls(p: StudioControlsProps) {
         <h2 id="st-when" className="font-display text-2xl">Fecha</h2>
         <Field id="st-theme" label="Temática" hint={piece.template === "offer" ? "Usa su fondo animado, sus colores y su cupón." : "Usa su fondo animado y sus colores."} className="mt-3">
           <Select id="st-theme" value={piece.themeId ?? "original"} onChange={(e) => piece.setThemeId(e.target.value === "original" ? null : (e.target.value as SeasonId))} aria-describedby="st-theme-hint">
-            <option value="original">Volta (sin temática)</option>
+            <option value="original">{brand.name} (sin temática)</option>
             {piece.themes.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
           </Select>
         </Field>

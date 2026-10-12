@@ -1,5 +1,7 @@
 import { SHAKER, type FallingItem } from "@/demo/engine/game";
 import { ART, SHAKER_ART, SPRITES, type Layer } from "./sprites";
+import { brand } from "@/config/brand";
+import { alpha } from "@/lib/color";
 
 /** Dibujo en canvas de las capas de `sprites.ts`. Los Path2D se crean una sola vez y se reusan en cada cuadro. */
 const paths = new Map<string, Path2D>();
@@ -50,8 +52,8 @@ function gradients(ctx: CanvasRenderingContext2D) {
   let g = glows.get(ctx);
   if (!g) {
     const aura = ctx.createRadialGradient(0, 40, 6, 0, 40, 74);
-    aura.addColorStop(0, "rgba(200,255,46,0.42)");
-    aura.addColorStop(1, "rgba(200,255,46,0)");
+    aura.addColorStop(0, alpha(brand.signature.volt, 0.42));
+    aura.addColorStop(1, alpha(brand.signature.volt, 0));
     const rim = ctx.createLinearGradient(0, 0, 0, 80);
     rim.addColorStop(0, ART.voltSoft);
     rim.addColorStop(0.5, ART.volt);

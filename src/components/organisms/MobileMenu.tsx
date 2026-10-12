@@ -8,10 +8,11 @@ import { ThemeToggle } from "@/components/atoms/ThemeToggle";
 import { categoryHref, visibleCategories } from "@/demo/engine/catalog";
 import { useDemoVersion } from "@/stores/admin";
 import { useUi } from "@/stores/ui";
+import { brand } from "@/config/brand";
 
 const LINKS = [
   { href: "/crear/", label: "Armá tu stack", icon: Layers },
-  { href: "/club/", label: "Club Volta", icon: Gift },
+  { href: "/club/", label: brand.club, icon: Gift },
   { href: "/club/juego/", label: "Shaker Rush", icon: Gamepad2 },
   { href: "/favoritos/", label: "Favoritos", icon: Heart },
   { href: "/cupones/", label: "Mis cupones", icon: TicketPercent },

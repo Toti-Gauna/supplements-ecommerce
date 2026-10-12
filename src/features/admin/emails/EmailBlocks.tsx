@@ -60,7 +60,7 @@ export function UsageList({ b }: { b: Extract<RenderedBlock, { type: "usage" }> 
     <ul className={cn(card, "flex flex-col gap-3 p-4 text-sm", INK)}>
       {b.lines.map((l) => (
         <li key={l.name}>
-          <p className="font-bold text-[#0b0d10]">{l.name}{l.dose && <span className="font-lab ml-2 rounded-full bg-[#0b0d10] px-2 py-0.5 text-[10.5px] text-[#c8ff2e]">{l.dose}</span>}</p>
+          <p className="font-bold text-[#0b0d10]">{l.name}{l.dose && <span className="font-lab ml-2 rounded-full bg-[#0b0d10] px-2 py-0.5 text-[10.5px] text-volt">{l.dose}</span>}</p>
           <p className="mt-0.5">{l.text}</p>
         </li>
       ))}
@@ -81,7 +81,7 @@ export function TrackingBattery({ b }: { b: Extract<RenderedBlock, { type: "trac
     <div className="@container mx-6 mt-5 rounded-2xl bg-[#f6f7f9] p-4">
       <ol className="flex gap-1.5 rounded-lg border-2 p-1" style={{ borderColor: NIGHT }}>
         {b.steps.map((s) => (
-          <li key={s.label} aria-label={`${s.label}: ${STEP_STATE[s.state]}`} className={cn("h-3.5 flex-1 rounded-[3px]", s.state === "done" ? "bg-[#0b0d10]" : s.state === "current" ? "bg-[#c8ff2e] ring-1 ring-[#0b0d10]" : "bg-[#e3e6ea]")} />
+          <li key={s.label} aria-label={`${s.label}: ${STEP_STATE[s.state]}`} className={cn("h-3.5 flex-1 rounded-[3px]", s.state === "done" ? "bg-[#0b0d10]" : s.state === "current" ? "bg-volt ring-1 ring-[#0b0d10]" : "bg-[#e3e6ea]")} />
         ))}
       </ol>
       <div aria-hidden="true" className="mt-2 hidden gap-1.5 @min-[28rem]:flex">

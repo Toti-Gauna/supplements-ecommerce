@@ -12,18 +12,19 @@ import { ThemeToggle } from "@/components/atoms/ThemeToggle";
 import { ThemeLogo } from "@/features/themes/ThemeLogo";
 import { MobileMenu } from "./MobileMenu";
 import { ShopMenu } from "./ShopMenu";
+import { brand } from "@/config/brand";
 
 export const NAV = [
   { href: "/categorias/", label: "Tienda" },
   { href: "/crear/", label: "Armá tu stack" },
-  { href: "/club/", label: "Club Volta" },
+  { href: "/club/", label: brand.club },
   { href: "/club/juego/", label: "Shaker Rush" },
   { href: "/preguntas/", label: "Ayuda" },
 ];
 
 export function Header() {
   const pathname = usePathname();
-  // El link más específico que coincide es el actual (en /club/juego/ es Shaker Rush, no Club Volta).
+  // El link más específico que coincide es el actual (en /club/juego/ es Shaker Rush, no el club).
   const current = NAV.filter((n) => pathname.startsWith(n.href)).sort((a, b) => b.href.length - a.href.length)[0]?.href;
   const hydrated = useHydrated();
   const units = useCart((s) => s.lines.reduce((sum, l) => sum + l.quantity, 0));
@@ -55,7 +56,7 @@ export function Header() {
     <header ref={ref} data-shop-header className={cn(stuck && "max-lg:bleed-top", "sticky top-[env(safe-area-inset-top)] z-40 bg-surface lg:glass border-b transition-[border-color,box-shadow] duration-300", compact ? "border-line shadow-[0_8px_30px_-20px_rgb(0_0_0/0.35)]" : "border-transparent")}>
       <div className={cn("mx-auto flex max-w-7xl items-center gap-2 px-4 transition-[height] duration-300 sm:px-6", compact ? "h-16" : "h-[4.5rem] lg:h-20")}>
         <button type="button" onClick={() => setMenu(true)} aria-label="Abrir menú" className={cn(icon, "-ml-2 lg:hidden")}><Menu size={22} aria-hidden="true" /></button>
-        <Link href="/" aria-label="Volta, ir al inicio" className="shrink-0"><ThemeLogo /></Link>
+        <Link href="/" aria-label={`${brand.name}, ir al inicio`} className="shrink-0"><ThemeLogo /></Link>
         <nav aria-label="Principal" className="ml-8 hidden items-center gap-1 lg:flex">
           {NAV.map((n) => n.href === "/categorias/" ? <ShopMenu key={n.href} active={pathname.startsWith("/c") || pathname.startsWith("/p")} /> : (
             <Link key={n.href} href={n.href} aria-current={current === n.href ? "page" : undefined}

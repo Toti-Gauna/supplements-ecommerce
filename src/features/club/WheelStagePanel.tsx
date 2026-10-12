@@ -13,6 +13,7 @@ import { useWheelSpin } from "./useWheelSpin";
 import { WheelDial } from "./WheelDial";
 import { WheelPrizeReveal } from "./WheelPrizeReveal";
 import { WheelStageDecor } from "./WheelStageDecor";
+import { brand } from "@/config/brand";
 
 /** Tamaño del disco: entero en la pantalla del celular (ancho) y en la del escritorio (alto). */
 const DIAL_SIZE = { "--dial": "min(82vw, 54dvh, 500px)" } as CSSProperties;
@@ -63,7 +64,7 @@ export default function WheelStagePanel({ open, checkout, onClose }: { open: boo
           applyRef={applyBtn} onApply={apply} onKeep={keep} onNext={next} onClose={onClose} />
       ) : (
         <div className="flex w-full flex-col items-center text-center" style={DIAL_SIZE}>
-          <p className="eyebrow text-volt-soft">{checkout ? "Antes de pagar · Disco VOLTA" : "Club VOLTA · Disco olímpico"}</p>
+          <p className="eyebrow text-volt-soft">{checkout ? `Antes de pagar · Disco ${brand.mark}` : `${brand.club} · Disco olímpico`}</p>
           <h2 className="font-display mt-1 text-[clamp(1.7rem,7vw,2.4rem)] leading-tight">{checkout ? "Probá tu suerte" : "Girá y ganá"}</h2>
           <div className="relative -mx-5 -my-[calc(var(--dial)*0.06)] flex w-[calc(100%+2.5rem)] justify-center overflow-clip py-[calc(var(--dial)*0.13)]">
             <WheelStageDecor spinning={spinning && !landedNow} landed={landedNow} />

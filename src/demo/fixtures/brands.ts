@@ -1,7 +1,9 @@
 import type { PackStyle } from "../types";
+import { brand } from "@/config/brand";
+import { HOUSE_BRAND, HOUSE_BRAND_ID } from "./house";
 
 /**
- * Marcas de MUESTRA (inventadas): VOLTA Lab es la marca propia de la tienda; Krono, Brava Sport, Ozono y Forja
+ * Marcas de MUESTRA (inventadas): la primera es la marca propia de la tienda (sale de `brand`, ver house.ts); Krono, Brava Sport, Ozono y Forja
  * imitan a las distribuidoras que vende una tienda real, sin usar ninguna marca existente.
  */
 export interface BrandInfo {
@@ -12,7 +14,7 @@ export interface BrandInfo {
 }
 
 export const brands: BrandInfo[] = [
-  { id: "volta-lab", name: "VOLTA Lab", note: "Marca propia de la tienda" },
+  { id: HOUSE_BRAND_ID, name: HOUSE_BRAND, note: "Marca propia de la tienda" },
   { id: "krono", name: "Krono Nutrition", note: "Marca de muestra · línea premium" },
   { id: "brava", name: "Brava Sport", note: "Marca de muestra · deportes" },
   { id: "ozono", name: "Ozono", note: "Marca de muestra · salud y veganos" },
@@ -21,10 +23,10 @@ export const brands: BrandInfo[] = [
 
 type Line = { line: string; sub?: string };
 
-/** Envase de cada marca: grafito y voltio (propia), blanco y rojo, azul y amarillo, menta y verde agua, tostado y naranja. */
+/** Envase de cada marca: noche y color firma (propia), blanco y rojo, azul y amarillo, menta y verde agua, tostado y naranja. */
 export const pack = {
-  volta: ({ line, sub }: Line): PackStyle => ({ body: "#101318", band: "#101318", ink: "#eef1f5", accent: "#c8ff2e", mark: "VOLTA LAB", line, sub, pattern: "bolt" }),
-  voltaWhite: ({ line, sub }: Line): PackStyle => ({ body: "#e9edf2", lid: "#101318", band: "#ffffff", ink: "#0b0d10", accent: "#8b72ff", mark: "VOLTA LAB", line, sub, pattern: "bolt" }),
+  house: ({ line, sub }: Line): PackStyle => ({ body: brand.colors.surface, band: brand.colors.surface, ink: brand.signature.onNight, accent: brand.signature.volt, mark: brand.houseMark, line, sub, pattern: "bolt" }),
+  houseWhite: ({ line, sub }: Line): PackStyle => ({ body: "#e9edf2", lid: brand.colors.surface, band: "#ffffff", ink: brand.light.text, accent: brand.signature.plasma, mark: brand.houseMark, line, sub, pattern: "bolt" }),
   krono: ({ line, sub }: Line): PackStyle => ({ body: "#f1f2ee", lid: "#c9ccd2", band: "#ffffff", ink: "#111318", accent: "#ff4d2e", mark: "KRONO", line, sub, pattern: "stripes" }),
   brava: ({ line, sub }: Line): PackStyle => ({ body: "#1b2a6b", band: "#1b2a6b", ink: "#f4f6ff", accent: "#ffd23f", mark: "BRAVA SPORT", line, sub, pattern: "wave" }),
   ozono: ({ line, sub }: Line): PackStyle => ({ body: "#e7f2f0", lid: "#0d2b29", band: "#ffffff", ink: "#0d2b29", accent: "#0fa89b", mark: "OZONO", line, sub, pattern: "grid" }),

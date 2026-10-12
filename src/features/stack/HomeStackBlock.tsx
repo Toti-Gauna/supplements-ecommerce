@@ -37,7 +37,7 @@ export function HomeStackBlock() {
   const shelf = inView ? shelfItems(summary.lines) : [];
   return (
     <section aria-labelledby="home-stack-title" className="relative overflow-hidden rounded-[2rem] bg-night px-5 py-8 text-on-night sm:rounded-[2.5rem] sm:px-10 sm:py-12 lg:px-12">
-      <div aria-hidden="true" className="absolute -right-40 -top-40 h-[28rem] w-[28rem] rounded-full bg-[radial-gradient(closest-side,rgb(139_114_255/0.3),transparent)]" />
+      <div aria-hidden="true" className="absolute -right-40 -top-40 h-[28rem] w-[28rem] rounded-full bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--brand-glow)_30%,transparent),transparent)]" />
       <div className="relative grid grid-cols-[minmax(0,1fr)] gap-7 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-center lg:gap-12">
         <div className="flex min-w-0 flex-col gap-6">
           <div>

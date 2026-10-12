@@ -1,9 +1,10 @@
 import type { TimelineStep } from "@/components/molecules/StatusTimeline";
+import { brand } from "@/config/brand";
 
 /** Estados de MUESTRA para la línea de tiempo (spec 5.2). */
 const FLOW = [
   { label: "Pedido recibido", description: "Reservamos tu pedido." },
-  { label: "Pago en revisión", description: "Volta verifica el ingreso de la transferencia o QR." },
+  { label: "Pago en revisión", description: `${brand.name} verifica el ingreso de la transferencia o QR.` },
   { label: "Pagado", description: "Pago confirmado." },
   { label: "Armando tu pedido", description: "Controlamos lote y vencimiento de cada producto y lo embalamos." },
   { label: "Listo", description: "Embalado y precintado, listo para salir." },

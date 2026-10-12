@@ -16,16 +16,18 @@ import { RouteMap } from "./RouteMap";
 import { StageStepper } from "./StageStepper";
 import { travelerFor } from "./tracking/Travelers";
 import { SAMPLE_STATES, timelineFor, type SampleStateId } from "./tracking-states";
+import { brand } from "@/config/brand";
+import { HOUSE_SHAKER_SLUG } from "@/demo/fixtures/house";
 
 const SAMPLE_LINES: CartLine[] = [
   { id: "s1", productSlug: "ionic-whey", variantId: "iw-chocolate-2lb", quantity: 1 },
   { id: "s2", productSlug: "creatina-monohidrato", variantId: "cm-sin-sabor-300", quantity: 1 },
-  { id: "s3", productSlug: "shaker-volta", variantId: "sh-voltio", quantity: 1 },
+  { id: "s3", productSlug: HOUSE_SHAKER_SLUG, variantId: "sh-voltio", quantity: 1 },
   { id: "s4", productSlug: "barra-proteica", variantId: "bp-mani-u", quantity: 2 },
 ];
 
 const STATE_COPY: Record<SampleStateId, { title: string; eta: string; progress: number; note: string }> = {
-  pending: { title: "Esperando tu comprobante", eta: "Se calcula cuando Volta confirme el pago", progress: 0.04, note: "Subí el comprobante: Volta verifica el ingreso y arma tu pedido." },
+  pending: { title: "Esperando tu comprobante", eta: `Se calcula cuando ${brand.name} confirme el pago`, progress: 0.04, note: `Subí el comprobante: ${brand.name} verifica el ingreso y arma tu pedido.` },
   production: { title: "Armando tu pedido", eta: "Llega entre el jue 8 y el vie 9 de oct", progress: 0.38, note: "Estamos preparando tu pedido: controlamos lote y vencimiento de cada producto." },
   ready: { title: "Listo", eta: "Sale del local mañana, jue 8 de oct", progress: 0.58, note: "Tu pedido está armado y precintado. Coordinamos la entrega por WhatsApp." },
   shipped: { title: "En camino", eta: "Llega mañana, vie 9 de oct", progress: 0.82, note: "Ya salió del local. El cadete te escribe antes de llegar." },
@@ -83,7 +85,7 @@ export function TrackingView() {
       <section aria-label="Etapas del pedido" className="rounded-[2rem] bg-surface p-6 shadow-[var(--shadow-card)] sm:p-8">
         <StageStepper key={stateId} steps={timelineFor(state.current)} />
       </section>
-      <a href={whatsappLink(`Hola Volta! Consulto por el pedido ${code}.`)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-3xl bg-surface p-5 shadow-[var(--shadow-card)] hover:bg-accent/40">
+      <a href={whatsappLink(`Hola ${brand.name}! Consulto por el pedido ${code}.`)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-3xl bg-surface p-5 shadow-[var(--shadow-card)] hover:bg-accent/40">
         <MessageCircle size={22} aria-hidden="true" className="text-primary" />
         <span><span className="block font-bold">¿Dudas con tu pedido?</span><span className="text-sm text-muted">Escribinos por WhatsApp con tu código</span></span>
       </a>

@@ -8,6 +8,7 @@ import { cn } from "@/lib/cn";
 import { ADMIN_GROUPS, ADMIN_NAV, BADGE_TEXT, isActive, type NavBadge } from "./nav";
 import { useNavCounts } from "./useNavCounts";
 import { useSidebarPin } from "./useSidebarPin";
+import { brand } from "@/config/brand";
 
 /**
  * En el riel de escritorio, lo que solo se ve con la barra abierta (hover, foco de teclado dentro o fijada) y lo que solo se ve
@@ -29,11 +30,11 @@ export function SidebarContent({ onNavigate, rail = false, footer }: { onNavigat
   return (
     <div className={cn("flex h-full flex-col", rail && "w-[280px]")}>
       <div className="flex items-center gap-3 px-[14px] pb-6 pt-6">
-        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-[linear-gradient(135deg,#e3ff8f,#c8ff2e_55%,#7fa800)] shadow-[inset_0_1px_0_rgb(255_255_255/0.5),0_8px_20px_-10px_rgb(200_255_46/0.8)]">
+        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-[linear-gradient(135deg,var(--color-volt-soft),var(--color-volt)_55%,color-mix(in_srgb,var(--color-volt),#000_35%))] shadow-[inset_0_1px_0_rgb(255_255_255/0.5),0_8px_20px_-10px_color-mix(in_srgb,var(--brand-volt)_80%,transparent)]">
           <LogoMark className="h-6 w-6 text-night" />
         </span>
         <span className={cn("min-w-0", show)}>
-          <span className="font-display block text-[1.45rem] leading-none text-on-night">Volta</span>
+          <span className="font-display block text-[1.45rem] leading-none text-on-night">{brand.name}</span>
           <span className="mt-1 block text-[11px] font-bold uppercase tracking-[0.16em] text-volt">Admin · demo</span>
         </span>
       </div>
@@ -75,7 +76,7 @@ export function SidebarContent({ onNavigate, rail = false, footer }: { onNavigat
         <div className={cn("flex items-center gap-3 rounded-xl px-[10px] py-2", show)}>
           <span aria-hidden="true" className="font-display grid h-7 w-7 shrink-0 place-items-center rounded-full bg-on-night text-base text-night">V</span>
           <span className="min-w-0 flex-1">
-            <span className="block truncate text-sm font-bold text-on-night">Volta (demo)</span>
+            <span className="block truncate text-sm font-bold text-on-night">{brand.name} (demo)</span>
             <span className="block truncate text-xs text-night-muted">Datos ficticios · sin login</span>
           </span>
         </div>

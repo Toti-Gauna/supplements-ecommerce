@@ -8,6 +8,7 @@ import { cn } from "@/lib/cn";
 import { scrollBehavior } from "@/lib/scroll";
 import { useHydrated } from "@/stores/hydration";
 import { HeroSlideBody, heroSlideClass } from "./HeroSlide";
+import { brand } from "@/config/brand";
 
 const INTERVAL = 4000;
 
@@ -44,7 +45,7 @@ export function HeroCarousel({ slides, lead }: { slides: CarouselSlide[]; lead?:
   if (total === 0) return null;
   const arrow = "absolute top-1/2 z-10 hidden h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-on-night/90 text-night shadow-[var(--shadow-card)] backdrop-blur transition hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-on-night sm:grid lg:h-12 lg:w-12";
   return (
-    <section aria-roledescription="carrusel" aria-label="Destacados de Volta" className="relative -mx-4 -mt-6 sm:mx-0 sm:mt-0 sm:[--hero-safe:4.5rem] lg:[--hero-safe:5.5rem]"
+    <section aria-roledescription="carrusel" aria-label={`Destacados de ${brand.name}`} className="relative -mx-4 -mt-6 sm:mx-0 sm:mt-0 sm:[--hero-safe:4.5rem] lg:[--hero-safe:5.5rem]"
       onPointerEnter={(e) => e.pointerType === "mouse" && setHold(true)} onPointerLeave={() => setHold(false)} onTouchStart={() => setPaused(true)}
       onFocusCapture={() => setHold(true)} onBlurCapture={() => setHold(false)}>
       <div ref={track} onScroll={(e) => setIndex(Math.round(e.currentTarget.scrollLeft / Math.max(1, e.currentTarget.clientWidth)))}

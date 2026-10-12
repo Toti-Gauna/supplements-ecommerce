@@ -3,13 +3,14 @@ import { AlertCircle } from "lucide-react";
 import { ConfirmButton } from "@/components/molecules/ConfirmButton";
 import { Select } from "@/components/atoms/Select";
 import { Switch } from "@/components/atoms/Switch";
+import { brand } from "@/config/brand";
 import { SLIDE_LIMITS } from "@/demo/admin/content-slides";
 import type { CarouselSlide } from "@/demo/types";
 import { ListControls } from "../ListControls";
 import { CountedField } from "./CountedField";
 import { SlideImageField } from "./SlideImageField";
 
-const LINKS = [["/crear/", "Armá tu stack"], ["/crear/quiz/", "Quiz ¿Qué necesitás?"], ["/categorias/", "Categorías"], ["/c/proteinas/", "Proteínas"], ["/c/creatinas/", "Creatinas"], ["/c/pre-entrenos/", "Pre-entrenos"], ["/club/", "Club Volta"], ["/club/juego/", "Shaker Rush"], ["/preguntas/", "Preguntas"]];
+const LINKS = [["/crear/", "Armá tu stack"], ["/crear/quiz/", "Quiz ¿Qué necesitás?"], ["/categorias/", "Categorías"], ["/c/proteinas/", "Proteínas"], ["/c/creatinas/", "Creatinas"], ["/c/pre-entrenos/", "Pre-entrenos"], ["/club/", brand.club], ["/club/juego/", "Shaker Rush"], ["/preguntas/", "Preguntas"]];
 
 interface Props {
   slide: CarouselSlide;

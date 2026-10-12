@@ -29,8 +29,8 @@
   /* Alerta sobre la noche (tiempo que se acaba, chatarra): el escenario es oscuro en los dos modos. */
   --game-alert: #ff8a73;
   background:
-    radial-gradient(120% 40% at 50% 100%, rgb(200 255 46 / 0.12), transparent 70%),
-    radial-gradient(90% 50% at 50% 0%, rgb(139 114 255 / 0.18), transparent 70%),
+    radial-gradient(120% 40% at 50% 100%, color-mix(in srgb, var(--brand-volt) 12%, transparent), transparent 70%),
+    radial-gradient(90% 50% at 50% 0%, color-mix(in srgb, var(--brand-glow) 18%, transparent), transparent 70%),
     radial-gradient(circle at 1px 1px, rgb(238 241 245 / 0.07) 1px, transparent 1.4px) 0 0 / 22px 22px,
     #07080a;
 }

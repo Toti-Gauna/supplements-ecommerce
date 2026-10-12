@@ -4,12 +4,13 @@ import { ProductArt } from "@/components/illustrations/ProductArt";
 import { frame } from "@/demo/admin/content-slides";
 import type { CarouselSlide } from "@/demo/types";
 import { cn } from "@/lib/cn";
+import { brand } from "@/config/brand";
 
 /** Fondos que rotan por diapositiva: grafito con plasma, plasma profundo e ion profundo (oscuros en cualquier temática). */
 const TONES = [
-  { bg: "bg-night", eyebrow: "text-volt", glow: "rgb(139_114_255/0.45)", tint: "#5a3220" },
-  { bg: "bg-[#120f2e]", eyebrow: "text-volt-soft", glow: "rgb(200_255_46/0.3)", tint: "#e8e4d8" },
-  { bg: "bg-[#06222a]", eyebrow: "text-[#7ff5ea]", glow: "rgb(46_230_214/0.38)", tint: "#8b72ff" },
+  { bg: "bg-night", eyebrow: "text-volt", glow: "color-mix(in_srgb,var(--brand-glow)_45%,transparent)", tint: "#5a3220" },
+  { bg: "bg-[#120f2e]", eyebrow: "text-volt-soft", glow: "color-mix(in_srgb,var(--brand-volt)_30%,transparent)", tint: "#e8e4d8" },
+  { bg: "bg-[#06222a]", eyebrow: "text-[#7ff5ea]", glow: "color-mix(in_srgb,var(--brand-spark)_38%,transparent)", tint: "#8b72ff" },
 ];
 
 const ART = "relative aspect-square w-full max-w-[19rem] transition-transform duration-[1200ms] ease-[var(--ease-out-expo)] group-hover:scale-[1.04] group-hover:-rotate-1 sm:max-w-[24rem]";
@@ -38,12 +39,12 @@ export function HeroSlideBody({ slide, index }: { slide: CarouselSlide; index: n
   return (
     <>
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[0.06] [background-image:radial-gradient(circle_at_1px_1px,#fff_1px,transparent_1.5px)] [background-size:22px_22px]" />
-      <svg aria-hidden="true" viewBox={LOGO_VIEWBOX} className="pointer-events-none absolute -right-[12%] top-1/2 h-[135%] -translate-y-1/2 opacity-[0.07]"><path d={LOGO_BOLT} fill="none" stroke="#c8ff2e" strokeWidth="0.6" /></svg>
+      <svg aria-hidden="true" viewBox={LOGO_VIEWBOX} className="pointer-events-none absolute -right-[12%] top-1/2 h-[135%] -translate-y-1/2 opacity-[0.07]"><path d={LOGO_BOLT} fill="none" stroke="var(--color-volt)" strokeWidth="0.6" /></svg>
       <div className="relative z-10 flex min-w-0 flex-col justify-center py-8 pl-5 pr-1 sm:py-12 sm:pl-[var(--hero-safe)] sm:pr-6 lg:pr-8">
-        <p className={cn("eyebrow", tone.eyebrow)}>Volta · {String(index + 1).padStart(2, "0")}</p>
+        <p className={cn("eyebrow", tone.eyebrow)}>{brand.name} · {String(index + 1).padStart(2, "0")}</p>
         <p className="font-display font-wide mt-2 text-[1.6rem] leading-[1.02] [overflow-wrap:anywhere] sm:mt-3 sm:text-5xl lg:text-6xl">{slide.title}</p>
         <p className="mt-2 line-clamp-2 max-w-md text-[13px] text-white/80 sm:mt-3 sm:line-clamp-none sm:text-lg">{slide.subtitle}</p>
-        <span className="mt-5 inline-flex w-fit max-w-full items-center gap-2 rounded-full bg-volt px-4 py-2.5 text-[13px] font-extrabold sm:mt-6 sm:px-6 sm:py-3 sm:text-sm text-night shadow-[0_12px_34px_-12px_rgb(200_255_46/0.7)] transition-transform group-hover:translate-x-1">
+        <span className="mt-5 inline-flex w-fit max-w-full items-center gap-2 rounded-full bg-volt px-4 py-2.5 text-[13px] font-extrabold sm:mt-6 sm:px-6 sm:py-3 sm:text-sm text-night shadow-[0_12px_34px_-12px_color-mix(in_srgb,var(--brand-volt)_70%,transparent)] transition-transform group-hover:translate-x-1">
           {slide.ctaLabel} <ArrowRight size={16} aria-hidden="true" />
         </span>
       </div>

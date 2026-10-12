@@ -95,9 +95,9 @@ export function drawPill(ctx: CanvasRenderingContext2D, text: string, x: number,
   return w;
 }
 
-const LOGO_PATHS = typeof Path2D === "undefined" ? null : [new Path2D(LOGO_STROKE_PATH), new Path2D(LOGO_BOLT)] as const;
+const LOGO_PATHS = typeof Path2D === "undefined" ? null : [LOGO_STROKE_PATH ? new Path2D(LOGO_STROKE_PATH) : null, new Path2D(LOGO_BOLT)] as const;
 
-/** Logo de la marca (marca + nombre). `h` = alto de la marca. El rayo va en voltio. */
+/** Logo de la marca (marca + nombre). `h` = alto de la marca. El rayo va en el color firma. */
 export function drawLogo(ctx: CanvasRenderingContext2D, x: number, y: number, h: number, color: string) {
   if (!LOGO_PATHS) return;
   const s = h / 64;
@@ -105,8 +105,8 @@ export function drawLogo(ctx: CanvasRenderingContext2D, x: number, y: number, h:
   ctx.translate(x, y);
   ctx.scale(s, s);
   ctx.fillStyle = color;
-  ctx.fill(LOGO_PATHS[0]);
-  ctx.fillStyle = "#c8ff2e";
+  if (LOGO_PATHS[0]) ctx.fill(LOGO_PATHS[0]);
+  ctx.fillStyle = brand.signature.volt;
   ctx.fill(LOGO_PATHS[1]);
   ctx.restore();
   ctx.save();
@@ -115,6 +115,6 @@ export function drawLogo(ctx: CanvasRenderingContext2D, x: number, y: number, h:
   ctx.fontStretch = "expanded";
   ctx.textAlign = "left";
   ctx.textBaseline = "middle";
-  ctx.fillText(brand.name.toUpperCase(), x + h * 1.12, y + h * 0.52);
+  ctx.fillText(brand.mark, x + h * 1.12, y + h * 0.52);
   ctx.restore();
 }

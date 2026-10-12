@@ -10,9 +10,9 @@ const base =
 /** Destello que cruza el botón al pasar el mouse (primario y oscuro). */
 const SHEEN = "after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:bg-[linear-gradient(110deg,transparent_30%,rgb(255_255_255/0.22)_50%,transparent_70%)] after:bg-[length:240%_100%] after:bg-[position:130%_0] after:transition-[background-position] after:duration-700 hover:after:bg-[position:-30%_0]";
 const variants: Record<Variant, string> = {
-  primary: SHEEN + " bg-primary text-on-primary shadow-[inset_0_1px_0_rgb(255_255_255/0.14),0_10px_24px_-12px_rgb(200_255_46/0.7)] hover:bg-primary-hover hover:shadow-[inset_0_1px_0_rgb(255_255_255/0.14),0_16px_30px_-12px_rgb(200_255_46/0.75)]",
+  primary: SHEEN + " bg-primary text-on-primary shadow-[inset_0_1px_0_rgb(255_255_255/0.14),0_10px_24px_-12px_color-mix(in_srgb,var(--brand-volt)_70%,transparent)] hover:bg-primary-hover hover:shadow-[inset_0_1px_0_rgb(255_255_255/0.14),0_16px_30px_-12px_color-mix(in_srgb,var(--brand-volt)_75%,transparent)]",
   dark: SHEEN + " bg-night text-on-night shadow-[inset_0_1px_0_rgb(255_255_255/0.08)] ring-1 ring-inset ring-white/15 hover:bg-night-2 hover:ring-volt/40",
-  light: SHEEN + " bg-volt text-night shadow-[0_12px_34px_-14px_rgb(200_255_46/0.7)] hover:bg-volt-soft",
+  light: SHEEN + " bg-volt text-night shadow-[0_12px_34px_-14px_color-mix(in_srgb,var(--brand-volt)_70%,transparent)] hover:bg-volt-soft",
   secondary: "border border-ink/15 bg-surface text-ink hover:border-ink/30 hover:bg-accent/40",
   ghost: "text-primary hover:bg-accent/60",
   danger: "text-danger hover:bg-danger-soft",

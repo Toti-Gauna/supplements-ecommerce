@@ -28,7 +28,7 @@ export function UsageTimeline({ usage }: { usage: Usage }) {
           const on = usage.moments.includes(m.id);
           return (
             <li key={m.id} className="relative flex flex-col items-center gap-2 text-center">
-              <span className={cn("grid h-10 w-10 place-items-center rounded-full ring-1 transition-colors", on ? "bg-volt text-night ring-volt shadow-[0_0_18px_rgb(200_255_46/0.55)]" : "bg-night-2 text-night-muted ring-white/10")}>
+              <span className={cn("grid h-10 w-10 place-items-center rounded-full ring-1 transition-colors", on ? "bg-volt text-night ring-volt shadow-[0_0_18px_color-mix(in_srgb,var(--brand-volt)_55%,transparent)]" : "bg-night-2 text-night-muted ring-white/10")}>
                 <MomentGlyph moment={m.id} className="h-[18px] w-[18px]" />
               </span>
               <span className={cn("text-[11px] font-bold leading-tight", on ? "text-on-night" : "text-night-muted")}>{m.label}</span>

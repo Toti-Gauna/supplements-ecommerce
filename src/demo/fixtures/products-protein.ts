@@ -2,14 +2,15 @@ import type { Product } from "../types";
 import { FLAVOR, pack } from "./brands";
 import { nutrition } from "./nutrition";
 import { FAQ, flavorGrid } from "./variants";
+import { HOUSE_BRAND } from "./house";
 
 /** Proteínas y ganadores. Precios ORIENTATIVOS (pesos, octubre 2026); valores nutricionales de MUESTRA. */
 export const proteinProducts: Product[] = [
   {
     slug: "ionic-whey", name: "Ionic Whey 100%", short: "24 g de proteína por scoop, se disuelve en segundos",
     description: "Blend de proteína de suero concentrada y aislada, micronizada para que no queden grumos. 24 g de proteína y 5,4 g de BCAA por servicio, con poca grasa y poca azúcar. La base de cualquier stack.",
-    categorySlug: "proteinas", brand: "VOLTA Lab", basePrice: 54900, art: "tub", gallery: ["front", "detail", "context"],
-    pack: pack.volta({ line: "WHEY", sub: "100% · 24 G PROT" }),
+    categorySlug: "proteinas", brand: HOUSE_BRAND, basePrice: 54900, art: "tub", gallery: ["front", "detail", "context"],
+    pack: pack.house({ line: "WHEY", sub: "100% · 24 G PROT" }),
     variants: flavorGrid("iw", [["Chocolate", FLAVOR.chocolate], ["Vainilla", FLAVOR.vainilla], ["Frutilla", FLAVOR.frutilla], ["Cookies & cream", FLAVOR.cookies]],
       [{ size: "2 lb (907 g)", key: "2lb", servings: 30, delta: 0 }, { size: "5 lb (2,27 kg)", key: "5lb", servings: 75, delta: 62000 }],
       (f, s) => (f === "Frutilla" && s === "5lb" ? 0 : f === "Cookies & cream" && s === "5lb" ? 2 : s === "2lb" ? 18 : 6)),

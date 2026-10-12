@@ -2,14 +2,16 @@ import type { Product } from "../types";
 import { FLAVOR, pack } from "./brands";
 import { actives, nutrition } from "./nutrition";
 import { FAQ, flavorGrid } from "./variants";
+import { HOUSE_BRAND, HOUSE_SHAKER, HOUSE_SHAKER_SLUG } from "./house";
+import { brand } from "@/config/brand";
 
 /** Vitaminas y salud, snacks, hidratación y accesorios. Precios ORIENTATIVOS; valores de MUESTRA. */
 export const wellnessProducts: Product[] = [
   {
     slug: "multivitaminico", name: "Multivitamínico Daily", short: "23 vitaminas y minerales en 1 comprimido",
     description: "Un comprimido por día con vitaminas A, C, D, E, complejo B, zinc y magnesio, pensado para personas que entrenan.",
-    categorySlug: "salud", brand: "VOLTA Lab", basePrice: 16900, art: "caps", gallery: ["front", "detail"],
-    pack: pack.voltaWhite({ line: "DAILY", sub: "MULTI · 60 COMP" }),
+    categorySlug: "salud", brand: HOUSE_BRAND, basePrice: 16900, art: "caps", gallery: ["front", "detail"],
+    pack: pack.houseWhite({ line: "DAILY", sub: "MULTI · 60 COMP" }),
     variants: flavorGrid("mv", null, [{ size: "60 comprimidos", key: "60", servings: 60, delta: 0 }], () => 21),
     goals: ["salud"], badges: ["marca-propia", "sin-tacc"],
     usage: { moments: ["manana"], text: "1 comprimido con el desayuno.", dose: "1 comprimido" },
@@ -60,8 +62,8 @@ export const wellnessProducts: Product[] = [
   {
     slug: "barra-proteica", name: "Barra proteica 20 g", short: "20 g de proteína, bañada en chocolate",
     description: "Barra con 20 g de proteína, fibra y cobertura de chocolate semiamargo. La colación de la mochila.",
-    categorySlug: "snacks", brand: "VOLTA Lab", basePrice: 2900, art: "bar", gallery: ["front", "detail"],
-    pack: pack.volta({ line: "PROTEIN BAR", sub: "20 G" }),
+    categorySlug: "snacks", brand: HOUSE_BRAND, basePrice: 2900, art: "bar", gallery: ["front", "detail"],
+    pack: pack.house({ line: "PROTEIN BAR", sub: "20 G" }),
     variants: flavorGrid("bp", [["Chocolate", FLAVOR.chocolate], ["Maní", FLAVOR.mani], ["Cookies & cream", FLAVOR.cookies]],
       [{ size: "Unidad", key: "u", servings: 1, delta: 0 }, { size: "Caja x 12", key: "x12", servings: 12, delta: 26100 }], (f, s) => (s === "u" ? 40 : f === "Maní" ? 3 : 8)),
     goals: ["masa-muscular", "salud"], badges: ["marca-propia"],
@@ -101,8 +103,8 @@ export const wellnessProducts: Product[] = [
   {
     slug: "electrolitos", name: "Electro Volt sobres", short: "Sodio, potasio y magnesio para hidratarte",
     description: "Electrolitos en sobres individuales para disolver en 500 ml de agua. Para días de calor, entrenamientos largos o después de correr en la costa.",
-    categorySlug: "hidratacion", brand: "VOLTA Lab", basePrice: 12900, art: "sachet", gallery: ["front", "detail"],
-    pack: pack.volta({ line: "ELECTRO", sub: "VOLT" }),
+    categorySlug: "hidratacion", brand: HOUSE_BRAND, basePrice: 12900, art: "sachet", gallery: ["front", "detail"],
+    pack: pack.house({ line: "ELECTRO", sub: "VOLT" }),
     variants: flavorGrid("ev", [["Limón", FLAVOR.limon], ["Naranja", FLAVOR.naranja], ["Blue razz", FLAVOR.blueRazz]], [{ size: "Caja x 10", key: "x10", servings: 10, delta: 0 }], (f) => (f === "Blue razz" ? 3 : 18)),
     goals: ["resistencia", "salud"], badges: ["marca-propia", "sin-azucar", "vegano"],
     usage: { moments: ["intra", "post"], text: "1 sobre en 500 ml de agua durante o después del esfuerzo.", dose: "1 sobre (6 g)" },
@@ -125,10 +127,10 @@ export const wellnessProducts: Product[] = [
     featured: false, isNew: false, soldCount: 66, tags: ["gel", "running", "resistencia"],
   },
   {
-    slug: "shaker-volta", name: "Shaker VOLTA 700 ml", short: "Con resorte mezclador y tapa a prueba de mochila",
+    slug: HOUSE_SHAKER_SLUG, name: `${HOUSE_SHAKER} 700 ml`, short: "Con resorte mezclador y tapa a prueba de mochila",
     description: "Shaker de 700 ml libre de BPA, con resorte mezclador de acero, marcas de medida y tapa a rosca con cierre a presión.",
-    categorySlug: "accesorios", brand: "VOLTA Lab", basePrice: 8900, art: "shaker", gallery: ["front", "context"],
-    pack: { ...pack.volta({ line: "VOLTA", sub: "700 ML" }), body: "#1a1f28", accent: "#c8ff2e" },
+    categorySlug: "accesorios", brand: HOUSE_BRAND, basePrice: 8900, art: "shaker", gallery: ["front", "context"],
+    pack: { ...pack.house({ line: brand.mark, sub: "700 ML" }), body: brand.colors.accent, accent: brand.signature.volt },
     variants: [
       { id: "sh-grafito", label: "Grafito", color: "Grafito", colorHex: "#3a4250", priceDelta: 0, stock: 25 },
       { id: "sh-voltio", label: "Voltio", color: "Voltio", colorHex: "#c8ff2e", priceDelta: 0, stock: 14 },
@@ -142,8 +144,8 @@ export const wellnessProducts: Product[] = [
   {
     slug: "magnesio-tiza", name: "Magnesio en bloque (tiza)", short: "Agarre seco para barra y kettlebell",
     description: "Carbonato de magnesio en bloque de 56 g. Mejora el agarre en dominadas, peso muerto y kettlebell.",
-    categorySlug: "accesorios", brand: "VOLTA Lab", basePrice: 4900, art: "chalk", gallery: ["front"],
-    pack: pack.volta({ line: "MAGNESIO", sub: "56 G" }),
+    categorySlug: "accesorios", brand: HOUSE_BRAND, basePrice: 4900, art: "chalk", gallery: ["front"],
+    pack: pack.house({ line: "MAGNESIO", sub: "56 G" }),
     variants: flavorGrid("mt", null, [{ size: "Bloque 56 g", key: "56", servings: 1, delta: 0 }], () => 30),
     goals: ["fuerza"], badges: ["marca-propia"],
     faqs: [{ q: "¿Se puede comer?", a: "No: es para las manos. No es un suplemento." }],

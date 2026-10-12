@@ -1,0 +1,56 @@
+import { defineBrand } from "./types";
+
+/**
+ * VOLTA (marca INVENTADA para la demo). Identidad "Laboratorio eléctrico": grafito profundo, verde voltio y violeta
+ * plasma (ver docs/tono-visual.md). Para armar la demo de otra tienda se copia este archivo (ver docs/marca-blanca.md).
+ */
+export const volta = defineBrand({
+  id: "volta",
+  name: "Volta",
+  mark: "VOLTA",
+  descriptor: "Suplementos",
+  tagline: "Suplementos deportivos con energía de verdad",
+  city: "Mar del Plata",
+  instagram: "volta.mdp",
+  whatsappNumber: null,
+  email: null,
+  legalName: null,
+  cuit: null,
+  houseBrand: "VOLTA Lab",
+  logo: "v-bolt",
+  paletteStatus: "provisional",
+  defaultMode: "dark",
+  colors: {
+    primary: "#c8ff2e",
+    primaryHover: "#d9ff6e",
+    onPrimary: "#0a0c10",
+    accent: "#1a1f28",
+    ion: "#2ee6d6",
+    plasma: "#8b72ff",
+    background: "#0a0c10",
+    surface: "#12161d",
+    text: "#eef1f5",
+    muted: "#9aa4b2",
+    border: "#252b36",
+    night: "#050608",
+    night2: "#0e1117",
+    voltInk: "#c8ff2e",
+  },
+  light: {
+    primary: "#0b0d10",
+    primaryHover: "#1c2129",
+    onPrimary: "#c8ff2e",
+    accent: "#e6eae0",
+    ion: "#0fa89b",
+    plasma: "#5a3fe6",
+    background: "#f2f3ee",
+    surface: "#ffffff",
+    text: "#0b0d10",
+    muted: "#545c68",
+    border: "#daded4",
+    night: "#0b0d10",
+    night2: "#161a22",
+    voltInk: "#4e6e00",
+  },
+  signature: { volt: "#c8ff2e", voltSoft: "#e3ff8f", plasma: "#8b72ff", ion: "#2ee6d6", onNight: "#eef1f5", nightMuted: "#a3acba" },
+});

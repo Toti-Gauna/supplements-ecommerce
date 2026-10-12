@@ -26,10 +26,10 @@
   --color-night: var(--c-night);
   --color-night-2: var(--c-night-2);
   /* Sobre bandas "noche" (oscuras en los dos modos): texto, texto apagado y acento. */
-  --color-on-night: #eef1f5;
-  --color-night-muted: #a3acba;
-  --color-volt: #c8ff2e;
-  --color-volt-soft: #e3ff8f;
+  --color-on-night: var(--brand-on-night);
+  --color-night-muted: var(--brand-night-muted);
+  --color-volt: var(--brand-volt);
+  --color-volt-soft: var(--brand-volt-soft);
   --color-volt-ink: var(--c-volt-ink);
   --color-ember: var(--c-ember);
   --color-success: var(--c-success);
@@ -64,14 +64,12 @@
   --c-danger-soft: #2c1512;
   --sh-card: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 18px 40px -22px rgb(0 0 0 / 0.8);
   --sh-lift: 0 1px 0 rgb(255 255 255 / 0.06) inset, 0 30px 60px -24px rgb(0 0 0 / 0.9);
-  --sh-glow: 0 0 0 1px rgb(200 255 46 / 0.35), 0 12px 40px -12px rgb(200 255 46 / 0.45);
+  --sh-glow: 0 0 0 1px color-mix(in srgb, var(--brand-volt) 35%, transparent), 0 12px 40px -12px color-mix(in srgb, var(--brand-volt) 45%, transparent);
   --skeleton-a: #161b23;
   --skeleton-b: #1f2530;
   --studio-1: #1b212b;
   --studio-2: #10141a;
   --studio-3: #07090c;
-  --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23c8ff2e' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-  --calendar: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23c8ff2e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2'/%3E%3Cpath d='M16 2v4M8 2v4M3 10h18'/%3E%3C/svg%3E");
 }
 html[data-theme="light"] {
   color-scheme: light;
@@ -84,17 +82,15 @@ html[data-theme="light"] {
   --c-danger-soft: #fbe4e1;
   --sh-card: 0 1px 2px rgb(11 13 16 / 0.05), 0 18px 40px -24px rgb(11 13 16 / 0.28);
   --sh-lift: 0 2px 4px rgb(11 13 16 / 0.06), 0 30px 60px -28px rgb(11 13 16 / 0.4);
-  --sh-glow: 0 0 0 1px rgb(11 13 16 / 0.9), 0 12px 32px -14px rgb(78 110 0 / 0.55);
+  --sh-glow: 0 0 0 1px rgb(11 13 16 / 0.9), 0 12px 32px -14px color-mix(in srgb, var(--c-volt-ink) 55%, transparent);
   --skeleton-a: #e3e6de;
   --skeleton-b: #f4f5f1;
   --studio-1: #20262f;
   --studio-2: #141920;
   --studio-3: #0a0c10;
-  --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230b0d10' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-  --calendar: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%230b0d10' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2'/%3E%3Cpath d='M16 2v4M8 2v4M3 10h18'/%3E%3C/svg%3E");
 }
 /* Las bandas "noche" llevan un filo de voltaje muy sutil para separarse del fondo oscuro. */
-.bg-night { box-shadow: inset 0 0 0 1px rgb(200 255 46 / 0.06); }
+.bg-night { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--brand-volt) 6%, transparent); }
 
 @layer base {
   /* Controles nativos con la estética de la tienda: el navegador sigue dibujando el selector, el calendario,
@@ -158,7 +154,7 @@ html[data-theme="light"] {
   }
   ::selection {
     background: var(--color-volt);
-    color: #0a0c10;
+    color: var(--color-night);
   }
 }
 
@@ -200,7 +196,7 @@ html[data-theme="light"] {
 
 /* Patrón de rayos muy tenue (reemplaza al de chevrones de Velmar). */
 @utility chevron-pattern {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 36 36'%3E%3Cpath d='M20 4 11 19h7l-3 13 10-17h-7z' fill='%23c8ff2e' fill-opacity='.05'/%3E%3C/svg%3E");
+  background-image: var(--bolt-pattern);
 }
 
 @utility glass {
@@ -212,7 +208,7 @@ html[data-theme="light"] {
 /* Filo eléctrico: borde con degradé voltio → plasma (tarjetas destacadas, cupones, club). */
 @utility edge-volt {
   border: 1px solid transparent;
-  background: linear-gradient(var(--color-surface), var(--color-surface)) padding-box, linear-gradient(135deg, rgb(200 255 46 / 0.7), rgb(139 114 255 / 0.5) 55%, rgb(46 230 214 / 0.35)) border-box;
+  background: linear-gradient(var(--color-surface), var(--color-surface)) padding-box, linear-gradient(135deg, color-mix(in srgb, var(--brand-volt) 70%, transparent), color-mix(in srgb, var(--brand-glow) 50%, transparent) 55%, color-mix(in srgb, var(--brand-spark) 35%, transparent)) border-box;
 }
 
 /* Header fijo: su fondo se extiende hacia arriba y tapa la franja de la hora (Safari deja ver la página detrás). */

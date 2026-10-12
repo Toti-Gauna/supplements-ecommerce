@@ -1,4 +1,5 @@
 import { isOccasion, type Gift } from "../engine/gifts";
+import { HOUSE_SHAKER, HOUSE_SHAKER_SLUG } from "./house";
 
 /**
  * Regalo de muestra que espera sin abrir en la cuenta demo (Sofía), para mostrar la apertura sin comprar antes.
@@ -45,7 +46,7 @@ const samples: SampleGift[] = [
     item: { slug: "creatina-monohidrato", name: "Creatina monohidrato micronizada", variant: "Sin sabor · 500 g" }, createdAt: SAMPLE_DAY, eta: SAMPLE_ETA },
   { code: "REGALO-AN02-027S", occasion: "ano-nuevo", from: "Flor", to: "Mati",
     message: "Año nuevo, marca nueva. ¡A romperla en 2027!",
-    item: { slug: "shaker-volta", name: "Shaker VOLTA 700 ml", variant: "Voltio" }, createdAt: SAMPLE_DAY, eta: SAMPLE_ETA },
+    item: { slug: HOUSE_SHAKER_SLUG, name: `${HOUSE_SHAKER} 700 ml`, variant: "Voltio" }, createdAt: SAMPLE_DAY, eta: SAMPLE_ETA },
   { code: "REGALO-AM0R-014M", occasion: "san-valentin", from: "Lu", to: "Gonza",
     message: "Feliz San Valentín, amor. Vos, yo y el gym a las 7.",
     item: { slug: "barra-proteica", name: "Barra proteica 20 g", variant: "Chocolate · Caja x 12" }, createdAt: SAMPLE_DAY, eta: SAMPLE_ETA },

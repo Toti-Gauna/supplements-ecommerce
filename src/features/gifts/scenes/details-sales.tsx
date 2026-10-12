@@ -7,11 +7,11 @@ import type { BagDecor, BagColors } from "./bag-colors";
 const mono = (weight = 700, spacing = "0.22em") => ({ fontFamily: MONO_SVG, fontWeight: weight, letterSpacing: spacing });
 const display = { fontFamily: DISPLAY_SVG, fontWeight: 850, fontStretch: "125%" };
 
-/** La "V" con el rayo de la marca, centrada en (x, y). */
+/** El símbolo del logo de la marca, centrado en (x, y). */
 function Mark({ x, y, s, ink, bolt }: { x: number; y: number; s: number; ink: string; bolt: string }) {
   return (
     <g transform={`translate(${x} ${y}) scale(${s}) translate(-32 -34)`}>
-      <path d={LOGO_STROKE_PATH} fill={ink} /><path d={LOGO_BOLT} fill={bolt} />
+      {LOGO_STROKE_PATH && <path d={LOGO_STROKE_PATH} fill={ink} />}<path d={LOGO_BOLT} fill={bolt} />
     </g>
   );
 }
@@ -31,8 +31,8 @@ function Tag({ c, lines, strike }: { c: BagColors; lines: [string, string]; stri
   );
 }
 
-/** VOLTA, sin fecha: la "V" con el rayo y el pulso. */
-export const VOLTA: BagDecor = {
+/** La marca, sin fecha: el símbolo del logo y el pulso. */
+export const BRAND_BAG: BagDecor = {
   Body: ({ c }) => (
     <g>
       <Mark x={150} y={152} s={0.78} ink={c.ink} bolt={c.accent} />

@@ -27,6 +27,7 @@ import { ScheduleSheet } from "./ScheduleSheet";
 import { useCalendarMoves } from "./useCalendarMoves";
 import { WeekView } from "./WeekView";
 import { WorkshopSettingsDialog } from "./WorkshopSettingsDialog";
+import { brand } from "@/config/brand";
 
 type View = "month" | "week" | "agenda";
 const VIEWS: { id: View; label: string }[] = [{ id: "month", label: "Mes" }, { id: "week", label: "Semana" }, { id: "agenda", label: "Agenda" }];
@@ -69,9 +70,9 @@ export function DeliveryCalendar() {
     const list = entries.filter((e) => CAPACITY_STATUSES.includes(e.order.status)).map((e) => ({
       uid: e.order.code, day: e.day,
       title: `${fulfillmentLabel(e.order.fulfillment)}: ${e.order.code} · ${e.order.customer.name}`,
-      description: `${e.summary}\nEstado: ${STATUS_LABEL[e.order.status]}${e.order.address ? `\n${e.order.address}` : ""}\n(Panel demo de Volta, datos ficticios)`,
+      description: `${e.summary}\nEstado: ${STATUS_LABEL[e.order.status]}${e.order.address ? `\n${e.order.address}` : ""}\n(Panel demo de ${brand.name}, datos ficticios)`,
     }));
-    const name = `volta-despachos-${new Date().toISOString().slice(0, 10)}.ics`;
+    const name = `${brand.id}-despachos-${new Date().toISOString().slice(0, 10)}.ics`;
     downloadBlob(new Blob([toIcs(list, new Date())], { type: "text/calendar;charset=utf-8" }), name);
     push({ tone: "success", title: `${list.length} despachos exportados`, description: `Abrí ${name} con Google Calendar, Outlook o el calendario del celular.` });
   };

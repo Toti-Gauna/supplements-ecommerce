@@ -10,6 +10,7 @@ import type { Mission } from "@/demo/types";
 import { useAdmin } from "@/stores/admin";
 import { useDemoSave } from "../useDemoSave";
 import { clearMissionDraft, loadMissionDraft, saveMissionDraft } from "./missionDraft";
+import { brand } from "@/config/brand";
 
 interface Props {
   /** Misión a editar (o una vacía para "Nueva misión"); null = cerrado. */
@@ -69,7 +70,7 @@ function MissionBody({ initial, draftKey, onClose }: { initial: Mission; draftKe
             <Input id="ms-title" value={m.title} onChange={(e) => set({ title: e.target.value })} placeholder="Comprá 3 productos" aria-invalid={!!errors.title} aria-describedby={describedBy("ms-title", errors.title)} />
           </Field>
           <Field id="ms-reward" label="Premio" error={errors.reward}>
-            <Input id="ms-reward" value={m.reward} onChange={(e) => set({ reward: e.target.value })} placeholder="Shaker VOLTA de regalo" aria-invalid={!!errors.reward} aria-describedby={describedBy("ms-reward", errors.reward)} />
+            <Input id="ms-reward" value={m.reward} onChange={(e) => set({ reward: e.target.value })} placeholder={`Shaker ${brand.mark} de regalo`} aria-invalid={!!errors.reward} aria-describedby={describedBy("ms-reward", errors.reward)} />
           </Field>
           <Field id="ms-type" label="Tipo">
             <Select id="ms-type" value={m.type} onChange={(e) => set({ type: e.target.value as Mission["type"] })}>{MISSION_TYPES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}</Select>

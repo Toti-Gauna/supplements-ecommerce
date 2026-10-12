@@ -3,6 +3,7 @@ import { LogoMark } from "@/components/atoms/Logo";
 import { MONO_FONT } from "@/config/brand";
 import { cn } from "@/lib/cn";
 import { polar, VOLT } from "./wheel-art";
+import { brand } from "@/config/brand";
 
 /** Moleteado: dos tandas de líneas cruzadas entre dos radios (caja de 100). */
 const KNURL = Array.from({ length: 64 }, (_, i) => {
@@ -26,7 +27,7 @@ function Engraved({ pathId, text }: { pathId: string; text: string }) {
   );
 }
 
-/** Arte de la maza de acero: aro moleteado, "VOLTA" y "20 KG" grabados y el agujero de la barra. */
+/** Arte de la maza de acero: aro moleteado, la marca y "20 KG" grabados y el agujero de la barra. */
 function HubArt({ live }: { live: boolean }) {
   const uid = useId().replace(/:/g, "");
   const id = (k: string) => `${uid}${k}`;
@@ -56,7 +57,7 @@ function HubArt({ live }: { live: boolean }) {
       <path d={KNURL} stroke="#20252c" strokeOpacity=".55" strokeWidth=".7" />
       <circle cx="50" cy="50" r="45.6" fill="none" stroke="#1b1f25" strokeOpacity=".6" strokeWidth=".7" />
       <circle cx="50" cy="50" r="37.4" fill="none" stroke="#fff" strokeOpacity=".5" strokeWidth=".7" />
-      <Engraved pathId={id("top")} text="VOLTA" />
+      <Engraved pathId={id("top")} text={brand.mark} />
       <Engraved pathId={id("bottom")} text="20 KG" />
       <circle cx="50" cy="50" r="25.6" fill="none" stroke="#fff" strokeOpacity=".6" strokeWidth="1" />
       <circle cx="50" cy="50" r="24.4" fill={`url(#${id("hole")})`} />

@@ -41,6 +41,11 @@ export function clearDemoStorage(): void {
     Object.keys(window.localStorage)
       .filter((k) => k.startsWith(STORAGE_PREFIX))
       .forEach((k) => window.localStorage.removeItem(k));
+    // Borradores sin guardar del panel (`volta-ui:*-draft:*`, en la pestaña): si quedaran, volverían como "cambios sin
+    // guardar" sobre los datos reiniciados. La barra lateral y el regreso de la vista previa se conservan.
+    Object.keys(window.sessionStorage)
+      .filter((k) => k.startsWith("volta-ui:") && k.includes("-draft"))
+      .forEach((k) => window.sessionStorage.removeItem(k));
   } catch {
     /* ignorar */
   }

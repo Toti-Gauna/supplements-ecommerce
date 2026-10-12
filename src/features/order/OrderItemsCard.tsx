@@ -5,6 +5,7 @@ import { Sheet } from "@/components/motion/Sheet";
 import type { CartLine } from "@/demo/engine/cart-types";
 import { quoteLines } from "@/demo/engine/pricing";
 import { formatARS } from "@/lib/money";
+import { plural } from "@/lib/plural";
 import { OrderLines } from "./OrderLines";
 
 const VISIBLE = 3;
@@ -37,7 +38,7 @@ export function OrderItemsCard({ code, lines, sample }: { code: string; lines: C
       <Sheet open={open} onClose={() => setOpen(false)} title="Productos del pedido" side="bottom">
         <div className="overflow-y-auto px-5 pb-8 pt-6">
           <p className="eyebrow text-volt-ink">{code}</p>
-          <h2 className="font-display mt-1 text-3xl">{units} productos</h2>
+          <h2 className="font-display mt-1 text-3xl">{plural(units, "producto", "productos")}</h2>
           <div className="mt-5"><OrderLines lines={lines} /></div>
           <p className="mt-4 flex justify-between border-t border-line pt-4 font-bold"><span>Total de productos</span><span className="tabular-nums">{formatARS(total)}</span></p>
         </div>

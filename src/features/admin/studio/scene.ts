@@ -8,10 +8,11 @@ import { AMBIENT, type AmbientLayer } from "@/features/themes/ambient";
 import { skinOf } from "@/features/themes/skins";
 import type { AssetRequest, StudioAssets } from "./assets";
 import type { StudioLook, StudioScene } from "./render/types";
+import { brand } from "@/config/brand";
 
 /** Sin temática: el laboratorio de la marca (grafito, halo plasma y acento voltio) con chispas voltio que titilan. */
-const BRAND_LOOK = { from: "#06080b", to: "#1c2230", glow: "#8b72ff", accent: "#c8ff2e", accentInk: "#0a0c10" };
-const BRAND_LAYERS: AmbientLayer[] = [{ particles: [{ dot: "#c8ff2e" }, { dot: "#e3ff8f" }], motion: "twinkle", count: 18, size: [3, 7], duration: [3, 6], opacity: 0.8 }];
+const BRAND_LOOK = { from: "#06080b", to: "#1c2230", glow: brand.signature.plasma, accent: brand.signature.volt, accentInk: "#0a0c10" };
+const BRAND_LAYERS: AmbientLayer[] = [{ particles: [{ dot: brand.signature.volt }, { dot: brand.signature.voltSoft }], motion: "twinkle", count: 18, size: [3, 7], duration: [3, 6], opacity: 0.8 }];
 
 export function layersFor(themeId: SeasonId | null): AmbientLayer[] {
   return themeId ? AMBIENT[themeId] : BRAND_LAYERS;

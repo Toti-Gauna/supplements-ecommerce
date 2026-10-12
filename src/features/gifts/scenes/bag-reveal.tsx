@@ -2,9 +2,10 @@ import { defaultPack } from "@/components/illustrations/supplements";
 import { Tub } from "@/components/illustrations/supplements/tubs";
 import type { BagColors } from "./bag-colors";
 import { SPARKLE } from "./kit";
+import { brand } from "@/config/brand";
 
 /** Pote genérico de regalo: el de VOLTA Lab con el rótulo de la marca (el producto real se ve después). */
-const GIFT_PACK = { ...defaultPack("tub"), line: "VOLTA", sub: "EDICIÓN REGALO" };
+const GIFT_PACK = { ...defaultPack("tub"), line: brand.mark, sub: "EDICIÓN REGALO" };
 const RAYS = [-70, -45, -22, 0, 22, 45, 70, 180];
 const TWINKLES = [{ x: 204, y: 104, s: 1.1, d: 520 }, { x: 98, y: 132, s: 0.7, d: 680 }, { x: 186, y: 206, s: 0.6, d: 820 }];
 

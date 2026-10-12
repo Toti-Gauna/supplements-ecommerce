@@ -19,7 +19,7 @@ export function GamePrizesPreview({ config, valid }: { config: GamePrizeConfig; 
   const shown = Math.min(score, max);
   return (
     <section aria-labelledby="gp-preview" className="relative flex flex-col gap-4 overflow-hidden rounded-3xl bg-night p-5 text-on-night sm:p-6">
-      <span aria-hidden="true" className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-[radial-gradient(closest-side,rgb(139_114_255/0.35),transparent)]" />
+      <span aria-hidden="true" className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--brand-glow)_35%,transparent),transparent)]" />
       <p id="gp-preview" className="eyebrow relative flex items-center gap-2 text-volt"><Gamepad2 size={14} aria-hidden="true" />Vista previa · Shaker Rush</p>
       {!valid ? <p className="relative text-sm text-night-muted">Corregí los valores marcados para ver la vista previa.</p> : (
         <>

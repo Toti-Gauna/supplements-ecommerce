@@ -1,3 +1,4 @@
+import { HOUSE_SHAKER, HOUSE_SHAKER_SLUG } from "./house";
 /**
  * Ruleta "Disco olímpico" de MUESTRA. Pesos relativos; editable desde el panel demo. La muestra vale lo que un sachet de
  * pre-entreno y el shaker, su precio desde del catálogo (`giftValue`).
@@ -49,7 +50,7 @@ const PRIZES: WheelPrize[] = [
   { id: "p-muestra", template: "sample", name: "Muestra de regalo", kind: "FIXED", value: 2500 },
   { id: "p-10", template: "percent", name: "10% OFF", kind: "PERCENT", value: 10 },
   { id: "p-3000", template: "fixed", name: "$3.000 OFF", kind: "FIXED", value: 3000, minSubtotal: 25000 },
-  { id: "p-shaker", template: "gift", name: "Shaker VOLTA de regalo", kind: "FIXED", value: 8900, minSubtotal: 30000, productSlug: "shaker-volta" },
+  { id: "p-shaker", template: "gift", name: `${HOUSE_SHAKER} de regalo`, kind: "FIXED", value: 8900, minSubtotal: 30000, productSlug: HOUSE_SHAKER_SLUG },
   { id: "p-15", template: "percent", name: "15% OFF", kind: "PERCENT", value: 15 },
 ];
 

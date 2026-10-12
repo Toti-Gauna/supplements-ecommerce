@@ -1,3 +1,4 @@
+import { HOUSE_BRAND } from "./house";
 /**
  * Proveedores y niveles de stock de MUESTRA (Fase 7): distribuidoras inventadas de las marcas del catálogo. Nombres,
  * contactos, teléfonos, emails y montos son ficticios (teléfonos 223 555-01xx, emails @ejemplo.com).
@@ -19,7 +20,7 @@ export interface Supplier {
 
 export const suppliers: Supplier[] = [
   {
-    id: "lab-costa", name: "Laboratorio Costa (muestra)", brands: ["VOLTA Lab"], contact: "Paula Ríos", phone: "223 555-0181",
+    id: "lab-costa", name: "Laboratorio Costa (muestra)", brands: [HOUSE_BRAND], contact: "Paula Ríos", phone: "223 555-0181",
     email: "labcosta@ejemplo.com", deliveryWeekdays: [2, 4], minOrder: 500000, notes: "Fabrica la marca propia. Pedir con dos días de anticipación.",
   },
   {

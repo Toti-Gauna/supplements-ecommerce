@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { DISPLAY_SVG, Rim } from "@/components/illustrations/supplements/defs";
 import type { BagColors } from "./bag-colors";
+import { brand } from "@/config/brand";
 
 /**
  * Piezas de la bolsa de boxeo (lienzo de 300 × 300). Cilindro de cuero de x 100 a 200, tapa en y 86 y base en 256;
@@ -106,7 +107,7 @@ export function Skin({ uid, c, children }: { uid: string; c: BagColors; children
       <path d={TOP_COLLAR} fill={c.band} />
       <path d={BASE} fill={c.band} />
       <path d="M100 89.5A50 8 0 0 0 200 89.5M100 99A50 8 0 0 0 200 99M100 225.5A50 8 0 0 0 200 225.5" fill="none" stroke={c.accent} strokeOpacity=".7" strokeWidth="1" strokeDasharray="2.6 2.6" />
-      <text x="150" y="103" textAnchor="middle" fill={c.accent} style={{ fontFamily: DISPLAY_SVG, fontWeight: 850, fontStretch: "125%", letterSpacing: "0.22em" }} fontSize="9.5">VOLTA</text>
+      <text x="150" y="103" textAnchor="middle" fill={c.accent} style={{ fontFamily: DISPLAY_SVG, fontWeight: 850, fontStretch: "125%", letterSpacing: "0.22em" }} fontSize="9.5">{brand.mark}</text>
       <path d={TOP_COLLAR} fill="url(#sp-cyl)" opacity=".5" /><path d={BASE} fill="url(#sp-cyl)" opacity=".5" />
       <g opacity=".35"><Rim x={198} y1={98} y2={236} /></g>
     </g>

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { brand } from "@/config/brand";
 
 export type GlyphKind = "percent" | "truck" | "sample" | "shaker" | "gift" | "coin";
 type CouponKind = "PERCENT" | "FIXED" | "FREE_SHIPPING";
@@ -77,9 +78,9 @@ export function GlyphGradient({ id = "volta-glyph" }: { id?: string }) {
   return (
     <defs>
       <linearGradient id={id} x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stopColor="#e3ff8f" />
-        <stop offset=".5" stopColor="#c8ff2e" />
-        <stop offset="1" stopColor="#2ee6d6" />
+        <stop offset="0" stopColor={brand.signature.voltSoft} />
+        <stop offset=".5" stopColor={brand.signature.volt} />
+        <stop offset="1" stopColor={brand.signature.ion} />
       </linearGradient>
     </defs>
   );

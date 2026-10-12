@@ -13,6 +13,8 @@ import { useWheelPrize } from "../club/useWheelPrize";
 import { WheelPrizeTicket } from "../club/WheelPrizeTicket";
 import { GamePrizeTicket } from "../game/GamePrizeTicket";
 import { useGameCodes } from "@/stores/game";
+import { DEMO_TRACKING_TOKEN } from "@/demo/fixtures/commerce";
+import { ORDER_PREFIX } from "@/demo/fixtures/house";
 
 /** El premio de la ruleta, con su estado, primero en los premios de la cuenta (8.2.14). */
 function WheelPrizeItem() {
@@ -23,7 +25,7 @@ function WheelPrizeItem() {
 export function OrdersSection({ lastOrder }: { lastOrder: DemoOrder | null }) {
   const orders = [
     ...(lastOrder ? [{ code: lastOrder.code, status: "Pendiente de pago", total: lastOrder.quote.total, href: `/pedido/${lastOrder.token}/` }] : []),
-    { code: "VOL-DEMO-0000", status: "Entregado", total: 30400, href: "/pedido/demo-volta/" },
+    { code: `${ORDER_PREFIX}-DEMO-0000`, status: "Entregado", total: 30400, href: `/pedido/${DEMO_TRACKING_TOKEN}/` },
   ];
   return (
     <ul className="flex flex-col gap-2">

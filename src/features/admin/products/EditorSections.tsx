@@ -10,6 +10,7 @@ import { cn } from "@/lib/cn";
 import { NumberField } from "../NumberField";
 import { ProductMediaFields } from "../ProductMediaFields";
 import { VariantsEditor } from "../VariantsEditor";
+import { brand } from "@/config/brand";
 
 interface StepProps { id: StepId; check: StepCheck; tried: boolean; children: ReactNode }
 
@@ -92,7 +93,7 @@ export function EditorSections({ d, set, checks, tried, categories, products, on
       {step("suplemento", (
         <>
           <label className="flex flex-col gap-1 text-sm font-bold">Marca
-            <Input value={d.brand} list="marcas" onChange={(e) => set({ brand: e.target.value })} placeholder="VOLTA Lab" />
+            <Input value={d.brand} list="marcas" onChange={(e) => set({ brand: e.target.value })} placeholder={brand.houseBrand} />
             <datalist id="marcas">{[...new Set(products.map((p) => p.brand).filter(Boolean))].map((b) => <option key={b} value={b} />)}</datalist>
           </label>
           <Chips legend="Objetivos" options={goalList().map((g) => [g.id, g.name] as const)} value={d.goals ?? []} onChange={(v) => set({ goals: v as Product["goals"] })} />

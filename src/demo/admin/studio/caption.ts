@@ -4,6 +4,7 @@ import { STUDIO_BRAND, STUDIO_GAME_STEPS, STUDIO_HOOKS, STUDIO_KEYWORDS, STUDIO_
 import type { SeasonalTheme } from "../../types";
 import type { StudioProduct } from "./content";
 import type { StudioGame, StudioStack } from "./templates";
+import { brand } from "@/config/brand";
 
 /** Ganchos que aplican a la plantilla y a los productos elegidos (los específicos primero, después los genéricos). */
 export function hooksFor(products: StudioProduct[], template: StudioTemplate = "offer"): StudioHook[] {
@@ -18,7 +19,7 @@ export function hooksFor(products: StudioProduct[], template: StudioTemplate = "
 export function keywordFor(products: StudioProduct[], template: StudioTemplate = "offer"): string {
   if (template === "stack") return "STACK";
   if (template === "game") return "SHAKER";
-  return STUDIO_KEYWORDS[products[0]?.categorySlug ?? ""] ?? "VOLTA";
+  return STUDIO_KEYWORDS[products[0]?.categorySlug ?? ""] ?? brand.mark;
 }
 
 /** Hashtag sin espacios ni signos ("Día de la Madre" → #DíaDeLaMadre). Pocos: rinden poco. */

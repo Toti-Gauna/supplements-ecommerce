@@ -21,6 +21,8 @@ import { useHydrated } from "@/stores/hydration";
 import { summaryRows } from "../checkout/CheckoutSummary";
 import { OrderLines } from "./OrderLines";
 import { PaymentInstructions } from "./PaymentInstructions";
+import { brand } from "@/config/brand";
+import { STORAGE_PREFIX } from "@/stores/storage";
 
 const PAY_TITLE = { CHECKOUT_PRO: "Pagar con tarjeta, vía Mercado Pago (muestra)", BANK_TRANSFER: "Transferencia (muestra)", QR_MANUAL: "Pago con QR (muestra)" };
 
@@ -35,7 +37,7 @@ export function ConfirmationView() {
   useEffect(() => {
     if (!order) return;
     syncShopOrder(order);
-    const key = `volta-demo:celebrated:${order.code}`;
+    const key = `${STORAGE_PREFIX}celebrated:${order.code}`;
     let first = true;
     try { first = !window.sessionStorage.getItem(key); } catch { /* sin sessionStorage: celebra igual */ }
     if (!first) return;
@@ -62,7 +64,7 @@ export function ConfirmationView() {
           <h2 className="font-display animate-rise mt-4 text-4xl leading-tight sm:text-5xl">¡Gracias, {order.contact.name.split(" ")[0]}! Tu pedido de demostración está registrado</h2>
           <p className="mt-3 text-night-muted">Código <strong className="text-on-night">{order.code}</strong> · Estado de muestra: <strong className="text-on-night">pendiente de pago</strong>. No se cobró nada ni se envió ningún email.</p>
           <ol className="mt-8 grid gap-3 text-sm sm:grid-cols-3">
-            {["Pagás o subís el comprobante", "Volta confirma y arma tu pedido", "Seguís cada etapa con tu link"].map((t, i) => (
+            {["Pagás o subís el comprobante", `${brand.name} confirma y arma tu pedido`, "Seguís cada etapa con tu link"].map((t, i) => (
               <li key={t} className="flex items-center gap-3 rounded-2xl bg-white/5 p-3"><span className="font-display grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white/10 text-volt">{i + 1}</span>{t}</li>
             ))}
           </ol>
@@ -89,7 +91,7 @@ export function ConfirmationView() {
       <aside className="flex flex-col gap-3 lg:sticky lg:top-24 lg:self-start">
         <OrderSummary rows={summaryRows(order.quote)} total={order.quote.total} totalNote="Montos de muestra." />
         <ButtonLink href={`/pedido/${order.token}/`} size="lg">Seguir mi pedido</ButtonLink>
-        <a href={whatsappLink(`Hola Volta! Hice el pedido ${order.code} en la tienda y tengo una consulta.`)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 text-sm font-bold text-primary underline">
+        <a href={whatsappLink(`Hola ${brand.name}! Hice el pedido ${order.code} en la tienda y tengo una consulta.`)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 text-sm font-bold text-primary underline">
           <MessageCircle size={16} aria-hidden="true" /> Consultar por WhatsApp
         </a>
       </aside>

@@ -20,7 +20,7 @@ export function StackRulePreview({ rule, valid }: { rule: StackRule; valid: bool
   const counted = new Intl.ListFormat("es", { type: "conjunction" }).format(STACK_CATEGORIES.map((c) => getCategory(c)?.name.toLowerCase() ?? c));
   return (
     <section aria-labelledby="stack-preview-title" aria-live="polite" className="relative overflow-hidden rounded-3xl bg-night p-5 text-on-night sm:p-6">
-      <span aria-hidden="true" className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-[radial-gradient(closest-side,rgb(139_114_255/0.35),transparent)]" />
+      <span aria-hidden="true" className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--brand-glow)_35%,transparent),transparent)]" />
       <p id="stack-preview-title" className="eyebrow relative flex items-center gap-2 text-volt"><Layers size={14} aria-hidden="true" />Vista previa</p>
       {!valid ? (
         <p className="relative mt-3 text-sm text-night-muted">Corregí los valores para ver el ejemplo.</p>

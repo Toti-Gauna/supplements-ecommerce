@@ -1,3 +1,4 @@
+import { brand } from "@/config/brand";
 /**
  * La bolsa de boxeo vestida según la ocasión del regalo. Los colores salen de la temática (`occasionColors`) y cada
  * fecha suma un detalle propio. Mapa abierto a propósito (no exhaustivo sobre `SeasonId`): un id de temática sin
@@ -15,7 +16,7 @@ export interface BagVariant {
   name: string;
 }
 
-const DEFAULT_VARIANT: BagVariant = { detail: "volta", name: "Bolsa de boxeo VOLTA" };
+const DEFAULT_VARIANT: BagVariant = { detail: "volta", name: `Bolsa de boxeo ${brand.mark}` };
 
 const VARIANTS: Readonly<Record<string, BagVariant | undefined>> = {
   volta: DEFAULT_VARIANT,

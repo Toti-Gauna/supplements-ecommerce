@@ -7,7 +7,7 @@ import { withBase } from "@/lib/base-path";
 import { cn } from "@/lib/cn";
 import { OrderCard, ProductsList, PulseDivider, RefillCard, TrackingBattery, UsageList } from "./EmailBlocks";
 
-export const FROM = `${brand.name} <hola@volta.demo>`;
+export const FROM = `${brand.name} <${brand.email ?? `hola@${brand.demoDomain}`}>`;
 
 function Block({ block: b }: { block: RenderedBlock }) {
   switch (b.type) {

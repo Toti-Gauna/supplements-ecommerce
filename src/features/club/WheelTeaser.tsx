@@ -20,7 +20,7 @@ export function WheelTeaser() {
   return (
     <div className="flex flex-col items-center gap-6">
       <button type="button" tabIndex={-1} aria-hidden="true" onClick={() => setWheel(true)} className="group relative w-full max-w-[320px] pt-3">
-        <span className="absolute inset-[-6%] rounded-full bg-[radial-gradient(closest-side,rgb(139_114_255/0.32),rgb(139_114_255/0.08)_70%,transparent)]" />
+        <span className="absolute inset-[-6%] rounded-full bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--brand-glow)_32%,transparent),color-mix(in_srgb,var(--brand-glow)_8%,transparent)_70%,transparent)]" />
         <WheelDial segments={wheel.segments} className="w-full transition-transform duration-500 group-hover:scale-[1.02] motion-reduce:transition-none" />
       </button>
       {hydrated && prize ? (

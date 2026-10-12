@@ -25,7 +25,7 @@ export function GamePrizeTable() {
           return (
             <li key={t.id} className="flex items-center gap-4 rounded-[1.5rem] bg-night p-5 text-on-night">
               <span aria-hidden="true" className="flex h-12 w-7 shrink-0 flex-col-reverse gap-[3px] rounded-md p-[3px] ring-1 ring-white/25">
-                {tiers.map((_, j) => <span key={j} className={cn("flex-1 rounded-[2px]", j <= i ? "bg-volt shadow-[0_0_8px_rgb(200_255_46/0.6)]" : "bg-white/10")} />)}
+                {tiers.map((_, j) => <span key={j} className={cn("flex-1 rounded-[2px]", j <= i ? "bg-volt shadow-[0_0_8px_color-mix(in_srgb,var(--brand-volt)_60%,transparent)]" : "bg-white/10")} />)}
               </span>
               <span className="min-w-0 flex-1">
                 <span className="font-lab block text-xs text-night-muted">Nivel {i + 1} · desde {t.minScore.toLocaleString("es-AR")} pts</span>

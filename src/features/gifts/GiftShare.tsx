@@ -8,6 +8,7 @@ import { withBase } from "@/lib/base-path";
 import { formatDay } from "@/lib/date";
 import { useToasts } from "@/stores/toast";
 import { bagPhrase } from "./scenes";
+import { brand } from "@/config/brand";
 
 const noop = () => () => {};
 const canShare = () => typeof navigator !== "undefined" && typeof navigator.share === "function";
@@ -21,9 +22,9 @@ export function giftUrl(gift: GiftData): string {
 export function GiftShare({ gift, compact }: { gift: GiftData; compact?: boolean }) {
   const toast = useToasts((s) => s.push);
   const share = useSyncExternalStore(noop, canShare, () => false);
-  const text = (url: string) => `🥊 ¡${gift.to}, te llegó un regalo de ${gift.from} en Volta! Se abre a golpes: ${url} (o con el código ${gift.code})`;
+  const text = (url: string) => `🥊 ¡${gift.to}, te llegó un regalo de ${gift.from} en ${brand.name}! Se abre a golpes: ${url} (o con el código ${gift.code})`;
   // La hoja de compartir del celular lleva el link aparte: el texto no lo repite.
-  const shareText = `🥊 ¡${gift.to}, te llegó un regalo de ${gift.from} en Volta! Se abre a golpes. También con el código ${gift.code}.`;
+  const shareText = `🥊 ¡${gift.to}, te llegó un regalo de ${gift.from} en ${brand.name}! Se abre a golpes. También con el código ${gift.code}.`;
   const copy = async (value: string, title: string) => {
     try { await navigator.clipboard.writeText(value); toast({ tone: "success", title, description: value.length > 40 ? undefined : value }); }
     catch { toast({ tone: "error", title: "No se pudo copiar", description: "Copialo a mano: " + value }); }
@@ -50,7 +51,7 @@ export function GiftShare({ gift, compact }: { gift: GiftData; compact?: boolean
           <MessageCircle size={17} aria-hidden="true" /> WhatsApp
         </a>
         {share ? (
-          <button type="button" onClick={() => void navigator.share({ title: "Un regalo de Volta", text: shareText, url: giftUrl(gift) }).catch(() => {})}
+          <button type="button" onClick={() => void navigator.share({ title: `Un regalo de ${brand.name}`, text: shareText, url: giftUrl(gift) }).catch(() => {})}
             className="flex min-h-12 items-center justify-center gap-2 rounded-full bg-on-night px-4 text-sm font-bold text-night hover:bg-white">
             <Share2 size={17} aria-hidden="true" /> Compartir
           </button>

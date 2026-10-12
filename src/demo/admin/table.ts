@@ -1,5 +1,6 @@
 import { normalize } from "../engine/search";
 import type { Help } from "./help";
+import { brand } from "@/config/brand";
 
 /** Reglas puras de las tablas del panel: orden, búsqueda y paginado. Sin React. */
 export type SortDir = "asc" | "desc";
@@ -61,10 +62,10 @@ export function paginate<T>(rows: T[], page: number, size: number): Page<T> {
   };
 }
 
-/** Nombre de archivo de exportación: "volta-pedidos-2026-10-09.xlsx". */
+/** Nombre de archivo de exportación, con el id de la marca: "volta-pedidos-2026-10-09.xlsx". */
 export function exportFileName(entity: string, now = new Date()): string {
   const day = new Date(now.getTime() - now.getTimezoneOffset() * 60_000).toISOString().slice(0, 10);
-  return `volta-${normalize(entity).replace(/\s+/g, "-")}-${day}.xlsx`;
+  return `${brand.id}-${normalize(entity).replace(/\s+/g, "-")}-${day}.xlsx`;
 }
 
 /**

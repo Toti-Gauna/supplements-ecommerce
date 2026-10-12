@@ -5,15 +5,16 @@ import type { Mission } from "@/demo/types";
 import { formatDate } from "@/lib/date";
 import { formatARS } from "@/lib/money";
 import { Panel } from "../detail/Panel";
+import { brand } from "@/config/brand";
 
 const amount = (m: Mission, n: number) => (m.type === "SPEND_TOTAL" ? formatARS(n) : String(n));
 
 /** Misiones y premios del Club (8.3.12): progreso guardado del cliente y sus premios, sin inventar datos. */
 export function ClubCard({ user, missions }: { user?: AdminUser; missions: Mission[] }) {
-  if (!user) return <Panel title="Club Volta"><p className="text-sm text-muted">Compró como invitado: sin cuenta no suma misiones ni premios.</p></Panel>;
+  if (!user) return <Panel title={brand.club}><p className="text-sm text-muted">Compró como invitado: sin cuenta no suma misiones ni premios.</p></Panel>;
   const progress = missions.filter((m) => m.id in user.missionProgress);
   return (
-    <Panel title="Club Volta">
+    <Panel title={brand.club}>
       <h3 className="mb-2 text-sm font-bold">Misiones</h3>
       {progress.length ? (
         <ul className="mb-4 flex flex-col gap-2">

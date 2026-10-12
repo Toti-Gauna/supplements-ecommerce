@@ -3,6 +3,7 @@ import { Chalk, Shaker } from "./gear";
 import { Bar, Box, Gel, Pouch, Sachet } from "./packs";
 import { Jar, Spread, Tub, TubTall } from "./tubs";
 import type { ContainerKind, ContainerProps, PackStyle } from "./types";
+import { brand } from "@/config/brand";
 
 export type { ContainerKind, PackStyle, LabelPattern } from "./types";
 
@@ -21,12 +22,12 @@ export const CONTAINER_LABEL: Record<ContainerKind, string> = {
 /** Rótulo por defecto de cada envase (categorías, banners y productos sin estilo propio). */
 const DEFAULT_LINE: Record<ContainerKind, string> = {
   tub: "WHEY", "tub-tall": "MASS", jar: "CREA", pouch: "VEGAN", caps: "CAPS", gummies: "GUMMY", bottle: "L-CARN",
-  bar: "BAR", box: "BOX", sachet: "HYDRO", gel: "GEL", spread: "MANÍ", shaker: "VOLTA", chalk: "MAGNESIO",
+  bar: "BAR", box: "BOX", sachet: "HYDRO", gel: "GEL", spread: "MANÍ", shaker: brand.mark, chalk: "MAGNESIO",
 };
 
-/** Estilo de la marca propia (VOLTA Lab): grafito con voltio. */
+/** Estilo de la marca propia de la tienda (sale de `brand`): noche con el color firma. */
 export function defaultPack(kind: ContainerKind): PackStyle {
-  return { body: "#101318", band: "#101318", ink: "#eef1f5", accent: "#c8ff2e", mark: "VOLTA LAB", line: DEFAULT_LINE[kind], pattern: "bolt" };
+  return { body: brand.colors.surface, band: brand.colors.surface, ink: brand.signature.onNight, accent: brand.signature.volt, mark: brand.houseMark, line: DEFAULT_LINE[kind], pattern: "bolt" };
 }
 
 /** Escala de cada envase para que todos llenen el cuadro parecido (el piso queda en y = 330). */

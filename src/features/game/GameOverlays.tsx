@@ -9,7 +9,7 @@ import styles from "./game.module.css";
 export function Countdown({ count, first }: { count: number; first: boolean }) {
   return (
     <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-4 text-center">
-      <p key={count} aria-hidden="true" className={`${styles.count} font-display font-wide text-7xl leading-none text-volt drop-shadow-[0_0_24px_rgb(200_255_46/0.45)]`}>
+      <p key={count} aria-hidden="true" className={`${styles.count} font-display font-wide text-7xl leading-none text-volt drop-shadow-[0_0_24px_color-mix(in_srgb,var(--brand-volt)_45%,transparent)]`}>
         {count > 0 ? count : "¡Ya!"}
       </p>
       {first && <p className="max-w-[16rem] rounded-full bg-night/80 px-4 py-2 text-sm font-semibold text-on-night">Arrastrá el shaker o usá ← → · Esc pausa</p>}

@@ -21,7 +21,7 @@ interface Props {
   onClose: () => void;
 }
 
-const PRIMARY = "flex min-h-14 items-center justify-center gap-2 rounded-full bg-volt-soft px-6 text-base font-bold text-night shadow-[0_12px_36px_-12px_rgb(200_255_46/0.6)] hover:brightness-105";
+const PRIMARY = "flex min-h-14 items-center justify-center gap-2 rounded-full bg-volt-soft px-6 text-base font-bold text-night shadow-[0_12px_36px_-12px_color-mix(in_srgb,var(--brand-volt)_60%,transparent)] hover:brightness-105";
 
 /** El premio ya sorteado: cupón de la fecha y las acciones según su estado (aplicar, guardar, seguir o salir). */
 export function WheelPrizeReveal({ shown, coupon, status, occasion, justWon, checkout, applyRef, onApply, onKeep, onNext, onClose }: Props) {

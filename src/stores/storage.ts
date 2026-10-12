@@ -1,6 +1,11 @@
 import { createJSONStorage, type StateStorage } from "zustand/middleware";
+import { brand } from "@/config/brand";
 
-export const STORAGE_PREFIX = "volta-demo:";
+/**
+ * Prefijo de lo que la demo guarda en el navegador. Con VOLTA sigue siendo "volta-demo:" (no se pierde nada guardado);
+ * otra marca usa el suyo, así dos demos publicadas en el mismo dominio (usuario.github.io) no comparten datos.
+ */
+export const STORAGE_PREFIX = `${brand.storageKey}-demo:`;
 
 /** Versión del estado guardado del panel (la lee también el script del <head> de la tienda). */
 export const ADMIN_STORE_VERSION = 10;

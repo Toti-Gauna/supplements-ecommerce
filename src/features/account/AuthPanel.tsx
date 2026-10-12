@@ -7,6 +7,7 @@ import { Decor } from "@/components/illustrations/seasonal/Decor";
 import { cn } from "@/lib/cn";
 import { useAccount } from "@/stores/account";
 import { GoogleSimulated } from "./GoogleSimulated";
+import { brand } from "@/config/brand";
 
 type Mode = "login" | "signup";
 type Errors = Partial<Record<"name" | "email" | "password", string>>;
@@ -55,9 +56,9 @@ export function AuthPanel() {
   return (
     <div className="grid overflow-hidden rounded-[2.5rem] bg-surface shadow-[var(--shadow-card)] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
       <aside className="relative flex flex-col gap-6 overflow-hidden bg-night p-6 text-on-night sm:p-10">
-        <div aria-hidden="true" className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-[radial-gradient(closest-side,rgb(139_114_255/0.4),transparent)]" />
+        <div aria-hidden="true" className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--brand-glow)_40%,transparent),transparent)]" />
         <div className="relative">
-          <p className="eyebrow text-volt">Cuenta Volta</p>
+          <p className="eyebrow text-volt">Cuenta {brand.name}</p>
           <h2 className="font-display mt-3 text-3xl leading-tight sm:text-5xl">Todo lo tuyo, <span className="italic text-volt">en un lugar.</span></h2>
         </div>
         <ul className="relative flex flex-col gap-3 max-sm:hidden">

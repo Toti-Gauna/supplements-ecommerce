@@ -11,6 +11,7 @@ import { seasonalThemes } from "@/demo/fixtures/themes";
 import { useGiftDraft } from "@/stores/giftDraft";
 import { GiftPreview } from "./GiftPreview";
 import { bagPhrase } from "./scenes";
+import { brand } from "@/config/brand";
 
 interface Props {
   open: boolean;
@@ -81,7 +82,7 @@ export function GiftModal({ open, onClose, productName, choices, choice, onChoic
                     aria-invalid={Boolean(errorOf("de parte"))} aria-describedby={describedBy("gift-from", errorOf("de parte"))} />
                 </Field>
               </div>
-              <Field id="gift-email" label="Email de quien lo recibe (opcional)" hint="Si tiene cuenta en Volta, el regalo le aparece ahí sin abrir el link. En la demo no se manda ningún email." error={errorOf("email")}>
+              <Field id="gift-email" label="Email de quien lo recibe (opcional)" hint={`Si tiene cuenta en ${brand.name}, el regalo le aparece ahí sin abrir el link. En la demo no se manda ningún email.`} error={errorOf("email")}>
                 <Input id="gift-email" type="email" inputMode="email" autoComplete="off" value={draft.toEmail ?? ""} onChange={(e) => set({ toEmail: e.target.value })}
                   aria-invalid={Boolean(errorOf("email"))} aria-describedby={describedBy("gift-email", errorOf("email"), true)} />
               </Field>
@@ -92,7 +93,7 @@ export function GiftModal({ open, onClose, productName, choices, choice, onChoic
               </Field>
               <Field id="gift-occasion" label="Ocasión" hint={`Lo abre a golpes contra ${bagPhrase(draft.occasion)}.`}>
                 <Select id="gift-occasion" value={draft.occasion} onChange={(e) => isOccasion(e.target.value) && set({ occasion: e.target.value })} aria-describedby="gift-occasion-hint">
-                  <option value="volta">Sin fecha especial (bolsa VOLTA)</option>
+                  <option value="volta">Sin fecha especial (bolsa {brand.mark})</option>
                   {seasonalThemes.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
                 </Select>
               </Field>

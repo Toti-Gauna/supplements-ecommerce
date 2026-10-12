@@ -57,7 +57,7 @@
 }
 .immersive-stage > :not(.immersive-backdrop) { animation: stage-rise 520ms var(--ease-out-expo) 80ms both; }
 /* Sobre el fondo casi negro, el anillo de foco va en crema (el de la tienda, oliva, no llega a 3:1). */
-.immersive-stage :focus-visible { outline-color: #e3ff8f; }
+.immersive-stage :focus-visible { outline-color: var(--brand-volt-soft); }
 @keyframes stage-in { from { opacity: 0; } }
 @keyframes stage-rise { from { opacity: 0; transform: translateY(14px) scale(0.98); } }
 /* Con el escenario abierto, los fondos animados de la tienda se pausan (no se ven y gastan batería). */
@@ -75,7 +75,7 @@
 /* Disco olímpico: la maza "Girar" late tres veces con un anillo voltio y el agujero de la barra respira; al frenar, el
    gajo ganador brilla; al ganar, el cupón sube y un brillo lo cruza una vez. */
 .wheel-hub { animation: hub-pulse 1.8s ease-in-out 0.9s 3; }
-@keyframes hub-pulse { 50% { box-shadow: 0 0 0 10px rgb(200 255 46 / 0.2), 0 0 32px 6px rgb(200 255 46 / 0.22), 0 10px 24px -8px rgb(0 0 0 / 0.85); } }
+@keyframes hub-pulse { 50% { box-shadow: 0 0 0 10px color-mix(in srgb, var(--brand-volt) 20%, transparent), 0 0 32px 6px color-mix(in srgb, var(--brand-volt) 22%, transparent), 0 10px 24px -8px rgb(0 0 0 / 0.85); } }
 .wheel-hole-glow { animation: hole-glow 1.8s ease-in-out 0.9s 3; }
 @keyframes hole-glow { 50% { stroke-opacity: 0.2; } }
 .wheel-landed { animation: landed-glow .26s steps(2) 5 both; }
@@ -84,8 +84,8 @@
    polvo de tiza que flota dos veces y queda quieto. */
 .wheel-halo {
   background:
-    radial-gradient(closest-side, transparent 66%, rgb(200 255 46 / 0.2) 71%, transparent 79%),
-    radial-gradient(closest-side, rgb(139 114 255 / 0.42), rgb(139 114 255 / 0.14) 62%, transparent 100%);
+    radial-gradient(closest-side, transparent 66%, color-mix(in srgb, var(--brand-volt) 20%, transparent) 71%, transparent 79%),
+    radial-gradient(closest-side, color-mix(in srgb, var(--brand-glow) 42%, transparent), color-mix(in srgb, var(--brand-glow) 14%, transparent) 62%, transparent 100%);
   animation: halo-breathe 3.2s ease-in-out 3;
 }
 .wheel-halo.is-spinning { animation: halo-breathe .9s ease-in-out infinite; }

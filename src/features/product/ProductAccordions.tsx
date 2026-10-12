@@ -1,6 +1,7 @@
 import { ChevronDown } from "lucide-react";
 import type { ReactNode } from "react";
 import type { Product } from "@/demo/types";
+import { brand } from "@/config/brand";
 
 function Item({ title, children, open }: { title: string; children: ReactNode; open?: boolean }) {
   return (
@@ -19,7 +20,7 @@ export function ProductAccordions({ product }: { product: Product }) {
     <div className="border-t border-line">
       <Item title="Descripción" open>{product.description}</Item>
       <Item title="Detalles y medidas">
-        {d && d.lengthCm ? <p>{d.lengthCm} × {d.widthCm} × {d.heightCm} cm · {d.weightG} g (con caja).</p> : <p>Medidas a confirmar por Volta.</p>}
+        {d && d.lengthCm ? <p>{d.lengthCm} × {d.widthCm} × {d.heightCm} cm · {d.weightG} g (con caja).</p> : <p>Medidas a confirmar por {brand.name}.</p>}
         {product.madeToOrderDays ? <p className="mt-1">Por encargo: llega al local en {product.madeToOrderDays} días hábiles desde la confirmación del pago.</p> : <p className="mt-1">Listo para despachar.</p>}
       </Item>
       <Item title="Envíos, retiro y cambios">

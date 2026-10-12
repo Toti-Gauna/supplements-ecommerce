@@ -7,11 +7,12 @@ import type { SeasonId, ThemeSettings } from "@/demo/types";
 import { formatDayRange } from "@/lib/date";
 import { useAdmin } from "@/stores/admin";
 import { useDemoSave } from "../useDemoSave";
+import { brand } from "@/config/brand";
 
 const MODES: { value: ThemeSettings["mode"]; label: string; hint: string }[] = [
   { value: "auto", label: "Automática según la fecha", hint: "La tienda usa sola la temática cuyas fechas incluyen hoy. Fuera de esas fechas se ve sin temática." },
   { value: "fixed", label: "Siempre la que elija", hint: "La tienda muestra siempre la temática elegida, aunque no sea su fecha, hasta que cambies el modo." },
-  { value: "off", label: "Sin temática", hint: "La tienda se ve con el estilo de siempre de Volta, sin banner ni decoraciones de fecha." },
+  { value: "off", label: "Sin temática", hint: `La tienda se ve con el estilo de siempre de ${brand.name}, sin banner ni decoraciones de fecha.` },
 ];
 
 /**

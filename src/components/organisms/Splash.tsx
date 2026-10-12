@@ -9,9 +9,9 @@ import { ThemeSplashScene } from "@/features/themes/ThemeSplashScene";
 const PIECES: { art: ArtKey; angle: number; tint: string }[] = [
   { art: "tub", angle: -90, tint: "#5a3220" },
   { art: "jar", angle: -18, tint: "#e8e4d8" },
-  { art: "shaker", angle: 54, tint: "#8b72ff" },
+  { art: "shaker", angle: 54, tint: brand.signature.plasma },
   { art: "caps", angle: 126, tint: "#ffd23f" },
-  { art: "pouch", angle: 198, tint: "#c8ff2e" },
+  { art: "pouch", angle: 198, tint: brand.signature.volt },
 ];
 
 /** Chispas: posición (%), retraso (ms) y tamaño (px), fijos para que el HTML sea siempre igual. */
@@ -25,7 +25,7 @@ const CELLS = Array.from({ length: 10 }, (_, i) => i);
 
 /**
  * Pantalla de carga "Cargando energía" en cada recarga (HTML + CSS; se ve aunque no haya JS). En 5 s: una línea de
- * pulso cruza la pantalla, el trazo de la "V" sube y el rayo cae con un fogonazo, la batería se carga de 0 a 100,
+ * pulso cruza la pantalla, el trazo del logo sube (si la marca lo tiene) y el rayo cae con un fogonazo, la batería se carga de 0 a 100,
  * los envases entran en órbita sobre un aro eléctrico y un telón la retira. Todo es transform/opacity (app/splash.css).
  * Durante una temática cambia de colores y suma su escena (ThemeSplashScene). Con "reducir movimiento" no se muestra.
  *
@@ -58,8 +58,8 @@ export function Splash() {
       <ThemeSplashScene />
       <div aria-hidden="true" className="splash-brand relative z-10 flex flex-col items-center">
         <span className="splash-mark h-16 w-16 sm:h-20 sm:w-20">
-          <svg viewBox={LOGO_VIEWBOX} className="mark-m"><path d={LOGO_STROKE_PATH} fill="#eef1f5" /></svg>
-          <svg viewBox={LOGO_VIEWBOX} className="mark-v"><path d={LOGO_BOLT} fill="#c8ff2e" /></svg>
+          {LOGO_STROKE_PATH && <svg viewBox={LOGO_VIEWBOX} className="mark-m"><path d={LOGO_STROKE_PATH} fill={brand.signature.onNight} /></svg>}
+          <svg viewBox={LOGO_VIEWBOX} className="mark-v"><path d={LOGO_BOLT} fill={brand.signature.volt} /></svg>
         </span>
         <span className="splash-word">
           <span className="word font-display font-wide block text-5xl uppercase tracking-[0.08em] text-on-night sm:text-7xl">{brand.name}</span>

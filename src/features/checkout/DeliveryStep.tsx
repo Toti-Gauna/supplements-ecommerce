@@ -12,6 +12,7 @@ import type { FulfillmentType } from "@/demo/types";
 import { formatARS } from "@/lib/money";
 import { useCheckout } from "@/stores/checkout";
 import { addressSchema, type AddressInput } from "./schemas";
+import { brand } from "@/config/brand";
 
 const ICONS = { PICKUP: Store, LOCAL_DELIVERY: Bike, SHIPPING: Truck };
 const FIELDS: { name: keyof AddressInput; label: string; auto: string; mode?: "numeric" }[] = [
@@ -53,7 +54,7 @@ export function DeliveryStep({ onNext, onBack, freeShipping }: { onNext: () => v
           );
         })}
         {missing && <p role="alert" className="text-sm font-semibold text-danger">Elegí una forma de entrega.</p>}
-        <p className="text-xs text-muted">Zonas y precios de muestra. Retiro: dirección a confirmar por Volta.</p>
+        <p className="text-xs text-muted">Zonas y precios de muestra. Retiro: dirección a confirmar por {brand.name}.</p>
       </fieldset>
       {choice && choice !== "PICKUP" && (
         <fieldset className="animate-fade-up grid gap-4 sm:grid-cols-2">

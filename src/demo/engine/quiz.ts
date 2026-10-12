@@ -45,7 +45,8 @@ export function recommendStack(answers: QuizAnswers, catalog: Product[]): QuizRe
     if (slots.includes("energia")) notes.push("Entrenás de noche: el pre va sin cafeína para que duermas bien.");
   }
   if (answers.restrictions.length) {
-    const labels = answers.restrictions.map((r) => QUIZ_RESTRICTIONS.find((x) => x.value === r)?.label.toLowerCase() ?? r);
+    // Solo la inicial en minúscula: "sin TACC", no "sin tacc".
+    const labels = answers.restrictions.map((r) => { const l = QUIZ_RESTRICTIONS.find((x) => x.value === r)?.label ?? r; return l.charAt(0).toLowerCase() + l.slice(1); });
     notes.push(`Solo productos ${new Intl.ListFormat("es", { type: "conjunction" }).format(labels)}.`);
   }
   const goal = goalById(answers.goal)?.name.toLowerCase() ?? answers.goal;

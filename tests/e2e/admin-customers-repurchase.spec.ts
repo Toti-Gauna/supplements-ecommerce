@@ -35,9 +35,9 @@ for (const [label, width, height, touch] of [["celular", 390, 844, true], ["escr
       await page.reload();
       await expect(whey).toContainText("Avisado por email");
       expect(await horizontalOverflow(page)).toBeLessThanOrEqual(0);
-      await page.goto("admin-demo/emails/?vista=enviados");
+      await page.goto("admin-demo/emails/enviados/");
       const outbox = page.getByRole("region", { name: "Bandeja de salida" });
-      await expect(outbox.getByText("Juan, ¿te queda para esta semana?")).toHaveCount(1);
+      await expect(outbox.getByRole("button", { name: /Juan, tu Ionic Whey 100% se está por terminar/ })).toHaveCount(1);
       assertNoExternal();
     });
 

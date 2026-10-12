@@ -16,7 +16,7 @@ test("preparación: un pedido pasa por Armando y Control de lote hasta Listo par
   await stage(page, /^Control de lote/).click();
   await page.getByRole("button", { name: "Controlar lotes de VOL-000113" }).click();
   const dialog = page.getByRole("dialog", { name: "Control de lote de VOL-000113" });
-  await expect(dialog).toContainText("Lote VL-2609-B · vence 03/2027");
+  await expect(dialog).toContainText("Lote VL-2604-B · vence 10/2026");
   // Sin marcar el lote no se despacha.
   await dialog.getByRole("button", { name: "Listo para despachar" }).click();
   await expect(dialog.getByRole("alert")).toContainText("Marcá el lote de cada producto");
@@ -26,11 +26,11 @@ test("preparación: un pedido pasa por Armando y Control de lote hasta Listo par
   await dialog.getByRole("button", { name: "Listo para despachar" }).click();
   await expect(toast(page, "VOL-000113 está listo para despachar")).toBeVisible();
   await stage(page, /^Listo para despachar/).click();
-  await expect(page.locator('section[data-column="ready"]').getByRole("article", { name: "Pedido VOL-000113" })).toContainText("Salió · lote VL-2609-B · vence 03/2027");
+  await expect(page.locator('section[data-column="ready"]').getByRole("article", { name: "Pedido VOL-000113" })).toContainText("Salió · lote VL-2604-B · vence 10/2026");
   // La ficha del pedido muestra el estado, el lote registrado y el email "listo" que salió solo.
   await page.goto("admin-demo/pedidos/detalle/?codigo=VOL-000113");
   await expect(page.getByText(/Preparación y entrega:\s*Listo para retirar/)).toBeVisible();
-  await expect(page.getByText("Lote controlado: VL-2609-B · vence 03/2027")).toBeVisible();
+  await expect(page.getByText("Lote controlado: VL-2604-B · vence 10/2026")).toBeVisible();
   await expect(page.getByRole("button", { name: /VOL-000113 está listo/ })).toBeVisible();
 });
 

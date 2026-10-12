@@ -76,7 +76,7 @@
 - Confeti y escenario inmersivo con los colores de VOLTA.
 - Falta probar en un teléfono real (Safari de iPhone: audio después del primer toque y arrastre sin rebote).
 
-## Fase 5 · Regalos y temáticas fitness ✅ (en revisión)
+## Fase 5 · Regalos y temáticas fitness ✅ (publicada)
 - **Regalo a golpes contra una bolsa de boxeo** (`src/features/gifts/scenes/`): una sola escena SVG con la bolsa VOLTA
   colgando; cada golpe la balancea, suelta tiza y abre una costura con luz; en el quinto el frente se rompe y sale el
   pote "Edición regalo" antes del producto real. Variante por fecha (moño navideño, "Versión 2027", guantes del Día del
@@ -94,9 +94,50 @@
 - Temáticas **encendidas**: modo automático por fecha (octubre → Día de la Madre) y "Probar temáticas" visible.
   `ADMIN_STORE_VERSION` 9.
 
+## Fase 6 · Panel I · Ventas y catálogo ✅ (en revisión)
+- **Clientes sin mascotas**: fichas con objetivo (editable o deducido de lo que compra), notas, cumpleaños y avisos
+  de recompra ya mandados (`src/demo/fixtures/customers.ts`).
+- **Recompra calculada** (`src/demo/admin/repurchase.ts`): con los pedidos pagados, los servicios de la variante, la
+  fecha de entrega y el consumo de referencia de cada categoría, cuándo se le termina cada pote ("a Juan se le
+  termina la whey el jueves"). En la ficha: batería, fecha y **Avisarle** por email ("Tu pote se está por terminar",
+  a la bandeja simulada) o por WhatsApp prellenado; un solo aviso por pote.
+- **Segmentos**: Se le termina esta semana, Recompra atrasada, Nuevos, Frecuentes, VIP y Sin compras, con filtro por
+  objetivo y columnas Objetivo y Se le termina.
+- **Lotes y vencimientos por variante** (código, AAAA-MM, unidades): el stock es la suma y sale primero el que vence
+  primero (FEFO, `src/demo/engine/lots.ts`). Aviso "Vence pronto" (menos de 60 días), filtro e insignia; **Liquidar
+  con descuento** con vista previa y margen: en la tienda, precio tachado y "Liquidación · vence MM/AAAA".
+- **Marca** como filtro, **aumento masivo por %** (marca, categoría o todo; redondeo a $100/$500) con vista previa
+  por variante y deshacer exacto.
+- **Importar la lista del proveedor** en Excel (costo y precio sugerido o margen) con vista previa y deshacer; lista
+  de ejemplo de una distribuidora ficticia. Costo y margen por variante.
+- **Categorías y objetivos**: nombre, bajada y color de los objetivos se editan en el panel y los usa la tienda.
+- **Inicio del panel**: "Recompras de la semana" y "Próximos a vencer" (con Liquidar) debajo de las tarjetas de
+  Operaciones.
+
+## Fase 7 · Panel II · Operaciones y marketing ✅ (en revisión)
+- **Taller → Operaciones**: Preparación, Calendario de despachos, Proveedores y compras, Costos y margen e Insumos
+  de embalaje. `IN_PRODUCTION` se muestra "En preparación"; `/admin-demo/produccion/` lleva a la preparación.
+- **Preparación de pedidos**: Por preparar → Armando → **Control de lote** → Listo para despachar (arrastrar, botón
+  de la etapa siguiente o "Mover etapa"). El control muestra el lote que sale de cada producto (el mismo FEFO del
+  catálogo) y queda guardado en el pedido; nada pasa a Listo sin los lotes confirmados (tampoco desde la ficha).
+- **Calendario de despachos**: el cupo es del cadete (envíos en Mar del Plata, 2 por día por defecto), con feriados,
+  cierres y arrastrar para reprogramar; la ficha de la tienda dice "Lo despachamos el…".
+- **Costos y margen**: proveedor + embalaje (sin horas de taller), margen y precio sugerido, también por presentación;
+  manda el costo de la variante que trae la lista del proveedor.
+- **Proveedores y compras** (nuevo): tres distribuidoras ficticias, stock mínimo y objetivo por variante, compra
+  sugerida por proveedor con total al costo, próxima entrega y pedido mínimo; copiar el pedido para WhatsApp, marcarlo
+  como pedido y **recibir mercadería** (suma al lote más nuevo).
+- **Emails automáticos** de una tienda que revende: compra recibida, comprobante recibido, pago aprobado, pago no
+  validado (con motivo), preparando, listo para retirar / para salir (según la entrega), en camino, entregado (cómo
+  tomarlo) y "Tu pote se está por terminar". Estética VOLTA, recorrido como batería y rótulo de lote cuando el pedido
+  ya se armó. Salen solos al mover el pedido (bandeja de salida simulada).
+- **Premios de Shaker Rush** editables en Cupones y ruleta → Premios del juego (puntaje, tipo, valor y vencimiento);
+  el juego de la tienda usa lo guardado.
+- **Estudio de contenido**: oferta de la fecha, producto destacado (precio por servicio y lote), stack del mes y cupón
+  del juego, con los potes animados; post, historia y carrusel en PNG y video con música sintetizada.
+- `ADMIN_STORE_VERSION` 10 (los datos del panel guardados en el navegador se reinician una vez).
+
 ## Pendiente de Velmar (se resuelve en su fase)
 | Qué queda | Dónde se ve | Fase |
 |---|---|---|
-| Emails, recordatorios y email de cumpleaños de mascotas, cola de producción, insumos y calendario "del taller" | Panel | 6 y 7 |
-| Editor de producto: si se llega con Tab a "Ver en tienda", al volver abre en el último paso (con mouse no pasa) | Panel → Productos | 6 |
-| Estudio de contenido con decoraciones de Velmar | Panel → Estudio | 7 |
+| Editor de producto: si se llega con Tab a "Ver en tienda", al volver abre en el último paso (con mouse no pasa) | Panel → Productos | 8 |

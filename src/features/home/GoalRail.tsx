@@ -8,6 +8,7 @@ import { Reveal } from "@/components/motion/Reveal";
 import { goalHref, productsForGoal } from "@/demo/engine/catalog";
 import { useGoals } from "../catalog/useGoals";
 import { useDemoVersion } from "@/stores/admin";
+import { plural } from "@/lib/plural";
 
 /**
  * "¿Cuál es tu objetivo?": una tarjeta oscura por objetivo, con su color, su ícono, el producto más vendido de ese
@@ -36,7 +37,7 @@ export function GoalRail({ heading = true }: { heading?: boolean }) {
                   <span className="font-display mt-auto pt-6 text-xl leading-tight">{g.name}</span>
                   <span className="mt-1 max-w-[64%] text-[13px] leading-snug text-night-muted">{g.pitch}</span>
                   <span className="mt-3 flex items-center gap-1 font-mono text-[11px] font-bold uppercase tracking-wider" style={{ color: "var(--hue)" }}>
-                    {list.length} productos <ArrowUpRight size={14} aria-hidden="true" className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                    {plural(list.length, "producto", "productos")} <ArrowUpRight size={14} aria-hidden="true" className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                   </span>
                 </span>
                 <ProductArt art={top.art} pack={top.pack} tint={top.variants[0]?.colorHex} bare label="" showBadge={false}

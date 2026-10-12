@@ -44,7 +44,10 @@ export function ProductCard({ product, priority }: { product: ProductCardData; p
   const [hovered, setHovered] = useState(false);
   return (
     <article data-product-card className="group relative flex flex-col gap-3" onPointerEnter={(e) => { if (e.pointerType === "mouse") setHovered(true); }}>
-      <div className="relative overflow-hidden rounded-[var(--radius-card)] bg-accent shadow-[var(--shadow-card)] transition-shadow duration-500 group-hover:shadow-[var(--shadow-lift)]">
+      {/* La caja de la imagen va siempre en su propia capa (z-[1]) por encima del link estirado del nombre: con el
+          `transform` de hover/tap (motion.css) se vuelve contexto de apilamiento y, sin esto, el link tapaba "+ Agregar".
+          No recibe el puntero (el clic en la imagen sigue llegando al link); solo el botón lo recupera. */}
+      <div className="pointer-events-none relative z-[1] overflow-hidden rounded-[var(--radius-card)] bg-accent shadow-[var(--shadow-card)] transition-shadow duration-500 group-hover:shadow-[var(--shadow-lift)]">
         <div data-card-visual className="overflow-hidden rounded-[var(--radius-card)]">
           <ProductVisual art={product.art} pack={product.pack} tint={product.tint} photoUrl={product.photoUrl} label={product.alt}
             className="aspect-[4/5] transition-transform duration-[900ms] ease-[var(--ease-out-expo)] group-hover:scale-[1.04]" />
@@ -60,7 +63,7 @@ export function ProductCard({ product, priority }: { product: ProductCardData; p
         </div>
         {full && (
           <button type="button" onClick={() => quickAdd(full)} aria-label={`Agregar ${product.name} al carrito`}
-            className="absolute bottom-3 right-3 z-10 flex h-11 items-center gap-2 rounded-full bg-primary px-3.5 text-sm font-bold text-on-primary shadow-[var(--shadow-glow)] transition-all duration-300 hover:bg-primary-hover lg:translate-y-3 lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100 lg:focus-visible:translate-y-0 lg:focus-visible:opacity-100">
+            className="pointer-events-auto absolute bottom-3 right-3 z-10 flex h-11 items-center gap-2 rounded-full bg-primary px-3.5 text-sm font-bold text-on-primary shadow-[var(--shadow-glow)] transition-all duration-300 hover:bg-primary-hover lg:translate-y-3 lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100 lg:focus-visible:translate-y-0 lg:focus-visible:opacity-100">
             <Plus size={16} aria-hidden="true" />
             <span className="max-lg:sr-only">Agregar</span>
           </button>

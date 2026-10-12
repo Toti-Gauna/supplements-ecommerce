@@ -12,6 +12,7 @@ import { goalInfo } from "@/demo/engine/goals";
 import type { Goal } from "@/demo/types";
 import { GoalGlyph } from "@/components/illustrations/GoalGlyph";
 import { cn } from "@/lib/cn";
+import { plural } from "@/lib/plural";
 import { useDemoVersion } from "@/stores/admin";
 import { toCard } from "./mappers";
 import { useGoals } from "./useGoals";
@@ -34,7 +35,7 @@ function GoalView({ goal }: { goal: Goal }) {
       </nav>
       <div>
         <h2 className="font-display text-2xl sm:text-3xl">{info.name}</h2>
-        <p className="mt-1 text-muted">{info.pitch} <span className="font-mono text-xs font-bold uppercase tracking-wider text-volt-ink">{list.length} productos</span></p>
+        <p className="mt-1 text-muted">{info.pitch} <span className="font-mono text-xs font-bold uppercase tracking-wider text-volt-ink">{plural(list.length, "producto", "productos")}</span></p>
       </div>
       <ProductGrid products={list.map(toCard)} />
     </div>

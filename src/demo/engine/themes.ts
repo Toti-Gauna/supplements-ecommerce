@@ -1,3 +1,4 @@
+import { formatARS } from "@/lib/money";
 import type { Coupon, Product, SeasonalTheme, SeasonId } from "../types";
 import { demoData } from "./source";
 
@@ -62,6 +63,18 @@ export function themeOffer(theme: SeasonalTheme): ThemeOffer | null {
 export function offerPrice(price: number, offer: ThemeOffer | null): number | null {
   if (!offer || offer.coupon.type !== "PERCENT" || offer.coupon.minSubtotal) return null;
   return Math.round(price * (1 - offer.coupon.value / 100));
+}
+
+/**
+ * Insignia y precio de una tarjeta del riel de ofertas. Si el cupón pide un mínimo de compra, el precio de la tarjeta
+ * va sin descuento, así que la insignia lleva la condición ("−30 % desde $ 40.000") en vez de un "30% OFF" que con ese
+ * precio no se cumple.
+ */
+export function cardDeal(price: number, offer: ThemeOffer): { price: number | null; label: string } {
+  const { type, value, minSubtotal } = offer.coupon;
+  if (!minSubtotal) return { price: offerPrice(price, offer), label: offer.label };
+  const off = type === "PERCENT" ? `−${value}\u00a0%` : type === "FIXED" ? `−${formatARS(value)}` : "Envío gratis";
+  return { price: null, label: `${off} desde ${formatARS(minSubtotal)}` };
 }
 
 /** Productos en oferta de la temática, en el orden elegido; omite pausados o borrados. */

@@ -31,8 +31,8 @@ const RANK: Record<WalletOrigin, number> = { ruleta: 0, juego: 1, tienda: 2 };
 
 /**
  * "Mis cupones": el cupón propio de la ruleta, los ganados en Shaker Rush y los cupones de la tienda. Los RULETA… y
- * SHAKER… de otras personas nunca se listan; los de una temática, solo mientras está puesta. Ordena primero lo que se
- * puede usar ahora y, a igual estado, los premios propios.
+ * SHAKER… de otras personas nunca se listan; los de una temática, solo mientras está puesta, y los de la tienda, solo si
+ * están vigentes. Ordena primero lo que se puede usar ahora y, a igual estado, los premios propios.
  */
 export function walletCoupons(ctx: { subtotal: number; isRegistered: boolean; now: Date; wheelCode: string | null; gameCodes?: string[]; themeId?: string | null }): WalletCoupon[] {
   const list = demoData().coupons.flatMap((coupon): WalletCoupon[] => {
@@ -41,7 +41,10 @@ export function walletCoupons(ctx: { subtotal: number; isRegistered: boolean; no
     if ((coupon.code.startsWith("RULETA") || coupon.code.startsWith(GAME_COUPON_PREFIX)) && !own) return [];
     if (!own && coupon.active === false) return [];
     if (coupon.themeId && coupon.themeId !== ctx.themeId) return [];
-    return [{ coupon, origin, ...statusOf(coupon, ctx) }];
+    const state = statusOf(coupon, ctx);
+    // De la tienda, solo los vigentes: un cupón vencido o agotado es ruido (los premios propios sí se ven vencidos).
+    if (!own && (state.status === "expired" || state.status === "used")) return [];
+    return [{ coupon, origin, ...state }];
   });
   return list.sort((a, b) => ORDER[a.status] - ORDER[b.status] || RANK[a.origin] - RANK[b.origin]);
 }

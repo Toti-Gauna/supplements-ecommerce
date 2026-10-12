@@ -56,7 +56,7 @@ describe("cupones", () => {
     expect(validateCoupon("ENVIOGRATIS", { subtotal: 50000, isRegistered: true, now }).ok).toBe(true);
   });
   it("respeta el mínimo de compra", () => {
-    expect(validateCoupon("FERIA2000", { subtotal: 10000, isRegistered: false, now }).ok).toBe(false);
-    expect(validateCoupon(" feria 2000 ", { subtotal: 20000, isRegistered: false, now }).ok).toBe(true);
+    expect(validateCoupon("ENTRENA2000", { subtotal: 10000, isRegistered: false, now }).ok).toBe(false);
+    expect(validateCoupon(" entrena 2000 ", { subtotal: 20000, isRegistered: false, now }).ok).toBe(true);
   });
 });

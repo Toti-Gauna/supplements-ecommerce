@@ -48,7 +48,7 @@ export const homeCta = {
 
 export const coupons: Coupon[] = [
   { code: "BIENVENIDA10", type: "PERCENT", value: 10, description: "10% en tu primera compra", active: true, usedCount: 23 },
-  { code: "FERIA2000", type: "FIXED", value: 2000, minSubtotal: 20000, description: "$2.000 desde $20.000 (cupón del gimnasio amigo)", active: true, maxUses: 50, usedCount: 12 },
+  { code: "ENTRENA2000", type: "FIXED", value: 2000, minSubtotal: 20000, description: "$2.000 de descuento desde $20.000", active: true, maxUses: 50, usedCount: 12 },
   { code: "ENVIOGRATIS", type: "FREE_SHIPPING", value: 0, onlyRegistered: true, description: "Envío gratis, solo con cuenta", active: true, usedCount: 7 },
   { code: "INVIERNO", type: "PERCENT", value: 15, endsAt: "2026-08-31", description: "Cupón vencido de ejemplo", active: true, maxUses: 100, usedCount: 41 },
 ];

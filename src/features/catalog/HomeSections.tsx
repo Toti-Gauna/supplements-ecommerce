@@ -1,6 +1,7 @@
 "use client";
 import { bestSellers, newArrivals } from "@/demo/engine/catalog";
-import { recommendForCart } from "@/demo/engine/recommend";
+import { recommendForHome } from "@/demo/engine/recommend";
+import { brand } from "@/config/brand";
 import { useDemoVersion } from "@/stores/admin";
 import { useCart } from "@/stores/cart";
 import { useHydrated } from "@/stores/hydration";
@@ -34,9 +35,11 @@ export function HomeSections() {
   const slides = data.content.slides.filter((s) => s.active !== false);
   const best = bestSellers(8);
   // Recomendados: si hay carrito, complementos; si no, lo destacado que no está en "más vendidos".
-  const recommended = recommendForCart(hydrated ? lines : [], 8);
+  const recommended = recommendForHome(hydrated ? lines : [], 8, best.length);
   return (
     <div className="flex flex-col gap-12 sm:gap-20">
+      {/* El título del carrusel cambia con cada diapositiva: el h1 de la página va oculto y dice qué es la tienda. */}
+      <h1 className="sr-only">{brand.name} · {brand.tagline}</h1>
       <div className="flex flex-col gap-6">
         <HeroCarousel key={theme?.id ?? "base"} slides={slides} lead={theme ? { node: <ThemeBanner theme={theme} offer={offer} />, label: theme.headline } : undefined} />
         <BenefitsBar />

@@ -82,8 +82,10 @@ test("carrito: elegir cupón sin escribir el código y ruleta al ir a pagar", as
   await page.goto("carrito/");
   await page.getByRole("button", { name: /Elegir de mis cupones/ }).click();
   const sheet = page.getByRole("dialog", { name: "Mis cupones" });
-  await expect(sheet.getByText("INVIERNO")).toBeVisible();
-  await expect(sheet.getByText("Vencido", { exact: true })).toBeVisible();
+  // De la tienda solo se listan los vigentes: el vencido de ejemplo queda para el panel.
+  await expect(sheet.getByRole("button", { name: "Aplicar cupón BIENVENIDA10" })).toBeVisible();
+  await expect(sheet.getByText("INVIERNO")).toHaveCount(0);
+  await expect(sheet.getByText("Vencido", { exact: true })).toHaveCount(0);
   await sheet.getByRole("button", { name: "Aplicar cupón BIENVENIDA10" }).click();
   await expect(sheet).toBeHidden();
   await expect(page.getByText(/BIENVENIDA10: 10%/)).toBeVisible();

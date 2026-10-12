@@ -55,11 +55,11 @@ export function CouponForm({ subtotal, isRegistered, check, where = "tienda" }: 
     >
       <label htmlFor="coupon" className="text-sm font-bold">¿Tenés un código?</label>
       <div className="flex gap-2">
-        <Input id="coupon" value={value} onChange={(e) => setValue(e.target.value)} placeholder="Ej.: BIENVENIDA10" autoCapitalize="characters" aria-invalid={Boolean(error)} aria-describedby="coupon-help" />
+        <Input id="coupon" value={value} onChange={(e) => setValue(e.target.value)} autoCapitalize="characters" aria-invalid={Boolean(error)} aria-describedby="coupon-help" />
         <Button type="submit" variant="secondary">Aplicar</Button>
       </div>
       <p id="coupon-help" className="text-xs text-muted" role={error ? "alert" : undefined}>
-        {error ?? (code && check && !check.ok ? check.message : "Probá BIENVENIDA10 o INVIERNO (vencido).")}
+        {error ?? (code && check && !check.ok ? check.message : "Escribilo tal como te llegó.")}
       </p>
     </form>
     </div>

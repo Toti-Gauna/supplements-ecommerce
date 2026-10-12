@@ -20,15 +20,15 @@ export interface Supplier {
 export const suppliers: Supplier[] = [
   {
     id: "lab-costa", name: "Laboratorio Costa (muestra)", brands: ["VOLTA Lab"], contact: "Paula Ríos", phone: "223 555-0181",
-    email: "pedidos.labcosta@ejemplo.com", deliveryWeekdays: [2, 4], minOrder: 500000, notes: "Fabrica la marca propia. Pedir con dos días de anticipación.",
+    email: "labcosta@ejemplo.com", deliveryWeekdays: [2, 4], minOrder: 500000, notes: "Fabrica la marca propia. Pedir con dos días de anticipación.",
   },
   {
     id: "atlantica", name: "Distribuidora Atlántica (muestra)", brands: ["Krono Nutrition", "Ozono"], contact: "Martina Gil", phone: "223 555-0182",
-    email: "ventas.atlantica@ejemplo.com", deliveryWeekdays: [1, 4], minOrder: 400000,
+    email: "atlantica@ejemplo.com", deliveryWeekdays: [1, 4], minOrder: 400000,
   },
   {
     id: "sur", name: "Sur Suplementos (muestra)", brands: ["Brava Sport", "Forja"], contact: "Germán Paz", phone: "223 555-0183",
-    email: "pedidos.sur@ejemplo.com", deliveryWeekdays: [3], minOrder: 800000, notes: "Reparte en Mar del Plata los miércoles a la mañana.",
+    email: "sursuple@ejemplo.com", deliveryWeekdays: [3], minOrder: 800000, notes: "Reparte en Mar del Plata los miércoles a la mañana.",
   },
 ];
 

@@ -61,8 +61,8 @@ export function PurchaseGroupCard({ group }: { group: PurchaseGroup }) {
       <div className="flex flex-wrap items-center justify-between gap-2 rounded-2xl bg-bg p-3 text-sm">
         <span>Total al costo <strong className="block text-xl tabular-nums">{formatARS(group.total)}</strong></span>
         {supplier && (missing > 0
-          ? <span className="inline-flex items-center gap-1 font-bold text-warning"><TriangleAlert size={15} aria-hidden="true" /> Faltan {formatARS(missing)} para el mínimo de {formatARS(supplier.minOrder)}</span>
-          : <span className="inline-flex items-center gap-1 font-bold text-success"><Check size={15} aria-hidden="true" /> Llega al pedido mínimo ({formatARS(supplier.minOrder)})</span>)}
+          ? <span className="inline-flex flex-wrap items-center gap-x-1 font-bold text-warning"><TriangleAlert size={15} aria-hidden="true" /> Faltan <span className="whitespace-nowrap">{formatARS(missing)}</span> para el mínimo de <span className="whitespace-nowrap">{formatARS(supplier.minOrder)}</span></span>
+          : <span className="inline-flex flex-wrap items-center gap-x-1 font-bold text-success"><Check size={15} aria-hidden="true" /> Llega al pedido mínimo (<span className="whitespace-nowrap">{formatARS(supplier.minOrder)}</span>)</span>)}
       </div>
       {group.withoutCost > 0 && <p className="text-xs font-semibold text-warning">{group.withoutCost === 1 ? "1 producto no tiene" : `${group.withoutCost} productos no tienen`} costo cargado: el total no lo incluye.</p>}
       <details open={preview} onToggle={(e) => setPreview(e.currentTarget.open)} className="text-sm">

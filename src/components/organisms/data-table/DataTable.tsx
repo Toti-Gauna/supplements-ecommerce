@@ -7,7 +7,7 @@ import { Pagination } from "@/components/molecules/Pagination";
 import { applyFilters, facetCount, matchesQuery, paginate, sortRows } from "@/demo/admin/table";
 import { cn } from "@/lib/cn";
 import { DataTableFooter } from "./DataTableFooter";
-import { DataTableHead } from "./DataTableHead";
+import { DataTableHead, STICKY_END } from "./DataTableHead";
 import { DataTableToolbar } from "./DataTableToolbar";
 import { DataTableViewTools } from "./DataTableViewTools";
 import type { Column, DataTableProps, ExportSheet } from "./types";
@@ -18,6 +18,13 @@ export function toSheet<T>(columns: Column<T>[], rows: T[]): ExportSheet {
 }
 
 const TONE = { warning: "bg-warning-soft/40", danger: "bg-danger-soft/40" };
+/** Celda fija a la derecha: fondo opaco con el mismo tono que la fila, para que lo que pasa por debajo no se vea. */
+const END_TONE = {
+  base: "bg-surface group-hover:bg-[color-mix(in_srgb,var(--color-accent)_35%,var(--color-surface))]",
+  on: "bg-[color-mix(in_srgb,var(--color-primary)_6%,var(--color-surface))]",
+  warning: "bg-[color-mix(in_srgb,var(--color-warning-soft)_40%,var(--color-surface))]",
+  danger: "bg-[color-mix(in_srgb,var(--color-danger-soft)_40%,var(--color-surface))]",
+};
 /** Lo que tiene acción propia dentro de una fila: tocarlo no abre la ficha. */
 const INNER = "a, button, input, select, textarea, label, summary, [role='switch'], [data-row-ignore]";
 export const fromInner = (e: MouseEvent) => !!(e.target as HTMLElement).closest(INNER);
@@ -103,7 +110,8 @@ export function DataTable<T>(p: DataTableProps<T>) {
                       className={cn("group border-b border-line/70 transition-colors last:border-0 hover:bg-accent/35", open && "cursor-pointer", on && "bg-primary/[0.06]", tone && TONE[tone])}>
                       <td className="w-12 pl-4"><input type="checkbox" checked={on} onChange={() => toggle(k)} aria-label={p.rowLabel(r)} className="h-4 w-4 accent-primary" /></td>
                       {visible.map((c) => (
-                        <td key={c.id} className={cn("px-3 align-middle", pad, c.align === "right" && "text-right tabular-nums", c.align === "center" && "text-center", c.className)}>
+                        <td key={c.id} className={cn("px-3 align-middle", pad, c.align === "right" && "text-right tabular-nums", c.align === "center" && "text-center", c.className,
+                          c.stickyEnd && cn(STICKY_END, END_TONE[on ? "on" : tone ?? "base"]))}>
                           {c.primary ? primary(r, c) : c.cell(r)}
                         </td>
                       ))}

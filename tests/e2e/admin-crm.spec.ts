@@ -95,6 +95,16 @@ test("buscador del panel con Ctrl+K abre un pedido", async ({ page }) => {
 test.describe("vista Excel de Productos y stock en escritorio", () => {
   test.use({ viewport: { width: 1280, height: 900 }, isMobile: false, hasTouch: false });
 
+  test("las columnas quedan alineadas en todas las filas, aunque una variante tenga un nombre largo", async ({ page }) => {
+    await page.goto("admin-demo/planilla/");
+    const grid = page.getByRole("grid", { name: /formato Excel/ });
+    await expect(grid.getByRole("row").filter({ hasText: "Cookies & cream" }).first()).toBeVisible();
+    // Antes, en "Cookies & cream · 2 lb (907 g)" la fila se estiraba y Marca y Lote quedaban corridos a la derecha.
+    const lefts = await grid.getByRole("row").evaluateAll((rows) => rows.map((r) => [...r.children].map((c) => Math.round(c.getBoundingClientRect().left)).join(",")));
+    expect(lefts.length).toBeGreaterThan(60);
+    expect(new Set(lefts).size).toBe(1);
+  });
+
   test("editar con teclado, validar, pegar desde Excel, deshacer y guardar", async ({ page }) => {
     // La ruta vieja de la Planilla lleva a la vista Excel del módulo unificado.
     await page.goto("admin-demo/planilla/");

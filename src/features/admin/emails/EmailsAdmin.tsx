@@ -40,13 +40,13 @@ export function EmailsAdmin() {
       <SubpageHeader trail={[MARKETING]} back={MARKETING} title="Emails automáticos"
         intro="Un email en cada momento del pedido —compra, pago, armado, entrega— y el aviso cuando se le está por terminar el pote. Salen solos al cambiar el estado del pedido. En la demo no se envía nada: queda en la bandeja de salida." />
       <ol aria-label="Plantillas" className="mb-8 grid grid-cols-[minmax(0,1fr)] gap-3 md:grid-cols-2 xl:grid-cols-3">
-        {ordered.map((t) => {
+        {ordered.map((t, i) => {
           const sent = outbox.filter((m) => m.templateId === t.id && !m.test);
           const only = audience(t);
           return (
             <li key={t.id} className="flex flex-col gap-3 rounded-3xl bg-surface p-4 shadow-[var(--shadow-card)] ring-1 ring-ink/[0.04]">
               <div className="flex items-start gap-3">
-                <span aria-hidden="true" className="font-lab grid h-9 w-9 shrink-0 place-items-center rounded-full bg-night text-sm font-bold text-volt">{step(t) + 1}</span>
+                <span aria-hidden="true" className="font-lab grid h-9 w-9 shrink-0 place-items-center rounded-full bg-night text-sm font-bold text-volt">{i + 1}</span>
                 <span className="min-w-0 flex-1">
                   <span className="eyebrow block text-muted">{TRIGGER_LABEL[t.trigger]}</span>
                   <span className="mt-1 block text-lg font-extrabold leading-snug">{t.name}</span>

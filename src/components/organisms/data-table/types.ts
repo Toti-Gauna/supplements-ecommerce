@@ -19,6 +19,8 @@ export interface Column<T> {
   pinned?: boolean;
   /** Arranca oculta. */
   defaultHidden?: boolean;
+  /** Queda fija contra el borde derecho aunque la tabla tenga scroll horizontal (el total de un pedido). */
+  stickyEnd?: boolean;
 }
 
 export interface Sort {

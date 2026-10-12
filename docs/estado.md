@@ -44,10 +44,23 @@
 - Tests: 236 unitarios y 297 e2e adaptados a VOLTA (se borraron solo los del configurador de collar), más los nuevos
   de descuento stack y aviso de recompra.
 
-## Fase 3 · Armá tu stack + Quiz ⏸
-- Pendiente: Ignacio pidió pasar antes a la Fase 4.
+## Fase 3 · Armá tu stack + Quiz ✅ (en revisión)
+- Hecha después de la 4, a pedido de Ignacio.
+- **Motor** (`src/demo/engine/stack-builder.ts`, `quiz.ts`, `src/demo/fixtures/stack-builder.ts`): cuatro lugares del
+  estante (base de proteína, creatina, pre-entreno, extra), qué arma cada objetivo, opciones por objetivo y
+  restricciones (vegano, sin TACC, sin azúcar, sin cafeína), resumen con la misma regla que el carrito y **costo por
+  día**, y el estante en la URL (`?objetivo=…&stack=…`) para compartirlo.
+- **`/crear/` → "Armá tu stack"**: elegís objetivo, se carga el stack sugerido y lo ajustás lugar por lugar (sabor,
+  tamaño, cambiar o vaciar). **Estante iluminado en SVG**: los potes caen con rebote, cada lugar prende su luz y al
+  llegar al descuento se enciende el neón con el sello "Stack −10 %". Agregar todo al carrito y copiar el link.
+- **Quiz "¿Qué necesitás?"** (`/crear/quiz/`): objetivo, días, horario y restricciones → stack con el porqué de cada
+  producto, total con descuento y costo por día; al carrito o "Ajustarlo en el armador". Recuerda las últimas respuestas.
+- **Inicio**: bloque en vivo "Tu estante, según tu objetivo" con mini estante y "Armalo a tu medida".
+- **Panel → Marketing → Descuento stack**: porcentaje (0–30 %) y categorías mínimas (2–5) con vista previa real; la
+  ficha, el armador, el quiz, el carrito y el checkout usan la regla nueva.
+- Menú: "Por objetivo" pasa a "Armá tu stack". "Reiniciar demo" borra también los borradores del panel.
 
-## Fase 4 · Gamificación ✅ (en revisión)
+## Fase 4 · Gamificación ✅ (publicada)
 - **Niveles del Club**: Novato → Atleta → Élite → Bestia por gasto acumulado (`src/demo/fixtures/club.ts`, motor en
   `src/demo/engine/club-levels.ts`). Sección "Cargá tu batería" en el Club y el nivel junto al nombre en Mi cuenta.
 - **Ruleta "Disco olímpico"**: disco de pesas SVG (rojo, azul, amarillo y verde con sus kilos), aro con 24 LED, maza de

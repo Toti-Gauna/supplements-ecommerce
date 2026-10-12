@@ -50,6 +50,9 @@ y distinta de las que hay hoy (negro + rojo agresivo, o blanco clínico). Todo s
   reglamentarios (rojo 25 kg, azul 20, amarillo 15, verde 10) con goma moteada y relieve, aro con 24 LED voltio que
   corren en cadena al girar y titilan al ganar, maza de acero moleteada con "VOLTA · 20 KG" y "Girar" en el agujero
   de la barra, y el puntero como traba de barra. Escenario noche con halo plasma, pulso y polvo de tiza.
+- **Estante del armador** (`src/features/stack/shelf/`): vitrina noche con LED voltio, halo plasma y un cono de luz por
+  lugar; los potes caen con rebote, los lugares vacíos son siluetas punteadas y con el descuento se prende el filo de
+  neón con el sello "Stack −10 %".
 - **Niveles del club** (`LevelGlyph`): un disco visto de frente con una batería que se carga una celda por nivel
   (Novato, Atleta, Élite, Bestia; Bestia suma el rayo).
 - Fondo con grano fino y grilla de puntos; bandas oscuras con filo voltio muy sutil; botón primario con destello.

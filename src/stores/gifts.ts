@@ -1,7 +1,7 @@
 "use client";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { Gift } from "@/demo/engine/gifts";
+import { withKnownOccasion, type Gift } from "@/demo/engine/gifts";
 import { demoStorage, STORAGE_PREFIX } from "./storage";
 
 /** Regalos de este navegador (demo): los que se compraron para regalar y los que se guardaron al abrir un link o un código. */
@@ -27,6 +27,13 @@ export const useGifts = create<GiftsState>()(
       markOpened: (code) => set((s) => (s.opened.includes(code) ? s : { opened: [...s.opened, code] })),
       clear: () => set({ sent: [], saved: [], opened: [] }),
     }),
-    { name: `${STORAGE_PREFIX}gifts`, storage: demoStorage, skipHydration: true },
+    {
+      name: `${STORAGE_PREFIX}gifts`, storage: demoStorage, skipHydration: true,
+      // Lo guardado antes de cambiar las temáticas sigue abriéndose (con la bolsa VOLTA si su fecha ya no está).
+      merge: (persisted, current) => {
+        const p = (persisted ?? {}) as Partial<GiftsState>;
+        return { ...current, ...p, sent: (p.sent ?? []).map(withKnownOccasion), saved: (p.saved ?? []).map(withKnownOccasion) };
+      },
+    },
   ),
 );

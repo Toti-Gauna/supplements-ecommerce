@@ -10,7 +10,7 @@ import { GIFT_LIMITS, cleanGift, giftProblem, isOccasion } from "@/demo/engine/g
 import { seasonalThemes } from "@/demo/fixtures/themes";
 import { useGiftDraft } from "@/stores/giftDraft";
 import { GiftPreview } from "./GiftPreview";
-import { sceneLabel } from "./scenes";
+import { bagPhrase } from "./scenes";
 
 interface Props {
   open: boolean;
@@ -62,7 +62,7 @@ export function GiftModal({ open, onClose, productName, choices, choice, onChoic
               <div className="pr-12">
                 <p className="eyebrow text-volt-ink">Es para regalar</p>
                 <h2 className="font-display mt-2 text-3xl leading-tight">{productName}</h2>
-                <p className="mt-2 text-sm text-muted">Al confirmar el pedido te damos un link y un código para mandarle. Lo abre a golpes, con una escena de la ocasión.</p>
+                <p className="mt-2 text-sm text-muted">Al confirmar el pedido te damos un link y un código para mandarle. Lo abre a golpes contra una bolsa de boxeo vestida para la ocasión, y nunca ve el precio.</p>
               </div>
               {choices && choices.length > 1 && (
                 <Field id="gift-line" label="¿Cuál es el regalo?">
@@ -87,12 +87,12 @@ export function GiftModal({ open, onClose, productName, choices, choice, onChoic
               </Field>
               <Field id="gift-message" label="Mensaje" hint={left >= 0 ? `${left} ${left === 1 ? "carácter disponible" : "caracteres disponibles"}` : `${-left} de más`} error={errorOf("caracteres")}>
                 {/* Sin maxLength: el navegador cuenta los emojis como dos y trabaría el campo antes del tope real. */}
-                <Textarea id="gift-message" value={draft.message} placeholder="¡Feliz día! Para que lo disfrutes." onChange={(e) => set({ message: e.target.value })}
+                <Textarea id="gift-message" value={draft.message} placeholder="¡Feliz día! Para que entrenes con todo." onChange={(e) => set({ message: e.target.value })}
                   aria-invalid={Boolean(errorOf("caracteres"))} aria-describedby={describedBy("gift-message", errorOf("caracteres"), true)} />
               </Field>
-              <Field id="gift-occasion" label="Ocasión" hint={`Se abre como: ${sceneLabel(draft.occasion)}.`}>
+              <Field id="gift-occasion" label="Ocasión" hint={`Lo abre a golpes contra ${bagPhrase(draft.occasion)}.`}>
                 <Select id="gift-occasion" value={draft.occasion} onChange={(e) => isOccasion(e.target.value) && set({ occasion: e.target.value })} aria-describedby="gift-occasion-hint">
-                  <option value="volta">Sin fecha especial (caja de Volta)</option>
+                  <option value="volta">Sin fecha especial (bolsa VOLTA)</option>
                   {seasonalThemes.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
                 </Select>
               </Field>

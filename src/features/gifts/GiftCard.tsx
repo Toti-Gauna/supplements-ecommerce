@@ -24,17 +24,17 @@ export function GiftCard({ gift, saved, preview, onSave, onReplay }: Props) {
   const variant = product?.variants.find((v) => v.label === gift.item.variant);
   return (
     <div ref={box} tabIndex={-1} className="gift-card flex max-h-full w-full max-w-md flex-col items-center overflow-y-auto text-center outline-none">
-      <p className="eyebrow text-volt-soft">{gift.from} te regaló</p>
+      <p className="eyebrow text-volt-soft">Regalo de {gift.from}</p>
       <div className="gift-card-art relative mt-4 aspect-square w-[min(62vw,34dvh,260px)] overflow-hidden rounded-[2rem] shadow-[0_30px_80px_-30px_rgb(0_0_0/0.9)] ring-1 ring-white/15">
         {product ? <ProductArt art={product.art} pack={product.pack} tint={variant?.colorHex} label={gift.item.name} className="h-full w-full [&>svg]:h-full" />
-          : <div className="grid h-full place-items-center bg-white/5 text-sm text-night-muted">Un producto de Volta</div>}
+          : <div className="grid h-full place-items-center bg-white/5 text-sm text-night-muted">Un suplemento de Volta</div>}
       </div>
       <h2 className="font-display mt-5 text-[clamp(1.6rem,6vw,2.2rem)] leading-tight">{gift.item.name}</h2>
       <p className="mt-1 text-sm text-night-muted">{[gift.item.variant, gift.item.detail].filter(Boolean).join(" · ")}</p>
       {gift.message && (
-        <blockquote className="font-script gift-card-note mt-5 w-full rounded-2xl bg-on-night px-5 py-4 text-left text-[1.45rem] leading-snug text-[#3a3226] shadow-lg" style={{ "--tilt": "-1.5deg" } as CSSProperties}>
+        <blockquote className="font-script gift-card-note mt-5 w-full rounded-2xl bg-on-night px-5 py-4 text-left text-[1.45rem] leading-snug text-night shadow-lg" style={{ "--tilt": "-1.5deg" } as CSSProperties}>
           “{gift.message}”
-          <footer className="mt-1 text-right text-lg text-[#6b5233]">— {gift.from}</footer>
+          <footer className="mt-1 text-right text-lg text-night/75">— {gift.from}</footer>
         </blockquote>
       )}
       {gift.eta && (

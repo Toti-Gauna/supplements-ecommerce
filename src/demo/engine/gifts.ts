@@ -42,6 +42,11 @@ export function isOccasion(value: unknown): value is GiftOccasion {
   return typeof value === "string" && OCCASIONS.has(value);
 }
 
+/** Un regalo guardado con una temática que ya no existe (se borró del panel o del código) abre la bolsa VOLTA. */
+export function withKnownOccasion<T extends { occasion: GiftOccasion }>(gift: T): T {
+  return isOccasion(gift.occasion) ? gift : { ...gift, occasion: "volta" };
+}
+
 /** Texto limpio: sin caracteres de control, espacios simples y con tope (cuenta emojis como un carácter). */
 export function cleanText(value: unknown, max: number): string {
   if (typeof value !== "string") return "";

@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutGrid } from "lucide-react";
+import { Ellipsis } from "lucide-react";
 import { TabIndicator } from "@/components/atoms/TabIndicator";
 import { cn } from "@/lib/cn";
 import { ADMIN_NAV, isActive } from "./nav";
@@ -43,7 +43,7 @@ export function AdminTabBar({ onMore, moreOpen }: { onMore: () => void; moreOpen
         })}
         <li className="flex flex-1">
           <button type="button" onClick={onMore} aria-label="Más secciones del panel" aria-expanded={moreOpen} className={cn(item, !inTabs ? "text-volt" : "text-night-muted")}>
-            <LayoutGrid size={21} aria-hidden="true" />Más
+            <Ellipsis size={21} aria-hidden="true" />Más
           </button>
         </li>
       </ul>

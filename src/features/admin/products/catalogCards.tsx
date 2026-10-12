@@ -3,7 +3,8 @@ import { ChevronRight } from "lucide-react";
 import { Switch } from "@/components/atoms/Switch";
 import type { RowCardProps } from "@/components/organisms/data-table/types";
 import type { LotRow } from "@/demo/admin/lots";
-import { productStockState, productStockTotal, stockMargin, type StockRow } from "@/demo/admin/stock";
+import { stockMargin, type StockRow } from "@/demo/admin/stock";
+import { productStockBadge } from "@/demo/admin/stock-badge";
 import type { Category, Product } from "@/demo/types";
 import { formatARS } from "@/lib/money";
 import { StockChip } from "../table/StockChip";
@@ -22,7 +23,7 @@ export function ProductCard({ row: p, selected, onToggle, onOpen, categories, lo
           <span className="min-w-0 flex-1">
             <span className="block font-bold leading-tight">{p.name}</span>
             <span className="text-sm text-muted">{categories.find((c) => c.slug === p.categorySlug)?.name} · desde {formatARS(minPrice(p))}</span>
-            <span className="mt-1 flex flex-wrap gap-1"><StockChip state={productStockState(p, low)} units={productStockTotal(p)} /><ExpiringBadge product={p} /></span>
+            <span className="mt-1 flex flex-wrap gap-1"><StockChip {...productStockBadge(p, low)} /><ExpiringBadge product={p} /></span>
           </span>
           <ChevronRight size={18} aria-hidden="true" className="mt-1 shrink-0 text-muted" />
         </button>

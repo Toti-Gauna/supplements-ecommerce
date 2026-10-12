@@ -120,6 +120,23 @@ test.describe("escritorio con mouse", () => {
     await expect(page).toHaveURL(/etapa=to-collect/);
     await expect(bodyRows(page)).toHaveCount(n);
   });
+
+  test("el Total de los pedidos se ve entero aunque la tabla no entre, también con el menú fijado", async ({ page }) => {
+    // Cada celda de "Total" (encabezado y filas) queda dentro de la caja visible de la tabla, con o sin scroll.
+    const totalsInside = () => page.locator("table").first().evaluate((t) => {
+      const box = t.parentElement!.getBoundingClientRect();
+      const col = [...t.querySelectorAll("thead th")].findIndex((th) => th.textContent?.trim().startsWith("Total"));
+      const cells = [...t.querySelectorAll("tr")].map((tr) => tr.children[col]!.getBoundingClientRect());
+      return { overflow: t.parentElement!.scrollWidth > t.parentElement!.clientWidth, inside: cells.every((c) => c.left >= box.left - 1 && c.right <= box.right + 1) };
+    });
+    await page.goto("admin-demo/pedidos/");
+    await expect(bodyRows(page)).toHaveCount(10);
+    expect((await totalsInside()).inside).toBe(true);
+    await page.locator("aside[data-pinned]").getByRole("button", { name: "Fijar el menú abierto" }).click();
+    await page.mouse.move(1200, 500);
+    // Con el menú fijado la tabla seguro no entra: el Total queda fijo a la derecha.
+    await expect.poll(totalsInside).toEqual({ overflow: true, inside: true });
+  });
 });
 
 test("8.3.19 un solo módulo: menú sin Stock ni Planilla, “Ver stock” filtra la misma pantalla y las rutas viejas llegan", async ({ page }) => {

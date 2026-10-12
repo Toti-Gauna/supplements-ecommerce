@@ -3,6 +3,7 @@ import { defaultAdminData } from "@/demo/admin/defaults";
 import { customerRows } from "@/demo/admin/customers";
 import { applyDraft, cellKey, expandEdit, parseCellInput, parseTsv, pruneDraft, sheetReducer, toTsv } from "@/demo/admin/sheet";
 import { applyStockOp, inventoryValue, lowStockRows, productStockTotal, stockRows, stockState } from "@/demo/admin/stock";
+import { productStockBadge } from "@/demo/admin/stock-badge";
 import { compareValues, exportFileName, matchesQuery, paginate, sortRows } from "@/demo/admin/table";
 
 describe("tablas del panel", () => {
@@ -42,6 +43,21 @@ describe("stock y clientes", () => {
     const shaker = products.find((p) => p.slug === "shaker-volta")!;
     expect(productStockTotal(shaker)).toBeNull();
     expect(inventoryValue(stockRows(products, admin.data.categories))).toBeGreaterThan(0);
+  });
+  it("la insignia de stock del producto sale de la variante más baja, no de la suma", () => {
+    const bar = products.find((p) => p.slug === "barra-proteica")!;
+    const withStocks = (p: typeof bar, stocks: number[]) => ({ ...p, variants: p.variants.slice(0, stocks.length).map((v, i) => ({ ...v, stock: stocks[i]! })) });
+    // La barra del catálogo: mucho stock en total y una sola variante baja ("Stock bajo · 139" se contradecía).
+    expect(productStockBadge(bar)).toEqual({ state: "low", text: "1 variante baja" });
+    expect(productStockBadge(withStocks(bar, [40, 2, 3]))).toEqual({ state: "low", text: "2 variantes bajas" });
+    expect(productStockBadge(withStocks(bar, [40, 0, 0, 2]))).toEqual({ state: "out", text: "Sin stock en 2 variantes" });
+    expect(productStockBadge(withStocks(bar, [0, 0]))).toEqual({ state: "out", text: "Sin stock" });
+    expect(productStockBadge(withStocks(bar, [2]))).toEqual({ state: "low", text: "Stock bajo · 2" });
+    expect(productStockBadge(withStocks(bar, [40, 12]))).toEqual({ state: "ok", text: "En stock · 52" });
+    expect(productStockBadge(withStocks(bar, [-1, 12]))).toEqual({ state: "ok", text: "En stock" });
+    expect(productStockBadge(withStocks(bar, [-1, -1]))).toEqual({ state: "made-to-order", text: "A pedido" });
+    // El umbral es el de "Avisar con N o menos".
+    expect(productStockBadge(withStocks(bar, [40, 5]), 5)).toEqual({ state: "low", text: "1 variante baja" });
   });
   it("une cuentas e invitados por email y calcula el total pagado", () => {
     const rows = customerRows(admin.users, admin.orders);

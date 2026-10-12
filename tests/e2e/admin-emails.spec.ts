@@ -136,3 +136,11 @@ test.describe("editor en escritorio", () => {
     await expect(page.getByRole("region", { name: "Bandeja de salida" }).getByRole("button", { name: /tu Creatina monohidrato micronizada se está por terminar/ })).toBeVisible();
   });
 });
+
+test("las plantillas van numeradas en orden, sin números repetidos (retiro y salida eran las dos “6”)", async ({ page }) => {
+  await page.goto("admin-demo/emails/");
+  const cards = page.getByRole("list", { name: "Plantillas" }).getByRole("listitem");
+  await expect(cards.first()).toBeVisible();
+  const numbers = await cards.evaluateAll((items) => items.map((li) => li.querySelector("span[aria-hidden='true']")?.textContent ?? ""));
+  expect(numbers).toEqual(numbers.map((_, i) => String(i + 1)));
+});

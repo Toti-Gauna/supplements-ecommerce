@@ -138,8 +138,7 @@ Son cosas que hoy restan en cualquier demo y no conviene esperar al rediseño. E
 - **Tarjeta:** "+ Agregar" agrega de verdad, con e2e en escritorio y celular.
 - **Inicio:** "Recomendados" sin repetir los más vendidos; `h1`; "1 productos"; el link "Por objetivo".
 - **Una sola fecha de demo en toda la app:** la ficha, el checkout, el seguimiento (sin fechas escritas a mano) y el
-  regalo. **Se propone pasar la demo del domingo 4/10 al lunes 5/10** para que "Hoy", "Sale hoy" y el cadete tengan
-  sentido.
+  regalo. **La demo pasa del domingo 4/10 al lunes 5/10** (aprobado) para que "Hoy", "Sale hoy" y el cadete tengan sentido.
 - **Insignia de campaña honesta:** "−30 % desde $ 40.000", o el precio con la condición.
 - **Panel:** celdas corridas en la vista Excel, total cortado, "Stock bajo · 139" por "1 variante baja", el número de
   email repetido, el menú con scroll oculto y el riel que se abre solo.
@@ -284,9 +283,12 @@ mañana.
 - **Apertura del regalo:** las dos, la bolsa de boxeo rehecha y el locker. Quien regala elige cuál.
 - **Temáticas:** **las 12 fechas al máximo nivel**, cada una como campaña completa.
 - **Orden:** R0 → R1 → R2 → R3 → R4.
+- **Fecha de la demo:** pasa del domingo 4/10 al **lunes 5/10** (R0).
+- **Las 14 funcionalidades nuevas de la sección 10:** aprobadas.
 
-## 10. Propuestas que salieron del análisis y esperan el OK de Ignacio
-Son funcionalidades nuevas. Mientras no estén aprobadas, quedan fuera del plan.
+## 10. Funcionalidades nuevas que salieron del análisis: **todas aprobadas** (12/10/2026)
+Entran en la fase indicada, además de lo de cada tabla. Con esto R2 y R4 crecen bastante. Si una fase se pasa de
+tamaño, se parte en dos PR (por ejemplo, R2a ficha + catálogo + comparador y R2b compra + club), sin cambiar el orden.
 
 | Propuesta | Área | Fase | Esfuerzo |
 |---|---|---|---|

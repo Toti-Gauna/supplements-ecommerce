@@ -1,8 +1,8 @@
 import type { PackStyle } from "./types";
 
 /**
- * Definiciones compartidas de la librería de envases. Los IDs son fijos y las definiciones idénticas en cada SVG
- * (se pueden repetir en la página). Sin variables CSS adentro de los dibujos: el Estudio de contenido los pasa a imagen.
+ * Definiciones compartidas de la librería de envases (IDs fijos). En la página van una sola vez (`GlobalArtDefs`); el
+ * SVG que se pasa a imagen (`PackShot` del Estudio de contenido) las trae adentro. Sin variables CSS en los dibujos.
  */
 export const DISPLAY_SVG = "'Archivo Variable','Arial Black',Arial,sans-serif";
 export const MONO_SVG = "'JetBrains Mono Variable',ui-monospace,Menlo,monospace";

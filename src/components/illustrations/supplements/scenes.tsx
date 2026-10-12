@@ -1,8 +1,9 @@
 import { DISPLAY_SVG, tone } from "./defs";
 
 /**
- * Escenarios de la librería (400 × 400). El estudio usa --studio-1/2/3 con respaldo (las temáticas lo cambian;
- * pasado a imagen para el Estudio de contenido queda el respaldo).
+ * Escenarios de la librería (400 × 400). Sus degradés (`st-*`, `gy-*`) se dibujan una sola vez por página en
+ * `GlobalArtDefs`: repetirlos en cada ilustración sumaba miles de nodos y el navegador usa igual el primero (Fase 8).
+ * El estudio usa --studio-1/2/3 con respaldo (las temáticas lo cambian).
  */
 export function StudioDefs() {
   return (
@@ -40,7 +41,6 @@ export function GymDefs() {
 export function Studio({ bare = false }: { bare?: boolean }) {
   return (
     <g aria-hidden="true">
-      <StudioDefs />
       {!bare && (
         <>
           <rect width="400" height="400" fill="url(#st-bg)" />
@@ -62,7 +62,6 @@ export function Studio({ bare = false }: { bare?: boolean }) {
 export function GymScene() {
   return (
     <g aria-hidden="true">
-      <GymDefs />
       <rect width="400" height="300" fill="url(#gy-wall)" />
       <rect width="400" height="300" fill="url(#gy-dots)" />
       <rect y="64" width="400" height="3" fill="#c8ff2e" opacity=".85" />

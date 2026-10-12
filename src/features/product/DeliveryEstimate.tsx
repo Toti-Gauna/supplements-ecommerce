@@ -1,9 +1,9 @@
 "use client";
 import { Bike, CalendarCheck, Store, Truck } from "lucide-react";
-import { deliveryWindows, estimateForProduct } from "@/demo/engine/delivery";
+import { deliveryWindows, DISPATCH_PROMISE, estimateForProduct } from "@/demo/engine/delivery";
 import { DEMO_TODAY } from "@/demo/fixtures/admin-orders";
 import type { Product, Variant } from "@/demo/types";
-import { formatDay } from "@/lib/date";
+import { formatDay, whenDay } from "@/lib/date";
 import { useAdmin } from "@/stores/admin";
 import { useHydrated } from "@/stores/hydration";
 
@@ -30,9 +30,9 @@ export function DeliveryEstimate({ product, variant }: { product: Product; varia
       <p className="mb-3 flex items-start gap-2.5 rounded-xl bg-bg p-3 text-sm">
         <CalendarCheck size={18} aria-hidden="true" className="mt-0.5 shrink-0 text-primary" />
         <span>
-          <span className="font-bold">Lo despachamos el {formatDay(est.earliest, "long")}</span>
+          <span className="font-bold">Lo despachamos {whenDay(est.earliest, DEMO_TODAY, "long")}</span>
           <span className="block text-muted">
-            {est.leadDays === 1 ? "En stock: sale al día hábil siguiente." : `Entra al depósito en ${est.leadDays} días hábiles.`}
+            {est.leadDays === 1 ? `En stock: sale ${DISPATCH_PROMISE}.` : `Entra al depósito en ${est.leadDays} días hábiles.`}
             {est.fullDays.length > 0 && ` Con cadete, el ${formatDay(est.day, "long")}: los días anteriores el reparto ya está completo.`}
           </span>
         </span>

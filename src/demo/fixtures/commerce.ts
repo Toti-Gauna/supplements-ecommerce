@@ -1,3 +1,4 @@
+import { DISPATCH_PROMISE } from "../engine/lead-time";
 import type { CarouselSlide, Coupon, Mission, PaymentMethod, ShippingZone } from "../types";
 import { HOUSE_SHAKER } from "./house";
 import { brand } from "@/config/brand";
@@ -63,8 +64,8 @@ export const missions: Mission[] = [
 export const demoAccountProgress: Record<string, number> = { "m-dos-productos": 1, "m-primera": 0, "m-gasto": 58000 };
 
 export const shippingZones: ShippingZone[] = [
-  { id: "pickup", type: "PICKUP", name: "Retiro en el local", price: 0, etaText: "Listo en 1 hora en días hábiles" },
-  { id: "local", type: "LOCAL_DELIVERY", name: `Cadete en ${brand.city}`, price: 3500, etaText: "En el día si comprás antes de las 14 h", postalCodes: ["7600", "7601", "7602", "7603", "7604", "7605", "7606", "7607", "7608", "7609", "7610", "7611", "7612"] },
+  { id: "pickup", type: "PICKUP", name: "Retiro en el local", price: 0, etaText: `Listo para retirar ${DISPATCH_PROMISE}` },
+  { id: "local", type: "LOCAL_DELIVERY", name: `Cadete en ${brand.city}`, price: 3500, etaText: `Llega ${DISPATCH_PROMISE}`, postalCodes: ["7600", "7601", "7602", "7603", "7604", "7605", "7606", "7607", "7608", "7609", "7610", "7611", "7612"] },
   { id: "national", type: "SHIPPING", name: "Envío al resto del país", price: 9800, etaText: "3–7 días hábiles por correo" },
 ];
 

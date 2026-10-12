@@ -1,3 +1,4 @@
+import { DISPATCH_PROMISE } from "../engine/lead-time";
 import type { Faq, Variant } from "../types";
 
 export interface SizeSpec {
@@ -32,5 +33,5 @@ export const FAQ = {
   conservar: { q: "¿Cómo lo conservo?", a: "En un lugar fresco y seco, bien cerrado y lejos del sol. Usá siempre el scoop seco." } satisfies Faq,
   consulta: { q: "¿Lo puedo tomar si tengo una condición de salud?", a: "Los suplementos no reemplazan una alimentación variada. Si estás embarazada, amamantando, tomás medicación o tenés una condición de salud, consultá antes con tu médico." } satisfies Faq,
   cafeina: { q: "¿Tiene cafeína?", a: "Sí. No lo combines con otros productos con cafeína ni lo tomes de noche. No recomendado para menores de 18 años." } satisfies Faq,
-  envio: { q: "¿Cuándo llega?", a: "En Mar del Plata, con cadete en el día si comprás antes de las 14 h (días hábiles). Al resto del país, de 3 a 7 días hábiles." } satisfies Faq,
+  envio: { q: "¿Cuándo llega?", a: `En Mar del Plata, con cadete ${DISPATCH_PROMISE} (si ese día el reparto está completo, el próximo día hábil con lugar). Al resto del país, de 3 a 7 días hábiles.` } satisfies Faq,
 };

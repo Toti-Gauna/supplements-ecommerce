@@ -1,4 +1,5 @@
 "use client";
+import { DISPATCH_PROMISE } from "@/demo/engine/lead-time";
 import { Gift, ShieldCheck, ShoppingBag, Undo2, Zap } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/atoms/Button";
@@ -27,7 +28,7 @@ import { ClearanceTag, LotNote, ProductBadges, ServingPrice } from "./Supplement
 import { UsageTimeline } from "./UsageTimeline";
 import { useProductPurchase } from "./useProductPurchase";
 import { useVariantSelection } from "./useVariantSelection";
-const TRUST = [{ icon: ShieldCheck, t: "Original, con lote y vencimiento" }, { icon: Zap, t: "Cadete en el día en Mar del Plata" }, { icon: Undo2, t: "Botón de arrepentimiento" }];
+const TRUST = [{ icon: ShieldCheck, t: "Original, con lote y vencimiento" }, { icon: Zap, t: `Cadete en Mar del Plata ${DISPATCH_PROMISE}` }, { icon: Undo2, t: "Botón de arrepentimiento" }];
 
 function stockNote(a: Availability): string {
   return a.kind === "in-stock" ? `(${a.units} disponibles)` : a.kind === "made-to-order" ? "Por encargo" : "Sin stock";

@@ -1,3 +1,4 @@
+import { DISPATCH_PROMISE } from "../engine/lead-time";
 import { categories } from "../fixtures/categories";
 import { servingsPerWeek } from "../fixtures/customers";
 import { formatDay } from "@/lib/date";
@@ -40,7 +41,7 @@ const firstName = (name: string) => name.trim().split(/\s+/)[0] ?? name;
 /** Mensaje de WhatsApp prellenado para avisarle al cliente. */
 export function repurchaseMessage(item: RepurchaseItem, store: string): string {
   const when = item.inDays < 0 ? `ya se te terminó tu ${item.product}` : `${item.inDays === 0 ? "hoy" : `el ${dayText(item.runsOutOn)}`} se te termina tu ${item.product}`;
-  return `¡Hola ${firstName(item.name)}! Te escribimos de ${store}. Calculamos que ${when}. ¿Te preparamos otro? En Mar del Plata te lo llevamos con cadete en el día.`;
+  return `¡Hola ${firstName(item.name)}! Te escribimos de ${store}. Calculamos que ${when}. ¿Te preparamos otro? En Mar del Plata te lo llevamos con cadete ${DISPATCH_PROMISE}.`;
 }
 
 /** Link de WhatsApp al teléfono del cliente (celular argentino: 54 9 + característica + número). */

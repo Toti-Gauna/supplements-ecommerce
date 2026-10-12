@@ -1,3 +1,4 @@
+import { demoNow } from "../clock";
 import { emailTemplates, type EmailTemplate } from "../fixtures/emails";
 import { auditEntry, type AdminData } from "./defaults";
 import { sampleContext } from "./emails/context";
@@ -38,7 +39,7 @@ export function createEmailActions(set: Set, get: Get): EmailActions {
       // La prueba usa el mismo contexto que la vista previa (la recompra no lleva pedido, sino el producto).
       const ctx = { ...sampleContext(tpl, s.orders, orderCode), email: TEST_INBOX };
       if (tpl.trigger === "repurchase" ? !ctx.refill : !ctx.order) return false;
-      const [mail] = composeEmails([tpl], [tpl.trigger], ctx, new Date().toISOString(), { orderCode: ctx.order?.code, force: true });
+      const [mail] = composeEmails([tpl], [tpl.trigger], ctx, demoNow(), { orderCode: ctx.order?.code, force: true });
       edit("Email de prueba", tpl.name, (st) => ({ outbox: pushOutbox(st.emails.outbox, [{ ...mail!, test: true }]) }));
       return true;
     },

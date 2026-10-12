@@ -1,10 +1,11 @@
+import { DISPATCH_PROMISE } from "@/demo/engine/lead-time";
 import { FlaskConical, ShieldCheck, Truck, Zap } from "lucide-react";
 import { Reveal } from "@/components/motion/Reveal";
 
 const VALUES = [
   { icon: ShieldCheck, title: "Originales, con lote", text: "Compramos a la marca o a su distribuidor oficial. Lote y vencimiento en cada ficha." },
   { icon: FlaskConical, title: "Info clara", text: "Tabla nutricional, precio por servicio y cómo tomarlo, sin promesas mágicas." },
-  { icon: Zap, title: "Llega hoy", text: "Cadete en el día en Mar del Plata y envíos a todo el país." },
+  { icon: Zap, title: "Cadete propio", text: `Cadete en Mar del Plata ${DISPATCH_PROMISE} y envíos a todo el país.` },
   { icon: Truck, title: "Pagás como prefieras", text: "Mercado Pago, transferencia o QR, con descuento." },
 ];
 

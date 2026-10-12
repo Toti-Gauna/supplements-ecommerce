@@ -1,3 +1,4 @@
+import { DISPATCH_PROMISE } from "../engine/lead-time";
 import { brand } from "@/config/brand";
 /** Textos de MUESTRA. En producción se editan desde el panel (Contenido) y requieren revisión legal. */
 export interface LegalSection {
@@ -7,7 +8,7 @@ export interface LegalSection {
 
 export const storeFaqs = [
   { q: "¿Los productos son originales?", a: "Sí. Compramos directo a cada marca o a su distribuidor oficial. En cada ficha ves el lote y el vencimiento del envase que te llega." },
-  { q: "¿Cuándo me llega?", a: "En Mar del Plata, con cadete en el día si comprás antes de las 14 h (días hábiles). Al resto del país, de 3 a 7 días hábiles. También podés retirar en el local." },
+  { q: "¿Cuándo me llega?", a: `En Mar del Plata, con cadete ${DISPATCH_PROMISE} (si ese día el reparto está completo, el próximo día hábil con lugar). Al resto del país, de 3 a 7 días hábiles. También podés retirar en el local.` },
   { q: "¿Cómo puedo pagar?", a: `Con Mercado Pago (tarjeta de crédito, débito o dinero en cuenta), por transferencia o con QR. Transferencia y QR tienen descuento y requieren subir el comprobante: ${brand.name} confirma el ingreso antes de despachar.` },
   { q: "¿Cuál me conviene?", a: "Usá el filtro por objetivo o escribinos por WhatsApp. Las recomendaciones de la tienda son orientativas: si tenés una condición de salud, consultá con tu médico o nutricionista." },
   { q: "¿Necesito cuenta para comprar?", a: "No. Podés comprar como invitado. Con cuenta ves tus pedidos, sumás a las misiones del Club y te avisamos cuando se te está por terminar el pote." },

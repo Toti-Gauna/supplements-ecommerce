@@ -19,8 +19,8 @@ export const demoGifts: Gift[] = [
   },
 ];
 
-const SAMPLE_DAY = "2026-10-10T12:00:00.000Z";
-const SAMPLE_ETA = "2026-10-23";
+const SAMPLE_DAY = "2026-10-02T12:00:00.000Z";
+const SAMPLE_ETA = "2026-10-06";
 
 /** Un regalo de prueba antes de saber si su ocasión existe (las temáticas se editan aparte). */
 type SampleGift = Omit<Gift, "occasion"> & { occasion: string };

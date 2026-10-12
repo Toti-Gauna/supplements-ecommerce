@@ -33,6 +33,7 @@ const ADMIN = [
   // Subpáginas de Polish 8.3 (tarjetas de Marketing, Contenido y Ajustes).
   ["admin-demo/marketing/", "Marketing"], ["admin-demo/cupones/lista/", "Cupones"], ["admin-demo/cupones/ruleta/", "Configuración de ruleta"],
   ["admin-demo/cupones/premios/", "Premios disponibles"], ["admin-demo/misiones/simular/", "Simular progreso y premio"], ["admin-demo/emails/enviados/", "Bandeja de salida"],
+  ["admin-demo/cupones/juego/", "Premios del juego"],
   ["admin-demo/contenido/carrusel/", "Carrusel"], ["admin-demo/contenido/textos/", "Textos de inicio"], ["admin-demo/contenido/preguntas/", "Preguntas frecuentes"],
   ["admin-demo/ajustes/contacto/", "Contacto y WhatsApp"], ["admin-demo/ajustes/pagos/", "Medios de pago"], ["admin-demo/ajustes/cobro/", "Datos de cobro"],
   ["admin-demo/ajustes/envios/", "Envíos y retiro"],

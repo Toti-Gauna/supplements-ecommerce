@@ -70,30 +70,30 @@ test.describe("escritorio con mouse", () => {
     await expect(page).toHaveURL(/emails\/enviados\/$/);
     await expect(page.getByRole("region", { name: "Bandeja de salida" })).toBeVisible();
     await page.getByRole("link", { name: "Volver a Emails automáticos" }).click();
-    await expect(page.getByRole("link", { name: "Editar Gracias por tu compra" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Editar Recibimos tu pedido" })).toBeVisible();
     await expect(page.getByRole("region", { name: "Bandeja de salida" })).toHaveCount(0);
   });
 
   test("8.3.24 editor de email: título a todo el ancho y acciones abajo; los cambios sin guardar vuelven al reabrir y se descartan con confirmación", async ({ page }) => {
     await page.setViewportSize({ width: 1024, height: 900 });
     await page.goto("admin-demo/emails/editar/?id=tpl-order-created");
-    const title = (await page.getByRole("heading", { level: 1, name: /Gracias por tu compra/ }).boundingBox())!;
+    const title = (await page.getByRole("heading", { level: 1, name: /Recibimos tu pedido/ }).boundingBox())!;
     const actions = (await page.getByRole("group", { name: "Acciones de la plantilla" }).boundingBox())!;
     expect(title.height, "el título entra en una línea").toBeLessThan(70);
     expect(actions.y).toBeGreaterThanOrEqual(title.y + title.height - 1);
     await page.getByRole("navigation", { name: "Partes del editor" }).getByRole("button", { name: "Bloques" }).click();
     await expect(page.locator("#e-blocks")).toBeFocused();
-    await page.getByLabel("Nombre interno").fill("Gracias por tu compra (borrador)");
+    await page.getByLabel("Nombre interno").fill("Recibimos tu pedido (borrador)");
     await expect(page.getByText("Cambios sin guardar")).toBeVisible();
     await page.getByRole("link", { name: "Volver a Emails automáticos" }).click();
-    await page.getByRole("link", { name: "Editar Gracias por tu compra" }).click();
+    await page.getByRole("link", { name: "Editar Recibimos tu pedido" }).click();
     await expect(page.getByText("Recuperamos los cambios sin guardar de esta plantilla.")).toBeVisible();
-    await expect(page.getByLabel("Nombre interno")).toHaveValue("Gracias por tu compra (borrador)");
+    await expect(page.getByLabel("Nombre interno")).toHaveValue("Recibimos tu pedido (borrador)");
     await page.getByRole("button", { name: "Descartar cambios" }).click();
     await page.getByRole("dialog").getByRole("button", { name: "Descartar" }).click();
-    await expect(page.getByLabel("Nombre interno")).toHaveValue("Gracias por tu compra");
+    await expect(page.getByLabel("Nombre interno")).toHaveValue("Recibimos tu pedido");
     // La vista previa sigue reemplazando las fichas.
-    await expect(page.getByRole("region", { name: "Vista previa" }).getByText(/¡Gracias por tu compra, Julián! Pedido VOL-000121/)).toBeVisible();
+    await expect(page.getByRole("region", { name: "Vista previa" }).getByText(/¡Recibimos tu pedido, Julián! · VOL-000121/)).toBeVisible();
   });
 
   test("8.3.25 ruleta arriba; premio desde plantilla, elegido por lista y guardado; pesos en cero no se guardan; el borrador vuelve", async ({ page }) => {

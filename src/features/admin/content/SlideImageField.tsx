@@ -67,7 +67,7 @@ export function SlideImageField({ slide, onChange }: Props) {
       {img && (
         <>
           <label className="flex flex-col gap-1 text-sm font-bold">Texto alternativo
-            <Input value={img.alt} onChange={(e) => onChange({ image: { ...img, alt: e.target.value } })} placeholder="Velador de madera con la foto de un perro" aria-invalid={[...img.alt.trim()].length > SLIDE_LIMITS.alt || undefined} />
+            <Input value={img.alt} onChange={(e) => onChange({ image: { ...img, alt: e.target.value } })} placeholder="Pote de whey de chocolate sobre el mostrador del local" aria-invalid={[...img.alt.trim()].length > SLIDE_LIMITS.alt || undefined} />
             <span className="text-xs font-normal text-muted">Describe la imagen para lectores de pantalla y buscadores.</span>
           </label>
           <div role="group" aria-label="Encuadre" className="grid gap-x-4 sm:grid-cols-3">

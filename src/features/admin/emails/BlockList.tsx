@@ -1,21 +1,23 @@
 "use client";
 import { ArrowDown, ArrowUp, Copy, Plus, Trash2, TriangleAlert } from "lucide-react";
 import { useState } from "react";
-import { needsOrder } from "@/demo/admin/emails/render";
+import { needsOrder, needsRefill } from "@/demo/admin/emails/render";
 import { BLOCK_LABEL, LINK_LABEL, type ButtonLink, type EmailBlock, type EmailBlockType, type EmailToken } from "@/demo/fixtures/emails";
 import type { ArtKey } from "@/demo/types";
 import { ChipEditor } from "./ChipEditor";
 
 const DESCRIBE: Partial<Record<EmailBlockType, string>> = {
-  header: "Logo y nombre de Volta sobre fondo oscuro.",
+  header: "Logo y nombre de la tienda sobre la banda oscura.",
   "order-card": "Código, total, estado, fecha de entrega y forma de entrega del pedido.",
-  products: "Los productos del pedido con su sabor, presentación y servicios.",
-  tracking: "Recorrido del pedido marcado en la etapa actual.",
-  divider: "Una línea para separar.",
+  products: "Los productos del pedido con su sabor, tamaño y servicios; cuando ya está armado, también el lote y el vencimiento.",
+  usage: "Cómo se toma cada producto del pedido (la indicación de su ficha).",
+  tracking: "Recorrido del pedido como una batería que se carga hasta la etapa actual.",
+  refill: "El producto que se le termina, con la fecha estimada.",
+  divider: "La línea de pulso de la marca, para separar.",
   footer: "Datos de la tienda y aviso de por qué recibe el email.",
 };
 
-const ADDABLE: EmailBlockType[] = ["heading", "text", "button", "image", "order-card", "products", "tracking", "divider"];
+const ADDABLE: EmailBlockType[] = ["heading", "text", "button", "image", "order-card", "products", "usage", "tracking", "refill", "divider"];
 
 let seq = 0;
 export function newBlock(type: EmailBlockType): EmailBlock {
@@ -33,6 +35,7 @@ interface Props {
   blocks: EmailBlock[];
   onChange: (blocks: EmailBlock[]) => void;
   tokens: EmailToken[];
+  /** El disparador trae un pedido o, en la recompra, el producto que se termina. */
   hasOrder: boolean;
   arts: { art: ArtKey; name: string }[];
 }
@@ -69,7 +72,7 @@ export function BlockList({ blocks, onChange, tokens, hasOrder, arts }: Props) {
                   <ChipEditor id={`blk-${b.id}`} label={`Texto del botón ${i + 1}`} value={b.label} tokens={tokens} onChange={(l) => patch(i, { ...b, label: l })} />
                   <label className="flex flex-col gap-1 text-xs font-bold">Lleva a
                     <select value={b.link} onChange={(e) => patch(i, { ...b, link: e.target.value as ButtonLink })} className="h-11 rounded-2xl border border-ink/12 bg-surface px-3 text-sm font-semibold">
-                      {(Object.keys(LINK_LABEL) as ButtonLink[]).map((l) => <option key={l} value={l}>{LINK_LABEL[l]}</option>)}
+                      {(Object.keys(LINK_LABEL) as ButtonLink[]).filter((l) => l === b.link || (hasOrder ? l !== "product" : l !== "tracking")).map((l) => <option key={l} value={l}>{LINK_LABEL[l]}</option>)}
                     </select>
                   </label>
                 </div>
@@ -87,8 +90,8 @@ export function BlockList({ blocks, onChange, tokens, hasOrder, arts }: Props) {
                 </div>
               )}
               {DESCRIBE[b.type] && <p className="text-sm text-muted">{DESCRIBE[b.type]}</p>}
-              {needsOrder(b) && !hasOrder && (
-                <p className="mt-2 flex items-center gap-1.5 text-xs font-bold text-warning"><TriangleAlert size={14} aria-hidden="true" /> Este disparador no tiene pedido: el bloque no se muestra.</p>
+              {((needsOrder(b) && !hasOrder) || (needsRefill(b) && hasOrder)) && (
+                <p className="mt-2 flex items-center gap-1.5 text-xs font-bold text-warning"><TriangleAlert size={14} aria-hidden="true" /> {hasOrder ? "Solo sale en el aviso de recompra" : "Este disparador no tiene pedido"}: el bloque no se muestra.</p>
               )}
             </li>
           );

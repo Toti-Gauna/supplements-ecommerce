@@ -1,10 +1,9 @@
 import type { CustomerProfile, NoticeChannel } from "../fixtures/customers";
 import type { Goal } from "../types";
 import { auditEntry, type AdminData } from "./defaults";
-import { contextForOrder, type EmailContext } from "./emails/render";
-import { composeEmails, pushOutbox } from "./emails/triggers";
+import type { EmailContext } from "./emails/render";
+import { composeEmails, pushOutbox, repurchaseKey } from "./emails/triggers";
 import { noticeFor, withNotice, type RepurchaseItem } from "./repurchase";
-import type { AdminOrder } from "./types";
 
 type Set = (fn: (s: AdminData) => Partial<AdminData>) => void;
 type Get = () => AdminData;
@@ -25,11 +24,9 @@ export interface CustomerActions {
 
 const EMPTY_PROFILE: CustomerProfile = { notes: [] };
 
-/** Datos del email de recompra: el cliente y el pedido de esa compra, solo con el producto que se le termina. */
-export function repurchaseContext(item: RepurchaseItem, order: AdminOrder | undefined): EmailContext {
-  const base = { customerName: item.name, email: item.email };
-  const ctx = order ? contextForOrder(order).order : undefined;
-  return ctx ? { ...base, order: { ...ctx, lines: ctx.lines.filter((l) => l.productSlug === item.slug) } } : base;
+/** Datos del email de recompra: el cliente, el producto (con su variante) y el día en que se le termina. */
+export function repurchaseContext(item: RepurchaseItem): EmailContext {
+  return { customerName: item.name, email: item.email, refill: { slug: item.slug, variantId: item.variantId, date: item.runsOutOn } };
 }
 
 export function createCustomerActions(set: Set, get: Get): CustomerActions {
@@ -48,8 +45,8 @@ export function createCustomerActions(set: Set, get: Get): CustomerActions {
       const s = get();
       if (noticeFor(s.workshop.profiles[item.email.toLowerCase()], item)) return "already";
       const at = new Date().toISOString();
-      const order = s.orders.find((o) => o.code === item.orderCode);
-      const mails = channel === "email" ? composeEmails(s.emails.templates, ["repurchase"], repurchaseContext(item, order), at, undefined, `repurchase:${item.email.toLowerCase()}:${item.key}`) : [];
+      const key = repurchaseKey(item.email, item.slug, item.runsOutOn);
+      const mails = channel === "email" ? composeEmails(s.emails.templates, ["repurchase"], repurchaseContext(item), at, { key }) : [];
       if (channel === "email" && !mails.length) return "off";
       const action = `Aviso de recompra por ${channel === "email" ? "email" : "WhatsApp"}: ${item.product}`;
       set((st) => ({

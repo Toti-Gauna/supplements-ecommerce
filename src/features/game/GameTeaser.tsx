@@ -2,13 +2,18 @@
 import { Play } from "lucide-react";
 import { useId } from "react";
 import { ButtonLink } from "@/components/atoms/Button";
-import { gamePrizes, gameRules } from "@/demo/fixtures/game";
+import { gameRules } from "@/demo/fixtures/game";
 import { cn } from "@/lib/cn";
 import { GameScene } from "./art/GameScene";
 import { fillLevel } from "./tiers";
 import { useGameStats } from "./useGameStats";
+import { usePrizeTiers } from "./usePrizeTiers";
 
-const tiers = new Intl.ListFormat("es", { type: "disjunction" }).format(gamePrizes.tiers.map((t) => t.label.replace(/^Envío/, "envío")));
+/** "5 % OFF, 10 % OFF o envío gratis" (o el aviso de premios pausados). */
+function prizesText(labels: string[], active: boolean): string {
+  if (!active || !labels.length) return "Los premios están pausados: jugá por el récord.";
+  return `Según tu puntaje ganás ${new Intl.ListFormat("es", { type: "disjunction" }).format(labels.map((l) => l.replace(/^Envío/, "envío")))} (un cupón por día).`;
+}
 
 /**
  * Tarjeta de Shaker Rush para el Club y el inicio: mini escena (un scoop que cae al shaker, tres veces y queda),
@@ -17,6 +22,7 @@ const tiers = new Intl.ListFormat("es", { type: "disjunction" }).format(gamePriz
 export function GameTeaser({ className, heading = "h2" }: { className?: string; heading?: "h2" | "h3" }) {
   const id = useId();
   const { hydrated, best, today } = useGameStats();
+  const { config, tiers } = usePrizeTiers();
   const Title = heading;
   return (
     <article aria-labelledby={id} className={cn("relative grid items-center gap-5 overflow-hidden rounded-[2rem] bg-night p-6 text-on-night sm:grid-cols-[1fr_minmax(0,14rem)] sm:p-8", className)}>
@@ -25,7 +31,7 @@ export function GameTeaser({ className, heading = "h2" }: { className?: string; 
         <div>
           <p className="eyebrow text-volt">Juego del Club</p>
           <Title id={id} className="font-display font-wide mt-1 text-4xl uppercase leading-none">Shaker Rush</Title>
-          <p className="mt-3 max-w-md text-sm text-night-muted">{gameRules.durationSec} segundos para atrapar energía y esquivar la chatarra. Según tu puntaje ganás {tiers} (un cupón por día).</p>
+          <p className="mt-3 max-w-md text-sm text-night-muted">{gameRules.durationSec} segundos para atrapar energía y esquivar la chatarra. {prizesText(tiers.map((t) => t.label), config.active)}</p>
         </div>
         <dl className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
           <div><dt className="eyebrow text-[10px] text-night-muted">Tu récord</dt><dd className="font-lab text-xl font-bold tabular-nums text-volt">{hydrated ? best.toLocaleString("es-AR") : "—"}</dd></div>

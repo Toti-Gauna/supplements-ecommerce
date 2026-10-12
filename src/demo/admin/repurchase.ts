@@ -28,6 +28,7 @@ export interface RepurchaseItem {
   slug: string;
   product: string;
   variant: string;
+  variantId?: string;
   /** Pedido de la última compra de ese producto. */
   orderCode: string;
   /** AAAA-MM-DD en que empezó este pote y en que se le termina. */
@@ -63,7 +64,7 @@ export function stateOf(inDays: number): RepurchaseState {
  */
 export function repurchaseItems(customer: CustomerRow, products: Product[], today: string): RepurchaseItem[] {
   const bySlug = new Map(products.map((p) => [p.slug, p]));
-  const chains = new Map<string, { start: string; end: string; product: Product; variant: string; order: string }>();
+  const chains = new Map<string, { start: string; end: string; product: Product; variant: string; variantId?: string; order: string }>();
   const paid = customer.orders.filter((o) => isPaidOrLater(o.status)).sort((a, b) => a.createdAt.localeCompare(b.createdAt));
   for (const order of paid) {
     for (const line of order.lines) {
@@ -74,13 +75,13 @@ export function repurchaseItems(customer: CustomerRow, products: Product[], toda
       const prev = chains.get(product.slug);
       const start = startOf(order);
       const from = prev && prev.end > start ? prev.end : start;
-      chains.set(product.slug, { start: from, end: runsOutOn(from, days), product, variant: variant?.label ?? "", order: order.code });
+      chains.set(product.slug, { start: from, end: runsOutOn(from, days), product, variant: variant?.label ?? "", variantId: variant?.id, order: order.code });
     }
   }
   return [...chains.values()]
-    .map(({ start, end, product, variant, order }) => {
+    .map(({ start, end, product, variant, variantId, order }) => {
       const inDays = daysBetween(today, end);
-      return { key: `${product.slug}:${end}`, email: customer.email, name: customer.name, phone: customer.phone, slug: product.slug, product: product.name, variant, orderCode: order, startsOn: start, runsOutOn: end, inDays, state: stateOf(inDays) };
+      return { key: `${product.slug}:${end}`, email: customer.email, name: customer.name, phone: customer.phone, slug: product.slug, product: product.name, variant, ...(variantId ? { variantId } : {}), orderCode: order, startsOn: start, runsOutOn: end, inDays, state: stateOf(inDays) };
     })
     .filter((i) => i.inDays >= -OVERDUE_DAYS)
     .sort((a, b) => a.runsOutOn.localeCompare(b.runsOutOn) || a.product.localeCompare(b.product));

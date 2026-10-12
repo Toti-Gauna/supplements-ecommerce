@@ -43,7 +43,7 @@ const NO_IMG = {};
 const cards = new WeakMap<object, Map<string, HTMLCanvasElement>>();
 export const CARD_PAD = 110;
 
-/** Tarjeta de producto con su sombra y la imagen recortada (cover), con margen para la sombra. */
+/** Tarjeta de la foto propia del dueño con su sombra y la imagen recortada (cover), con margen para la sombra. */
 export function cardSprite(img: Img | null, w: number, h: number, radius: number, cover: (ctx: CanvasRenderingContext2D, img: Img, w: number, h: number) => void): HTMLCanvasElement {
   const key = `${Math.round(w)}x${Math.round(h)}x${radius}`;
   const k = img ?? NO_IMG;
@@ -58,7 +58,7 @@ export function cardSprite(img: Img | null, w: number, h: number, radius: number
     ctx.translate(CARD_PAD, CARD_PAD);
     ctx.shadowColor = "rgba(0,0,0,0.38)"; ctx.shadowBlur = 60; ctx.shadowOffsetY = 28;
     ctx.beginPath(); ctx.roundRect(0, 0, w, h, radius);
-    ctx.fillStyle = "#efe6d4"; ctx.fill();
+    ctx.fillStyle = "#12161d"; ctx.fill();
     ctx.shadowColor = "transparent";
     ctx.clip();
     if (img) cover(ctx, img, w, h);
@@ -68,7 +68,7 @@ export function cardSprite(img: Img | null, w: number, h: number, radius: number
 
 const backgrounds = new Map<string, HTMLCanvasElement>();
 
-/** Degradado de fondo de la temática (estático). */
+/** Degradado de fondo de la temática o de la marca, con grilla de puntos y pulso (estático). */
 export function backgroundSprite(from: string, to: string, W: number, H: number): HTMLCanvasElement {
   const key = `${from}|${to}|${W}x${H}`;
   let c = backgrounds.get(key);
@@ -80,6 +80,12 @@ export function backgroundSprite(from: string, to: string, W: number, H: number)
       g.addColorStop(0, to); g.addColorStop(0.72, from); g.addColorStop(1, from);
       ctx.fillStyle = g;
       ctx.fillRect(0, 0, W, H);
+      // Grilla de puntos y línea de pulso (motivos de laboratorio de la marca), muy suaves.
+      ctx.fillStyle = "rgba(255,255,255,0.07)";
+      for (let y = 18; y < H; y += 36) for (let x = 18; x < W; x += 36) ctx.fillRect(x, y, 2, 2);
+      ctx.strokeStyle = "rgba(255,255,255,0.12)"; ctx.lineWidth = 2;
+      const py = H - 46;
+      ctx.beginPath(); ctx.moveTo(0, py); ctx.lineTo(W * 0.42, py); ctx.lineTo(W * 0.45, py - 22); ctx.lineTo(W * 0.48, py + 26); ctx.lineTo(W * 0.51, py - 12); ctx.lineTo(W * 0.53, py); ctx.lineTo(W, py); ctx.stroke();
     }
     backgrounds.set(key, c);
     // Solo la temática actual en sus tres formatos (cada fondo a tamaño real pesa varios MB).

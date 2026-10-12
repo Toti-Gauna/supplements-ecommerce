@@ -3,7 +3,7 @@ import { Download, Film, Share2 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/atoms/Button";
 import { exportName } from "@/demo/admin/studio/video";
-import { STUDIO_BRAND } from "@/demo/fixtures/studio";
+import { STUDIO_BRAND, type StudioTemplate } from "@/demo/fixtures/studio";
 import { carouselSlides } from "./render/carousel";
 import type { StudioScene } from "./render/types";
 import { canvasFor, canShareFiles, recordVideo, releaseCanvas, saveBlob, shareFiles, toPng, videoSupport } from "./export";
@@ -13,7 +13,7 @@ import { drawFrame } from "./StudioPreview";
 const FORMAT_SLUG = { post: "post", story: "historia", carousel: "carrusel" } as const;
 
 /** Exportar: imagen del cuadro final, todas las diapositivas del carrusel o el video con música. */
-export function StudioExport({ scene, slide, themeId, music, onRecording, ready }: { scene: StudioScene; slide: number; themeId: string | null; music: StudioMusic; onRecording: (on: boolean) => void; ready: boolean }) {
+export function StudioExport({ scene, slide, themeId, template, music, onRecording, ready }: { scene: StudioScene; slide: number; themeId: string | null; template: StudioTemplate; music: StudioMusic; onRecording: (on: boolean) => void; ready: boolean }) {
   const [busy, setBusy] = useState<string | null>(null);
   const [status, setStatus] = useState("");
   const [last, setLast] = useState<File[]>([]);
@@ -30,7 +30,7 @@ export function StudioExport({ scene, slide, themeId, music, onRecording, ready 
     if (!ctx) throw new Error("El navegador no tiene memoria para la imagen: cerrá otras pestañas y probá de nuevo.");
     drawFrame(ctx, scene, scene.duration, index);
     const blob = await toPng(canvas).finally(() => releaseCanvas(canvas));
-    return new File([blob], exportName(themeId, format, "png", scene.format === "carousel" ? index : undefined), { type: "image/png" });
+    return new File([blob], exportName(themeId, format, "png", scene.format === "carousel" ? index : undefined, template), { type: "image/png" });
   };
   const deliver = async (files: File[], label: string) => {
     setLast(files);
@@ -58,7 +58,7 @@ export function StudioExport({ scene, slide, themeId, music, onRecording, ready 
     if (!ctx) throw new Error("El navegador no tiene memoria para el video: cerrá otras pestañas y probá de nuevo.");
     try {
       const { blob, ext } = await recordVideo(canvas, (t) => drawFrame(ctx, scene, t), scene.duration, music, (s) => setStatus(`Grabando… ${Math.floor(s)} de ${scene.duration} s`));
-      await deliver([new File([blob], exportName(themeId, format, ext), { type: blob.type })], "Video listo");
+      await deliver([new File([blob], exportName(themeId, format, ext, undefined, template), { type: blob.type })], "Video listo");
     } finally { releaseCanvas(canvas); }
   });
 

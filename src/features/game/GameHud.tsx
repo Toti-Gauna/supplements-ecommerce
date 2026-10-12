@@ -1,17 +1,18 @@
 "use client";
 import { Heart, Pause, Zap } from "lucide-react";
-import { gamePrizes, gameRules } from "@/demo/fixtures/game";
+import { gameRules } from "@/demo/fixtures/game";
 import { cn } from "@/lib/cn";
+import { usePrizeTiers } from "./usePrizeTiers";
 import type { Hud } from "./useShakerRush";
 
 const CELLS = 9;
-const tiers = [...gamePrizes.tiers].sort((a, b) => a.minScore - b.minScore);
 
 /**
  * HUD de la partida en DOM (se lee mejor que dibujado y lo encuentra el lector de pantalla): pausa, puntos, tiempo
  * como batería que se descarga, vidas, combo, ×2 y el premio alcanzado. Nada depende solo del color: todo tiene texto.
  */
 export function GameHud({ hud, onPause }: { hud: Hud; onPause: () => void }) {
+  const { tiers } = usePrizeTiers();
   const lit = Math.ceil((hud.timeLeft / gameRules.durationSec) * CELLS);
   const low = hud.timeLeft <= 10;
   const reached = hud.tier > 0 ? tiers[hud.tier - 1] : null;

@@ -1,9 +1,9 @@
 import type { PrizeKind } from "./wheel";
 
 /**
- * Shaker Rush (Fase 4): reglas y premios de MUESTRA. Lo que se ve en "Cómo se juega" y en la tabla de premios sale de
- * acá, así que cambiar un número cambia el juego y el texto juntos. En producción la tabla de premios vive en el
- * servidor (el navegador nunca decide el premio).
+ * Shaker Rush (Fase 4): reglas y premios de MUESTRA. Lo que se ve en "Cómo se juega" sale de acá, así que cambiar un
+ * número cambia el juego y el texto juntos. Los premios son los de arranque: el panel los guarda en `data.game` y el
+ * juego usa los guardados. En producción la tabla de premios vive en el servidor (el navegador nunca decide el premio).
  */
 export type GameItemKind = "scoop" | "capsule" | "bolt" | "golden" | "burger" | "soda" | "donut";
 
@@ -48,30 +48,33 @@ export const gameRules: GameRules = {
   },
 };
 
-/** Nivel de premio: desde `minScore` puntos se gana su cupón. Las etiquetas usan espacios duros ("10 % OFF" no se corta). */
+/**
+ * Nivel de premio: desde `minScore` puntos se gana su cupón, que vence a los `validDays` días. Las etiquetas usan
+ * espacios duros ("10 % OFF" no se corta). Se editan en el panel (Marketing → Cupones y ruleta → Premios del juego).
+ */
 export interface GamePrizeTier {
   id: string;
   minScore: number;
   label: string;
   kind: PrizeKind;
   value: number;
+  /** Días de vigencia del cupón ganado en este nivel. */
+  validDays: number;
   minSubtotal?: number;
 }
 
 export interface GamePrizeConfig {
+  /** false = se sigue jugando, pero no se entregan cupones. */
   active: boolean;
-  /** Días de vigencia del cupón ganado. */
-  validDays: number;
   /** Ordenados de menor a mayor puntaje. */
   tiers: GamePrizeTier[];
 }
 
 export const gamePrizes: GamePrizeConfig = {
   active: true,
-  validDays: 7,
   tiers: [
-    { id: "g-5", minScore: 300, label: "5\u00a0%\u00a0OFF", kind: "PERCENT", value: 5 },
-    { id: "g-10", minScore: 800, label: "10\u00a0%\u00a0OFF", kind: "PERCENT", value: 10 },
-    { id: "g-envio", minScore: 1500, label: "Envío gratis", kind: "FREE_SHIPPING", value: 0 },
+    { id: "g-5", minScore: 300, label: "5\u00a0%\u00a0OFF", kind: "PERCENT", value: 5, validDays: 7 },
+    { id: "g-10", minScore: 800, label: "10\u00a0%\u00a0OFF", kind: "PERCENT", value: 10, validDays: 7 },
+    { id: "g-envio", minScore: 1500, label: "Envío gratis", kind: "FREE_SHIPPING", value: 0, validDays: 7 },
   ],
 };

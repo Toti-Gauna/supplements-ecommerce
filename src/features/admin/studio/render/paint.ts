@@ -6,6 +6,8 @@ import type { Img } from "./types";
 /** Utilidades de dibujo en canvas (coordenadas de diseño a 1080 px de ancho). */
 export const DISPLAY = '"Archivo Variable", "Arial Black", sans-serif';
 export const SANS = '"Archivo Variable", system-ui, sans-serif';
+/** Datos de laboratorio (lote, precio por servicio, puntos). */
+export const MONO = '"JetBrains Mono Variable", ui-monospace, monospace';
 
 export function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
   ctx.beginPath();
@@ -28,6 +30,12 @@ export function drawCard(ctx: CanvasRenderingContext2D, img: Img | null, x: numb
   ctx.rotate(((opts.rotate ?? 0) * Math.PI) / 180);
   ctx.drawImage(cardSprite(img, w, h, opts.radius ?? 36, (c, i, cw, ch) => drawCover(c, i, 0, 0, cw, ch)), -w / 2 - CARD_PAD, -h / 2 - CARD_PAD);
   ctx.restore();
+}
+
+/** Titular de la marca: Archivo pesada y expandida (como `font-display`). Usar entre save() y restore(). */
+export function display(ctx: CanvasRenderingContext2D, size: number, weight = 800) {
+  ctx.font = `${weight} ${size}px ${DISPLAY}`;
+  ctx.fontStretch = "semi-expanded";
 }
 
 /** Corta el texto en líneas que entran en `maxWidth` (con la fuente ya puesta). */
@@ -89,7 +97,7 @@ export function drawPill(ctx: CanvasRenderingContext2D, text: string, x: number,
 
 const LOGO_PATHS = typeof Path2D === "undefined" ? null : [new Path2D(LOGO_STROKE_PATH), new Path2D(LOGO_BOLT)] as const;
 
-/** Logo de Volta (marca + nombre). `h` = alto de la marca. El rayo va en voltio. */
+/** Logo de la marca (marca + nombre). `h` = alto de la marca. El rayo va en voltio. */
 export function drawLogo(ctx: CanvasRenderingContext2D, x: number, y: number, h: number, color: string) {
   if (!LOGO_PATHS) return;
   const s = h / 64;
@@ -101,9 +109,12 @@ export function drawLogo(ctx: CanvasRenderingContext2D, x: number, y: number, h:
   ctx.fillStyle = "#c8ff2e";
   ctx.fill(LOGO_PATHS[1]);
   ctx.restore();
+  ctx.save();
   ctx.fillStyle = color;
   ctx.font = `800 ${h * 0.62}px ${DISPLAY}`;
+  ctx.fontStretch = "expanded";
   ctx.textAlign = "left";
   ctx.textBaseline = "middle";
   ctx.fillText(brand.name.toUpperCase(), x + h * 1.12, y + h * 0.52);
+  ctx.restore();
 }

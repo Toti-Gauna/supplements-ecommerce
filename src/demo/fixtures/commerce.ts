@@ -37,9 +37,10 @@ export const demoSettings: DemoSettings = {
   cuit: null,
 };
 
+/** Bloque "Armá tu stack" del inicio (Contenido → Textos de inicio). Lo que va después de la coma se pinta en voltio. */
 export const homeCta = {
-  title: "Armá tu stack",
-  text: "Elegí tu objetivo y sumá proteína, creatina y pre. Te mostramos cuánto te dura cada pote y cuánto ahorrás.",
+  title: "Tu estante, según tu objetivo",
+  text: "Tocá un objetivo y mirá el stack que te sugerimos.",
 };
 
 export const coupons: Coupon[] = [

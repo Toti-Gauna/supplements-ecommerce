@@ -47,7 +47,7 @@ export const useAdmin = create<AdminState>()(
       // v7: VOLTA, tienda de suplementos (catálogo, costos con proveedor, sin personalización, descuento stack).
       // v8: ruleta "Disco olímpico" con premios de suplementos (muestra y shaker de regalo en lugar de grabado y llavero).
       // v10: panel de las Fases 6 y 7 (fichas sin mascotas, con objetivo y avisos de recompra; lotes y vencimientos por
-      // variante, último aumento de precios, objetivos editables).
+      // variante, último aumento de precios, objetivos editables; emails de suplementos y premios del juego editables).
       // Al cambiar de versión la demo vuelve a los datos de muestra.
       version: ADMIN_STORE_VERSION,
       storage: demoStorage,

@@ -37,7 +37,8 @@ export function RouteMap({ progress, traveler, accent = "#c8ff2e", delivered = f
   return (
     <div className="relative overflow-hidden rounded-3xl bg-night-2" role="img"
       aria-label={`${who}${delivered ? "llegó a tu casa" : `${Math.round(progress * 100)}% del camino entre el local y tu casa`} (ilustrativo)`}>
-      <div className="relative">
+      {/* Margen arriba: el viajero de la temática (con su gorro) se dibuja por encima del recorrido y no se corta. */}
+      <div className={cn("relative", traveler && "mt-5 sm:mt-6")}>
         <svg viewBox={`0 0 ${W} ${H}`} className="block w-full" aria-hidden="true">
           <defs><pattern id="route-grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" fill="none" stroke="#fff" strokeOpacity=".05" /></pattern></defs>
           <rect width={W} height={H} fill="url(#route-grid)" />
@@ -51,7 +52,7 @@ export function RouteMap({ progress, traveler, accent = "#c8ff2e", delivered = f
           )}
         </svg>
         {traveler && (
-          <motion.span aria-hidden="true" data-trk-traveler={traveler.label} className="pointer-events-none absolute -translate-x-1/2 -translate-y-[85%]" initial={false}
+          <motion.span aria-hidden="true" data-trk-traveler={traveler.label} className="pointer-events-none absolute -translate-x-1/2 -translate-y-[76%]" initial={false}
             animate={{ left: `${(dot.x / W) * 100}%`, top: `${(dot.y / H) * 100}%` }} transition={move}>
             {/* Se mece mientras viaja (unas vueltas, sin animación permanente) y se queda quieto al llegar. */}
             <span key={progress} className={cn("trk-body block h-[clamp(2.6rem,8vw,4rem)] w-[clamp(3.6rem,11vw,5.6rem)]", `trk-${traveler.motion}`)}>{traveler.node}</span>

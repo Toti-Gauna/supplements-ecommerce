@@ -208,11 +208,9 @@ for (const d of DEVICES) {
     });
 
     test("E · seguimiento: en producción → en camino → entregado → cambio de temática → repetir", async ({ page }) => {
-      // En VOLTA "Probar temáticas" viene apagado (las temáticas se rehacen en la Fase 5): se prende desde el panel.
+      // Desde la Fase 5 "Probar temáticas" viene prendido (se apaga desde el panel).
       await page.goto("admin-demo/tematicas/");
-      const tryButton = page.getByRole("switch", { name: /Probar temáticas/ });
-      await tryButton.click();
-      await expect(tryButton).toHaveAttribute("aria-checked", "true");
+      await expect(page.getByRole("switch", { name: /Probar temáticas/ })).toHaveAttribute("aria-checked", "true");
       const w = watch(page);
       await page.goto("pedido/demo-volta/");
       const run = async () => {
@@ -230,7 +228,7 @@ for (const d of DEVICES) {
       await page.getByRole("dialog", { name: "Probar temáticas" }).getByRole("button", { name: "Probar Navidad" }).click();
       await expect(page.locator("html")).toHaveAttribute("data-season", "navidad");
       await page.keyboard.press("Escape");
-      await expect(page.locator("[data-trk-traveler]")).toHaveAttribute("data-trk-traveler", "Papá Noel en su trineo");
+      await expect(page.locator("[data-trk-traveler]")).toHaveAttribute("data-trk-traveler", "el cadete de VOLTA, con gorro de Papá Noel");
       await run();
       w.done();
     });

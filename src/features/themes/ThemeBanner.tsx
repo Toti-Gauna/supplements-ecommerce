@@ -1,6 +1,5 @@
 "use client";
 import { ArrowDown, Check, Ticket } from "lucide-react";
-import { VoltaPup } from "@/components/illustrations/characters";
 import { Decor } from "@/components/illustrations/seasonal/Decor";
 import type { SeasonalTheme } from "@/demo/types";
 import type { ThemeOffer } from "@/demo/engine/themes";
@@ -20,7 +19,8 @@ const SPOTS = [
 ];
 
 /**
- * Banner de temporada: titular, oferta con su código y decoraciones propias de la festividad.
+ * Banner de temporada: titular, oferta con su código y decoraciones fitness propias de la fecha (la protagonista
+ * sobre un halo y el aro eléctrico de VOLTA).
  * Es la primera diapositiva del carrusel del inicio mientras la temática está puesta: el texto arranca después de la
  * franja de las flechas del carrusel (`--hero-safe`).
  */
@@ -35,23 +35,16 @@ export function ThemeBanner({ theme, offer }: { theme: SeasonalTheme; offer: The
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[0.08] [background-image:radial-gradient(#fff_1px,transparent_1.5px)] [background-size:18px_18px]" />
       <SeasonFx id={theme.id} />
       <AmbientField layers={AMBIENT[theme.id]} className="absolute inset-0" />
-      {/* Con personajes, la protagonista y la decoración de abajo a la derecha dejan lugar al elenco. */}
-      {skin.decor.map((kind, i) => (skin.cast && (i === 0 || i === 4) ? null : (
+      {/* Detrás de la protagonista, un halo del acento y el aro eléctrico de VOLTA. */}
+      <span aria-hidden="true" className="pointer-events-none absolute right-[-6%] top-1/2 h-48 w-48 -translate-y-1/2 rounded-full opacity-60 sm:right-[5%] sm:h-96 sm:w-96"
+        style={{ background: `radial-gradient(closest-side, ${skin.accent}55, transparent 70%)` }} />
+      <span aria-hidden="true" className="animate-fade-in pointer-events-none absolute right-[calc(3%-0.75rem)] top-1/2 h-[9.5rem] w-[9.5rem] -translate-y-1/2 rounded-full border sm:right-[calc(11%-1.5rem)] sm:h-[18rem] sm:w-[18rem]"
+        style={{ borderColor: `${skin.accent}66`, boxShadow: `0 0 40px ${skin.accent}22, inset 0 0 30px ${skin.accent}1a` }} />
+      {skin.decor.map((kind, i) => (
         <span key={`${kind}-${i}`} aria-hidden="true" className={`animate-fade-up pointer-events-none absolute ${SPOTS[i]}`} style={{ animationDelay: `${120 + i * 110}ms` }}>
           <Decor kind={kind} className="h-full w-full drop-shadow-[0_14px_20px_rgb(0_0_0/0.35)]" />
         </span>
-      )))}
-      {skin.cast && (
-        <div aria-hidden="true" className="pointer-events-none absolute bottom-14 right-[2%] flex items-end sm:bottom-10 sm:right-[7%]">
-          {skin.cast.map((c, i) => (
-            <span key={i} className={`animate-fade-up block ${c.pup ? "w-[21vw] max-w-36" : "w-[27vw] max-w-56"} ${i ? "-ml-5 sm:-ml-10" : ""}`} style={{ animationDelay: `${150 + i * 140}ms` }}>
-              <span className="pup-idle block" style={{ animationDelay: `${-i * 1.3}s` }}>
-                <VoltaPup who={c.who} pose={c.pose} outfit={c.outfit} pup={c.pup} flip={c.flip} animated className="pup-brief w-full drop-shadow-[0_14px_20px_rgb(0_0_0/0.35)]" />
-              </span>
-            </span>
-          ))}
-        </div>
-      )}
+      ))}
       <div className="relative max-w-[62%] sm:max-w-md">
         <p className="eyebrow" style={{ color: skin.accent }}>Temática · {theme.name}</p>
         <h2 id="tematica-title" className="font-display mt-2 text-[1.75rem] leading-[1.04] sm:text-5xl lg:text-6xl">{theme.headline}</h2>

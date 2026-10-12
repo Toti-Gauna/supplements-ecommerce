@@ -180,11 +180,10 @@ export interface CarouselSlide {
   active?: boolean;
 }
 
-/** Festividades comerciales con temática propia (pedido de Ignacio, fuera de la especificación). */
+/** Fechas comerciales con temática fitness propia (Fase 5, docs/plan-por-fases.md). */
 export type SeasonId =
-  | "san-valentin" | "pascuas" | "dia-del-animal" | "hot-sale" | "revolucion-de-mayo" | "dia-del-padre" | "dia-de-la-bandera"
-  | "dia-de-la-independencia" | "dia-del-amigo" | "dia-del-nino" | "dia-de-la-madre" | "halloween" | "orgullo" | "black-friday"
-  | "navidad" | "ano-nuevo";
+  | "dia-de-la-madre" | "halloween" | "cyber-monday" | "black-friday" | "navidad" | "ano-nuevo"
+  | "san-valentin" | "vuelta-al-gym" | "hot-sale" | "dia-del-padre" | "dia-del-amigo" | "operacion-verano";
 
 /** Ocasión de un regalo: una festividad o Volta sin temática (define la escena con la que se abre). */
 export type GiftOccasion = SeasonId | "volta";

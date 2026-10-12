@@ -26,17 +26,17 @@ export const BADGE_EDGE = 44;
 /**
  * Post 1:1: con oferta, la tarjeta baja un poco y el cartel va arriba a la derecha, apoyado en el borde de la tarjeta
  * (solo pisa su margen superior, no el producto); la decoración de la temática se corre a su izquierda para que el
- * cartel no la tape. Sin oferta, todo queda donde estaba. `cast`: la temática tiene personajes (dos figuras, más anchas).
+ * cartel no la tape. Sin oferta, todo queda donde estaba.
  */
-export function postLayout(W: number, badge: { w: number; h: number } | null, cast = false) {
+export function postLayout(W: number, badge: { w: number; h: number } | null) {
   if (!badge) return { card: { x: 560, y: 250, w: 430, h: 538 }, badge: null, hero: { x: W * 0.7, y: 54, size: 210 } };
   const b = { x: W - BADGE_EDGE - badge.w, y: 48, w: badge.w, h: badge.h };
   // La tarjeta baja lo necesario para que el cartel solo se apoye en su borde (≤ 48 px) y termina siempre en y = 800.
   const top = Math.min(380, Math.max(300, b.y + b.h - 48));
   const card = { x: 560, y: top, w: 430, h: 800 - top };
-  const size = cast ? 150 : 180;
-  // Los personajes ocupan de x − 0,3·size a x + 1,22·size; una decoración sola, de x a x + size.
-  const x = cast ? b.x + 16 - 1.22 * size : Math.min(590, b.x + 16 - size);
+  const size = 180;
+  // La decoración protagonista ocupa de x a x + size.
+  const x = Math.min(590, b.x + 16 - size);
   return { card, badge: b, hero: { x, y: 40, size } };
 }
 

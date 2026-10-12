@@ -31,8 +31,7 @@ function cover(ctx: CanvasRenderingContext2D, s: StudioScene) {
   ctx.fillStyle = "rgba(255,255,255,0.86)";
   ctx.font = `500 38px ${SANS}`;
   drawLines(ctx, wrap(ctx, s.texts.subtitle, 820, 3), 80, y + 20, 52);
-  if (s.cast.length) s.cast.forEach((img, i) => ctx.drawImage(raster(img, 470, 362), 120 + i * 360, 860));
-  else if (s.hero) ctx.drawImage(raster(s.hero, 420, 420), s.W - 520, 760);
+  if (s.hero) ctx.drawImage(raster(s.hero, 420, 420), s.W - 520, 760);
   drawPill(ctx, "Deslizá →", s.W - 80, s.H - 150, { bg: s.look.accent, ink: s.look.accentInk, size: 30, align: "right" });
 }
 
@@ -91,8 +90,7 @@ function offer(ctx: CanvasRenderingContext2D, s: StudioScene) {
     ctx.fillText(`en ${STUDIO_BRAND.city}`, s.W / 2, 650);
   }
   drawPill(ctx, s.texts.cta, s.W / 2, s.H - 300, { bg: "#ffffff", ink: "#1c2016", size: 32, align: "center" });
-  if (s.cast.length) s.cast.forEach((img, i) => ctx.drawImage(raster(img, 260, 200), s.W / 2 - 270 + i * 280, s.H - 215));
-  else if (s.hero) ctx.drawImage(raster(s.hero, 170, 170), s.W / 2 - 85, s.H - 190);
+  if (s.hero) ctx.drawImage(raster(s.hero, 170, 170), s.W / 2 - 85, s.H - 190);
 }
 
 export function drawSlide(ctx: CanvasRenderingContext2D, s: StudioScene, index: number, t: number) {

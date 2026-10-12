@@ -3,7 +3,7 @@ import { Eye, EyeOff, Gift, MapPin, Package, Sparkles } from "lucide-react";
 import { useState, type FormEvent } from "react";
 import { Button } from "@/components/atoms/Button";
 import { Field, Input, describedBy } from "@/components/atoms/Field";
-import { VoltaPup } from "@/components/illustrations/characters";
+import { Decor } from "@/components/illustrations/seasonal/Decor";
 import { cn } from "@/lib/cn";
 import { useAccount } from "@/stores/account";
 import { GoogleSimulated } from "./GoogleSimulated";
@@ -66,8 +66,8 @@ export function AuthPanel() {
           ))}
         </ul>
         <div aria-hidden="true" className="relative mt-auto flex items-end gap-2 pt-4 max-sm:hidden">
-          <span className="block w-24 sm:w-28"><VoltaPup who="lola" pose="wave" animated className="w-full" /></span>
-          <span className="block w-24 sm:w-28"><VoltaPup who="pancho" pose="stand" flip animated className="w-full" /></span>
+          <Decor kind="shaker" className="h-24 w-24 -rotate-6 drop-shadow-[0_14px_20px_rgb(0_0_0/0.45)] sm:h-28 sm:w-28" />
+          <Decor kind="kettlebell" className="h-20 w-20 rotate-3 drop-shadow-[0_14px_20px_rgb(0_0_0/0.45)] sm:h-24 sm:w-24" />
         </div>
         <p className="relative -mt-2 text-xs text-night-muted sm:mt-0">Demo: no hay registro real y nada sale de este navegador.</p>
       </aside>

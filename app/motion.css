@@ -115,6 +115,3 @@
 @keyframes trk-walk { from { transform: rotate(-2deg); } to { transform: rotate(2deg) translateY(-2px); } }
 @keyframes trk-hop { from { transform: translateY(0); } to { transform: translateY(-12px); } }
 @keyframes trk-bob { from { transform: translateY(0) rotate(-4deg); } to { transform: translateY(-5px) rotate(4deg); } }
-.trk-hearts::before, .trk-hearts::after { content: "♥"; position: absolute; left: -14%; color: #ff8fab; font-size: 0.8rem; opacity: 0; animation: trk-heart 1.6s ease-out 1 both; }
-.trk-hearts::after { left: -30%; top: 30%; font-size: 0.6rem; animation-delay: 0.4s; }
-@keyframes trk-heart { 20% { opacity: 1; } to { opacity: 0; transform: translate(-10px, -14px); } }

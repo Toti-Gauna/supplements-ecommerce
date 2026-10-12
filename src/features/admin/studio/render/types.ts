@@ -29,7 +29,6 @@ export interface StudioScene {
   showOffer: boolean;
   /** Decoración protagonista de la temática y personajes (si la temática los tiene). */
   hero: Img | null;
-  cast: Img[];
   steps: string[];
   duration: number;
 }

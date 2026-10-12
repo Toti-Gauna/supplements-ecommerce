@@ -28,7 +28,7 @@ describe("estudio de contenido", () => {
     // Cupón con mínimo (Black Friday): no hay precio por producto, la oferta va como condición.
     const [q] = studioProducts(["creatina-monohidrato"], studioOffer(theme("black-friday")));
     expect(q!.offerPrice).toBeNull();
-    expect(offerLine(studioOffer(theme("black-friday")))).toBe("25% OFF con el código BLACK25 (desde $30.000 de compra)");
+    expect(offerLine(studioOffer(theme("black-friday")))).toBe("30% OFF con el código BLACK30 (desde $40.000 de compra)");
     expect(studioProducts(["no-existe", "creatina-monohidrato"], offer).map((x) => x.slug)).toEqual(["creatina-monohidrato"]);
   });
 
@@ -52,7 +52,8 @@ describe("estudio de contenido", () => {
     const ids = [0, 1, 2, 3, 4, 5, 6, 7].map((v) => buildCaption({ theme: null, offer: null, products: creatine, format: "post", variant: v }).hook.id);
     expect(new Set(ids).size).toBe(hooksFor(creatine).length);
     expect(buildCaption({ theme: null, offer: null, products: creatine, format: "carousel", variant: 0 }).text).toContain("Cómo pedir el tuyo: 1)");
-    expect(themeHashtag(theme("dia-de-la-independencia"))).toBe("#9DeJulio");
+    expect(themeHashtag(theme("operacion-verano"))).toBe("#OperaciónVerano");
+    expect(themeHashtag(theme("cyber-monday"))).toBe("#CyberMonday");
     // El texto sigue a la pieza: sin precio ni oferta si se apagaron.
     const quiet = buildCaption({ theme: madre, offer, products: creatine, format: "post", variant: 0, showPrice: false, showOffer: false }).text;
     expect(quiet).not.toContain("$");

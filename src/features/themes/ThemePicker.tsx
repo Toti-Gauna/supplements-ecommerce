@@ -55,7 +55,7 @@ export function ThemePicker({ open, onClose }: { open: boolean; onClose: () => v
                 <button type="button" onClick={() => pick(t.id)} aria-pressed={on} aria-label={`Probar ${t.name}`}
                   className={cn("relative flex h-full w-full flex-col overflow-hidden rounded-2xl text-left text-white ring-offset-2 ring-offset-bg transition-transform hover:-translate-y-0.5", on && "ring-2 ring-primary")}
                   style={{ background: `linear-gradient(140deg, ${skin.from}, ${skin.to})` }}>
-                  <Decor kind={skin.decor[0]!} className="absolute -right-2 -top-1 h-16 w-16 rotate-6 opacity-95" />
+                  <Decor kind={skin.decor[0]} className="absolute -right-2 -top-1 h-16 w-16 rotate-6 opacity-95" />
                   <span className="relative mt-12 px-3 text-[15px] font-bold leading-tight">{t.name}</span>
                   <span className="relative px-3 text-[11px] text-white/75">{formatDayRange(t.startsOn, t.endsOn)}</span>
                   <span className="relative mx-3 mb-3 mt-2 w-fit rounded-full px-2 py-0.5 text-[11px] font-extrabold" style={{ background: skin.accent, color: skin.accentInk }}>{offer?.label ?? "Sin oferta"}</span>

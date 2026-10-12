@@ -28,7 +28,7 @@ export function ThemesAdmin() {
   return (
     <>
       <SubpageHeader trail={[MARKETING]} back={MARKETING} title="Temáticas"
-        intro="Halloween, Navidad, el Orgullo, las fechas patrias y el resto de las fechas comerciales: cada una con su banner, decoraciones, cupón y productos en oferta. Agregado pedido por Ignacio (fuera de la especificación)." />
+        intro="Doce fechas comerciales con estética fitness, del Día de la Madre a Operación verano: cada una con su paleta, banner, pantalla de carga, cupón y productos en oferta." />
       <ThemeMode />
       <ul aria-label="Temáticas por fecha" className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,26rem),1fr))] gap-3">
         {themes.map((t) => {
@@ -37,7 +37,7 @@ export function ThemesAdmin() {
           return (
             <li key={t.id} className="flex gap-4 rounded-3xl bg-surface p-4 shadow-[var(--shadow-card)]">
               <span aria-hidden="true" className="grid h-20 w-20 shrink-0 place-items-center rounded-2xl" style={{ background: `linear-gradient(140deg, ${skin.from}, ${skin.to})` }}>
-                <Decor kind={skin.decor[0]!} className="h-14 w-14" />
+                <Decor kind={skin.decor[0]} className="h-14 w-14" />
               </span>
               <div className="flex min-w-0 flex-1 flex-col gap-1.5">
                 <div className="flex flex-wrap items-center gap-2">

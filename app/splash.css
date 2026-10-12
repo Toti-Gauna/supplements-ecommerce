@@ -95,8 +95,8 @@
 
 @media (min-width: 640px) and (min-height: 561px) { #volta-splash { --brand-h: 210px; } }
 
-/* Con temática, la escena de la fecha rodea al logo (flor, corazón, aros): el bloque va más compacto y sin la batería,
-   que mide lo mismo que el logo de Velmar para el que se dibujaron las escenas (se rehacen en la Fase 5). */
+/* Con temática, la escena de la fecha rodea al logo (batería en anillo, corazón, cronómetro, chip…): el bloque va
+   compacto y sin la batería. ThemeSplashScene mide esta caja y cada escena calcula sus aros para no pisarla. */
 html[data-season] #volta-splash .splash-battery { display: none; }
 html[data-season] #volta-splash .splash-mark { width: 3.5rem; height: 3.5rem; }
 html[data-season] #volta-splash .word { font-size: 2rem; line-height: 1.1; }

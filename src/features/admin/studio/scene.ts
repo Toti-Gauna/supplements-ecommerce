@@ -25,8 +25,7 @@ export function particleKinds(layers: AmbientLayer[]): DecorKind[] {
 export function assetRequest(themeId: SeasonId | null, products: StudioProduct[]): AssetRequest {
   const skin = themeId ? skinOf(themeId) : null;
   return {
-    products, hero: skin ? skin.decor[0] ?? null : null,
-    cast: (skin?.cast ?? []).map(({ who, outfit, flip, pup }) => ({ who, outfit, flip, pup })),
+    products, hero: skin ? skin.decor[0] : null,
     particles: particleKinds(layersFor(themeId)),
   };
 }
@@ -52,6 +51,6 @@ export function buildScene(input: SceneInput, assets: StudioAssets): StudioScene
     format: input.format, W, H, look, texts: input.texts,
     products: input.products.map((data, i) => ({ data, img: i === 0 && input.photo ? input.photo : assets.products[data.slug] ?? null })),
     offer: input.offer ? { label: input.offer.label, code: input.offer.coupon.code, condition: input.offer.condition } : null,
-    showPrice: input.showPrice, showOffer: input.showOffer, hero: assets.hero, cast: assets.cast, steps: STUDIO_STEPS, duration: input.duration,
+    showPrice: input.showPrice, showOffer: input.showOffer, hero: assets.hero, steps: STUDIO_STEPS, duration: input.duration,
   };
 }

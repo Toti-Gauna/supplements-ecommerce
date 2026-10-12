@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { holdSplash, sceneOverlaps as overlaps, settleSplash as settle } from "./splash-helpers";
 
 /** Polish 8.1: pantallas de carga centradas, sin superposiciones y con el lienzo oscuro mientras se ven. */
 const preview = (page: Page, id: string) =>
@@ -31,42 +32,73 @@ test("Original: un solo aro, concéntrico con el logo, con las piezas montadas e
   expect(await page.evaluate(() => getComputedStyle(document.documentElement).backgroundColor)).toBe("rgba(0, 0, 0, 0)");
 });
 
-test("Día de la Madre: la flor se abre alrededor del logo y ningún pétalo ni estambre lo pisa", async ({ page }) => {
+const SCENES = ["dia-de-la-madre", "halloween", "cyber-monday", "black-friday", "navidad", "ano-nuevo", "san-valentin", "vuelta-al-gym", "hot-sale", "dia-del-padre", "dia-del-amigo", "operacion-verano"];
+
+for (const [width, height] of [[375, 812], [1440, 900], [844, 390]] as const) {
+  test(`a ${width}×${height}: cada escena de temporada rodea al logo compacto sin pisarlo`, async ({ page }) => {
+    test.setTimeout(120_000);
+    await holdSplash(page);
+    await page.setViewportSize({ width, height });
+    for (const id of SCENES) {
+      await preview(page, id);
+      await page.goto("");
+      const scene = page.locator(`#volta-splash .season-scene[data-scene='${id}']`);
+      await expect(scene.locator("[data-sc]").first()).toBeAttached();
+      // Con temática el logo va compacto y sin la batería.
+      await expect(page.locator("#volta-splash .splash-battery")).toBeHidden();
+      await settle(page);
+      expect(await overlaps(page), id).toEqual([]);
+      // La escena queda entera a lo ancho de la pantalla (lo de los bordes, como las pistas del chip, se corta adrede).
+      const brand = (await page.locator("#volta-splash .splash-brand").boundingBox())!;
+      expect(Math.abs(brand.x + brand.width / 2 - width / 2), id).toBeLessThan(2);
+    }
+  });
+}
+
+test("Día de la Madre: la batería en anillo se carga entera alrededor del logo y florece", async ({ page }) => {
+  await holdSplash(page);
   await preview(page, "dia-de-la-madre");
   await page.goto("");
   const scene = page.locator("#volta-splash .season-scene");
-  await expect(scene.locator(".md-petal")).toHaveCount(20);
-  const brand = (await page.locator("#volta-splash .splash-brand").boundingBox())!;
-  // La flor es un punto (0 × 0) en el centro de la pantalla: se mide con el DOM, Playwright no da caja de algo sin tamaño.
-  const bloom = await scene.locator(".md-bloom").evaluate((e) => { const r = e.getBoundingClientRect(); return { x: r.x, y: r.y }; });
-  // Las esquinas del logo quedan más cerca del centro de la flor que la ronda de estambres (donde nacen los pétalos).
-  const stamens = await scene.locator(".md-stamen").evaluateAll((els) => els.map((e) => { const r = e.getBoundingClientRect(); return { x: r.x + r.width / 2, y: r.y + r.height / 2 }; }));
-  const ring = Math.min(...stamens.map((s) => Math.hypot(s.x - bloom.x, s.y - bloom.y)));
-  for (const [x, y] of [[brand.x, brand.y], [brand.x + brand.width, brand.y], [brand.x, brand.y + brand.height], [brand.x + brand.width, brand.y + brand.height]]) {
-    expect(Math.hypot(x! - bloom.x, y! - bloom.y)).toBeLessThan(ring);
-  }
+  await expect(scene.locator(".md-cell")).toHaveCount(28);
+  await settle(page);
+  await expect(scene.locator(".md-cell").first()).toHaveCSS("opacity", "1");
+  await expect(scene.getByText("100%")).toBeVisible();
+  await expect(scene.locator(".sc-piece.sc-pop")).toHaveCount(8);
 });
 
-test("San Valentín: Lola y Pancho cenan debajo del logo, todo centrado y sin pisarse", async ({ page }) => {
+test("San Valentín: el corazón rodea al logo, centrado, y entra entero en la pantalla", async ({ page }) => {
+  await holdSplash(page);
   await preview(page, "san-valentin");
   await page.goto("");
   const scene = page.locator("#volta-splash .season-scene");
-  await expect(scene.locator(".vl-dinner svg.pup")).toHaveCount(2);
+  await expect(scene.locator(".vl-heart")).toHaveCount(24);
+  await settle(page);
   const view = page.viewportSize()!;
-  // Todo en el mismo cuadro y relativo a la pantalla de carga: a los 4,35 s sube como cortina y, con la máquina cargada,
-  // medir una caja por vez podía tomar el logo antes de la cortina y la cena ya subiendo.
-  const { brand, heart, dinner } = await page.locator("#volta-splash").evaluate((splash) => {
-    const top = splash.getBoundingClientRect().top;
-    const box = (sel: string) => { const r = splash.querySelector(sel)!.getBoundingClientRect(); return { x: r.x, y: r.y - top, width: r.width, height: r.height }; };
-    return { brand: box(".splash-brand"), heart: box(".season-scene .vl-heart"), dinner: box(".season-scene .vl-dinner") };
+  const { brand, heart } = await page.locator("#volta-splash").evaluate((splash) => {
+    const box = (sel: string) => { const r = splash.querySelector(sel)!.getBoundingClientRect(); return { x: r.x, y: r.y, width: r.width, height: r.height }; };
+    return { brand: box(".splash-brand"), heart: box(".season-scene .vl-line") };
   });
   expect(Math.abs(center(heart).x - view.width / 2)).toBeLessThan(2);
-  expect(Math.abs(center(dinner).x - view.width / 2)).toBeLessThan(2);
-  // El logo dentro del corazón y la cena debajo; el grupo entero entra en la pantalla.
+  // El logo adentro del corazón; el corazón entero en la pantalla.
   expect(brand.y).toBeGreaterThan(heart.y);
-  expect(brand.y + brand.height).toBeLessThan(dinner.y);
-  expect(heart.y).toBeGreaterThan(0);
-  expect(dinner.y + dinner.height).toBeLessThan(view.height);
+  expect(brand.y + brand.height).toBeLessThan(heart.y + heart.height);
+  expect(brand.x).toBeGreaterThan(heart.x);
+  expect(heart.x).toBeGreaterThanOrEqual(0);
+  expect(heart.x + heart.width).toBeLessThanOrEqual(view.width);
+  expect(heart.y + heart.height).toBeLessThan(view.height);
+});
+
+test("Año Nuevo: la actualización se instala y el año pasa a 2027", async ({ page }) => {
+  await holdSplash(page);
+  await preview(page, "ano-nuevo");
+  await page.goto("");
+  const scene = page.locator("#volta-splash .season-scene");
+  await expect(scene.locator(".ny-bar")).toBeAttached();
+  await settle(page);
+  await expect(scene.getByText("Versión 2027 instalada")).toBeInViewport();
+  await expect(scene.getByText("7", { exact: true })).toBeInViewport();
+  await expect(scene.getByText("6", { exact: true })).not.toBeInViewport();
 });
 
 test("al recargar a mitad de página, la pantalla de carga queda por encima de todo (capa superior)", async ({ page }) => {

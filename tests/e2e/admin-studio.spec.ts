@@ -24,9 +24,9 @@ test("elegir la fecha muestra las tres plantillas con los textos, productos y la
   await page.getByRole("button", { name: "Otra idea" }).click();
   await expect(page.getByText(/^Gancho:/)).not.toHaveText(hook!);
   // Cambiar de fecha trae sus textos y su cupón.
-  await page.getByLabel("Temática").selectOption("orgullo");
-  await expect(page.getByLabel("Titular")).toHaveValue("Orgullo de ser quien sos");
-  await expect(caption).toHaveValue(/ORGULLO15/);
+  await page.getByLabel("Temática").selectOption("cyber-monday");
+  await expect(page.getByLabel("Titular")).toHaveValue("Overclock de precios");
+  await expect(caption).toHaveValue(/CYBER25/);
   assertNoExternal();
 });
 

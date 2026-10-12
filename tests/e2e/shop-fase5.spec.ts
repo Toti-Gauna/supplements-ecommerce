@@ -4,38 +4,39 @@ import { expect, test, type Page } from "@playwright/test";
 const preview = (page: Page, id: string) =>
   page.addInitScript((v) => localStorage.setItem("volta-demo:theme-preview", JSON.stringify({ state: { previewId: v }, version: 0 })), id);
 
-test.describe("temáticas de la Fase 5", () => {
+test.describe("temáticas fitness de la Fase 5", () => {
   for (const [id, heading, scene] of [
-    ["orgullo", "Orgullo de ser quien sos", "Especial Orgullo"],
-    ["revolucion-de-mayo", "Con escarapela y proteína", "Especial 25 de Mayo"],
-    ["dia-de-la-bandera", "Celeste y blanca, como el cielo de la costa", "Especial Día de la Bandera"],
-    ["dia-de-la-independencia", "Independientes desde 1816", "Especial 9 de Julio"],
+    ["cyber-monday", "Overclock de precios", "Especial CyberMonday"],
+    ["vuelta-al-gym", "Volvió la rutina", "Especial Vuelta al gym"],
+    ["operacion-verano", "Modo verano: activado", "Especial Operación verano"],
+    ["ano-nuevo", "Versión 2027 instalada", "Especial Año Nuevo"],
   ] as const) {
     test(`${id}: pantalla de carga con su escena, paleta y banner`, async ({ page }) => {
       await page.emulateMedia({ reducedMotion: "no-preference" });
       await preview(page, id);
       await page.goto("");
       await expect(page.locator("html")).toHaveAttribute("data-season", id);
-      await expect(page.locator("#volta-splash .season-scene")).toContainText(scene);
+      await expect(page.locator(`#volta-splash .season-scene[data-scene='${id}']`)).toContainText(scene);
       await page.keyboard.press("Escape");
       await expect(page.getByRole("heading", { name: heading })).toBeVisible();
       await expect(page.locator(`[data-theme-ribbon='${id}']`)).toBeVisible();
     });
   }
 
-  test("Día del Amigo y del Padre: los personajes protagonizan el banner y la escena", async ({ page }) => {
+  test("el banner luce sus cinco decoraciones fitness y la escena se desmonta al cerrar la pantalla de carga", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "no-preference" });
     await preview(page, "dia-del-amigo");
     await page.goto("");
-    await expect(page.locator("#volta-splash .season-scene svg.pup")).toHaveCount(2);
+    await expect(page.locator("#volta-splash .season-scene [data-sc]").first()).toBeAttached();
     await page.keyboard.press("Escape");
     // Al cerrar la pantalla de carga la escena se desmonta (sus animaciones en bucle no siguen escondidas).
     await expect(page.locator("#volta-splash .season-scene")).toHaveCount(0);
-    await expect(page.locator("[data-theme-banner='dia-del-amigo'] svg.pup")).toHaveCount(2);
-    await preview(page, "dia-del-padre");
-    await page.reload();
-    await page.keyboard.press("Escape");
-    await expect(page.locator("[data-theme-banner='dia-del-padre'] svg.pup")).toHaveCount(2);
+    const banner = page.locator("[data-theme-banner='dia-del-amigo']");
+    await expect(banner.getByRole("heading", { name: "Tu compañero de gym" })).toBeVisible();
+    await expect(banner.locator("span.absolute > svg")).toHaveCount(5);
+    await expect(banner).toContainText("$5.000 OFF");
+    // Nada de Velmar: sin personajes ni decoraciones de mascotas.
+    await expect(page.locator("svg.pup")).toHaveCount(0);
   });
 });
 
@@ -44,7 +45,7 @@ test("con movimiento reducido no queda ninguna animación corriendo en una temá
   await page.goto("");
   await expect(page.locator("#volta-splash")).toBeHidden();
   await expect(page.locator("#volta-splash .season-scene")).toHaveCount(0);
-  await expect(page.locator("[data-theme-banner='dia-del-amigo'] svg.pup").first()).toBeVisible();
+  await expect(page.locator("[data-theme-banner='dia-del-amigo']")).toBeVisible();
   await page.waitForTimeout(800);
   const running = await page.evaluate(() => document.getAnimations().filter((a) => a.playState === "running" && a instanceof CSSAnimation).map((a) => (a as CSSAnimation).animationName));
   expect(running).toEqual([]);

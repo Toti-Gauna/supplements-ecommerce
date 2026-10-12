@@ -63,14 +63,13 @@ function priceTag(ctx: CanvasRenderingContext2D, s: StudioScene, index: number, 
   ctx.restore();
 }
 
-/** Decoración protagonista y personajes de la temática, flotando. */
+/** Decoración protagonista de la temática, flotando. */
 function heroArt(ctx: CanvasRenderingContext2D, s: StudioScene, t: number, x: number, y: number, size: number) {
   const k = easeOutExpo(span(t, 0.6, 1.2));
   const bob = Math.sin(t * 1.6) * size * 0.03;
   ctx.save();
   ctx.globalAlpha *= k;
-  if (s.cast.length) s.cast.forEach((img, i) => ctx.drawImage(raster(img, size * 0.9, size * 0.69), x + i * size * 0.62 - size * 0.3, y + bob * (i ? -1 : 1) + (1 - k) * 40));
-  else if (s.hero) ctx.drawImage(raster(s.hero, size, size), x, y + bob + (1 - k) * 40);
+  if (s.hero) ctx.drawImage(raster(s.hero, size, size), x, y + bob + (1 - k) * 40);
   ctx.restore();
 }
 
@@ -85,7 +84,7 @@ function cta(ctx: CanvasRenderingContext2D, s: StudioScene, t: number, x: number
 export function drawPost(ctx: CanvasRenderingContext2D, s: StudioScene, t: number) {
   const { W } = s;
   const badge = badgeFor(s, 0.9, 320);
-  const L = postLayout(W, badge, s.cast.length > 0);
+  const L = postLayout(W, badge);
   drawBackdrop(ctx, s.look, t, W, s.H);
   heroArt(ctx, s, t, L.hero.x, L.hero.y, L.hero.size);
   const slot = productSlot(t, s.duration, s.products.length);

@@ -1,4 +1,5 @@
 "use client";
+import { demoNow } from "@/demo/clock";
 import { CalendarClock, Check, Copy, MessageCircle, TriangleAlert } from "lucide-react";
 import { useId, useState } from "react";
 import { Button } from "@/components/atoms/Button";
@@ -36,7 +37,7 @@ export function PurchaseGroupCard({ group }: { group: PurchaseGroup }) {
   };
   const order = () => {
     if (!supplier) return;
-    addPurchase(purchaseOrderFrom(group, new Date().toISOString(), next));
+    addPurchase(purchaseOrderFrom(group, demoNow(), next));
     push({ tone: "success", title: `Pedido a ${supplier.name} registrado`, description: "Deja de sugerirse hasta que lo recibas. Cambio guardado solo en esta demo." });
   };
   return (

@@ -73,7 +73,7 @@ async function liquidateLot(page: Page) {
   await expect(page.getByText("6 variantes de 63")).toBeVisible();
   await page.getByRole("button", { name: "Liquidar del lote VL-2603-W de Ionic Whey 100% · Vainilla · 2 lb (907 g)" }).click();
   const dialog = page.getByRole("dialog", { name: "Liquidar el lote VL-2603-W" });
-  await expect(dialog).toContainText("Vence en 57 días");
+  await expect(dialog).toContainText("Vence en 56 días");
   await dialog.getByText("−40 %", { exact: true }).click();
   await expect(dialog.getByRole("status", { name: "Vista previa del precio" })).toContainText(money("32.900"));
   await dialog.getByRole("button", { name: /Liquidar a/ }).click();

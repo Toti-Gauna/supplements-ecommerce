@@ -1,3 +1,4 @@
+import { demoNow } from "../clock";
 import type { CustomerProfile, NoticeChannel } from "../fixtures/customers";
 import type { Goal } from "../types";
 import { auditEntry, type AdminData } from "./defaults";
@@ -38,13 +39,13 @@ export function createCustomerActions(set: Set, get: Get): CustomerActions {
     set((s) => ({ workshop: profiles(s, email, fn), audit: [auditEntry(action, email), ...s.audit].slice(0, 80) }));
 
   return {
-    addCustomerNote: (email, text) => edit("Nota del cliente", email, (p) => ({ ...p, notes: [{ at: new Date().toISOString(), text: text.trim() }, ...p.notes] })),
+    addCustomerNote: (email, text) => edit("Nota del cliente", email, (p) => ({ ...p, notes: [{ at: demoNow(), text: text.trim() }, ...p.notes] })),
     setCustomerBirthday: (email, birthday) => edit("Cumpleaños del cliente", email, (p) => ({ ...p, birthday })),
     setCustomerGoal: (email, goal) => edit("Objetivo del cliente", email, (p) => ({ ...p, goal })),
     notifyRepurchase: (item, channel) => {
       const s = get();
       if (noticeFor(s.workshop.profiles[item.email.toLowerCase()], item)) return "already";
-      const at = new Date().toISOString();
+      const at = demoNow();
       const key = repurchaseKey(item.email, item.slug, item.runsOutOn);
       const mails = channel === "email" ? composeEmails(s.emails.templates, ["repurchase"], repurchaseContext(item), at, { key }) : [];
       if (channel === "email" && !mails.length) return "off";

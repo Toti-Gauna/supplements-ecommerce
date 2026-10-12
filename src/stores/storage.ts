@@ -8,7 +8,8 @@ import { brand } from "@/config/brand";
 export const STORAGE_PREFIX = `${brand.storageKey}-demo:`;
 
 /** Versión del estado guardado del panel (la lee también el script del <head> de la tienda). */
-export const ADMIN_STORE_VERSION = 10;
+// v11: la demo pasa al lunes 5/10/2026 (pedidos, despachos y avisos con la fecha nueva).
+export const ADMIN_STORE_VERSION = 11;
 
 /** localStorage tolerante a modo privado / cuota llena: la demo sigue funcionando en memoria. */
 const memory = new Map<string, string>();

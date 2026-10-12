@@ -39,14 +39,14 @@ test("reprogramar sin arrastrar: el atrasado pasa a la primera fecha libre", asy
   await page.getByRole("button", { name: "Reprogramar VOL-000115" }).click();
   const sheet = page.getByRole("dialog", { name: "Despacho VOL-000115" });
   await sheet.getByRole("button", { name: /Primera fecha libre/ }).click();
-  await expect(sheet.getByRole("heading", { name: "Lunes, 5 de octubre" })).toBeVisible();
+  await expect(sheet.getByRole("heading", { name: "Martes, 6 de octubre" })).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(page.getByRole("heading", { name: /Atrasados/ })).toHaveCount(0);
 });
 
 test("cupo del cadete: con días completos la tienda muestra la próxima fecha del cadete; retiro y correo salen igual", async ({ page }) => {
   // El catálogo no trae productos por encargo: la Creatina Brava pasa a "A pedido" con 4 días hábiles desde el editor.
-  // Desde el dom 4/10 cae el jue 8; el cadete ya tiene 2 de 2 pedidos el 8 y el 9 (el 12 es feriado).
+  // Desde el lun 5/10 cae el vie 9; el cadete ya tiene 2 de 2 pedidos el 9 (el 12 es feriado).
   await page.goto("admin-demo/productos/editar/?id=creatina-brava");
   await expect(page.getByRole("heading", { name: /Editar: Creatina Brava/ })).toBeVisible();
   await page.getByLabel("Plazo si es por encargo (días hábiles)").fill("4");
@@ -54,7 +54,7 @@ test("cupo del cadete: con días completos la tienda muestra la próxima fecha d
   await page.getByRole("button", { name: "Guardar (solo en esta demo)" }).click();
   await expect(page.getByRole("status").filter({ hasText: "Cambio guardado solo en esta demo" })).toBeVisible();
   await page.goto("p/creatina-brava/");
-  await expect(page.getByText("Lo despachamos el jueves, 8 de octubre")).toBeVisible();
+  await expect(page.getByText("Lo despachamos el viernes, 9 de octubre")).toBeVisible();
   await expect(page.getByText(/Con cadete, el martes, 13 de octubre: los días anteriores el reparto ya está completo/)).toBeVisible();
   await page.goto("admin-demo/calendario/");
   await page.getByRole("button", { name: "Cupo del cadete y feriados" }).click();
@@ -64,7 +64,7 @@ test("cupo del cadete: con días completos la tienda muestra la próxima fecha d
   await field.press("Enter");
   await expect(toast(page, "Cupo del cadete: 3 por día")).toBeVisible();
   await page.goto("p/creatina-brava/");
-  await expect(page.getByText("Lo despachamos el jueves, 8 de octubre")).toBeVisible();
+  await expect(page.getByText("Lo despachamos el viernes, 9 de octubre")).toBeVisible();
   await expect(page.getByText(/el reparto ya está completo/)).toHaveCount(0);
 });
 

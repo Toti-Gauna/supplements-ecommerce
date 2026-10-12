@@ -11,6 +11,8 @@ import { EmptyState } from "@/components/molecules/EmptyState";
 import { MissionProgress } from "@/components/molecules/MissionProgress";
 import { OrderSummary } from "@/components/molecules/OrderSummary";
 import { previewMission } from "@/demo/engine/missions";
+import { STATUS_LABEL } from "@/demo/engine/orders";
+import { DEMO_TODAY } from "@/demo/fixtures/admin-orders";
 import { demoAccountProgress } from "@/demo/fixtures/commerce";
 import { useAdmin, useDemoData } from "@/stores/admin";
 import { whatsappLink } from "@/lib/whatsapp";
@@ -19,10 +21,12 @@ import { useGifts } from "@/stores/gifts";
 import { GiftShare } from "../gifts/GiftShare";
 import { useHydrated } from "@/stores/hydration";
 import { summaryRows } from "../checkout/CheckoutSummary";
+import { arrivalText } from "./arrival";
 import { OrderLines } from "./OrderLines";
 import { PaymentInstructions } from "./PaymentInstructions";
 import { brand } from "@/config/brand";
 import { STORAGE_PREFIX } from "@/stores/storage";
+import { useShopOrder } from "./useShopOrder";
 
 const PAY_TITLE = { CHECKOUT_PRO: "Pagar con tarjeta, vía Mercado Pago (muestra)", BANK_TRANSFER: "Transferencia (muestra)", QR_MANUAL: "Pago con QR (muestra)" };
 
@@ -32,6 +36,8 @@ export function ConfirmationView() {
   const missions = useDemoData((d) => d.missions);
   const syncShopOrder = useAdmin((s) => s.syncShopOrder);
   const sentGifts = useGifts((s) => s.sent);
+  const tracked = useShopOrder(order?.code);
+  const settings = useAdmin((s) => s.workshop.settings);
   // Confeti solo la primera vez que se ve la confirmación de cada pedido (no en cada recarga).
   const [celebrate, setCelebrate] = useState(false);
   useEffect(() => {
@@ -51,6 +57,9 @@ export function ConfirmationView() {
   if (!order) return <EmptyState title="Todavía no hay un pedido de demostración" action={<ButtonLink href="/">Ir a la tienda</ButtonLink>}>Completá el checkout para ver esta pantalla.</EmptyState>;
   const mission = missions.find((m) => m.active !== false) ?? missions[0]!;
   const gifts = sentGifts.filter((g) => order.gifts?.includes(g.code));
+  // Estado y fecha del pedido en el panel: al subir el comprobante pasa a "en revisión"; si se reprograma, cambia la fecha.
+  const status = STATUS_LABEL[tracked?.status ?? "PENDING_PAYMENT"].toLowerCase();
+  const promised = tracked?.promisedDate ?? order.promisedDate;
   const preview = previewMission(mission, demoAccountProgress[mission.id] ?? 0, { units: order.quote.units, total: order.quote.total });
   return (
     <div className="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
@@ -62,7 +71,8 @@ export function ConfirmationView() {
             className="grid h-16 w-16 place-items-center rounded-full bg-volt text-night"><Check size={30} aria-hidden="true" /></motion.span>
           <p className="mt-5"><Badge tone="demo">PEDIDO DE DEMOSTRACIÓN · no es un pedido real</Badge></p>
           <h2 className="font-display animate-rise mt-4 text-4xl leading-tight sm:text-5xl">¡Gracias, {order.contact.name.split(" ")[0]}! Tu pedido de demostración está registrado</h2>
-          <p className="mt-3 text-night-muted">Código <strong className="text-on-night">{order.code}</strong> · Estado de muestra: <strong className="text-on-night">pendiente de pago</strong>. No se cobró nada ni se envió ningún email.</p>
+          <p className="mt-3 text-night-muted">Código <strong className="text-on-night">{order.code}</strong> · Estado de muestra: <strong className="text-on-night">{status}</strong>. No se cobró nada ni se envió ningún email.</p>
+          {promised && <p className="mt-2 text-night-muted">Entrega: <strong className="text-on-night">{arrivalText(order.fulfillment, promised, DEMO_TODAY, settings)}</strong>, una vez confirmado el pago.</p>}
           <ol className="mt-8 grid gap-3 text-sm sm:grid-cols-3">
             {["Pagás o subís el comprobante", `${brand.name} confirma y arma tu pedido`, "Seguís cada etapa con tu link"].map((t, i) => (
               <li key={t} className="flex items-center gap-3 rounded-2xl bg-white/5 p-3"><span className="font-display grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white/10 text-volt">{i + 1}</span>{t}</li>

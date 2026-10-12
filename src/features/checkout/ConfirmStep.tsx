@@ -3,8 +3,10 @@ import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/atoms/Button";
 import { useDemoData } from "@/stores/admin";
+import { useCart } from "@/stores/cart";
 import { useCheckout } from "@/stores/checkout";
 import { CheckoutGift } from "./CheckoutGift";
+import { useOrderPromise } from "./useOrderPromise";
 
 const PAY_LABEL = { CHECKOUT_PRO: "Tarjeta de débito, crédito o prepaga, vía Mercado Pago (muestra)", BANK_TRANSFER: "Transferencia (muestra)", QR_MANUAL: "QR (muestra)" };
 
@@ -17,9 +19,10 @@ export function ConfirmStep({ onBack, onConfirm, onEdit }: { onBack: () => void;
     onConfirm();
   };
   const zone = useDemoData((d) => d.zones.find((z) => z.type === fulfillment));
+  const promise = useOrderPromise(useCart((s) => s.lines));
   const rows = [
     { step: 0, label: "Datos", value: `${contact.name} · ${contact.email} · ${contact.phone}` },
-    { step: 1, label: "Entrega", value: `${zone?.name ?? "—"}${fulfillment !== "PICKUP" ? ` · ${address.street} ${address.number}, ${address.city} (${address.postalCode})` : ""}` },
+    { step: 1, label: "Entrega", value: `${zone?.name ?? "—"}${fulfillment ? ` · ${promise(fulfillment).text}` : ""}${fulfillment !== "PICKUP" ? ` · ${address.street} ${address.number}, ${address.city} (${address.postalCode})` : ""}` },
     { step: 2, label: "Pago", value: paymentMethod ? PAY_LABEL[paymentMethod] : "—" },
   ];
   return (

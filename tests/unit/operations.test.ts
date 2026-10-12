@@ -86,8 +86,8 @@ describe("compras sugeridas", () => {
   });
   it("próximo reparto del proveedor (saltea feriados) y días en palabras", () => {
     const atlantica = suppliers.find((s) => s.id === "atlantica")!;
-    // Lunes y jueves: desde el domingo 4 → lunes 5; desde el viernes 9, el lunes 12 es feriado → jueves 15
-    expect(nextDelivery(atlantica, DEMO_TODAY, settings.closures)).toBe("2026-10-05");
+    // Lunes y jueves: desde el lunes 5 (hoy no cuenta) → jueves 8; desde el viernes 9, el lunes 12 es feriado → jueves 15
+    expect(nextDelivery(atlantica, DEMO_TODAY, settings.closures)).toBe("2026-10-08");
     expect(nextDelivery(atlantica, "2026-10-09", settings.closures)).toBe("2026-10-15");
     expect(nextDelivery({ ...atlantica, deliveryWeekdays: [] }, DEMO_TODAY, settings.closures)).toBeNull();
     expect(deliveryDaysText([4, 1])).toBe("lunes y jueves");

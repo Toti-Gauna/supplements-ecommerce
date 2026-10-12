@@ -1,3 +1,4 @@
+import { demoNow } from "../clock";
 import type { StockLevel, Supplier } from "../fixtures/suppliers";
 import { auditEntry, type AdminData } from "./defaults";
 import { checkLevel, receiveStock } from "./workshop/purchase-orders";
@@ -39,7 +40,7 @@ export function createPurchasingActions(set: Set): PurchasingActions {
         ok = true;
         return {
           data: { ...s.data, products: receiveStock(s.data.products, order) },
-          workshop: { ...s.workshop, purchases: s.workshop.purchases.map((p) => (p.id === id ? { ...p, status: "received", receivedAt: new Date().toISOString() } : p)) },
+          workshop: { ...s.workshop, purchases: s.workshop.purchases.map((p) => (p.id === id ? { ...p, status: "received", receivedAt: demoNow() } : p)) },
           audit: log(s, "Mercadería recibida: stock actualizado", order.supplierId),
         };
       });

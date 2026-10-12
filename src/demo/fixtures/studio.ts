@@ -3,6 +3,7 @@
  * del juego), ganchos para Reels y textos fijos de marca. Los ganchos son propuestas sin testear: el dueño mide cuál
  * retiene más en los primeros 3 segundos.
  */
+import { DISPATCH_PROMISE } from "../engine/lead-time";
 import { brand } from "@/config/brand";
 
 export type StudioFormat = "post" | "story" | "carousel";
@@ -69,6 +70,6 @@ export const STUDIO_TIPS = [
 export const STUDIO_BRAND = {
   name: brand.name, city: brand.city, handle: brand.instagram ? `@${brand.instagram}` : brand.name,
   eyebrow: `${brand.name} · ${brand.city}`, title: "Cargá tu mejor versión",
-  subtitle: `Suplementos originales con lote y vencimiento a la vista. Cadete en el día en ${brand.city}.`, cta: "Pedilo en la tienda · link en la bio",
-  seal: "Originales", closing: "Link en la bio · Cadete en el día y envíos a todo el país.",
+  subtitle: `Suplementos originales con lote y vencimiento a la vista. Cadete en ${brand.city} ${DISPATCH_PROMISE}.`, cta: "Pedilo en la tienda · link en la bio",
+  seal: "Originales", closing: `Link en la bio · Cadete ${DISPATCH_PROMISE} y envíos a todo el país.`,
 };

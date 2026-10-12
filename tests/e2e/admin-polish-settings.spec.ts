@@ -84,7 +84,7 @@ test.describe("escritorio con mouse", () => {
     await pickup.getByLabel("Plazo que ve el comprador").fill("");
     await page.getByRole("button", { name: "Descartar" }).click();
     await page.getByRole("dialog", { name: "Descartar los cambios" }).getByRole("button", { name: "Descartar" }).click();
-    await expect(pickup.getByLabel("Plazo que ve el comprador")).toHaveValue("Listo en 1 hora en días hábiles");
+    await expect(pickup.getByLabel("Plazo que ve el comprador")).toHaveValue("Listo para retirar al día hábil siguiente");
   });
 
   test("8.3.29 datos de cobro en su página usan la misma fuente que el modal de Pagos y la tienda sigue con el estilo Volta", async ({ page }) => {

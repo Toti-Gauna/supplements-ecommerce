@@ -3,7 +3,10 @@ import type { FulfillmentType, Product, Variant } from "../types";
 import type { CartLine } from "./cart-types";
 import { getProduct } from "./catalog";
 import type { OrderStatus } from "./orders";
+import { READY_STOCK_DAYS } from "./lead-time";
 import { addWorkdays, nextWorkday, type WorkCalendar } from "./workdays";
+
+export { DISPATCH_PROMISE, READY_STOCK_DAYS } from "./lead-time";
 
 /**
  * Despachos (Fase 7). Cada pedido tiene su fecha de despacho: sale con el cadete, va al correo o queda listo para
@@ -11,8 +14,6 @@ import { addWorkdays, nextWorkday, type WorkCalendar } from "./workdays";
  * un día se llena, el pedido pasa al siguiente día hábil con lugar. Retiro y envío al país no tienen cupo.
  */
 
-/** Lo que está en stock sale al día hábil siguiente. */
-export const READY_STOCK_DAYS = 1;
 /** Plazo si un producto a pedido (encargo al proveedor) no tiene plazo cargado. */
 export const DEFAULT_MAKE_DAYS = 3;
 
@@ -110,6 +111,11 @@ export function estimateForProduct(product: Product, variant: Variant | undefine
   const leadDays = lineLeadDays(product, variant);
   const earliest = addWorkdays(today, leadDays, calendarOf(settings));
   return { leadDays, ...firstAvailableDay(earliest, loadByDay(orders), settings) };
+}
+
+/** Primer día en que el cadete puede llevar un pedido en stock que entra hoy: la promesa general de la tienda. */
+export function nextCadeteDay(today: string, orders: ScheduledOrder[], settings: WorkshopSettings): string {
+  return firstAvailableDay(addWorkdays(today, READY_STOCK_DAYS, calendarOf(settings)), loadByDay(orders), settings).day;
 }
 
 export interface DeliveryWindow {

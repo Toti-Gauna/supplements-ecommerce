@@ -1,3 +1,4 @@
+import { DISPATCH_PROMISE } from "@/demo/engine/lead-time";
 import { ChevronDown } from "lucide-react";
 import type { ReactNode } from "react";
 import type { Product } from "@/demo/types";
@@ -24,7 +25,7 @@ export function ProductAccordions({ product }: { product: Product }) {
         {product.madeToOrderDays ? <p className="mt-1">Por encargo: llega al local en {product.madeToOrderDays} días hábiles desde la confirmación del pago.</p> : <p className="mt-1">Listo para despachar.</p>}
       </Item>
       <Item title="Envíos, retiro y cambios">
-        <p>Cadete en el día en Mar del Plata, envío al resto del país o retiro en el local. Por higiene, los suplementos abiertos o sin precinto no tienen cambio (ver términos).</p>
+        <p>Cadete en Mar del Plata {DISPATCH_PROMISE}, envío al resto del país o retiro en el local. Por higiene, los suplementos abiertos o sin precinto no tienen cambio (ver términos).</p>
       </Item>
       {product.faqs.length > 0 && (
         <Item title="Preguntas frecuentes">

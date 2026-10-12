@@ -1,7 +1,13 @@
 import type { TimelineStep } from "@/components/molecules/StatusTimeline";
 import { brand } from "@/config/brand";
+import type { OrderStatus } from "@/demo/engine/orders";
+import { TRACKING_STAGES } from "@/demo/engine/tracking";
+import type { WorkshopSettings } from "@/demo/fixtures/workshop";
+import type { FulfillmentType } from "@/demo/types";
+import { formatDateTime, formatDay, whenDay } from "@/lib/date";
+import { arrivalText } from "./arrival";
 
-/** Estados de MUESTRA para la línea de tiempo (spec 5.2). */
+/** Etapas de la línea de tiempo (spec 5.2), en el orden de `TRACKING_STAGES`. */
 const FLOW = [
   { label: "Pedido recibido", description: "Reservamos tu pedido." },
   { label: "Pago en revisión", description: `${brand.name} verifica el ingreso de la transferencia o QR.` },
@@ -12,9 +18,11 @@ const FLOW = [
   { label: "Entregado", description: "¡Que lo disfrutes!" },
 ];
 
-/** Estados que se pueden probar en el seguimiento de demostración (solo cambian la vista, no el pedido). */
+/** Estados que se pueden probar en el seguimiento (solo cambian la vista, no el pedido). Arranca en el estado real. */
 export const SAMPLE_STATES = [
   { id: "pending", label: "Esperando comprobante", current: 0 },
+  { id: "review", label: "Pago en revisión", current: 1 },
+  { id: "paid", label: "Pagado", current: 2 },
   { id: "production", label: "Armando tu pedido", current: 3 },
   { id: "ready", label: "Listo", current: 4 },
   { id: "shipped", label: "En camino", current: 5 },
@@ -23,8 +31,35 @@ export const SAMPLE_STATES = [
 
 export type SampleStateId = (typeof SAMPLE_STATES)[number]["id"];
 
-const DATES = ["2 oct, 10:14", "2 oct, 18:40", "3 oct, 09:02", "3 oct, 11:30", "", "", ""];
+/** El estado de la vista que corresponde al estado real del pedido. */
+export function stateForStatus(status: OrderStatus): SampleStateId {
+  const i = TRACKING_STAGES.indexOf(status);
+  return SAMPLE_STATES.find((s) => s.current === (i === TRACKING_STAGES.length - 1 ? 7 : i))?.id ?? "pending";
+}
 
-export function timelineFor(current: number): TimelineStep[] {
-  return FLOW.map((s, i) => ({ ...s, state: i < current ? "done" : i === current ? "current" : "pending", date: i <= current ? DATES[i] || undefined : undefined }));
+export const STATE_COPY: Record<SampleStateId, { title: string; progress: number; note: string }> = {
+  pending: { title: "Esperando tu comprobante", progress: 0.04, note: `Subí el comprobante: ${brand.name} verifica el ingreso y arma tu pedido.` },
+  review: { title: "Revisando tu pago", progress: 0.12, note: `Recibimos tu comprobante. ${brand.name} controla el ingreso en la cuenta y, cuando lo aprueba, arma tu pedido.` },
+  paid: { title: "Pago confirmado", progress: 0.22, note: "Ya está aprobado: lo empezamos a armar enseguida." },
+  production: { title: "Armando tu pedido", progress: 0.38, note: "Estamos preparando tu pedido: controlamos lote y vencimiento de cada producto." },
+  ready: { title: "Listo", progress: 0.58, note: "Tu pedido está armado y precintado. Coordinamos la entrega por WhatsApp." },
+  shipped: { title: "En camino", progress: 0.82, note: "Ya salió del local. El cadete te escribe antes de llegar." },
+  delivered: { title: "Entregado", progress: 1, note: "Llegó a tu casa. ¡Que lo disfrutes! Si querés, contanos cómo quedó." },
+};
+
+/** Entrega estimada con el día de despacho del pedido (`day`): la misma fecha que se prometió en el checkout. */
+export function etaFor(id: SampleStateId, fulfillment: FulfillmentType, day: string, today: string, settings: WorkshopSettings): string {
+  const arrival = arrivalText(fulfillment, day, today, settings);
+  if (id === "pending" || id === "review") return `${arrival}, si el pago se confirma a tiempo`;
+  if (id === "ready") return fulfillment === "PICKUP" ? arrival : `Sale ${fulfillment === "SHIPPING" ? "al correo" : "con el cadete"} ${whenDay(day, today)}`;
+  if (id === "delivered") return fulfillment === "SHIPPING" ? "Entregado por el correo" : `${fulfillment === "PICKUP" ? "Retirado" : "Entregado"} el ${formatDay(day)}`;
+  return arrival;
+}
+
+/** Línea de tiempo hasta `current`, con la fecha y hora en que el pedido llegó a cada etapa (ISO, de su historial). */
+export function timelineFor(current: number, dates: (string | undefined)[] = []): TimelineStep[] {
+  return FLOW.map((s, i) => {
+    const at = i <= current ? dates[i] : undefined;
+    return { ...s, state: i < current ? "done" : i === current ? "current" : "pending", date: at ? formatDateTime(at) : undefined };
+  });
 }

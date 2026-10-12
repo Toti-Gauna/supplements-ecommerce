@@ -31,6 +31,8 @@ export interface DemoOrder {
   lines: CartLine[];
   quote: Omit<Quote, "lines">;
   asAccount: boolean;
+  /** Día de despacho que se le prometió al confirmar (calendario de despachos); el panel puede reprogramarlo. */
+  promisedDate?: string;
   /** Códigos de los regalos de este pedido (ver stores/gifts). */
   gifts?: string[];
 }

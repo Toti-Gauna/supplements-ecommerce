@@ -77,23 +77,23 @@ describe("plazos y capacidad", () => {
     expect(load.get("2026-10-08")).toBe(2);
     expect(load.get("2026-10-09")).toBe(2);
     expect(load.get("2026-10-07")).toBeUndefined();
-    // Encargo al proveedor de 4 días hábiles desde el domingo 4 → jueves 8, completo; viernes 9, completo; lunes 12, feriado → martes 13
+    // Encargo al proveedor de 4 días hábiles desde el lunes 5 → viernes 9, completo; lunes 12, feriado → martes 13
     const whey = { ...getProduct("ionic-whey")!, madeToOrderDays: 4 };
     const onOrder = { ...whey.variants[0]!, stock: -1 };
     const est = estimateForProduct(whey, onOrder, DEMO_TODAY, admin.orders, settings);
-    expect(est).toMatchObject({ leadDays: 4, earliest: "2026-10-08", day: "2026-10-13", fullDays: ["2026-10-08", "2026-10-09"] });
-    expect(estimateForProduct(whey, onOrder, DEMO_TODAY, admin.orders, { ...settings, dailyCapacity: 5 }).day).toBe("2026-10-08");
+    expect(est).toMatchObject({ leadDays: 4, earliest: "2026-10-09", day: "2026-10-13", fullDays: ["2026-10-09"] });
+    expect(estimateForProduct(whey, onOrder, DEMO_TODAY, admin.orders, { ...settings, dailyCapacity: 5 }).day).toBe("2026-10-09");
     // Lo que está en stock sale al día hábil siguiente
-    expect(estimateForProduct(whey, whey.variants[0], DEMO_TODAY, admin.orders, settings)).toMatchObject({ leadDays: 1, day: "2026-10-05" });
+    expect(estimateForProduct(whey, whey.variants[0], DEMO_TODAY, admin.orders, settings)).toMatchObject({ leadDays: 1, day: "2026-10-06" });
   });
   it("promesa de un pedido nuevo según cómo sale, y ventanas de entrega", () => {
-    expect(promiseFor([wheyLine], DEMO_TODAY, admin.orders, settings, { fulfillment: "LOCAL_DELIVERY" }).day).toBe("2026-10-05");
-    // Un encargo de 4 días: con cadete pasa al 13 (8 y 9 completos); por correo o retiro sale el 8.
+    expect(promiseFor([wheyLine], DEMO_TODAY, admin.orders, settings, { fulfillment: "LOCAL_DELIVERY" }).day).toBe("2026-10-06");
+    // Un encargo de 4 días: con cadete pasa al 13 (9 completo, 12 feriado); por correo o retiro sale el 9.
     const slow = [bananaLine];
     const data = defaultDemoData();
     setDemoData({ ...data, products: data.products.map((p) => (p.slug === "mass-gainer" ? { ...p, madeToOrderDays: 4, variants: p.variants.map((v) => (v.id === "mg-banana-3kg" ? { ...v, stock: -1 } : v)) } : p)) });
-    expect(promiseFor(slow, DEMO_TODAY, admin.orders, settings, { fulfillment: "LOCAL_DELIVERY" })).toMatchObject({ earliest: "2026-10-08", day: "2026-10-13" });
-    expect(promiseFor(slow, DEMO_TODAY, admin.orders, settings, { fulfillment: "SHIPPING" })).toMatchObject({ day: "2026-10-08", fullDays: [] });
+    expect(promiseFor(slow, DEMO_TODAY, admin.orders, settings, { fulfillment: "LOCAL_DELIVERY" })).toMatchObject({ earliest: "2026-10-09", day: "2026-10-13" });
+    expect(promiseFor(slow, DEMO_TODAY, admin.orders, settings, { fulfillment: "SHIPPING" })).toMatchObject({ day: "2026-10-09", fullDays: [] });
     const w = deliveryWindows("2026-10-09", settings, "2026-10-13");
     expect(w.find((x) => x.id === "pickup")).toMatchObject({ from: "2026-10-09", to: "2026-10-13" });
     expect(w.find((x) => x.id === "local")).toMatchObject({ from: "2026-10-13", to: "2026-10-13" });
@@ -217,7 +217,8 @@ describe("casos de la revisión", () => {
   it("un pedido listo solo espera un día hábil y los despachos cuentan desde hoy", () => {
     const { orders, workshop } = defaultAdminData();
     const ready = { code: "X", status: "READY" as const, fulfillment: "PICKUP" as const, promisedDate: "2026-10-02", lines: [] };
-    expect(nextFreeDayFor(ready, DEMO_TODAY, orders, workshop.settings)).toBe("2026-10-05");
-    expect(pendingDeliveries(orders, DEMO_TODAY, "2026-10-10")).toBe(8);
+    expect(nextFreeDayFor(ready, DEMO_TODAY, orders, workshop.settings)).toBe("2026-10-06");
+    // Del lunes 5 al sábado 10: incluye a VOL-000120 (listo, sale hoy con el cadete) y el retiro de VOL-000124.
+    expect(pendingDeliveries(orders, DEMO_TODAY, "2026-10-10")).toBe(9);
   });
 });

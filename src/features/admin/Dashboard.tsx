@@ -14,6 +14,7 @@ import { OrderCard } from "./OrderCard";
 import { SalesByDay } from "./SalesByDay";
 import { StatusPipeline } from "./StatusPipeline";
 import { WorkshopStrip } from "./WorkshopStrip";
+import { RepurchaseWeek } from "./customers/RepurchaseWeek";
 
 export function Dashboard() {
   const orders = useAdmin((s) => s.orders);
@@ -48,6 +49,10 @@ export function Dashboard() {
         <StatusPipeline counts={counts} />
       </section>
       <WorkshopStrip />
+      {/* Lo que pide acción esta semana: recompras para avisar (y, con los lotes, lo que vence pronto). */}
+      <div data-dashboard-actions className="grid grid-cols-[minmax(0,1fr)] gap-4 xl:grid-cols-2">
+        <RepurchaseWeek />
+      </div>
       <div className="grid grid-cols-[minmax(0,1fr)] gap-4 xl:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
         <SalesByDay days={sales.days} orders={orders} />
         <TopProducts orders={orders} />

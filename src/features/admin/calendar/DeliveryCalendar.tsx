@@ -1,5 +1,5 @@
 "use client";
-import { CalendarArrowDown, CalendarX2, ChevronLeft, ChevronRight, SlidersHorizontal } from "lucide-react";
+import { Bike, CalendarArrowDown, CalendarX2, ChevronLeft, ChevronRight, SlidersHorizontal, Store, Truck } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/atoms/Button";
 import { HelpButton, HelpPanel } from "@/components/molecules/Help";
@@ -32,8 +32,8 @@ type View = "month" | "week" | "agenda";
 const VIEWS: { id: View; label: string }[] = [{ id: "month", label: "Mes" }, { id: "week", label: "Semana" }, { id: "agenda", label: "Agenda" }];
 
 /**
- * Calendario de entregas (pedido de Ignacio, fuera de la especificación): cada pedido en su fecha comprometida,
- * capacidad por día, feriados, atrasos, entradas propias por día (8.3.15) y reprogramación arrastrando o con botones.
+ * Calendario de despachos (Fase 7): cada pedido en su fecha de despacho, el cupo del cadete por día (solo los pedidos
+ * con cadete en Mar del Plata), feriados y cierres, atrasos, entradas propias (8.3.15) y reprogramar arrastrando o con botones.
  */
 export function DeliveryCalendar() {
   const orders = useAdmin((s) => s.orders);
@@ -66,14 +66,14 @@ export function DeliveryCalendar() {
   const viewProps = { cursor, today, days, events: evDays, cal, capacity: settings.dailyCapacity, dnd: moves.dnd, onDay: (day: string) => setDayOpen({ day, eventId: null }), onOpen: openOrder, onEvent: openEvent };
 
   const exportIcs = () => {
-    const list = entries.filter((e) => CAPACITY_STATUSES.includes(e.order.status) || e.order.status === "READY").map((e) => ({
+    const list = entries.filter((e) => CAPACITY_STATUSES.includes(e.order.status)).map((e) => ({
       uid: e.order.code, day: e.day,
       title: `${fulfillmentLabel(e.order.fulfillment)}: ${e.order.code} · ${e.order.customer.name}`,
       description: `${e.summary}\nEstado: ${STATUS_LABEL[e.order.status]}${e.order.address ? `\n${e.order.address}` : ""}\n(Panel demo de Volta, datos ficticios)`,
     }));
-    const name = `volta-entregas-${new Date().toISOString().slice(0, 10)}.ics`;
+    const name = `volta-despachos-${new Date().toISOString().slice(0, 10)}.ics`;
     downloadBlob(new Blob([toIcs(list, new Date())], { type: "text/calendar;charset=utf-8" }), name);
-    push({ tone: "success", title: `${list.length} entregas exportadas`, description: `Abrí ${name} con Google Calendar, Outlook o el calendario del celular.` });
+    push({ tone: "success", title: `${list.length} despachos exportados`, description: `Abrí ${name} con Google Calendar, Outlook o el calendario del celular.` });
   };
   const kpi = (label: string, value: number | string, tone?: string) => (
     <div className="rounded-2xl bg-surface p-3 shadow-[var(--shadow-card)]"><p className="text-xs font-bold text-muted">{label}</p><p className={cn("mt-0.5 text-2xl font-extrabold tabular-nums", tone)}>{value}</p></div>
@@ -81,18 +81,18 @@ export function DeliveryCalendar() {
 
   return (
     <>
-      <AdminPageHeader title="Calendario de entregas" actions={(
+      <AdminPageHeader title="Calendario de despachos" actions={(
         <div className="flex flex-wrap gap-2">
-          <Button variant="secondary" size="sm" onClick={() => setSettingsOpen(true)}><SlidersHorizontal size={16} aria-hidden="true" /> Capacidad y feriados</Button>
+          <Button variant="secondary" size="sm" onClick={() => setSettingsOpen(true)}><SlidersHorizontal size={16} aria-hidden="true" /> Cupo del cadete y feriados</Button>
           <Button variant="secondary" size="sm" onClick={exportIcs}><CalendarArrowDown size={16} aria-hidden="true" /> Exportar a Google Calendar</Button>
         </div>
-      )}>Tocá un día para ver, agregar o editar sus entradas. Arrastrá un pedido a otro día (se confirma antes) o tocalo para reprogramar: los días cerrados o completos no lo aceptan y dicen por qué.</AdminPageHeader>
+      )}>Cada pedido en el día que sale: con el cadete en Mar del Plata, al correo o listo para retirar. Solo el cadete tiene cupo por día. Tocá un día para ver o agregar entradas; arrastrá un pedido a otro día (se confirma antes) o tocalo para reprogramar: los días sin despachos o con el cadete completo no lo aceptan y dicen por qué.</AdminPageHeader>
 
       <div className="mb-5 grid grid-cols-2 gap-2 sm:grid-cols-4">
-        {kpi("Entregas próximos 7 días", nextDays)}
+        {kpi("Despachos próximos 7 días", nextDays)}
         {kpi("Atrasados", late.length, late.length ? "text-danger" : undefined)}
-        {kpi("Días completos (14 días)", twoWeeks, twoWeeks ? "text-warning" : undefined)}
-        {kpi("Capacidad", `${settings.dailyCapacity} por día`)}
+        {kpi("Cadete completo (14 días)", twoWeeks, twoWeeks ? "text-warning" : undefined)}
+        {kpi("Cupo del cadete", `${settings.dailyCapacity} por día`)}
       </div>
       {blocked.length > 0 && (
         <div role="status" className="mb-4 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-2xl bg-warning-soft p-3 text-sm font-bold text-warning ring-1 ring-warning/30">
@@ -124,7 +124,10 @@ export function DeliveryCalendar() {
         {LEGEND.map((l) => <li key={l.status} className="flex items-center gap-1.5"><span aria-hidden="true" className={cn("h-3.5 w-5 rounded", STATUS_TONE[l.status])} />{l.label}</li>)}
         <li className="flex items-center gap-1.5"><span aria-hidden="true" className="h-3.5 w-5 rounded border border-danger bg-danger-soft" />Atrasado</li>
         <li className="flex items-center gap-1.5"><span aria-hidden="true" className="h-3.5 w-5 rounded border border-dashed border-volt-ink/45 bg-bg" />Entrada propia</li>
-        <li className="flex items-center gap-1.5"><span aria-hidden="true" className="h-3.5 w-5 rounded bg-[repeating-linear-gradient(135deg,transparent_0_3px,rgb(0_0_0/0.15)_3px_6px)]" />Taller cerrado</li>
+        <li className="flex items-center gap-1.5"><span aria-hidden="true" className="h-3.5 w-5 rounded bg-[repeating-linear-gradient(135deg,transparent_0_3px,rgb(127_127_127/0.35)_3px_6px)] ring-1 ring-line" />Sin despachos</li>
+        <li className="flex items-center gap-1.5"><Bike size={14} aria-hidden="true" />Cadete (ocupa cupo)</li>
+        <li className="flex items-center gap-1.5"><Truck size={14} aria-hidden="true" />Correo</li>
+        <li className="flex items-center gap-1.5"><Store size={14} aria-hidden="true" />Retiro</li>
       </ul>
 
       <ScheduleSheet key={current?.code} order={current} orders={orders} settings={settings} today={today} late={!!currentEntry?.late} movable={currentEntry?.movable ?? false}

@@ -1,6 +1,7 @@
 import { isLate } from "@/demo/admin/order-groups";
 import type { AdminOrder } from "@/demo/admin/types";
-import { CAPACITY_STATUSES, canReschedule } from "@/demo/engine/delivery";
+import { takesCadeteSlot } from "@/demo/engine/delivery";
+import { canReschedule } from "@/demo/engine/reschedule";
 import { getProduct } from "@/demo/engine/catalog";
 import type { OrderStatus } from "@/demo/engine/orders";
 import { closureFor, type WorkCalendar } from "@/demo/engine/workdays";
@@ -13,7 +14,7 @@ export interface Entry {
   order: AdminOrder;
   day: string;
   late: boolean;
-  /** Ocupa un lugar de la capacidad del día. */
+  /** Ocupa un lugar del cadete ese día. */
   counts: boolean;
   movable: boolean;
   /** Quedó en un día que ahora está cerrado (8.3.14): hay que reprogramarlo. */
@@ -30,7 +31,7 @@ export function calendarEntries(orders: AdminOrder[], today: string, cal: WorkCa
     .filter((o) => o.promisedDate && !HIDDEN.includes(o.status))
     .map((o) => {
       const day = o.promisedDate!, movable = canReschedule(o.status);
-      return { order: o, day, late: isLate(o, today), counts: CAPACITY_STATUSES.includes(o.status), movable, blocked: movable && day >= today && !!closureFor(day, cal), summary: orderSummary(o) };
+      return { order: o, day, late: isLate(o, today), counts: takesCadeteSlot(o), movable, blocked: movable && day >= today && !!closureFor(day, cal), summary: orderSummary(o) };
     })
     .sort((a, b) => a.day.localeCompare(b.day) || a.order.code.localeCompare(b.order.code));
 }

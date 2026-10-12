@@ -5,8 +5,8 @@ import type { AdminOrder } from "./types";
 export const ORDER_TABS = [
   { id: "all", label: "Todos", statuses: [] as OrderStatus[] },
   { id: "to-collect", label: "Por cobrar", statuses: ["PENDING_PAYMENT", "PAYMENT_REVIEW"] as OrderStatus[] },
-  { id: "to-make", label: "Para producir", statuses: ["PAID"] as OrderStatus[] },
-  { id: "making", label: "En producción", statuses: ["IN_PRODUCTION"] as OrderStatus[] },
+  { id: "to-make", label: "Por preparar", statuses: ["PAID"] as OrderStatus[] },
+  { id: "making", label: "En preparación", statuses: ["IN_PRODUCTION"] as OrderStatus[] },
   { id: "ready", label: "Listos", statuses: ["READY"] as OrderStatus[] },
   { id: "shipped", label: "Enviados", statuses: ["SHIPPED"] as OrderStatus[] },
   { id: "done", label: "Entregados", statuses: ["DELIVERED"] as OrderStatus[] },
@@ -24,7 +24,7 @@ export function inTab(order: AdminOrder, tab: OrderTabId): boolean {
   return t.statuses.length === 0 || t.statuses.includes(order.status);
 }
 
-/** Pedido con fecha comprometida vencida que todavía no salió del taller. */
+/** Pedido con fecha de despacho vencida que todavía no se terminó de preparar. */
 export function isLate(order: AdminOrder, today: string): boolean {
   return !!order.promisedDate && order.promisedDate < today && ["PAID", "IN_PRODUCTION"].includes(order.status);
 }

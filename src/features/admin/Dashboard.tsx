@@ -42,7 +42,7 @@ export function Dashboard() {
       <section aria-label="Indicadores (demo)" className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
         <KpiTile className="col-span-2 sm:col-span-1" label="Ventas últimos 7 días" value={formatARS(sales.week)} delta={delta(sales.week, sales.prevWeek)} spark={sales.days.map((d) => d.amount)} />
         <KpiTile className="col-span-2 sm:col-span-1" label="Ticket promedio" value={formatARS(sales.avgTicket)} hint={`${sales.paidCount} pedidos pagados · demo`} />
-        <KpiTile label="Pedidos en marcha" value={<Counter value={active} />} hint="pagados, en producción, listos y enviados" />
+        <KpiTile label="Pedidos en marcha" value={<Counter value={active} />} hint="pagados, en preparación, listos y enviados" />
         <KpiTile label="Comprobantes a verificar" value={<Counter value={counts.PAYMENT_REVIEW} />} hint="transferencia y QR · demo" dark />
       </section>
       <section aria-labelledby="pipe">

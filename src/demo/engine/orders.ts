@@ -11,7 +11,7 @@ export const STATUS_LABEL: Record<OrderStatus, string> = {
   PENDING_PAYMENT: "Pendiente de pago",
   PAYMENT_REVIEW: "Comprobante en revisión",
   PAID: "Pagado",
-  IN_PRODUCTION: "En producción",
+  IN_PRODUCTION: "En preparación",
   READY: "Listo",
   SHIPPED: "Enviado",
   DELIVERED: "Entregado",

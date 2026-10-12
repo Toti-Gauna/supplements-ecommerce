@@ -1,25 +1,26 @@
-import { calendarOf, canReschedule, CAPACITY_STATUSES, loadByDay, type ScheduledOrder } from "../../engine/delivery";
+import { calendarOf, CAPACITY_STATUSES, loadByDay, type ScheduledOrder } from "../../engine/delivery";
+import { canReschedule } from "../../engine/reschedule";
 import { closureFor } from "../../engine/workdays";
 import { AR_HOLIDAYS, type CalendarEvent, type CalendarEventKind, type Closure, type WorkshopSettings } from "../../fixtures/workshop";
 
 /**
- * Días del taller (Polish 8.3.14 y 8.3.15): qué entregas toca un cambio de capacidad o de días cerrados, los feriados
- * cargados separados de los cierres propios, y la validación de las entradas del calendario. Ningún cambio mueve
- * pedidos: los que quedan en un día cerrado o sobrecargado se avisan para reprogramarlos.
+ * Días de despacho (Polish 8.3.14 y 8.3.15, Fase 7): qué pedidos toca un cambio del cupo del cadete o de días
+ * cerrados, los feriados cargados separados de los cierres propios, y la validación de las entradas del calendario.
+ * Ningún cambio mueve pedidos: los que quedan en un día cerrado o con el cadete sobrecargado se avisan para reprogramarlos.
  */
 
 export interface ScheduleImpact {
-  /** Pedidos por entregar que quedarían en un día cerrado. */
+  /** Pedidos por despachar que quedarían en un día cerrado. */
   closed: { code: string; day: string; reason: string }[];
-  /** Días que quedarían con más pedidos que la capacidad. */
+  /** Días en que el cadete quedaría con más pedidos que su cupo. */
   overloaded: { day: string; used: number; capacity: number }[];
 }
 
-/** Lo que cambia para las entregas ya comprometidas (desde hoy) al pasar de `prev` a `next`. */
+/** Lo que cambia para los despachos ya comprometidos (desde hoy) al pasar de `prev` a `next`. */
 export function scheduleImpact(orders: ScheduledOrder[], prev: WorkshopSettings, next: WorkshopSettings, today: string): ScheduleImpact {
   const before = calendarOf(prev), after = calendarOf(next);
   const closed = orders
-    .filter((o) => o.promisedDate && o.promisedDate >= today && canReschedule(o.status) && (CAPACITY_STATUSES.includes(o.status) || o.status === "READY"))
+    .filter((o) => o.promisedDate && o.promisedDate >= today && canReschedule(o.status) && CAPACITY_STATUSES.includes(o.status))
     .flatMap((o) => {
       const now = closureFor(o.promisedDate!, after);
       return now && !closureFor(o.promisedDate!, before) ? [{ code: o.code, day: o.promisedDate!, reason: now.reason }] : [];
@@ -33,7 +34,7 @@ export function scheduleImpact(orders: ScheduledOrder[], prev: WorkshopSettings,
 
 export const hasImpact = (i: ScheduleImpact) => i.closed.length + i.overloaded.length > 0;
 
-/** Un feriado cargado de fábrica, cerrado o con el taller trabajando (se quitó de los días cerrados). */
+/** Un feriado cargado de fábrica, cerrado o con despachos (se quitó de los días cerrados). */
 export interface HolidayRow extends Closure { closed: boolean; past: boolean }
 
 const HOLIDAY_DATES = new Set(AR_HOLIDAYS.map((h) => h.date));
@@ -43,7 +44,7 @@ export function holidayRows(settings: WorkshopSettings, today: string): HolidayR
   return [...AR_HOLIDAYS].sort((a, b) => a.date.localeCompare(b.date)).map((h) => ({ ...h, closed: closedDates.has(h.date), past: h.date < today }));
 }
 
-/** Cierres que agregó el taller (vacaciones, ferias, días no laborables nuevos): todo lo que no es un feriado cargado. */
+/** Cierres que agregó el local (vacaciones, inventario, días no laborables nuevos): todo lo que no es un feriado cargado. */
 export function ownClosures(settings: WorkshopSettings): Closure[] {
   return settings.closures.filter((c) => !HOLIDAY_DATES.has(c.date)).sort((a, b) => a.date.localeCompare(b.date));
 }

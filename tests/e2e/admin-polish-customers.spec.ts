@@ -56,28 +56,30 @@ test.describe("escritorio con mouse", () => {
   });
 
   test("8.3.17 Costos en modal: frase de ayuda, validación, cancelar con cambios pide confirmar y no guarda, guardar recalcula", async ({ page }) => {
-    // VOLTA no usa máquina (la hora cuesta $ 0): se prueba con los minutos de armado ($ 4.500 la hora).
+    // Fase 7: el costo es lo que se le paga al proveedor más el embalaje (sin horas de máquina ni de armado).
     await page.goto("admin-demo/costos/?q=overvolt");
     await page.getByRole("button", { name: /Overvolt pre-entreno/ }).first().click();
     const dialog = page.getByRole("dialog", { name: "Costo de Overvolt pre-entreno" });
-    await expect(dialog.getByText(/Modificá el costo del proveedor, el embalaje, los tiempos y el precio de prueba/)).toBeVisible();
-    await dialog.getByLabel("Armado (minutos)").fill("-5");
+    await expect(dialog.getByText(/Cargá lo que le pagás al proveedor y el embalaje que lleva/)).toBeVisible();
+    await expect(dialog.getByLabel("Armado (minutos)")).toHaveCount(0);
+    const supplier = dialog.getByLabel("Costo del proveedor por unidad (pesos)");
+    await supplier.fill("22.100,50");
     await dialog.getByRole("button", { name: "Guardar" }).click();
-    await expect(dialog.getByText("Minutos enteros, 0 o más.")).toBeVisible();
+    await expect(dialog.getByText(/pesos enteros/)).toBeVisible();
     await dialog.getByRole("button", { name: "Cancelar" }).click();
     await expect(dialog.getByRole("alertdialog", { name: "Cambios sin guardar" })).toBeVisible();
     await dialog.getByRole("button", { name: "Descartar cambios" }).click();
     await expect(dialog).toBeHidden();
     await page.getByRole("button", { name: /Overvolt pre-entreno/ }).first().click();
-    await expect(dialog.getByLabel("Armado (minutos)")).toHaveValue("6");
-    await dialog.getByLabel("Armado (minutos)").fill("65");
+    await expect(supplier).toHaveValue("22100");
+    await supplier.fill("24000");
     await dialog.getByRole("button", { name: "Guardar" }).click();
     await expect(dialog).toBeHidden();
-    await expect(toast(page, "Receta de costo guardada")).toBeVisible();
+    await expect(toast(page, "Costos guardados")).toBeVisible();
     await page.getByRole("button", { name: /Overvolt pre-entreno/ }).first().click();
-    await expect(dialog.getByLabel("Armado (minutos)")).toHaveValue("65");
-    // 65 min × $ 4.500 la hora = $ 4.875 de armado.
-    await expect(dialog.getByText(/\$\s?4\.875/).first()).toBeVisible();
+    await expect(supplier).toHaveValue("24000");
+    // $ 24.000 del proveedor + $ 794 de embalaje (caja, folleto, precinto y cinta).
+    await expect(dialog.getByText(/\$\s?24\.794/).first()).toBeVisible();
   });
 
   test("8.3.17 Insumos en modal: crear exige datos y crea uno solo; editar guarda una vez; Escape sin cambios cierra", async ({ page }) => {

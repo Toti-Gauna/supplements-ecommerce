@@ -1,5 +1,5 @@
 "use client";
-import { Plus } from "lucide-react";
+import { Bike, Plus } from "lucide-react";
 import { closureFor, weekOf } from "@/demo/engine/workdays";
 import { formatDay } from "@/lib/date";
 import { cn } from "@/lib/cn";
@@ -28,7 +28,7 @@ export function WeekView({ cursor, today, days, events, cal, capacity, dnd, onDa
                   {formatDay(day)}<Plus size={13} aria-hidden="true" className="text-muted" />
                 </button>
               </h3>
-              {!closed && <span className={cn("ml-auto rounded-full px-2 text-[11px] font-extrabold tabular-nums", used >= capacity ? "bg-warning-soft text-warning" : "bg-bg text-muted")}>{capacityText(used, capacity)}</span>}
+              {!closed && <span className={cn("ml-auto inline-flex items-center gap-1 rounded-full px-2 text-[11px] font-extrabold tabular-nums", used >= capacity ? "bg-warning-soft text-warning" : "bg-bg text-muted")}><Bike size={11} aria-hidden="true" /><span className="sr-only">Cadete: </span>{capacityText(used, capacity)}</span>}
             </div>
             {closed && <p className="text-xs font-bold text-muted">{closed.reason}</p>}
             {list.length + evs.length ? (
@@ -36,7 +36,7 @@ export function WeekView({ cursor, today, days, events, cal, capacity, dnd, onDa
                 {list.map((e) => <li key={e.order.code}><EntryChip entry={e} variant="card" onOpen={onOpen} dnd={dnd} /></li>)}
                 {evs.map((e) => <li key={e.id}><EventChip event={e} variant="card" onOpen={onEvent} dnd={dnd} /></li>)}
               </ul>
-            ) : !closed && <p className="text-xs text-muted">Sin entregas</p>}
+            ) : !closed && <p className="text-xs text-muted">Sin despachos</p>}
             <BlockedBadge dnd={dnd} day={day} />
           </li>
         );

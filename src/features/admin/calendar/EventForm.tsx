@@ -20,7 +20,7 @@ interface Props {
   onRemove?: () => void;
 }
 
-/** Alta y edición de una entrada del día (8.3.15): título, tipo, fecha, notas y pedido vinculado, o un cierre del taller. */
+/** Alta y edición de una entrada del día (8.3.15): título, tipo, fecha, notas y pedido vinculado, o un cierre del local. */
 export function EventForm({ initial, today, orders, allowClosure, editing, onSave, onCancel, onRemove }: Props) {
   const [d, setD] = useState(initial);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -36,7 +36,7 @@ export function EventForm({ initial, today, orders, allowClosure, editing, onSav
           <Select id="ev-kind" value={d.kind} onChange={(e) => set({ kind: e.target.value as EventDraft["kind"] })}>
             <option value="tarea">{EVENT_KIND_LABEL.tarea}</option>
             <option value="pedido">{EVENT_KIND_LABEL.pedido}</option>
-            {allowClosure && <option value="cierre">Cierre del taller</option>}
+            {allowClosure && <option value="cierre">Cierre del local</option>}
           </Select>
         </Field>
         <Field id="ev-date" label="Fecha" error={errors.date}>
@@ -44,7 +44,7 @@ export function EventForm({ initial, today, orders, allowClosure, editing, onSav
         </Field>
       </div>
       <Field id="ev-title" label={closure ? "Motivo del cierre" : "Título"} error={errors.title}>
-        <Input id="ev-title" autoComplete="off" value={d.title} onChange={(e) => set({ title: e.target.value })} placeholder={closure ? "Vacaciones, feria…" : "Retirar insumos, llamar a un cliente…"}
+        <Input id="ev-title" autoComplete="off" value={d.title} onChange={(e) => set({ title: e.target.value })} placeholder={closure ? "Vacaciones, inventario…" : "Recibir mercadería, llamar a un cliente…"}
           aria-invalid={!!errors.title} aria-describedby={describedBy("ev-title", errors.title)} />
       </Field>
       {d.kind === "pedido" && (
@@ -60,10 +60,10 @@ export function EventForm({ initial, today, orders, allowClosure, editing, onSav
           <Textarea id="ev-notes" rows={3} value={d.notes} onChange={(e) => set({ notes: e.target.value })} aria-describedby={describedBy("ev-notes", errors.notes)} />
         </Field>
       )}
-      {closure && <p className="text-xs text-muted">El taller no trabaja ese día: no se ofrece en la tienda y no se puede comprometer ahí. Si ya hay entregas, se avisa antes de cerrar.</p>}
+      {closure && <p className="text-xs text-muted">Ese día no se despacha: no se ofrece en la tienda y no se puede comprometer ahí. Si ya hay pedidos, se avisa antes de cerrar.</p>}
       <div className="flex flex-wrap items-center gap-2">
         {onRemove && <Button variant="ghost" className="text-danger" onClick={onRemove}>Quitar entrada</Button>}
-        <span className="ml-auto flex gap-2"><Button variant="ghost" onClick={onCancel}>Cancelar</Button><Button type="submit">{closure ? "Cerrar el taller ese día" : "Guardar entrada"}</Button></span>
+        <span className="ml-auto flex gap-2"><Button variant="ghost" onClick={onCancel}>Cancelar</Button><Button type="submit">{closure ? "Cerrar el local ese día" : "Guardar entrada"}</Button></span>
       </div>
     </form>
   );

@@ -5,7 +5,7 @@ import type { CategoryRow } from "./categories";
 import { parseMoney, parseYesNo, type Parsed } from "./import/cells";
 import { COLUMN_LABEL, expandEdit, parseCellInput, type Draft, type SheetColumn, type SheetSpec, type SheetValue } from "./sheet";
 import type { StockRow } from "./stock";
-import { MATERIAL_STATE_LABEL, reorderQty, type MaterialRow } from "./workshop/materials";
+import { MATERIAL_STATE_LABEL, reorderQty, usesDecimals, type MaterialRow } from "./workshop/materials";
 
 /** Vistas Excel de Productos y stock, Insumos y Categorías (8.3.18, 8.3.19, 8.3.22): qué se edita, cómo se valida y cómo se guarda. */
 
@@ -32,7 +32,7 @@ export function productSheetSpec(categories: Category[]): SheetSpec<StockRow> {
 
 const required = (input: string): Parsed<SheetValue> => (input.trim() ? { ok: true, value: input.trim() } : { ok: false, error: "No puede quedar vacío" });
 
-/** Cantidad de un insumo: 0 o más; con coma decimal solo en metros y planchas (como en la tabla). */
+/** Cantidad de un insumo: 0 o más; con coma decimal solo en metros (como en la tabla). */
 export function parseQty(input: string, decimals: boolean): Parsed<number> {
   const text = input.trim().replace(/\s/g, "");
   if (!text) return { ok: false, error: "Falta la cantidad" };
@@ -42,7 +42,6 @@ export function parseQty(input: string, decimals: boolean): Parsed<number> {
   return { ok: true, value: Number(raw) };
 }
 
-const usesDecimals = (r: MaterialRow) => r.unit === "m" || r.unit === "plancha";
 
 export const materialSheetSpec: SheetSpec<MaterialRow> = {
   rowKey: (r) => r.id,
@@ -50,8 +49,8 @@ export const materialSheetSpec: SheetSpec<MaterialRow> = {
     { id: "name", label: "Insumo", get: (r) => r.name, parse: required, width: "min-w-[11rem] sm:min-w-[14rem]" },
     { id: "unit", label: "Unidad", get: (r) => UNIT_LABEL[r.unit], width: "min-w-[7rem]" },
     { id: "costPerUnit", label: "Costo por unidad", get: (r) => r.costPerUnit, parse: (t) => parseMoney(t), numeric: true, money: true, width: "min-w-[8rem]" },
-    { id: "stock", label: "En el taller", get: (r) => r.stock, parse: (t, r) => parseQty(t, usesDecimals(r)), numeric: true, width: "min-w-[7rem]" },
-    { id: "minStock", label: "Mínimo", get: (r) => r.minStock, parse: (t, r) => parseQty(t, usesDecimals(r)), numeric: true, width: "min-w-[6rem]" },
+    { id: "stock", label: "En depósito", get: (r) => r.stock, parse: (t, r) => parseQty(t, usesDecimals(r.unit)), numeric: true, width: "min-w-[7rem]" },
+    { id: "minStock", label: "Mínimo", get: (r) => r.minStock, parse: (t, r) => parseQty(t, usesDecimals(r.unit)), numeric: true, width: "min-w-[6rem]" },
     { id: "supplier", label: "Proveedor", get: (r) => r.supplier ?? "", parse: (t) => ({ ok: true, value: t.trim() }), width: "min-w-[9rem]" },
     { id: "committed", label: "Piden los pedidos", get: (r) => r.committed, numeric: true, width: "min-w-[8rem]" },
     { id: "available", label: "Queda", get: (r) => r.available, numeric: true, width: "min-w-[6rem]" },

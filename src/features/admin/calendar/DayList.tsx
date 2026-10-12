@@ -72,7 +72,7 @@ export function AgendaView({ entries, events, today, cal, capacity, onOpen, onEv
           </section>
         );
       })}
-      {!late.length && !days.length && <p className="text-sm text-muted">No hay entregas por delante.</p>}
+      {!late.length && !days.length && <p className="text-sm text-muted">No hay despachos por delante.</p>}
     </div>
   );
 }

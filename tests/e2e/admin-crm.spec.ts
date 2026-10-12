@@ -53,12 +53,12 @@ test("pedidos: filtro de etapa, cambio en lote, ficha completa y exportar a Exce
   await page.getByRole("button", { name: "Más filtros" }).click();
   await stage.selectOption("to-make");
   await page.getByLabel("Seleccionar VOL-000122").first().check();
-  await page.getByRole("region", { name: "Acciones en lote" }).getByRole("button", { name: "Pasar a En producción" }).click();
-  await expect(status(page, /1 pedido pasó a “En producción”/)).toBeVisible();
+  await page.getByRole("region", { name: "Acciones en lote" }).getByRole("button", { name: "Pasar a En preparación" }).click();
+  await expect(status(page, /1 pedido pasó a “En preparación”/)).toBeVisible();
   await stage.selectOption("making");
   await page.getByRole("button", { name: /VOL-000122/ }).first().click();
   await expect(page.getByRole("heading", { level: 1, name: /VOL-000122/ })).toBeVisible();
-  await expect(page.getByText("En producción").first()).toBeVisible();
+  await expect(page.getByText("En preparación").first()).toBeVisible();
   // Atrás vuelve a la tabla con el filtro puesto (vive en la URL).
   await page.goBack();
   await expect(page).toHaveURL(/etapa=making/);

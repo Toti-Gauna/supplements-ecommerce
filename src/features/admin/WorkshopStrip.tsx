@@ -1,18 +1,18 @@
 "use client";
 import Link from "next/link";
-import { AlarmClock, CalendarDays, RefreshCw, Spool } from "lucide-react";
+import { AlarmClock, CalendarDays, RefreshCw, Warehouse } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { customerRows, customerViews } from "@/demo/admin/customers";
 import { isLate } from "@/demo/admin/order-groups";
-import { materialRows } from "@/demo/admin/workshop/materials";
 import { segmentCount } from "@/demo/admin/segments";
+import { levelRows } from "@/demo/admin/workshop/purchasing";
 import { pendingDeliveries } from "@/demo/engine/delivery";
 import { addDays } from "@/demo/engine/workdays";
 import { DEMO_TODAY } from "@/demo/fixtures/admin-orders";
 import { cn } from "@/lib/cn";
 import { useAdmin } from "@/stores/admin";
 
-/** Resumen del taller en el inicio: entregas de la semana, atrasos, insumos y clientes para contactar. */
+/** Resumen de Operaciones en el inicio (Fase 7): despachos de la semana, atrasos, compras sugeridas y clientes para contactar. */
 export function WorkshopStrip() {
   const orders = useAdmin((s) => s.orders);
   const users = useAdmin((s) => s.users);
@@ -20,17 +20,17 @@ export function WorkshopStrip() {
   const w = useAdmin((s) => s.workshop);
   const nextDays = pendingDeliveries(orders, DEMO_TODAY, addDays(DEMO_TODAY, 6));
   const late = orders.filter((o) => isLate(o, DEMO_TODAY)).length;
-  const reorder = materialRows(w.materials, orders, w.recipes).filter((m) => m.state !== "ok").length;
+  const toBuy = levelRows(products, w.suppliers, w.stockLevels, w.purchases).filter((r) => r.state === "below").length;
   const reminders = segmentCount(customerViews(customerRows(users, orders), w.profiles, products, DEMO_TODAY), "semana");
   const tiles: { href: string; icon: LucideIcon; label: string; value: number; hint: string; tone?: string }[] = [
-    { href: "/admin-demo/calendario/", icon: CalendarDays, label: "Entregas próximos 7 días", value: nextDays, hint: "Ver el calendario" },
-    { href: "/admin-demo/produccion/", icon: AlarmClock, label: "Pedidos atrasados", value: late, hint: "Abrir la cola de producción", tone: late ? "text-danger" : undefined },
-    { href: "/admin-demo/insumos/", icon: Spool, label: "Insumos para reponer", value: reorder, hint: "Ver insumos", tone: reorder ? "text-warning" : undefined },
+    { href: "/admin-demo/calendario/", icon: CalendarDays, label: "Despachos próximos 7 días", value: nextDays, hint: "Ver el calendario" },
+    { href: "/admin-demo/preparacion/", icon: AlarmClock, label: "Pedidos atrasados", value: late, hint: "Abrir la preparación de pedidos", tone: late ? "text-danger" : undefined },
+    { href: "/admin-demo/proveedores/", icon: Warehouse, label: "Variantes para comprar", value: toBuy, hint: "Ver la compra sugerida", tone: toBuy ? "text-warning" : undefined },
     { href: "/admin-demo/usuarios/?segmento=semana", icon: RefreshCw, label: "Se les termina esta semana", value: reminders, hint: "Avisarles de la recompra" },
   ];
   return (
-    <section aria-labelledby="taller">
-      <h2 id="taller" className="font-display mb-3 text-2xl">El taller</h2>
+    <section aria-labelledby="operaciones">
+      <h2 id="operaciones" className="font-display mb-3 text-2xl">Operaciones</h2>
       <ul className="grid grid-cols-2 gap-3 xl:grid-cols-4">
         {tiles.map(({ href, icon: Icon, label, value, hint, tone }) => (
           <li key={href}>

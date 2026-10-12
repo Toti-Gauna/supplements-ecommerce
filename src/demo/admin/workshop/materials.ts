@@ -1,8 +1,11 @@
 import type { OrderStatus } from "../../engine/orders";
 import type { CartLine } from "../../engine/cart-types";
-import type { Material, Recipe } from "../../fixtures/workshop";
+import type { Material, MaterialUnit, Recipe } from "../../fixtures/workshop";
 
-/** Insumos con stock propio: lo comprometido por los pedidos en cola y lo que queda para reponer. */
+/** Insumos de embalaje y regalo con stock propio: lo comprometido por los pedidos por preparar y lo que queda para reponer. */
+
+/** La cinta se mide en metros (con coma decimal); el resto, por unidad. */
+export const usesDecimals = (unit: MaterialUnit) => unit === "m";
 
 interface OrderLike {
   code: string;
@@ -10,10 +13,10 @@ interface OrderLike {
   lines: CartLine[];
 }
 
-/** Pedidos que todavía no empezaron a fabricarse: sus insumos están comprometidos pero no descontados. */
+/** Pedidos que todavía no se empezaron a preparar: su embalaje está comprometido pero no descontado. */
 export const COMMITTED_STATUSES: OrderStatus[] = ["PAID"];
 
-/** Insumos que consume un pedido según las recetas (por unidad × cantidad). */
+/** Insumos que lleva un pedido según el embalaje de cada producto (por unidad × cantidad). */
 export function orderNeeds(lines: CartLine[], recipes: Record<string, Recipe>): Map<string, number> {
   const needs = new Map<string, number>();
   for (const line of lines) {
@@ -31,7 +34,7 @@ export function committedNeeds(orders: OrderLike[], recipes: Record<string, Reci
   return total;
 }
 
-/** Descuenta del stock lo que usa un pedido al entrar a producción (puede quedar negativo: falta comprar). */
+/** Descuenta del stock lo que usa un pedido al empezar a prepararlo (puede quedar negativo: falta comprar). */
 export function consumeMaterials(materials: Material[], needs: Map<string, number>): Material[] {
   return materials.map((m) => (needs.has(m.id) ? { ...m, stock: round(m.stock - needs.get(m.id)!) } : m));
 }
@@ -44,7 +47,7 @@ export const MATERIAL_STATE_LABEL: Record<MaterialState, string> = { ok: "Alcanz
 
 export interface MaterialRow extends Material {
   committed: number;
-  /** Stock que queda después de fabricar los pedidos en cola. */
+  /** Stock que queda después de preparar los pedidos pagados. */
   available: number;
   state: MaterialState;
   value: number;

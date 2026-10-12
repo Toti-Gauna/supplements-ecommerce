@@ -123,9 +123,12 @@ describe("disparadores y bandeja de salida", () => {
     const h = harness();
     expect(h.get().emails.outbox.length).toBeGreaterThan(5);
     expect(h.get().emails.outbox.every((m, i, all) => i === 0 || Date.parse(all[i - 1]!.at) >= Date.parse(m.at))).toBe(true);
-    expect(h.orders.transition("VOL-000113", "IN_PRODUCTION")).toBe(true);
+    expect(h.orders.movePreparation("VOL-000113", "picking")).toBeNull();
     expect(h.get().emails.outbox[0]).toMatchObject({ trigger: "preparing", orderCode: "VOL-000113", to: "ana.l@ejemplo.com" });
-    expect(h.orders.transition("VOL-000113", "READY")).toBe(true);
+    // Sin el lote de cada línea confirmado no pasa a Listo (control de lote, Fase 7).
+    expect(h.orders.transition("VOL-000113", "READY")).toBe(false);
+    const lines = h.get().orders.find((o) => o.code === "VOL-000113")!.lines;
+    expect(h.orders.confirmLots("VOL-000113", Object.fromEntries(lines.map((l) => [l.id, "VL-2609-B · vence 03/2027"])))).toBeNull();
     expect(h.get().emails.outbox[0]).toMatchObject({ templateId: "tpl-ready-pickup", email: { subject: "¡Tu pedido VOL-000113 está listo para retirar!" } });
     h.emails.setEmailTemplateActive("tpl-delivered", false);
     expect(h.orders.transition("VOL-000113", "DELIVERED")).toBe(true);

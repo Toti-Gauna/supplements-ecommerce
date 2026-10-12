@@ -5,11 +5,13 @@ import { orderSeeds } from "../fixtures/admin-orders";
 import { adminClaims, adminUsers } from "../fixtures/admin-people";
 import { emailTemplates, type EmailTemplate } from "../fixtures/emails";
 import { customerProfiles, type CustomerProfile } from "../fixtures/customers";
+import { stockLevels, suppliers, type StockLevel, type Supplier } from "../fixtures/suppliers";
 import { calendarEvents, materials, recipes, workshopSettings, type CalendarEvent, type Material, type Recipe, type WorkshopSettings } from "../fixtures/workshop";
 import type { PriceUndo } from "./bulk-price";
 import type { ImportSnapshot } from "./catalog-slice";
 import type { AdminClaim, AdminOrder, AdminUser, AuditEntry, StatusLogEntry } from "./types";
 import { emailsForOrder, OUTBOX_LIMIT, triggersForNewOrder, triggersForTransition, type OutboxEmail } from "./emails/triggers";
+import type { PurchaseOrder } from "./workshop/purchasing";
 
 export interface AdminData {
   data: DemoData;
@@ -21,7 +23,7 @@ export interface AdminData {
   lastImport: ImportSnapshot | null;
   /** Último aumento masivo de precios, para deshacerlo. */
   lastPriceChange: PriceUndo | null;
-  /** Taller: calendario y capacidad, insumos, recetas de costo y fichas de clientes (solo del panel). */
+  /** Operaciones: calendario y cupo del cadete, insumos, costos, proveedores y compras, y fichas de clientes (solo del panel). */
   workshop: WorkshopData;
   /** Emails automáticos: plantillas y bandeja de salida simulada (nada se envía). */
   emails: EmailsData;
@@ -49,6 +51,12 @@ export interface WorkshopData {
   profiles: Record<string, CustomerProfile>;
   /** Tareas y notas del calendario (8.3.15). */
   events: CalendarEvent[];
+  /** Proveedores (Fase 7). */
+  suppliers: Supplier[];
+  /** Stock mínimo y objetivo propios por variante (`producto::variante`); el resto usa el general. */
+  stockLevels: Record<string, StockLevel>;
+  /** Pedidos hechos a proveedores. */
+  purchases: PurchaseOrder[];
 }
 
 const HAPPY_PATH: OrderStatus[] = ["PENDING_PAYMENT", "PAYMENT_REVIEW", "PAID", "IN_PRODUCTION", "READY", "SHIPPED", "DELIVERED"];
@@ -82,7 +90,7 @@ export function defaultAdminData(): AdminData {
     audit: [{ id: "a0", at: "2026-10-04T08:00:00-03:00", actor: "Sistema (demo)", action: "Datos de muestra cargados", entity: "Panel" }],
     lastImport: null,
     lastPriceChange: null,
-    workshop: structuredClone({ settings: workshopSettings, materials, recipes, profiles: customerProfiles, events: calendarEvents }),
+    workshop: structuredClone({ settings: workshopSettings, materials, recipes, profiles: customerProfiles, events: calendarEvents, suppliers, stockLevels, purchases: [] }),
     emails: { templates, outbox: seedOutbox(orders, templates) },
   };
 }

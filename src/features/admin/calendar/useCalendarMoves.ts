@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { checkDrop, checkReschedule } from "@/demo/engine/delivery";
+import { checkDrop, checkReschedule } from "@/demo/engine/reschedule";
 import { formatDay } from "@/lib/date";
 import { useAdmin } from "@/stores/admin";
 import { useToasts } from "@/stores/toast";

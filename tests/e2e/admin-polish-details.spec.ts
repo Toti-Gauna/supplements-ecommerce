@@ -21,15 +21,15 @@ test.describe("escritorio con mouse", () => {
     await expect(page.getByRole("navigation", { name: "Migas de pan" })).toContainText("Pedidos");
     await expect(page.getByText("Pago:", { exact: true })).toBeVisible();
     await expect(page.getByText(/Pago:\s*Pagado con Mercado Pago/)).toBeVisible();
-    await expect(page.getByText("Producción y entrega:", { exact: true })).toBeVisible();
-    await expect(page.getByRole("region", { name: "Próxima acción" })).toContainText("Pasarlo a producción");
-    await page.getByRole("button", { name: "En producción", exact: true }).click();
+    await expect(page.getByText("Preparación y entrega:", { exact: true })).toBeVisible();
+    await expect(page.getByRole("region", { name: "Próxima acción" })).toContainText("Empezar a prepararlo");
+    await page.getByRole("button", { name: "En preparación", exact: true }).click();
     await confirm(page, "Confirmar cambio");
-    await expect(page.getByText(/Producción y entrega:\s*En producción/)).toBeVisible();
+    await expect(page.getByText(/Preparación y entrega:\s*En preparación · armando/)).toBeVisible();
     // Recargar mantiene la entidad.
     await page.reload();
     await expect(page.getByRole("heading", { level: 1, name: /VOL-000122/ })).toBeVisible();
-    // Volver lleva a la lista con su filtro; el pedido ya no está en "Para producir".
+    // Volver lleva a la lista con su filtro; el pedido ya no está en "Por preparar".
     await page.getByRole("link", { name: "Volver" }).click();
     await expect(page).toHaveURL(/pedidos\/\?etapa=to-make/);
     await expect(page.getByRole("row").filter({ hasText: "VOL-000122" })).toHaveCount(0);

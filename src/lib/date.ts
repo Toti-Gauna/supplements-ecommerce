@@ -32,7 +32,7 @@ const dayFormats = {
   dayMonth: new Intl.DateTimeFormat("es-AR", { day: "numeric", month: "short", timeZone: "UTC" }),
 };
 
-/** Un día AAAA-MM-DD del calendario del taller: "jue, 8 oct" (short), "jueves, 8 de octubre" (long), "octubre de 2026" (month). */
+/** Un día AAAA-MM-DD del calendario de despachos: "jue, 8 oct" (short), "jueves, 8 de octubre" (long), "octubre de 2026" (month). */
 export function formatDay(day: string, style: keyof typeof dayFormats = "short"): string {
   return dayFormats[style].format(new Date(`${day}T12:00:00Z`));
 }

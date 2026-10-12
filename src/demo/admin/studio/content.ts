@@ -55,7 +55,7 @@ export function toStudioProduct(product: Product, offer: ThemeOffer | null): Stu
   const variant = [...product.variants].sort((a, b) => a.priceDelta - b.priceDelta)[0];
   const servings = variant?.servings && variant.servings > 1 ? variant.servings : undefined;
   const perServing = pricePerServing(price, servings) ?? undefined;
-  const lot = lotLabel(product);
+  const lot = lotLabel(product, variant);
   return {
     slug: product.slug, name: product.name, short: product.short, brand: product.brand, categorySlug: product.categorySlug, art: product.art, pack: product.pack,
     tint: product.variants[0]?.colorHex, photoDataUrl: product.photoDataUrl, price, offerPrice: offerPrice(price, offer),

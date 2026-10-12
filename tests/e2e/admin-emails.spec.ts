@@ -37,9 +37,14 @@ test("compra en la tienda: el email de compra aparece en la bandeja y es el úni
   assertNoExternal();
 });
 
-test("mover un pedido a “Listo” manda solo su email (con el lote controlado); una plantilla pausada no sale", async ({ page }) => {
-  await moveOrder(page, "VOL-000121", /^Listo/);
-  await expect(toast(page, /Pedido en “Listo/)).toBeVisible();
+test("al confirmar el control de lote, “Listo” manda solo su email (con el lote); una plantilla pausada no sale", async ({ page }) => {
+  // Desde la ficha, "Listo" abre el control de lote (Fase 7): sin los lotes confirmados el pedido no queda listo.
+  await page.goto("admin-demo/pedidos/detalle/?codigo=VOL-000121");
+  await page.getByRole("button", { name: /^Listo/ }).first().click();
+  const lots = page.getByRole("dialog", { name: "Control de lote de VOL-000121" });
+  for (const box of await lots.getByRole("checkbox").all()) await box.check();
+  await lots.getByRole("button", { name: "Listo para despachar" }).click();
+  await expect(toast(page, "VOL-000121 está listo para despachar")).toBeVisible();
   await page.goto("admin-demo/emails/enviados/");
   const inbox = page.getByRole("region", { name: "Bandeja de salida" });
   await inbox.getByRole("button", { name: /Tu pedido VOL-000121 está listo para salir/ }).click();

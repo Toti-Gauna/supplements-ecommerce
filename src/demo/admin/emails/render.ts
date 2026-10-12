@@ -63,7 +63,7 @@ function renderLine(l: Pick<CartLine, "productSlug" | "variantId" | "quantity">,
   const p = getProduct(l.productSlug);
   const v = p?.variants.find((x) => x.id === l.variantId);
   const detail = v?.servings && v.servings > 1 ? `${v.servings} servicios` : undefined;
-  const lot = withLot ? lotLabel(p) : undefined;
+  const lot = withLot ? lotLabel(p, v) : undefined;
   return { name: p?.name ?? l.productSlug, variant: v?.label ?? "", quantity: l.quantity, art: p?.art ?? "tub", pack: p?.pack, tint: v?.colorHex, ...(detail ? { detail } : {}), ...(lot ? { lot } : {}) };
 }
 

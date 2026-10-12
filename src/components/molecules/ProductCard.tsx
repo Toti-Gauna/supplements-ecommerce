@@ -83,7 +83,8 @@ export function ProductCard({ product, priority }: { product: ProductCardData; p
         <p className={cn("line-clamp-1 text-[13px]", product.stockNote.startsWith("¡Últimas") ? "font-bold text-danger" : "text-muted")}>{product.stockNote}</p>
       </div>
       {product.colors.length > 1 && (
-        <p className="flex gap-1.5 px-1" aria-label={`${product.colors.length} sabores o colores`}>
+        <p className="flex gap-1.5 px-1">
+          <span className="sr-only">{product.colors.length} sabores o colores</span>
           {product.colors.slice(0, 5).map((c) => <span key={c} aria-hidden="true" className="h-3.5 w-3.5 rounded-full border border-black/10" style={{ background: c }} />)}
         </p>
       )}

@@ -66,7 +66,7 @@ export function GiftOpener({ occasion, accent, onOpened, autoFocus }: Props) {
     if (opened) return;
     const next = hits + 1;
     setHits(next);
-    playSound("hit");
+    playSound("hit", next);
     try { navigator.vibrate?.(next >= GIFT_HITS ? [24, 40, 70] : 14); } catch { /* sin vibración */ }
     if (reduce) return;
     box.current?.animate(punch(next % 2 ? 1 : -1), { duration: 380, easing: "cubic-bezier(.2,.9,.3,1)" });
@@ -78,7 +78,7 @@ export function GiftOpener({ occasion, accent, onOpened, autoFocus }: Props) {
     setImpacts((list) => [...list.slice(-3), { id, x, y }]);
     window.setTimeout(() => setImpacts((list) => list.filter((i) => i.id !== id)), 650);
   };
-  const openNow = () => { setHits(GIFT_HITS); playSound("hit"); };
+  const openNow = () => { setHits(GIFT_HITS); playSound("hit", GIFT_HITS); };
 
   const left = GIFT_HITS - hits;
   return (

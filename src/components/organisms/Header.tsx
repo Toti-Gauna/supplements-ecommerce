@@ -13,6 +13,7 @@ import { ThemeLogo } from "@/features/themes/ThemeLogo";
 import { MobileMenu } from "./MobileMenu";
 import { ShopMenu } from "./ShopMenu";
 import { brand } from "@/config/brand";
+import { useBagJiggle } from "./useBagJiggle";
 
 export const NAV = [
   { href: "/categorias/", label: "Tienda" },
@@ -28,29 +29,27 @@ export function Header() {
   const current = NAV.filter((n) => pathname.startsWith(n.href)).sort((a, b) => b.href.length - a.href.length)[0]?.href;
   const hydrated = useHydrated();
   const units = useCart((s) => s.lines.reduce((sum, l) => sum + l.quantity, 0));
-  const { openCart, setMenu, setSearch } = useUi();
+  const { openCart, setMenu, setSearch, cartOpen } = useUi();
   const [compact, setCompact] = useState(false);
   const [stuck, setStuck] = useState(false);
   const ref = useRef<HTMLElement>(null);
   useEffect(() => {
-    const onScroll = () => {
+    let frame = 0;
+    const measure = () => {
+      frame = 0;
       setCompact(window.scrollY > 24);
       // Pegado arriba: recién ahí su fondo se extiende hacia la franja de la hora (antes taparía el aviso de la demo).
       const el = ref.current;
       if (el) setStuck(el.getBoundingClientRect().top <= parseFloat(getComputedStyle(el).top) + 0.5);
     };
-    onScroll();
+    // Una medición por cuadro (no por evento): leer el layout en cada evento de scroll traba celulares de gama media.
+    const onScroll = () => { if (!frame) frame = requestAnimationFrame(measure); };
+    measure();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => { cancelAnimationFrame(frame); window.removeEventListener("scroll", onScroll); };
   }, []);
   const count = hydrated ? units : 0;
-  // La bolsa se sacude solo cuando entra algo con la página ya cargada (no al recuperar el carrito guardado).
-  const [prev, setPrev] = useState({ count, hydrated });
-  const [jiggle, setJiggle] = useState(0);
-  if (prev.count !== count || prev.hydrated !== hydrated) {
-    if (prev.hydrated && hydrated && count > prev.count) setJiggle((j) => j + 1);
-    setPrev({ count, hydrated });
-  }
+  const jiggle = useBagJiggle(count, hydrated, cartOpen);
   const icon = "grid h-11 w-11 place-items-center rounded-full text-ink transition-colors hover:bg-ink/5";
   return (
     <header ref={ref} data-shop-header className={cn(stuck && "max-lg:bleed-top", "sticky top-[env(safe-area-inset-top)] z-40 bg-surface lg:glass border-b transition-[border-color,box-shadow] duration-300", compact ? "border-line shadow-[0_8px_30px_-20px_rgb(0_0_0/0.35)]" : "border-transparent")}>
@@ -74,7 +73,7 @@ export function Header() {
           <Link href="/cuenta/" aria-label="Mi cuenta (demo)" className={cn(icon, "max-sm:hidden")}><UserRound size={21} aria-hidden="true" /></Link>
           <button type="button" onClick={() => openCart()} aria-label={`Carrito, ${count} ${count === 1 ? "producto" : "productos"}`} className={cn(icon, "relative")}>
             <ShoppingBag key={`bag-${jiggle}`} size={21} aria-hidden="true" className={jiggle ? "animate-bag" : undefined} />
-            {count > 0 && <span key={`badge-${count}`} className="animate-pop absolute right-0.5 top-0.5 grid h-5 min-w-5 place-items-center rounded-full bg-primary px-1 text-[11px] font-extrabold text-on-primary">{count}</span>}
+            {count > 0 && <span key={`badge-${jiggle}`} className="animate-pop absolute right-0.5 top-0.5 grid h-5 min-w-5 place-items-center rounded-full bg-primary px-1 text-[11px] font-extrabold text-on-primary">{count}</span>}
           </button>
         </div>
       </div>

@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { scrollBehavior } from "./scroll";
 
 /** Margen para dar por llegado un borde (Safari informa el scroll con decimales). */
@@ -22,7 +22,7 @@ export function useRail<T extends HTMLElement>(itemsKey: string) {
   const ref = useRef<T>(null);
   // Hasta medir, se asume que no hay nada para recorrer (así es el HTML del servidor).
   const [edges, setEdges] = useState({ atStart: true, atEnd: true });
-  useLayoutEffect(() => {
+  useEffect(() => {
     const el = ref.current;
     if (!el) return;
     const update = () => {
@@ -30,7 +30,8 @@ export function useRail<T extends HTMLElement>(itemsKey: string) {
       const atStart = el.scrollLeft <= EDGE, atEnd = el.scrollLeft >= max - EDGE;
       setEdges((e) => (e.atStart === atStart && e.atEnd === atEnd ? e : { atStart, atEnd }));
     };
-    update();
+    // Sin medir en el efecto: con varios rieles, cada lectura forzaba un layout completo en medio de la hidratación
+    // (medio segundo en un celular de gama media). El ResizeObserver avisa apenas termina el primer layout.
     el.addEventListener("scroll", update, { passive: true });
     const ro = new ResizeObserver(update);
     ro.observe(el);

@@ -16,7 +16,7 @@ export function ContentHub() {
         intro="Lo que se lee en el inicio y en la ayuda de la tienda. Cada parte se edita por separado y, al guardar, se ve en la tienda de este navegador sin deploy." />
       <HubGrid label="Partes del contenido">
         <HubCard href="/admin-demo/contenido/carrusel/" icon={GalleryHorizontal} title="Carrusel" description="Las diapositivas grandes del inicio: imagen, título, bajada y botón." meta={`${slides.length} ${slides.length === 1 ? "diapositiva" : "diapositivas"} · ${visible} ${visible === 1 ? "visible" : "visibles"}`} action="Editar el carrusel" />
-        <HubCard href="/admin-demo/contenido/textos/" icon={Type} title="Textos de inicio" description="El bloque para crear un producto propio: título y texto." meta={`“${homeCta.title}”`} action="Editar los textos" />
+        <HubCard href="/admin-demo/contenido/textos/" icon={Type} title="Textos de inicio" description="El bloque “Armá tu stack” del inicio: título y texto." meta={`“${homeCta.title}”`} action="Editar los textos" />
         <HubCard href="/admin-demo/contenido/preguntas/" icon={MessageCircleQuestion} title="Preguntas frecuentes" description="Las preguntas y respuestas de la página de ayuda." meta={`${faqs.length} ${faqs.length === 1 ? "pregunta" : "preguntas"}`} action="Editar las preguntas" />
       </HubGrid>
     </>

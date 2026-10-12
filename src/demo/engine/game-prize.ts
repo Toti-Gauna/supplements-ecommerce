@@ -30,6 +30,11 @@ export type GamePrizeOutcome =
 
 export const dayKey = (now: Date) => toDayKey(now.toISOString());
 
+/** Niveles de menor a mayor puntaje (la escalera del juego, la tabla de premios y el panel). */
+export function sortedTiers(tiers: GamePrizeTier[]): GamePrizeTier[] {
+  return [...tiers].sort((a, b) => a.minScore - b.minScore);
+}
+
 /** El nivel más alto alcanzado con ese puntaje (o ninguno). */
 export function tierForScore(score: number, tiers: GamePrizeTier[]): GamePrizeTier | null {
   return [...tiers].sort((a, b) => b.minScore - a.minScore).find((t) => score >= t.minScore) ?? null;
@@ -37,7 +42,7 @@ export function tierForScore(score: number, tiers: GamePrizeTier[]): GamePrizeTi
 
 /** El próximo nivel y cuántos puntos faltan (null si ya se llegó al último). */
 export function nextTier(score: number, tiers: GamePrizeTier[]): { tier: GamePrizeTier; missing: number } | null {
-  const tier = [...tiers].sort((a, b) => a.minScore - b.minScore).find((t) => score < t.minScore);
+  const tier = sortedTiers(tiers).find((t) => score < t.minScore);
   return tier ? { tier, missing: tier.minScore - score } : null;
 }
 
@@ -53,8 +58,8 @@ export function maxPlausibleScore(rules: GameRules, durationSec = rules.duration
   return spawns * best * rules.maxComboMult * 2;
 }
 
-/** Cupón de un uso que funciona en el carrito de la demo. `seed` da el sufijo del código. */
-export function gamePrizeCoupon(tier: GamePrizeTier, seed: string, now: Date, validDays: number): Coupon {
+/** Cupón de un uso que funciona en el carrito de la demo. `seed` da el sufijo del código; vence según el nivel. */
+export function gamePrizeCoupon(tier: GamePrizeTier, seed: string, now: Date, validDays = tier.validDays): Coupon {
   const endsAt = dayKey(new Date(now.getTime() + validDays * 86_400_000));
   const suffix = seed.toUpperCase().replace(/[^A-Z0-9]/g, "").padEnd(5, "X").slice(0, 5);
   const min = tier.minSubtotal ? ` desde $${tier.minSubtotal.toLocaleString("es-AR")}` : "";
@@ -79,6 +84,6 @@ export function resolveGamePrize(input: { score: number; durationSec: number; no
   const claimed = claimedOn(prizes, day);
   if (claimed) return { kind: "already", tier, claimed };
   if (!tier) return { kind: "below", next: nextTier(score, config.tiers) };
-  const coupon = gamePrizeCoupon(tier, input.seed, now, config.validDays);
+  const coupon = gamePrizeCoupon(tier, input.seed, now);
   return { kind: "won", tier, coupon, record: { code: coupon.code, tierId: tier.id, label: tier.label, score, day, at: now.toISOString() } };
 }

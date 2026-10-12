@@ -1,4 +1,4 @@
-import { STUDIO_BRAND } from "../../fixtures/studio";
+import { STUDIO_BRAND, STUDIO_TEMPLATES, type StudioTemplate } from "../../fixtures/studio";
 
 /** Formato del video según lo que grabe el navegador: MP4 (Safari, Chrome nuevo) y si no WebM. */
 const CANDIDATES: { mimeType: string; ext: "mp4" | "webm" }[] = [
@@ -14,8 +14,12 @@ export function pickVideoFormat(isSupported: (mime: string) => boolean): { mimeT
   return CANDIDATES.find((c) => isSupported(c.mimeType)) ?? null;
 }
 
-/** Nombre del archivo: volta-dia-de-la-madre-historia.mp4 (con el nombre de la marca). */
-export function exportName(themeId: string | null, format: string, ext: string, slide?: number): string {
+/**
+ * Nombre del archivo con el nombre de la marca: la oferta lleva la fecha (volta-dia-de-la-madre-historia.mp4) y las
+ * otras plantillas su nombre (volta-stack-post.png, volta-juego-carrusel-2.png).
+ */
+export function exportName(themeId: string | null, format: string, ext: string, slide?: number, template: StudioTemplate = "offer"): string {
   const prefix = STUDIO_BRAND.name.normalize("NFD").replace(/[^\w]/g, "").toLowerCase() || "pieza";
-  return [prefix, themeId ?? "original", format, slide !== undefined ? `${slide + 1}` : null].filter(Boolean).join("-") + `.${ext}`;
+  const what = template === "offer" ? (themeId ?? "original") : STUDIO_TEMPLATES.find((t) => t.id === template)!.slug;
+  return [prefix, what, format, slide !== undefined ? `${slide + 1}` : null].filter(Boolean).join("-") + `.${ext}`;
 }

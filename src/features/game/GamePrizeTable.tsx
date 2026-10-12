@@ -1,15 +1,17 @@
 "use client";
 import { CalendarClock, Check, ShieldCheck } from "lucide-react";
-import { gamePrizes } from "@/demo/fixtures/game";
 import { cn } from "@/lib/cn";
 import { GamePrizeTicket } from "./GamePrizeTicket";
 import { useGameStats } from "./useGameStats";
+import { usePrizeTiers } from "./usePrizeTiers";
 
-const tiers = [...gamePrizes.tiers].sort((a, b) => a.minScore - b.minScore);
+/** "vence a los 7 días" si todos los niveles vencen igual; si no, cada nivel lo dice. */
+const expiry = (days: number[]) => (new Set(days).size === 1 ? `vence a los ${days[0]} días` : "vence según el nivel");
 
-/** Tabla de premios por puntaje (de los fixtures), las reglas del cupón diario y el cupón de hoy si ya se ganó. */
+/** Tabla de premios por puntaje (los guardados en el panel), las reglas del cupón diario y el cupón de hoy si ya se ganó. */
 export function GamePrizeTable() {
   const { hydrated, best, today } = useGameStats();
+  const { config, tiers } = usePrizeTiers();
   return (
     <section aria-labelledby="premios-juego" className="flex flex-col gap-6">
       <div>
@@ -28,6 +30,7 @@ export function GamePrizeTable() {
               <span className="min-w-0 flex-1">
                 <span className="font-lab block text-xs text-night-muted">Nivel {i + 1} · desde {t.minScore.toLocaleString("es-AR")} pts</span>
                 <span className="font-display block text-2xl">{t.label}</span>
+                <span className="font-lab block text-xs text-night-muted">Vence a los {t.validDays} días</span>
                 {reached && <span className="mt-1 inline-flex items-center gap-1 text-xs font-bold text-volt"><Check size={14} aria-hidden="true" />Tu récord ya llega</span>}
               </span>
             </li>
@@ -37,7 +40,7 @@ export function GamePrizeTable() {
       <ul className="grid gap-3 text-sm sm:grid-cols-2">
         <li className="flex items-start gap-3 rounded-2xl border border-line bg-surface p-4">
           <CalendarClock size={18} aria-hidden="true" className="mt-0.5 shrink-0 text-primary" />
-          <span>Jugá todas las veces que quieras: <strong>el cupón se gana una vez por día</strong>, con la primera partida que llegue a un nivel. Es de un uso y vence a los {gamePrizes.validDays} días.</span>
+          <span>Jugá todas las veces que quieras: <strong>el cupón se gana una vez por día</strong>, con la primera partida que llegue a un nivel. Es de un uso y {expiry(tiers.map((t) => t.validDays))}.{!config.active && " Ahora los premios están pausados."}</span>
         </li>
         <li className="flex items-start gap-3 rounded-2xl border border-line bg-surface p-4">
           <ShieldCheck size={18} aria-hidden="true" className="mt-0.5 shrink-0 text-primary" />

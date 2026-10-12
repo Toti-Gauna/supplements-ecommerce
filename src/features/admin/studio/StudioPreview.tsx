@@ -14,12 +14,12 @@ export function drawFrame(ctx: CanvasRenderingContext2D, scene: StudioScene, t: 
   else drawSlide(ctx, scene, slide, t);
 }
 
-/** Espera a que estén las fuentes de la marca (el canvas no las usa hasta que cargan). */
+/** Espera a que estén las fuentes de la marca, Archivo y JetBrains Mono (el canvas no las usa hasta que cargan). */
 export function useFontsReady(): boolean {
   const [ready, setReady] = useState(false);
   useEffect(() => {
     let alive = true;
-    Promise.all([document.fonts.load('600 80px "Fraunces Variable"'), document.fonts.load('800 40px "Manrope Variable"'), document.fonts.load('500 40px "Manrope Variable"')])
+    Promise.all([document.fonts.load('600 80px "Archivo Variable"'), document.fonts.load('800 40px "Archivo Variable"'), document.fonts.load('700 30px "JetBrains Mono Variable"')])
       .catch(() => [])
       .then(() => { if (alive) setReady(true); });
     return () => { alive = false; };

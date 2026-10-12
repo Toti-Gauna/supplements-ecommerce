@@ -1,72 +1,19 @@
 import type { CartLine } from "../../engine/cart-types";
-import { getProduct } from "../../engine/catalog";
-import { STATUS_LABEL, type OrderStatus } from "../../engine/orders";
-import type { ButtonLink, EmailBlock, EmailTemplate, EmailToken, Inline } from "../../fixtures/emails";
+import { getProduct, productHref } from "../../engine/catalog";
+import type { OrderStatus } from "../../engine/orders";
+import type { ButtonLink, EmailBlock, EmailTemplate } from "../../fixtures/emails";
 import { DEMO_TRACKING_TOKEN } from "../../fixtures/commerce";
-import type { ArtKey, FulfillmentType } from "../../types";
-import { formatDay } from "@/lib/date";
+import type { ArtKey, FulfillmentType, PackStyle } from "../../types";
+import { lotLabel } from "../lot-label";
 import { formatARS } from "@/lib/money";
 import { whatsappLink } from "@/lib/whatsapp";
-import type { AdminOrder } from "../types";
+import { customerStatus, FULFILLMENT_LABEL, resolveInline, tokenValue, type EmailContext } from "./context";
 
-/** Datos con los que se arma un email: el cliente y, según el disparador, un pedido o una mascota. */
-export interface EmailContext {
-  customerName: string;
-  email: string;
-  order?: {
-    code: string;
-    total: number;
-    deliveryDate?: string;
-    fulfillment: FulfillmentType;
-    status: OrderStatus;
-    lines: CartLine[];
-  };
-  pet?: { name: string };
-}
+export * from "./context";
+export { lotLabel };
 
-const FULFILLMENT: Record<FulfillmentType, string> = { PICKUP: "Retiro en Mar del Plata", LOCAL_DELIVERY: "Cadete en Mar del Plata", SHIPPING: "Envío por correo" };
-
-export function contextForOrder(order: AdminOrder): EmailContext {
-  return {
-    customerName: order.customer.name, email: order.customer.email,
-    order: { code: order.code, total: order.total, deliveryDate: order.promisedDate, fulfillment: order.fulfillment, status: order.status, lines: order.lines },
-  };
-}
-
-/** Pedido de muestra para la vista previa: el primero en producción (tiene fecha, productos y personalización). */
-export function sampleOrder(orders: AdminOrder[]): AdminOrder | undefined {
-  return orders.find((o) => o.status === "IN_PRODUCTION") ?? orders.find((o) => o.status !== "CANCELLED") ?? orders[0];
-}
-
-/** Cliente con mascota de las fichas, para la vista previa y la prueba del email de cumpleaños (sin pedido). */
-export function petSampleContext(profiles: Record<string, { pets: { name: string }[] }>, orders: AdminOrder[], users: { email: string; name: string }[]): EmailContext {
-  const [email, profile] = Object.entries(profiles).find(([, p]) => p.pets.length > 0) ?? ["", { pets: [] }];
-  const name = users.find((u) => u.email.toLowerCase() === email)?.name ?? orders.find((o) => o.customer.email.toLowerCase() === email)?.customer.name ?? "Cliente";
-  return { customerName: name, email, pet: profile.pets[0] ? { name: profile.pets[0].name } : undefined };
-}
-
-const firstName = (name: string) => name.trim().split(/\s+/)[0] ?? name;
-
-/** Valor de una ficha. Si falta el dato se usa un texto natural (nunca queda la ficha vacía ni un código). */
-export function tokenValue(token: EmailToken, ctx: EmailContext): string {
-  const o = ctx.order;
-  switch (token) {
-    case "customer.firstName": return firstName(ctx.customerName) || "¡hola";
-    case "customer.name": return ctx.customerName;
-    case "order.code": return o?.code ?? "tu pedido";
-    case "order.total": return o ? formatARS(o.total) : "";
-    case "order.deliveryDate": return o?.deliveryDate ? formatDay(o.deliveryDate, "long") : "la fecha que te confirmemos";
-    case "order.fulfillment": return o ? FULFILLMENT[o.fulfillment] : "";
-    case "order.status": return o ? STATUS_LABEL[o.status] : "";
-    case "pet.name": return ctx.pet?.name ?? "tu mascota";
-  }
-}
-
-export function resolveInline(content: Inline, ctx: EmailContext): string {
-  return content.map((p) => (p.kind === "text" ? p.text : tokenValue(p.token, ctx))).join("");
-}
-
-export interface RenderedLine { name: string; variant: string; quantity: number; art: ArtKey; tint?: string; detail?: string }
+export interface RenderedLine { name: string; variant: string; quantity: number; art: ArtKey; pack?: PackStyle; tint?: string; detail?: string; lot?: string }
+export interface UsageLine { name: string; dose?: string; text: string }
 export interface TrackingStep { label: string; state: "done" | "current" | "next" }
 
 export type RenderedBlock =
@@ -76,7 +23,9 @@ export type RenderedBlock =
   | { id: string; type: "button"; label: string; href: string }
   | { id: string; type: "order-card"; code: string; total: string; deliveryDate: string; fulfillment: string; status: string }
   | { id: string; type: "products"; lines: RenderedLine[] }
-  | { id: string; type: "tracking"; steps: TrackingStep[] };
+  | { id: string; type: "usage"; lines: UsageLine[] }
+  | { id: string; type: "tracking"; steps: TrackingStep[] }
+  | { id: string; type: "refill"; line: RenderedLine; date: string };
 
 export interface RenderedEmail {
   subject: string;
@@ -84,54 +33,75 @@ export interface RenderedEmail {
   blocks: RenderedBlock[];
 }
 
-/** Bloques que necesitan un pedido: en un disparador sin pedido (cumpleaños) no se muestran. */
-export const ORDER_BLOCKS: EmailBlock["type"][] = ["order-card", "products", "tracking"];
+/** Bloques que necesitan un pedido (no salen en la recompra) y el que necesita el producto que se termina. */
+export const ORDER_BLOCKS: EmailBlock["type"][] = ["order-card", "products", "usage", "tracking"];
 
-export function needsOrder(block: EmailBlock): boolean {
-  return ORDER_BLOCKS.includes(block.type);
-}
+export const needsOrder = (block: Pick<EmailBlock, "type">) => ORDER_BLOCKS.includes(block.type);
+export const needsRefill = (block: Pick<EmailBlock, "type">) => block.type === "refill";
 
 export function linkHref(link: ButtonLink, ctx: EmailContext): string {
   if (link === "tracking") return `/pedido/${DEMO_TRACKING_TOKEN}/`;
   if (link === "whatsapp") return whatsappLink(ctx.order ? `Hola! Te escribo por mi pedido ${ctx.order.code}.` : "Hola! Te escribo por el email que me mandaron.");
+  if (link === "product") return ctx.refill ? productHref(ctx.refill.slug) : "/";
   return link === "club" ? "/club/" : "/";
 }
 
-const PATH: OrderStatus[] = ["PAID", "IN_PRODUCTION", "READY", "SHIPPED", "DELIVERED"];
+const PICKUP_STEPS: [string, OrderStatus[]][] = [["Recibido", ["PENDING_PAYMENT", "PAYMENT_REVIEW"]], ["Pagado", ["PAID"]], ["Preparando", ["IN_PRODUCTION"]], ["Listo para retirar", ["READY"]], ["Retirado", ["DELIVERED"]]];
+const DELIVERY_STEPS: [string, OrderStatus[]][] = [["Recibido", ["PENDING_PAYMENT", "PAYMENT_REVIEW"]], ["Pagado", ["PAID"]], ["Preparando", ["IN_PRODUCTION"]], ["Listo", ["READY"]], ["En camino", ["SHIPPED"]], ["Entregado", ["DELIVERED"]]];
 
+/** Recorrido del pedido como lo ve el cliente: retiro (5 pasos) o envío (6), marcado en el estado actual. */
 export function trackingSteps(status: OrderStatus, fulfillment: FulfillmentType): TrackingStep[] {
-  const labels = ["Recibido", "Pagado", "En producción", "Listo", fulfillment === "PICKUP" ? "Retirado" : "Enviado"];
-  const at = status === "PENDING_PAYMENT" || status === "PAYMENT_REVIEW" ? 0 : status === "DELIVERED" ? 4 : Math.max(0, PATH.indexOf(status) + 1);
-  return labels.map((label, i) => ({ label, state: i < at ? "done" : i === at ? "current" : "next" }));
+  const steps = fulfillment === "PICKUP" ? PICKUP_STEPS : DELIVERY_STEPS;
+  const at = Math.max(0, steps.findIndex(([, states]) => states.includes(status)));
+  return steps.map(([label], i) => ({ label, state: i < at ? "done" : i === at ? "current" : "next" }));
 }
 
-function renderLines(lines: CartLine[]): RenderedLine[] {
-  return lines.map((l) => {
+/** El lote se informa recién cuando el pedido se armó y se controló (listo, en camino o entregado). */
+const LOT_KNOWN: OrderStatus[] = ["READY", "SHIPPED", "DELIVERED"];
+
+function renderLine(l: Pick<CartLine, "productSlug" | "variantId" | "quantity">, withLot: boolean): RenderedLine {
+  const p = getProduct(l.productSlug);
+  const v = p?.variants.find((x) => x.id === l.variantId);
+  const detail = v?.servings && v.servings > 1 ? `${v.servings} servicios` : undefined;
+  const lot = withLot ? lotLabel(p) : undefined;
+  return { name: p?.name ?? l.productSlug, variant: v?.label ?? "", quantity: l.quantity, art: p?.art ?? "tub", pack: p?.pack, tint: v?.colorHex, ...(detail ? { detail } : {}), ...(lot ? { lot } : {}) };
+}
+
+export function renderLines(lines: CartLine[], status: OrderStatus): RenderedLine[] {
+  return lines.map((l) => renderLine(l, LOT_KNOWN.includes(status)));
+}
+
+/** "Cómo tomarlo" de cada producto distinto del pedido (los que tienen indicación de uso). */
+export function usageLines(lines: CartLine[]): UsageLine[] {
+  const seen = new Set<string>();
+  return lines.flatMap((l) => {
     const p = getProduct(l.productSlug);
-    const v = p?.variants.find((x) => x.id === l.variantId);
-    const detail = v?.servings && v.servings > 1 ? `${v.servings} servicios` : undefined;
-    return { name: p?.name ?? l.productSlug, variant: v?.label ?? "", quantity: l.quantity, art: p?.art ?? "tub", tint: v?.colorHex, detail };
+    if (!p?.usage || seen.has(p.slug)) return [];
+    seen.add(p.slug);
+    return [{ name: p.name, text: p.usage.text, ...(p.usage.dose ? { dose: p.usage.dose } : {}) }];
   });
+}
+
+function renderBlock(b: EmailBlock, ctx: EmailContext): RenderedBlock | null {
+  const o = ctx.order;
+  if ((needsOrder(b) && !o) || (needsRefill(b) && !ctx.refill)) return null;
+  switch (b.type) {
+    case "header": case "divider": case "footer": return { id: b.id, type: b.type };
+    case "heading": case "text": return { id: b.id, type: b.type, text: resolveInline(b.content, ctx) };
+    case "image": return { id: b.id, type: "image", art: b.art, caption: resolveInline(b.caption, ctx) };
+    case "button": return { id: b.id, type: "button", label: resolveInline(b.label, ctx), href: linkHref(b.link, ctx) };
+    case "order-card":
+      return { id: b.id, type: "order-card", code: o!.code, total: formatARS(o!.total), deliveryDate: tokenValue("order.deliveryDate", ctx), fulfillment: FULFILLMENT_LABEL[o!.fulfillment], status: customerStatus(o!.status, o!.fulfillment) };
+    case "products": return { id: b.id, type: "products", lines: renderLines(o!.lines, o!.status) };
+    case "usage": return { id: b.id, type: "usage", lines: usageLines(o!.lines) };
+    case "tracking": return { id: b.id, type: "tracking", steps: trackingSteps(o!.status, o!.fulfillment) };
+    case "refill": return { id: b.id, type: "refill", line: renderLine({ productSlug: ctx.refill!.slug, variantId: ctx.refill!.variantId ?? "", quantity: 1 }, false), date: tokenValue("refill.date", ctx) };
+  }
 }
 
 /** Arma el email listo para mostrar o "enviar": fichas resueltas, bloques del pedido completos. */
 export function renderEmail(template: Pick<EmailTemplate, "subject" | "preheader" | "blocks">, ctx: EmailContext): RenderedEmail {
-  const blocks: RenderedBlock[] = [];
-  for (const b of template.blocks) {
-    if (needsOrder(b) && !ctx.order) continue;
-    const o = ctx.order;
-    switch (b.type) {
-      case "header": case "divider": case "footer": blocks.push({ id: b.id, type: b.type }); break;
-      case "heading": case "text": blocks.push({ id: b.id, type: b.type, text: resolveInline(b.content, ctx) }); break;
-      case "image": blocks.push({ id: b.id, type: "image", art: b.art, caption: resolveInline(b.caption, ctx) }); break;
-      case "button": blocks.push({ id: b.id, type: "button", label: resolveInline(b.label, ctx), href: linkHref(b.link, ctx) }); break;
-      case "order-card":
-        blocks.push({ id: b.id, type: "order-card", code: o!.code, total: formatARS(o!.total), deliveryDate: tokenValue("order.deliveryDate", ctx), fulfillment: FULFILLMENT[o!.fulfillment], status: STATUS_LABEL[o!.status] });
-        break;
-      case "products": blocks.push({ id: b.id, type: "products", lines: renderLines(o!.lines) }); break;
-      case "tracking": blocks.push({ id: b.id, type: "tracking", steps: trackingSteps(o!.status, o!.fulfillment) }); break;
-    }
-  }
+  const blocks = template.blocks.flatMap((b) => renderBlock(b, ctx) ?? []);
   return { subject: resolveInline(template.subject, ctx), preheader: resolveInline(template.preheader, ctx), blocks };
 }
 
@@ -142,8 +112,20 @@ export function plainText(email: RenderedEmail): string {
     if (b.type === "button") return `${b.label}: ${b.href}`;
     if (b.type === "image") return b.caption;
     if (b.type === "order-card") return `Pedido ${b.code} · ${b.total} · entrega ${b.deliveryDate}`;
-    if (b.type === "products") return b.lines.map((l) => `${l.quantity} × ${l.name}`).join("\n");
+    if (b.type === "products") return b.lines.map((l) => `${l.quantity} × ${l.name}${l.lot ? ` (${l.lot})` : ""}`).join("\n");
+    if (b.type === "usage") return b.lines.map((l) => `${l.name}: ${l.text}`).join("\n");
+    if (b.type === "refill") return `${b.line.name}: se termina cerca del ${b.date}`;
     if (b.type === "tracking") return b.steps.map((s) => `${s.state === "done" ? "✓" : s.state === "current" ? "→" : "·"} ${s.label}`).join("  ");
     return "";
   }).filter(Boolean).join("\n\n");
+}
+
+/** Problemas para guardar una plantilla (asunto vacío, sin bloques o sin ninguna forma de entrega). */
+export function checkTemplate(t: Pick<EmailTemplate, "name" | "subject" | "blocks" | "only">): string[] {
+  const errors: string[] = [];
+  if (!t.name.trim()) errors.push("Poné un nombre interno para reconocerla en la lista.");
+  if (!t.subject.some((p) => p.kind === "token" || p.text.trim())) errors.push("Escribí el asunto: es lo primero que se lee en la casilla.");
+  if (!t.blocks.some((b) => b.type !== "header" && b.type !== "footer" && b.type !== "divider")) errors.push("Agregá al menos un título, un texto o un bloque con datos.");
+  if (t.only && t.only.length === 0) errors.push("Elegí al menos una forma de entrega para la que sale este email.");
+  return errors;
 }

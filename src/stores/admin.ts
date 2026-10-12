@@ -44,6 +44,7 @@ export const useAdmin = create<AdminState>()(
       // v6: temáticas de la Fase 5 (Orgullo en lugar de San Patricio y fechas patrias, con sus cupones).
       // v7: VOLTA, tienda de suplementos (catálogo, costos con proveedor, sin personalización, descuento stack).
       // v8: ruleta "Disco olímpico" con premios de suplementos (muestra y shaker de regalo en lugar de grabado y llavero).
+      // v10: Fase 6 y 7 (panel de una tienda que revende): emails de suplementos y premios del juego editables, entre otros.
       // Al cambiar de versión la demo vuelve a los datos de muestra.
       version: ADMIN_STORE_VERSION,
       storage: demoStorage,

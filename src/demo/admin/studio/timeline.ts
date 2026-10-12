@@ -18,13 +18,32 @@ export function beats(duration: number) {
 
 /**
  * Los productos pasan uno por uno entre la entrada y el cierre; en el cierre vuelve el principal (el primero), que
- * es también el del cuadro final que se exporta como imagen. Devuelve el índice visible y el avance de su entrada.
+ * es también el del cuadro final que se exporta como imagen. Devuelve el índice visible, el avance de su entrada y
+ * cuándo empezó (el pote cae desde ahí).
  */
-export function productSlot(t: number, duration: number, count: number): { index: number; enter: number } {
-  if (count <= 1) return { index: 0, enter: span(t, beats(duration).product, 0.9) };
+export function productSlot(t: number, duration: number, count: number): { index: number; enter: number; start: number } {
   const { product, cta } = beats(duration);
-  if (t >= cta) return { index: 0, enter: span(t, cta, 0.8) };
+  if (count <= 1) return { index: 0, enter: span(t, product, 0.9), start: product };
+  if (t >= cta) return { index: 0, enter: span(t, cta, 0.8), start: cta };
   const each = Math.max(1.2, (cta - product) / count);
   const i = Math.min(count - 1, Math.max(0, Math.floor((t - product) / each)));
-  return { index: i, enter: span(t, product + i * each, 0.8) };
+  return { index: i, enter: span(t, product + i * each, 0.8), start: product + i * each };
+}
+
+/**
+ * Pote que cae al pedestal: 0 arriba (fuera de cuadro) y 1 apoyado, con un rebote corto. `delay` escalona varios potes
+ * (el estante del stack).
+ */
+export function potDrop(t: number, start: number, delay = 0): number {
+  return easeOutBack(span(t, start + delay, 0.75));
+}
+
+/**
+ * Filo de luz que cruza el pote (como la luz de estudio sobre el envase): avance 0–1 durante la pasada, o null fuera
+ * de ella. Pasa una vez cada `every` segundos después de apoyarse y nunca en el cuadro final (la imagen exportada).
+ */
+export function sweepAt(t: number, landed: number, duration: number, every = 3.2): number | null {
+  if (t < landed + 0.3 || t >= duration - 0.4) return null;
+  const k = ((t - landed - 0.3) % every) / 1.1;
+  return k <= 1 ? k : null;
 }

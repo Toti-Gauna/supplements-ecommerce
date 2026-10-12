@@ -1,7 +1,7 @@
 "use client";
 import { ChevronLeft, ChevronRight, Play } from "lucide-react";
 import { useState } from "react";
-import { STUDIO_FORMATS, type StudioFormat } from "@/demo/fixtures/studio";
+import { STUDIO_FORMATS, type StudioFormat, type StudioTemplate } from "@/demo/fixtures/studio";
 import { cn } from "@/lib/cn";
 import { carouselSlides } from "./render/carousel";
 import type { StudioScene } from "./render/types";
@@ -9,9 +9,9 @@ import type { StudioMusic } from "./music";
 import { StudioExport } from "./StudioExport";
 import { StudioPreview, useFontsReady } from "./StudioPreview";
 
-/** Las tres plantillas (VEL-60) y la elegida en grande, con su exportación. */
-export function StudioStage({ scenes, format, onFormat, slide: rawSlide, onSlide, themeId, music, ready }: {
-  scenes: Record<StudioFormat, StudioScene>; format: StudioFormat; onFormat: (f: StudioFormat) => void; slide: number; onSlide: (i: number) => void; themeId: string | null; music: StudioMusic; ready: boolean;
+/** Los tres formatos de la pieza y el elegido en grande, con su exportación. */
+export function StudioStage({ scenes, format, onFormat, slide: rawSlide, onSlide, themeId, template, music, ready }: {
+  scenes: Record<StudioFormat, StudioScene>; format: StudioFormat; onFormat: (f: StudioFormat) => void; slide: number; onSlide: (i: number) => void; themeId: string | null; template: StudioTemplate; music: StudioMusic; ready: boolean;
 }) {
   const scene = scenes[format];
   const [recording, setRecording] = useState(false);
@@ -23,7 +23,7 @@ export function StudioStage({ scenes, format, onFormat, slide: rawSlide, onSlide
   const meta = STUDIO_FORMATS.find((f) => f.id === format)!;
   return (
     <section aria-labelledby="st-templates" className="rounded-3xl border border-line bg-surface p-5">
-      <h2 id="st-templates" className="font-display text-2xl">Plantillas</h2>
+      <h2 id="st-templates" className="font-display text-2xl">Formatos</h2>
       <div role="group" aria-label="Formato" className="mt-3 grid grid-cols-3 items-end gap-3">
         {STUDIO_FORMATS.map((f) => (
           <button key={f.id} type="button" aria-pressed={format === f.id} onClick={() => onFormat(f.id)}
@@ -53,7 +53,7 @@ export function StudioStage({ scenes, format, onFormat, slide: rawSlide, onSlide
         </div>
         <div className="flex flex-col gap-3">
           <p className="text-sm text-muted">{meta.hint} {meta.size[0]} × {meta.size[1]} px.</p>
-          <StudioExport scene={scene} slide={slide} themeId={themeId} music={music} onRecording={setRecording} ready={ready && fonts} />
+          <StudioExport scene={scene} slide={slide} themeId={themeId} template={template} music={music} onRecording={setRecording} ready={ready && fonts} />
         </div>
       </div>
     </section>

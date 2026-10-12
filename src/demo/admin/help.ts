@@ -1,7 +1,5 @@
-import { formatARS } from "@/lib/money";
 import { CAPACITY_STATUSES } from "../engine/delivery";
 import { STATUS_LABEL } from "../engine/orders";
-import { VIP_FROM } from "./customers";
 import { ORDER_TABS } from "./order-groups";
 import { MATERIAL_STATE_LABEL } from "./workshop/materials";
 import { MARGIN_LABEL } from "./workshop/costs";
@@ -9,21 +7,13 @@ import { PRODUCTION_COLUMNS } from "./workshop/production";
 
 /**
  * Qué significa cada segmento o estado (8.3.10). Se arma con las mismas reglas y umbrales del engine
- * (`segmentOf`, `ORDER_TABS`, `materialState`, `marginState`): si cambia una regla, cambia la explicación.
+ * (`SEGMENTS`, `ORDER_TABS`, `materialState`, `marginState`): si cambia una regla, cambia la explicación.
  */
 export interface HelpItem { term: string; text: string }
 export interface Help { title: string; items: HelpItem[] }
 
-export const SEGMENT_HELP: Help = {
-  title: "Segmentos de clientes",
-  items: [
-    { term: "VIP", text: `Pagó ${formatARS(VIP_FROM)} o más sumando todos sus pedidos.` },
-    { term: "Recurrente", text: `Más de un pedido pagado, por menos de ${formatARS(VIP_FROM)} en total.` },
-    { term: "Nuevo", text: "Un solo pedido pagado." },
-    { term: "Sin compras", text: "Tiene cuenta o dejó un pedido, pero todavía no pagó ninguno." },
-    { term: "Invitado", text: "Compró sin crear una cuenta. Sus pedidos se agrupan por email." },
-  ],
-};
+/** Segmentos de clientes: viven con sus reglas en `segments.ts`. */
+export { SEGMENT_HELP } from "./segments";
 
 export const STAGE_HELP: Help = {
   title: "Etapas de los pedidos",

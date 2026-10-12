@@ -88,21 +88,3 @@ test.describe("editor en escritorio", () => {
     await expect(page.getByRole("region", { name: "Bandeja de salida" }).getByText("Prueba").first()).toBeVisible();
   });
 });
-
-test("cumpleaños de mascota: el email sale desde los recordatorios de la ficha del cliente", async ({ page }) => {
-  await page.goto("admin-demo/usuarios/ficha/?email=diego.a@ejemplo.com");
-  // Las fichas de VOLTA no traen mascotas: se carga una desde el panel con el cumple dentro de los 60 días.
-  const pets = page.getByRole("region", { name: "Mascotas" });
-  await pets.getByLabel("Nombre").fill("Ñoqui");
-  await pets.getByLabel("Día del cumpleaños").selectOption("10");
-  await pets.getByLabel("Mes del cumpleaños").selectOption({ label: "octubre" });
-  await pets.getByRole("button", { name: "Agregar" }).click();
-  await expect(toast(page, "Ñoqui agregado a la ficha")).toBeVisible();
-  const send = page.getByRole("button", { name: /Simular el email del día: Cumple de Ñoqui/ });
-  await send.click();
-  await expect(toast(page, "Email de cumpleaños en la bandeja de salida")).toBeVisible();
-  await send.click();
-  await expect(toast(page, "Ya salió este año")).toBeVisible();
-  await page.goto("admin-demo/emails/?vista=enviados");
-  await expect(page.getByRole("region", { name: "Bandeja de salida" }).getByRole("button", { name: /¡Feliz cumple, Ñoqui!/ })).toBeVisible();
-});

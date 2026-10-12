@@ -1,8 +1,12 @@
 import { isPaidOrLater } from "../engine/orders";
+import type { CustomerProfile } from "../fixtures/customers";
+import { goals } from "../fixtures/goals";
+import type { Goal, Product } from "../types";
+import { repurchaseItems, type RepurchaseItem } from "./repurchase";
 import type { AdminOrder, AdminUser } from "./types";
 
 /** Clientes del CRM: cuentas registradas más compradores invitados, unidos por email. */
-export type CustomerSegment = "VIP" | "Recurrente" | "Nuevo" | "Sin compras";
+export type CustomerSegment = "VIP" | "Frecuente" | "Nuevo" | "Sin compras";
 
 export interface CustomerRow {
   key: string;
@@ -31,7 +35,7 @@ function counts(o: AdminOrder): boolean {
 export function segmentOf(paidCount: number, totalSpent: number): CustomerSegment {
   if (paidCount === 0) return "Sin compras";
   if (totalSpent >= VIP_FROM) return "VIP";
-  return paidCount > 1 ? "Recurrente" : "Nuevo";
+  return paidCount > 1 ? "Frecuente" : "Nuevo";
 }
 
 export function customerRows(users: AdminUser[], orders: AdminOrder[]): CustomerRow[] {
@@ -61,5 +65,32 @@ export function customerRows(users: AdminUser[], orders: AdminOrder[]): Customer
       lastOrderAt,
       segment: segmentOf(paid.length, totalSpent),
     };
+  });
+}
+
+/** Objetivo del cliente: el de su ficha o, si no tiene, el que más se repite en lo que compró (sin cancelados). */
+export function customerGoal(profile: CustomerProfile | undefined, customer: CustomerRow, products: Product[]): { goal: Goal | null; fromPurchases: boolean } {
+  if (profile?.goal) return { goal: profile.goal, fromPurchases: false };
+  const score = new Map<Goal, number>();
+  for (const o of customer.orders) {
+    if (o.status === "CANCELLED") continue;
+    for (const l of o.lines) for (const g of products.find((p) => p.slug === l.productSlug)?.goals ?? []) score.set(g, (score.get(g) ?? 0) + l.quantity);
+  }
+  // Empate: gana el que va primero en la lista de objetivos de la tienda.
+  const best = goals.map((g) => g.id).filter((id) => score.has(id)).sort((a, b) => score.get(b)! - score.get(a)!)[0];
+  return { goal: best ?? null, fromPurchases: !!best };
+}
+
+/** Cliente con lo que el panel calcula para él: objetivo y lo que se le termina. */
+export interface CustomerView extends CustomerRow {
+  goal: Goal | null;
+  goalFromPurchases: boolean;
+  repurchases: RepurchaseItem[];
+}
+
+export function customerViews(rows: CustomerRow[], profiles: Record<string, CustomerProfile>, products: Product[], today: string): CustomerView[] {
+  return rows.map((c) => {
+    const { goal, fromPurchases } = customerGoal(profiles[c.email.toLowerCase()], c, products);
+    return { ...c, goal, goalFromPurchases: fromPurchases, repurchases: repurchaseItems(c, products, today) };
   });
 }

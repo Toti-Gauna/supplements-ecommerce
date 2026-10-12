@@ -49,4 +49,17 @@ export const orderSeeds: Seed[] = [
   { code: "VOL-000109", createdAt: "2026-10-01T18:05:00-03:00", customer: { name: "Martín Gómez", email: "martin.g@ejemplo.com", phone: "223 555-0125" }, userId: null, status: "PAID", fulfillment: "PICKUP", paymentMethod: "QR_MANUAL", promisedDate: "2026-10-09",
     lines: [{ id: "a", productSlug: "alfajor-proteico", variantId: "ap-dulce-de-leche-x6", quantity: 1 }],
     proof: { fileName: "qr-109.png", receivedAt: "2026-10-01T18:20:00-03:00", status: "APPROVED" } },
+  // Compras anteriores (Fase 6): con ellas se calcula a quién se le termina el pote esta semana y quién está atrasado.
+  { code: "VOL-000108", createdAt: "2026-09-14T17:45:00-03:00", customer: { name: "Nicolás Romero", email: "nico.r@ejemplo.com", phone: "223 555-0108" }, userId: null, status: "DELIVERED", fulfillment: "LOCAL_DELIVERY", paymentMethod: "CHECKOUT_PRO", address: "Brown 2600, Mar del Plata (7600)", promisedDate: "2026-09-15",
+    lines: [{ id: "a", productSlug: "mass-gainer", variantId: "mg-dulce-de-leche-3kg", quantity: 1 }] },
+  { code: "VOL-000107", createdAt: "2026-09-07T10:15:00-03:00", customer: { name: "Juan Ibarra", email: "juan.i@ejemplo.com", phone: "223 555-0103" }, userId: null, status: "DELIVERED", fulfillment: "LOCAL_DELIVERY", paymentMethod: "CHECKOUT_PRO", address: "Funes 2100, Mar del Plata (7600)", promisedDate: "2026-09-08",
+    lines: [{ id: "a", productSlug: "ionic-whey", variantId: "iw-chocolate-2lb", quantity: 1 }, { id: "b", productSlug: "creatina-monohidrato", variantId: "cm-sin-sabor-300", quantity: 1 }] },
+  { code: "VOL-000106", createdAt: "2026-09-05T10:00:00-03:00", customer: { name: "Florencia Medina", email: "flor.m@ejemplo.com", phone: "223 555-0106" }, userId: null, status: "DELIVERED", fulfillment: "PICKUP", paymentMethod: "CHECKOUT_PRO", promisedDate: "2026-09-07",
+    lines: [{ id: "a", productSlug: "isolate-zero", variantId: "iz-vainilla-2lb", quantity: 1 }] },
+  { code: "VOL-000105", createdAt: "2026-08-20T11:10:00-03:00", customer: { name: "Paula Castro", email: "paula.c@ejemplo.com", phone: "223 555-0105" }, userId: null, status: "DELIVERED", fulfillment: "PICKUP", paymentMethod: "CHECKOUT_PRO", promisedDate: "2026-08-21",
+    lines: [{ id: "a", productSlug: "ionic-whey", variantId: "iw-vainilla-2lb", quantity: 1 }, { id: "b", productSlug: "multivitaminico", variantId: "mv-60", quantity: 1 }] },
+  { code: "VOL-000104", createdAt: "2026-08-12T19:20:00-03:00", customer: { name: "Tomás Herrera", email: "tomas.h@ejemplo.com", phone: "223 555-0104" }, userId: null, status: "DELIVERED", fulfillment: "LOCAL_DELIVERY", paymentMethod: "CHECKOUT_PRO", address: "Jara 1450, Mar del Plata (7600)", promisedDate: "2026-08-13",
+    lines: [{ id: "a", productSlug: "overvolt-pre", variantId: "ov-mango-300", quantity: 1 }, { id: "b", productSlug: "creatina-brava", variantId: "cb-sin-sabor-250", quantity: 1 }] },
+  { code: "VOL-000103", createdAt: "2026-08-06T18:30:00-03:00", customer: { name: "Juan Ibarra", email: "juan.i@ejemplo.com", phone: "223 555-0103" }, userId: null, status: "DELIVERED", fulfillment: "LOCAL_DELIVERY", paymentMethod: "CHECKOUT_PRO", address: "Funes 2100, Mar del Plata (7600)", promisedDate: "2026-08-07",
+    lines: [{ id: "a", productSlug: "ionic-whey", variantId: "iw-chocolate-2lb", quantity: 1 }] },
 ];

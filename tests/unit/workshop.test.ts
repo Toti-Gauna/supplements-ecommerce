@@ -1,12 +1,10 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { customerRows } from "@/demo/admin/customers";
 import { defaultAdminData, type AdminData } from "@/demo/admin/defaults";
 import { createOrdersActions } from "@/demo/admin/orders-slice";
 import { costRows, marginPct, recipeCost, suggestedPrice, basePriceFor } from "@/demo/admin/workshop/costs";
 import { toIcs } from "@/demo/admin/workshop/ics";
 import { applyMaterialOp, committedNeeds, consumeMaterials, materialRows, orderNeeds, reorderQty } from "@/demo/admin/workshop/materials";
 import { columnOf, nextColumn, productionMove } from "@/demo/admin/workshop/production";
-import { customerReminders, nextOccurrence } from "@/demo/admin/workshop/reminders";
 import { calendarOf, checkReschedule, deliveryWindows, estimateForProduct, lineLeadDays, loadByDay, nextFreeDayFor, orderLeadDays, pendingDeliveries, promiseFor } from "@/demo/engine/delivery";
 import { getProduct } from "@/demo/engine/catalog";
 import { defaultDemoData, setDemoData } from "@/demo/engine/source";
@@ -108,7 +106,7 @@ describe("plazos y capacidad", () => {
 
 describe("costos, insumos, producción y recordatorios", () => {
   const admin = defaultAdminData();
-  const { materials, recipes, settings, profiles } = admin.workshop;
+  const { materials, recipes, settings } = admin.workshop;
   it("costo de receta en pesos enteros y precio sugerido", () => {
     const c = recipeCost(recipes["ionic-whey"]!, materials, settings);
     // Proveedor 26.400 + embalaje (caja chica 650 + folleto 90 + precinto 40 + 1,2 m de cinta × 12 = 14) + 6 min de armado a $4.500 la hora
@@ -160,19 +158,6 @@ describe("costos, insumos, producción y recordatorios", () => {
     expect(productionMove({ status: "SHIPPED" }, "ready").ok).toBe(false);
     expect(nextColumn("finishing")).toBe("ready");
     expect(nextColumn("ready")).toBeNull();
-  });
-  it("recordatorios: cumpleaños de mascotas y recompra dentro de los próximos 30 días", () => {
-    expect(nextOccurrence("10-09", DEMO_TODAY)).toBe("2026-10-09");
-    expect(nextOccurrence("01-15", DEMO_TODAY)).toBe("2027-01-15");
-    // Las fichas de muestra ya no traen mascotas: se cargan acá (el panel las sigue aceptando).
-    const diego = "diego.a@ejemplo.com";
-    const withPets = { ...profiles, [diego]: { ...profiles[diego]!, pets: [{ id: "p-noqui", name: "Ñoqui", species: "perro" as const, birthday: "10-09" }, { id: "p-kira", name: "Kira", species: "gato" as const, birthday: "12-20" }] } };
-    const list = customerReminders(customerRows(admin.users, admin.orders), withPets, admin.data.products, settings, DEMO_TODAY);
-    expect(list[0]).toMatchObject({ kind: "pet-birthday", date: "2026-10-09", title: "Cumple de Ñoqui", inDays: 5 });
-    // VOL-000119 (29/9): pre-entreno, recompra a los 30 días
-    expect(list.some((r) => r.kind === "repurchase" && r.title === "Recompra: Overvolt pre-entreno" && r.date === "2026-10-29")).toBe(true);
-    expect(list.every((r) => r.inDays <= 30)).toBe(true);
-    expect(list.some((r) => r.title === "Cumple de Kira")).toBe(false);
   });
   it("exporta las entregas a .ics de día completo", () => {
     const ics = toIcs([{ uid: "VOL-000121", day: "2026-10-08", title: "Entrega VOL-000121, Julián", description: "Colgador; 1 u.\nRetira" }], new Date("2026-10-04T12:00:00Z"));

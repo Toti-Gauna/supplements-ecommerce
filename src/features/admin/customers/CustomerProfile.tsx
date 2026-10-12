@@ -6,41 +6,36 @@ import { useState } from "react";
 import { Button } from "@/components/atoms/Button";
 import { EmptyState } from "@/components/molecules/EmptyState";
 import { StatusBadge } from "@/components/molecules/StatusBadge";
-import { customerRows } from "@/demo/admin/customers";
-import { remindersFor } from "@/demo/admin/workshop/reminders";
+import { consumptionRule } from "@/demo/admin/repurchase-text";
+import { goalName } from "@/demo/admin/segments";
 import { getProduct } from "@/demo/engine/catalog";
-import { DEMO_TODAY } from "@/demo/fixtures/admin-orders";
 import { formatDate, formatDateTime } from "@/lib/date";
 import { formatARS } from "@/lib/money";
 import { useAdmin } from "@/stores/admin";
 import { DetailHeader, TrackChip } from "../detail/DetailHeader";
 import { Panel } from "../detail/Panel";
 import { useDemoSave } from "../useDemoSave";
-import { BirthdayPicker, birthdayText } from "./BirthdayPicker";
 import { ClubCard } from "./ClubCard";
-import { PetsCard } from "./PetsCard";
-import { ReminderList } from "./Reminders";
+import { ProfileCard } from "./ProfileCard";
+import { RepurchaseList } from "./Reminders";
+import { useCustomerViews } from "./useCustomerViews";
 
 /**
- * Ficha completa del cliente (8.3.12, 8.3.13): cabecera, métricas, mascotas, recordatorios, historial, Club, cumpleaños y
- * notas. Dos columnas solo cuando el ancho real alcanza; en tablet y celular, todo apilado y sin cortar palabras.
+ * Ficha completa del cliente (Fase 6): cabecera con segmento y objetivo, métricas, lo que se le termina (con el aviso),
+ * historial, objetivo y cumpleaños, Club y notas. Dos columnas solo cuando el ancho real alcanza (8.3.13).
  */
 export function CustomerProfile() {
   const email = useSearchParams().get("email") ?? "";
   const users = useAdmin((s) => s.users);
-  const orders = useAdmin((s) => s.orders);
-  const products = useAdmin((s) => s.data.products);
   const missions = useAdmin((s) => s.data.missions);
-  const { profiles, settings } = useAdmin((s) => s.workshop);
-  const { addCustomerNote, setCustomerBirthday } = useAdmin();
+  const notes = useAdmin((s) => s.workshop.profiles[email.toLowerCase()]?.notes);
+  const addCustomerNote = useAdmin((s) => s.addCustomerNote);
   const save = useDemoSave();
   const [note, setNote] = useState("");
-  const customer = customerRows(users, orders).find((c) => c.email.toLowerCase() === email.toLowerCase());
+  const customer = useCustomerViews().find((c) => c.email.toLowerCase() === email.toLowerCase());
   if (!customer) {
     return <EmptyState title="No encontramos ese cliente" action={<Link href="/admin-demo/usuarios/" className="font-bold text-primary underline">Volver a Clientes</Link>}>Puede que el enlace sea viejo o que la demo se haya reiniciado.</EmptyState>;
   }
-  const profile = profiles[customer.email.toLowerCase()] ?? { pets: [], notes: [] };
-  const reminders = remindersFor(customer, profile, products, settings, DEMO_TODAY, 60);
   const bought = new Map<string, number>();
   for (const o of customer.orders) for (const l of o.lines) bought.set(l.productSlug, (bought.get(l.productSlug) ?? 0) + l.quantity);
   const stat = (label: string, value: string) => <div className="min-w-0 rounded-2xl bg-surface p-4 shadow-[var(--shadow-card)]"><p className="text-xs font-bold text-muted">{label}</p><p className="mt-1 break-words text-xl font-extrabold tabular-nums">{value}</p></div>;
@@ -49,6 +44,7 @@ export function CustomerProfile() {
       <DetailHeader list={{ href: "/admin-demo/usuarios/", label: "Clientes" }} title={customer.name} eyebrow={customer.registered ? "Cuenta registrada" : "Compró como invitado"}
         status={<>
           <TrackChip label="Segmento" value={customer.segment} tone={customer.segment === "VIP" ? "brand" : "neutral"} />
+          <TrackChip label="Objetivo" value={goalName(customer.goal)} tone="neutral" />
           {customer.blocked && <TrackChip label="Cuenta" value="Bloqueada" tone="danger" />}
           <span className="flex items-center gap-1.5 text-sm text-muted"><Mail size={14} aria-hidden="true" /><span className="break-all">{customer.email}</span></span>
           {customer.phone && <span className="flex items-center gap-1.5 text-sm text-muted"><Phone size={14} aria-hidden="true" />{customer.phone}</span>}
@@ -61,9 +57,9 @@ export function CustomerProfile() {
       </div>
       <div className="grid gap-6 @min-[64rem]:grid-cols-2">
         <div className="flex min-w-0 flex-col gap-6">
-          <PetsCard email={customer.email} profile={profile} />
-          <Panel title="Recordatorios (próximos 60 días)">
-            {reminders.length ? <ReminderList reminders={reminders} /> : <p className="text-sm text-muted">Nada por ahora. Cargá el cumpleaños de sus mascotas para que aparezcan acá.</p>}
+          <Panel title="Se le termina">
+            <p className="mb-3 text-sm text-muted">Calculado con los servicios del envase: {consumptionRule()}. Es orientativo.</p>
+            {customer.repurchases.length ? <RepurchaseList items={customer.repurchases} /> : <p className="text-sm text-muted">Nada por ahora: no tiene potes en uso (o se le terminaron hace más de un mes).</p>}
           </Panel>
           <Panel title="Historial de compras">
             {customer.orders.length ? (
@@ -82,18 +78,16 @@ export function CustomerProfile() {
           </Panel>
         </div>
         <div className="flex min-w-0 flex-col gap-6">
+          <ProfileCard customer={customer} />
           <ClubCard user={users.find((u) => u.id === customer.userId)} missions={missions} />
-          <Panel title="Cumpleaños del cliente">
-            <BirthdayPicker id="cust-bday" value={profile.birthday ?? ""} onChange={(b) => save(b ? `Cumpleaños: ${birthdayText(b)}` : "Cumpleaños borrado", () => setCustomerBirthday(customer.email, b || undefined))} />
-          </Panel>
           <Panel title="Notas internas">
             <form className="mb-3 flex flex-col gap-2" onSubmit={(e) => { e.preventDefault(); if (!note.trim()) return; save("Nota guardada", () => addCustomerNote(customer.email, note)); setNote(""); }}>
               <label htmlFor="p-note" className="sr-only">Nota nueva</label>
-              <textarea id="p-note" rows={2} value={note} onChange={(e) => setNote(e.target.value)} placeholder="Prefiere retirar los sábados, alérgico a la lavanda…" className="rounded-2xl border border-ink/12 bg-bg p-3 text-base" />
+              <textarea id="p-note" rows={2} value={note} onChange={(e) => setNote(e.target.value)} placeholder="Prefiere chocolate, entrena a la mañana, retira los sábados…" className="rounded-2xl border border-ink/12 bg-bg p-3 text-base" />
               <Button type="submit" variant="secondary" size="sm" disabled={!note.trim()} className="self-start">Guardar nota</Button>
             </form>
-            {profile.notes.length ? (
-              <ul className="flex flex-col gap-2">{profile.notes.map((n) => <li key={n.at + n.text} className="rounded-2xl bg-bg p-3 text-sm"><p>{n.text}</p><p className="mt-1 text-xs text-muted">{formatDateTime(n.at)}</p></li>)}</ul>
+            {notes?.length ? (
+              <ul className="flex flex-col gap-2">{notes.map((n) => <li key={n.at + n.text} className="rounded-2xl bg-bg p-3 text-sm"><p>{n.text}</p><p className="mt-1 text-xs text-muted">{formatDateTime(n.at)}</p></li>)}</ul>
             ) : <p className="text-sm text-muted">Sin notas.</p>}
           </Panel>
         </div>

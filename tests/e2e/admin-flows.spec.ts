@@ -154,7 +154,7 @@ test("celular: menú hamburguesa del panel y paginado de pedidos", async ({ page
   await expect(pages).toContainText("1–10 de");
   await pages.getByRole("button", { name: "Página 2" }).click();
   await expect(pages).toContainText("11–");
-  await expect(pages).toContainText("página 2 de 2");
+  await expect(pages).toContainText("página 2 de 3");
   await page.getByLabel("Código o cliente").fill("VOL-000123");
   await expect(pages).toBeHidden();
   // Pestañas inferiores: acceso directo y "Más" abre el menú completo

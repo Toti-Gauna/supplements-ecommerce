@@ -13,8 +13,6 @@ export interface EmailActions {
   resetEmailTemplate: (id: string) => void;
   /** Envío de prueba a la casilla del taller (demo) con un pedido de muestra. */
   sendTestEmail: (templateId: string, orderCode: string) => boolean;
-  /** Cumpleaños de una mascota de la ficha: arma el email si la plantilla está activa (una vez por año y mascota). */
-  sendPetBirthdayEmail: (email: string, name: string, petId: string, year: string) => "sent" | "already" | "off";
   clearOutbox: () => void;
 }
 
@@ -43,17 +41,6 @@ export function createEmailActions(set: Set, get: Get): EmailActions {
       const [mail] = composeEmails([{ ...tpl, active: true }], [tpl.trigger], ctx, new Date().toISOString(), tpl.trigger === "pet-birthday" ? undefined : order!.code);
       edit("Email de prueba", tpl.name, (st) => ({ outbox: pushOutbox(st.emails.outbox, [{ ...mail!, test: true }]) }));
       return true;
-    },
-    sendPetBirthdayEmail: (email, name, petId, year) => {
-      const s = get();
-      const pet = s.workshop.profiles[email.toLowerCase()]?.pets.find((p) => p.id === petId);
-      if (!pet) return "off";
-      const key = `pet-birthday:${email.toLowerCase()}:${petId}:${year}`;
-      if (s.emails.outbox.some((m) => m.key === key)) return "already";
-      const mails = composeEmails(s.emails.templates, ["pet-birthday"], { customerName: name, email, pet: { name: pet.name } }, new Date().toISOString(), undefined, key);
-      if (!mails.length) return "off";
-      edit(`Email de cumpleaños de ${pet.name}`, email, (st) => ({ outbox: pushOutbox(st.emails.outbox, mails) }));
-      return "sent";
     },
     clearOutbox: () => edit("Bandeja de salida vaciada", "Emails", () => ({ outbox: [] })),
   };

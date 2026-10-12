@@ -1,4 +1,4 @@
-import type { CalendarEvent, Closure, CustomerProfile, Material, Pet, Recipe, WorkshopSettings } from "../fixtures/workshop";
+import type { CalendarEvent, Closure, Material, Recipe, WorkshopSettings } from "../fixtures/workshop";
 import { slugify } from "./import/cells";
 import { auditEntry, type AdminData, type WorkshopData } from "./defaults";
 import { basePriceFor } from "./workshop/costs";
@@ -24,22 +24,11 @@ export interface WorkshopActions {
   saveRecipe: (slug: string, recipe: Recipe) => void;
   /** Lleva el precio "desde" del producto a `price` (las variantes conservan su diferencia). */
   applyPrice: (slug: string, price: number) => void;
-  savePet: (email: string, pet: Pet) => void;
-  removePet: (email: string, petId: string) => void;
-  addCustomerNote: (email: string, text: string) => void;
-  setCustomerBirthday: (email: string, birthday: string | undefined) => void;
 }
-
-const EMPTY_PROFILE: CustomerProfile = { pets: [], notes: [] };
 
 export function createWorkshopActions(set: Set): WorkshopActions {
   const edit = (action: string, entity: string, fn: (w: WorkshopData) => Partial<WorkshopData>) =>
     set((s) => ({ workshop: { ...s.workshop, ...fn(s.workshop) }, audit: [auditEntry(action, entity), ...s.audit].slice(0, 80) }));
-  const profile = (action: string, email: string, fn: (p: CustomerProfile) => CustomerProfile) =>
-    edit(action, email, (w) => {
-      const key = email.trim().toLowerCase();
-      return { profiles: { ...w.profiles, [key]: fn(w.profiles[key] ?? EMPTY_PROFILE) } };
-    });
 
   return {
     saveWorkshopSettings: (patch) => edit("Ajustes del taller", Object.keys(patch).join(", "), (w) => ({ settings: { ...w.settings, ...patch } })),
@@ -69,9 +58,5 @@ export function createWorkshopActions(set: Set): WorkshopActions {
         data: { ...s.data, products: s.data.products.map((p) => (p.slug === slug ? { ...p, basePrice: basePriceFor(p, price) } : p)) },
         audit: [auditEntry(`Precio actualizado a $${price.toLocaleString("es-AR")}`, slug), ...s.audit].slice(0, 80),
       })),
-    savePet: (email, pet) => profile(`Mascota guardada: ${pet.name}`, email, (p) => ({ ...p, pets: p.pets.some((x) => x.id === pet.id) ? p.pets.map((x) => (x.id === pet.id ? pet : x)) : [...p.pets, pet] })),
-    removePet: (email, petId) => profile("Mascota quitada", email, (p) => ({ ...p, pets: p.pets.filter((x) => x.id !== petId) })),
-    addCustomerNote: (email, text) => profile("Nota del cliente", email, (p) => ({ ...p, notes: [{ at: new Date().toISOString(), text: text.trim() }, ...p.notes] })),
-    setCustomerBirthday: (email, birthday) => profile("Cumpleaños del cliente", email, (p) => ({ ...p, birthday })),
   };
 }

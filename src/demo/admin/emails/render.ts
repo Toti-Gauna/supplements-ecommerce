@@ -38,11 +38,14 @@ export function sampleOrder(orders: AdminOrder[]): AdminOrder | undefined {
   return orders.find((o) => o.status === "IN_PRODUCTION") ?? orders.find((o) => o.status !== "CANCELLED") ?? orders[0];
 }
 
-/** Cliente con mascota de las fichas, para la vista previa y la prueba del email de cumpleaños (sin pedido). */
-export function petSampleContext(profiles: Record<string, { pets: { name: string }[] }>, orders: AdminOrder[], users: { email: string; name: string }[]): EmailContext {
-  const [email, profile] = Object.entries(profiles).find(([, p]) => p.pets.length > 0) ?? ["", { pets: [] }];
+/**
+ * Cliente de muestra para la vista previa y la prueba del email de cumpleaños (sin pedido). Las fichas de VOLTA ya no
+ * guardan mascotas (Fase 6): queda el primer cliente con ficha y la mascota sin nombre ("tu mascota").
+ */
+export function petSampleContext(profiles: Record<string, object>, orders: AdminOrder[], users: { email: string; name: string }[]): EmailContext {
+  const email = Object.keys(profiles)[0] ?? "";
   const name = users.find((u) => u.email.toLowerCase() === email)?.name ?? orders.find((o) => o.customer.email.toLowerCase() === email)?.customer.name ?? "Cliente";
-  return { customerName: name, email, pet: profile.pets[0] ? { name: profile.pets[0].name } : undefined };
+  return { customerName: name, email };
 }
 
 const firstName = (name: string) => name.trim().split(/\s+/)[0] ?? name;

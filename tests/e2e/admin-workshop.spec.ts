@@ -101,24 +101,21 @@ test("costos: la receta calcula el margen y el precio sugerido llega a la tienda
   await expect(page.getByText(/\$\s?37\.000/).first()).toBeVisible();
 });
 
-test("ficha de cliente: mascota con cumpleaños genera un recordatorio y se guardan notas", async ({ page }) => {
-  // 8.3.9: ya no hay bloque "Para escribirles"; queda el filtro "Para escribir" (el inicio enlaza a él).
-  // En los datos de muestra, en 30 días le toca a Diego la recompra del pre-entreno.
-  await page.goto("admin-demo/usuarios/?escribir=30");
-  await expect(page.getByRole("region", { name: "Clientes" }).getByText("Diego Álvarez").first()).toBeVisible();
+test("ficha de cliente: objetivo y notas se guardan; el enlace viejo “Para escribir” abre las recompras de la semana", async ({ page }) => {
+  // El inicio enlazaba a ?escribir=7: ahora es el segmento "Se le termina esta semana".
+  await page.goto("admin-demo/usuarios/?escribir=7");
+  const list = page.getByRole("region", { name: "Clientes" });
+  await expect(list.getByText("Juan Ibarra").filter({ visible: true }).first()).toBeVisible();
+  await expect(list.getByText("Valentina Sosa")).toHaveCount(0);
   await page.goto("admin-demo/usuarios/ficha/?email=vale.s@ejemplo.com");
   await expect(page.getByRole("heading", { level: 1, name: /Valentina Sosa/ })).toBeVisible();
-  await page.getByLabel("Nombre").fill("Michi");
-  await page.getByLabel("Día del cumpleaños").first().selectOption("8");
-  await page.getByLabel("Mes del cumpleaños").first().selectOption("10");
-  await page.getByRole("button", { name: "Agregar", exact: true }).click();
-  await expect(page.getByText("Cumple de Michi")).toBeVisible();
+  await page.getByLabel("Objetivo", { exact: true }).selectOption({ label: "Fuerza" });
+  await expect(toast(page, "Objetivo: Fuerza")).toBeVisible();
   await page.getByLabel("Nota nueva").fill("Prefiere el isolate sabor chocolate.");
   await page.getByRole("button", { name: "Guardar nota" }).click();
   await page.reload();
   await expect(page.getByText("Prefiere el isolate sabor chocolate.")).toBeVisible();
-  await expect(page.getByText("Cumple de Michi")).toBeVisible();
-  // El cumple cae esta semana (jue 8/10): Valentina entra en "Para escribir" de la semana.
-  await page.goto("admin-demo/usuarios/?escribir=7");
+  await expect(page.getByLabel("Objetivo", { exact: true })).toHaveValue("fuerza");
+  await page.goto("admin-demo/usuarios/?objetivo=fuerza");
   await expect(page.getByRole("region", { name: "Clientes" }).getByText("Valentina Sosa").first()).toBeVisible();
 });

@@ -86,25 +86,17 @@ describe("disparadores y bandeja de salida", () => {
     expect(h.orders.transition("VOL-000122", "PAID")).toBe(true);
     expect(paid()).toBe(before122);
   });
-  it("prueba, cumpleaños de mascota y plantilla restaurada", () => {
-    // Las fichas de muestra ya no traen mascotas: Diego tiene una cargada solo para esta prueba.
-    const h = harness((s) => {
-      const diego = s.workshop.profiles["diego.a@ejemplo.com"]!;
-      const profiles = { ...s.workshop.profiles, "diego.a@ejemplo.com": { ...diego, pets: [{ id: "p1", name: "Ñoqui", species: "perro" as const, birthday: "10-09" }] } };
-      return { ...s, workshop: { ...s.workshop, profiles } };
-    });
-    expect(harness().emails.sendPetBirthdayEmail("diego.a@ejemplo.com", "Diego Álvarez", "p1", "2026")).toBe("off");
+  it("prueba (también la del cumpleaños, que ya no tiene mascotas en las fichas) y plantilla restaurada", () => {
+    const h = harness();
     expect(h.emails.sendTestEmail("tpl-shipped", "VOL-000119")).toBe(true);
     expect(h.get().emails.outbox[0]).toMatchObject({ test: true, to: "taller@volta.demo" });
-    expect(h.emails.sendPetBirthdayEmail("diego.a@ejemplo.com", "Diego Álvarez", "p1", "2026")).toBe("sent");
-    expect(h.get().emails.outbox[0]!.email.subject).toBe("¡Feliz cumple, Ñoqui! 🎂");
-    expect(h.emails.sendPetBirthdayEmail("diego.a@ejemplo.com", "Diego Álvarez", "p1", "2026")).toBe("already");
-    // La prueba del cumpleaños usa el cliente con mascota (sin pedido), igual que la vista previa
+    // La prueba del cumpleaños no lleva pedido: usa un cliente de las fichas y "tu mascota".
     expect(h.emails.sendTestEmail("tpl-pet-birthday", "")).toBe(true);
     const test = h.get().emails.outbox[0]!;
     expect(test.orderCode).toBeUndefined();
     expect(test.email.blocks.some((b) => b.type === "order-card")).toBe(false);
     expect(plainText(test.email)).toContain("Hola Diego");
+    expect(plainText(test.email)).toContain("tu mascota");
     const t = h.get().emails.templates.find((x) => x.id === "tpl-ready")!;
     h.emails.saveEmailTemplate({ ...t, name: "Cambiada", blocks: [] });
     h.emails.resetEmailTemplate("tpl-ready");

@@ -35,9 +35,9 @@ describe("pago y producción por separado (8.3.5)", () => {
 
 describe("ayudas con las reglas del engine (8.3.10)", () => {
   it("VIP usa el umbral real y coincide con segmentOf", () => {
-    expect(SEGMENT_HELP.items[0]!.text).toContain(VIP_FROM.toLocaleString("es-AR"));
+    expect(SEGMENT_HELP.items.find((i) => i.term === "VIP")!.text).toContain(VIP_FROM.toLocaleString("es-AR"));
     expect(segmentOf(1, VIP_FROM)).toBe("VIP");
-    expect(segmentOf(2, VIP_FROM - 1)).toBe("Recurrente");
+    expect(segmentOf(2, VIP_FROM - 1)).toBe("Frecuente");
     expect(segmentOf(1, 10)).toBe("Nuevo");
     expect(segmentOf(0, 0)).toBe("Sin compras");
   });

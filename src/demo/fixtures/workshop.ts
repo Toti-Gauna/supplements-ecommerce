@@ -1,6 +1,6 @@
 /**
  * Datos del taller para la demo (pedido de Ignacio, fuera de la especificación): calendario, capacidad, insumos,
- * recetas de costo y fichas de clientes. Todo es de MUESTRA: costos, proveedores, mascotas y fechas son inventados.
+ * recetas de costo. Las fichas de clientes viven en `customers.ts`. Todo es de MUESTRA: costos, proveedores y fechas son inventados.
  */
 
 export type ClosureKind = "feriado" | "no-laborable" | "cierre";
@@ -25,8 +25,6 @@ export interface WorkshopSettings {
   handHourCost: number;
   /** Margen que Volta quiere ganar sobre el precio de venta, en %. */
   targetMarginPct: number;
-  /** Días después de la compra para sugerir la recompra, por categoría (velas y aromas se terminan). */
-  repurchaseDays: Record<string, number>;
 }
 
 /**
@@ -101,7 +99,6 @@ export const workshopSettings: WorkshopSettings = {
   machineHourCost: 0,
   handHourCost: 4500,
   targetMarginPct: 35,
-  repurchaseDays: { proteinas: 30, creatinas: 60, "pre-entrenos": 30, aminoacidos: 30, ganadores: 20, salud: 60 },
 };
 
 export type MaterialUnit = "g" | "ml" | "u" | "m" | "plancha";
@@ -176,36 +173,4 @@ export const recipes: Record<string, Recipe> = {
   "gel-energetico": { supplierCost: 7100, items: [{ materialId: "bolsa", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }], machineMinutes: 0, handMinutes: 3 },
   "shaker-volta": { supplierCost: 4300, items: [{ materialId: "bolsa", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }], machineMinutes: 0, handMinutes: 3 },
   "magnesio-tiza": { supplierCost: 2400, items: [{ materialId: "bolsa", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }], machineMinutes: 0, handMinutes: 3 },
-};
-
-export type PetSpecies = "perro" | "gato" | "otro";
-
-export interface Pet {
-  id: string;
-  name: string;
-  species: PetSpecies;
-  breed?: string;
-  /** Cumpleaños MM-DD (se repite cada año). */
-  birthday?: string;
-}
-
-export interface CustomerNote {
-  at: string;
-  text: string;
-}
-
-export interface CustomerProfile {
-  pets: Pet[];
-  notes: CustomerNote[];
-  /** Cumpleaños del cliente, MM-DD. */
-  birthday?: string;
-}
-
-/** Fichas FICTICIAS por email (en minúsculas). Notas y fechas inventadas. */
-export const customerProfiles: Record<string, CustomerProfile> = {
-  "diego.a@ejemplo.com": { pets: [], notes: [{ at: "2026-09-29T10:00:00-03:00", text: "Prefiere que le escriban por WhatsApp a la tarde." }] },
-  "julian.p@ejemplo.com": { pets: [], notes: [], birthday: "01-15" },
-  "vale.s@ejemplo.com": { pets: [], notes: [{ at: "2026-09-28T09:30:00-03:00", text: "Le llegó un pote con el precinto roto: ofrecerle un cupón en la próxima." }], birthday: "11-12" },
-  "martin.g@ejemplo.com": { pets: [], notes: [] },
-  "lucia.f@ejemplo.com": { pets: [], notes: [], birthday: "10-30" },
 };

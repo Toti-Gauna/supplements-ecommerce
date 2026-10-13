@@ -19,6 +19,7 @@ import { GlobalArtDefs } from "@/components/illustrations/supplements/GlobalDefs
 import { themeScript } from "@/components/atoms/ThemeToggle";
 import { seasonAccentCss } from "@/features/themes/palettes";
 import { seasonScript } from "@/features/themes/seasonScript";
+import { sessionScript } from "@/features/shell/session";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -53,6 +54,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <style dangerouslySetInnerHTML={{ __html: brandCss() }} />
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <script dangerouslySetInnerHTML={{ __html: seasonScript }} />
+        <script dangerouslySetInnerHTML={{ __html: sessionScript }} />
         <script dangerouslySetInnerHTML={{ __html: splashScript }} />
         <style dangerouslySetInnerHTML={{ __html: seasonAccentCss() }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationLd) }} />

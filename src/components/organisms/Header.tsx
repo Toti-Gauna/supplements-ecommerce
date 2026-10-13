@@ -25,7 +25,7 @@ export const NAV = [
 ];
 
 const ICON = "grid h-10 w-10 place-items-center rounded-sm text-ink transition-colors hover:bg-accent";
-const TAB = "flex h-14 items-center border-b-2 px-3 font-mono text-[12px] font-bold uppercase tracking-[0.12em] transition-colors xl:px-4";
+const TAB = "flex h-14 items-center whitespace-nowrap border-b-2 px-2.5 font-mono text-[12px] font-bold uppercase tracking-[0.08em] transition-colors xl:px-4 xl:tracking-[0.12em]";
 
 /**
  * Header de una línea: marca, carriles de navegación, el buscador a la vista (abre el buscador superpuesto; "/" desde
@@ -57,7 +57,7 @@ export function Header() {
       <div className="mx-auto flex h-14 max-w-7xl items-center gap-1 px-3 sm:gap-2 sm:px-6">
         <button type="button" onClick={() => setMenu(true)} aria-label="Abrir menú" className={cn(ICON, "lg:hidden")}><Menu size={22} aria-hidden="true" /></button>
         <Link href="/" aria-label={`${brand.name}, ir al inicio`} className="shrink-0"><Logo /></Link>
-        <nav aria-label="Principal" className="ml-4 hidden self-stretch lg:flex xl:ml-8">
+        <nav aria-label="Principal" className="ml-3 hidden self-stretch lg:flex xl:ml-8">
           {NAV.map((n) => n.href === "/categorias/" ? <ShopMenu key={n.href} active={pathname.startsWith("/c") || pathname.startsWith("/p")} /> : (
             <Link key={n.href} href={n.href} aria-current={current === n.href ? "page" : undefined}
               className={cn(TAB, current === n.href ? "border-volt-ink text-ink" : "border-transparent text-muted hover:text-ink")}>
@@ -66,10 +66,11 @@ export function Header() {
           ))}
         </nav>
         <button type="button" onClick={() => setSearch(true)} aria-label="Buscar productos" aria-keyshortcuts="/"
-          className="ml-auto hidden h-10 min-w-0 items-center gap-2 rounded-sm border border-line bg-surface px-3 text-left text-muted shadow-[inset_0_2px_0_rgb(0_0_0/0.12)] transition-colors hover:border-ink/40 sm:flex sm:w-[min(340px,34vw)] lg:w-[min(300px,24vw)]">
+          className="ml-auto hidden h-10 min-w-0 items-center gap-2 rounded-sm border border-line bg-surface px-3 text-left text-muted shadow-[inset_0_2px_0_rgb(0_0_0/0.12)] transition-colors hover:border-ink/40 sm:flex sm:w-[min(340px,34vw)] lg:w-32 xl:w-[min(300px,22vw)]">
           <Search size={16} aria-hidden="true" className="shrink-0 text-ink" />
-          <span className="truncate font-mono text-[12px]">Whey, creatina, sin TACC…</span>
-          <kbd className="ml-auto border border-line px-1.5 font-mono text-[10px] text-muted">/</kbd>
+          <span className="truncate font-mono text-[12px] lg:max-xl:hidden">Whey, creatina, sin TACC…</span>
+          <span className="hidden font-mono text-[12px] uppercase tracking-[0.08em] lg:max-xl:inline">Buscar</span>
+          <kbd className="ml-auto border border-line px-1.5 font-mono text-[10px] text-muted lg:max-xl:hidden">/</kbd>
         </button>
         <div className="ml-auto flex items-center gap-0.5 sm:ml-1">
           <SoundToggle className={ICON} />

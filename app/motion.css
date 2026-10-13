@@ -61,7 +61,7 @@
 @keyframes stage-in { from { opacity: 0; } }
 @keyframes stage-rise { from { opacity: 0; transform: translateY(14px) scale(0.98); } }
 /* Con el escenario abierto, los fondos animados de la tienda se pausan (no se ven y gastan batería). */
-.stage-open .season-backdrop *, .stage-open .season-scene * { animation-play-state: paused !important; }
+.stage-open .amb-field *, .stage-open .fx-layer * { animation-play-state: paused !important; }
 
 /* Regalo abierto: lo de adentro entra en cascada; la nota queda apenas inclinada, como un papel. */
 .gift-card > * { flex-shrink: 0; animation: stage-rise 640ms var(--ease-out-expo) both; }

@@ -26,7 +26,7 @@ export function Ticker({ items, season, onHide }: TickerProps) {
   return (
     <div data-ticker role="region" aria-label="Avisos de la tienda" className="floor flex h-9 items-stretch border-b border-white/10 text-on-night">
       <span aria-hidden="true" className="w-1.5 shrink-0 bg-(--season-accent)" />
-      <ul className="no-scrollbar flex min-w-0 flex-1 items-center gap-5 overflow-x-auto whitespace-nowrap px-3 font-mono text-[11px] uppercase tracking-[0.1em] sm:justify-center sm:px-6">
+      <ul className="no-scrollbar flex min-w-0 flex-1 items-center gap-5 overflow-x-auto whitespace-nowrap px-3 font-mono text-[11px] uppercase tracking-[0.1em] sm:justify-center-safe sm:px-6">
         {season && <li className="flex shrink-0 items-center">{season}</li>}
         {items.map((it) => (
           <li key={it.key} className={cn("shrink-0 items-center gap-2", it.wide ? "hidden md:flex" : "flex")}>

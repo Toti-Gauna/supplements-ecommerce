@@ -11,20 +11,25 @@ test.describe("movimiento reducido", () => {
   });
 });
 
-test("la pantalla de carga aparece en cada recarga, dura 5 s y se cierra con Escape", async ({ page }) => {
+test("la pantalla de carga sale solo la primera vez de la sesión, dura ~1,2 s y se cierra con Escape", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("");
   const splash = page.locator("#volta-splash");
   await expect(splash).toBeVisible();
-  await expect(splash.locator(".splash-piece")).toHaveCount(5);
+  await expect(splash.locator(".splash-bar span")).toHaveCount(12);
   await page.keyboard.press("Escape");
   await expect(splash).toBeHidden();
   await page.getByRole("link", { name: "Ver todas" }).click();
   await expect(page).toHaveURL(/categorias\/$/);
-  // Vuelve en la recarga y se va sola a los 5 s
+  // En la misma sesión no vuelve, ni al recargar.
+  await page.reload();
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  await expect(splash).toBeHidden();
+  // En una sesión nueva vuelve y se va sola en ~1,2 s.
+  await page.evaluate(() => sessionStorage.clear());
   await page.reload();
   await expect(splash).toBeVisible();
-  await expect(splash).toBeHidden({ timeout: 6500 });
+  await expect(splash).toBeHidden({ timeout: 2500 });
 });
 
 for (const width of [375, 768, 1440]) {

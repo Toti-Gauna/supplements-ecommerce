@@ -26,7 +26,7 @@ export function ShopMenu({ active }: { active: boolean }) {
   return (
     <div ref={ref} className="relative flex" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
       <button type="button" aria-expanded={open} aria-controls="shop-menu" onClick={() => setOpen((v) => !v)}
-        className={cn("flex h-14 items-center gap-1 border-b-2 px-3 font-mono text-[12px] font-bold uppercase tracking-[0.12em] transition-colors xl:px-4", active || open ? "border-volt-ink text-ink" : "border-transparent text-muted hover:text-ink")}>
+        className={cn("flex h-14 items-center gap-1 whitespace-nowrap border-b-2 px-2.5 font-mono text-[12px] font-bold uppercase tracking-[0.08em] transition-colors xl:px-4 xl:tracking-[0.12em]", active || open ? "border-volt-ink text-ink" : "border-transparent text-muted hover:text-ink")}>
         Tienda <ChevronDown size={16} aria-hidden="true" className={cn("transition-transform duration-300", open && "rotate-180")} />
       </button>
       <AnimatePresence>

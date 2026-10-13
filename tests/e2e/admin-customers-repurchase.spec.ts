@@ -20,8 +20,8 @@ for (const [label, width, height, touch] of [["celular", 390, 844, true], ["escr
       await expect(page.getByRole("heading", { level: 1, name: /Juan Ibarra/ })).toBeVisible();
       await expect(page.getByLabel("Objetivo", { exact: true })).toHaveValue("masa-muscular");
       const whey = page.getByRole("region", { name: "Se le termina" }).getByRole("listitem").filter({ hasText: "Ionic Whey 100%" });
-      await expect(whey).toContainText("Se le termina el jueves 8 de octubre (en 4 días)");
-      await expect(whey.getByRole("progressbar", { name: /Le queda cerca del 13 %/ })).toBeVisible();
+      await expect(whey).toContainText("Se le termina el jueves 8 de octubre (en 3 días)");
+      await expect(whey.getByRole("progressbar", { name: /Le queda cerca del 10 %/ })).toBeVisible();
       // El WhatsApp va al celular del cliente con el mensaje escrito (no se abre en el test: es un sitio externo).
       const whatsapp = whey.getByRole("link", { name: /WhatsApp a Juan Ibarra/ });
       await expect(whatsapp).toHaveAttribute("href", /^https:\/\/wa\.me\/5492235550103\?text=.*jueves%208%20de%20octubre/);

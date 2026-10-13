@@ -167,6 +167,9 @@ Copia de la estructura del panel de Velmar con la estética eléctrica y la lóg
 - **Marca blanca**: guía para cambiar nombre, logo, colores, WhatsApp y catálogo por cliente en minutos, y publicar una
   demo por prospecto de Mar del Plata.
 
+## Rediseño (R1–R4)
+Después de la Fase 8, el rediseño UX/UI completo se planifica en [`plan-rediseno.md`](plan-rediseno.md).
+
 ## Cómo se publica la demo
 - Export estático (`out/`) que corre en cualquier hosting gratis. El workflow de GitHub Pages queda listo; **GitHub
   Pages en un repo privado requiere plan pago**, así que hay dos caminos: hacer público el repo (como Velmar) o

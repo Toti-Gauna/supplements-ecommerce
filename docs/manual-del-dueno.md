@@ -158,7 +158,7 @@ Otros segmentos útiles: **Recompra atrasada** (ya se le terminó y no volvió),
 ### Avisarle que se le está por terminar
 
 1. Abrí la ficha del cliente (por ejemplo **Juan Ibarra**).
-2. En **Se le termina** ves cada pote con su batería y la fecha: "Se le termina el jueves 8 de octubre (en 4 días)".
+2. En **Se le termina** ves cada pote con su batería y la fecha: "Se le termina el jueves 8 de octubre (en 3 días)".
    El cálculo sale de los servicios del pote y de cuándo lo recibió (un servicio por día; pre-entrenos y aminoácidos,
    4 por semana). Es orientativo.
 3. Tocá **Avisarle por email** o **WhatsApp** (abre WhatsApp con el mensaje ya escrito).
@@ -200,7 +200,7 @@ sabor y tamaño, con su stock.
 
 1. En **Productos y stock** tocá **6 lotes vencen en menos de 60 días** (el número cambia) o **Liquidar** en
    **Próximos a vencer** del inicio.
-2. Tocá **Liquidar** en el lote (por ejemplo VL-2603-W de Ionic Whey Vainilla, que vence en 57 días).
+2. Tocá **Liquidar** en el lote (por ejemplo VL-2603-W de Ionic Whey Vainilla, que vence en 56 días).
 3. Elegí el descuento (−10 % a −50 %, u otro porcentaje) y mirá cómo se va a ver en la tienda.
 4. Tocá **Liquidar a $ …**.
 
@@ -484,4 +484,4 @@ En **Contenido** cambiás lo que se lee en el inicio y en la ayuda, sin pedirle 
 | El WhatsApp se abre con el mensaje escrito, pero lo mandás vos | Igual |
 | El giro de la ruleta y el cupón del juego valen uno por navegador | Uno por cuenta |
 | Proveedores, clientes, pedidos y códigos de lote son inventados | Son los tuyos |
-| La fecha del panel está fija en el 4 de octubre de 2026 | Es la fecha de hoy |
+| La fecha del panel está fija en el lunes 5 de octubre de 2026 | Es la fecha de hoy |

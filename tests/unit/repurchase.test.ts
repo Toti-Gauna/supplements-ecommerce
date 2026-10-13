@@ -47,11 +47,11 @@ describe("cuánto dura cada pote", () => {
 });
 
 describe("se le termina", () => {
-  it("a Juan se le termina la whey el jueves 8 (en 4 días) y la creatina más adelante", () => {
+  it("a Juan se le termina la whey el jueves 8 (en 3 días) y la creatina más adelante", () => {
     const [whey, creatine] = repurchaseItems(row("juan.i@ejemplo.com"), products, DEMO_TODAY);
-    expect(whey).toMatchObject({ slug: "ionic-whey", runsOutOn: "2026-10-08", inDays: 4, state: "week", orderCode: "VOL-000107", variant: "Chocolate · 2 lb (907 g)", key: "ionic-whey:2026-10-08" });
+    expect(whey).toMatchObject({ slug: "ionic-whey", runsOutOn: "2026-10-08", inDays: 3, state: "week", orderCode: "VOL-000107", variant: "Chocolate · 2 lb (907 g)", key: "ionic-whey:2026-10-08" });
     expect(runOutText(whey!)).toBe("Se le termina el jueves 8 de octubre");
-    expect(runOutLine(whey!)).toBe("Se le termina el jueves 8 de octubre (en 4 días)");
+    expect(runOutLine(whey!)).toBe("Se le termina el jueves 8 de octubre (en 3 días)");
     expect(runOutLine({ runsOutOn: DEMO_TODAY, inDays: 0 })).toBe("Se le termina hoy");
     expect(runOutLine({ runsOutOn: "2026-09-20", inDays: -14 })).toBe("Se le terminó el domingo 20 de septiembre (hace 14 días)");
     expect(creatine).toMatchObject({ slug: "creatina-monohidrato", runsOutOn: "2026-11-07", state: "later" });
@@ -59,7 +59,7 @@ describe("se le termina", () => {
   it("si vuelve a comprar antes de terminarlo, el pote nuevo arranca cuando se termina el anterior", () => {
     const line = (id: string) => [{ id, productSlug: "ionic-whey", variantId: "iw-chocolate-2lb", quantity: 1 }];
     const c = customer([{ createdAt: "2026-09-01T10:00:00-03:00", lines: line("a") }, { createdAt: "2026-09-20T10:00:00-03:00", lines: line("b") }]);
-    expect(repurchaseItems(c, products, DEMO_TODAY)).toEqual([expect.objectContaining({ startsOn: "2026-10-01", runsOutOn: "2026-10-31", inDays: 27 })]);
+    expect(repurchaseItems(c, products, DEMO_TODAY)).toEqual([expect.objectContaining({ startsOn: "2026-10-01", runsOutOn: "2026-10-31", inDays: 26 })]);
   });
   it("solo cuentan pedidos pagados: ni pendientes, ni cancelados, ni en reclamo", () => {
     const lines = [{ id: "a", productSlug: "isolate-zero", variantId: "iz-chocolate-2lb", quantity: 1 }];
@@ -67,24 +67,24 @@ describe("se le termina", () => {
     expect(repurchaseItems(customer([{ status: "PAID", lines }]), products, DEMO_TODAY)).toHaveLength(1);
   });
   it("atrasada hasta 30 días después de terminarse; más atrás ya no aparece", () => {
-    expect(repurchaseItems(row("paula.c@ejemplo.com"), products, DEMO_TODAY)[0]).toMatchObject({ slug: "ionic-whey", runsOutOn: "2026-09-20", inDays: -14, state: "overdue" });
+    expect(repurchaseItems(row("paula.c@ejemplo.com"), products, DEMO_TODAY)[0]).toMatchObject({ slug: "ionic-whey", runsOutOn: "2026-09-20", inDays: -15, state: "overdue" });
     const old = customer([{ createdAt: "2026-07-01T10:00:00-03:00", lines: [{ id: "a", productSlug: "ionic-whey", variantId: "iw-chocolate-2lb", quantity: 1 }] }]);
     expect(repurchaseItems(old, products, DEMO_TODAY)).toEqual([]);
     expect([stateOf(-1), stateOf(0), stateOf(6), stateOf(7)]).toEqual(["overdue", "week", "week", "later"]);
   });
   it("los datos de muestra traen varios avisos esta semana y recompras atrasadas", () => {
     const week = rows.flatMap((c) => repurchaseItems(c, products, DEMO_TODAY).filter((i) => i.state === "week"));
-    expect(week.map((i) => `${i.name} ${i.runsOutOn}`).sort()).toEqual(["Florencia Medina 2026-10-07", "Juan Ibarra 2026-10-08", "Nicolás Romero 2026-10-05", "Tomás Herrera 2026-10-04"]);
+    expect(week.map((i) => `${i.name} ${i.runsOutOn}`).sort()).toEqual(["Florencia Medina 2026-10-07", "Juan Ibarra 2026-10-08", "Nicolás Romero 2026-10-05", "Tomás Herrera 2026-10-05"]);
     const late = rows.flatMap((c) => repurchaseItems(c, products, DEMO_TODAY).filter((i) => i.state === "overdue"));
     expect(late.map((i) => i.name).sort()).toEqual(["Paula Castro", "Tomás Herrera"]);
   });
   it("textos: cuándo, batería, WhatsApp prellenado al celular del cliente", () => {
     expect([whenText(0), whenText(1), whenText(4), whenText(-1), whenText(-14)]).toEqual(["hoy", "mañana", "en 4 días", "ayer", "hace 14 días"]);
     const [whey] = repurchaseItems(row("juan.i@ejemplo.com"), products, DEMO_TODAY);
-    expect(remainingPct(whey!, DEMO_TODAY)).toBe(13);
+    expect(remainingPct(whey!, DEMO_TODAY)).toBe(10);
     expect(remainingPct(whey!, "2026-10-20")).toBe(0);
     const text = repurchaseMessage(whey!, "Volta");
-    expect(text).toBe("¡Hola Juan! Te escribimos de Volta. Calculamos que el jueves 8 de octubre se te termina tu Ionic Whey 100%. ¿Te preparamos otro? En Mar del Plata te lo llevamos con cadete en el día.");
+    expect(text).toBe("¡Hola Juan! Te escribimos de Volta. Calculamos que el jueves 8 de octubre se te termina tu Ionic Whey 100%. ¿Te preparamos otro? En Mar del Plata te lo llevamos con cadete al día hábil siguiente.");
     expect(customerWhatsappLink("223 555-0103", "Hola")).toBe("https://wa.me/5492235550103?text=Hola");
     expect(customerWhatsappLink(undefined, "Hola")).toBeNull();
   });

@@ -5,10 +5,9 @@ import { ButtonLink } from "@/components/atoms/Button";
 import { Skeleton } from "@/components/atoms/Skeleton";
 import { EmptyState } from "@/components/molecules/EmptyState";
 import { StepIndicator } from "@/components/molecules/StepIndicator";
-import { promiseFor } from "@/demo/engine/delivery";
 import { giftsFromLines } from "@/demo/engine/gifts";
 import { missingForFreeShipping, totalsOf } from "@/demo/engine/pricing";
-import { DEMO_TODAY } from "@/demo/fixtures/admin-orders";
+import { demoNow } from "@/demo/clock";
 import { DEMO_ORDER_CODE, DEMO_TRACKING_TOKEN } from "@/demo/fixtures/commerce";
 import { useAccount } from "@/stores/account";
 import { useAdmin } from "@/stores/admin";
@@ -23,6 +22,7 @@ import { ConfirmStep } from "./ConfirmStep";
 import { ContactStep } from "./ContactStep";
 import { DeliveryStep } from "./DeliveryStep";
 import { PaymentStep } from "./PaymentStep";
+import { useOrderPromise } from "./useOrderPromise";
 
 const STEPS = ["Datos", "Entrega", "Pago", "Confirmar"];
 
@@ -37,6 +37,7 @@ export function CheckoutView() {
   const isAccount = useAccount((s) => s.user !== null);
   const checkout = useCheckout();
   const mounted = useRef(false);
+  const promise = useOrderPromise(lines);
 
   useEffect(() => {
     if (mounted.current) heading.current?.focus();
@@ -56,15 +57,16 @@ export function CheckoutView() {
   }
 
   const confirm = () => {
-    const now = new Date();
+    // La hora de verdad sobre el día de la demo: el pedido queda fechado el mismo día que el resto de la demo.
+    const createdAt = demoNow();
     // El carrito se lee en el momento: desde "¿Es para regalo?" se puede marcar un regalo y confirmar en el mismo toque.
     const lines = useCart.getState().lines;
-    // Cada línea marcada como regalo genera su código y su link; la fecha estimada sale del calendario de despachos.
-    const { orders, workshop } = useAdmin.getState();
-    const gifts = giftsFromLines(lines, { orderCode: DEMO_ORDER_CODE, now, eta: promiseFor(lines, DEMO_TODAY, orders, workshop.settings, { fulfillment: checkout.fulfillment!, exceptCode: DEMO_ORDER_CODE }).day, random: Math.random });
+    // Una sola fecha del calendario de despachos: la del pedido, la de sus regalos y la que se vio en Entrega.
+    const promisedDate = promise(checkout.fulfillment!, lines).day;
+    const gifts = giftsFromLines(lines, { orderCode: DEMO_ORDER_CODE, now: new Date(createdAt), eta: promisedDate, random: Math.random });
     if (gifts.length) useGifts.getState().addSent(gifts);
     const order = {
-      code: DEMO_ORDER_CODE, token: DEMO_TRACKING_TOKEN, createdAt: now.toISOString(), contact: checkout.contact,
+      code: DEMO_ORDER_CODE, token: DEMO_TRACKING_TOKEN, createdAt, contact: checkout.contact, promisedDate,
       fulfillment: checkout.fulfillment!, paymentMethod: checkout.paymentMethod!, lines, quote: totalsOf(quote), asAccount: isAccount,
       ...(gifts.length ? { gifts: gifts.map((g) => g.code) } : {}),
     };

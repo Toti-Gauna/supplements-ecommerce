@@ -5,6 +5,7 @@ import { Switch } from "@/components/atoms/Switch";
 import { ProductVisual } from "@/components/illustrations/ProductVisual";
 import type { Column } from "@/components/organisms/data-table/types";
 import { productMinPrice, productStockState, productStockTotal, STOCK_LABEL } from "@/demo/admin/stock";
+import { productStockBadge } from "@/demo/admin/stock-badge";
 import { productHref } from "@/demo/engine/catalog";
 import { hasClearance } from "@/demo/admin/lots";
 import type { Category, Product } from "@/demo/types";
@@ -34,7 +35,7 @@ export function productColumns(categories: Category[], low: number, onToggle: (p
     },
     { id: "category", header: "Categoría", cell: cat, sortValue: cat, exportValue: cat },
     { id: "price", header: "Precio desde", align: "right", cell: (p) => formatARS(minPrice(p)), sortValue: minPrice, exportValue: minPrice },
-    { id: "stock", header: "Stock", className: "whitespace-nowrap", cell: (p) => <StockChip state={productStockState(p, low)} units={productStockTotal(p)} />, sortValue: (p) => productStockTotal(p) ?? Number.MAX_SAFE_INTEGER, exportValue: stockText },
+    { id: "stock", header: "Stock", className: "whitespace-nowrap", cell: (p) => <StockChip {...productStockBadge(p, low)} />, sortValue: (p) => productStockTotal(p) ?? Number.MAX_SAFE_INTEGER, exportValue: stockText },
     { id: "stockState", header: "Estado de stock", defaultHidden: true, cell: (p) => STOCK_LABEL[productStockState(p, low)], exportValue: (p) => STOCK_LABEL[productStockState(p, low)] },
     { id: "sold", header: "Vendidos", align: "right", cell: (p) => p.soldCount, sortValue: (p) => p.soldCount, exportValue: (p) => p.soldCount },
     { id: "tags", header: "Etiquetas", cell: (p) => <span className="flex flex-wrap gap-1">{p.featured && <Badge>Destacado</Badge>}{p.isNew && <Badge tone="brand">Nuevo</Badge>}{p.brand && <Badge>{p.brand}</Badge>}</span> },

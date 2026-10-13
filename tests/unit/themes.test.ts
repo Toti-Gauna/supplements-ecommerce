@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { seasonalThemes, themeCoupons, themeSettings } from "@/demo/fixtures/themes";
 import { defaultDemoData, demoData, setDemoData } from "@/demo/engine/source";
-import { currentTheme, inSeason, nextTheme, offerPrice, themeForDate, themeOffer, themeProducts } from "@/demo/engine/themes";
+import { cardDeal, currentTheme, inSeason, nextTheme, offerPrice, themeForDate, themeOffer, themeProducts } from "@/demo/engine/themes";
 import { walletCoupons } from "@/demo/engine/wallet";
 import type { SeasonId } from "@/demo/types";
 import { AMBIENT } from "@/features/themes/ambient";
@@ -110,6 +110,17 @@ describe("temáticas fitness (Fase 5)", () => {
     expect(themeOffer(demoData().themes.find((t) => t.id === "dia-del-amigo")!)!.label).toBe("$5.000 OFF");
     setDemoData({ ...demoData(), coupons: demoData().coupons.map((c) => (c.code === "MONSTER20" ? { ...c, active: false } : c)) });
     expect(themeOffer(halloween)).toBeNull();
+  });
+
+  it("la tarjeta no promete el descuento cuando el cupón pide un mínimo: la insignia dice la condición", () => {
+    const offerOf = (id: string) => themeOffer(demoData().themes.find((t) => t.id === id)!)!;
+    const nbsp = (s: string) => s.replace(/\s/g, " ");
+    expect(cardDeal(10000, offerOf("halloween"))).toEqual({ price: 8000, label: "20% OFF" });
+    const black = cardDeal(72500, offerOf("black-friday"));
+    expect(black.price).toBeNull();
+    expect(nbsp(black.label)).toBe("−30 % desde $ 40.000");
+    expect(nbsp(cardDeal(9000, offerOf("dia-del-amigo")).label)).toBe("−$ 5.000 desde $ 35.000");
+    expect(cardDeal(9000, offerOf("dia-del-amigo")).price).toBeNull();
   });
 
   it("omite productos pausados de la oferta", () => {

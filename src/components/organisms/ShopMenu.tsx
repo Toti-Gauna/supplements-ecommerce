@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { ProductArt } from "@/components/illustrations/ProductArt";
 import { categoryHref, productsInCategory, visibleCategories } from "@/demo/engine/catalog";
 import { cn } from "@/lib/cn";
+import { plural } from "@/lib/plural";
 import { useDemoVersion } from "@/stores/admin";
 
 /** Menú desplegable de la tienda (escritorio): categorías ilustradas + acceso por objetivo. */
@@ -38,13 +39,13 @@ export function ShopMenu({ active }: { active: boolean }) {
                   <li key={c.slug}>
                     <Link href={categoryHref(c.slug)} onClick={() => setOpen(false)} className="group flex items-center gap-3 rounded-2xl p-2 hover:bg-accent/50">
                       <ProductArt art={c.art} label="" showBadge={false} className="h-12 w-12 shrink-0 rounded-xl" />
-                      <span className="flex-1"><span className="block font-bold">{c.name}</span><span className="text-xs text-muted">{productsInCategory(c.slug).length} productos</span></span>
+                      <span className="flex-1"><span className="block font-bold">{c.name}</span><span className="text-xs text-muted">{plural(productsInCategory(c.slug).length, "producto", "productos")}</span></span>
                       <ArrowRight size={16} aria-hidden="true" className="-translate-x-1 text-primary opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
                     </Link>
                   </li>
                 ))}
               </ul>
-              <Link href="/buscar/?objetivo=masa-muscular" onClick={() => setOpen(false)} className="flex flex-col justify-between rounded-2xl bg-night p-4 text-on-night ring-1 ring-volt/20">
+              <Link href="/crear/" onClick={() => setOpen(false)} className="flex flex-col justify-between rounded-2xl bg-night p-4 text-on-night ring-1 ring-volt/20">
                 <span className="eyebrow text-volt">Por objetivo</span>
                 <span className="font-display text-2xl leading-tight">Encontrá lo tuyo según tu objetivo</span>
                 <span className="flex items-center gap-1 text-sm font-bold text-volt">Ver objetivos <ArrowRight size={16} aria-hidden="true" /></span>

@@ -3,6 +3,9 @@ import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
 import { cn } from "@/lib/cn";
 import type { Column, Sort } from "./types";
 
+/** Columna fija contra el borde derecho (`stickyEnd`): la sombra marca que hay contenido pasando por debajo. */
+export const STICKY_END = "sticky right-0 shadow-[-12px_0_12px_-12px_rgb(0_0_0/0.3)]";
+
 interface Props<T> {
   columns: Column<T>[];
   sort: Sort | null;
@@ -31,7 +34,7 @@ export function DataTableHead<T>({ columns, sort, onSort, allSelected, someSelec
           const Icon = !active ? ArrowUpDown : sort.dir === "asc" ? ArrowUp : ArrowDown;
           return (
             <th key={c.id} scope="col" aria-sort={active ? (sort.dir === "asc" ? "ascending" : "descending") : undefined}
-              className={cn("whitespace-nowrap px-3 py-3", c.align === "right" && "text-right", c.align === "center" && "text-center", c.className)}>
+              className={cn("whitespace-nowrap px-3 py-3", c.align === "right" && "text-right", c.align === "center" && "text-center", c.className, c.stickyEnd && cn(STICKY_END, "bg-surface"))}>
               {c.sortValue ? (
                 <button type="button" onClick={() => cycle(c.id)} className={cn("inline-flex items-center gap-1.5 rounded-md uppercase transition-colors hover:text-ink", active && "text-ink", c.align === "right" && "flex-row-reverse")}>
                   {c.header}<Icon size={13} aria-hidden="true" className={active ? "text-primary" : "opacity-40"} />

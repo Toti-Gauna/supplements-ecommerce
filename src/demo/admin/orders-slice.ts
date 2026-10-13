@@ -1,3 +1,4 @@
+import { demoNow } from "../clock";
 import { promiseFor } from "../engine/delivery";
 import { checkReschedule, type RescheduleCheck } from "../engine/reschedule";
 import { canTransition, STATUS_LABEL, type OrderStatus, type TransitionTrigger } from "../engine/orders";
@@ -43,7 +44,7 @@ function move(set: Set, code: string, to: OrderStatus, trigger: TransitionTrigge
     const orders = s.orders.map((o) => {
       if (o.code !== code || !canTransition(o.status, to, { fulfillment: o.fulfillment, trigger, prevStatus: o.prevStatus })) return o;
       const prevStatus = to === "IN_CLAIM" ? o.status : o.status === "IN_CLAIM" ? null : o.prevStatus;
-      const next: AdminOrder = { ...o, ...patch(o), status: to, prevStatus, log: [...o.log, { at: new Date().toISOString(), from: o.status, to, note: action }] };
+      const next: AdminOrder = { ...o, ...patch(o), status: to, prevStatus, log: [...o.log, { at: demoNow(), from: o.status, to, note: action }] };
       // Control de lote: sin el lote de cada línea confirmado, el pedido no queda listo.
       if (to === "READY" && o.status === "IN_PRODUCTION" && missingLots(next).length) return o;
       ok = true;
@@ -53,7 +54,7 @@ function move(set: Set, code: string, to: OrderStatus, trigger: TransitionTrigge
       // La etapa se conserva durante un reclamo para volver a la misma columna; se borra al salir de preparación.
       if (to !== "IN_PRODUCTION" && to !== "IN_CLAIM") delete next.stage;
       // Emails automáticos del cambio de estado (bandeja de salida simulada).
-      mails = emailsForOrder(s.emails.templates, triggersForTransition(o.status, to), next, new Date().toISOString());
+      mails = emailsForOrder(s.emails.templates, triggersForTransition(o.status, to), next, demoNow());
       return next;
     });
     return ok ? { orders, workshop: { ...s.workshop, materials }, emails: { ...s.emails, outbox: pushOutbox(s.emails.outbox, mails) }, audit: [auditEntry(action, code), ...s.audit].slice(0, 80) } : {};
@@ -70,13 +71,13 @@ export function createOrdersActions(set: Set, get: () => AdminData): OrdersActio
         const created: AdminOrder = {
           code: order.code, createdAt: order.createdAt, customer: order.contact, userId: order.asAccount ? "u-demo" : null,
           status: "PENDING_PAYMENT", fulfillment: order.fulfillment, paymentMethod: order.paymentMethod, lines: order.lines,
-          total: order.quote.total, notes: [], fromShop: true, promisedDate: promiseFor(order.lines, DEMO_TODAY, s.orders, s.workshop.settings, { fulfillment: order.fulfillment, exceptCode: order.code }).day, log: [{ at: order.createdAt, from: null, to: "PENDING_PAYMENT", note: "Checkout de demostración" }],
+          total: order.quote.total, notes: [], fromShop: true, promisedDate: order.promisedDate ?? promiseFor(order.lines, DEMO_TODAY, s.orders, s.workshop.settings, { fulfillment: order.fulfillment, exceptCode: order.code }).day, log: [{ at: order.createdAt, from: null, to: "PENDING_PAYMENT", note: "Checkout de demostración" }],
         };
         const mails = emailsForOrder(s.emails.templates, triggersForNewOrder(), created, order.createdAt);
         return { orders: [created, ...s.orders.filter((o) => o.code !== order.code)], emails: { ...s.emails, outbox: pushOutbox(s.emails.outbox, mails) } };
       }),
     receiveProof: (code, fileName) =>
-      move(set, code, "PAYMENT_REVIEW", "proof-received", () => ({ proof: { fileName, receivedAt: new Date().toISOString(), status: "IN_REVIEW" } }), `Comprobante recibido (${fileName}): queda en revisión`),
+      move(set, code, "PAYMENT_REVIEW", "proof-received", () => ({ proof: { fileName, receivedAt: demoNow(), status: "IN_REVIEW" } }), `Comprobante recibido (${fileName}): queda en revisión`),
     approveProof: (code) =>
       move(set, code, "PAID", "proof-approved", (o) => ({ proof: o.proof && { ...o.proof, status: "APPROVED" } }), "Comprobante aprobado tras verificar el ingreso (simulado)"),
     rejectProof: (code, reason) =>

@@ -3,7 +3,7 @@ import { HOUSE_SHAKER_SLUG } from "./house";
 import { ORDER_PREFIX } from "./house";
 
 /** Fecha de referencia de la demo: todas las cifras "de hoy/semana/mes" se calculan contra esta fecha. */
-export const DEMO_TODAY = "2026-10-04";
+export const DEMO_TODAY = "2026-10-05";
 
 type Seed = Omit<AdminOrder, "total" | "notes" | "log"> & { notes?: string[]; log?: AdminOrder["log"] };
 
@@ -24,7 +24,7 @@ export const orderSeeds: Seed[] = [
   { code: `${ORDER_PREFIX}-000121`, createdAt: "2026-10-01T13:00:00-03:00", customer: { name: "Julián Paz", email: "julian.p@ejemplo.com", phone: "223 555-0121" }, userId: "u-julian", status: "IN_PRODUCTION", fulfillment: "LOCAL_DELIVERY", paymentMethod: "QR_MANUAL", address: "Rivadavia 3200, Mar del Plata (7600)", promisedDate: "2026-10-08", stage: "lot-check",
     lines: [{ id: "a", productSlug: "creatina-monohidrato", variantId: "cm-sin-sabor-500", quantity: 1 }],
     proof: { fileName: "qr-121.png", receivedAt: "2026-10-01T13:30:00-03:00", status: "APPROVED" }, notes: ["Pidió sumar un sachet de muestra de pre-entreno."] },
-  { code: `${ORDER_PREFIX}-000120`, createdAt: "2026-09-30T18:20:00-03:00", customer: { name: "Camila Torres", email: "cami.t@ejemplo.com", phone: "223 555-0120" }, userId: "u-sofia", status: "READY", fulfillment: "LOCAL_DELIVERY", paymentMethod: "BANK_TRANSFER", address: "Alem 2700, Mar del Plata (7600)", promisedDate: "2026-10-02",
+  { code: `${ORDER_PREFIX}-000120`, createdAt: "2026-09-30T18:20:00-03:00", customer: { name: "Camila Torres", email: "cami.t@ejemplo.com", phone: "223 555-0120" }, userId: "u-sofia", status: "READY", fulfillment: "LOCAL_DELIVERY", paymentMethod: "BANK_TRANSFER", address: "Alem 2700, Mar del Plata (7600)", promisedDate: "2026-10-05",
     lines: [{ id: "a", productSlug: "electrolitos", variantId: "ev-limon-x10", quantity: 2 }],
     proof: { fileName: "transferencia-120.pdf", receivedAt: "2026-09-30T18:45:00-03:00", status: "APPROVED" } },
   { code: `${ORDER_PREFIX}-000119`, createdAt: "2026-09-29T09:00:00-03:00", customer: { name: "Diego Álvarez", email: "diego.a@ejemplo.com", phone: "223 555-0123" }, userId: "u-diego", status: "SHIPPED", fulfillment: "SHIPPING", paymentMethod: "CHECKOUT_PRO", address: "Mitre 900, Balcarce (7620)", promisedDate: "2026-09-30",
@@ -60,7 +60,7 @@ export const orderSeeds: Seed[] = [
     lines: [{ id: "a", productSlug: "isolate-zero", variantId: "iz-vainilla-2lb", quantity: 1 }] },
   { code: `${ORDER_PREFIX}-000105`, createdAt: "2026-08-20T11:10:00-03:00", customer: { name: "Paula Castro", email: "paula.c@ejemplo.com", phone: "223 555-0105" }, userId: null, status: "DELIVERED", fulfillment: "PICKUP", paymentMethod: "CHECKOUT_PRO", promisedDate: "2026-08-21",
     lines: [{ id: "a", productSlug: "ionic-whey", variantId: "iw-vainilla-2lb", quantity: 1 }, { id: "b", productSlug: "multivitaminico", variantId: "mv-60", quantity: 1 }] },
-  { code: `${ORDER_PREFIX}-000104`, createdAt: "2026-08-12T19:20:00-03:00", customer: { name: "Tomás Herrera", email: "tomas.h@ejemplo.com", phone: "223 555-0104" }, userId: null, status: "DELIVERED", fulfillment: "LOCAL_DELIVERY", paymentMethod: "CHECKOUT_PRO", address: "Jara 1450, Mar del Plata (7600)", promisedDate: "2026-08-13",
+  { code: `${ORDER_PREFIX}-000104`, createdAt: "2026-08-13T19:20:00-03:00", customer: { name: "Tomás Herrera", email: "tomas.h@ejemplo.com", phone: "223 555-0104" }, userId: null, status: "DELIVERED", fulfillment: "LOCAL_DELIVERY", paymentMethod: "CHECKOUT_PRO", address: "Jara 1450, Mar del Plata (7600)", promisedDate: "2026-08-14",
     lines: [{ id: "a", productSlug: "overvolt-pre", variantId: "ov-mango-300", quantity: 1 }, { id: "b", productSlug: "creatina-brava", variantId: "cb-sin-sabor-250", quantity: 1 }] },
   { code: `${ORDER_PREFIX}-000103`, createdAt: "2026-08-06T18:30:00-03:00", customer: { name: "Juan Ibarra", email: "juan.i@ejemplo.com", phone: "223 555-0103" }, userId: null, status: "DELIVERED", fulfillment: "LOCAL_DELIVERY", paymentMethod: "CHECKOUT_PRO", address: "Funes 2100, Mar del Plata (7600)", promisedDate: "2026-08-07",
     lines: [{ id: "a", productSlug: "ionic-whey", variantId: "iw-chocolate-2lb", quantity: 1 }] },

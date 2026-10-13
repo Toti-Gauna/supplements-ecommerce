@@ -12,7 +12,7 @@ export function formatDate(isoOrDay: string): string {
   return dateOnly.format(new Date(isoOrDay.length === 10 ? `${isoOrDay}T12:00:00-03:00` : isoOrDay));
 }
 
-/** "2026-10-04" en hora argentina. */
+/** "2026-10-05" en hora argentina. */
 export function toDayKey(iso: string): string {
   return dayKey.format(new Date(iso));
 }
@@ -35,4 +35,12 @@ const dayFormats = {
 /** Un día AAAA-MM-DD del calendario de despachos: "jue, 8 oct" (short), "jueves, 8 de octubre" (long), "octubre de 2026" (month). */
 export function formatDay(day: string, style: keyof typeof dayFormats = "short"): string {
   return dayFormats[style].format(new Date(`${day}T12:00:00Z`));
+}
+
+const RELATIVE = ["hoy", "mañana"];
+
+/** Cuándo, contado desde `today`, para seguir a "llega" o "sale": "hoy, lun 5 oct", "mañana, mar 6 oct" o "el jue, 8 oct". */
+export function whenDay(day: string, today: string, style: "short" | "long" = "short"): string {
+  const rel = RELATIVE[Math.round((Date.parse(day) - Date.parse(today)) / 86_400_000)];
+  return rel ? `${rel}, ${formatDay(day, style).replace(",", "")}` : `el ${formatDay(day, style)}`;
 }

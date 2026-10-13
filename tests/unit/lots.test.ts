@@ -20,8 +20,8 @@ describe("vencimientos y FEFO (engine)", () => {
     expect(formatExpiry("2026-11")).toBe("11/2026");
   });
   it("días hasta el vencimiento contra la fecha de la demo", () => {
-    expect(daysToExpiry("2026-11", DEMO_TODAY)).toBe(57);
-    expect(daysToExpiry("2026-12", DEMO_TODAY)).toBe(88);
+    expect(daysToExpiry("2026-11", DEMO_TODAY)).toBe(56);
+    expect(daysToExpiry("2026-12", DEMO_TODAY)).toBe(87);
     expect(daysToExpiry("2026-09", DEMO_TODAY)).toBeLessThan(0);
   });
   it("sale primero el que vence primero y tiene unidades", () => {

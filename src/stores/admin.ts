@@ -1,4 +1,5 @@
 "use client";
+import { demoNow } from "@/demo/clock";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { createCatalogActions, type CatalogActions } from "@/demo/admin/catalog-slice";
@@ -37,7 +38,7 @@ export const useAdmin = create<AdminState>()(
       ...createCustomerActions(set, get),
       addClaim: (claim) =>
         set((s) => ({
-          claims: [{ ...claim, id: `c-${Date.now().toString(36)}`, status: "OPEN", createdAt: new Date().toISOString(), fromShop: true }, ...s.claims],
+          claims: [{ ...claim, id: `c-${Date.now().toString(36)}`, status: "OPEN", createdAt: demoNow(), fromShop: true }, ...s.claims],
           audit: [auditEntry("Arrepentimiento recibido desde la tienda", claim.code), ...s.audit],
         })),
       resetAdmin: () => set(defaultAdminData()),

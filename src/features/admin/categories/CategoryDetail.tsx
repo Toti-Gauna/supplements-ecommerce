@@ -8,7 +8,8 @@ import { describedBy, Field, Input, Textarea } from "@/components/atoms/Field";
 import { Switch } from "@/components/atoms/Switch";
 import { EmptyState } from "@/components/molecules/EmptyState";
 import { categoryRows } from "@/demo/admin/categories";
-import { DEFAULT_LOW_STOCK, productStockState, productStockTotal } from "@/demo/admin/stock";
+import { DEFAULT_LOW_STOCK } from "@/demo/admin/stock";
+import { productStockBadge } from "@/demo/admin/stock-badge";
 import { categoryHref as shopHref } from "@/demo/engine/catalog";
 import type { Category } from "@/demo/types";
 import { formatARS } from "@/lib/money";
@@ -84,7 +85,7 @@ export function CategoryDetail() {
                 <Link href={`/admin-demo/productos/editar/?id=${p.slug}`} className="flex flex-wrap items-center gap-3 rounded-2xl bg-bg p-2.5 pr-4 text-sm hover:ring-1 hover:ring-primary">
                   <ProductThumb product={p} />
                   <span className="min-w-0 flex-1"><span className="block font-bold">{p.name}</span><span className="text-muted">desde {formatARS(minPrice(p))} · {p.active === false ? "Pausado" : "Visible"}</span></span>
-                  <StockChip state={productStockState(p, low)} units={productStockTotal(p)} />
+                  <StockChip {...productStockBadge(p, low)} />
                 </Link>
               </li>
             ))}

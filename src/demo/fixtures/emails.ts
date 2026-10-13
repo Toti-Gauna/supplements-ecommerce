@@ -1,3 +1,4 @@
+import { DISPATCH_PROMISE } from "../engine/lead-time";
 import type { ArtKey, FulfillmentType } from "../types";
 import { brand } from "@/config/brand";
 
@@ -200,7 +201,7 @@ export const emailTemplates: EmailTemplate[] = [
     subject: [k("customer.firstName"), t(", tu "), k("refill.product"), t(" se está por terminar")],
     preheader: [t("Reponé antes de cortar la rutina.")],
     blocks: [head(), h(t("Se te está por terminar")),
-      p(t("Hola "), k("customer.firstName"), t(", por los servicios del envase que llevaste, tu "), k("refill.product"), t(" se termina cerca del "), k("refill.date"), t(". Si lo pedís hoy, en Mar del Plata te llega con cadete en el día.")),
+      p(t("Hola "), k("customer.firstName"), t(", por los servicios del envase que llevaste, tu "), k("refill.product"), t(" se termina cerca del "), k("refill.date"), t(`. Si lo pedís hoy, en Mar del Plata te llega con cadete ${DISPATCH_PROMISE}.`)),
       block("refill"), btn("product", t("Volver a pedirlo")),
       p(t("¿Querés cambiar de sabor o pasar al tamaño grande? En la ficha ves el precio por servicio de cada uno.")), foot()],
   },

@@ -2,7 +2,7 @@ import type { Lot, Product } from "../types";
 
 /**
  * Lotes de MUESTRA por variante (códigos inventados: marca + AAMM de elaboración + línea). La fecha de la demo es
- * `DEMO_TODAY` (2026-10-04): los que vencen en 10/2026 y 11/2026 quedan a menos de 60 días; 12/2026 queda afuera.
+ * `DEMO_TODAY` (2026-10-05): los que vencen en 10/2026 y 11/2026 quedan a menos de 60 días; 12/2026 queda afuera.
  * La suma de unidades de cada variante es su stock (el mismo que tenía antes de los lotes).
  */
 export const variantLots: Record<string, Lot[]> = {

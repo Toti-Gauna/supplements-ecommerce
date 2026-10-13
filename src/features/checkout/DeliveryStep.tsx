@@ -10,8 +10,10 @@ import { isLocalPostalCode } from "@/demo/engine/shipping";
 import { useDemoData } from "@/stores/admin";
 import type { FulfillmentType } from "@/demo/types";
 import { formatARS } from "@/lib/money";
+import { useCart } from "@/stores/cart";
 import { useCheckout } from "@/stores/checkout";
 import { addressSchema, type AddressInput } from "./schemas";
+import { useOrderPromise } from "./useOrderPromise";
 import { brand } from "@/config/brand";
 
 const ICONS = { PICKUP: Store, LOCAL_DELIVERY: Bike, SHIPPING: Truck };
@@ -29,6 +31,7 @@ export function DeliveryStep({ onNext, onBack, freeShipping }: { onNext: () => v
   const [missing, setMissing] = useState(false);
   const allZones = useDemoData((d) => d.zones);
   const zones = allZones.filter((z) => z.active !== false);
+  const promise = useOrderPromise(useCart((s) => s.lines));
   const form = useForm<AddressInput>({ resolver: zodResolver(addressSchema), defaultValues: address });
   const errors = form.formState.errors;
 
@@ -50,7 +53,7 @@ export function DeliveryStep({ onNext, onBack, freeShipping }: { onNext: () => v
           const price = z.price === 0 ? "Gratis" : freeShipping ? "Gratis" : z.price === null ? "A cotizar" : formatARS(z.price);
           return (
             <OptionCard key={z.id} name="fulfillment" value={z.type} checked={choice === z.type} onChange={(v) => { setChoice(v as FulfillmentType); setMissing(false); patch({ fulfillment: v as FulfillmentType }); }}
-              title={z.name} description={z.etaText} aside={price} icon={<Icon size={20} aria-hidden="true" />} />
+              title={z.name} description={<><span className="block font-semibold text-ink">{promise(z.type).text}</span>{z.etaText}</>} aside={price} icon={<Icon size={20} aria-hidden="true" />} />
           );
         })}
         {missing && <p role="alert" className="text-sm font-semibold text-danger">Elegí una forma de entrega.</p>}

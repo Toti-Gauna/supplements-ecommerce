@@ -27,7 +27,7 @@ test.describe("escritorio con mouse", () => {
     await panel.getByRole("button", { name: "Cerrar explicación" }).focus();
     await page.keyboard.press("Escape");
     await expect(panel).toBeHidden();
-    // Recompra atrasada: Paula (whey, hace 14 días) y Tomás (creatina, hace 2); Juan todavía tiene whey.
+    // Recompra atrasada: Paula (whey, hace 15 días) y Tomás (creatina, hace 2); Juan todavía tiene whey.
     await page.getByRole("combobox", { name: "Segmento" }).selectOption("atrasada");
     await expect(page).toHaveURL(/segmento=atrasada/);
     await expect(page.getByRole("row").filter({ hasText: "Paula Castro" })).toHaveCount(1);

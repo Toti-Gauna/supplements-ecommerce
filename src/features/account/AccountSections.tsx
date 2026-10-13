@@ -5,6 +5,7 @@ import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
 import { MissionProgress } from "@/components/molecules/MissionProgress";
 import { formatMissionValue, previewMission } from "@/demo/engine/missions";
+import { STATUS_LABEL } from "@/demo/engine/orders";
 import { demoAccountProgress } from "@/demo/fixtures/commerce";
 import { useDemoData } from "@/stores/admin";
 import { formatARS } from "@/lib/money";
@@ -15,6 +16,7 @@ import { GamePrizeTicket } from "../game/GamePrizeTicket";
 import { useGameCodes } from "@/stores/game";
 import { DEMO_TRACKING_TOKEN } from "@/demo/fixtures/commerce";
 import { ORDER_PREFIX } from "@/demo/fixtures/house";
+import { useShopOrder } from "../order/useShopOrder";
 
 /** El premio de la ruleta, con su estado, primero en los premios de la cuenta (8.2.14). */
 function WheelPrizeItem() {
@@ -23,8 +25,10 @@ function WheelPrizeItem() {
 }
 
 export function OrdersSection({ lastOrder }: { lastOrder: DemoOrder | null }) {
+  // El estado del último pedido sale del panel: con el comprobante subido dice "en revisión", nunca "pagado".
+  const tracked = useShopOrder(lastOrder?.code);
   const orders = [
-    ...(lastOrder ? [{ code: lastOrder.code, status: "Pendiente de pago", total: lastOrder.quote.total, href: `/pedido/${lastOrder.token}/` }] : []),
+    ...(lastOrder ? [{ code: lastOrder.code, status: STATUS_LABEL[tracked?.status ?? "PENDING_PAYMENT"], total: lastOrder.quote.total, href: `/pedido/${lastOrder.token}/` }] : []),
     { code: `${ORDER_PREFIX}-DEMO-0000`, status: "Entregado", total: 30400, href: `/pedido/${DEMO_TRACKING_TOKEN}/` },
   ];
   return (

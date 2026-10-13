@@ -18,6 +18,13 @@ interface Props<R> {
   onSave?: () => void;
 }
 
+/**
+ * Cada fila es un flex propio: si el texto de una celda contara para su ancho, la fila con el texto más largo
+ * (por ejemplo "Cookies & cream · 2 lb (907 g)") se estiraría y sus columnas quedarían corridas respecto de las demás.
+ * Con `contain: inline-size` el ancho sale solo del mínimo de la columna, igual en todas las filas; el texto se trunca.
+ */
+const COL = "flex-1 [contain:inline-size]";
+
 /** La grilla de la vista Excel: teclado, rango con Shift, copiar y pegar con Excel, deshacer y edición validada. */
 export function SheetGrid<R>({ id, label, rows, rowKey, g, sort, onSort, onSave }: Props<R>) {
   const push = useToasts((s) => s.push);
@@ -54,10 +61,10 @@ export function SheetGrid<R>({ id, label, rows, rowKey, g, sort, onSort, onSave 
       <div role="row" className="sticky top-0 z-20 flex w-max min-w-full border-b border-line bg-accent/70 backdrop-blur">
         {g.cols.map((col, c) => (
           <div key={col.id} role="columnheader" aria-sort={sort?.col === col.id ? (sort.dir === "asc" ? "ascending" : "descending") : undefined}
-            className={cn("flex-1 border-r border-line/70 px-2 py-2", col.width ?? "min-w-[8rem]", c === 0 && "sticky left-0 z-10 bg-accent")}>
+            className={cn(COL, "border-r border-line/70 px-2 py-2", col.width ?? "min-w-[8rem]", c === 0 && "sticky left-0 z-10 bg-accent")}>
             <button type="button" onClick={() => onSort(col.id)} className="flex w-full items-center gap-1 text-[12px] font-bold uppercase tracking-[0.06em] text-muted hover:text-ink">
               {!col.parse && <Lock size={11} aria-label="Solo lectura" className="shrink-0" />}
-              <span className="truncate">{col.label}</span>
+              <span className="truncate" title={col.label}>{col.label}</span>
               {sort?.col === col.id ? (sort.dir === "asc" ? <ArrowUp size={13} aria-hidden="true" /> : <ArrowDown size={13} aria-hidden="true" />) : <ArrowUpDown size={13} aria-hidden="true" className="shrink-0 opacity-40" />}
             </button>
           </div>
@@ -71,7 +78,7 @@ export function SheetGrid<R>({ id, label, rows, rowKey, g, sort, onSort, onSave 
             return (
               <div key={col.id} role="gridcell" aria-selected={g.inRange(r, c)} aria-readonly={!col.parse || undefined}
                 onMouseDown={(e) => { if (editing) return; e.preventDefault(); if (!g.commit()) return; if (active && !e.shiftKey) { g.startEdit({ r, c }); return; } g.select({ r, c }, e.shiftKey); document.getElementById(id)?.focus({ preventScroll: true }); }}
-                onDoubleClick={() => g.startEdit({ r, c })} className={cn("flex-1 cursor-cell border-r border-line/50", col.width ?? "min-w-[8rem]", c === 0 && "sticky left-0 z-10 bg-surface font-semibold")}>
+                onDoubleClick={() => g.startEdit({ r, c })} className={cn(COL, "cursor-cell border-r border-line/50", col.width ?? "min-w-[8rem]", c === 0 && "sticky left-0 z-10 bg-surface font-semibold")}>
                 <SheetCell col={col} row={row} value={g.value(row, col)} active={active} selected={g.inRange(r, c)} dirty={g.isDirty(row, col)}
                   error={g.errors[g.key(row, col)]} editing={editing} onEditText={(text) => g.setEditing((x) => (x ? { ...x, text, error: undefined } : x))}
                   onEditKey={onEditKey} onEditBlur={() => g.commit()} />

@@ -21,7 +21,12 @@ for (const [width, height] of [[1440, 900], [1280, 800], [1024, 768]] as const) 
       await expect(page.getByRole("navigation", { name: "Accesos rápidos del panel" })).toBeHidden();
       await expect.poll(() => panelWidth(page)).toBe(72);
       const x = await mainX(page);
-      // Hover: se despliega encima del contenido, que no se corre.
+      // Cruzarlo de pasada camino al contenido no lo abre (antes se desplegaba solo encima de la página).
+      await page.mouse.move(30, height / 2);
+      await page.mouse.move(width - 40, height / 2);
+      await page.waitForTimeout(700);
+      expect(await panelWidth(page)).toBe(72);
+      // Hover que se queda un momento: se despliega encima del contenido, que no se corre.
       await rail(page).hover();
       await expect.poll(() => panelWidth(page)).toBe(280);
       expect(await mainX(page)).toBe(x);
@@ -49,6 +54,19 @@ for (const [width, height] of [[1440, 900], [1280, 800], [1024, 768]] as const) 
       expect(await horizontalOverflow(page)).toBeLessThanOrEqual(0);
     });
 
+    test("si las secciones no entran, una sombra con flecha avisa que hay más abajo y se va al llegar al final", async ({ page }) => {
+      await page.goto("admin-demo/");
+      const nav = rail(page).getByRole("navigation", { name: "Secciones del panel demo" });
+      const more = rail(page).locator("[data-more-below]");
+      // A 900 px de alto o menos, Marketing y Ajustes quedan debajo del pliegue: el aviso tiene que verse.
+      expect(await nav.evaluate((el) => el.scrollHeight > el.clientHeight + 2)).toBe(true);
+      await expect(more).toHaveAttribute("data-more-below", "true");
+      await expect(rail(page).getByRole("link", { name: "Ajustes" })).not.toBeInViewport();
+      await nav.evaluate((el) => el.scrollTo({ top: el.scrollHeight }));
+      await expect(more).toHaveAttribute("data-more-below", "false");
+      await expect(rail(page).getByRole("link", { name: "Ajustes" })).toBeInViewport();
+    });
+
     test("un clic en un ícono navega y la barra vuelve a cerrarse al salir el mouse", async ({ page }) => {
       await page.goto("admin-demo/");
       await rail(page).getByRole("link", { name: "Clientes" }).click();
@@ -68,6 +86,8 @@ for (const [label, width, height] of [["tablet horizontal", 1024, 768], ["tablet
     const bar = page.getByRole("navigation", { name: "Accesos rápidos del panel" });
     await expect(bar).toBeVisible();
     for (const tab of ["Inicio", "Pedidos", "Pagos", "Productos"]) await expect(bar.getByRole("link", { name: tab })).toBeVisible();
+    // "Más" es un "…", no otra grilla casi igual a la de "Inicio".
+    await expect(bar.getByRole("button", { name: "Más secciones del panel" }).locator("svg")).toHaveClass(/lucide-ellipsis/);
     await bar.getByRole("button", { name: "Más secciones del panel" }).click();
     const menu = page.getByRole("dialog", { name: "Menú del panel" });
     await expect(menu.getByText("Marketing", { exact: true })).toBeVisible();

@@ -1,13 +1,17 @@
 "use client";
 import { BadgePercent, ShieldCheck, Truck, Zap } from "lucide-react";
+import { DEMO_TODAY } from "@/demo/fixtures/admin-orders";
+import { whenDay } from "@/lib/date";
 import { formatARS } from "@/lib/money";
 import { useDemoData } from "@/stores/admin";
+import { useCadeteDay } from "../delivery/useCadeteDay";
 
-/** Beneficios de compra, debajo del carrusel (cifras desde los ajustes editables). */
+/** Beneficios de compra, debajo del carrusel (cifras desde los ajustes; el cadete, desde el calendario de despachos). */
 export function BenefitsBar() {
   const settings = useDemoData((d) => d.settings);
+  const cadeteDay = useCadeteDay();
   const items = [
-    { icon: Zap, title: "Cadete en el día", text: "En Mar del Plata, antes de las 14 h" },
+    { icon: Zap, title: "Cadete en Mar del Plata", text: `Pedí hoy y llega ${whenDay(cadeteDay, DEMO_TODAY)}` },
     { icon: ShieldCheck, title: "100% originales", text: "Lote y vencimiento a la vista" },
     { icon: Truck, title: "Envío gratis", text: `Desde ${formatARS(settings.freeShippingFrom)}` },
     { icon: BadgePercent, title: `${settings.transferDiscountPct}% off`, text: "Con transferencia o QR" },

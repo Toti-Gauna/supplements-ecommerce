@@ -21,8 +21,10 @@ test("reducir movimiento: quieto, navegación circular y compra de la diapositiv
   await expect(page.getByRole("button", { name: "Reproducir carrusel" })).toBeDisabled();
   await page.waitForTimeout(4700);
   await expect(page.locator(markers).first()).toHaveAttribute("aria-current", "true");
+  const height = (await page.locator(hero).boundingBox())!.height;
   await page.getByRole("button", { name: "Diapositiva anterior" }).click();
   await expect(page.locator(markers).last()).toHaveAttribute("aria-current", "true");
+  expect((await page.locator(hero).boundingBox())!.height).toBeCloseTo(height, 0);
   await page.getByRole("button", { name: "Diapositiva siguiente" }).click();
   await expect(page.locator(markers).first()).toHaveAttribute("aria-current", "true");
   await page.getByRole("button", { name: "Diapositiva siguiente" }).click();

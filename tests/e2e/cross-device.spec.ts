@@ -58,7 +58,7 @@ async function sweep(page: Page, routes: readonly (readonly [string, string])[],
     const before = errors.length;
     const res = await page.goto(path);
     if (res?.status() !== 200) problems.push(`/${path}: HTTP ${res?.status()}`);
-    const target = page.getByRole("heading", { level: 1, name: heading });
+    const target = page.getByRole("heading", { level: path ? 1 : 2, name: heading });
     if (!(await target.first().waitFor({ state: "visible", timeout: 8000 }).then(() => true, () => false))) problems.push(`/${path}: no se ve «${heading}»`);
     const overflow = await horizontalOverflow(page);
     if (overflow > 0) problems.push(`/${path}: desborda ${overflow}px a lo ancho`);

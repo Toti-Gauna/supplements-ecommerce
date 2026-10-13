@@ -51,7 +51,7 @@ export function HeroStage({ pick, facts, cadete, campaign, actions, markers, mot
   const words = pick.headline.trim().split(/\s+/);
   const Heading = headingLevel;
   const readings = cells(facts, cadete).map((cell) => deferred && (cell.money || cell.key === "serv")
-    ? { ...cell, display: <span aria-hidden="true" className="block h-9 sm:h-10" /> } : cell);
+    ? { ...cell, display: <span aria-hidden="true" className="block h-10" /> } : cell);
   // Celular: titular, rack y marcador en el primer pantallazo; después el texto, los botones y los destacados.
   // Escritorio: titular y texto a la izquierda del rack; abajo, los destacados y el marcador a todo el ancho.
   return (

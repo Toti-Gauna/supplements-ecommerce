@@ -8,6 +8,7 @@ import { defaultDemoData, setDemoData } from "@/demo/engine/source";
 import { stageDates, trackedStatus } from "@/demo/engine/tracking";
 import { weekday } from "@/demo/engine/workdays";
 import { DEMO_TODAY } from "@/demo/fixtures/admin-orders";
+import { toDayKey } from "@/lib/date";
 import { shippingZones } from "@/demo/fixtures/commerce";
 import { storeFaqs } from "@/demo/fixtures/content";
 import { sampleTrackedOrder } from "@/demo/fixtures/tracking";
@@ -73,7 +74,7 @@ describe("promesa de entrega única", () => {
     // Subir el comprobante lo deja en revisión, fechado el día de la demo.
     expect(actions.receiveProof("VOL-DEMO-0001", "comprobante.pdf")).toBe(true);
     expect(state.orders[0]!.status).toBe("PAYMENT_REVIEW");
-    expect(state.orders[0]!.log.at(-1)!.at.slice(0, 10)).toBe(DEMO_TODAY);
+    expect(toDayKey(state.orders[0]!.log.at(-1)!.at)).toBe(DEMO_TODAY);
   });
 });
 

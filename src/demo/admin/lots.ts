@@ -1,14 +1,13 @@
-import { clearancePrice, daysToExpiry, EXPIRY_WINDOW_DAYS, fefo, firstOutLot, lotUnits } from "../engine/lots";
+import { clearancePrice, daysToExpiry, EXPIRY_WINDOW_DAYS, expiryState, fefo, firstOutLot, lotUnits, type ExpiryState } from "../engine/lots";
 import type { Lot, Product, Variant } from "../types";
 
 /** Lotes en el panel: avisos de vencimiento, liquidación y stock que se reparte entre lotes. Puro y testeado. */
-export type LotState = "expired" | "soon" | "ok";
+export type LotState = ExpiryState;
 
 export const LOT_STATE_LABEL: Record<LotState, string> = { expired: "Vencido", soon: "Vence pronto", ok: "Vigente" };
 
 export function lotState(lot: Lot, today: string, window = EXPIRY_WINDOW_DAYS): LotState {
-  const days = daysToExpiry(lot.expires, today);
-  return days < 0 ? "expired" : days < window ? "soon" : "ok";
+  return expiryState(lot.expires, today, window);
 }
 
 /** Un lote con su producto y variante: la fila del aviso de vencimientos y de la liquidación. */

@@ -47,6 +47,8 @@ export interface Lot {
   units: number;
   /** Liquidación por vencimiento: % de descuento mientras este lote sea el que sale primero. */
   clearancePct?: number;
+  /** Día en que el lote entró al local (AAAA-MM-DD). Lo muestra "Verificá tu lote". */
+  receivedOn?: string;
 }
 
 export interface Faq {
@@ -124,6 +126,8 @@ export interface Product {
   badges?: ProductBadge[];
   nutrition?: Nutrition;
   usage?: Usage;
+  /** Registro del producto alimenticio (RNPA) que figura en el rótulo. */
+  rnpa?: string;
   /** Lote representativo del producto (AAAA-MM). El de cada variante está en `variants[].lots`. */
   lot?: { code: string; expires: string };
   /** Nombres de las opciones en la ficha (por defecto "Sabor" y "Tamaño"). */

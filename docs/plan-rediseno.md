@@ -132,6 +132,31 @@ app con capturas. Hasta elegir, no se construye nada más.
 
 ---
 
+### Dirección elegida (13/10/2026)
+Ignacio delegó la elección. Se hicieron 3 propuestas en la app (capturas en [`img/rediseno/`](img/rediseno/)):
+
+| | Propuesta | Qué aporta |
+|---|---|---|
+| A | **BOX Industrial** ([1440](img/rediseno/propuesta-a-1440.jpg) · [390](img/rediseno/propuesta-a-390.jpg)) | Box de powerlifting de noche: carbono, acero, tiza, rack con reflector, **marcador LED de 7 segmentos**, esquinas rectas, Big Shoulders Display |
+| B | **Performance Lab** ([1440](img/rediseno/propuesta-b-1440.jpg) · [390](img/rediseno/propuesta-b-390.jpg)) | Hoja técnica clara: papel milimetrado, cotas reales del envase, etiqueta de lote, tablas de laboratorio, Space Grotesk |
+| C | **Arena** ([1440](img/rediseno/propuesta-c-1440.jpg) · [390](img/rediseno/propuesta-c-390.jpg)) | Noche de competencia: reflectores, humo, titulares gigantes en itálica, dorsales con el puesto en ventas |
+
+**Decisión: una síntesis con A como columna vertebral.**
+- **Modo oscuro (el de la marca) = A "BOX Industrial"** para toda la tienda y el panel. Es la que más se siente gimnasio
+  y la que más se aleja de Velmar. El marcador LED es la firma: precio por servicio, contadores y el panel.
+- **Modo claro "Tiza" = el laboratorio de B.** Papel, grilla milimétrica, cotas y etiquetas de lote, con la misma
+  estructura y componentes de A. Así la dirección "gimnasio + laboratorio" queda literal: de noche es el box y de día
+  es el laboratorio.
+- **Piezas de B en ambos modos:** el banco de pruebas con cotas reales en la ficha, la etiqueta de lote con aviso FEFO
+  y el "Readout" de datos de la ficha.
+- **Campañas y regalos (R3) = el lenguaje de C:** titulares gigantes en itálica, luz de escenario, dorsales y cortes en
+  diagonal. Así las fechas se viven como una campaña sin romper la tienda.
+- **Tipografías:** Big Shoulders Display para los titulares, Archivo para el texto (y su itálica comprimida para las
+  campañas), JetBrains Mono para los datos y los dígitos LED en SVG propio. Space Grotesk queda solo si el modo claro
+  la necesita.
+
+---
+
 ## 3. R0 · Arreglos urgentes (antes de R1, un PR chico)
 Son cosas que hoy restan en cualquier demo y no conviene esperar al rediseño. El esfuerzo total es S.
 

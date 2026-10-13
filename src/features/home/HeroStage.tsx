@@ -7,7 +7,6 @@ import { StockLights } from "@/components/molecules/StockLights";
 import type { HeroPick } from "@/demo/engine/home";
 import { stockLine, type RackFacts } from "@/demo/engine/rack";
 import { productHref } from "@/demo/engine/catalog";
-import { cn } from "@/lib/cn";
 
 export interface HeroCampaign {
   name: string;
@@ -49,10 +48,12 @@ export function HeroStage({ pick, facts, cadete, campaign, actions, markers, mot
   const p = pick.product;
   const words = pick.headline.trim().split(/\s+/);
   const Heading = headingLevel;
+  // Celular: titular, rack y marcador en el primer pantallazo; después el texto, los botones y los destacados.
+  // Escritorio: titular y texto a la izquierda del rack; abajo, los destacados y el marcador a todo el ancho.
   return (
     <div className="stage relative overflow-hidden">
-      <div className="relative mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)] px-4 pt-6 sm:px-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:gap-x-10 lg:pt-12">
-        <div className="lg:self-end">
+      <div className="relative mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)] gap-y-3 px-4 pb-4 pt-6 sm:px-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:gap-x-10 lg:gap-y-2 lg:pt-12">
+        <div className="lg:col-start-1 lg:row-start-1 lg:self-end">
           <p className="eyebrow flex items-center gap-2 text-muted">
             <span aria-hidden="true" className="size-2 bg-(--season-accent) shadow-[0_0_10px_var(--season-glow)]" />
             {campaign ? `Campaña · ${campaign.name}` : pick.key === "best" ? "El más elegido" : "Estrella del rack"} · {p.brand}
@@ -62,14 +63,15 @@ export function HeroStage({ pick, facts, cadete, campaign, actions, markers, mot
             <span className="rk-slam-2 block text-volt-ink">{words.at(-1)}</span>
           </Heading>
         </div>
-        <div className="relative -mx-4 mt-3 h-[15.5rem] sm:mx-0 sm:h-[26rem] lg:row-span-2 lg:mt-0 lg:h-[33rem]">
+        <div className="relative -mx-4 h-52 sm:mx-0 sm:h-[24rem] lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:h-[31rem]">
           {p.photoDataUrl
             // eslint-disable-next-line @next/next/no-img-element -- foto cargada en el panel demo (data URL local)
             ? <img src={p.photoDataUrl} alt={p.imageAlt || p.name} className="h-full w-full object-contain" />
-            : <RackShot items={[{ art: p.art, pack: p.pack, tint: facts.lead.colorHex }]} label={p.imageAlt || p.name} uprights lightUp />}
-          <span className="absolute bottom-2 right-4 font-mono text-[10px] uppercase tracking-[0.14em] text-muted">Imagen ilustrativa</span>
+            : <RackShot items={[{ art: p.art, pack: p.pack, tint: facts.lead.colorHex }]} label={p.imageAlt || p.name} uprights lightUp fit />}
+          <span className="absolute bottom-1 right-4 font-mono text-[10px] uppercase tracking-[0.14em] text-muted">Imagen ilustrativa</span>
         </div>
-        <div className="pb-5 pt-4 lg:pb-10">
+        <Scoreboard key={pick.key} cells={cells(facts, cadete)} label={`Datos de ${p.name}`} motion={motion} className="lg:col-span-2 lg:row-start-4 lg:grid-cols-[1.4fr_1fr_1fr_1.3fr]" />
+        <div className="pb-2 pt-2 lg:col-start-1 lg:row-start-2 lg:pb-8">
           <p className="max-w-[40ch] text-base sm:text-lg">
             <Link href={productHref(p.slug)} className="font-bold underline decoration-line underline-offset-4 hover:decoration-current">{p.name}</Link>
             <span className="text-muted">{pick.pitch ? ` · ${pick.pitch}` : ""}</span>
@@ -81,12 +83,9 @@ export function HeroStage({ pick, facts, cadete, campaign, actions, markers, mot
               {campaign.offer.condition && <span className="w-full text-xs text-muted">{campaign.offer.condition}</span>}
             </p>
           )}
-          {actions && <div className="mt-5 grid grid-cols-[minmax(0,1fr)] gap-2 sm:flex sm:flex-wrap">{actions}</div>}
+          {actions && <div className="mt-4 grid grid-cols-[minmax(0,1fr)] gap-2 sm:flex sm:flex-wrap">{actions}</div>}
         </div>
-      </div>
-      <div className={cn("relative mx-auto max-w-7xl px-4 pb-4 sm:px-6", Boolean(markers) && "flex flex-col gap-2")}>
-        {markers}
-        <Scoreboard key={pick.key} cells={cells(facts, cadete)} label={`Datos de ${p.name}`} motion={motion} className="lg:grid-cols-[1.4fr_1fr_1fr_1.3fr]" />
+        {markers && <div className="lg:col-span-2 lg:row-start-3">{markers}</div>}
       </div>
     </div>
   );

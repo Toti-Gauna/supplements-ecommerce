@@ -33,7 +33,7 @@ export function HeroPreview({ feature, caption }: { feature: HeroFeature; captio
   }, []);
   const product = getProduct(feature.productSlug);
   return (
-    <figure className="flex flex-col gap-2">
+    <figure className="flex max-w-3xl flex-col gap-2">
       <div ref={outer} data-hero-preview className="relative overflow-hidden rounded-sm border border-line" style={{ height: m.height || undefined }}>
         <div ref={inner} inert className="origin-top-left" style={{ width: m.width || "100%", transform: `scale(${m.scale})` }}>
           {product

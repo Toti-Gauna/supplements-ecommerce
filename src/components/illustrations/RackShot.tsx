@@ -17,6 +17,8 @@ interface RackShotProps {
   uprights?: boolean;
   /** Reflector con la luz que se prende (solo el hero; CSS, quieto con "reducir movimiento"). */
   lightUp?: boolean;
+  /** El rack entero a la vista (hero): sin recortar arriba en cajas anchas. */
+  fit?: boolean;
   className?: string;
 }
 
@@ -43,12 +45,12 @@ const SLOTS: Record<number, { x: number; s: number }[]> = {
  * "ficha de rack" y los estantes de categorías. Los degradés (`rk-*`) están una vez por página en `GlobalArtDefs`; los
  * colores del estante salen de `app/rack.css` (acero de noche, mesa de laboratorio de día).
  */
-export function RackShot({ items, label, uprights = false, lightUp = false, className }: RackShotProps) {
+export function RackShot({ items, label, uprights = false, lightUp = false, fit = false, className }: RackShotProps) {
   const list = items.slice(0, 3);
   const slots = SLOTS[list.length] ?? SLOTS[1]!;
   const base = uprights ? 0.86 : 0.84;
   return (
-    <svg viewBox="0 0 400 400" preserveAspectRatio="xMidYMax slice" role={label ? "img" : undefined} aria-label={label ? `${label} (imagen ilustrativa)` : undefined}
+    <svg viewBox="0 0 400 400" preserveAspectRatio={fit ? "xMidYMax meet" : "xMidYMax slice"} role={label ? "img" : undefined} aria-label={label ? `${label} (imagen ilustrativa)` : undefined}
       aria-hidden={label ? undefined : true} className={cn("rack-shot block h-full w-full", className)}>
       <g aria-hidden="true">
         {uprights && <><Upright x={34} /><Upright x={344} /></>}

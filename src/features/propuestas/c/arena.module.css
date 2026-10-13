@@ -1,0 +1,106 @@
+/*
+ * Propuesta C · ARENA. La noche de competencia: negro de estadio, reflectores, humo y contraluz. Plasma y voltio son
+ * luces de escena, no rellenos. Display: Archivo itálica condensada (eje wdth), datos en JetBrains Mono.
+ * Movimiento: se encienden las luces, el titular se comprime como un largador y el marcador gira. Una vez, nunca en bucle.
+ */
+.root {
+  --a-bg: #050507;
+  --a-stage: #0a0a0e;
+  --a-card: #0e0e13;
+  --a-line: #24242d;
+  --a-ink: #f4f4ef;
+  --a-muted: #a3a3ae;
+  --a-volt: #c8ff2e;
+  --a-plasma: #8b72ff;
+  --a-plasma-ink: #a593ff;
+  --a-ember: #ff6a3d;
+  --a-cut: 22px;
+  background: var(--a-bg);
+  color: var(--a-ink);
+  overflow-x: clip;
+}
+
+.display {
+  font-family: "Archivo Variable", "Arial Black", sans-serif;
+  font-style: italic;
+  font-weight: 900;
+  font-stretch: 72%;
+  text-transform: uppercase;
+  line-height: 0.84;
+  letter-spacing: -0.012em;
+}
+.wide { font-stretch: 112%; }
+.num { font-variant-numeric: tabular-nums; font-stretch: 96%; }
+.mono { font-family: "JetBrains Mono Variable", ui-monospace, monospace; }
+/* El relleno transparente va por -webkit-text-fill-color: así el trazo sigue usando el color del texto. */
+.outline { -webkit-text-fill-color: transparent; -webkit-text-stroke: 1.5px currentColor; }
+
+/* Cortes en diagonal: esquina superior derecha e inferior izquierda, como una placa troquelada. */
+.cut { clip-path: polygon(0 0, calc(100% - var(--a-cut)) 0, 100% var(--a-cut), 100% 100%, var(--a-cut) 100%, 0 calc(100% - var(--a-cut))); }
+.cutSm { --a-cut: 10px; }
+.slant { clip-path: polygon(14px 0, 100% 0, calc(100% - 14px) 100%, 0 100%); }
+.stageCut { clip-path: polygon(0 0, 100% 0, 100% calc(100% - 5vw), 0 100%); }
+
+/* Borde de 1 px que respeta el corte: el padre pinta la línea y el hijo se mete 1 px. */
+.frame { background: var(--a-line); padding: 1px; }
+.frame > * { background: var(--a-card); }
+
+/* Reflectores y humo. Capas quietas: solo se encienden una vez al cargar. */
+.beam {
+  position: absolute;
+  top: -10%;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgb(255 255 255 / 0.2), rgb(255 255 255 / 0.05) 55%, transparent 85%);
+  clip-path: polygon(44% 0, 56% 0, 100% 100%, 0 100%);
+  filter: blur(14px);
+  mix-blend-mode: screen;
+}
+.haze {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 45% at 18% 78%, rgb(139 114 255 / 0.32), transparent 70%),
+    radial-gradient(40% 35% at 86% 22%, rgb(200 255 46 / 0.1), transparent 70%),
+    radial-gradient(70% 30% at 50% 100%, rgb(255 255 255 / 0.06), transparent 70%);
+}
+.floor {
+  position: absolute;
+  inset: auto -20% 0;
+  height: 42%;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(90deg, rgb(255 255 255 / 0.07) 0 1px, transparent 1px 120px);
+  transform: perspective(500px) rotateX(62deg);
+  transform-origin: bottom;
+  mask-image: linear-gradient(to top, #000, transparent);
+}
+
+/* Tarjeta: al pasar el mouse se enciende su reflector. */
+.cardLight { opacity: 0.45; transition: opacity 260ms ease-out; }
+.card:hover .cardLight, .card:focus-within .cardLight { opacity: 1; }
+.cardPack { transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1); }
+.card:hover .cardPack { transform: translateY(-6px); }
+
+.ledDot { width: 8px; height: 8px; box-shadow: 0 0 10px currentColor; background: currentColor; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .lightsOn { animation: lights-on 1100ms steps(1, end) both, lights-fade 900ms ease-out 1100ms both; }
+  .squeeze { animation: squeeze 900ms cubic-bezier(0.7, 0, 0.2, 1) 250ms both; }
+  .rise { animation: rise 700ms cubic-bezier(0.16, 1, 0.3, 1) 650ms both; }
+  .flipOnce { animation: flip 420ms cubic-bezier(0.2, 0.9, 0.3, 1.2) both; transform-origin: 50% 0; }
+  .snap { animation: snap 240ms cubic-bezier(0.3, 1.6, 0.5, 1) both; }
+  @supports (animation-timeline: view()) {
+    .flip { animation: flip linear both; animation-timeline: view(); animation-range: entry 10% entry 70%; transform-origin: 50% 0; }
+  }
+}
+
+/* Parpadeo de reflector que arranca: dos golpes y queda prendido. */
+@keyframes lights-on { 0% { opacity: 0; } 18% { opacity: 0.7; } 26% { opacity: 0.1; } 40% { opacity: 0.9; } 48% { opacity: 0.3; } 60%, 100% { opacity: 0.85; } }
+@keyframes lights-fade { from { opacity: 0.85; } to { opacity: 1; } }
+@keyframes squeeze { from { font-stretch: 125%; letter-spacing: 0.04em; opacity: 0; } 35% { opacity: 1; } to { font-stretch: 72%; letter-spacing: -0.012em; } }
+@keyframes rise { from { transform: translateY(28px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes snap { from { transform: scale(0.94); } to { transform: none; } }
+@keyframes flip { from { transform: rotateX(-88deg); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* El clip-path recorta el outline: en las piezas troqueladas el foco es un anillo interior (negro y tiza). */
+.focusCut:focus-visible { outline: none; box-shadow: inset 0 0 0 2px #050507, inset 0 0 0 5px #f4f4ef; }

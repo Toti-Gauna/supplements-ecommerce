@@ -1,21 +1,28 @@
 import { Check } from "lucide-react";
 import { cn } from "@/lib/cn";
 
-/** Pasos numerados con línea de progreso. */
+/**
+ * Pasos como carriles del box: cada paso es una placa numerada ("01") sobre un riel; los hechos quedan cargados,
+ * el actual encendido y los que faltan apagados. El estado va en texto para lectores de pantalla.
+ */
 export function StepIndicator({ steps, current }: { steps: string[]; current: number }) {
   return (
-    <ol className="flex items-start" aria-label="Pasos">
+    <ol className="grid auto-cols-fr grid-flow-col gap-1" aria-label="Pasos">
       {steps.map((step, i) => {
         const done = i < current;
         const active = i === current;
         return (
-          <li key={step} className="relative flex flex-1 flex-col items-center gap-2 text-center" aria-current={active ? "step" : undefined}>
-            {i > 0 && <span aria-hidden="true" className={cn("absolute right-1/2 top-4 h-0.5 w-full -translate-y-1/2 transition-colors duration-500", done || active ? "bg-primary" : "bg-line")} />}
-            <span className={cn("relative z-10 grid h-8 w-8 place-items-center rounded-sm text-sm font-extrabold transition-all duration-300",
-              done && "bg-primary text-on-primary", active && "bg-night text-on-night ring-4 ring-primary/15", !done && !active && "bg-surface text-muted ring-1 ring-line")}>
-              {done ? <Check size={15} aria-hidden="true" /> : i + 1}
+          <li key={step} className="flex min-w-0 flex-col gap-2" aria-current={active ? "step" : undefined}>
+            <span aria-hidden="true" className={cn("h-1.5 transition-colors duration-300", done ? "bg-volt-ink" : active ? "bg-ink" : "bg-line")} />
+            <span className="flex min-w-0 items-center gap-2">
+              <span className={cn("grid h-7 min-w-7 shrink-0 place-items-center rounded-xs px-1 font-mono text-[12px] font-bold tabular-nums",
+                done && "bg-volt-ink text-bg", active && "bg-ink text-bg", !done && !active && "border border-line text-muted")}>
+                {done ? <Check size={14} strokeWidth={3} aria-hidden="true" /> : String(i + 1).padStart(2, "0")}
+              </span>
+              <span className={cn("truncate font-mono text-[11px] font-bold uppercase tracking-[0.06em] sm:text-xs", active ? "text-ink" : "text-muted")}>
+                {step}{done && <span className="sr-only"> (completo)</span>}
+              </span>
             </span>
-            <span className={cn("text-[11px] font-bold sm:text-xs", active ? "text-ink" : "text-muted")}>{step}{done && <span className="sr-only"> (completo)</span>}</span>
           </li>
         );
       })}

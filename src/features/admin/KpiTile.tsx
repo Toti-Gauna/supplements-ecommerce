@@ -17,7 +17,7 @@ interface KpiTileProps {
 }
 
 /** KPI como marcador LED del box: rótulo, cifra en 7 segmentos, variación (ícono + texto, no solo color) y tendencia. */
-export function KpiTile({ label, value, money, delta, spark, hint = "demo", alert, className }: KpiTileProps) {
+export function KpiTile({ label, value, money, delta, spark, hint, alert, className }: KpiTileProps) {
   const up = (delta ?? 0) >= 0;
   const tone = alert && value > 0 ? "amber" : "volt";
   return (
@@ -37,7 +37,7 @@ export function KpiTile({ label, value, money, delta, spark, hint = "demo", aler
           : <Led value={String(value).padStart(2, "0")} label={String(value)} tone={tone} className="h-9 sm:h-10" />}
         {spark && <Sparkline values={spark} label={`Tendencia de ${label}`} className="h-9 w-28 text-volt-ink" />}
       </div>
-      <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-muted">{hint}</span>
+      {hint && <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-muted">{hint}</span>}
     </div>
   );
 }

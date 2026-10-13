@@ -55,7 +55,7 @@ export function CategoryDetail() {
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <p className="eyebrow text-muted">Categoría · {row.position} de {data.categories.length} en la tienda</p>
-          <h1 className="font-display text-4xl sm:text-5xl">{category.name} <span className="align-middle font-sans text-sm font-bold text-warning">(demo)</span></h1>
+          <h1 className="font-display text-4xl sm:text-5xl">{category.name}</h1>
         </div>
         {row.active > 0 && <ButtonLink href={shopHref(slug)} variant="secondary"><ExternalLink size={16} aria-hidden="true" /> Ver en la tienda</ButtonLink>}
       </header>

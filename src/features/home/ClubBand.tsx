@@ -21,7 +21,7 @@ export function ClubBand() {
       <Reveal className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <div>
           <p className="eyebrow text-volt">{brand.club}</p>
-          <h2 id="club" className="font-display mt-3 max-w-xl text-4xl leading-tight sm:text-5xl">Cada compra suma. <span className="italic text-volt">Cada misión, un regalo.</span></h2>
+          <h2 id="club" className="font-display mt-3 max-w-xl text-4xl leading-tight sm:text-5xl">Sumá reps en el club. <span className="italic text-volt">Cobralas en producto.</span></h2>
         </div>
         <div className="flex flex-wrap gap-3">
           {wheelActive && <Button variant="light" size="lg" onClick={() => setWheel(true)}><Gift size={18} aria-hidden="true" /> Girar la ruleta</Button>}

@@ -65,7 +65,7 @@ test("flujo móvil completo hasta la confirmación de demostración", async ({ p
   await expect(page).toHaveURL(/checkout\/confirmacion\/$/);
   await expect(page.getByText("PEDIDO DE DEMOSTRACIÓN · no es un pedido real")).toBeVisible();
   await expect(page.getByText("Datos de muestra: no transfieras a esta cuenta.")).toBeVisible();
-  await page.getByLabel("Subir comprobante (demo)").setInputFiles({ name: "comprobante.pdf", mimeType: "application/pdf", buffer: Buffer.from("%PDF-1.4 demo") });
+  await page.getByLabel("Subir comprobante").setInputFiles({ name: "comprobante.pdf", mimeType: "application/pdf", buffer: Buffer.from("%PDF-1.4 demo") });
   await expect(page.getByText(/queda en revisión/i)).toBeVisible();
   await expect(page.getByText(/acreditad/i)).toHaveCount(0);
 
@@ -74,7 +74,7 @@ test("flujo móvil completo hasta la confirmación de demostración", async ({ p
   await expect(page).toHaveURL(/pedido\/demo-volta\/$/);
   await expect(page.getByText("estado actual")).toBeVisible();
   // El seguimiento muestra lo que se compró (no el pedido de ejemplo)
-  const items = page.getByRole("region", { name: "Tu pedido de demostración" });
+  const items = page.getByRole("region", { name: "Tu pedido", exact: true });
   await expect(items.getByText("1 × Creatina monohidrato micronizada")).toBeVisible();
   await expect(items.getByText("500 g")).toBeVisible();
 

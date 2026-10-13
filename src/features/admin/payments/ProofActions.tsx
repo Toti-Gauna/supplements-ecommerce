@@ -29,14 +29,14 @@ export function ProofActions({ order }: { order: AdminOrder }) {
     <div className="flex flex-col gap-2">
       <p className="rounded-sm bg-warning-soft p-2.5 text-xs font-bold text-warning">Antes de aprobar, {brand.name} verifica el ingreso en su cuenta. En la demo no hay cuenta real: aprobar solo cambia el estado local.</p>
       <div className="flex flex-wrap gap-2">
-        <ConfirmButton size="sm" title={`Aprobar comprobante de ${order.code}`} confirmLabel="Aprobar (demo)"
+        <ConfirmButton size="sm" title={`Aprobar comprobante de ${order.code}`} confirmLabel="Aprobar"
           description={<>¿Confirmás que verificaste el ingreso de <strong>{formatARS(order.total)}</strong>? El pedido pasa a <strong>Pagado</strong> en esta demo y queda en el historial.</>}
-          onConfirm={() => save("Comprobante aprobado (demo)", () => approveProof(order.code))}>
+          onConfirm={() => save("Comprobante aprobado", () => approveProof(order.code))}>
           <Check size={16} aria-hidden="true" /> Aprobar
         </ConfirmButton>
         <ConfirmButton size="sm" variant="danger" title={`Rechazar comprobante de ${order.code}`} confirmLabel="Rechazar" reasonLabel="Motivo del rechazo"
           description="El pedido vuelve a pendiente de pago y el comprador puede subir otro comprobante."
-          onConfirm={(reason) => save("Comprobante rechazado (demo)", () => rejectProof(order.code, reason))}>
+          onConfirm={(reason) => save("Comprobante rechazado", () => rejectProof(order.code, reason))}>
           <X size={16} aria-hidden="true" /> Rechazar
         </ConfirmButton>
       </div>
@@ -46,7 +46,7 @@ export function ProofActions({ order }: { order: AdminOrder }) {
 
 export const PROOF_STATE = {
   IN_REVIEW: { tone: "warning", label: "En revisión" },
-  APPROVED: { tone: "success", label: "Aprobado a mano (demo)" },
+  APPROVED: { tone: "success", label: "Aprobado a mano" },
   REJECTED: { tone: "danger", label: "Rechazado" },
 } as const;
 

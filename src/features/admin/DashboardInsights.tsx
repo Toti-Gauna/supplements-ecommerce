@@ -49,7 +49,7 @@ export function ClubPerformance() {
   ];
   return (
     <section aria-labelledby="club" className="rounded-sm bg-night p-5 text-on-night">
-      <h2 id="club" className="font-display mb-4 text-2xl">{brand.club} <span className="font-sans text-sm text-night-muted">(demo)</span></h2>
+      <h2 id="club" className="font-display mb-4 text-2xl">{brand.club}</h2>
       <ul className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {rows.map(({ icon: Icon, label, value, note }) => (
           <li key={label} className="flex items-center gap-3 rounded-sm bg-white/5 p-3">

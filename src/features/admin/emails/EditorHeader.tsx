@@ -46,7 +46,7 @@ export function EditorHeader({ savedName, draft, dirty, restored, canTest, onAct
       <header className="flex flex-col gap-3">
         <div>
           <p className="eyebrow text-muted">Se envía con: {TRIGGER_LABEL[draft.trigger]}</p>
-          <h1 className="font-display mt-1 text-4xl text-balance sm:text-5xl">{draft.name} <span className="font-sans align-middle text-sm font-bold text-warning">(demo)</span></h1>
+          <h1 className="font-display mt-1 text-4xl text-balance sm:text-5xl">{draft.name}</h1>
           <p className="mt-1 max-w-2xl text-sm text-muted">{TRIGGER_HINT[draft.trigger]}</p>
         </div>
         <div role="group" aria-label="Acciones de la plantilla" className="flex flex-wrap items-center gap-2 rounded-sm bg-surface p-2 pl-4 shadow-[var(--shadow-card)] ring-1 ring-ink/[0.04]">

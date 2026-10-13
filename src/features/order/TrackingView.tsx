@@ -50,7 +50,7 @@ export function TrackingView() {
       )}
       <section className="grid grid-cols-[minmax(0,1fr)] gap-6 overflow-hidden rounded-sm bg-night p-6 text-on-night sm:p-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
         <div className="flex flex-col gap-4">
-          <p className="eyebrow text-volt">Pedido {code} · seguimiento de demostración</p>
+          <p className="eyebrow text-volt">Pedido {code} · seguimiento</p>
           <p className="text-sm text-night-muted">Estado actual</p>
           <h2 key={stateId} className="font-display animate-rise -mt-3 text-5xl leading-none sm:text-6xl">{copy.title}</h2>
           <p className="text-night-muted">{copy.note}</p>

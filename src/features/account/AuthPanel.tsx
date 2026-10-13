@@ -59,7 +59,7 @@ export function AuthPanel() {
         <div aria-hidden="true" className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--brand-glow)_40%,transparent),transparent)]" />
         <div className="relative">
           <p className="eyebrow text-volt">Cuenta {brand.name}</p>
-          <h2 className="font-display mt-3 text-3xl leading-tight sm:text-5xl">Todo lo tuyo, <span className="italic text-volt">en un lugar.</span></h2>
+          <h2 className="font-display mt-3 text-3xl leading-tight sm:text-5xl">Tus pedidos, tus potes, <span className="italic text-volt">tu nivel.</span></h2>
         </div>
         <ul className="relative flex flex-col gap-3 max-sm:hidden">
           {BENEFITS.map(({ icon: Icon, text }) => (

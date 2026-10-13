@@ -58,7 +58,7 @@ export function Header() {
         <button type="button" onClick={() => setMenu(true)} aria-label="Abrir menú" className={cn(ICON, "lg:hidden")}><Menu size={22} aria-hidden="true" /></button>
         <Link href="/" aria-label={`${brand.name}, ir al inicio`} className="shrink-0"><Logo /></Link>
         <nav aria-label="Principal" className="ml-3 hidden self-stretch lg:flex xl:ml-8">
-          {NAV.map((n) => n.href === "/categorias/" ? <ShopMenu key={n.href} active={pathname.startsWith("/c") || pathname.startsWith("/p")} /> : (
+          {NAV.map((n) => n.href === "/categorias/" ? <ShopMenu key={n.href} active={/^\/(c|p|categorias)\//.test(pathname)} /> : (
             <Link key={n.href} href={n.href} aria-current={current === n.href ? "page" : undefined}
               className={cn(TAB, current === n.href ? "border-volt-ink text-ink" : "border-transparent text-muted hover:text-ink")}>
               {n.label}

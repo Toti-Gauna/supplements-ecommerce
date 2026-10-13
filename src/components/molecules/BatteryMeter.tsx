@@ -7,7 +7,7 @@ import { cn } from "@/lib/cn";
  */
 export function BatteryMeter({ pct, cells = 10, label, className, tone = "volt" }: { pct: number; cells?: number; label: string; className?: string; tone?: "volt" | "success" | "danger" }) {
   const lit = Math.round((Math.min(100, Math.max(0, pct)) / 100) * cells);
-  const color = tone === "success" ? "var(--color-success)" : tone === "danger" ? "var(--color-danger)" : "var(--color-volt)";
+  const color = tone === "success" ? "var(--color-success)" : tone === "danger" ? "var(--color-danger)" : "var(--led-volt)";
   return (
     <div role="progressbar" aria-label={label} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(pct)}
       className={cn("relative flex items-center gap-[3px] rounded-md border border-line p-[3px] pr-[5px]", className)} style={{ "--cell": color } as CSSProperties}>

@@ -80,7 +80,7 @@ export function RewardsSection({ used, onUse }: { used: string[]; onUse: (id: st
             <p className="flex items-center gap-2 font-bold"><Gift size={18} aria-hidden="true" className="text-primary" /> {r.title}</p>
             <p className="text-sm text-muted">{r.expired ? `Venció el ${r.expires}` : `Vence el ${r.expires}`} · un solo uso</p>
             {r.expired ? <Badge tone="neutral" className="self-start">Vencido</Badge> : isUsed ? <Badge tone="success" className="self-start">Usado: no se puede volver a aplicar</Badge> : (
-              <Button size="sm" variant="secondary" className="self-start" onClick={() => onUse(r.id)}>Marcar como usado (demo)</Button>
+              <Button size="sm" variant="secondary" className="self-start" onClick={() => onUse(r.id)}>Marcar como usado</Button>
             )}
           </li>
         );

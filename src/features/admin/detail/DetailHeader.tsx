@@ -19,7 +19,7 @@ interface Props {
 
 /**
  * Encabezado de las fichas completas (8.3.5): migas de pan, Volver (a la lista con sus filtros y página), ID, estado y
- * acciones. El título lleva la marca "(demo)" como el resto del panel.
+ * acciones.
  */
 export function DetailHeader({ list, title, eyebrow, status, aside, actions }: Props) {
   const back = useBackHref(list.href);
@@ -37,7 +37,7 @@ export function DetailHeader({ list, title, eyebrow, status, aside, actions }: P
       <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
         <div className="min-w-0">
           {eyebrow && <p className="eyebrow text-muted">{eyebrow}</p>}
-          <h1 className="font-display mt-1 break-words text-4xl sm:text-5xl">{title} <span className="align-middle font-sans text-sm font-bold text-warning">(demo)</span></h1>
+          <h1 className="font-display mt-1 break-words text-4xl sm:text-5xl">{title}</h1>
           {status && <div className="mt-3 flex flex-wrap items-center gap-2">{status}</div>}
         </div>
         {aside && <div className="text-right">{aside}</div>}

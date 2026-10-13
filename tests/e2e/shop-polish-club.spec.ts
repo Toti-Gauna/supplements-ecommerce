@@ -7,9 +7,9 @@ const preview = (page: Page, id: string) =>
 
 test("8.2.13 portada del Club: métricas, próximo premio y accesos; las funciones siguen igual", async ({ page }) => {
   await page.goto("club/");
-  const hero = page.getByRole("region", { name: "Comprás, sumás, ganás." });
+  const hero = page.getByRole("region", { name: "Sumá carga. Subí de nivel." });
   await expect(hero.getByRole("heading", { level: 1 })).toBeVisible();
-  for (const label of ["Misiones activas", "Completadas (demo)", "Premios en producto"]) await expect(hero.getByText(label, { exact: true })).toBeVisible();
+  for (const label of ["Misiones activas", "Completadas", "Premios en producto"]) await expect(hero.getByText(label, { exact: true })).toBeVisible();
   await expect(hero.getByText("Tu próximo premio")).toBeVisible();
   await expect(hero.getByRole("progressbar", { name: /Progreso hacia/ })).toHaveAttribute("aria-valuenow", "0");
   // Con la cuenta demo, el próximo premio toma el progreso de ejemplo (motor de misiones, sin cambios).
@@ -25,7 +25,7 @@ test("8.2.13 portada del Club: métricas, próximo premio y accesos; las funcion
 test("8.2.13 la portada toma el acento y el adorno de la temática vigente", async ({ page }) => {
   await preview(page, "halloween");
   await page.goto("club/");
-  const hero = page.getByRole("region", { name: "Comprás, sumás, ganás." });
+  const hero = page.getByRole("region", { name: "Sumá carga. Subí de nivel." });
   await expect(hero.getByText("Club Volta · Halloween")).toBeVisible();
   expect(await hero.locator("h1 .italic").evaluate((el) => getComputedStyle(el).color)).toBe("rgb(255, 138, 31)");
 });

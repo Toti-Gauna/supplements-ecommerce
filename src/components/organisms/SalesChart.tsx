@@ -38,7 +38,7 @@ export function SalesChart({ title, bars, selected = null, onSelect, detail }: P
           const on = selected === b.key;
           return (
             <button key={b.key} type="button" onClick={() => onSelect?.(b.key)} aria-pressed={on}
-              aria-label={`${b.label}: ${formatARS(b.amount)}, ${pedidos(b.orders)} (demo)`}
+              aria-label={`${b.label}: ${formatARS(b.amount)}, ${pedidos(b.orders)}`}
               className="group relative flex h-full flex-1 items-end justify-center rounded-t-md outline-none focus-visible:ring-2 focus-visible:ring-primary/50">
               <span aria-hidden="true" className={cn("block w-full max-w-10 rounded-t-[4px] transition-[opacity,background-color]", on ? "bg-volt-ink" : "bg-primary group-hover:opacity-85")}
                 style={{ height: b.amount > 0 ? `${Math.max(3, (b.amount / max) * 100)}%` : "2px", opacity: b.amount > 0 || on ? 1 : 0.25 }} />
@@ -53,7 +53,7 @@ export function SalesChart({ title, bars, selected = null, onSelect, detail }: P
       <details className="mt-3 text-sm">
         <summary className="cursor-pointer font-bold text-primary">Ver como tabla</summary>
         <table className="mt-2 w-full text-left">
-          <thead><tr className="text-muted"><th className="py-1 font-semibold">Día</th><th className="font-semibold">Ventas (demo)</th><th className="font-semibold">Pedidos</th></tr></thead>
+          <thead><tr className="text-muted"><th className="py-1 font-semibold">Día</th><th className="font-semibold">Ventas</th><th className="font-semibold">Pedidos</th></tr></thead>
           <tbody>
             {bars.map((b) => (
               <tr key={b.key} className={cn("border-t border-line", selected === b.key && "bg-accent/50")}>

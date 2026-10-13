@@ -38,11 +38,11 @@ export function Dashboard() {
           <ButtonLink href="/admin-demo/productos/" variant="secondary"><Plus size={16} aria-hidden="true" /> Productos</ButtonLink>
         </div>
       </header>
-      <section aria-label="Indicadores (demo)" className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
-        <KpiTile className="col-span-2 sm:col-span-1" label="Ventas últimos 7 días" value={sales.week} money delta={delta(sales.week, sales.prevWeek)} spark={sales.days.map((d) => d.amount)} />
-        <KpiTile className="col-span-2 sm:col-span-1" label="Ticket promedio" value={sales.avgTicket} money hint={`${sales.paidCount} pedidos pagados · demo`} />
+      <section aria-label="Indicadores" className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
+        <KpiTile className="col-span-2 sm:col-span-1" label="Ventas últimos 7 días" value={sales.week} money delta={delta(sales.week, sales.prevWeek)} spark={sales.days.map((d) => d.amount)} hint="contra la semana anterior" />
+        <KpiTile className="col-span-2 sm:col-span-1" label="Ticket promedio" value={sales.avgTicket} money hint={`${sales.paidCount} pedidos pagados`} />
         <KpiTile label="Pedidos en marcha" value={active} hint="pagados, en preparación, listos y enviados" />
-        <KpiTile label="Comprobantes a verificar" value={counts.PAYMENT_REVIEW} hint="transferencia y QR · demo" alert />
+        <KpiTile label="Comprobantes a verificar" value={counts.PAYMENT_REVIEW} hint="transferencia y QR" alert />
       </section>
       <section aria-labelledby="pipe">
         <div className="mb-3 flex items-end justify-between"><h2 id="pipe" className="font-display text-2xl">Pedidos por estado</h2><Link href="/admin-demo/pedidos/" className="text-sm font-bold text-primary underline">Ver todos</Link></div>

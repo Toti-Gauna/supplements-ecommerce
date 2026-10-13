@@ -59,8 +59,8 @@ export function ClubView() {
         <GameTeaser />
       </section>
       <section aria-labelledby="path" className="rounded-sm bg-night p-6 text-on-night sm:rounded-sm sm:p-10 lg:p-14">
-        <p className="eyebrow text-volt">Cadenas</p>
-        <h2 id="path" className="font-display mb-8 mt-2 text-4xl leading-tight sm:text-5xl">Camino de premios</h2>
+        <p className="eyebrow text-volt">Series</p>
+        <h2 id="path" className="font-display mb-8 mt-2 text-4xl leading-tight sm:text-5xl">Misión por misión</h2>
         <MissionPath missions={missions} />
       </section>
       <section aria-labelledby="wallet" className="flex flex-col gap-8">

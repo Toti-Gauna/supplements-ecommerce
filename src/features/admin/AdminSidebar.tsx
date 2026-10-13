@@ -86,9 +86,9 @@ export function SidebarContent({ onNavigate, rail = false, footer }: { onNavigat
       </div>
       <div className="mx-3 mb-3 flex flex-col gap-1">
         <div className={cn("flex items-center gap-3 rounded-sm px-[10px] py-2", show)}>
-          <span aria-hidden="true" className="font-display grid h-7 w-7 shrink-0 place-items-center rounded-sm bg-on-night text-base text-night">V</span>
+          <span aria-hidden="true" className="font-display grid h-7 w-7 shrink-0 place-items-center rounded-sm bg-on-night text-base text-night">{brand.mark.charAt(0)}</span>
           <span className="min-w-0 flex-1">
-            <span className="block truncate text-sm font-bold text-on-night">{brand.name} (demo)</span>
+            <span className="block truncate text-sm font-bold text-on-night">{brand.name}</span>
             <span className="block truncate text-xs text-night-muted">Datos ficticios · sin login</span>
           </span>
         </div>

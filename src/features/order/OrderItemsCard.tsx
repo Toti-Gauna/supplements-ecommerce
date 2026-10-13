@@ -23,7 +23,7 @@ export function OrderItemsCard({ code, lines, sample }: { code: string; lines: C
         <div className="flex items-center gap-3">
           <span className="grid h-11 w-11 shrink-0 place-items-center rounded-sm bg-night text-volt"><Package size={20} aria-hidden="true" /></span>
           <div>
-            <h2 id="items" className="font-bold leading-tight">{sample ? "Pedido de ejemplo" : "Tu pedido de demostración"}</h2>
+            <h2 id="items" className="font-bold leading-tight">{sample ? "Pedido de ejemplo" : "Tu pedido"}</h2>
             <p className="font-mono text-xs font-bold tracking-wider text-muted">{code}</p>
           </div>
         </div>

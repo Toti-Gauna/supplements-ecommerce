@@ -41,7 +41,7 @@ test("transferencia: la fecha del checkout queda en la confirmación y, con el c
 
   await expect(page).toHaveURL(/checkout\/confirmacion\/$/);
   await expect(page.getByText(/Entrega: Llega mañana, mar 6 oct/)).toBeVisible();
-  await page.getByLabel("Subir comprobante (demo)").setInputFiles({ name: "comprobante.pdf", mimeType: "application/pdf", buffer: Buffer.from("%PDF-1.4 demo") });
+  await page.getByLabel("Subir comprobante").setInputFiles({ name: "comprobante.pdf", mimeType: "application/pdf", buffer: Buffer.from("%PDF-1.4 demo") });
   await expect(page.getByText(/Estado de muestra: comprobante en revisión/)).toBeVisible();
 
   await page.getByRole("link", { name: "Seguir mi pedido", exact: true }).click();

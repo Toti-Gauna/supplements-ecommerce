@@ -5,7 +5,7 @@ import type { Product } from "@/demo/types";
 
 function stockNote(product: Product): string {
   const stocks = product.variants.map((v) => v.stock);
-  if (stocks.every((s) => s < 0)) return product.madeToOrderDays ? `Hecho a pedido · ${product.madeToOrderDays} días` : "Hecho a pedido";
+  if (stocks.every((s) => s < 0)) return product.madeToOrderDays ? `Por encargo · ${product.madeToOrderDays} días hábiles` : "Por encargo";
   const units = stocks.filter((s) => s > 0).reduce((a, b) => a + b, 0);
   if (units === 0 && stocks.every((s) => s >= 0)) return "Sin stock por ahora";
   if (units > 0 && units <= 3) return `¡Últimas ${units} unidades!`;

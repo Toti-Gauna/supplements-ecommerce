@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
-import { ArrowUpRight, Gamepad2, Gift, Heart, Layers, PartyPopper, TicketPercent, UserRound } from "lucide-react";
+import { ArrowUpRight, Gift, Heart, TicketPercent, UserRound } from "lucide-react";
+import { IconBarbell, IconKettlebell, IconShaker } from "@/components/illustrations/GymIcons";
 import { Logo } from "@/components/atoms/Logo";
 import { Sheet } from "@/components/motion/Sheet";
 import { SoundToggle } from "@/components/atoms/SoundToggle";
@@ -13,12 +14,12 @@ import { brand } from "@/config/brand";
 import { WhatsAppLink } from "./WhatsAppLink";
 
 const LINKS = [
-  { href: "/crear/", label: "Armá tu stack", icon: Layers },
-  { href: "/club/", label: brand.club, icon: Gift },
-  { href: "/club/juego/", label: "Shaker Rush", icon: Gamepad2 },
+  { href: "/crear/", label: "Armá tu stack", icon: IconBarbell },
+  { href: "/club/", label: brand.club, icon: IconKettlebell },
+  { href: "/club/juego/", label: "Shaker Rush", icon: IconShaker },
   { href: "/favoritos/", label: "Favoritos", icon: Heart },
   { href: "/cupones/", label: "Mis cupones", icon: TicketPercent },
-  { href: "/regalo/", label: "Tengo un regalo", icon: PartyPopper },
+  { href: "/regalo/", label: "Tengo un regalo", icon: Gift },
   { href: "/cuenta/", label: "Mi cuenta", icon: UserRound },
 ];
 const ROW = "flex min-h-12 w-full items-center gap-3 border-b border-line px-1 text-left font-mono text-[13px] font-bold uppercase tracking-[0.06em] text-ink";

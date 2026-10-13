@@ -46,7 +46,7 @@ test.describe("escritorio con mouse", () => {
     expect(proof.x + proof.width).toBeLessThanOrEqual(data.x);
     await expect(page.getByRole("region", { name: "Datos del pago" })).toContainText("Sofía Ruiz");
     await page.getByRole("button", { name: "Aprobar" }).click();
-    await confirm(page, "Aprobar (demo)");
+    await confirm(page, "Aprobar");
     await expect(page.getByText(/Pago:\s*Pagado · aprobado a mano/)).toBeVisible();
     await page.getByRole("link", { name: "Volver" }).click();
     await expect(page.getByRole("button", { name: /Por revisar/ })).toContainText("1");

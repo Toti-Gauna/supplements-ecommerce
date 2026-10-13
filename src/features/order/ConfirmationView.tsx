@@ -70,7 +70,7 @@ export function ConfirmationView() {
           <motion.span initial={{ scale: 0, rotate: -30 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: "spring", stiffness: 300, damping: 18, delay: 0.15 }}
             className="grid h-16 w-16 place-items-center rounded-sm bg-volt text-night"><Check size={30} aria-hidden="true" /></motion.span>
           <p className="mt-5"><Badge tone="demo">PEDIDO DE DEMOSTRACIÓN · no es un pedido real</Badge></p>
-          <h2 className="font-display animate-rise mt-4 text-4xl leading-tight sm:text-5xl">¡Gracias, {order.contact.name.split(" ")[0]}! Tu pedido de demostración está registrado</h2>
+          <h2 className="font-display animate-rise mt-4 text-4xl leading-tight sm:text-5xl">¡Gracias, {order.contact.name.split(" ")[0]}! Tu pedido está registrado</h2>
           <p className="mt-3 text-night-muted">Código <strong className="text-on-night">{order.code}</strong> · Estado de muestra: <strong className="text-on-night">{status}</strong>. No se cobró nada ni se envió ningún email.</p>
           {promised && <p className="mt-2 text-night-muted">Entrega: <strong className="text-on-night">{arrivalText(order.fulfillment, promised, DEMO_TODAY, settings)}</strong>, una vez confirmado el pago.</p>}
           <ol className="mt-8 grid gap-3 text-sm sm:grid-cols-3">

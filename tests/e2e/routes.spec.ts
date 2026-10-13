@@ -13,15 +13,15 @@ const ROUTES = [
   ["crear/quiz/", "¿Qué necesitás?"],
   ["cupones/", "Mis cupones"],
   ["carrito/", "Tu carrito"],
-  ["checkout/", "Checkout de demostración"],
-  ["checkout/confirmacion/", "Confirmación (demo)"],
+  ["checkout/", "Finalizar compra"],
+  ["checkout/confirmacion/", "Confirmación"],
   ["pedido/demo-volta/", "Seguimiento de tu pedido"],
   ["cuenta/", "Mi cuenta"],
   ["preguntas/", "Preguntas frecuentes"],
   ["terminos/", "Términos y condiciones"],
   ["privacidad/", "Política de privacidad"],
   ["arrepentimiento/", "Botón de arrepentimiento"],
-  ["club/", "Comprás, sumás, ganás."],
+  ["club/", "Sumá carga. Subí de nivel."],
   ["regalo/", "¿Te hicieron un regalo?"],
 ] as const;
 

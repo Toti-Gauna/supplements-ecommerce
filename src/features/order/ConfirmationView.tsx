@@ -20,7 +20,7 @@ import { useCheckout } from "@/stores/checkout";
 import { useGifts } from "@/stores/gifts";
 import { GiftShare } from "../gifts/GiftShare";
 import { useHydrated } from "@/stores/hydration";
-import { summaryRows } from "../checkout/CheckoutSummary";
+import { summaryRows } from "../checkout/summary-rows";
 import { arrivalText } from "./arrival";
 import { OrderLines } from "./OrderLines";
 import { PaymentInstructions } from "./PaymentInstructions";

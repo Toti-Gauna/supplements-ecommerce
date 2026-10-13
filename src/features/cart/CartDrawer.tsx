@@ -1,38 +1,39 @@
 "use client";
 import { AnimatePresence, motion } from "motion/react";
-import { Check, Trash2, Truck } from "lucide-react";
+import { Check } from "lucide-react";
 import { Button, ButtonLink } from "@/components/atoms/Button";
 import { Sheet } from "@/components/motion/Sheet";
-import { BatteryMeter } from "@/components/molecules/BatteryMeter";
-import { QuantityStepper } from "@/components/molecules/QuantityStepper";
-import { LineThumb } from "@/components/organisms/LineThumb";
-import { getProduct, maxQuantity } from "@/demo/engine/catalog";
-import { missingForFreeShipping } from "@/demo/engine/pricing";
+import { CartLineItem } from "@/components/organisms/CartLineItem";
+import { getProduct } from "@/demo/engine/catalog";
 import { recommendForCart } from "@/demo/engine/recommend";
-import { demoData } from "@/demo/engine/source";
 import { formatARS } from "@/lib/money";
 import { useCart } from "@/stores/cart";
 import { useUi } from "@/stores/ui";
-import { StackNudge } from "./StackNudge";
+import { BagLoad } from "./BagLoad";
+import { CadeteCountdown } from "./CadeteCountdown";
 import { CartMissionNudge } from "./CartMissionNudge";
 import { MiniRecommendations } from "./MiniRecommendations";
+import { toLineView } from "./line-view";
 import { useCartQuote } from "./useCartQuote";
 import { useGoToCheckout } from "./useGoToCheckout";
+import { WheelOffer } from "./WheelOffer";
 
-/** Carrito lateral: aparece al agregar, con progreso de envío gratis, misión y complementos. */
+/**
+ * Carrito lateral "bolso" (R2): lo agregado, un solo medidor de carga (envío gratis + stack), cuánto te dura cada pote
+ * y, en el pie, el total con la cuenta regresiva del cadete. La misión va en una línea y la ruleta, como placa opcional.
+ */
 export function CartDrawer() {
   const { cartOpen, closeCart, lastAdded } = useUi();
   const { quote } = useCartQuote();
   const goToCheckout = useGoToCheckout();
   const lines = useCart((s) => s.lines);
   const { setQuantity, remove } = useCart();
-  const missing = missingForFreeShipping(quote.subtotal);
-  const threshold = demoData().settings.freeShippingFrom;
   const added = lastAdded ? getProduct(lastAdded) : undefined;
   return (
     <Sheet open={cartOpen} onClose={closeCart} title="Carrito">
-      <div className="px-6 pb-4 pt-6">
-        <h2 className="font-display text-3xl">Tu carrito</h2>
+      <div className="px-5 pb-3 pt-6 sm:px-6">
+        <p className="eyebrow text-muted">Tu bolso</p>
+        <h2 className="font-display text-3xl leading-none">Tu carrito</h2>
         <AnimatePresence>
           {added && (
             <motion.p initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} role="status" className="mt-2 flex items-center gap-2 text-sm font-bold text-success">
@@ -41,47 +42,30 @@ export function CartDrawer() {
           )}
         </AnimatePresence>
       </div>
-      <div className="flex-1 overflow-y-auto px-6">
+      <div className="flex flex-1 flex-col gap-4 overflow-y-auto px-5 sm:px-6">
         {lines.length === 0 ? (
-          <p className="rounded-sm bg-surface p-6 text-center text-muted">Todavía no agregaste nada.</p>
+          <p className="rounded-sm border border-dashed border-line p-6 text-center text-muted">Tu bolso está vacío.</p>
         ) : (
           <>
-            <div className="mb-4 rounded-sm bg-surface p-3">
-              <p className="flex items-center gap-2 text-sm font-semibold"><Truck size={16} aria-hidden="true" className="text-primary" />{missing > 0 ? `Te faltan ${formatARS(missing)} para envío gratis` : "¡Tenés envío gratis!"}</p>
-              <BatteryMeter pct={Math.min(100, (quote.subtotal / threshold) * 100)} label="Avance hacia el envío gratis" className="mt-2" tone={missing > 0 ? "volt" : "success"} />
-            </div>
-            <div className="mb-4"><StackNudge stack={quote.stack} compact /></div>
-            <ul className="flex flex-col gap-3">
+            <BagLoad quote={quote} />
+            <ul className="flex flex-col gap-2" aria-label="Productos en el bolso">
               {quote.lines.map((q) => {
-                const product = getProduct(q.line.productSlug);
-                const variant = product?.variants.find((v) => v.id === q.line.variantId);
-                if (!product || !variant) return null;
-                return (
-                  <motion.li layout key={q.line.id} className="flex gap-3 rounded-sm bg-surface p-3">
-                    <div className="w-16 shrink-0"><LineThumb art={product.art} pack={product.pack} tint={variant.colorHex} name={product.name} /></div>
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-bold">{product.name}</p>
-                      <p className="truncate text-xs text-muted">{variant.label}</p>
-                      <div className="mt-1 flex items-center justify-between">
-                        <QuantityStepper label={`Cantidad de ${product.name}`} value={q.line.quantity} max={maxQuantity(variant)} onChange={(n) => setQuantity(q.line.id, n)} />
-                        <span className="text-sm font-extrabold tabular-nums">{formatARS(q.lineTotal)}</span>
-                      </div>
-                    </div>
-                    <button type="button" onClick={() => remove(q.line.id)} aria-label={`Quitar ${product.name}`} className="grid h-9 w-9 place-items-center self-start rounded-sm text-muted hover:bg-danger-soft hover:text-danger"><Trash2 size={16} aria-hidden="true" /></button>
-                  </motion.li>
-                );
+                const view = toLineView(q);
+                return view && <CartLineItem key={view.id} line={view} size="compact" onNavigate={closeCart} onQuantity={(n) => setQuantity(view.id, n)} onRemove={() => remove(view.id)} />;
               })}
             </ul>
-            <div className="mt-4"><CartMissionNudge units={quote.units} total={quote.total} /></div>
+            <CartMissionNudge units={quote.units} total={quote.total} compact />
+            <WheelOffer when="cart" />
           </>
         )}
-        <div className="my-6"><MiniRecommendations title={lines.length ? "Completá tu pedido" : "Lo más elegido"} products={recommendForCart(lines, 5)} onNavigate={closeCart} /></div>
+        <div className="mb-6"><MiniRecommendations title={lines.length ? "Completá tu pedido" : "Lo más elegido"} products={recommendForCart(lines, 5)} onNavigate={closeCart} /></div>
       </div>
       {lines.length > 0 && (
-        <div className="border-t border-line bg-surface px-6 py-4">
-          {quote.stack.discount > 0 && <p className="mb-1 flex justify-between text-sm font-semibold text-success"><span>Descuento stack ({quote.stack.pct} %)</span><span className="tabular-nums">−{formatARS(quote.stack.discount)}</span></p>}
-          <div className="mb-3 flex items-end justify-between"><span className="text-sm text-muted">Subtotal (muestra)</span><span className="text-2xl font-extrabold tabular-nums">{formatARS(quote.subtotal - quote.stack.discount)}</span></div>
-          <div className="grid gap-2">
+        <div className="border-t border-line bg-surface px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 sm:px-6">
+          <CadeteCountdown lines={lines} className="mb-2" />
+          {quote.stack.discount > 0 && <p className="flex justify-between text-sm font-semibold text-success"><span>Descuento stack ({quote.stack.pct} %)</span><span className="font-mono tabular-nums">−{formatARS(quote.stack.discount)}</span></p>}
+          <div className="mb-3 flex items-end justify-between"><span className="eyebrow text-muted">Subtotal</span><span className="font-display text-3xl tabular-nums">{formatARS(quote.subtotal - quote.stack.discount)}</span></div>
+          <div className="grid gap-1">
             <Button onClick={goToCheckout} size="lg" className="w-full">Ir al checkout</Button>
             <ButtonLink href="/carrito/" onClick={closeCart} variant="ghost" className="w-full">Ver carrito completo</ButtonLink>
           </div>

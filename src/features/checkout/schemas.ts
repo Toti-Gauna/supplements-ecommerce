@@ -16,5 +16,13 @@ export const addressSchema = z.object({
   postalCode: z.string().trim().regex(/^\d{4}$|^[A-Za-z]\d{4}[A-Za-z]{3}$/, "Código postal de 4 dígitos (ej.: 7600)."),
 });
 
+/** Dirección sin validar (retiro en el local): los campos quedan como están. */
+const looseAddress = z.object({ street: z.string(), number: z.string(), city: z.string(), province: z.string(), postalCode: z.string() });
+
+/** Paso "Datos y entrega": el contacto siempre; la dirección solo se valida si hay envío. */
+export const detailsPickupSchema = contactSchema.extend(looseAddress.shape);
+export const detailsShippingSchema = contactSchema.extend(addressSchema.shape);
+export type DetailsInput = z.infer<typeof detailsShippingSchema>;
+
 export type ContactInput = z.infer<typeof contactSchema>;
 export type AddressInput = z.infer<typeof addressSchema>;

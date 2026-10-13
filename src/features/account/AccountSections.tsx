@@ -1,49 +1,20 @@
 "use client";
-import Link from "next/link";
-import { Gift, MapPin, Package } from "lucide-react";
+import { Gift, MapPin } from "lucide-react";
 import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
 import { MissionProgress } from "@/components/molecules/MissionProgress";
 import { formatMissionValue, previewMission } from "@/demo/engine/missions";
-import { STATUS_LABEL } from "@/demo/engine/orders";
 import { demoAccountProgress } from "@/demo/fixtures/commerce";
 import { useDemoData } from "@/stores/admin";
-import { formatARS } from "@/lib/money";
-import type { DemoOrder } from "@/stores/checkout";
 import { useWheelPrize } from "../club/useWheelPrize";
 import { WheelPrizeTicket } from "../club/WheelPrizeTicket";
 import { GamePrizeTicket } from "../game/GamePrizeTicket";
 import { useGameCodes } from "@/stores/game";
-import { DEMO_TRACKING_TOKEN } from "@/demo/fixtures/commerce";
-import { ORDER_PREFIX } from "@/demo/fixtures/house";
-import { useShopOrder } from "../order/useShopOrder";
 
 /** El premio de la ruleta, con su estado, primero en los premios de la cuenta (8.2.14). */
 function WheelPrizeItem() {
   const { coupon } = useWheelPrize();
   return coupon ? <li className="sm:col-span-2"><WheelPrizeTicket badge="Ganado en la ruleta" /></li> : null;
-}
-
-export function OrdersSection({ lastOrder }: { lastOrder: DemoOrder | null }) {
-  // El estado del último pedido sale del panel: con el comprobante subido dice "en revisión", nunca "pagado".
-  const tracked = useShopOrder(lastOrder?.code);
-  const orders = [
-    ...(lastOrder ? [{ code: lastOrder.code, status: STATUS_LABEL[tracked?.status ?? "PENDING_PAYMENT"], total: lastOrder.quote.total, href: `/pedido/${lastOrder.token}/` }] : []),
-    { code: `${ORDER_PREFIX}-DEMO-0000`, status: "Entregado", total: 30400, href: `/pedido/${DEMO_TRACKING_TOKEN}/` },
-  ];
-  return (
-    <ul className="flex flex-col gap-2">
-      {orders.map((o) => (
-        <li key={o.code}>
-          <Link href={o.href} className="flex items-center gap-3 rounded-sm border border-line bg-surface p-4 hover:border-primary">
-            <Package size={20} aria-hidden="true" className="text-primary" />
-            <span className="flex-1"><span className="block font-bold">{o.code}</span><span className="text-sm text-muted">{o.status} (muestra)</span></span>
-            <span className="font-bold tabular-nums">{formatARS(o.total)}</span>
-          </Link>
-        </li>
-      ))}
-    </ul>
-  );
 }
 
 export function MissionsSection() {

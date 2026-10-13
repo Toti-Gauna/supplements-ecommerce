@@ -56,6 +56,19 @@ export function etaFor(id: SampleStateId, fulfillment: FulfillmentType, day: str
   return arrival;
 }
 
+/** Tira corta de la ficha de entrega: pedido, pago, armado con control de lote y entrega, según el estado real. */
+export function deliveryStrip(status: OrderStatus, arrival: string): TimelineStep[] {
+  const i = TRACKING_STAGES.indexOf(status);
+  // Cada tramo está en curso entre `from` y `to` (índices de TRACKING_STAGES) y hecho después.
+  const at = (from: number, to: number): TimelineStep["state"] => (i > to ? "done" : i >= from ? "current" : "pending");
+  return [
+    { label: "Pedido recibido", description: "", state: "done" },
+    { label: status === "PAYMENT_REVIEW" ? "Pago en revisión" : "Pago", description: "", state: at(0, 1) },
+    { label: "Armado y lote", description: "", state: at(2, 3) },
+    { label: arrival, description: "", state: at(4, 5) },
+  ];
+}
+
 /** Línea de tiempo hasta `current`, con la fecha y hora en que el pedido llegó a cada etapa (ISO, de su historial). */
 export function timelineFor(current: number, dates: (string | undefined)[] = []): TimelineStep[] {
   return FLOW.map((s, i) => {

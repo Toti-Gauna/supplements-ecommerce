@@ -1,17 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Check, MessageCircle } from "lucide-react";
-import { motion } from "motion/react";
-import { Celebration } from "@/components/molecules/Celebration";
+import { MessageCircle } from "lucide-react";
 import { ConfettiRain } from "@/components/molecules/ConfettiRain";
-import { Badge } from "@/components/atoms/Badge";
 import { ButtonLink } from "@/components/atoms/Button";
 import { HeroSkeleton } from "@/components/atoms/Skeleton";
 import { EmptyState } from "@/components/molecules/EmptyState";
 import { MissionProgress } from "@/components/molecules/MissionProgress";
 import { OrderSummary } from "@/components/molecules/OrderSummary";
 import { previewMission } from "@/demo/engine/missions";
-import { STATUS_LABEL } from "@/demo/engine/orders";
 import { DEMO_TODAY } from "@/demo/fixtures/admin-orders";
 import { demoAccountProgress } from "@/demo/fixtures/commerce";
 import { useAdmin, useDemoData } from "@/stores/admin";
@@ -20,16 +16,24 @@ import { useCheckout } from "@/stores/checkout";
 import { useGifts } from "@/stores/gifts";
 import { GiftShare } from "../gifts/GiftShare";
 import { useHydrated } from "@/stores/hydration";
+import { WheelOffer } from "../cart/WheelOffer";
 import { summaryRows } from "../checkout/summary-rows";
 import { arrivalText } from "./arrival";
+import { DeliveryCard } from "./DeliveryCard";
+import { HowToTake } from "./HowToTake";
 import { OrderLines } from "./OrderLines";
 import { PaymentInstructions } from "./PaymentInstructions";
+import { RepurchaseActivate } from "./RepurchaseActivate";
 import { brand } from "@/config/brand";
 import { STORAGE_PREFIX } from "@/stores/storage";
 import { useShopOrder } from "./useShopOrder";
 
 const PAY_TITLE = { CHECKOUT_PRO: "Pagar con tarjeta, vía Mercado Pago (muestra)", BANK_TRANSFER: "Transferencia (muestra)", QR_MANUAL: "Pago con QR (muestra)" };
 
+/**
+ * Confirmación como "ficha de entrega" (R2): estado real y fecha del calendario arriba, cómo pagar, cómo tomar cada
+ * producto, los avisos de recompra en un toque y, para la próxima, el giro del disco si todavía no se usó.
+ */
 export function ConfirmationView() {
   const hydrated = useHydrated();
   const order = useCheckout((s) => s.lastOrder);
@@ -58,27 +62,15 @@ export function ConfirmationView() {
   const mission = missions.find((m) => m.active !== false) ?? missions[0]!;
   const gifts = sentGifts.filter((g) => order.gifts?.includes(g.code));
   // Estado y fecha del pedido en el panel: al subir el comprobante pasa a "en revisión"; si se reprograma, cambia la fecha.
-  const status = STATUS_LABEL[tracked?.status ?? "PENDING_PAYMENT"].toLowerCase();
+  const status = tracked?.status ?? "PENDING_PAYMENT";
   const promised = tracked?.promisedDate ?? order.promisedDate;
   const preview = previewMission(mission, demoAccountProgress[mission.id] ?? 0, { units: order.quote.units, total: order.quote.total });
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
-      <div className="flex flex-col gap-6">
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-x-10">
+      <div className="flex flex-col gap-8">
         {celebrate && <ConfettiRain />}
-        <section className="relative overflow-hidden rounded-sm bg-night p-6 text-on-night sm:p-10">
-          <Celebration />
-          <motion.span initial={{ scale: 0, rotate: -30 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: "spring", stiffness: 300, damping: 18, delay: 0.15 }}
-            className="grid h-16 w-16 place-items-center rounded-sm bg-volt text-night"><Check size={30} aria-hidden="true" /></motion.span>
-          <p className="mt-5"><Badge tone="demo">PEDIDO DE DEMOSTRACIÓN · no es un pedido real</Badge></p>
-          <h2 className="font-display animate-rise mt-4 text-4xl leading-tight sm:text-5xl">¡Gracias, {order.contact.name.split(" ")[0]}! Tu pedido está registrado</h2>
-          <p className="mt-3 text-night-muted">Código <strong className="text-on-night">{order.code}</strong> · Estado de muestra: <strong className="text-on-night">{status}</strong>. No se cobró nada ni se envió ningún email.</p>
-          {promised && <p className="mt-2 text-night-muted">Entrega: <strong className="text-on-night">{arrivalText(order.fulfillment, promised, DEMO_TODAY, settings)}</strong>, una vez confirmado el pago.</p>}
-          <ol className="mt-8 grid gap-3 text-sm sm:grid-cols-3">
-            {["Pagás o subís el comprobante", `${brand.name} confirma y arma tu pedido`, "Seguís cada etapa con tu link"].map((t, i) => (
-              <li key={t} className="flex items-center gap-3 rounded-sm bg-white/5 p-3"><span className="font-display grid h-8 w-8 shrink-0 place-items-center rounded-sm bg-white/10 text-volt">{i + 1}</span>{t}</li>
-            ))}
-          </ol>
-        </section>
+        <DeliveryCard code={order.code} firstName={order.contact.name.split(" ")[0] ?? ""} status={status} total={order.quote.total}
+          arrival={promised ? arrivalText(order.fulfillment, promised, DEMO_TODAY, settings) : null} />
         {gifts.length > 0 && (
           <section aria-labelledby="regalos" className="flex flex-col gap-3">
             <h2 id="regalos" className="font-display text-3xl">{gifts.length === 1 ? "Tu regalo, listo para mandar" : "Tus regalos, listos para mandar"}</h2>
@@ -90,18 +82,22 @@ export function ConfirmationView() {
           <h2 id="pago" className="font-display text-3xl">{PAY_TITLE[order.paymentMethod]}</h2>
           <PaymentInstructions method={order.paymentMethod} total={order.quote.total} code={order.code} />
         </section>
+        <HowToTake lines={order.lines} />
+        <RepurchaseActivate lines={order.lines} startsOn={promised ?? DEMO_TODAY} />
         {order.asAccount && (
           <MissionProgress title={mission.title} reward={mission.reward} pctFrom={preview.pctBefore} pctTo={preview.pctAfter}
             valueLabel={`${Math.min(preview.after, mission.threshold)} / ${mission.threshold}`}
             status={preview.completesNow ? "completes-now" : preview.alreadyComplete ? "complete" : "progress"}
             note="Ilustrativo: en la tienda real la misión avanza cuando el pago queda confirmado." />
         )}
-        <section aria-labelledby="items" className="rounded-sm bg-surface p-4 shadow-[var(--shadow-card)] sm:p-6"><h2 id="items" className="font-display mb-3 text-3xl">Tu pedido</h2><OrderLines lines={order.lines} /></section>
+        <WheelOffer when="next" />
       </div>
       <aside className="flex flex-col gap-3 lg:sticky lg:top-24 lg:self-start">
-        <OrderSummary rows={summaryRows(order.quote)} total={order.quote.total} totalNote="Montos de muestra." />
+        <OrderSummary title="Tu pedido" rows={summaryRows(order.quote)} total={order.quote.total}>
+          <OrderLines lines={order.lines} compact />
+        </OrderSummary>
         <ButtonLink href={`/pedido/${order.token}/`} size="lg">Seguir mi pedido</ButtonLink>
-        <a href={whatsappLink(`Hola ${brand.name}! Hice el pedido ${order.code} en la tienda y tengo una consulta.`)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 text-sm font-bold text-primary underline">
+        <a href={whatsappLink(`Hola ${brand.name}! Hice el pedido ${order.code} en la tienda y tengo una consulta.`)} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-10 items-center justify-center gap-2 text-sm font-bold text-volt-ink underline">
           <MessageCircle size={16} aria-hidden="true" /> Consultar por WhatsApp
         </a>
       </aside>

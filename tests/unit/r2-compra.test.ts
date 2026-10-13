@@ -4,6 +4,8 @@ import { cartLoad } from "@/demo/engine/cart-load";
 import { orderReminders, potsInUse, remainingPct } from "@/demo/engine/repurchase";
 import { defaultDemoData, demoData, setDemoData } from "@/demo/engine/source";
 import { checkedLot } from "@/demo/engine/tracking";
+import { runOutLineForBuyer } from "@/demo/admin/repurchase-text";
+import { deliveryStrip } from "@/features/order/tracking-states";
 import { DEMO_TODAY } from "@/demo/fixtures/admin-orders";
 import { deliveredSampleOrder } from "@/demo/fixtures/tracking";
 import { workshopSettings as settings } from "@/demo/fixtures/workshop";
@@ -72,5 +74,19 @@ describe("lote del control, para el comprador", () => {
     expect(checkedLot("VL-2606-W · vence 06/2027")).toEqual({ code: "VL-2606-W", expires: "06/2027" });
     expect(checkedLot("Sin lote cargado")).toEqual({ code: null, expires: null });
     expect(checkedLot(undefined)).toBeNull();
+  });
+});
+
+describe("textos y etapas para el comprador", () => {
+  it("Mi box le habla al comprador", () => {
+    expect(runOutLineForBuyer({ runsOutOn: "2026-10-09", inDays: 4 })).toBe("Se te termina el viernes 9 de octubre (en 4 días)");
+    expect(runOutLineForBuyer({ runsOutOn: "2026-10-01", inDays: -4 })).toBe("Se te terminó el jueves 1 de octubre (hace 4 días)");
+  });
+  it("la ficha de entrega: pago en curso, después armado y lote, después la entrega", () => {
+    const states = (s: Parameters<typeof deliveryStrip>[0]) => deliveryStrip(s, "Llega mañana").map((x) => x.state);
+    expect(states("PENDING_PAYMENT")).toEqual(["done", "current", "pending", "pending"]);
+    expect(states("IN_PRODUCTION")).toEqual(["done", "done", "current", "pending"]);
+    expect(states("SHIPPED")).toEqual(["done", "done", "done", "current"]);
+    expect(states("DELIVERED")).toEqual(["done", "done", "done", "done"]);
   });
 });

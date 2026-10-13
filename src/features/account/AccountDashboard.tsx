@@ -1,5 +1,5 @@
 "use client";
-import { BellRing, Gift, LogOut, MapPin, Package, Sparkles, Trophy, type LucideIcon } from "lucide-react";
+import { BatteryCharging, Gift, LogOut, MapPin, Package, Sparkles, Trophy, type LucideIcon } from "lucide-react";
 import type { MouseEvent, ReactNode } from "react";
 import { LevelGlyph } from "@/components/illustrations/LevelGlyph";
 import { levelFor } from "@/demo/engine/club-levels";
@@ -10,14 +10,16 @@ import { cn } from "@/lib/cn";
 import { scrollBehavior } from "@/lib/scroll";
 import { useAccount } from "@/stores/account";
 import { useDemoData } from "@/stores/admin";
-import { useCheckout } from "@/stores/checkout";
 import { useGameCodes } from "@/stores/game";
 import { useGifts } from "@/stores/gifts";
-import { useReminders } from "@/stores/reminders";
 import { useWheelPrize } from "../club/useWheelPrize";
 import { AccountGifts } from "../gifts/AccountGifts";
-import { AddressesSection, MissionsSection, OrdersSection, RewardsSection, availableRewards } from "./AccountSections";
-import { RepurchaseSection } from "./RepurchaseSection";
+import { AddressesSection, MissionsSection, RewardsSection, availableRewards } from "./AccountSections";
+import { MyBoxSection } from "./MyBoxSection";
+import { OrdersSection } from "./OrdersSection";
+import { useAccountOrders } from "./useAccountOrders";
+import { potsInUse } from "@/demo/engine/repurchase";
+import { DEMO_TODAY } from "@/demo/fixtures/admin-orders";
 import { useAccountTab, type AccountTab } from "./useAccountTab";
 
 interface Section { id: AccountTab; title: string; icon: LucideIcon; summary: string; intro: string; body: ReactNode }
@@ -31,7 +33,8 @@ const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one :
  */
 export function AccountDashboard({ user }: { user: { name: string; email: string } }) {
   const { logout, usedRewards, markRewardUsed } = useAccount();
-  const lastOrder = useCheckout((s) => s.lastOrder);
+  const orders = useAccountOrders();
+  const pots = potsInUse(orders, useDemoData((d) => d.products), DEMO_TODAY).length;
   const missions = useDemoData((d) => d.missions).filter((m) => m.active !== false);
   const { sent, saved, opened } = useGifts();
   const received = giftsFor(user.email, { addressed: [...demoGifts, ...sent], saved });
@@ -42,11 +45,10 @@ export function AccountDashboard({ user }: { user: { name: string; email: string
   const coupons = useDemoData((d) => d.coupons);
   const gameLeft = gameCodes.filter((code) => { const c = coupons.find((x) => x.code === code); return c && !(c.maxUses !== undefined && (c.usedCount ?? 0) >= c.maxUses); }).length;
   const rewards = availableRewards(usedRewards) + (prizeStatus && prizeStatus !== "utilizado" ? 1 : 0) + gameLeft;
-  const reminders = useReminders((s) => s.items.length);
   const [tab, select] = useAccountTab();
   const sections: Section[] = [
-    { id: "pedidos", title: "Mis pedidos", icon: Package, summary: plural(lastOrder ? 2 : 1, "pedido", "pedidos"), intro: "Seguí cada pedido paso a paso.", body: <OrdersSection lastOrder={lastOrder} /> },
-    { id: "recompras", title: "Recompras", icon: BellRing, summary: reminders ? plural(reminders, "aviso", "avisos") : "Sin avisos", intro: "Te avisamos antes de que se termine el pote y lo recomprás en un toque.", body: <RepurchaseSection /> },
+    { id: "mi-box", title: "Mi box", icon: BatteryCharging, summary: pots ? plural(pots, "pote en uso", "potes en uso") : "Sin potes en uso", intro: "Lo que te queda de cada pote, tu nivel y recomprar en un toque.", body: <MyBoxSection /> },
+    { id: "pedidos", title: "Mis pedidos", icon: Package, summary: plural(orders.length, "pedido", "pedidos"), intro: "Seguí cada pedido paso a paso o repetilo.", body: <OrdersSection /> },
     { id: "regalos", title: "Mis regalos", icon: Gift, summary: unopened ? plural(unopened, "sin abrir", "sin abrir") : plural(received.length, "regalo", "regalos"), intro: "Los que te mandaron se abren sin el link; los que hiciste, para volver a mandarlos.", body: <AccountGifts email={user.email} /> },
     { id: "misiones", title: "Misiones", icon: Sparkles, summary: plural(missions.length, "activa", "activas"), intro: "Tus compras suman a cada misión (progreso de ejemplo).", body: <MissionsSection /> },
     { id: "premios", title: "Premios", icon: Trophy, summary: rewards ? plural(rewards, "disponible", "disponibles") : "Sin premios para usar", intro: "Los cupones de la ruleta y de Shaker Rush y los premios de las misiones, de un solo uso.", body: <RewardsSection used={usedRewards} onUse={markRewardUsed} /> },

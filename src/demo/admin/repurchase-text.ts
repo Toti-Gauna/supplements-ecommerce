@@ -36,6 +36,11 @@ export function runOutLine(item: Pick<RepurchaseItem, "runsOutOn" | "inDays">): 
   return item.inDays === 0 ? runOutText(item) : `${runOutText(item)} (${whenText(item.inDays)})`;
 }
 
+/** Lo mismo, hablándole al comprador ("Mi box"): "Se te termina el jueves 8 de octubre (en 4 días)". */
+export function runOutLineForBuyer(item: Pick<RepurchaseItem, "runsOutOn" | "inDays">): string {
+  return runOutLine(item).replace(/^Se le /, "Se te ");
+}
+
 const firstName = (name: string) => name.trim().split(/\s+/)[0] ?? name;
 
 /** Mensaje de WhatsApp prellenado para avisarle al cliente. */

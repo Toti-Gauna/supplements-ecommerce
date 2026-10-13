@@ -7,8 +7,10 @@ import { cn } from "@/lib/cn";
 import type { Traveler } from "./tracking/Travelers";
 import { brand } from "@/config/brand";
 
-const PATH = "M40 150 C 120 40, 210 190, 300 100 S 470 30, 560 90";
-const W = 600, H = 190;
+/** Carril recto del local a tu casa, como una pista pintada en el piso del box. */
+const PATH = "M40 96 H560";
+const W = 600, H = 150;
+const TICKS = [0, 1, 2, 3, 4, 5, 6].map((i) => 40 + (520 / 6) * i);
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 interface Props {
@@ -21,10 +23,10 @@ interface Props {
   delivered?: boolean;
 }
 
-/** Ruta ilustrada del local a tu casa: la línea avanza según la etapa. Sin mapas externos. */
+/** Pista del local a tu casa: el carril se carga según la etapa, con una marca por etapa. Sin mapas externos. */
 export function RouteMap({ progress, traveler, accent = brand.signature.volt, delivered = false }: Props) {
   const ref = useRef<SVGPathElement>(null);
-  const [dot, setDot] = useState({ x: 40, y: 150 });
+  const [dot, setDot] = useState({ x: 40, y: 96 });
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -36,15 +38,16 @@ export function RouteMap({ progress, traveler, accent = brand.signature.volt, de
   const move = reduce ? { duration: 0 } : { duration: 1.6, ease: EASE };
   const who = traveler ? `${traveler.label} lleva el pedido: ` : "";
   return (
-    <div className="relative overflow-hidden rounded-sm bg-night-2" role="img"
+    <div className="relative overflow-hidden rounded-sm border border-white/10 bg-night-2" role="img"
       aria-label={`${who}${delivered ? "llegó a tu casa" : `${Math.round(progress * 100)}% del camino entre el local y tu casa`} (ilustrativo)`}>
       {/* Margen arriba: el viajero de la temática (con su gorro) se dibuja por encima del recorrido y no se corta. */}
       <div className={cn("relative", traveler && "mt-5 sm:mt-6")}>
         <svg viewBox={`0 0 ${W} ${H}`} className="block w-full" aria-hidden="true">
-          <defs><pattern id="route-grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" fill="none" stroke="#fff" strokeOpacity=".05" /></pattern></defs>
-          <rect width={W} height={H} fill="url(#route-grid)" />
-          <path d={PATH} fill="none" stroke="#fff" strokeOpacity=".18" strokeWidth="3" strokeDasharray="2 10" strokeLinecap="round" />
-          <motion.path ref={ref} d={PATH} fill="none" stroke={accent} strokeWidth="4" strokeLinecap="round" initial={{ pathLength: 0 }} animate={{ pathLength: progress }} transition={move} />
+          {/* Bordes del carril, la línea de puntos del medio y una marca por etapa. */}
+          <path d="M20 72H580M20 120H580" stroke="#fff" strokeOpacity=".14" strokeWidth="2" />
+          <path d={PATH} fill="none" stroke="#fff" strokeOpacity=".18" strokeWidth="3" strokeDasharray="18 12" />
+          {TICKS.map((x) => <path key={x} d={`M${x} 64V80M${x} 112V128`} stroke="#fff" strokeOpacity=".3" strokeWidth="2" />)}
+          <motion.path ref={ref} d={PATH} fill="none" stroke={accent} strokeWidth="6" initial={{ pathLength: 0 }} animate={{ pathLength: progress }} transition={move} />
           {!traveler && (
             <>
               <motion.circle r="9" fill={accent} initial={false} animate={{ cx: dot.x, cy: dot.y }} transition={move} />
@@ -60,7 +63,7 @@ export function RouteMap({ progress, traveler, accent = brand.signature.volt, de
           </motion.span>
         )}
         {delivered && !reduce && (
-          <span aria-hidden="true" data-trk-burst className="pointer-events-none absolute" style={{ left: `${(560 / W) * 100}%`, top: `${(90 / H) * 100}%` }}>
+          <span aria-hidden="true" data-trk-burst className="pointer-events-none absolute" style={{ left: `${(560 / W) * 100}%`, top: `${(96 / H) * 100}%` }}>
             {Array.from({ length: 8 }, (_, i) => {
               const a = (i / 8) * Math.PI * 2;
               const kind = traveler?.burst[i % traveler.burst.length];

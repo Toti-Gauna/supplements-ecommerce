@@ -1,5 +1,5 @@
 "use client";
-import { PRODUCT_STEPS, type StepId } from "@/demo/admin/product-steps";
+import { FIRST_STEP, PRODUCT_STEPS, type StepId } from "@/demo/admin/product-steps";
 import type { Product } from "@/demo/types";
 
 /**
@@ -33,7 +33,7 @@ function valid(x: unknown, key: string): EditorSnapshot | null {
   const s = x as Partial<EditorSnapshot> | null;
   const p = s?.product;
   if (!s || s.key !== key || (s.origin !== "edit" && s.origin !== "new") || !p || typeof p.slug !== "string" || typeof p.name !== "string" || !Array.isArray(p.variants)) return null;
-  return { key, origin: s.origin, product: p, step: PRODUCT_STEPS.some((st) => st.id === s.step) ? s.step! : "foto", scrollY: Number.isFinite(s.scrollY) ? s.scrollY! : 0 };
+  return { key, origin: s.origin, product: p, step: PRODUCT_STEPS.some((st) => st.id === s.step) ? s.step! : FIRST_STEP, scrollY: Number.isFinite(s.scrollY) ? s.scrollY! : 0 };
 }
 
 export function loadSnapshot(key: string): EditorSnapshot | null {

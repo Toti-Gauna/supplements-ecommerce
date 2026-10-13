@@ -1,4 +1,5 @@
 "use client";
+import { ChevronDown } from "lucide-react";
 import type { ReactNode } from "react";
 import { Input, Textarea } from "@/components/atoms/Field";
 import { Select } from "@/components/atoms/Select";
@@ -7,10 +8,12 @@ import { PRODUCT_STEPS, type StepCheck, type StepId } from "@/demo/admin/product
 import { goalList } from "@/demo/engine/goals";
 import type { Category, Product, ProductBadge } from "@/demo/types";
 import { cn } from "@/lib/cn";
+import { brand } from "@/config/brand";
 import { NumberField } from "../NumberField";
 import { ProductMediaFields } from "../ProductMediaFields";
 import { VariantsEditor } from "../VariantsEditor";
-import { brand } from "@/config/brand";
+import { Chips } from "./Chips";
+import { LabelFields } from "./LabelFields";
 
 interface StepProps { id: StepId; check: StepCheck; tried: boolean; children: ReactNode }
 
@@ -33,31 +36,17 @@ export function Step({ id, check, tried, children }: StepProps) {
 
 const BADGES: readonly (readonly [ProductBadge, string])[] = [["sin-tacc", "Sin TACC"], ["vegano", "Vegano"], ["sin-azucar", "Sin azúcar"], ["keto", "Keto"], ["marca-propia", "Marca propia"], ["sin-cafeina", "Sin cafeína"]];
 
-/** Opciones múltiples como fichas (checkbox nativos con la estética del panel). */
-function Chips({ legend, options, value, onChange }: { legend: string; options: readonly (readonly [string, string])[]; value: string[]; onChange: (v: string[]) => void }) {
-  return (
-    <fieldset>
-      <legend className="mb-2 text-sm font-bold">{legend}</legend>
-      <div className="flex flex-wrap gap-2">
-        {options.map(([id, label]) => (
-          <label key={id} className={cn("inline-flex min-h-10 cursor-pointer items-center gap-2 rounded-sm border px-3 text-sm font-semibold has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary/50", value.includes(id) ? "border-primary bg-primary text-on-primary" : "border-line bg-bg")}>
-            <input type="checkbox" className="sr-only" checked={value.includes(id)} onChange={(e) => onChange(e.target.checked ? [...value, id] : value.filter((x) => x !== id))} />{label}
-          </label>
-        ))}
-      </div>
-    </fieldset>
-  );
-}
-
 interface Props { d: Product; set: (p: Partial<Product>) => void; checks: Record<StepId, StepCheck>; tried: boolean; categories: Category[]; products: Product[]; onGo: (id: StepId) => void }
 
-/** Los bloques del editor en el orden de 8.3.20: la foto primero; nada se pierde respecto del formulario anterior. */
+/**
+ * Los bloques del editor "hoja técnica" (R2): primero lo que vende (datos, presentaciones con su precio, rótulo y
+ * sellos); la foto y las medidas de envío (plegadas) al final. Nada se pierde respecto del formulario anterior.
+ */
 export function EditorSections({ d, set, checks, tried, categories, products, onGo }: Props) {
   const dims = d.dims ?? { lengthCm: 0, widthCm: 0, heightCm: 0, weightG: 0 };
   const step = (id: StepId, children: ReactNode) => <Step id={id} check={checks[id]} tried={tried}>{children}</Step>;
   return (
     <>
-      {step("foto", <ProductMediaFields draft={d} onChange={set} />)}
       {step("datos", (
         <>
           <label className="flex flex-col gap-1 text-sm font-bold">Nombre<Input value={d.name} onChange={(e) => set({ name: e.target.value })} aria-invalid={tried && checks.datos.errors.length > 0} placeholder="Whey protein 2 lb" /></label>
@@ -67,12 +56,11 @@ export function EditorSections({ d, set, checks, tried, categories, products, on
       ))}
       {step("venta", (
         <>
-          <div className="@container grid gap-3 @min-[40rem]:grid-cols-3">
+          <div className="@container grid gap-3 @min-[40rem]:grid-cols-2">
             <label className="flex flex-col gap-1 text-sm font-bold">Categoría
               <Select value={d.categorySlug} onChange={(e) => set({ categorySlug: e.target.value })}>{[...categories].sort((a, b) => a.sortOrder - b.sortOrder).map((c) => <option key={c.slug} value={c.slug}>{c.name}</option>)}</Select>
             </label>
-            <NumberField id="p-price" label="Precio base ilustrativo" suffix="ARS" value={d.basePrice} onChange={(n) => set({ basePrice: n })} />
-            <NumberField id="p-days" label="Plazo si es por encargo" suffix="días hábiles" value={d.madeToOrderDays} onChange={(n) => set({ madeToOrderDays: n || undefined })} hint="Lo que tarda en llegar al local desde el pago, para las variantes por encargo. Cuenta solo días hábiles y lo usa el calendario de despachos" />
+            <NumberField id="p-days" label="Plazo si es por encargo" suffix="días hábiles" value={d.madeToOrderDays} onChange={(n) => set({ madeToOrderDays: n || undefined })} hint="Lo que tarda en llegar al local desde el pago, para las presentaciones por encargo. Cuenta solo días hábiles y lo usa el calendario de despachos" />
           </div>
           <div className="flex flex-wrap gap-x-6">
             <Switch checked={d.active !== false} onChange={(v) => set({ active: v })} label="Visible en la tienda" />
@@ -81,15 +69,8 @@ export function EditorSections({ d, set, checks, tried, categories, products, on
           </div>
         </>
       ))}
-      {step("variantes", <VariantsEditor variants={d.variants} onChange={(variants) => set({ variants })} idPrefix={d.slug} />)}
-      {step("envio", (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <NumberField id="d-l" label="Largo" suffix="cm" value={dims.lengthCm} onChange={(n) => set({ dims: { ...dims, lengthCm: n } })} />
-          <NumberField id="d-w" label="Ancho" suffix="cm" value={dims.widthCm} onChange={(n) => set({ dims: { ...dims, widthCm: n } })} />
-          <NumberField id="d-h" label="Alto" suffix="cm" value={dims.heightCm} onChange={(n) => set({ dims: { ...dims, heightCm: n } })} />
-          <NumberField id="d-g" label="Peso" suffix="g" value={dims.weightG} onChange={(n) => set({ dims: { ...dims, weightG: n } })} />
-        </div>
-      ))}
+      {step("variantes", <VariantsEditor product={d} onChange={set} />)}
+      {step("rotulo", <LabelFields d={d} set={set} />)}
       {step("suplemento", (
         <>
           <label className="flex flex-col gap-1 text-sm font-bold">Marca
@@ -98,8 +79,23 @@ export function EditorSections({ d, set, checks, tried, categories, products, on
           </label>
           <Chips legend="Objetivos" options={goalList().map((g) => [g.id, g.name] as const)} value={d.goals ?? []} onChange={(v) => set({ goals: v as Product["goals"] })} />
           <Chips legend="Sellos del rótulo" options={BADGES} value={d.badges ?? []} onChange={(v) => set({ badges: v as ProductBadge[] })} />
-          <p className="text-xs text-muted">La tabla nutricional y el uso vienen con la ficha del proveedor. Los lotes, vencimientos y costos se cargan en cada variante (o con la lista del proveedor en Importar Excel).</p>
         </>
+      ))}
+      {step("foto", <ProductMediaFields draft={d} onChange={set} />)}
+      {step("envio", (
+        <details className="group">
+          <summary className="flex min-h-11 cursor-pointer list-none items-center gap-2 text-sm font-bold text-primary [&::-webkit-details-marker]:hidden">
+            <ChevronDown size={16} aria-hidden="true" className="transition-transform group-open:rotate-180" />Largo, ancho, alto y peso del envase
+            <span className="font-normal text-muted">{dims.heightCm > 0 ? `· ${dims.lengthCm}×${dims.widthCm}×${dims.heightCm} cm, ${dims.weightG} g` : "· sin cargar"}</span>
+          </summary>
+          <div className="grid grid-cols-2 gap-3 pt-3 sm:grid-cols-4">
+            <NumberField id="d-l" label="Largo" suffix="cm" value={dims.lengthCm} onChange={(n) => set({ dims: { ...dims, lengthCm: n } })} />
+            <NumberField id="d-w" label="Ancho" suffix="cm" value={dims.widthCm} onChange={(n) => set({ dims: { ...dims, widthCm: n } })} />
+            <NumberField id="d-h" label="Alto" suffix="cm" value={dims.heightCm} onChange={(n) => set({ dims: { ...dims, heightCm: n } })} />
+            <NumberField id="d-g" label="Peso" suffix="g" value={dims.weightG} onChange={(n) => set({ dims: { ...dims, weightG: n } })} />
+          </div>
+          <p className="pt-2 text-xs text-muted">Sirven para cotizar envíos; el alto y el ancho también dibujan las cotas del pote en la ficha.</p>
+        </details>
       ))}
       {step("revision", (
         <ul className="flex flex-col gap-1.5 text-sm">

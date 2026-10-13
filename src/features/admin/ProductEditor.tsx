@@ -7,7 +7,8 @@ import { Button, ButtonLink } from "@/components/atoms/Button";
 import { Sheet } from "@/components/motion/Sheet";
 import { EmptyState } from "@/components/molecules/EmptyState";
 import { withoutEmptyLots } from "@/demo/admin/lots";
-import { checkSteps, newProductDraft, PRODUCT_STEPS } from "@/demo/admin/product-steps";
+import { cleanNutrition, cleanUsage } from "@/demo/admin/nutrition-form";
+import { checkSteps, FIRST_STEP, newProductDraft, PRODUCT_STEPS } from "@/demo/admin/product-steps";
 import type { Product } from "@/demo/types";
 import { useAdmin } from "@/stores/admin";
 import { useBackHref } from "./listReturn";
@@ -23,7 +24,7 @@ const LIST = "/admin-demo/productos/";
 interface EditorProps { draftKey: string; origin: "edit" | "new"; saved: Product | null }
 
 /**
- * Editor de producto (8.3.20 y 8.3.21): alta y edición con los mismos bloques, foto primero. Todo es borrador hasta
+ * Editor de producto (8.3.20 y 8.3.21): alta y edición con los mismos bloques (R2: hoja técnica, la foto al final). Todo es borrador hasta
  * "Guardar": ir a la vista previa, a otra sección o recargar la pestaña no lo pierde, y el alta no existe en el
  * catálogo hasta guardarla (ir y volver de la vista previa no crea productos).
  */
@@ -44,7 +45,7 @@ function Editor({ draftKey: key, origin, saved }: EditorProps) {
   const [asking, setAsking] = useState(false);
   /** Ya se guardó: el borrador no se vuelve a escribir mientras la página se va. */
   const done = useRef(false);
-  const nav = useEditorNav(start.snap?.step ?? "foto");
+  const nav = useEditorNav(start.snap?.step ?? FIRST_STEP);
   const dirty = JSON.stringify(d) !== JSON.stringify(start.pristine);
   const [restored, setRestored] = useState(() => !start.returning && dirty);
   const checks = checkSteps(d, categories);
@@ -72,7 +73,7 @@ function Editor({ draftKey: key, origin, saved }: EditorProps) {
     const title = origin === "new" ? (d.active === false ? "Producto creado (pausado)" : "Producto creado") : "Producto guardado";
     done.current = true;
     clearSnapshot(key);
-    save(title, () => saveProduct(withoutEmptyLots(d)));
+    save(title, () => saveProduct(withoutEmptyLots({ ...d, nutrition: cleanNutrition(d.nutrition), usage: cleanUsage(d.usage), rnpa: d.rnpa?.trim() || undefined })));
     router.push(back);
   };
   const preview = () => { saveSnapshot(snapshot()); markPreview(key); router.push(previewHref(key)); };

@@ -15,7 +15,7 @@ const COLS = [
   { title: "Ayuda", links: [["/preguntas/", "Preguntas frecuentes"], [`/pedido/${DEMO_TRACKING_TOKEN}/`, "Seguimiento de pedido"], ["/cuenta/", "Mi cuenta"]] },
   { title: "Legales", links: [["/terminos/", "Términos y condiciones"], ["/privacidad/", "Política de privacidad"], ["/arrepentimiento/", "Botón de arrepentimiento"]] },
 ];
-const FOOT_LINK = "font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-volt underline underline-offset-4 hover:text-on-night";
+const FOOT_LINK = "inline-flex min-h-6 items-center font-mono text-[11px] font-bold uppercase tracking-[0.1em] text-volt underline underline-offset-4 hover:text-on-night";
 
 /** Pie como "ficha técnica del local": marca, la ficha (lugar, horarios, cadete, envíos y pagos), links y el pie legal. */
 export function Footer() {

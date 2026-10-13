@@ -73,6 +73,7 @@ export function Header() {
           <kbd className="ml-auto border border-line px-1.5 font-mono text-[10px] text-muted lg:max-xl:hidden">/</kbd>
         </button>
         <div className="ml-auto flex items-center gap-0.5 sm:ml-1">
+          <button type="button" onClick={() => setSearch(true)} aria-label="Buscar productos" className={cn(ICON, "sm:hidden")}><Search size={20} aria-hidden="true" /></button>
           <SoundToggle className={ICON} />
           <ThemeToggle className={cn(ICON, "max-sm:hidden")} />
           <Link href="/favoritos/" aria-label="Favoritos" className={cn(ICON, "max-lg:hidden")}><Heart size={20} aria-hidden="true" /></Link>

@@ -126,9 +126,10 @@ html[data-theme="light"] {
     -webkit-text-size-adjust: 100%;
     scroll-behavior: smooth;
   }
-  /* Lo que se enfoca o se lleva a la vista no queda debajo del header fijo ni del dock del celular. */
-  html:has([data-shop-header]) { scroll-padding-top: 4.5rem; }
-  @media (width < 64rem) { html:has([data-shop-bottomnav]) { scroll-padding-bottom: calc(5.5rem + env(safe-area-inset-bottom)); } }
+  /* Lo que se enfoca o se lleva a la vista no queda debajo del header fijo ni de la barra de abajo del celular (tienda
+     y panel). Sin :has() en <html>: obligaría a recalcular estilos con cada cambio del DOM. */
+  html { scroll-padding-top: 4.5rem; }
+  @media (width < 64rem) { html { scroll-padding-bottom: calc(5.5rem + env(safe-area-inset-bottom)); } }
   body {
     background: var(--color-bg);
     color: var(--color-ink);

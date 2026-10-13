@@ -10,7 +10,7 @@ import { formatARS } from "@/lib/money";
 import { useDemoData } from "@/stores/admin";
 import { hideTicker } from "./session";
 
-const LINK = "ml-2 uppercase underline decoration-volt underline-offset-4 hover:text-volt";
+const LINK = "ml-2 inline-flex min-h-6 items-center uppercase underline decoration-volt underline-offset-4 hover:text-volt";
 
 /**
  * Cinta de la tienda: el aviso de demo (con "Reiniciar demo" y "Probar temáticas"), la fecha vigente con su cupón, la promesa del cadete

@@ -6,7 +6,7 @@ import { useAmbientPause } from "./useAmbientPause";
 import { useCurrentTheme } from "./useCurrentTheme";
 import { useThemeCoupon } from "./useThemeCoupon";
 
-const LINK = "underline decoration-(--season-accent) underline-offset-4 hover:text-(--season-accent)";
+const LINK = "inline-flex min-h-6 items-center underline decoration-(--season-accent) underline-offset-4 hover:text-(--season-accent)";
 
 /**
  * La fecha vigente en la cinta de avisos: su nombre en el acento de temporada, la oferta, el código para copiar, la
@@ -24,7 +24,7 @@ export function TickerSeason() {
       {offer && <span className="text-on-night">{offer.label}</span>}
       {offer && (
         <button type="button" onClick={() => copy(offer.coupon.code)} aria-label={`Copiar el código ${offer.coupon.code}`}
-          className="inline-flex items-center gap-1 border border-dashed border-(--season-accent) px-1.5 py-0.5 font-bold tracking-[0.14em] text-(--season-accent)">
+          className="inline-flex min-h-6 items-center gap-1 border border-dashed border-(--season-accent) px-1.5 font-bold tracking-[0.14em] text-(--season-accent)">
           {offer.coupon.code} <Copy size={11} aria-hidden="true" />
         </button>
       )}

@@ -28,7 +28,7 @@ html[data-theme="light"] .rack-bay {
 
 /* Piezas del SVG del rack (RackShot): base del estante, agujeros y la luz del filo (acento de temporada). */
 .rack-shot .rk-base { fill: #0d0e10; }
-.rack-shot .rk-hole { fill: #07080a; }
+.rack-shot .rk-hole { stroke: #07080a; }
 .rack-shot .rk-glow { fill: var(--season-accent); filter: drop-shadow(0 0 6px var(--season-glow)); }
 html[data-theme="light"] .rack-shot .rk-base { fill: color-mix(in srgb, var(--color-ink) 10%, var(--color-surface)); }
 html[data-theme="light"] .rack-shot .rk-glow { filter: none; }

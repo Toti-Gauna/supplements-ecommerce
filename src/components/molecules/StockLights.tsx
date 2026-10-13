@@ -16,17 +16,16 @@ const LIGHT: Record<StockState, string> = {
 };
 export const STOCK_WORD: Record<StockState, string> = { ok: "en stock", low: "quedan pocas", out: "sin stock", "made-to-order": "a pedido" };
 
-/** Una luz por variante (sabor · tamaño), como el tablero de un rack. La lectura completa va para lectores de pantalla. */
+/**
+ * Una luz por variante (sabor · tamaño), como el tablero de un rack. Para lectores de pantalla es una sola imagen con
+ * la lectura completa (y pocos nodos: va en cada tarjeta).
+ */
 export function StockLights({ items, className }: { items: StockLightItem[]; className?: string }) {
+  const reading = items.map((l) => `${l.label}: ${STOCK_WORD[l.state]}`).join("; ");
   return (
-    <ul aria-label="Stock por variante" className={cn("flex flex-wrap items-center gap-1", className)}>
-      {items.map((l) => (
-        <li key={l.id} title={`${l.label}: ${STOCK_WORD[l.state]}`} className="flex">
-          <span aria-hidden="true" className={cn("block size-2", LIGHT[l.state])} />
-          <span className="sr-only">{l.label}: {STOCK_WORD[l.state]}</span>
-        </li>
-      ))}
-    </ul>
+    <span role="img" aria-label={`Stock por variante. ${reading}`} title={reading} className={cn("flex flex-wrap items-center gap-1", className)}>
+      {items.map((l) => <span key={l.id} data-light={l.state} className={cn("block size-2", LIGHT[l.state])} />)}
+    </span>
   );
 }
 

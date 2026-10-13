@@ -19,16 +19,18 @@ interface RackShotProps {
   lightUp?: boolean;
   /** El rack entero a la vista (hero): sin recortar arriba en cajas anchas. */
   fit?: boolean;
+  /** Reflector con su cono de luz (sin él, más liviano: estantes de categorías). */
+  spot?: boolean;
   className?: string;
 }
 
-/** Agujeros del parante, cada 22 unidades, como un rack de sentadillas. */
+/** Parante con agujeros cada 22 unidades, como un rack de sentadillas (los agujeros, un solo trazo punteado). */
 function Upright({ x }: { x: number }) {
   return (
     <g>
       <rect x={x} y="0" width="22" height="400" fill="url(#rk-steel)" />
       <rect x={x} y="0" width="1.5" height="400" fill="#fff" opacity=".14" />
-      {Array.from({ length: 17 }, (_, i) => <rect key={i} x={x + 7} y={14 + i * 22} width="8" height="10" rx="1" className="rk-hole" />)}
+      <path d={`M${x + 11} 14V400`} strokeWidth="8" strokeDasharray="10 12" className="rk-hole" />
     </g>
   );
 }
@@ -45,35 +47,32 @@ const SLOTS: Record<number, { x: number; s: number }[]> = {
  * "ficha de rack" y los estantes de categorías. Los degradés (`rk-*`) están una vez por página en `GlobalArtDefs`; los
  * colores del estante salen de `app/rack.css` (acero de noche, mesa de laboratorio de día).
  */
-export function RackShot({ items, label, uprights = false, lightUp = false, fit = false, className }: RackShotProps) {
+export function RackShot({ items, label, uprights = false, lightUp = false, fit = false, spot = true, className }: RackShotProps) {
   const list = items.slice(0, 3);
   const slots = SLOTS[list.length] ?? SLOTS[1]!;
   const base = uprights ? 0.86 : 0.84;
   return (
     <svg viewBox="0 0 400 400" preserveAspectRatio={fit ? "xMidYMax meet" : "xMidYMax slice"} role={label ? "img" : undefined} aria-label={label ? `${label} (imagen ilustrativa)` : undefined}
       aria-hidden={label ? undefined : true} className={cn("rack-shot block h-full w-full", className)}>
-      <g aria-hidden="true">
-        {uprights && <><Upright x={34} /><Upright x={344} /></>}
+      {/* Pocos nodos a propósito: hay un rack por tarjeta y por estante (el contenido de un role="img" no se lee). */}
+      {uprights && <><Upright x={34} /><Upright x={344} /></>}
+      {spot && (
         <g className={lightUp ? "rk-spot" : undefined}>
           <path d="M176 10h48l150 330H26Z" fill="url(#rk-cone)" />
-          <rect x="178" y="9" width="44" height="2" fill="#fff" opacity=".9" />
           <ellipse cx="200" cy="338" rx="150" ry="22" fill="url(#rk-pool)" />
         </g>
-        <ellipse cx="200" cy="336" rx="150" ry="9" fill="#000" opacity=".4" />
-        <rect x="170" y="-2" width="60" height="12" fill="url(#rk-steel)" />
-      </g>
+      )}
+      <ellipse cx="200" cy="336" rx="150" ry="9" fill="#000" opacity=".4" />
+      {spot && <rect x="170" y="-2" width="60" height="12" fill="url(#rk-steel)" />}
       {list.map((it, i) => {
         const Container = CONTAINERS[it.art] ?? CONTAINERS.tub;
         const { x, s } = slots[i]!;
         return <g key={i} transform={`translate(${x} 336) scale(${(FRAME_SCALE[it.art] ?? 1) * base * s}) translate(-200 -330)`}><Container pack={it.pack ?? defaultPack(it.art)} tint={it.tint ?? "#8b72ff"} /></g>;
       })}
-      <g aria-hidden="true">
-        <rect x="14" y="336" width="372" height="16" fill="url(#rk-shelf)" />
-        <rect x="14" y="336" width="372" height="1.5" fill="#fff" opacity=".35" />
-        <rect x="14" y="352" width="372" height="48" className="rk-base" />
-        <rect x="14" y="352" width="372" height="2" className="rk-glow" />
-        <circle cx="30" cy="344" r="3" className="rk-hole" /><circle cx="370" cy="344" r="3" className="rk-hole" />
-      </g>
+      <rect x="14" y="336" width="372" height="16" fill="url(#rk-shelf)" />
+      <rect x="14" y="336" width="372" height="1.5" fill="#fff" opacity=".35" />
+      <rect x="14" y="352" width="372" height="48" className="rk-base" />
+      <rect x="14" y="352" width="372" height="2" className="rk-glow" />
     </svg>
   );
 }

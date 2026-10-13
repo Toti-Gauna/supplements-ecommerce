@@ -107,7 +107,9 @@ test("ficha de rack: precio por servicio en el marcador, luces de stock y un sol
   await page.goto("c/proteinas/");
   const card = page.locator("[data-product-card]").filter({ hasText: "Ionic Whey 100%" });
   await expect(card.getByRole("img", { name: /por servicio$/ })).toBeVisible();
-  await expect(card.getByRole("list", { name: "Stock por variante" }).getByRole("listitem")).toHaveCount(8);
+  await expect(card.getByRole("img", { name: /^Stock por variante\. Chocolate · 2 lb \(907 g\): en stock;/ })).toBeVisible();
+  await expect(card.locator("[data-light]")).toHaveCount(8);
+  await expect(card.locator("[data-light='out']")).toHaveCount(1);
   await expect(card.getByRole("list", { name: "Sellos" })).toBeVisible();
   await expect(card.getByText("Imagen ilustrativa", { exact: true })).toHaveCount(0);
   await expect(page.getByText("Imágenes ilustrativas de la demo")).toHaveCount(1);

@@ -32,6 +32,11 @@ const DIGITS: Record<string, string> = {
   "0": "abcdef", "1": "bc", "2": "abdeg", "3": "abcdg", "4": "bcfg", "5": "acdfg",
   "6": "acdefg", "7": "abc", "8": "abcdefg", "9": "abcdfg", "-": "g",
 };
+/** Contorno de varios segmentos como un solo trazo. */
+const toPath = (keys: string) => SEGMENTS.filter((_, k) => keys.includes("abcdefg"[k]!)).map((pts) => `M${pts}Z`).join("");
+const ALL = toPath("abcdefg");
+const LIT: Record<string, string> = Object.fromEntries(Object.entries(DIGITS).map(([d, keys]) => [d, toPath(keys)]));
+const lit = (c: string) => LIT[c]!;
 const DIGIT_W = 40;
 const DOT_W = 12;
 const HEIGHT = 58;
@@ -54,17 +59,16 @@ export function Led({ value, label, tone = "volt", motion = "power", className }
   const { cells, width } = layout(value);
   const color = `var(--led-${tone})`;
   const anim = ANIM[motion];
-  const lit = { filter: `drop-shadow(0 0 var(--led-glow) color-mix(in srgb, ${color} 55%, transparent))` };
+  const glow = { filter: `drop-shadow(0 0 var(--led-glow) color-mix(in srgb, ${color} 55%, transparent))` };
   return (
     <svg role="img" aria-label={label} viewBox={`-2 -2 ${width + 10} ${HEIGHT + 4}`} className={cn("block h-10 w-auto overflow-visible", className)} style={{ color }}>
       <g transform="translate(8 0) skewX(-7)">
         {cells.map(({ c, at, i }) =>
           c in DIGITS ? (
+            // Un trazo para los 7 segmentos apagados y otro para los prendidos: pocos nodos (va en cada tarjeta).
             <g key={i} transform={`translate(${at} 0)`}>
-              {SEGMENTS.map((pts, k) => <polygon key={k} points={pts} fill="currentColor" style={{ opacity: "var(--led-off)" }} />)}
-              <g className={anim} style={{ "--i": i, ...lit } as CSSProperties}>
-                {SEGMENTS.map((pts, k) => (DIGITS[c]!.includes("abcdefg"[k]!) ? <polygon key={k} points={pts} fill="currentColor" /> : null))}
-              </g>
+              <path d={ALL} fill="currentColor" style={{ opacity: "var(--led-off)" }} />
+              <path d={lit(c)} fill="currentColor" className={anim} style={{ "--i": i, ...glow } as CSSProperties} />
             </g>
           ) : (
             <rect key={i} x={at + 1} y={HEIGHT - 6} width={6} height={6} fill="currentColor" className={anim} style={{ "--i": i } as CSSProperties} />

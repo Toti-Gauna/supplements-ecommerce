@@ -2,7 +2,6 @@
 import Link from "next/link";
 import type { CSSProperties } from "react";
 import { AthleteSilhouette } from "@/components/illustrations/AthleteSilhouette";
-import { RackShot } from "@/components/illustrations/RackShot";
 import { goalHref } from "@/demo/engine/catalog";
 import { goalProduct, rackFacts } from "@/demo/engine/rack";
 import { formatARS } from "@/lib/money";
@@ -31,12 +30,10 @@ export function GoalPanels({ n }: { n: number }) {
                 <span className="font-display text-xl leading-none">{g.name}</span>
                 <span className="text-[12px] leading-snug text-night-muted">{g.pitch}</span>
               </span>
-              <span className="relative flex items-center gap-2 border-t border-white/10 p-2 pr-3">
-                <span className="h-14 w-12 shrink-0"><RackShot items={[{ art: p.art, pack: p.pack, tint: p.variants[0]?.colorHex }]} label="" /></span>
-                <span className="min-w-0 font-mono text-[10.5px] leading-tight">
-                  <span className="block truncate font-bold text-on-night">{p.name}</span>
-                  {pps && <span className="block text-night-muted">{formatARS(pps)} / serv</span>}
-                </span>
+              <span className="relative border-t border-white/10 px-3 py-2 font-mono text-[10.5px] leading-tight">
+                <span className="block text-(--hue)">Su producto</span>
+                <span className="block truncate font-bold text-on-night">{p.name}</span>
+                {pps && <span className="block text-night-muted">{formatARS(pps)} / serv</span>}
               </span>
             </Link>
           </li>

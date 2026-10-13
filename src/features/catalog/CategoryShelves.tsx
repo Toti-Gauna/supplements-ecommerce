@@ -28,7 +28,7 @@ export function CategoryShelves({ layout = "grid", listRef }: { layout?: "rail" 
         <li key={c.slug} className={cn(rail && "w-[72%] shrink-0 snap-start sm:w-[40%] lg:w-[calc((100%-2.25rem)/4)]")}>
           <Link href={categoryHref(c.slug)} className="group flex h-full flex-col border border-line bg-surface shadow-[var(--shadow-card)] transition-shadow hover:shadow-[var(--shadow-lift)]">
             <span className="rack-bay block aspect-[16/9] overflow-hidden">
-              <RackShot items={s.products.map((p) => ({ art: p.art, pack: p.pack, tint: p.variants[0]?.colorHex }))} label="" className="transition-transform duration-300 group-hover:-translate-y-1" />
+              <RackShot items={s.products.map((p) => ({ art: p.art, pack: p.pack, tint: p.variants[0]?.colorHex }))} label="" spot={false} className="transition-transform duration-300 group-hover:-translate-y-1" />
             </span>
             <span className="plate flex flex-1 flex-col gap-1 px-3 py-2.5">
               <span className="font-display text-xl leading-none">{c.name}</span>

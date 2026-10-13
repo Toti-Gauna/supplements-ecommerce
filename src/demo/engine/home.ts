@@ -26,7 +26,10 @@ const visible = (p: Product | undefined): p is Product => Boolean(p && p.active 
 export function heroPicks(features: HeroFeature[], theme: SeasonalTheme | null): HeroPick[] {
   const picks: HeroPick[] = [];
   const lead = theme ? themeProducts(theme)[0] : undefined;
-  if (theme && lead) picks.push({ key: `campaign-${theme.id}`, kind: "campaign", product: lead, headline: theme.headline, pitch: theme.subtitle });
+  if (theme && lead) {
+    const image = features.find((f) => f.active !== false && f.productSlug === lead.slug)?.image;
+    picks.push({ key: `campaign-${theme.id}`, kind: "campaign", product: lead, headline: theme.headline, pitch: theme.subtitle, image });
+  }
   for (const f of features) {
     const product = getProduct(f.productSlug);
     if (f.active === false || !visible(product) || picks.some((p) => p.product.slug === product.slug)) continue;

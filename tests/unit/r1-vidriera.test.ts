@@ -58,6 +58,13 @@ describe("estantes y objetivos", () => {
 });
 
 describe("hero del inicio", () => {
+  it("la campaña usa la imagen y el encuadre del destacado visible de su producto", () => {
+    const theme = demoData().themes.find((t) => t.id === "black-friday")!;
+    const lead = themeProducts(theme)[0]!;
+    const feature = { ...demoData().content.hero[0]!, productSlug: lead.slug, image: { src: "data:image/webp;base64,AA==", alt: "Escena propia del rack", frame: { x: 30, y: 60, zoom: 1.2 } } };
+    expect(heroPicks([feature], theme)[0]).toMatchObject({ kind: "campaign", headline: theme.headline, image: feature.image });
+    expect(heroPicks([{ ...feature, active: false }], theme)[0]?.image).toBeUndefined();
+  });
   it("cada destacado conserva su imagen y encuadre sin modificar el producto del catálogo", () => {
     const feature = demoData().content.hero[0]!;
     const image = { src: "data:image/webp;base64,AA==", alt: "Pote bajo el reflector", frame: { x: 20, y: 70, zoom: 1.5 } };

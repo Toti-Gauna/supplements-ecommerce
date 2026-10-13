@@ -4,6 +4,7 @@ import { expect, test, type Locator, type Page } from "@playwright/test";
  * R0 · Tienda. "+ Agregar" de la tarjeta agrega de verdad: el link estirado del nombre cubre toda la tarjeta y, con
  * el `transform` de hover/tap (motion.css), quedaba encima del botón y el clic terminaba en la ficha. Playwright no
  * hace clic si otro elemento intercepta el puntero, así que el clic mismo prueba el apilamiento.
+ * R1: con varios sabores o tamaños, "Agregar" abre la hoja chica para elegir; con una sola opción suma directo.
  * También: mega menú, h1 y rieles del inicio, e insignia honesta de las ofertas con mínimo.
  */
 const cartBadge = (page: Page) => page.getByRole("button", { name: /^Carrito, 1 producto$/ });
@@ -15,6 +16,14 @@ async function buttonIsOnTop(button: Locator) {
     const hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
     return Boolean(hit && el.contains(hit));
   });
+}
+
+/** Si el producto tiene varias opciones, se abre la hoja de sabor y tamaño: se agrega la que propone (la de la tarjeta). */
+async function chooseIfAsked(page: Page) {
+  const sheet = page.getByRole("dialog", { name: /^Elegí cómo llevás/ });
+  if (await sheet.isVisible({ timeout: 1500 }).catch(() => false)) {
+    await sheet.getByRole("button", { name: /^Agregar al carrito/ }).click();
+  }
 }
 
 test.describe("escritorio, con mouse", () => {
@@ -31,6 +40,7 @@ test.describe("escritorio, con mouse", () => {
     await expect(add).toBeVisible();
     expect(await buttonIsOnTop(add), "con el hover, el link de la tarjeta no debe tapar el botón").toBe(true);
     await add.click();
+    await chooseIfAsked(page);
     const drawer = page.getByRole("dialog", { name: "Carrito" });
     await expect(drawer).toBeVisible();
     await expect(drawer.getByText(name).first()).toBeVisible();
@@ -70,6 +80,7 @@ test.describe("celular, con toque", () => {
     const add = card.getByRole("button", { name: `Agregar ${name} al carrito` });
     await add.scrollIntoViewIfNeeded();
     await add.tap();
+    await chooseIfAsked(page);
     const drawer = page.getByRole("dialog", { name: "Carrito" });
     await expect(drawer).toBeVisible();
     await expect(drawer.getByText(name).first()).toBeVisible();
@@ -77,16 +88,38 @@ test.describe("celular, con toque", () => {
   });
 });
 
-test("inicio: tiene un h1 y «Recomendados» no repite «Más vendidos»", async ({ page }) => {
+test("inicio: tiene un h1 y «Recomendados» no repite «El más elegido del box»", async ({ page }) => {
   await page.goto("");
   await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
-  const names = (region: string) => page.getByRole("region", { name: new RegExp(`^${region}`) }).getByRole("heading", { level: 3 }).allInnerTexts();
-  await page.getByRole("region", { name: /^Más vendidos/ }).scrollIntoViewIfNeeded();
-  await expect(page.getByRole("region", { name: /^Más vendidos/ }).locator("[data-product-card]").first()).toBeVisible();
-  const best = await names("Más vendidos");
-  const recommended = await names("Recomendados");
+  const ranking = page.getByRole("region", { name: "El más elegido del box" });
+  await ranking.scrollIntoViewIfNeeded();
+  const best = (await ranking.getByRole("rowheader").getByRole("link").allInnerTexts()).map((n) => n.toLowerCase());
+  expect(best).toHaveLength(5);
+  const rec = page.getByRole("region", { name: /^Recomendados/ });
+  await rec.scrollIntoViewIfNeeded();
+  await expect(rec.locator("[data-product-card]").first()).toBeVisible();
+  const recommended = (await rec.getByRole("heading", { level: 3 }).allInnerTexts()).map((n) => n.toLowerCase());
   expect(recommended.length).toBeGreaterThan(0);
   expect(recommended.filter((n) => best.includes(n))).toEqual([]);
+});
+
+test("ficha de rack: precio por servicio en el marcador, luces de stock y un solo aviso de imagen ilustrativa", async ({ page }) => {
+  await page.goto("c/proteinas/");
+  const card = page.locator("[data-product-card]").filter({ hasText: "Ionic Whey 100%" });
+  await expect(card.getByRole("img", { name: /por servicio$/ })).toBeVisible();
+  await expect(card.getByRole("list", { name: "Stock por variante" }).getByRole("listitem")).toHaveCount(8);
+  await expect(card.getByRole("list", { name: "Sellos" })).toBeVisible();
+  await expect(card.getByText("Imagen ilustrativa", { exact: true })).toHaveCount(0);
+  await expect(page.getByText("Imágenes ilustrativas de la demo")).toHaveCount(1);
+  // Elegir sabor y tamaño en la hoja: entra esa variante, no la primera.
+  await card.getByRole("button", { name: "Agregar Ionic Whey 100% al carrito" }).click();
+  const sheet = page.getByRole("dialog", { name: "Elegí cómo llevás Ionic Whey 100%" });
+  await sheet.getByText("Vainilla", { exact: true }).click();
+  await sheet.getByText("2 lb (907 g)", { exact: true }).click();
+  await sheet.getByRole("button", { name: /^Agregar al carrito · \$\s?54\.900$/ }).click();
+  const drawer = page.getByRole("dialog", { name: "Carrito" });
+  await expect(drawer).toContainText("Vainilla");
+  await expect(drawer).toContainText("2 lb");
 });
 
 test("ofertas de Black Friday: con mínimo de compra, la insignia dice la condición y no un «30% OFF» sin descuento", async ({ page }) => {

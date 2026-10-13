@@ -59,7 +59,7 @@ export function HeroStage({ pick, facts, cadete, campaign, actions, markers, mot
             {campaign ? `Campaña · ${campaign.name}` : pick.key === "best" ? "El más elegido" : "Estrella del rack"} · {p.brand}
           </p>
           <Heading key={pick.key} className="font-display mt-3 text-[clamp(2.9rem,8.5vw,7.5rem)] font-black leading-[0.86] [overflow-wrap:anywhere]">
-            <span className="rk-slam block">{words.slice(0, -1).join(" ")}</span>
+            <span className="rk-slam block">{words.slice(0, -1).join(" ")}</span>{" "}
             <span className="rk-slam-2 block text-volt-ink">{words.at(-1)}</span>
           </Heading>
         </div>

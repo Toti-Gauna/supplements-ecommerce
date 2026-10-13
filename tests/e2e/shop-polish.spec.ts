@@ -68,12 +68,13 @@ for (const width of [375, 640, 820, 1080, 1180, 1440]) {
     await page.goto("categorias/");
     const counts = await rows(page, "ul[aria-label='Categorías']");
     expect(counts.slice(0, -1).every((c) => c === counts[0]), `filas ${counts}`).toBe(true);
-    expect(counts.at(-1)!, `filas ${counts}`).toBeGreaterThan(1);
+    // En una sola columna (celular) cada estante va en su fila; con más columnas, ninguno queda solo al final.
+    if (counts[0]! > 1) expect(counts.at(-1)!, `filas ${counts}`).toBeGreaterThan(1);
   });
 }
 
 /** Estado del riel de Recomendados: posición, si coincide con el borde de una tarjeta y si hay alguna en blanco a la vista. */
-const railState = (page: Page) => page.locator("#recomendados").locator("xpath=ancestor::section[1]").locator("ul").evaluate((ul) => {
+const railState = (page: Page) => page.locator("#recomendados").locator("xpath=ancestor::section[1]").locator("ul").first().evaluate((ul) => {
   const r = ul.getBoundingClientRect();
   const pad = parseFloat(getComputedStyle(ul).scrollPaddingLeft) || 0;
   const origin = r.left + ul.clientLeft - ul.scrollLeft;
@@ -121,7 +122,7 @@ for (const [width, height] of [[1080, 810], [820, 1180]] as const) {
       await expect(prev).toHaveAttribute("aria-disabled", "true");
     }
     // Un deslizón rápido hasta el final (de un cuadro al otro) y vuelta: las tarjetas por las que pasó están.
-    await section.locator("ul").evaluate((ul) => ul.scrollTo({ left: ul.scrollWidth, behavior: "instant" }));
+    await section.locator("ul").first().evaluate((ul) => ul.scrollTo({ left: ul.scrollWidth, behavior: "instant" }));
     await settle();
     await press(prev);
   });

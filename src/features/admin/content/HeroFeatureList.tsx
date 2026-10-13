@@ -3,6 +3,7 @@ import { AlertCircle, Plus } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import { RackShot } from "@/components/illustrations/RackShot";
 import { HERO_LIMITS } from "@/demo/admin/content-hero";
+import { imageFrame } from "@/demo/admin/content-images";
 import type { HeroFeature, Product } from "@/demo/types";
 import { cn } from "@/lib/cn";
 
@@ -29,7 +30,12 @@ export function HeroFeatureList({ features, products, selected, withErrors, onSe
               <button type="button" aria-pressed={i === selected} onClick={() => onSelect(f.id)}
                 aria-label={`Destacado ${i + 1}: ${f.headline || "sin titular"}, ${p?.name ?? "sin producto"}, ${visible ? "visible" : "oculto"}${withErrors.has(f.id) ? ", con errores" : ""}`}
                 className={cn("flex w-full items-center gap-3 rounded-sm p-2 text-left ring-1 transition-colors", i === selected ? "bg-accent ring-primary" : "bg-surface ring-ink/[0.06] hover:bg-accent/50")}>
-                <span aria-hidden="true" className="rack-bay h-12 w-12 shrink-0 overflow-hidden">{p && <RackShot items={[{ art: p.art, pack: p.pack, tint: p.variants[0]?.colorHex }]} label="" />}</span>
+                <span aria-hidden="true" className="rack-bay h-12 w-12 shrink-0 overflow-hidden">
+                  {f.image
+                    // eslint-disable-next-line @next/next/no-img-element -- Data URL local, no requiere loader.
+                    ? <img src={f.image.src} alt="" width={48} height={48} className="h-full w-full object-cover" style={{ objectPosition: `${imageFrame(f.image.frame).x}% ${imageFrame(f.image.frame).y}%`, transform: `scale(${imageFrame(f.image.frame).zoom})` }} />
+                    : p && <RackShot items={[{ art: p.art, pack: p.pack, tint: p.variants[0]?.colorHex }]} label="" />}
+                </span>
                 <span aria-hidden="true" className="min-w-0 flex-1">
                   <span className="block text-xs font-bold text-muted">{String(i + 1).padStart(2, "0")}{i === 0 ? " · estrella" : ""}{visible ? "" : " · oculto"}</span>
                   <span className="block truncate font-bold">{f.headline || "Sin titular"}</span>

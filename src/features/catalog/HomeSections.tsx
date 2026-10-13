@@ -23,9 +23,7 @@ function Later({ size, children }: { size: number; children: ReactNode }) {
 }
 
 /**
- * Inicio (R1), pocos bloques y con propósito: el hero del rack (campaña o producto estrella, con su marcador), las
- * ofertas de la campaña, los objetivos, el stack en vivo, las categorías como estantes, la tabla del box, lo
- * recomendado para vos, las reseñas por atributo y el club. El h1 es el titular del hero.
+ * Inicio: carrusel del rack, categorías, objetivos, ofertas de campaña y los bloques restantes de R1.
  */
 export function HomeSections() {
   useDemoVersion();
@@ -38,10 +36,10 @@ export function HomeSections() {
   return (
     <div className="flex flex-col gap-12 sm:gap-16">
       <HomeHero />
+      <Later size={420}><HomeCategories n={1} /></Later>
+      <GoalPanels n={2} />
       {theme && <ThemeOffersRail theme={theme} offer={offer} />}
-      <GoalPanels n={1} />
       <HomeStackBlock />
-      <Later size={420}><HomeCategories n={2} /></Later>
       <Later size={520}><BoxLeaderboard rows={ranking} n={3} /></Later>
       <Later size={620}><ProductRail id="recomendados" eyebrow="Elegidos para vos" title="Recomendados" products={recommended.map(toCard)} href="/categorias/" /></Later>
       <Later size={520}><AttributeReviews n={4} /></Later>

@@ -56,7 +56,7 @@ test("ficha: stock bajo la imagen, cantidad desplegable y favoritos", async ({ p
   await expect(page.getByRole("list", { name: "Favoritos guardados" }).getByText("Ionic Whey 100%")).toBeVisible();
 });
 
-test("barra inferior de la tienda y hero sin carrusel (los destacados se eligen, no rotan)", async ({ page }) => {
+test("barra inferior de la tienda y carrusel con controles accesibles", async ({ page }) => {
   await page.goto("");
   const nav = page.getByRole("navigation", { name: "Navegación inferior" });
   await expect(nav.getByRole("link", { name: "Inicio" })).toHaveAttribute("aria-current", "page");
@@ -73,8 +73,8 @@ test("barra inferior de la tienda y hero sin carrusel (los destacados se eligen,
   await expect(page.locator("[data-buy-bar]")).toBeVisible();
   await expect(nav).toHaveCount(0);
   await page.goto("");
-  await expect(page.getByRole("button", { name: /Reproducir carrusel|Pausar carrusel/ })).toHaveCount(0);
-  await expect(page.getByRole("group", { name: "Destacados" }).getByRole("button", { pressed: true })).toHaveCount(1);
+  await expect(page.getByRole("button", { name: /Reproducir carrusel|Pausar carrusel/ })).toHaveCount(1);
+  await expect(page.getByRole("group", { name: "Destacados" }).locator("button[aria-current=true]")).toHaveCount(1);
 });
 
 test("carrito: elegir cupón sin escribir el código y ruleta al ir a pagar", async ({ page }) => {

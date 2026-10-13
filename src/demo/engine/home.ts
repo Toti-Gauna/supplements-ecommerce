@@ -9,11 +9,12 @@ import { themeProducts } from "./themes";
 
 export interface HeroPick {
   key: string;
-  /** "campaign": la fecha vigente (va primero y no rota); "featured": un destacado del panel. */
+  /** "campaign": la fecha vigente (va primero); "featured": un destacado del panel. */
   kind: "campaign" | "featured";
   product: Product;
   headline: string;
   pitch: string;
+  image?: HeroFeature["image"];
 }
 
 const visible = (p: Product | undefined): p is Product => Boolean(p && p.active !== false);
@@ -29,7 +30,7 @@ export function heroPicks(features: HeroFeature[], theme: SeasonalTheme | null):
   for (const f of features) {
     const product = getProduct(f.productSlug);
     if (f.active === false || !visible(product) || picks.some((p) => p.product.slug === product.slug)) continue;
-    picks.push({ key: f.id, kind: "featured", product, headline: f.headline, pitch: f.pitch });
+    picks.push({ key: f.id, kind: "featured", product, headline: f.headline, pitch: f.pitch, image: f.image });
   }
   const top = bestSellers(1)[0];
   if (!picks.length && top) picks.push({ key: "best", kind: "featured", product: top, headline: top.name, pitch: top.short });

@@ -58,6 +58,14 @@ describe("estantes y objetivos", () => {
 });
 
 describe("hero del inicio", () => {
+  it("cada destacado conserva su imagen y encuadre sin modificar el producto del catálogo", () => {
+    const feature = demoData().content.hero[0]!;
+    const image = { src: "data:image/webp;base64,AA==", alt: "Pote bajo el reflector", frame: { x: 20, y: 70, zoom: 1.5 } };
+    const picks = heroPicks([{ ...feature, image }], null);
+    expect(picks[0]!.image).toEqual(image);
+    expect(picks[0]!.product).toEqual(getProduct(feature.productSlug));
+    expect(getProduct(feature.productSlug)!.photoDataUrl).toBeUndefined();
+  });
   it("sin campaña, los destacados visibles del panel en orden; con campaña, la campaña primero", () => {
     const { content, themes } = demoData();
     expect(heroPicks(content.hero, null).map((p) => p.product.slug)).toEqual(["ionic-whey", "creatina-monohidrato", "overvolt-pre"]);

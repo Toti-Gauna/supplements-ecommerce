@@ -8,6 +8,7 @@ import { HERO_LIMITS } from "@/demo/admin/content-hero";
 import type { HeroFeature, Product } from "@/demo/types";
 import { ListControls } from "../ListControls";
 import { CountedField } from "./CountedField";
+import { HeroImageField } from "./HeroImageField";
 
 interface Props {
   feature: HeroFeature;
@@ -30,7 +31,7 @@ export function HeroFeatureForm({ feature, index, total, products, errors, onCha
         <h2 id="hero-form-title" className="min-w-0 flex-1 text-lg font-extrabold">Destacado {n}{index === 0 ? " · estrella" : ""}</h2>
         <ListControls index={index} length={total} label={`destacado ${n}`} onMove={onMove} />
         {total > 1 && (
-          <ConfirmButton variant="danger" size="sm" title={`Quitar el destacado ${n}`} confirmLabel="Quitar" description="Sale del borrador; en la tienda deja de verse cuando guardes el hero." onConfirm={onRemove}>Quitar</ConfirmButton>
+          <ConfirmButton variant="danger" size="sm" title={`Quitar el destacado ${n}`} confirmLabel="Quitar" description="Sale del borrador; en la tienda deja de verse cuando guardes el carrusel." onConfirm={onRemove}>Quitar</ConfirmButton>
         )}
       </div>
       {errors.length > 0 && (
@@ -39,6 +40,7 @@ export function HeroFeatureForm({ feature, index, total, products, errors, onCha
           <ul className="flex flex-col gap-0.5">{errors.map((e) => <li key={e}>{e}</li>)}</ul>
         </div>
       )}
+      <HeroImageField key={feature.id} feature={feature} onChange={onChange} />
       <div className="grid gap-3 @min-[40rem]:grid-cols-2">
         <div className="flex flex-col gap-1">
           <label htmlFor={productId} className="text-sm font-bold">Producto en el rack</label>

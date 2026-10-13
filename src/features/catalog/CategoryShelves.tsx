@@ -14,7 +14,7 @@ import { useDemoVersion } from "@/stores/admin";
  * Categorías como estantes del rack: los tres potes más vendidos de cada una en su estante y el rótulo con lo que
  * importa para elegir ("desde $ 459/serv · 3 marcas"). En el inicio, una fila que se desliza; en /categorias/, grilla sin estantes solos en la última fila.
  */
-export function CategoryShelves({ layout = "grid", listRef }: { layout?: "rail" | "grid"; listRef?: Ref<HTMLUListElement> }) {
+export function CategoryShelves({ layout = "grid", listRef, artReady = true }: { layout?: "rail" | "grid"; listRef?: Ref<HTMLUListElement>; artReady?: boolean }) {
   useDemoVersion();
   const shelves = visibleCategories().map((c) => ({ c, s: categoryShelf(c.slug) }));
   const rail = layout === "rail";
@@ -28,7 +28,7 @@ export function CategoryShelves({ layout = "grid", listRef }: { layout?: "rail" 
         <li key={c.slug} className={cn(rail && "w-[72%] shrink-0 snap-start sm:w-[40%] lg:w-[calc((100%-2.25rem)/4)]")}>
           <Link href={categoryHref(c.slug)} className="group flex h-full flex-col border border-line bg-surface shadow-[var(--shadow-card)] transition-shadow hover:shadow-[var(--shadow-lift)]">
             <span className="rack-bay block aspect-[16/9] overflow-hidden">
-              <RackShot items={s.products.map((p) => ({ art: p.art, pack: p.pack, tint: p.variants[0]?.colorHex }))} label="" spot={false} className="transition-transform duration-300 group-hover:-translate-y-1" />
+              {artReady && <RackShot items={s.products.map((p) => ({ art: p.art, pack: p.pack, tint: p.variants[0]?.colorHex }))} label="" spot={false} className="transition-transform duration-300 group-hover:-translate-y-1" />}
             </span>
             <span className="plate flex flex-1 flex-col gap-1 px-3 py-2.5">
               <span className="font-display text-xl leading-none">{c.name}</span>

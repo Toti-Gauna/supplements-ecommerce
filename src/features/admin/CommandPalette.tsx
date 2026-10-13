@@ -30,7 +30,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
     { id: "sheet", group: "Acciones", label: "Productos y stock en formato Excel", icon: icon(FileSpreadsheet), href: "/admin-demo/productos/?formato=excel", search: "planilla excel grilla stock editar precios" },
     { id: "wheel", group: "Acciones", label: "Configuración de la ruleta", icon: icon(Disc3), href: "/admin-demo/cupones/ruleta/", search: "ruleta premios pesos gajos cupones" },
     { id: "outbox", group: "Acciones", label: "Bandeja de salida de emails", icon: icon(Inbox), href: "/admin-demo/emails/enviados/", search: "emails enviados bandeja salida" },
-    { id: "hero", group: "Acciones", label: "Hero del inicio", icon: icon(GalleryHorizontal), href: "/admin-demo/contenido/carrusel/", search: "hero carrusel destacados producto estrella portada inicio banner titular" },
+    { id: "hero", group: "Acciones", label: "Carrusel del inicio", icon: icon(GalleryHorizontal), href: "/admin-demo/contenido/carrusel/", search: "hero carrusel destacados producto estrella portada inicio banner titular imagen" },
     { id: "faqs", group: "Acciones", label: "Preguntas frecuentes", icon: icon(MessageCircleQuestion), href: "/admin-demo/contenido/preguntas/", search: "preguntas frecuentes ayuda faq" },
     { id: "collection", group: "Acciones", label: "Datos de cobro de muestra", icon: icon(Landmark), href: "/admin-demo/ajustes/cobro/", search: "alias cbu cvu titular qr transferencia cobro ajustes" },
     { id: "shipping", group: "Acciones", label: "Envíos y retiro", icon: icon(Truck), href: "/admin-demo/ajustes/envios/", search: "envio gratis zonas cadete retiro codigos postales ajustes" },

@@ -1,7 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import { horizontalOverflow } from "./helpers";
-
-/** Polish 8.3.26 (Temáticas: encabezado y "Cómo se elige"), 8.3.28 (Contenido por tarjetas) y R1 (el hero reemplaza al carrusel). */
+/** Polish 8.3.26 (Temáticas: encabezado y "Cómo se elige"), 8.3.28 (Contenido por tarjetas) y carrusel BOX con imágenes propias. */
 
 const toast = (page: Page, text: string | RegExp) => page.getByRole("status").filter({ hasText: text });
 const stored = (page: Page) => page.evaluate(() => JSON.parse(localStorage.getItem("volta-demo:admin") ?? "null")?.state?.data?.content ?? null);
@@ -19,12 +18,10 @@ test.describe("escritorio con mouse", () => {
     await expect(page.getByRole("link", { name: "Volver a Marketing" })).toBeVisible();
     await expect(page.getByRole("heading", { level: 1, name: /Temáticas/ })).toBeVisible();
     const mode = page.getByLabel("Modo", { exact: true });
-    // La tienda arranca con la temática original; en automático usa las doce temáticas fitness por fecha.
     await expect(mode).toHaveValue("off");
     await expect(page.locator("p").filter({ hasText: "Hoy ve el cliente" })).toContainText("Sin temática");
     await mode.selectOption("auto");
     await expect(page.getByRole("list", { name: "Temáticas por fecha" }).getByRole("listitem")).toHaveCount(12);
-    // En automático no hay selector de temática fija: no se confunde con la que sale por fecha.
     await expect(page.getByLabel("Temática fija")).toHaveCount(0);
     await expect(page.getByText(/usa sola la temática cuyas fechas incluyen hoy/)).toBeVisible();
     const today = page.locator("p").filter({ hasText: "Hoy ve el cliente" });
@@ -38,7 +35,6 @@ test.describe("escritorio con mouse", () => {
     await mode.selectOption("off");
     await expect(today).toContainText("Sin temática");
     await expect(page.getByLabel("Temática fija")).toHaveCount(0);
-    // El botón de la demo sigue funcionando.
     await expect(page.getByRole("switch", { name: /Probar temáticas/ })).toBeVisible();
   });
 
@@ -47,22 +43,22 @@ test.describe("escritorio con mouse", () => {
     const parts = page.getByRole("list", { name: "Partes del contenido" });
     await expect(parts.getByRole("link")).toHaveCount(3);
     await expect(page.getByRole("button", { name: /Guardar/ })).toHaveCount(0);
-    await parts.getByRole("link", { name: /Hero del inicio/ }).click();
+    await parts.getByRole("link", { name: /Carrusel del inicio/ }).click();
     await expect(page).toHaveURL(/contenido\/carrusel\/$/);
-    await expect(page.getByRole("button", { name: "Guardar hero" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Guardar carrusel" })).toBeVisible();
     await expect(page.getByRole("button", { name: /Guardar (preguntas|textos)/ })).toHaveCount(0);
     await page.getByRole("link", { name: "Volver a Contenido" }).click();
     await parts.getByRole("link", { name: /Preguntas frecuentes/ }).click();
     await expect(page.getByRole("button", { name: "Guardar preguntas" })).toBeVisible();
-    await expect(page.getByRole("button", { name: /Guardar (hero|textos)/ })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: /Guardar (carrusel|textos)/ })).toHaveCount(0);
     await page.goBack();
     await parts.getByRole("link", { name: /Textos de inicio/ }).click();
     await expect(page.getByRole("button", { name: "Guardar textos" })).toBeVisible();
   });
 
-  test("R1 hero: elegir, editar, ver arriba y guardar actualiza la tienda sin tocar preguntas ni textos", async ({ page }) => {
+  test("Carrusel BOX: elegir, editar, ver arriba y guardar actualiza la tienda sin tocar preguntas ni textos", async ({ page }) => {
     await page.goto("admin-demo/contenido/carrusel/");
-    await expect(page.getByRole("heading", { level: 1, name: "Hero del inicio" })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1, name: "Carrusel del inicio" })).toBeVisible();
     const before = await stored(page);
     const list = page.getByRole("list").filter({ has: page.getByRole("button", { name: /^Destacado 1:/ }) });
     await list.getByRole("button", { name: /^Destacado 2:/ }).click();
@@ -74,25 +70,24 @@ test.describe("escritorio con mouse", () => {
     await expect(preview(page).locator("svg[aria-label^='Isolate Zero']")).toBeVisible();
     // Salir y volver conserva el borrador.
     await page.getByRole("link", { name: "Volver a Contenido" }).click();
-    await page.getByRole("link", { name: /Hero del inicio/ }).click();
-    await expect(page.getByText("Recuperamos los cambios del hero que quedaron sin guardar.")).toBeVisible();
+    await page.getByRole("link", { name: /Carrusel del inicio/ }).click();
+    await expect(page.getByText("Recuperamos los cambios del carrusel que quedaron sin guardar.")).toBeVisible();
     await list.getByRole("button", { name: /^Destacado 2:/ }).click();
     await expect(titleField(page)).toHaveValue("Fuerza que se nota");
-    await page.getByRole("button", { name: "Guardar hero" }).click();
-    await expect(toast(page, "Hero guardado")).toBeVisible();
+    await page.getByRole("button", { name: "Guardar carrusel" }).click();
+    await expect(toast(page, "Carrusel guardado")).toBeVisible();
     const after = await stored(page);
     expect(after.hero[1]).toMatchObject({ headline: "Fuerza que se nota", productSlug: "isolate-zero" });
     expect(after.hero[0].headline).toBe(before?.hero?.[0]?.headline ?? after.hero[0].headline);
     if (before) { expect(after.faqs).toEqual(before.faqs); expect(after.homeCta).toEqual(before.homeCta); }
-    // En la tienda: el estrella primero y el editado como segundo destacado del marcador.
+    // En la tienda: la diapositiva editada se puede elegir desde las marcas del carrusel.
     await page.goto("");
-    const markers = page.getByRole("group", { name: "Destacados" }).getByRole("button");
-    await expect(markers.nth(1)).toContainText(/Isolate Zero/i);
-    await markers.nth(1).click();
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText(/Fuerza que se\s*nota/i);
+    const region = page.locator("section[aria-roledescription='carrusel']");
+    await region.getByRole("button", { name: /Ir a la diapositiva 2:/ }).click();
+    await expect(region.getByRole("heading", { level: 2, name: /Fuerza que se\s*nota/i })).toBeVisible();
   });
 
-  test("R1 hero: crear, reordenar y quitar no mezcla datos; titular largo y todo oculto fallan con mensaje claro", async ({ page }) => {
+  test("Carrusel BOX: crear, reordenar y quitar no mezcla datos; titular largo y todo oculto fallan con mensaje claro", async ({ page }) => {
     await page.goto("admin-demo/contenido/carrusel/");
     const items = page.getByRole("button", { name: /^Destacado \d:/ });
     await expect(items).toHaveCount(3);
@@ -102,7 +97,7 @@ test.describe("escritorio con mouse", () => {
     await expect(page.getByRole("button", { name: "Agregar destacado" })).toHaveCount(0);
     await titleField(page).fill("Un titular larguísimo que no entra en el póster del inicio");
     await expect(page.getByText(/sobran \d+/)).toBeVisible();
-    await page.getByRole("button", { name: "Guardar hero" }).click();
+    await page.getByRole("button", { name: "Guardar carrusel" }).click();
     await expect(page.getByRole("alert").filter({ hasText: /El titular tiene \d+ caracteres; el máximo es 40/ })).toBeVisible();
     await expect(page.getByRole("button", { name: /^Destacado 4: .*con errores/ })).toBeVisible();
     await titleField(page).fill("Nuevo ingreso");
@@ -121,11 +116,11 @@ test.describe("escritorio con mouse", () => {
       await page.getByRole("button", { name: new RegExp(`^Destacado ${i}:`) }).click();
       await page.getByRole("switch", { name: /Visible en la tienda/ }).click();
     }
-    await page.getByRole("button", { name: "Guardar hero" }).click();
+    await page.getByRole("button", { name: "Guardar carrusel" }).click();
     await expect(page.getByRole("alert").filter({ hasText: "Dejá al menos un destacado visible" })).toBeVisible();
     await page.getByRole("switch", { name: /Visible en la tienda/ }).click();
-    await page.getByRole("button", { name: "Guardar hero" }).click();
-    await expect(toast(page, "Hero guardado")).toBeVisible();
+    await page.getByRole("button", { name: "Guardar carrusel" }).click();
+    await expect(toast(page, "Carrusel guardado")).toBeVisible();
     const headlines = (await stored(page)).hero.map((x: { headline: string }) => x.headline);
     expect(headlines).toEqual([original[0], original[1], "Nuevo ingreso"]);
     expect(headlines).not.toContain(removed);
@@ -146,7 +141,6 @@ for (const [width, height] of [[1180, 820], [820, 1180], [375, 812]] as const) {
     const box = (await preview(page).boundingBox())!;
     expect(box.x).toBeGreaterThanOrEqual(0);
     expect(box.x + box.width).toBeLessThanOrEqual(width);
-    // Titular, texto y marcador del hero quedan dentro de la vista previa.
     const inner = await preview(page).evaluate((el) => {
       const r = el.getBoundingClientRect();
       return [...el.querySelectorAll("p, span")].every((n) => { const b = n.getBoundingClientRect(); return b.width === 0 || (b.left >= r.left - 1 && b.right <= r.right + 1 && b.top >= r.top - 1 && b.bottom <= r.bottom + 1); });

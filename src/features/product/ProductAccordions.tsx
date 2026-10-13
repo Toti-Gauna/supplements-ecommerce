@@ -2,7 +2,6 @@ import { DISPATCH_PROMISE } from "@/demo/engine/lead-time";
 import { ChevronDown } from "lucide-react";
 import type { ReactNode } from "react";
 import type { Product } from "@/demo/types";
-import { brand } from "@/config/brand";
 
 function Item({ title, children, open }: { title: string; children: ReactNode; open?: boolean }) {
   return (
@@ -16,14 +15,9 @@ function Item({ title, children, open }: { title: string; children: ReactNode; o
 }
 
 export function ProductAccordions({ product }: { product: Product }) {
-  const d = product.dims;
   return (
     <div className="border-t border-line">
       <Item title="Descripción" open>{product.description}</Item>
-      <Item title="Envase y disponibilidad">
-        {d?.weightG ? <p>Peso con envase: {d.weightG} g.</p> : <p>Peso del envase a confirmar por {brand.name}.</p>}
-        {product.madeToOrderDays ? <p className="mt-1">Por encargo: llega al local en {product.madeToOrderDays} días hábiles desde la confirmación del pago.</p> : <p className="mt-1">En stock: sale {DISPATCH_PROMISE}.</p>}
-      </Item>
       <Item title="Envíos, retiro y cambios">
         <p>Cadete en Mar del Plata {DISPATCH_PROMISE}, envío al resto del país o retiro en el local. Por higiene, los suplementos abiertos o sin precinto no tienen cambio (ver términos).</p>
       </Item>

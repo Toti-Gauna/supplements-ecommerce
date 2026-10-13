@@ -1,3 +1,4 @@
+import { sampleReviews, type ProductReviews } from "../fixtures/reviews";
 import type { Nutrition, Product, Variant } from "../types";
 import { activeProducts, findVariant, unitPrice } from "./catalog";
 import { searchRowFacts } from "./search-row";
@@ -124,4 +125,9 @@ export function compareAlternatives(product: Product, n = 4, catalog: Product[] 
     return Number(fa.stock === "out") - Number(fb.stock === "out") || (fa.perServing ?? fa.price) - (fb.perServing ?? fb.price) || a.slug.localeCompare(b.slug);
   });
   return [...order(same), ...order(near)].slice(0, n);
+}
+
+/** Reseñas por atributo (sabor, mezcla, efecto) del producto, si las hay (MUESTRA). */
+export function reviewsFor(slug: string): ProductReviews | null {
+  return sampleReviews.find((r) => r.productSlug === slug) ?? null;
 }

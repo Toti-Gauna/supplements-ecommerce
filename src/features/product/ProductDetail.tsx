@@ -1,43 +1,43 @@
 "use client";
-import { DISPATCH_PROMISE } from "@/demo/engine/lead-time";
-import { Gift, ShieldCheck, ShoppingBag, Undo2, Zap } from "lucide-react";
 import { useState } from "react";
-import { Button } from "@/components/atoms/Button";
-import { FLOATING_BAR } from "@/components/organisms/bottomBars";
 import { StockMeter } from "@/components/molecules/StockMeter";
-import { ProductGallery } from "@/components/organisms/ProductGallery";
-import { availability, getCategory, isPurchasable, maxQuantity, unitPrice, type Availability } from "@/demo/engine/catalog";
-import { variantClearance } from "@/demo/engine/lots";
+import { availability, getCategory, isPurchasable, maxQuantity, type Availability } from "@/demo/engine/catalog";
+import { firstOutLot, variantClearance } from "@/demo/engine/lots";
+import { priceOptions, reviewsFor, sheetScore } from "@/demo/engine/sheet";
 import type { Product } from "@/demo/types";
-import { cn } from "@/lib/cn";
-import { formatARS, withoutNationalTaxes } from "@/lib/money";
 import { useAccount } from "@/stores/account";
 import { useDemoData } from "@/stores/admin";
-import { GiftModal } from "../gifts/GiftModal";
 import { useGiftDraft } from "@/stores/giftDraft";
+import { GiftModal } from "../gifts/GiftModal";
 import { useCurrentTheme } from "../themes/useCurrentTheme";
+import { AttributeScores } from "./AttributeScores";
+import { BuyActions, MobileBuyBar } from "./BuyBar";
 import { ConfigureCard } from "./ConfigureCard";
 import { DeliveryEstimate } from "./DeliveryEstimate";
-import { FavoriteButton } from "./FavoriteButton";
+import { LotLabel } from "./LotLabel";
+import { LotVerifier } from "./LotVerifier";
 import { MissionChip } from "./MissionChip";
 import { NutritionFacts } from "./NutritionFacts";
 import { ProductAccordions } from "./ProductAccordions";
 import { ServingCalculator } from "./ServingCalculator";
+import { SheetHeader } from "./SheetHeader";
+import { SheetScore } from "./SheetScore";
+import { SpecGallery } from "./SpecGallery";
 import { StackOffer } from "./StackOffer";
-import { ClearanceTag, LotNote, ProductBadges, ServingPrice } from "./SupplementFacts";
+import { TwoPrices } from "./TwoPrices";
 import { UsageTimeline } from "./UsageTimeline";
 import { useProductPurchase } from "./useProductPurchase";
 import { useVariantSelection } from "./useVariantSelection";
-const TRUST = [{ icon: ShieldCheck, t: "Original, con lote y vencimiento" }, { icon: Zap, t: `Cadete en Mar del Plata ${DISPATCH_PROMISE}` }, { icon: Undo2, t: "Botón de arrepentimiento" }];
 
 function stockNote(a: Availability): string {
   return a.kind === "in-stock" ? `(${a.units} disponibles)` : a.kind === "made-to-order" ? "Por encargo" : "Sin stock";
 }
 
 /**
- * Ficha de suplemento: galería (estudio, detalle y gimnasio), sellos, precio y precio por servicio, una tarjeta para
- * sabor, tamaño y cantidad, lote y vencimiento; abajo, armá tu stack, cómo tomarlo, calculadora, tabla nutricional,
- * entrega y preguntas. `preview` (8.3.21): muestra el borrador del panel tal cual, sin comprar ni favoritos.
+ * Ficha "hoja técnica" (R2). Arriba, el nombre, el marcador por servicio, los dos precios, sabor y tamaño como placas,
+ * la compra y la etiqueta del lote; la galería (banco con cotas, rótulo y escenas) a la izquierda en escritorio y debajo
+ * en el celular. Abajo: cómo tomarlo, calculadora, un solo stack, rótulo completo, "Verificá tu lote", entrega y reseñas.
+ * `preview` (8.3.21): muestra el borrador del panel tal cual, sin comprar ni favoritos.
  */
 export function ProductDetail({ product: initial, preview = false }: { product: Product; preview?: boolean }) {
   const stored = useDemoData((d) => d.products.find((p) => p.slug === initial.slug));
@@ -45,8 +45,8 @@ export function ProductDetail({ product: initial, preview = false }: { product: 
   const settings = useDemoData((d) => d.settings);
   const sel = useVariantSelection(product);
   const [qty, setQty] = useState(1);
-  const price = unitPrice(product, sel.variant);
-  const clearance = variantClearance(product, sel.variant);
+  const [perDay, setPerDay] = useState(1);
+  const score = sheetScore(product, sel.variant, perDay);
   const max = Math.max(1, maxQuantity(sel.variant));
   const quantity = Math.min(qty, max);
   const inactive = product.active === false;
@@ -62,84 +62,49 @@ export function ProductDetail({ product: initial, preview = false }: { product: 
     useGiftDraft.getState().prime({ from: user?.name.split(" ")[0], occasion: theme?.id ?? "volta" });
     setGiftOpen(true);
   };
-  const transferPrice = Math.round(price * (1 - settings.transferDiscountPct / 100));
-  const category = getCategory(product.categorySlug);
-
-  // Botones en columna, del mismo ancho (8.2.7). En el celular "Agregar al carrito" vive en la barra flotante de abajo,
-  // así no se repite; desde tablet va primero en la tarjeta. Favoritos es aparte, junto al título.
-  const actions = (
-    <div className="flex flex-col gap-3">
-      <Button size="lg" disabled={!canBuy} onClick={() => purchase("cart")} className="w-full max-sm:hidden"><ShoppingBag size={18} aria-hidden="true" />Agregar al carrito</Button>
-      <Button size="lg" variant="dark" disabled={!canBuy} onClick={() => purchase("buy")} className="w-full"><Zap size={18} aria-hidden="true" className="text-volt" />Comprar ahora</Button>
-      <Button size="lg" variant="secondary" disabled={!canBuy} onClick={openGift} className="w-full"><Gift size={18} aria-hidden="true" className="text-volt-ink" />Regalar ahora</Button>
-      {preview
-        ? <p className="text-center text-xs font-bold text-warning">Vista previa: comprar y regalar están apagados.</p>
-        : <p className="text-center text-xs text-muted">Para regalar: le mandás un link o un código y lo abre a golpes, sin ver el precio.</p>}
-    </div>
-  );
+  const reviews = reviewsFor(product.slug);
+  const buy = { canBuy, preview, onAdd: () => purchase("cart"), onBuy: () => purchase("buy"), onGift: openGift };
+  const stock = inactive && !preview
+    ? <p role="status" className="rounded-sm bg-warning-soft p-3 text-sm font-bold text-warning">Este producto está pausado desde el panel demo y no se puede comprar.</p>
+    : <StockMeter availability={avail} />;
 
   return (
     <div className="flex flex-col gap-12 lg:gap-16">
-      {/* Sección de compra: la galería queda fija mientras se recorren precio, opciones y botones, y se suelta al
-          terminar esta sección (no acompaña a los detalles ni invade las recomendaciones). En el celular, flujo natural. */}
-      <div className="grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-14">
-        <div className="flex flex-col gap-4 lg:sticky lg:top-24 lg:self-start">
-          <ProductGallery art={product.art} pack={product.pack} views={product.gallery} tint={sel.variant.colorHex} name={product.name} photoUrl={product.photoDataUrl} alt={product.imageAlt} />
-          {inactive && !preview ? (
-            <p role="status" className="rounded-sm bg-warning-soft p-3 text-sm font-bold text-warning">Este producto está pausado desde el panel demo y no se puede comprar.</p>
-          ) : <StockMeter availability={avail} />}
+      {/* Compra: en escritorio la galería queda fija mientras se recorren las opciones y se suelta al terminar. */}
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-12">
+        <div className="order-2 lg:sticky lg:top-24 lg:order-1 lg:self-start">
+          <SpecGallery product={product} tint={sel.variant.colorHex} />
         </div>
-        <div className="flex flex-col gap-6">
-          <div className="flex items-start justify-between gap-4">
-            <div className="min-w-0">
-              <p className="eyebrow text-volt-ink">{category?.name}{product.brand ? ` · ${product.brand}` : ""}{product.isNew ? " · Nuevo" : ""}</p>
-              <h1 className="font-display mt-3 text-[clamp(2.1rem,4.5vw,3.4rem)] leading-[1.02]">{product.name}</h1>
-              <p className="mt-3 text-lg text-muted">{product.short}</p>
-              {product.soldCount > 0 && <p className="mt-2 text-sm font-semibold text-muted">+{product.soldCount} vendidos (muestra)</p>}
-              {(product.badges?.length ?? 0) > 0 && <div className="mt-4"><ProductBadges badges={product.badges!} /></div>}
-            </div>
-            {!preview && <FavoriteButton slug={product.slug} name={product.name} className="mt-6 h-12 w-12 max-sm:hidden" />}
-          </div>
-          <div className="flex flex-wrap items-end gap-x-4 gap-y-1">
-            {clearance && <ClearanceTag clearance={clearance} />}
-            <span className="text-4xl font-extrabold tabular-nums tracking-tight"><span key={price} className="animate-num">{formatARS(price)}</span></span>
-            {settings.transferDiscountPct > 0 && <span className="mb-1 rounded-sm bg-success-soft px-3 py-1 text-sm font-bold text-success">{formatARS(transferPrice)} con transferencia o QR</span>}
-            <span className="w-full pt-2"><ServingPrice price={price} servings={sel.variant.servings} /></span>
-            <span className="w-full text-xs text-muted">Precio sin impuestos nacionales: {formatARS(withoutNationalTaxes(price, settings.nationalTaxRate))} · precio de muestra</span>
-          </div>
-          <ConfigureCard product={product} sel={sel} quantity={quantity} max={max} stockNote={stockNote(avail)} onQuantity={setQty} actions={actions} />
-          <LotNote product={product} variant={sel.variant} />
+        <div className="order-1 flex min-w-0 flex-col gap-4 lg:order-2 lg:gap-5">
+          <SheetHeader product={product} category={getCategory(product.categorySlug)?.name} tint={sel.variant.colorHex} preview={preview} />
+          {(score.servings || score.active) && <SheetScore score={score} perDay={perDay} flipKey={sel.variant.id} />}
+          <TwoPrices price={score.price} options={priceOptions(score.price, settings.transferDiscountPct)} clearance={variantClearance(product, sel.variant)} taxRate={settings.nationalTaxRate} />
+          <ConfigureCard product={product} sel={sel} quantity={quantity} max={max} stockNote={stockNote(avail)} onQuantity={setQty} stock={stock} actions={<BuyActions {...buy} />} />
+          <LotLabel product={product} variant={sel.variant} />
           <GiftModal open={giftOpen} onClose={() => setGiftOpen(false)} productName={product.name}
             onSubmit={(gift, mode) => { setGiftOpen(false); purchase(mode, gift); }} />
         </div>
       </div>
-      {/* Detalles. En el celular van intercalados (order); en escritorio, dos columnas: lo que se lee a la izquierda y
-          lo que se usa (stack, calculadora, entrega) a la derecha. */}
-      <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:items-start lg:gap-x-14">
+      {/* Detalles. En el celular van intercalados (order); en escritorio, lo que se lee a la izquierda y lo que se usa
+          (calculadora, stack, entrega) a la derecha. */}
+      <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:items-start lg:gap-x-12">
         <div className="max-lg:contents lg:flex lg:flex-col lg:gap-6">
-          {product.usage && <div className="max-lg:order-2"><UsageTimeline usage={product.usage} /></div>}
-          {product.nutrition && <div className="max-lg:order-4"><NutritionFacts nutrition={product.nutrition} /></div>}
-          <div className="max-lg:order-6"><ProductAccordions product={product} /></div>
+          {product.usage && <div className="max-lg:order-1"><UsageTimeline usage={product.usage} /></div>}
+          {product.nutrition && <div id="rotulo" className="scroll-mt-28 max-lg:order-4"><NutritionFacts nutrition={product.nutrition} /></div>}
+          <div className="max-lg:order-5"><LotVerifier slug={product.slug} example={firstOutLot(sel.variant)?.code ?? product.lot?.code} /></div>
+          <div className="max-lg:order-8"><ProductAccordions product={product} /></div>
         </div>
         <div className="max-lg:contents lg:flex lg:flex-col lg:gap-6">
-          {!preview && <div className="max-lg:order-1"><StackOffer product={product} variant={sel.variant} /></div>}
-          <div className="max-lg:order-3"><ServingCalculator product={product} variant={sel.variant} /></div>
-          <div className="flex flex-col gap-6 max-lg:order-5">
-            <MissionChip units={quantity} />
+          <div className="max-lg:order-2"><ServingCalculator product={product} variant={sel.variant} perDay={perDay} onPerDay={setPerDay} /></div>
+          {!preview && <div className="max-lg:order-3"><StackOffer product={product} variant={sel.variant} /></div>}
+          <div className="flex flex-col gap-6 max-lg:order-6">
             <DeliveryEstimate product={product} variant={sel.variant} />
-            <ul className="grid grid-cols-3 gap-2 text-center text-xs font-semibold text-muted">
-              {TRUST.map(({ icon: Icon, t }) => <li key={t} className="flex flex-col items-center gap-2 rounded-sm bg-surface p-3"><Icon size={18} aria-hidden="true" className="text-volt-ink" />{t}</li>)}
-            </ul>
+            <MissionChip units={quantity} />
           </div>
+          {reviews && <div className="max-lg:order-7"><AttributeScores reviews={reviews} /></div>}
         </div>
       </div>
-      <div data-buy-bar hidden={preview} className={cn(FLOATING_BAR, "z-30 sm:hidden")}>
-        <FavoriteButton slug={product.slug} name={product.name} className="h-14 w-14 shrink-0" />
-        <Button size="lg" disabled={!canBuy} onClick={() => purchase("cart")} className="flex-1 justify-between whitespace-nowrap px-5 text-[15px]">
-          <span>Agregar al carrito</span>
-          <span key={price * quantity} className="animate-num tabular-nums">{formatARS(price * quantity)}</span>
-        </Button>
-      </div>
+      <MobileBuyBar {...buy} total={score.price * quantity} perServing={score.perServing} />
     </div>
   );
 }

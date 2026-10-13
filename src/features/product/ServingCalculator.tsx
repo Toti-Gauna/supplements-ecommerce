@@ -18,11 +18,11 @@ const field = "min-h-11 w-full rounded-sm border border-line bg-bg px-3 font-lab
 
 /**
  * "¿Cuánto te dura?": servicios por día → días y fecha en que se termina, con aviso de recompra. Para proteínas suma
- * la proteína del día según peso y objetivo; para creatinas, la dosis de referencia por peso. Todo ORIENTATIVO.
+ * la proteína del día según peso y objetivo; para creatinas, la dosis de referencia por peso. Todo ORIENTATIVO. Los
+ * servicios por día los comparte con el marcador de la ficha ("te dura N días").
  */
-export function ServingCalculator({ product, variant }: { product: Product; variant: Variant }) {
+export function ServingCalculator({ product, variant, perDay, onPerDay: setPerDay }: { product: Product; variant: Variant; perDay: number; onPerDay: (n: number) => void }) {
   const id = useId();
-  const [perDay, setPerDay] = useState(1);
   const [weight, setWeight] = useState(75);
   const goals = (product.goals ?? []).filter((g) => PROTEIN_PER_KG[g]);
   const [goal, setGoal] = useState<Goal>(goals[0] ?? "masa-muscular");

@@ -12,6 +12,8 @@ const PAGES: [string, string, string][] = [
   ["inicio", "", "main"],
   ["ficha", "p/overvolt-pre/", "h1"],
   ["categoría", "categorias/", "h1"],
+  ["búsqueda con chips", "buscar/?q=proteina sin lactosa", "h1"],
+  ["búsqueda sin resultados", "buscar/?q=creatina vainilla", "h1"],
   ["armador", "crear/", "h1"],
   ["carrito", "carrito/", "h1"],
   ["club", "club/", "h1"],
@@ -56,6 +58,17 @@ for (const mode of ["dark", "light"] as const) {
         expect(found, describe(found)).toEqual([]);
       });
     }
+    test("buscador superpuesto con resultados y una opción activa", async ({ page }) => {
+      await page.goto("");
+      await page.getByRole("button", { name: "Buscar productos" }).filter({ visible: true }).first().click();
+      const combo = page.getByRole("combobox", { name: "Buscar productos" });
+      await expect(combo).toBeFocused();
+      await combo.fill("vegano");
+      await combo.press("ArrowDown");
+      await page.waitForTimeout(500);
+      const found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+    });
   });
 }
 

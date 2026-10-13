@@ -25,9 +25,9 @@ const slotLower = (slot: StackSlot) => slot.name.toLowerCase();
 export function SlotCard({ slot, index, line, onOpen, onClear, onVariant, className }: SlotCardProps) {
   const titleId = useId();
   return (
-    <li aria-labelledby={titleId} className={cn("rounded-[var(--radius-card)] border border-line bg-surface p-4 shadow-[var(--shadow-card)] sm:p-5", className)}>
+    <li aria-labelledby={titleId} className={cn("rounded-sm border border-line bg-surface p-4 shadow-[var(--shadow-card)] sm:p-5", className)}>
       <div className="flex items-start gap-3">
-        <span aria-hidden="true" className={cn("font-lab grid h-9 w-9 shrink-0 place-items-center rounded-xl text-[13px] font-bold", line ? "bg-night text-volt ring-1 ring-volt/30" : "bg-accent text-muted")}>
+        <span aria-hidden="true" className={cn("font-lab grid h-9 w-9 shrink-0 place-items-center rounded-sm text-[13px] font-bold", line ? "bg-night text-volt ring-1 ring-volt/30" : "bg-accent text-muted")}>
           {slotNumber(index)}
         </span>
         <div className="min-w-0 flex-1">
@@ -36,7 +36,7 @@ export function SlotCard({ slot, index, line, onOpen, onClear, onVariant, classN
         </div>
         {line && (
           <button type="button" onClick={onClear} aria-label={`Vaciar ${slotLower(slot)}`}
-            className="-mr-1 -mt-1 grid h-10 w-10 shrink-0 place-items-center rounded-full text-muted transition-colors hover:bg-danger-soft hover:text-danger">
+            className="-mr-1 -mt-1 grid h-10 w-10 shrink-0 place-items-center rounded-sm text-muted transition-colors hover:bg-danger-soft hover:text-danger">
             <X size={18} aria-hidden="true" />
           </button>
         )}
@@ -45,7 +45,7 @@ export function SlotCard({ slot, index, line, onOpen, onClear, onVariant, classN
         <div className="mt-4 flex flex-col gap-3">
           <div className="flex gap-3">
             <span aria-hidden="true" className="w-[4.5rem] shrink-0">
-              <ProductArt art={line.product.art} pack={line.product.pack} tint={line.variant.colorHex} label="" showBadge={false} className="aspect-square rounded-2xl" />
+              <ProductArt art={line.product.art} pack={line.product.pack} tint={line.variant.colorHex} label="" showBadge={false} className="aspect-square rounded-sm" />
             </span>
             <div className="min-w-0 flex-1">
               <p className="font-bold leading-tight">{line.product.name}</p>
@@ -58,13 +58,13 @@ export function SlotCard({ slot, index, line, onOpen, onClear, onVariant, classN
           </div>
           <SlotVariantSelects product={line.product} variant={line.variant} onChange={onVariant} />
           <button type="button" onClick={onOpen} aria-label={`Cambiar ${slotLower(slot)}`}
-            className="flex min-h-11 items-center justify-center gap-2 rounded-full border border-ink/15 text-sm font-bold transition-colors hover:border-primary hover:text-primary">
+            className="flex min-h-11 items-center justify-center gap-2 rounded-sm border border-ink/15 text-sm font-bold transition-colors hover:border-primary hover:text-primary">
             <RefreshCw size={15} aria-hidden="true" />Cambiar
           </button>
         </div>
       ) : (
         <button type="button" onClick={onOpen}
-          className="mt-4 flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-ink/20 text-sm font-bold text-muted transition-colors hover:border-primary hover:text-primary">
+          className="mt-4 flex min-h-14 w-full items-center justify-center gap-2 rounded-sm border-2 border-dashed border-ink/20 text-sm font-bold text-muted transition-colors hover:border-primary hover:text-primary">
           <Plus size={18} aria-hidden="true" />Elegir {slotLower(slot)}
         </button>
       )}

@@ -1,21 +1,26 @@
 import { describe, expect, it } from "vitest";
-import { PALETTES } from "@/features/themes/palettes";
+import { BRAND_PRESETS } from "@/config/brands";
+import { SEASON_VARIABLES, seasonAccentCss } from "@/features/themes/palettes";
 import { SKINS } from "@/features/themes/skins";
 import { contrastRatio } from "@/lib/color";
 
-describe("paletas de temáticas", () => {
-  for (const [id, pair] of Object.entries(PALETTES)) {
-    for (const mode of ["light", "dark"] as const) {
-      it(`${id} (${mode}) cumple AA`, () => {
-        const c = pair[mode];
-        for (const [fg, bg, label] of [
-          [c.text, c.background, "texto/fondo"], [c.text, c.surface, "texto/superficie"], [c.muted, c.surface, "apagado/superficie"],
-          [c.muted, c.background, "apagado/fondo"], [c.primary, c.surface, "primario/superficie"], [c.primary, c.background, "primario/fondo"],
-          [c.onPrimary, c.primary, "texto sobre primario"], [c.voltInk, c.background, "acento de texto/fondo"], [c.text, c.accent, "texto/acento"],
-        ] as const) expect(contrastRatio(fg, bg), `${label} ${fg} sobre ${bg}`).toBeGreaterThanOrEqual(4.5);
-      });
+describe("regla de marca: la fecha solo tiñe acentos", () => {
+  const css = seasonAccentCss();
+  it("cada temática define su acento, su texto y su halo", () => {
+    for (const id of Object.keys(SKINS)) expect(css, id).toContain(`html[data-season="${id}"]{--season-accent:`);
+  });
+  it("ninguna temática pisa el primario, el fondo, las superficies, el texto ni los estados", () => {
+    const props = [...css.matchAll(/([\w-]+)\s*:/g)].map((m) => m[1]).filter((p) => p!.startsWith("--") || p === "color-scheme" || p === "background");
+    expect(new Set(props)).toEqual(new Set(SEASON_VARIABLES));
+    expect(css).not.toMatch(/--brand-|--c-|color-scheme|!important/);
+  });
+  it("el acento se lee como texto (código del cupón) sobre la cinta del ticker de cada marca", () => {
+    for (const b of Object.values(BRAND_PRESETS)) {
+      for (const [id, skin] of Object.entries(SKINS)) {
+        expect(contrastRatio(skin.accent, b.colors.night), `${b.id} · ${id}`).toBeGreaterThanOrEqual(4.5);
+      }
     }
-  }
+  });
 });
 
 /** Promedio de dos colores hex (centro del degradado de la cinta, donde va el código del cupón). */

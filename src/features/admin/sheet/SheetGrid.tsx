@@ -57,7 +57,7 @@ export function SheetGrid<R>({ id, label, rows, rowKey, g, sort, onSort, onSave 
         const extra = [r.failed && `${r.failed} no entraron: revisá las marcadas en rojo.`, r.locked && `${r.locked} eran de solo lectura y no cambiaron.`].filter(Boolean).join(" ");
         push({ tone: r.failed ? "error" : "success", title: `${r.pasted} ${r.pasted === 1 ? "celda pegada" : "celdas pegadas"}`, description: extra || "Revisá y guardá cuando quieras." });
       }}
-      className="max-h-[70dvh] overflow-auto rounded-[1.5rem] bg-surface text-[14px] shadow-[var(--shadow-card)] ring-1 ring-ink/[0.06] focus:outline-none focus-visible:ring-4 focus-visible:ring-primary/20">
+      className="max-h-[70dvh] overflow-auto rounded-sm bg-surface text-[14px] shadow-[var(--shadow-card)] ring-1 ring-ink/[0.06] focus:outline-none focus-visible:ring-4 focus-visible:ring-primary/20">
       <div role="row" className="sticky top-0 z-20 flex w-max min-w-full border-b border-line bg-accent/70 backdrop-blur">
         {g.cols.map((col, c) => (
           <div key={col.id} role="columnheader" aria-sort={sort?.col === col.id ? (sort.dir === "asc" ? "ascending" : "descending") : undefined}

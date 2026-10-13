@@ -27,7 +27,7 @@ export function ConfirmStep({ onBack, onConfirm, onEdit }: { onBack: () => void;
   ];
   return (
     <form noValidate onSubmit={(e) => { e.preventDefault(); if (!acceptedTerms) return setError(true); onConfirm(); }} className="flex flex-col gap-5">
-      <dl className="divide-y divide-line rounded-2xl border border-line bg-surface">
+      <dl className="divide-y divide-line rounded-sm border border-line bg-surface">
         {rows.map((r) => (
           <div key={r.label} className="flex items-start justify-between gap-3 p-4">
             <div className="min-w-0"><dt className="text-sm font-bold">{r.label}</dt><dd className="break-words text-sm text-muted">{r.value}</dd></div>
@@ -36,7 +36,7 @@ export function ConfirmStep({ onBack, onConfirm, onEdit }: { onBack: () => void;
         ))}
       </dl>
       <CheckoutGift onPayNow={payNow} />
-      <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-line bg-surface p-4 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary/50">
+      <label className="flex cursor-pointer items-start gap-3 rounded-sm border border-line bg-surface p-4 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary/50">
         <input id="terms" type="checkbox" checked={acceptedTerms} onChange={(e) => { patch({ acceptedTerms: e.target.checked }); setError(false); }} className="mt-1 h-5 w-5 accent-[var(--color-primary)]" aria-describedby={error ? "terms-error" : undefined} />
         <span className="text-sm">
           Acepto los <Link href="/terminos/" target="_blank" className="font-bold text-primary underline">términos y condiciones</Link> y la{" "}

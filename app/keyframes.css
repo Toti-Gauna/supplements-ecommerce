@@ -1,0 +1,57 @@
+/* Animaciones base de la tienda y el panel (CSS: funcionan antes de hidratar). Con "reducir movimiento", quietas. */
+
+@keyframes fade-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pop { 0% { transform: scale(1); } 40% { transform: scale(1.3); } 100% { transform: scale(1); } }
+@keyframes shimmer { from { background-position: -200% 0; } to { background-position: 200% 0; } }
+@keyframes grow { from { width: var(--from, 0%); } to { width: var(--to, 0%); } }
+@keyframes confetti {
+  0% { opacity: 1; transform: translate(0, 0) rotate(0); }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) rotate(var(--rot)); }
+}
+@keyframes toast-in { from { opacity: 0; transform: translateY(12px) scale(0.98); } to { opacity: 1; transform: none; } }
+@keyframes rise { from { opacity: 0; transform: translateY(0.5em); filter: blur(6px); } to { opacity: 1; transform: none; filter: blur(0); } }
+@keyframes float-a { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-10px) rotate(-1deg); } }
+
+.animate-fade-up { animation: fade-up 520ms var(--ease-out-expo) both; }
+.animate-fade-in { animation: fade-in 320ms ease-out both; }
+.animate-pop { animation: pop 420ms var(--ease-out-expo); }
+.animate-toast { animation: toast-in 260ms var(--ease-out-expo) both; }
+.animate-rise { animation: rise 900ms var(--ease-out-expo) both; }
+/* backwards (no both): al terminar no queda un transform que convierta a la página en contenedor de los `fixed`. */
+.page-enter { animation: fade-up 480ms var(--ease-out-expo) backwards; }
+.skeleton {
+  background: linear-gradient(90deg, var(--skeleton-a) 0%, var(--skeleton-b) 50%, var(--skeleton-a) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out 3;
+}
+.progress-fill { animation: grow 1100ms var(--ease-out-expo) both; }
+/* Celdas de la batería (BatteryMeter): se encienden en cadena una sola vez. */
+@keyframes cell-in { from { opacity: 0.15; transform: scaleY(0.55); } to { opacity: 1; transform: none; } }
+.battery-cell-on { animation: cell-in 380ms var(--ease-out-expo) both; }
+/* La pantalla de carga de marca vive en app/splash.css. */
+.confetti-piece { animation: confetti 1000ms var(--ease-out-expo) both; }
+
+/* LED del aro del disco olímpico: cometas que corren mientras gira (solo mientras gira) y todas titilan al ganar. */
+@keyframes led-chase { 0% { opacity: 1; } 14% { opacity: .85; } 42% { opacity: .16; } 100% { opacity: .1; } }
+.led-chase { animation: led-chase .8s linear infinite; }
+@keyframes led-win { 0%, 100% { opacity: 1; } 50% { opacity: .12; } }
+.led-win { animation: led-win .26s steps(2) 5 both; }
+@keyframes confetti-fall {
+  0% { transform: translate3d(0, 0, 0) rotate(0); opacity: 1; }
+  85% { opacity: 1; }
+  100% { transform: translate3d(var(--drift), 105vh, 0) rotate(var(--spin)); opacity: 0; }
+}
+.confetti-fall { animation-name: confetti-fall; animation-timing-function: cubic-bezier(0.25, 0.4, 0.45, 1); animation-fill-mode: both; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+  .confetti-piece, .confetti-fall { display: none; }
+}
+

@@ -15,7 +15,7 @@ export function CartMissionNudge({ units, total }: { units: number; total: numbe
   const p = previewMission(mission, isRegistered ? (demoAccountProgress[mission.id] ?? 0) : 0, { units, total });
   const unit = mission.type === "SPEND_TOTAL" ? `$${p.remaining.toLocaleString("es-AR")}` : `${p.remaining} ${p.remaining === 1 ? "producto" : "productos"}`;
   return (
-    <div className="flex items-center gap-4 rounded-3xl bg-night p-4 text-on-night">
+    <div className="flex items-center gap-4 rounded-sm bg-night p-4 text-on-night">
       <ProgressRing pct={p.pctAfter} size={64} tone="volt" label={`Progreso de ${mission.title}`}>
         <span className="text-xs font-extrabold">{p.pctAfter}%</span>
       </ProgressRing>

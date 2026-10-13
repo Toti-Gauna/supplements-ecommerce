@@ -15,7 +15,7 @@ export function ProductBadges({ badges }: { badges: ProductBadge[] }) {
   return (
     <ul aria-label="Sellos" className="flex flex-wrap gap-2">
       {badges.map((b) => (
-        <li key={b} className="inline-flex items-center gap-1.5 rounded-full border border-line bg-surface px-3 py-1.5 text-xs font-bold">
+        <li key={b} className="inline-flex items-center gap-1.5 rounded-sm border border-line bg-surface px-3 py-1.5 text-xs font-bold">
           <BadgeGlyph badge={b} className="h-4 w-4 text-volt-ink" />{BADGE_LABEL[b]}
         </li>
       ))}
@@ -28,7 +28,7 @@ export function ServingPrice({ price, servings }: { price: number; servings?: nu
   const pps = pricePerServing(price, servings);
   if (pps === null || !servings || servings < 2) return null;
   return (
-    <p className="font-lab inline-flex items-center gap-2 rounded-full bg-night px-3 py-1 text-xs font-bold text-on-night ring-1 ring-volt/30">
+    <p className="font-lab inline-flex items-center gap-2 rounded-sm bg-night px-3 py-1 text-xs font-bold text-on-night ring-1 ring-volt/30">
       <span className="text-volt">{formatARS(pps)}</span> por servicio <span className="text-night-muted">· {servings} servicios</span>
     </p>
   );
@@ -54,7 +54,7 @@ export function LotNote({ product, variant }: { product: Product; variant: Varia
 export function ClearanceTag({ clearance }: { clearance: Clearance }) {
   return (
     <span className="flex w-full flex-wrap items-center gap-x-3 gap-y-1">
-      <span className="font-lab inline-flex items-center gap-1.5 rounded-full bg-warning-soft px-3 py-1 text-xs font-extrabold text-warning ring-1 ring-warning/30">
+      <span className="font-lab inline-flex items-center gap-1.5 rounded-sm bg-warning-soft px-3 py-1 text-xs font-extrabold text-warning ring-1 ring-warning/30">
         <Timer size={14} aria-hidden="true" />Liquidación · vence {formatExpiry(clearance.lot.expires)}
       </span>
       <span className="text-sm text-muted"><span className="sr-only">Precio de lista: </span><s className="font-semibold tabular-nums">{formatARS(clearance.listPrice)}</s> <strong className="text-ink">−{clearance.pct} %</strong> · quedan {clearance.lot.units} a este precio</span>

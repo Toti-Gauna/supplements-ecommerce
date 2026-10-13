@@ -52,7 +52,7 @@ export function PreparationBoard() {
     <>
       <AdminPageHeader title="Preparación de pedidos">Los pedidos pagados en orden de despacho, con lo que lleva cada uno. Arrastrá la tarjeta, usá el botón de la etapa siguiente o “Mover etapa”: al empezar a armarlo se descuenta el embalaje (una sola vez) y en Control de lote confirmás el lote que sale de cada producto.</AdminPageHeader>
       {short.length > 0 && (
-        <p role="status" className="mb-4 flex flex-wrap items-center gap-2 rounded-2xl bg-danger-soft p-3 text-sm font-bold text-danger">
+        <p role="status" className="mb-4 flex flex-wrap items-center gap-2 rounded-sm bg-danger-soft p-3 text-sm font-bold text-danger">
           <TriangleAlert size={17} aria-hidden="true" /> No alcanzan {short.map((m) => m.name.toLowerCase()).join(", ")} para los pedidos por preparar.
           <Link href="/admin-demo/insumos/" className="underline">Ver insumos</Link>
         </p>
@@ -69,16 +69,16 @@ export function PreparationBoard() {
             const reason = dnd.reasonFor(c.id);
             return (
               <section key={c.id} aria-labelledby={`col-${c.id}`} {...dnd.zone(c.id)} data-column={c.id}
-                className={cn("flex min-h-[28rem] snap-start flex-col gap-3 rounded-[1.75rem] p-3 transition-colors", dnd.over === c.id ? "bg-accent ring-2 ring-primary" : "bg-bg ring-1 ring-ink/[0.06]", reason && "opacity-60")}>
+                className={cn("flex min-h-[28rem] snap-start flex-col gap-3 rounded-sm p-3 transition-colors", dnd.over === c.id ? "bg-accent ring-2 ring-primary" : "bg-bg ring-1 ring-ink/[0.06]", reason && "opacity-60")}>
                 <header className="px-1">
                   <span className="flex items-center gap-2">
                     <h2 id={`col-${c.id}`} className="whitespace-nowrap font-extrabold">{c.label}</h2>
-                    <span className="grid h-6 min-w-6 place-items-center rounded-full bg-surface px-1.5 text-xs font-extrabold tabular-nums">{c.orders.length}</span>
+                    <span className="grid h-6 min-w-6 place-items-center rounded-sm bg-surface px-1.5 text-xs font-extrabold tabular-nums">{c.orders.length}</span>
                   </span>
                   <span className="block truncate text-xs text-muted">{reason ? `No se puede: ${reason}` : c.hint}</span>
                 </header>
                 {c.orders.length ? c.orders.map((o) => <PreparationCard key={o.code} order={o} column={c.id} today={today} onMove={move} onCheckLots={setChecking} onDragStart={dnd.start} onDragEnd={dnd.end} />)
-                  : <p className="rounded-2xl border border-dashed border-ink/15 p-4 text-center text-sm text-muted">Sin pedidos en esta etapa</p>}
+                  : <p className="rounded-sm border border-dashed border-ink/15 p-4 text-center text-sm text-muted">Sin pedidos en esta etapa</p>}
               </section>
             );
           })}

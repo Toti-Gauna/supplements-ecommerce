@@ -22,7 +22,7 @@ function Prize({ outcome }: { outcome: FinishedGame["outcome"] }) {
     case "already": {
       const better = outcome.tier && outcome.tier.id !== outcome.claimed.tierId ? ` Con este puntaje llegabas a ${outcome.tier.label}.` : "";
       return (
-        <div className="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10">
+        <div className="rounded-sm bg-white/5 p-4 ring-1 ring-white/10">
           <p className="font-bold">Hoy ya ganaste tu cupón</p>
           <p className="mt-1 text-sm text-night-muted">
             {outcome.claimed.label} · <span className="font-lab">{outcome.claimed.code}</span>. El cupón es uno por día: mañana podés ganar otro.{better}
@@ -33,7 +33,7 @@ function Prize({ outcome }: { outcome: FinishedGame["outcome"] }) {
     }
     case "below":
       return (
-        <p className="rounded-2xl bg-white/5 p-4 text-sm ring-1 ring-white/10">
+        <p className="rounded-sm bg-white/5 p-4 text-sm ring-1 ring-white/10">
           {outcome.next ? <>Te faltaron <strong className="text-volt">{outcome.next.missing.toLocaleString("es-AR")} puntos</strong> para {outcome.next.tier.label}. ¡Otra!</> : "Sin premio esta vez."}
         </p>
       );
@@ -59,7 +59,7 @@ export function GameResult({ result, best, onReplay, onExit }: { result: Finishe
           </h2>
           <p className="mt-3 flex flex-wrap items-center gap-2 text-sm text-night-muted">
             {newBest ? (
-              <span className="inline-flex items-center gap-1 rounded-full bg-volt px-2.5 py-1 text-xs font-extrabold uppercase tracking-wide text-night"><Trophy size={13} aria-hidden="true" />Nuevo récord</span>
+              <span className="inline-flex items-center gap-1 rounded-sm bg-volt px-2.5 py-1 text-xs font-extrabold uppercase tracking-wide text-night"><Trophy size={13} aria-hidden="true" />Nuevo récord</span>
             ) : <span>Récord: {best.toLocaleString("es-AR")}</span>}
             <span>Atrapaste {summary.caught} · Combo máximo {summary.bestCombo}</span>
           </p>

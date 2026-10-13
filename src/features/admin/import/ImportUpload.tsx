@@ -23,7 +23,7 @@ interface Props {
 /** Paso 1: arrastrar o elegir el Excel/CSV, bajar la plantilla con el catálogo actual o probar con un ejemplo. */
 function Option({ icon, title, text, onClick }: { icon: ReactNode; title: string; text: string; onClick: () => void }) {
   return (
-    <button type="button" onClick={onClick} className="flex items-start gap-3 rounded-3xl bg-surface p-4 text-left shadow-[var(--shadow-card)] hover:ring-1 hover:ring-primary">
+    <button type="button" onClick={onClick} className="flex items-start gap-3 rounded-sm bg-surface p-4 text-left shadow-[var(--shadow-card)] hover:ring-1 hover:ring-primary">
       {icon}<span><span className="block font-bold">{title}</span><span className="text-sm text-muted">{text}</span></span>
     </button>
   );
@@ -34,7 +34,7 @@ export function ImportUpload({ busy, error, last, onFile, onSample, onSupplierSa
   return (
     <div className="flex flex-col gap-4">
       {last && (
-        <div className="flex flex-wrap items-center gap-3 rounded-2xl bg-accent/60 px-4 py-3 text-sm">
+        <div className="flex flex-wrap items-center gap-3 rounded-sm bg-accent/60 px-4 py-3 text-sm">
           <Undo2 size={17} aria-hidden="true" className="text-primary" />
           <span className="flex-1"><strong>Última importación</strong> · {last.fileName} · {formatDateTime(last.at)} · {last.summary}</span>
           <UndoImportButton onUndo={onUndo} />
@@ -42,16 +42,16 @@ export function ImportUpload({ busy, error, last, onFile, onSample, onSupplierSa
       )}
       <label onDragOver={(e) => { e.preventDefault(); setOver(true); }} onDragLeave={() => setOver(false)}
         onDrop={(e) => { e.preventDefault(); setOver(false); const f = e.dataTransfer.files[0]; if (f) onFile(f); }}
-        className={cn("flex cursor-pointer flex-col items-center gap-3 rounded-[1.75rem] border-2 border-dashed px-6 py-14 text-center transition-colors",
+        className={cn("flex cursor-pointer flex-col items-center gap-3 rounded-sm border-2 border-dashed px-6 py-14 text-center transition-colors",
           over ? "border-primary bg-primary/[0.06]" : "border-ink/15 bg-surface hover:border-primary/60")}>
-        <span className="grid h-16 w-16 place-items-center rounded-3xl bg-accent text-primary"><UploadCloud size={30} aria-hidden="true" /></span>
+        <span className="grid h-16 w-16 place-items-center rounded-sm bg-accent text-primary"><UploadCloud size={30} aria-hidden="true" /></span>
         <span className="font-display text-3xl">{busy ? "Leyendo tu planilla…" : "Arrastrá tu Excel acá"}</span>
         <span className="max-w-md text-sm text-muted">o tocá para elegirlo. Sirve .xlsx o .csv: tu catálogo (productos, variantes, precios y stock) o la lista de precios de un proveedor. Se lee en este navegador: el archivo no se sube a ningún lado.</span>
         <input type="file" accept=".xlsx,.csv,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" className="sr-only" aria-label="Elegir archivo de Excel o CSV"
           onChange={(e) => { const f = e.target.files?.[0]; if (f) onFile(f); e.target.value = ""; }} />
-        <span className="inline-flex items-center gap-2 rounded-full bg-night px-5 py-3 text-sm font-bold text-on-night"><FileSpreadsheet size={16} aria-hidden="true" /> Elegir archivo</span>
+        <span className="inline-flex items-center gap-2 rounded-sm bg-night px-5 py-3 text-sm font-bold text-on-night"><FileSpreadsheet size={16} aria-hidden="true" /> Elegir archivo</span>
       </label>
-      {error && <p role="alert" className="rounded-2xl bg-danger-soft px-4 py-3 text-sm font-semibold text-danger">{error}</p>}
+      {error && <p role="alert" className="rounded-sm bg-danger-soft px-4 py-3 text-sm font-semibold text-danger">{error}</p>}
       <div className="grid gap-3 sm:grid-cols-2">
         <Option onClick={onTemplate} icon={<Download size={20} aria-hidden="true" className="mt-0.5 shrink-0 text-primary" />}
           title="Bajar mi catálogo como plantilla" text="Un Excel con todos tus productos y stock. Lo editás y lo volvés a subir." />

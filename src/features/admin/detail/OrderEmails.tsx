@@ -19,7 +19,7 @@ export function OrderEmails({ code, createdAt }: { code: string; createdAt: stri
         <ul className="flex flex-col gap-1.5 text-sm">
           {mails.map((m) => (
             <li key={m.id}>
-              <button type="button" onClick={() => setOpen(m.id)} className="w-full rounded-xl bg-bg p-2.5 text-left hover:ring-1 hover:ring-primary">
+              <button type="button" onClick={() => setOpen(m.id)} className="w-full rounded-sm bg-bg p-2.5 text-left hover:ring-1 hover:ring-primary">
                 <span className="block font-bold">{m.email.subject}</span>
                 <span className="text-xs text-muted">{TRIGGER_LABEL[m.trigger]} · {formatDateTime(m.at)}{m.test ? " · prueba" : ""}</span>
               </button>

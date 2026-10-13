@@ -19,7 +19,7 @@ export function StackRulePreview({ rule, valid }: { rule: StackRule; valid: bool
   const names = ex.products.map((p) => p.name).join(" + ");
   const counted = new Intl.ListFormat("es", { type: "conjunction" }).format(STACK_CATEGORIES.map((c) => getCategory(c)?.name.toLowerCase() ?? c));
   return (
-    <section aria-labelledby="stack-preview-title" aria-live="polite" className="relative overflow-hidden rounded-3xl bg-night p-5 text-on-night sm:p-6">
+    <section aria-labelledby="stack-preview-title" aria-live="polite" className="relative overflow-hidden rounded-sm bg-night p-5 text-on-night sm:p-6">
       <span aria-hidden="true" className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--brand-glow)_35%,transparent),transparent)]" />
       <p id="stack-preview-title" className="eyebrow relative flex items-center gap-2 text-volt"><Layers size={14} aria-hidden="true" />Vista previa</p>
       {!valid ? (
@@ -32,8 +32,8 @@ export function StackRulePreview({ rule, valid }: { rule: StackRule; valid: bool
       {valid && ex.products.length > 0 && (
         <ul aria-label="Productos del ejemplo" className="relative mt-4 flex flex-wrap gap-2">
           {ex.products.map((p) => (
-            <li key={p.slug} className="w-[5.5rem] rounded-2xl bg-white/[0.05] p-1.5 ring-1 ring-white/10 sm:w-[6.5rem]">
-              <ProductArt art={p.art} pack={p.pack} tint={firstInStock(p)?.colorHex} bare label="" showBadge={false} className="aspect-square rounded-xl" />
+            <li key={p.slug} className="w-[5.5rem] rounded-sm bg-white/[0.05] p-1.5 ring-1 ring-white/10 sm:w-[6.5rem]">
+              <ProductArt art={p.art} pack={p.pack} tint={firstInStock(p)?.colorHex} bare label="" showBadge={false} className="aspect-square rounded-sm" />
               <span className="mt-1 line-clamp-2 block px-1 pb-0.5 text-[11px] font-bold leading-tight">{p.name}</span>
             </li>
           ))}
@@ -51,9 +51,9 @@ export function StackRulePreview({ rule, valid }: { rule: StackRule; valid: bool
           </p>
           {ex.complete && rule.pct > 0 && (
             <dl className="font-lab relative mt-4 grid grid-cols-3 gap-2 text-center text-xs">
-              <div className="rounded-xl bg-white/[0.05] p-2"><dt className="text-night-muted">Subtotal</dt><dd className="mt-0.5 text-sm font-bold">{formatARS(ex.subtotal)}</dd></div>
-              <div className="rounded-xl bg-white/[0.05] p-2"><dt className="text-night-muted">Stack {rule.pct} %</dt><dd className="mt-0.5 text-sm font-bold text-volt">−{formatARS(ex.discount)}</dd></div>
-              <div className="rounded-xl bg-white/[0.05] p-2"><dt className="text-night-muted">Total</dt><dd className="mt-0.5 text-sm font-bold">{formatARS(ex.total)}</dd></div>
+              <div className="rounded-sm bg-white/[0.05] p-2"><dt className="text-night-muted">Subtotal</dt><dd className="mt-0.5 text-sm font-bold">{formatARS(ex.subtotal)}</dd></div>
+              <div className="rounded-sm bg-white/[0.05] p-2"><dt className="text-night-muted">Stack {rule.pct} %</dt><dd className="mt-0.5 text-sm font-bold text-volt">−{formatARS(ex.discount)}</dd></div>
+              <div className="rounded-sm bg-white/[0.05] p-2"><dt className="text-night-muted">Total</dt><dd className="mt-0.5 text-sm font-bold">{formatARS(ex.total)}</dd></div>
             </dl>
           )}
         </>

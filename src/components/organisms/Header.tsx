@@ -7,13 +7,14 @@ import { cn } from "@/lib/cn";
 import { useCart } from "@/stores/cart";
 import { useHydrated } from "@/stores/hydration";
 import { useUi } from "@/stores/ui";
+import { Logo } from "@/components/atoms/Logo";
 import { SoundToggle } from "@/components/atoms/SoundToggle";
 import { ThemeToggle } from "@/components/atoms/ThemeToggle";
-import { ThemeLogo } from "@/features/themes/ThemeLogo";
 import { MobileMenu } from "./MobileMenu";
 import { ShopMenu } from "./ShopMenu";
 import { brand } from "@/config/brand";
 import { useBagJiggle } from "./useBagJiggle";
+import { useSearchShortcut } from "./useSearchShortcut";
 
 export const NAV = [
   { href: "/categorias/", label: "Tienda" },
@@ -23,6 +24,13 @@ export const NAV = [
   { href: "/preguntas/", label: "Ayuda" },
 ];
 
+const ICON = "grid h-10 w-10 place-items-center rounded-sm text-ink transition-colors hover:bg-accent";
+const TAB = "flex h-14 items-center border-b-2 px-3 font-mono text-[12px] font-bold uppercase tracking-[0.12em] transition-colors xl:px-4";
+
+/**
+ * Header de una línea: marca, carriles de navegación, el buscador a la vista (abre el buscador superpuesto; "/" desde
+ * el teclado) y la bolsa con su contador. Sticky; la cinta de avisos va arriba y se va con el scroll.
+ */
 export function Header() {
   const pathname = usePathname();
   // El link más específico que coincide es el actual (en /club/juego/ es Shaker Rush, no el club).
@@ -30,19 +38,13 @@ export function Header() {
   const hydrated = useHydrated();
   const units = useCart((s) => s.lines.reduce((sum, l) => sum + l.quantity, 0));
   const { openCart, setMenu, setSearch, cartOpen } = useUi();
-  const [compact, setCompact] = useState(false);
   const [stuck, setStuck] = useState(false);
   const ref = useRef<HTMLElement>(null);
+  useSearchShortcut(() => setSearch(true));
   useEffect(() => {
     let frame = 0;
-    const measure = () => {
-      frame = 0;
-      setCompact(window.scrollY > 24);
-      // Pegado arriba: recién ahí su fondo se extiende hacia la franja de la hora (antes taparía el aviso de la demo).
-      const el = ref.current;
-      if (el) setStuck(el.getBoundingClientRect().top <= parseFloat(getComputedStyle(el).top) + 0.5);
-    };
-    // Una medición por cuadro (no por evento): leer el layout en cada evento de scroll traba celulares de gama media.
+    // Pegado arriba: recién ahí su fondo se extiende hacia la franja de la hora (antes taparía la cinta de avisos).
+    const measure = () => { frame = 0; const el = ref.current; if (el) setStuck(el.getBoundingClientRect().top <= parseFloat(getComputedStyle(el).top) + 0.5); };
     const onScroll = () => { if (!frame) frame = requestAnimationFrame(measure); };
     measure();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -50,30 +52,34 @@ export function Header() {
   }, []);
   const count = hydrated ? units : 0;
   const jiggle = useBagJiggle(count, hydrated, cartOpen);
-  const icon = "grid h-11 w-11 place-items-center rounded-full text-ink transition-colors hover:bg-ink/5";
   return (
-    <header ref={ref} data-shop-header className={cn(stuck && "max-lg:bleed-top", "sticky top-[env(safe-area-inset-top)] z-40 bg-surface lg:glass border-b transition-[border-color,box-shadow] duration-300", compact ? "border-line shadow-[0_8px_30px_-20px_rgb(0_0_0/0.35)]" : "border-transparent")}>
-      <div className={cn("mx-auto flex max-w-7xl items-center gap-2 px-4 transition-[height] duration-300 sm:px-6", compact ? "h-16" : "h-[4.5rem] lg:h-20")}>
-        <button type="button" onClick={() => setMenu(true)} aria-label="Abrir menú" className={cn(icon, "-ml-2 lg:hidden")}><Menu size={22} aria-hidden="true" /></button>
-        <Link href="/" aria-label={`${brand.name}, ir al inicio`} className="shrink-0"><ThemeLogo /></Link>
-        <nav aria-label="Principal" className="ml-8 hidden items-center gap-1 lg:flex">
+    <header ref={ref} data-shop-header className={cn(stuck && "max-lg:bleed-top", "sticky top-[env(safe-area-inset-top)] z-40 border-b border-line bg-bg")}>
+      <div className="mx-auto flex h-14 max-w-7xl items-center gap-1 px-3 sm:gap-2 sm:px-6">
+        <button type="button" onClick={() => setMenu(true)} aria-label="Abrir menú" className={cn(ICON, "lg:hidden")}><Menu size={22} aria-hidden="true" /></button>
+        <Link href="/" aria-label={`${brand.name}, ir al inicio`} className="shrink-0"><Logo /></Link>
+        <nav aria-label="Principal" className="ml-4 hidden self-stretch lg:flex xl:ml-8">
           {NAV.map((n) => n.href === "/categorias/" ? <ShopMenu key={n.href} active={pathname.startsWith("/c") || pathname.startsWith("/p")} /> : (
             <Link key={n.href} href={n.href} aria-current={current === n.href ? "page" : undefined}
-              className={cn("relative rounded-full px-4 py-2 text-[15px] font-semibold transition-colors hover:text-primary", current === n.href ? "text-primary" : "text-ink/80")}>
+              className={cn(TAB, current === n.href ? "border-volt-ink text-ink" : "border-transparent text-muted hover:text-ink")}>
               {n.label}
-              {current === n.href && <span className="absolute inset-x-4 -bottom-0.5 h-0.5 rounded-full bg-volt" />}
             </Link>
           ))}
         </nav>
-        <div className="ml-auto flex items-center gap-0.5">
-          <SoundToggle className={icon} />
-          <ThemeToggle className={cn(icon, "max-sm:hidden")} />
-          <button type="button" onClick={() => setSearch(true)} aria-label="Buscar" className={icon}><Search size={21} aria-hidden="true" /></button>
-          <Link href="/favoritos/" aria-label="Favoritos" className={cn(icon, "max-lg:hidden")}><Heart size={21} aria-hidden="true" /></Link>
-          <Link href="/cuenta/" aria-label="Mi cuenta (demo)" className={cn(icon, "max-sm:hidden")}><UserRound size={21} aria-hidden="true" /></Link>
-          <button type="button" onClick={() => openCart()} aria-label={`Carrito, ${count} ${count === 1 ? "producto" : "productos"}`} className={cn(icon, "relative")}>
-            <ShoppingBag key={`bag-${jiggle}`} size={21} aria-hidden="true" className={jiggle ? "animate-bag" : undefined} />
-            {count > 0 && <span key={`badge-${jiggle}`} className="animate-pop absolute right-0.5 top-0.5 grid h-5 min-w-5 place-items-center rounded-full bg-primary px-1 text-[11px] font-extrabold text-on-primary">{count}</span>}
+        <button type="button" onClick={() => setSearch(true)} aria-label="Buscar productos" aria-keyshortcuts="/"
+          className="ml-auto hidden h-10 min-w-0 items-center gap-2 rounded-sm border border-line bg-surface px-3 text-left text-muted shadow-[inset_0_2px_0_rgb(0_0_0/0.12)] transition-colors hover:border-ink/40 sm:flex sm:w-[min(340px,34vw)] lg:w-[min(300px,24vw)]">
+          <Search size={16} aria-hidden="true" className="shrink-0 text-ink" />
+          <span className="truncate font-mono text-[12px]">Whey, creatina, sin TACC…</span>
+          <kbd className="ml-auto border border-line px-1.5 font-mono text-[10px] text-muted">/</kbd>
+        </button>
+        <div className="ml-auto flex items-center gap-0.5 sm:ml-1">
+          <SoundToggle className={ICON} />
+          <ThemeToggle className={cn(ICON, "max-sm:hidden")} />
+          <Link href="/favoritos/" aria-label="Favoritos" className={cn(ICON, "max-lg:hidden")}><Heart size={20} aria-hidden="true" /></Link>
+          <Link href="/cuenta/" aria-label="Mi cuenta" className={cn(ICON, "max-sm:hidden")}><UserRound size={20} aria-hidden="true" /></Link>
+          <button type="button" onClick={() => openCart()} aria-label={`Carrito, ${count} ${count === 1 ? "producto" : "productos"}`}
+            className="bevel ml-1 flex h-10 items-center gap-2 rounded-sm bg-accent px-2.5 text-ink transition-colors hover:bg-accent/70">
+            <ShoppingBag key={`bag-${jiggle}`} size={19} aria-hidden="true" className={jiggle ? "animate-bag" : undefined} />
+            <span key={`badge-${jiggle}`} aria-hidden="true" className={cn("font-mono text-[13px] font-bold tabular-nums", count > 0 ? "animate-pop text-volt-ink" : "text-muted")}>{String(count).padStart(2, "0")}</span>
           </button>
         </div>
       </div>

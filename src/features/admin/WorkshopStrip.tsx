@@ -34,7 +34,7 @@ export function WorkshopStrip() {
       <ul className="grid grid-cols-2 gap-3 xl:grid-cols-4">
         {tiles.map(({ href, icon: Icon, label, value, hint, tone }) => (
           <li key={href}>
-            <Link href={href} className="group flex h-full flex-col gap-1 rounded-3xl bg-surface p-4 shadow-[var(--shadow-card)] ring-1 ring-ink/[0.04] transition-shadow hover:ring-primary">
+            <Link href={href} className="group flex h-full flex-col gap-1 rounded-sm bg-surface p-4 shadow-[var(--shadow-card)] ring-1 ring-ink/[0.04] transition-shadow hover:ring-primary">
               <span className="flex items-center gap-2 text-sm font-bold text-muted"><Icon size={17} aria-hidden="true" className="text-volt-ink" />{label}</span>
               <span className={cn("text-3xl font-extrabold tabular-nums", tone)}>{value}</span>
               <span className="text-xs font-semibold text-primary group-hover:underline">{hint}</span>

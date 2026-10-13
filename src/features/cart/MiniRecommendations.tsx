@@ -17,9 +17,9 @@ export function MiniRecommendations({ title, products, onNavigate }: { title: st
         {products.map((p) => (
           <li key={p.slug} className="group relative w-36 shrink-0">
             <div className="relative">
-              <ProductVisual art={p.art} pack={p.pack} photoUrl={p.photoDataUrl} tint={p.variants[0]?.colorHex} label={p.imageAlt || p.name} showBadge={false} className="aspect-square rounded-2xl transition-transform duration-500 group-hover:scale-[1.03]" />
+              <ProductVisual art={p.art} pack={p.pack} photoUrl={p.photoDataUrl} tint={p.variants[0]?.colorHex} label={p.imageAlt || p.name} showBadge={false} className="aspect-square rounded-sm transition-transform duration-500 group-hover:scale-[1.03]" />
               <button type="button" onClick={() => quickAdd(p)} aria-label={`Agregar ${p.name}`}
-                className="absolute bottom-2 right-2 z-10 grid h-9 w-9 place-items-center rounded-full bg-surface text-primary shadow-[var(--shadow-card)] hover:bg-primary hover:text-on-primary">
+                className="absolute bottom-2 right-2 z-10 grid h-9 w-9 place-items-center rounded-sm bg-surface text-primary shadow-[var(--shadow-card)] hover:bg-primary hover:text-on-primary">
                 <Plus size={18} aria-hidden="true" />
               </button>
             </div>

@@ -24,8 +24,8 @@ export function GamePrizeTicket({ code, badge = "Shaker Rush" }: { code: string;
   };
   const action = used || expired ? null : applied ? (
     <span className="flex flex-wrap items-center gap-2">
-      <span className="inline-flex items-center gap-1.5 rounded-full bg-success-soft px-3 py-1.5 text-sm font-bold text-success"><Check size={15} aria-hidden="true" />Aplicado</span>
-      <Link href="/carrito/" className="min-h-9 content-center rounded-full px-2 text-sm font-bold text-primary underline underline-offset-4">Ver carrito</Link>
+      <span className="inline-flex items-center gap-1.5 rounded-sm bg-success-soft px-3 py-1.5 text-sm font-bold text-success"><Check size={15} aria-hidden="true" />Aplicado</span>
+      <Link href="/carrito/" className="min-h-9 content-center rounded-sm px-2 text-sm font-bold text-primary underline underline-offset-4">Ver carrito</Link>
     </span>
   ) : (
     <Button size="sm" className="w-fit" aria-label={`Aplicar cupón ${code} al carrito`} onClick={apply}>Aplicar al carrito</Button>

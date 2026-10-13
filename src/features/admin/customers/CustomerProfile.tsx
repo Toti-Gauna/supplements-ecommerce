@@ -38,7 +38,7 @@ export function CustomerProfile() {
   }
   const bought = new Map<string, number>();
   for (const o of customer.orders) for (const l of o.lines) bought.set(l.productSlug, (bought.get(l.productSlug) ?? 0) + l.quantity);
-  const stat = (label: string, value: string) => <div className="min-w-0 rounded-2xl bg-surface p-4 shadow-[var(--shadow-card)]"><p className="text-xs font-bold text-muted">{label}</p><p className="mt-1 break-words text-xl font-extrabold tabular-nums">{value}</p></div>;
+  const stat = (label: string, value: string) => <div className="min-w-0 rounded-sm bg-surface p-4 shadow-[var(--shadow-card)]"><p className="text-xs font-bold text-muted">{label}</p><p className="mt-1 break-words text-xl font-extrabold tabular-nums">{value}</p></div>;
   return (
     <div className="@container flex flex-col gap-6">
       <DetailHeader list={{ href: "/admin-demo/usuarios/", label: "Clientes" }} title={customer.name} eyebrow={customer.registered ? "Cuenta registrada" : "Compró como invitado"}
@@ -66,7 +66,7 @@ export function CustomerProfile() {
               <ul className="flex flex-col gap-2">
                 {customer.orders.map((o) => (
                   <li key={o.code}>
-                    <Link href={`/admin-demo/pedidos/detalle/?codigo=${o.code}`} className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-2xl bg-bg p-3 hover:ring-1 hover:ring-primary">
+                    <Link href={`/admin-demo/pedidos/detalle/?codigo=${o.code}`} className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-sm bg-bg p-3 hover:ring-1 hover:ring-primary">
                       <span className="min-w-0 flex-1 basis-48"><span className="block font-bold">{o.code}</span><span className="text-xs text-muted">{formatDate(o.createdAt)} · {o.lines.map((l) => getProduct(l.productSlug)?.name ?? l.productSlug).join(", ")}</span></span>
                       <StatusBadge status={o.status} /><span className="font-bold tabular-nums">{formatARS(o.total)}</span>
                     </Link>
@@ -83,11 +83,11 @@ export function CustomerProfile() {
           <Panel title="Notas internas">
             <form className="mb-3 flex flex-col gap-2" onSubmit={(e) => { e.preventDefault(); if (!note.trim()) return; save("Nota guardada", () => addCustomerNote(customer.email, note)); setNote(""); }}>
               <label htmlFor="p-note" className="sr-only">Nota nueva</label>
-              <textarea id="p-note" rows={2} value={note} onChange={(e) => setNote(e.target.value)} placeholder="Prefiere chocolate, entrena a la mañana, retira los sábados…" className="rounded-2xl border border-ink/12 bg-bg p-3 text-base" />
+              <textarea id="p-note" rows={2} value={note} onChange={(e) => setNote(e.target.value)} placeholder="Prefiere chocolate, entrena a la mañana, retira los sábados…" className="rounded-sm border border-ink/12 bg-bg p-3 text-base" />
               <Button type="submit" variant="secondary" size="sm" disabled={!note.trim()} className="self-start">Guardar nota</Button>
             </form>
             {notes?.length ? (
-              <ul className="flex flex-col gap-2">{notes.map((n) => <li key={n.at + n.text} className="rounded-2xl bg-bg p-3 text-sm"><p>{n.text}</p><p className="mt-1 text-xs text-muted">{formatDateTime(n.at)}</p></li>)}</ul>
+              <ul className="flex flex-col gap-2">{notes.map((n) => <li key={n.at + n.text} className="rounded-sm bg-bg p-3 text-sm"><p>{n.text}</p><p className="mt-1 text-xs text-muted">{formatDateTime(n.at)}</p></li>)}</ul>
             ) : <p className="text-sm text-muted">Sin notas.</p>}
           </Panel>
         </div>

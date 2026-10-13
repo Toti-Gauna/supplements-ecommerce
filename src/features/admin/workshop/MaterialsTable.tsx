@@ -71,7 +71,7 @@ export function MaterialsTable() {
     { id: "value", header: "Valor", align: "right", money: true, defaultHidden: true, cell: (r) => formatARS(r.value), sortValue: (r) => r.value, exportValue: (r) => r.value },
   ];
   const Card = ({ row: r, selected, onToggle, onOpen }: RowCardProps<MaterialRow>) => (
-    <div className={`flex flex-col gap-3 rounded-3xl bg-bg p-3 ring-1 ${selected ? "ring-primary" : "ring-ink/[0.06]"}`}>
+    <div className={`flex flex-col gap-3 rounded-sm bg-bg p-3 ring-1 ${selected ? "ring-primary" : "ring-ink/[0.06]"}`}>
       <div className="flex items-start gap-3">
         <input type="checkbox" checked={selected} onChange={onToggle} aria-label={`Seleccionar ${r.name}`} className="mt-1 h-5 w-5 accent-primary" />
         <button type="button" onClick={onOpen} className="min-w-0 flex-1 text-left"><span className="block font-bold">{r.name}</span><span className="text-sm text-muted">{formatARS(r.costPerUnit)} / {UNIT_SHORT[r.unit]} · piden {qty(r.committed, r.unit)}</span></button>

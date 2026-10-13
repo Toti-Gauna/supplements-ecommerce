@@ -25,7 +25,7 @@ export function OutboxSheet({ mail, onClose }: { mail: OutboxEmail | null; onClo
             <span className="ml-auto"><TabFilter label="Dispositivo" value={device} onChange={setDevice} tabs={[{ id: "desktop", label: "Escritorio" }, { id: "mobile", label: "Celular" }]} /></span>
           </div>
           <EmailPreview email={mail.email} to={`${mail.name} <${mail.to}>`} device={device} />
-          <p className="flex gap-2 rounded-2xl bg-warning-soft p-3 text-sm font-semibold text-warning">
+          <p className="flex gap-2 rounded-sm bg-warning-soft p-3 text-sm font-semibold text-warning">
             <Info size={17} aria-hidden="true" className="mt-0.5 shrink-0" />
             Simulado: en la demo no sale ningún email. En producción lo arma React Email y lo envía Nodemailer desde el servidor.
           </p>

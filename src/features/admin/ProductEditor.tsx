@@ -82,7 +82,7 @@ function Editor({ draftKey: key, origin, saved }: EditorProps) {
     <div className="@container">
       <EditorStepper layout="compact" checks={checks} current={nav.current} tried={tried} onGo={nav.goTo} />
       {restored && dirty && (
-        <div role="status" className="mb-4 flex flex-wrap items-center gap-3 rounded-2xl bg-warning-soft px-4 py-3 text-sm ring-1 ring-warning/30">
+        <div role="status" className="mb-4 flex flex-wrap items-center gap-3 rounded-sm bg-warning-soft px-4 py-3 text-sm ring-1 ring-warning/30">
           <p className="flex-1 font-bold text-warning">Recuperamos los cambios sin guardar de la última vez.</p>
           <Button size="sm" variant="secondary" onClick={() => setAsking(true)}>Descartar cambios</Button>
         </div>

@@ -13,7 +13,7 @@ export function MissionChip({ units }: { units: number }) {
   if (!m) return null;
   const p = previewMission(m, demoAccountProgress[m.id] ?? 0, { units, total: 0 });
   return (
-    <Link href="/club/" className="flex items-center gap-3 rounded-2xl bg-night px-4 py-3 text-sm text-on-night hover:bg-night-2">
+    <Link href="/club/" className="flex items-center gap-3 rounded-sm bg-night px-4 py-3 text-sm text-on-night hover:bg-night-2">
       <Gift size={18} aria-hidden="true" className="shrink-0 text-volt" />
       <span className="flex-1">{p.after >= m.threshold ? <>Con esta compra completás <strong>“{m.title}”</strong> y ganás: {m.reward}.</> : <>Suma {units} a <strong>“{m.title}”</strong> del {brand.club}.</>}</span>
       <span className="text-xs text-volt">Ver Club</span>

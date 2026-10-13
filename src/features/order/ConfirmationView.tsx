@@ -65,17 +65,17 @@ export function ConfirmationView() {
     <div className="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
       <div className="flex flex-col gap-6">
         {celebrate && <ConfettiRain />}
-        <section className="relative overflow-hidden rounded-[2.5rem] bg-night p-6 text-on-night sm:p-10">
+        <section className="relative overflow-hidden rounded-sm bg-night p-6 text-on-night sm:p-10">
           <Celebration />
           <motion.span initial={{ scale: 0, rotate: -30 }} animate={{ scale: 1, rotate: 0 }} transition={{ type: "spring", stiffness: 300, damping: 18, delay: 0.15 }}
-            className="grid h-16 w-16 place-items-center rounded-full bg-volt text-night"><Check size={30} aria-hidden="true" /></motion.span>
+            className="grid h-16 w-16 place-items-center rounded-sm bg-volt text-night"><Check size={30} aria-hidden="true" /></motion.span>
           <p className="mt-5"><Badge tone="demo">PEDIDO DE DEMOSTRACIÓN · no es un pedido real</Badge></p>
           <h2 className="font-display animate-rise mt-4 text-4xl leading-tight sm:text-5xl">¡Gracias, {order.contact.name.split(" ")[0]}! Tu pedido de demostración está registrado</h2>
           <p className="mt-3 text-night-muted">Código <strong className="text-on-night">{order.code}</strong> · Estado de muestra: <strong className="text-on-night">{status}</strong>. No se cobró nada ni se envió ningún email.</p>
           {promised && <p className="mt-2 text-night-muted">Entrega: <strong className="text-on-night">{arrivalText(order.fulfillment, promised, DEMO_TODAY, settings)}</strong>, una vez confirmado el pago.</p>}
           <ol className="mt-8 grid gap-3 text-sm sm:grid-cols-3">
             {["Pagás o subís el comprobante", `${brand.name} confirma y arma tu pedido`, "Seguís cada etapa con tu link"].map((t, i) => (
-              <li key={t} className="flex items-center gap-3 rounded-2xl bg-white/5 p-3"><span className="font-display grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white/10 text-volt">{i + 1}</span>{t}</li>
+              <li key={t} className="flex items-center gap-3 rounded-sm bg-white/5 p-3"><span className="font-display grid h-8 w-8 shrink-0 place-items-center rounded-sm bg-white/10 text-volt">{i + 1}</span>{t}</li>
             ))}
           </ol>
         </section>
@@ -96,7 +96,7 @@ export function ConfirmationView() {
             status={preview.completesNow ? "completes-now" : preview.alreadyComplete ? "complete" : "progress"}
             note="Ilustrativo: en la tienda real la misión avanza cuando el pago queda confirmado." />
         )}
-        <section aria-labelledby="items" className="rounded-[2rem] bg-surface p-4 shadow-[var(--shadow-card)] sm:p-6"><h2 id="items" className="font-display mb-3 text-3xl">Tu pedido</h2><OrderLines lines={order.lines} /></section>
+        <section aria-labelledby="items" className="rounded-sm bg-surface p-4 shadow-[var(--shadow-card)] sm:p-6"><h2 id="items" className="font-display mb-3 text-3xl">Tu pedido</h2><OrderLines lines={order.lines} /></section>
       </div>
       <aside className="flex flex-col gap-3 lg:sticky lg:top-24 lg:self-start">
         <OrderSummary rows={summaryRows(order.quote)} total={order.quote.total} totalNote="Montos de muestra." />

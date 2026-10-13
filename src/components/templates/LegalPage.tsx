@@ -5,7 +5,7 @@ export function LegalPage({ title, sections }: { title: string; sections: LegalS
   return (
     <article className="max-w-3xl">
       <PageHeader title={title} />
-      <p className="mb-6 rounded-2xl border border-dashed border-warning bg-warning-soft p-3 text-sm text-warning">
+      <p className="mb-6 rounded-sm border border-dashed border-warning bg-warning-soft p-3 text-sm text-warning">
         <strong>Texto de muestra.</strong> Pendiente de los datos del vendedor y de revisión legal antes de publicar la tienda real.
       </p>
       <div className="flex flex-col gap-6">

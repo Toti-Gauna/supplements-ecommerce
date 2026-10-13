@@ -28,7 +28,7 @@ export function ContactStep({ onNext }: { onNext: () => void }) {
 
   return (
     <form noValidate onSubmit={form.handleSubmit((data) => { patch({ contact: data }); onNext(); })} className="flex flex-col gap-5">
-      <div className="flex flex-col gap-3 rounded-2xl bg-accent/60 p-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 rounded-sm bg-accent/60 p-4 sm:flex-row sm:items-center sm:justify-between">
         {user ? (
           <p className="text-sm"><strong>Comprás con la cuenta demo de {user.name}.</strong> Tus compras suman a las misiones (ilustrativo).</p>
         ) : (

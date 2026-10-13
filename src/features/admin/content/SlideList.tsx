@@ -19,8 +19,8 @@ export function SlideList({ slides, selected, withErrors, onSelect, onAdd }: Pro
             <li key={s.id}>
               <button type="button" aria-pressed={i === selected} onClick={() => onSelect(s.id)}
                 aria-label={`Diapositiva ${i + 1}: ${s.title || "sin título"}, ${visible ? "visible" : "oculta"}${withErrors.has(s.id) ? ", con errores" : ""}`}
-                className={cn("flex w-full items-center gap-3 rounded-2xl p-2 text-left ring-1 transition-colors", i === selected ? "bg-accent ring-primary" : "bg-surface ring-ink/[0.06] hover:bg-accent/50")}>
-                <span aria-hidden="true" className="h-12 w-12 shrink-0 overflow-hidden rounded-xl bg-accent">
+                className={cn("flex w-full items-center gap-3 rounded-sm p-2 text-left ring-1 transition-colors", i === selected ? "bg-accent ring-primary" : "bg-surface ring-ink/[0.06] hover:bg-accent/50")}>
+                <span aria-hidden="true" className="h-12 w-12 shrink-0 overflow-hidden rounded-sm bg-accent">
                   {/* eslint-disable-next-line @next/next/no-img-element -- data URL local del panel demo */}
                   {s.image ? <img src={s.image.src} alt="" className="h-full w-full object-cover" /> : <ProductArt art={s.art} label="" showBadge={false} className="h-full w-full" />}
                 </span>

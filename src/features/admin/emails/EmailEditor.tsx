@@ -76,18 +76,18 @@ function Editor({ saved }: { saved: EmailTemplate }) {
         <EditorHeader savedName={saved.name} draft={draft} dirty={dirty} restored={session.restored} canTest={hasOrder ? Boolean(ctx.order) : Boolean(ctx.refill)}
           onActive={(active) => set({ active })} onRestore={() => save("Plantilla restaurada", () => resetEmailTemplate(draft.id))} onTest={test} onSave={submit} onDiscard={() => session.reset()} />
         {errors.length > 0 && (
-          <div role="alert" className="flex gap-2 rounded-2xl bg-danger-soft p-3 text-sm font-semibold text-danger">
+          <div role="alert" className="flex gap-2 rounded-sm bg-danger-soft p-3 text-sm font-semibold text-danger">
             <AlertCircle size={18} aria-hidden="true" className="mt-0.5 shrink-0" /><ul>{errors.map((e) => <li key={e}>{e}</li>)}</ul>
           </div>
         )}
         <div className="grid grid-cols-[minmax(0,1fr)] gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
           <div className="flex flex-col gap-4">
-            <section id="e-data" tabIndex={-1} aria-labelledby="e-data-t" className="scroll-mt-32 focus:outline-none sticky top-[calc(7.25rem+env(safe-area-inset-top))] z-10 rounded-3xl bg-bg/95 p-3 ring-1 ring-ink/[0.06] backdrop-blur">
+            <section id="e-data" tabIndex={-1} aria-labelledby="e-data-t" className="scroll-mt-32 focus:outline-none sticky top-[calc(7.25rem+env(safe-area-inset-top))] z-10 rounded-sm bg-bg/95 p-3 ring-1 ring-ink/[0.06] backdrop-blur">
               <h2 id="e-data-t" className="mb-2 text-sm font-extrabold">{hasOrder ? "Fichas de datos del pedido y del cliente" : "Fichas de datos del cliente y del producto"}</h2>
               <TokenPalette tokens={tokens} />
               <p className="mt-2 hidden text-xs text-muted sm:block">Tocá un texto y después el dato: entra como ficha y en cada email se reemplaza por el valor real.</p>
             </section>
-            <section id="e-fields" tabIndex={-1} aria-label="Datos del email" className="flex scroll-mt-48 flex-col gap-3 rounded-3xl bg-surface p-4 shadow-[var(--shadow-card)] focus:outline-none">
+            <section id="e-fields" tabIndex={-1} aria-label="Datos del email" className="flex scroll-mt-48 flex-col gap-3 rounded-sm bg-surface p-4 shadow-[var(--shadow-card)] focus:outline-none">
               <label className="flex flex-col gap-1 text-sm font-bold">Nombre interno<Input value={draft.name} onChange={(e) => set({ name: e.target.value })} /></label>
               <div className="flex flex-col gap-1 text-sm font-bold">Asunto
                 <ChipEditor id="e-subject" label="Asunto" value={draft.subject} tokens={tokens} onChange={(subject) => set({ subject })} />

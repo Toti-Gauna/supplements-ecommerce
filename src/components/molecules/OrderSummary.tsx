@@ -12,7 +12,7 @@ export interface SummaryRow {
 
 export function OrderSummary({ rows, total, totalNote, title, children }: { rows: SummaryRow[]; total: number; totalNote?: ReactNode; title?: string; children?: ReactNode }) {
   return (
-    <section aria-label={title ?? "Resumen"} className="rounded-3xl bg-surface p-5 shadow-[var(--shadow-card)] sm:p-6">
+    <section aria-label={title ?? "Resumen"} className="rounded-sm bg-surface p-5 shadow-[var(--shadow-card)] sm:p-6">
       {title && <h3 className="mb-3 text-base font-extrabold">{title}</h3>}
       <dl className="flex flex-col gap-2 text-sm">
         {rows.map((r, i) => (

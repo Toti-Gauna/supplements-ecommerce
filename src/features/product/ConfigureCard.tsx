@@ -30,7 +30,7 @@ export function ConfigureCard({ product, sel, quantity, max, stockNote, onQuanti
     return { ...o, detail: v?.servings && v.servings > 1 && pps ? `${v.servings} servicios\n${formatARS(pps)} c/u` : undefined, badge: o.value === best ? "Mejor precio por servicio" : undefined };
   });
   return (
-    <section id="elegir" aria-label="Elegí sabor, tamaño y cantidad" className="flex scroll-mt-28 flex-col gap-5 rounded-[var(--radius-card)] border border-line bg-surface p-5 shadow-[var(--shadow-card)] sm:p-6">
+    <section id="elegir" aria-label="Elegí sabor, tamaño y cantidad" className="flex scroll-mt-28 flex-col gap-5 rounded-sm border border-line bg-surface p-5 shadow-[var(--shadow-card)] sm:p-6">
       {(sel.colorOptions.length > 0 || sizeOptions.length > 0) && (
         <div className="flex flex-col gap-5">
           {sel.colorOptions.length > 0 && <VariantPicker legend={product.optionNames?.color ?? "Sabor"} options={sel.colorOptions} value={sel.color} onChange={sel.chooseColor} swatches />}

@@ -18,7 +18,7 @@ export function CategoryCircles() {
   useDemoVersion();
   const cats = visibleCategories();
   const { ref, atStart, atEnd, page } = useRail<HTMLUListElement>(cats.map((c) => c.slug).join());
-  const side = "absolute top-[calc(0.5rem+var(--cat)/2)] z-10 hidden h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-ink/10 bg-surface text-ink shadow-[var(--shadow-card)] transition-[opacity,visibility,background-color,color] duration-300 hover:bg-ink hover:text-bg sm:grid";
+  const side = "absolute top-[calc(0.5rem+var(--cat)/2)] z-10 hidden h-11 w-11 -translate-y-1/2 place-items-center rounded-sm border border-ink/10 bg-surface text-ink shadow-[var(--shadow-card)] transition-[opacity,visibility,background-color,color] duration-300 hover:bg-ink hover:text-bg sm:grid";
   return (
     <section aria-labelledby="cats-title">
       <div className="mb-5 flex items-end justify-between">
@@ -33,7 +33,7 @@ export function CategoryCircles() {
             return (
               <li key={c.slug} className="w-[var(--cat)] shrink-0 snap-start">
                 <Link href={categoryHref(c.slug)} className="group flex flex-col items-center gap-2 text-center">
-                  <span className="relative block aspect-square w-full overflow-hidden rounded-full bg-accent shadow-[var(--shadow-card)] ring-1 ring-line transition-all duration-500 group-hover:shadow-[var(--shadow-lift)] group-hover:ring-2 group-hover:ring-primary">
+                  <span className="relative block aspect-square w-full overflow-hidden rounded-sm bg-accent shadow-[var(--shadow-card)] ring-1 ring-line transition-all duration-500 group-hover:shadow-[var(--shadow-lift)] group-hover:ring-2 group-hover:ring-primary">
                     {top && <ProductArt art={top.art} pack={top.pack} tint={top.variants[0]?.colorHex} label="" showBadge={false} className="h-full w-full scale-110 transition-transform duration-700 group-hover:scale-125 [&>svg]:h-full" />}
                   </span>
                   <span className="text-[13px] font-bold leading-tight">{c.name}</span>

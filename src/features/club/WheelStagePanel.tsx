@@ -75,7 +75,7 @@ export default function WheelStagePanel({ open, checkout, onClose }: { open: boo
             {landedNow && won ? <span className="font-display text-base text-volt">¡Te tocó {won.label}!</span>
               : spinning ? "Girando…" : wheel.active ? "Tocá el centro o arrastrá el disco para girarlo" : "La ruleta está pausada"}
           </p>
-          {checkout && !spinning && <button type="button" onClick={next} className="mt-2 min-h-11 rounded-full px-5 text-sm font-semibold text-night-muted underline-offset-4 hover:text-white hover:underline">Continuar sin girar</button>}
+          {checkout && !spinning && <button type="button" onClick={next} className="mt-2 min-h-11 rounded-sm px-5 text-sm font-semibold text-night-muted underline-offset-4 hover:text-white hover:underline">Continuar sin girar</button>}
         </div>
       )}
     </ImmersiveStage>

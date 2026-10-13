@@ -37,7 +37,7 @@ export function QuizQuestion({ step, draft, error, headingRef, onAnswer, onNext,
         </legend>
         <QuizOptions step={info.id} draft={draft} onAnswer={onAnswer} />
       </fieldset>
-      {error && <p id={`quiz-error-${info.id}`} role="alert" className="mt-4 rounded-xl bg-danger-soft px-3 py-2 text-sm font-bold text-danger">{info.id === "restrictions" ? "Marcá al menos una opción, o Ninguna." : "Elegí una opción para seguir."}</p>}
+      {error && <p id={`quiz-error-${info.id}`} role="alert" className="mt-4 rounded-sm bg-danger-soft px-3 py-2 text-sm font-bold text-danger">{info.id === "restrictions" ? "Marcá al menos una opción, o Ninguna." : "Elegí una opción para seguir."}</p>}
       <div className="mt-6 flex items-center justify-between gap-3">
         {step > 0 ? (
           <Button variant="dark" onClick={onBack} className="px-5"><ArrowLeft size={17} aria-hidden="true" />Atrás</Button>

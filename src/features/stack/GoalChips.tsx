@@ -30,10 +30,10 @@ export function GoalChips({ value, onChange, legend = "Tu objetivo", tone = "sur
           const on = value === g.id;
           return (
             <label key={g.id} style={{ "--hue": g.hue } as CSSProperties}
-              className={cn("relative inline-flex min-h-11 shrink-0 cursor-pointer items-center gap-2 rounded-full border py-1 pl-1 pr-4 text-sm font-bold transition-[background-color,border-color,box-shadow] duration-300 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-bg",
+              className={cn("relative inline-flex min-h-11 shrink-0 cursor-pointer items-center gap-2 rounded-sm border py-1 pl-1 pr-4 text-sm font-bold transition-[background-color,border-color,box-shadow] duration-300 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-bg",
                 on ? "border-[var(--hue)] bg-night text-on-night shadow-[0_0_0_1px_var(--hue),0_10px_26px_-12px_var(--hue)]" : idle)}>
-              <input type="radio" name={name} value={g.id} checked={on} onChange={() => onChange(g.id)} className="absolute inset-0 z-10 cursor-pointer appearance-none rounded-full opacity-0" />
-              <span aria-hidden="true" className="grid h-9 w-9 place-items-center rounded-full bg-night ring-1 ring-white/10" style={{ color: "var(--hue)" }}>
+              <input type="radio" name={name} value={g.id} checked={on} onChange={() => onChange(g.id)} className="absolute inset-0 z-10 cursor-pointer appearance-none rounded-sm opacity-0" />
+              <span aria-hidden="true" className="grid h-9 w-9 place-items-center rounded-sm bg-night ring-1 ring-white/10" style={{ color: "var(--hue)" }}>
                 <GoalGlyph goal={g.id} className="h-[18px] w-[18px]" />
               </span>
               {g.name}

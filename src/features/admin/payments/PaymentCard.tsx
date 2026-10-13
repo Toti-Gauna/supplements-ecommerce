@@ -14,10 +14,10 @@ import { paymentHref, PROOF_STATE, ProofActions } from "./ProofActions";
 export function PaymentCard({ order: o }: { order: AdminOrder }) {
   const proof = o.proof;
   return (
-    <article aria-label={`Pago de ${o.code}`} className="animate-fade-up grid gap-4 rounded-3xl bg-surface p-4 shadow-[var(--shadow-card)] sm:grid-cols-[8.5rem_minmax(0,1fr)]">
-      <Link href={paymentHref(o.code)} aria-label={`Abrir el pago de ${o.code}`} className="block max-w-40 rounded-xl focus-visible:outline-2 focus-visible:outline-primary">
+    <article aria-label={`Pago de ${o.code}`} className="animate-fade-up grid gap-4 rounded-sm bg-surface p-4 shadow-[var(--shadow-card)] sm:grid-cols-[8.5rem_minmax(0,1fr)]">
+      <Link href={paymentHref(o.code)} aria-label={`Abrir el pago de ${o.code}`} className="block max-w-40 rounded-sm focus-visible:outline-2 focus-visible:outline-primary">
         {proof ? <SampleProof fileName={proof.fileName} amount={formatARS(o.total)} /> : (
-          <span className="grid aspect-[200/260] w-full place-items-center rounded-xl border border-dashed border-ink/20 bg-bg p-3 text-center text-xs font-bold text-muted">Sin comprobante todavía</span>
+          <span className="grid aspect-[200/260] w-full place-items-center rounded-sm border border-dashed border-ink/20 bg-bg p-3 text-center text-xs font-bold text-muted">Sin comprobante todavía</span>
         )}
       </Link>
       <div className="flex min-w-0 flex-col gap-3">

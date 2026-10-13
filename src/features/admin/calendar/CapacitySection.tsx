@@ -39,7 +39,7 @@ export function CapacitySection({ today, onDirty }: { today: string; onDirty: (d
     onDirty(false);
   };
   return (
-    <form id="despachos-cupo" aria-label="Cupo del cadete y días de despacho" noValidate className="flex flex-col gap-4 rounded-3xl bg-surface p-4 shadow-[var(--shadow-card)] sm:p-5"
+    <form id="despachos-cupo" aria-label="Cupo del cadete y días de despacho" noValidate className="flex flex-col gap-4 rounded-sm bg-surface p-4 shadow-[var(--shadow-card)] sm:p-5"
       onSubmit={(e) => { e.preventDefault(); if (!dirty) return; if (hasImpact(impact)) setAsking(true); else commit(); }}>
       <NumberField id="w-capacity" label="Pedidos que reparte el cadete por día" min={1} value={draft.dailyCapacity}
         onChange={(n) => setDraft({ ...draft, dailyCapacity: Math.min(50, Math.max(1, n)) })} hint="Solo los pedidos con cadete en Mar del Plata. Cuando un día se llena, la tienda ofrece el siguiente día hábil con lugar." />
@@ -47,7 +47,7 @@ export function CapacitySection({ today, onDirty }: { today: string; onDirty: (d
         <Switch checked={works(6)} onChange={(v) => toggle(6, v)} label="Despacho los sábados" />
         <Switch checked={works(0)} onChange={(v) => toggle(0, v)} label="Despacho los domingos" />
       </div>
-      <div className="rounded-2xl bg-bg p-3 text-sm">
+      <div className="rounded-sm bg-bg p-3 text-sm">
         <p className="font-bold">Reglas que usa el calendario</p>
         <ul className="mt-1 flex list-disc flex-col gap-0.5 pl-5 text-muted">
           <li>Los plazos de preparación cuentan solo días hábiles: sin días cerrados ni feriados.</li>

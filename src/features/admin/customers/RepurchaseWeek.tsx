@@ -27,7 +27,7 @@ export function RepurchaseWeek({ limit = 6, className }: { limit?: number; class
       {week.length ? (
         <ul className="flex flex-col gap-2">
           {week.slice(0, limit).map((item) => (
-            <li key={`${item.email}:${item.key}`} className="@container rounded-3xl bg-surface p-4 shadow-[var(--shadow-card)] ring-1 ring-ink/[0.04]">
+            <li key={`${item.email}:${item.key}`} className="@container rounded-sm bg-surface p-4 shadow-[var(--shadow-card)] ring-1 ring-ink/[0.04]">
               <div className="flex flex-col gap-3 @min-[34rem]:flex-row @min-[34rem]:items-center">
                 <div className="min-w-0 flex-1">
                   <Link href={profileHref(item.email)} className="font-bold hover:underline">{item.name}</Link>
@@ -40,7 +40,7 @@ export function RepurchaseWeek({ limit = 6, className }: { limit?: number; class
           ))}
         </ul>
       ) : (
-        <p className="rounded-3xl border border-dashed border-line p-4 text-sm text-muted">Esta semana no se le termina el pote a nadie.</p>
+        <p className="rounded-sm border border-dashed border-line p-4 text-sm text-muted">Esta semana no se le termina el pote a nadie.</p>
       )}
       {(more > 0 || late > 0) && (
         <p className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm">

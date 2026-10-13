@@ -26,7 +26,7 @@ interface Props {
 export function SlideForm({ slide, index, total, errors, onChange, onMove, onRemove }: Props) {
   const n = index + 1;
   return (
-    <section aria-labelledby="slide-form-title" className="@container flex min-w-0 flex-col gap-4 rounded-3xl bg-surface p-4 shadow-[var(--shadow-card)] sm:p-5">
+    <section aria-labelledby="slide-form-title" className="@container flex min-w-0 flex-col gap-4 rounded-sm bg-surface p-4 shadow-[var(--shadow-card)] sm:p-5">
       <div className="flex flex-wrap items-center gap-2">
         <h2 id="slide-form-title" className="min-w-0 flex-1 text-lg font-extrabold">Diapositiva {n}</h2>
         <ListControls index={index} length={total} label={`diapositiva ${n}`} onMove={onMove} />
@@ -35,7 +35,7 @@ export function SlideForm({ slide, index, total, errors, onChange, onMove, onRem
         )}
       </div>
       {errors.length > 0 && (
-        <div role="alert" className="flex gap-2 rounded-2xl bg-danger-soft p-3 text-sm font-semibold text-danger">
+        <div role="alert" className="flex gap-2 rounded-sm bg-danger-soft p-3 text-sm font-semibold text-danger">
           <AlertCircle size={18} aria-hidden="true" className="mt-0.5 shrink-0" />
           <ul className="flex flex-col gap-0.5">{errors.map((e) => <li key={e}>{e}</li>)}</ul>
         </div>

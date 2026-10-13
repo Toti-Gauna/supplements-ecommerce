@@ -47,8 +47,8 @@ export function ProductCard({ product, priority }: { product: ProductCardData; p
       {/* La caja de la imagen va siempre en su propia capa (z-[1]) por encima del link estirado del nombre: con el
           `transform` de hover/tap (motion.css) se vuelve contexto de apilamiento y, sin esto, el link tapaba "+ Agregar".
           No recibe el puntero (el clic en la imagen sigue llegando al link); solo el botón lo recupera. */}
-      <div className="pointer-events-none relative z-[1] overflow-hidden rounded-[var(--radius-card)] bg-accent shadow-[var(--shadow-card)] transition-shadow duration-500 group-hover:shadow-[var(--shadow-lift)]">
-        <div data-card-visual className="overflow-hidden rounded-[var(--radius-card)]">
+      <div className="pointer-events-none relative z-[1] overflow-hidden rounded-sm bg-accent shadow-[var(--shadow-card)] transition-shadow duration-500 group-hover:shadow-[var(--shadow-lift)]">
+        <div data-card-visual className="overflow-hidden rounded-sm">
           <ProductVisual art={product.art} pack={product.pack} tint={product.tint} photoUrl={product.photoUrl} label={product.alt}
             className="aspect-[4/5] transition-transform duration-[900ms] ease-[var(--ease-out-expo)] group-hover:scale-[1.04]" />
         </div>
@@ -57,13 +57,13 @@ export function ProductCard({ product, priority }: { product: ProductCardData; p
             className="fade-from-0 pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 [&>svg]:h-full [&>svg]:object-cover" />
         )}
         <div className="absolute left-3 top-3 flex flex-wrap gap-1.5">
-          {product.deal && <span className="rounded-full px-2.5 py-1 text-[11px] font-extrabold shadow-sm" style={{ background: product.deal.bg, color: product.deal.ink }}>{product.deal.label}</span>}
-          {product.isNew && <span className="rounded-full bg-night px-2.5 py-1 text-[11px] font-bold text-on-night">Nuevo</span>}
-          {product.clearance && <span className="rounded-full bg-warning-soft px-2.5 py-1 text-[11px] font-extrabold text-warning shadow-sm">Liquidación</span>}
+          {product.deal && <span className="rounded-sm px-2.5 py-1 text-[11px] font-extrabold shadow-sm" style={{ background: product.deal.bg, color: product.deal.ink }}>{product.deal.label}</span>}
+          {product.isNew && <span className="rounded-sm bg-night px-2.5 py-1 text-[11px] font-bold text-on-night">Nuevo</span>}
+          {product.clearance && <span className="rounded-sm bg-warning-soft px-2.5 py-1 text-[11px] font-extrabold text-warning shadow-sm">Liquidación</span>}
         </div>
         {full && (
           <button type="button" onClick={() => quickAdd(full)} aria-label={`Agregar ${product.name} al carrito`}
-            className="pointer-events-auto absolute bottom-3 right-3 z-10 flex h-11 items-center gap-2 rounded-full bg-primary px-3.5 text-sm font-bold text-on-primary shadow-[var(--shadow-glow)] transition-all duration-300 hover:bg-primary-hover lg:translate-y-3 lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100 lg:focus-visible:translate-y-0 lg:focus-visible:opacity-100">
+            className="pointer-events-auto absolute bottom-3 right-3 z-10 flex h-11 items-center gap-2 rounded-sm bg-primary px-3.5 text-sm font-bold text-on-primary shadow-[var(--shadow-glow)] transition-all duration-300 hover:bg-primary-hover lg:translate-y-3 lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100 lg:focus-visible:translate-y-0 lg:focus-visible:opacity-100">
             <Plus size={16} aria-hidden="true" />
             <span className="max-lg:sr-only">Agregar</span>
           </button>
@@ -72,7 +72,7 @@ export function ProductCard({ product, priority }: { product: ProductCardData; p
       <div className="flex flex-col gap-1 px-1">
         {product.brand && <p className="font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-volt-ink">{product.brand}</p>}
         <h3 className="line-clamp-2 text-[15px] font-bold leading-snug text-ink">
-          <Link href={product.href} prefetch={priority} onClick={(e) => markProductHero(e.currentTarget.closest("[data-product-card]"), e)} className="after:absolute after:inset-0 after:rounded-[var(--radius-card)] focus-visible:outline-none">{product.name}</Link>
+          <Link href={product.href} prefetch={priority} onClick={(e) => markProductHero(e.currentTarget.closest("[data-product-card]"), e)} className="after:absolute after:inset-0 after:rounded-sm focus-visible:outline-none">{product.name}</Link>
         </h3>
         <p className="text-lg font-extrabold tabular-nums leading-tight">
           {product.hasRange && <span className="mr-1 text-xs font-semibold text-muted">desde</span>}
@@ -88,7 +88,7 @@ export function ProductCard({ product, priority }: { product: ProductCardData; p
       {product.colors.length > 1 && (
         <p className="flex gap-1.5 px-1">
           <span className="sr-only">{product.colors.length} sabores o colores</span>
-          {product.colors.slice(0, 5).map((c) => <span key={c} aria-hidden="true" className="h-3.5 w-3.5 rounded-full border border-black/10" style={{ background: c }} />)}
+          {product.colors.slice(0, 5).map((c) => <span key={c} aria-hidden="true" className="h-3.5 w-3.5 rounded-sm border border-black/10" style={{ background: c }} />)}
         </p>
       )}
     </article>

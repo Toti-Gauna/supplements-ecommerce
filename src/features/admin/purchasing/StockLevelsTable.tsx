@@ -48,7 +48,7 @@ export function StockLevelsTable({ rows }: { rows: LevelRow[] }) {
     { id: "buy", header: "Comprar", align: "right", cell: (r) => (buyQty(r) ? <strong className="tabular-nums">{buyQty(r)}</strong> : "—"), sortValue: (r) => buyQty(r), exportValue: (r) => buyQty(r) },
   ];
   const Card = ({ row: r }: RowCardProps<LevelRow>) => (
-    <div className="flex flex-col gap-3 rounded-3xl bg-bg p-3 ring-1 ring-ink/[0.06]">
+    <div className="flex flex-col gap-3 rounded-sm bg-bg p-3 ring-1 ring-ink/[0.06]">
       <div className="flex items-start gap-2"><span className="min-w-0 flex-1"><span className="block font-bold">{r.name}</span><span className="text-xs text-muted">{r.supplier?.name ?? "Sin proveedor"} · stock {r.stock < 0 ? "a pedido" : r.stock}</span></span><LevelChip state={r.state} /></div>
       {r.stock >= 0 && (
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">

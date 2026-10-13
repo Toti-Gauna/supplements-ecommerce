@@ -77,7 +77,7 @@ export function DeliveryCalendar() {
     push({ tone: "success", title: `${list.length} despachos exportados`, description: `Abrí ${name} con Google Calendar, Outlook o el calendario del celular.` });
   };
   const kpi = (label: string, value: number | string, tone?: string) => (
-    <div className="rounded-2xl bg-surface p-3 shadow-[var(--shadow-card)]"><p className="text-xs font-bold text-muted">{label}</p><p className={cn("mt-0.5 text-2xl font-extrabold tabular-nums", tone)}>{value}</p></div>
+    <div className="rounded-sm bg-surface p-3 shadow-[var(--shadow-card)]"><p className="text-xs font-bold text-muted">{label}</p><p className={cn("mt-0.5 text-2xl font-extrabold tabular-nums", tone)}>{value}</p></div>
   );
 
   return (
@@ -96,7 +96,7 @@ export function DeliveryCalendar() {
         {kpi("Cupo del cadete", `${settings.dailyCapacity} por día`)}
       </div>
       {blocked.length > 0 && (
-        <div role="status" className="mb-4 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-2xl bg-warning-soft p-3 text-sm font-bold text-warning ring-1 ring-warning/30">
+        <div role="status" className="mb-4 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-sm bg-warning-soft p-3 text-sm font-bold text-warning ring-1 ring-warning/30">
           <CalendarX2 size={17} aria-hidden="true" />{blocked.length === 1 ? "1 pedido quedó" : `${blocked.length} pedidos quedaron`} en un día cerrado. Reprogramalos:
           {blocked.map((e) => <button key={e.order.code} type="button" onClick={() => openOrder(e.order.code)} className="underline">{e.order.code} ({formatDay(e.day)})</button>)}
         </div>
@@ -107,9 +107,9 @@ export function DeliveryCalendar() {
         <HelpButton label="marcas del calendario" open={help} controls="cal-help" onToggle={() => setHelp(!help)} />
         {view !== "agenda" && (
           <div className="flex items-center gap-1 sm:ml-auto">
-            <button type="button" onClick={() => shift(-1)} aria-label={view === "month" ? "Mes anterior" : "Semana anterior"} className="grid h-10 w-10 place-items-center rounded-full bg-surface ring-1 ring-ink/10 hover:bg-accent"><ChevronLeft size={18} aria-hidden="true" /></button>
-            <button type="button" onClick={() => setCursor(today)} className="h-10 rounded-full bg-surface px-4 text-sm font-bold ring-1 ring-ink/10 hover:bg-accent">Hoy</button>
-            <button type="button" onClick={() => shift(1)} aria-label={view === "month" ? "Mes siguiente" : "Semana siguiente"} className="grid h-10 w-10 place-items-center rounded-full bg-surface ring-1 ring-ink/10 hover:bg-accent"><ChevronRight size={18} aria-hidden="true" /></button>
+            <button type="button" onClick={() => shift(-1)} aria-label={view === "month" ? "Mes anterior" : "Semana anterior"} className="grid h-10 w-10 place-items-center rounded-sm bg-surface ring-1 ring-ink/10 hover:bg-accent"><ChevronLeft size={18} aria-hidden="true" /></button>
+            <button type="button" onClick={() => setCursor(today)} className="h-10 rounded-sm bg-surface px-4 text-sm font-bold ring-1 ring-ink/10 hover:bg-accent">Hoy</button>
+            <button type="button" onClick={() => shift(1)} aria-label={view === "month" ? "Mes siguiente" : "Semana siguiente"} className="grid h-10 w-10 place-items-center rounded-sm bg-surface ring-1 ring-ink/10 hover:bg-accent"><ChevronRight size={18} aria-hidden="true" /></button>
             <h2 aria-live="polite" className="font-display ml-2 min-w-0 text-2xl first-letter:uppercase">{title}</h2>
           </div>
         )}

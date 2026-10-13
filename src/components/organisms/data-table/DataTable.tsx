@@ -67,7 +67,7 @@ export function DataTable<T>(p: DataTableProps<T>) {
     return p.onRowOpen ? <button type="button" onClick={() => p.onRowOpen!(r)} className={cls}>{c.cell(r)}</button> : c.cell(r);
   };
   return (
-    <section aria-label={p.caption} className="overflow-hidden rounded-[1.75rem] bg-surface shadow-[var(--shadow-card)] ring-1 ring-ink/[0.04]">
+    <section aria-label={p.caption} className="overflow-hidden rounded-sm bg-surface shadow-[var(--shadow-card)] ring-1 ring-ink/[0.04]">
       <DataTableToolbar searchLabel={p.searchLabel} searchPlaceholder={p.searchPlaceholder} query={state.query} onQuery={state.setQuery}
         filters={specs} values={state.filters} onFilter={state.setFilter} dirty={state.dirty} onReset={state.reset}
         count={(id, v) => facetCount(queried, specs, state.filters, id, v)} />
@@ -79,10 +79,10 @@ export function DataTable<T>(p: DataTableProps<T>) {
         </div>
       </div>
       {chosen.length > 0 && (
-        <div role="region" aria-label="Acciones en lote" className="animate-fade-up mx-3 mt-3 flex flex-wrap items-center gap-2 rounded-2xl bg-night px-3 py-2.5 text-on-night sm:mx-4">
+        <div role="region" aria-label="Acciones en lote" className="animate-fade-up mx-3 mt-3 flex flex-wrap items-center gap-2 rounded-sm bg-night px-3 py-2.5 text-on-night sm:mx-4">
           <span className="pl-1 text-sm font-bold"><span className="tabular-nums">{chosen.length}</span> seleccionados</span>
           <div className="flex flex-1 flex-wrap items-center gap-2">{p.bulkActions?.(chosen, clear)}</div>
-          <button type="button" onClick={clear} aria-label="Quitar selección" className="grid h-9 w-9 place-items-center rounded-full hover:bg-white/10"><X size={16} aria-hidden="true" /></button>
+          <button type="button" onClick={clear} aria-label="Quitar selección" className="grid h-9 w-9 place-items-center rounded-sm hover:bg-white/10"><X size={16} aria-hidden="true" /></button>
         </div>
       )}
       {sorted.length === 0 ? <div className="p-4">{p.empty}</div> : (

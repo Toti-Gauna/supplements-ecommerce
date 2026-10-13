@@ -18,10 +18,10 @@ export function OrderItemsCard({ code, lines, sample }: { code: string; lines: C
   const total = quoted.reduce((n, q) => n + q.lineTotal, 0);
   const extra = lines.length - VISIBLE;
   return (
-    <section aria-labelledby="items" className="rounded-[2rem] bg-surface p-4 shadow-[var(--shadow-card)] sm:p-6">
+    <section aria-labelledby="items" className="rounded-sm bg-surface p-4 shadow-[var(--shadow-card)] sm:p-6">
       <div className="mb-4 flex items-start justify-between gap-3 px-1">
         <div className="flex items-center gap-3">
-          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-night text-volt"><Package size={20} aria-hidden="true" /></span>
+          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-sm bg-night text-volt"><Package size={20} aria-hidden="true" /></span>
           <div>
             <h2 id="items" className="font-bold leading-tight">{sample ? "Pedido de ejemplo" : "Tu pedido de demostración"}</h2>
             <p className="font-mono text-xs font-bold tracking-wider text-muted">{code}</p>
@@ -31,7 +31,7 @@ export function OrderItemsCard({ code, lines, sample }: { code: string; lines: C
       </div>
       <OrderLines lines={lines} mobileLimit={VISIBLE} />
       {extra > 0 && (
-        <button type="button" onClick={() => setOpen(true)} className="mt-3 flex w-full items-center justify-center gap-1 rounded-2xl border border-line py-3 text-sm font-bold text-primary hover:bg-accent/40 sm:hidden">
+        <button type="button" onClick={() => setOpen(true)} className="mt-3 flex w-full items-center justify-center gap-1 rounded-sm border border-line py-3 text-sm font-bold text-primary hover:bg-accent/40 sm:hidden">
           Ver {extra} {extra === 1 ? "producto más" : "productos más"} <ChevronRight size={16} aria-hidden="true" />
         </button>
       )}

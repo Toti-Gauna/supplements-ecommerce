@@ -15,7 +15,7 @@ interface Props { id: string; eyebrow: string; title: string; accent?: string; p
 export function ProductRail({ id, eyebrow, title, accent, products, href }: Props) {
   const { ref, atStart, atEnd, page } = useRail<HTMLUListElement>(products.map((p) => p.slug).join());
   if (products.length === 0) return null;
-  const arrow = "hidden h-11 w-11 place-items-center rounded-full border border-ink/15 bg-surface transition-[background-color,color,opacity] hover:bg-ink hover:text-bg aria-disabled:cursor-default aria-disabled:opacity-35 aria-disabled:hover:bg-surface aria-disabled:hover:text-ink sm:grid";
+  const arrow = "hidden h-11 w-11 place-items-center rounded-sm border border-ink/15 bg-surface transition-[background-color,color,opacity] hover:bg-ink hover:text-bg aria-disabled:cursor-default aria-disabled:opacity-35 aria-disabled:hover:bg-surface aria-disabled:hover:text-ink sm:grid";
   return (
     <section aria-labelledby={id}>
       <Reveal className="mb-6 flex items-end justify-between gap-4">

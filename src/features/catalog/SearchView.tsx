@@ -28,7 +28,7 @@ function GoalView({ goal }: { goal: Goal }) {
       <nav aria-label="Objetivos" className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 sm:mx-0 sm:flex-wrap sm:px-0">
         {goals.map((g) => (
           <Link key={g.id} href={goalHref(g.id)} aria-current={g.id === goal ? "page" : undefined}
-            className={cn("inline-flex shrink-0 items-center gap-2 rounded-full border px-4 py-2 text-sm font-bold transition-colors", g.id === goal ? "border-primary bg-primary text-on-primary" : "border-line bg-surface hover:border-ink/30")}>
+            className={cn("inline-flex shrink-0 items-center gap-2 rounded-sm border px-4 py-2 text-sm font-bold transition-colors", g.id === goal ? "border-primary bg-primary text-on-primary" : "border-line bg-surface hover:border-ink/30")}>
             <GoalGlyph goal={g.id} className="h-4 w-4" /> {g.name}
           </Link>
         ))}
@@ -68,7 +68,7 @@ function TextSearch() {
           <p className="mb-3 font-bold">Probá con:</p>
           <div className="flex flex-wrap gap-2">
             {["whey", "creatina", "pre entreno", "vegano", "omega", "alfajor"].map((t) => (
-              <button key={t} type="button" onClick={() => onSearch(t)} className="rounded-full border border-line bg-surface px-4 py-2 text-sm font-bold hover:bg-accent">{t}</button>
+              <button key={t} type="button" onClick={() => onSearch(t)} className="rounded-sm border border-line bg-surface px-4 py-2 text-sm font-bold hover:bg-accent">{t}</button>
             ))}
           </div>
         </section>
@@ -86,7 +86,7 @@ function TextSearch() {
               <p>Revisá cómo lo escribiste o mirá las categorías.</p>
             )}
             <p className="mt-3 flex flex-wrap justify-center gap-2">
-              {featuredCategories().map((c) => <Link key={c.slug} href={categoryHref(c.slug)} className="rounded-full bg-accent px-3 py-1.5 text-sm font-bold text-ink">{c.name}</Link>)}
+              {featuredCategories().map((c) => <Link key={c.slug} href={categoryHref(c.slug)} className="rounded-sm bg-accent px-3 py-1.5 text-sm font-bold text-ink">{c.name}</Link>)}
             </p>
           </EmptyState>
           <section aria-label="Más vendidos"><h2 className="mb-4 text-xl font-extrabold">Lo más elegido</h2><ProductGrid products={bestSellers(4).map(toCard)} /></section>

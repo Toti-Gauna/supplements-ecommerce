@@ -29,7 +29,7 @@ export function ConfirmButton({ children, title, description, confirmLabel, onCo
     <>
       <Button variant={variant} size={size} className={className} disabled={disabled} onClick={() => ref.current?.showModal()}>{children}</Button>
       <dialog ref={ref} aria-labelledby={`${id}-t`} onClose={() => { setReason(""); setError(false); }}
-        className="m-auto w-[min(92vw,440px)] rounded-[var(--radius-card)] border border-line bg-surface p-0 text-ink shadow-2xl backdrop:bg-black/40">
+        className="m-auto w-[min(92vw,440px)] rounded-sm border border-line bg-surface p-0 text-ink shadow-2xl backdrop:bg-black/40">
         <form method="dialog" className="flex flex-col gap-4 p-5" onSubmit={(e) => {
           e.preventDefault();
           if (reasonLabel && reason.trim().length < 3) return setError(true);
@@ -45,7 +45,7 @@ export function ConfirmButton({ children, title, description, confirmLabel, onCo
               {error && <p id={`${id}-e`} role="alert" className="text-sm font-semibold text-danger">Escribí el motivo (lo ve el comprador).</p>}
             </div>
           )}
-          <p className="rounded-xl bg-warning-soft px-3 py-2 text-xs font-bold text-warning">Demo: el cambio se guarda solo en este navegador.</p>
+          <p className="rounded-sm bg-warning-soft px-3 py-2 text-xs font-bold text-warning">Demo: el cambio se guarda solo en este navegador.</p>
           <div className="flex flex-wrap justify-end gap-2">
             <Button variant="ghost" onClick={close}>Cancelar</Button>
             <Button type="submit" variant={variant === "danger" ? "primary" : variant === "ghost" ? "primary" : variant}>{confirmLabel}</Button>

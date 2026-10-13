@@ -88,8 +88,8 @@ export function ImportWizard() {
       )}
       {step === "preview" && plan && <ImportPreview plan={plan} onBack={() => setStep("map")} onApply={apply} />}
       {step === "done" && (
-        <div className="flex flex-col items-center gap-4 rounded-[2rem] bg-surface px-6 py-14 text-center shadow-[var(--shadow-card)]">
-          <span className="grid h-16 w-16 place-items-center rounded-3xl bg-success-soft text-success"><PartyPopper size={30} aria-hidden="true" /></span>
+        <div className="flex flex-col items-center gap-4 rounded-sm bg-surface px-6 py-14 text-center shadow-[var(--shadow-card)]">
+          <span className="grid h-16 w-16 place-items-center rounded-sm bg-success-soft text-success"><PartyPopper size={30} aria-hidden="true" /></span>
           <h2 className="font-display text-4xl">{isSupplier ? "Costos y precios al día" : "Catálogo actualizado"}</h2>
           <p className="max-w-md text-sm text-muted">{lastImport?.summary}. {isSupplier ? "Los precios nuevos ya se ven en la tienda; el costo y el margen de cada variante, en Productos y stock." : "Los productos nuevos ya están visibles; sumales fotos desde su ficha."}</p>
           <div className="flex flex-wrap justify-center gap-2">

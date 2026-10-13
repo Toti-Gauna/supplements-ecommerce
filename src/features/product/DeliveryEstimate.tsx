@@ -25,9 +25,9 @@ export function DeliveryEstimate({ product, variant }: { product: Product; varia
   const est = estimateForProduct(product, variant, DEMO_TODAY, hydrated ? orders : [], settings);
   const windows = deliveryWindows(est.earliest, settings, est.day);
   return (
-    <div className="rounded-2xl border border-line p-4">
+    <div className="rounded-sm border border-line p-4">
       <p className="eyebrow mb-3 text-muted">¿Cuándo llega?</p>
-      <p className="mb-3 flex items-start gap-2.5 rounded-xl bg-bg p-3 text-sm">
+      <p className="mb-3 flex items-start gap-2.5 rounded-sm bg-bg p-3 text-sm">
         <CalendarCheck size={18} aria-hidden="true" className="mt-0.5 shrink-0 text-primary" />
         <span>
           <span className="font-bold">Lo despachamos {whenDay(est.earliest, DEMO_TODAY, "long")}</span>

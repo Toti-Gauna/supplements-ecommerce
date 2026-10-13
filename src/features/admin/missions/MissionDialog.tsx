@@ -60,7 +60,7 @@ function MissionBody({ initial, draftKey, onClose }: { initial: Mission; draftKe
           <p className="mt-1 max-w-xl text-sm text-muted">Completá qué tiene que hacer el cliente (tipo y umbral) y qué gana. Al guardar, la misión aparece en el Club de la tienda: solo cuentan pedidos pagados y el premio es de un uso con vencimiento.</p>
         </div>
         {showRestored && (
-          <p role="status" className="flex flex-wrap items-center gap-2 rounded-2xl bg-warning-soft px-4 py-3 text-sm font-bold text-warning ring-1 ring-warning/30">
+          <p role="status" className="flex flex-wrap items-center gap-2 rounded-sm bg-warning-soft px-4 py-3 text-sm font-bold text-warning ring-1 ring-warning/30">
             <span className="flex-1">Recuperamos el borrador que dejaste sin guardar.</span>
             <Button size="sm" variant="secondary" onClick={discard}>Empezar de nuevo</Button>
           </p>

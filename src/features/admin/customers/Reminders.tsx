@@ -25,7 +25,7 @@ export function RepurchaseList({ items }: { items: RepurchaseItem[] }) {
       {items.map((item) => {
         const pct = remainingPct(item, DEMO_TODAY);
         return (
-          <li key={item.key} className="@container rounded-2xl bg-bg p-3">
+          <li key={item.key} className="@container rounded-sm bg-bg p-3">
             {/* 8.3.13: las acciones van debajo del texto si no entran al costado. */}
             <div className="flex flex-col gap-3 @min-[36rem]:flex-row @min-[36rem]:items-center">
               <div className="min-w-0 flex-1">

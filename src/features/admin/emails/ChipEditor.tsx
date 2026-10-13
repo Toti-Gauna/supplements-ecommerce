@@ -9,7 +9,7 @@ import { cn } from "@/lib/cn";
  * desde la paleta, se borran con la tecla de borrar y se guardan como partes { texto | ficha }.
  */
 
-const CHIP = "chip-token mx-0.5 inline-flex select-none items-center rounded-full bg-primary/12 px-2 py-px align-baseline text-[0.92em] font-bold text-primary ring-1 ring-primary/25";
+const CHIP = "chip-token mx-0.5 inline-flex select-none items-center rounded-sm bg-primary/12 px-2 py-px align-baseline text-[0.92em] font-bold text-primary ring-1 ring-primary/25";
 
 function toNodes(value: Inline, multiline: boolean): Node[] {
   return value.flatMap((p): Node[] => {
@@ -216,7 +216,7 @@ export function ChipEditor({ id, label, value, onChange, tokens, multiline = fal
           const text = e.clipboardData.getData("text/plain");
           document.execCommand("insertText", false, multiline ? text : text.replace(/\s*\n\s*/g, " "));
         }}
-        className={cn("chip-editor min-h-11 w-full whitespace-pre-wrap break-words rounded-2xl border bg-surface px-3.5 py-2.5 text-[15px] leading-relaxed outline-none transition-colors focus:border-primary focus-visible:ring-4 focus-visible:ring-primary/12",
+        className={cn("chip-editor min-h-11 w-full whitespace-pre-wrap break-words rounded-sm border bg-surface px-3.5 py-2.5 text-[15px] leading-relaxed outline-none transition-colors focus:border-primary focus-visible:ring-4 focus-visible:ring-primary/12",
           isActive ? "border-primary/60" : "border-ink/12", multiline && "min-h-24")} />
     </div>
   );

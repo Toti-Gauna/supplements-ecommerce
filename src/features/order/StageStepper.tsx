@@ -16,7 +16,7 @@ export function StageStepper({ steps }: { steps: TimelineStep[] }) {
           <li key={s.label} aria-current={s.state === "current" ? "step" : undefined} className="relative flex gap-4 pb-6 lg:flex-col lg:items-center lg:gap-3 lg:pb-0 lg:text-center">
             {i < steps.length - 1 && <span aria-hidden="true" className={cn("absolute left-5 top-10 h-full w-0.5 lg:left-1/2 lg:top-5 lg:h-0.5 lg:w-full", s.state === "done" ? "bg-primary" : "bg-line")} />}
             <motion.span initial={{ scale: 0.6, opacity: 0 }} whileInView={{ scale: 1, opacity: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.08, type: "spring", stiffness: 400, damping: 24 }}
-              className={cn("relative z-10 grid h-10 w-10 shrink-0 place-items-center rounded-full",
+              className={cn("relative z-10 grid h-10 w-10 shrink-0 place-items-center rounded-sm",
                 s.state === "done" && "bg-primary text-on-primary", s.state === "current" && "bg-night text-volt ring-[6px] ring-volt/25", s.state === "pending" && "bg-surface text-muted ring-1 ring-line")}>
               {s.state === "done" ? <Check size={18} aria-hidden="true" /> : <Icon size={18} aria-hidden="true" />}
             </motion.span>

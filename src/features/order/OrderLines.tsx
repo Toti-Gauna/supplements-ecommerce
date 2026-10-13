@@ -15,7 +15,7 @@ export function OrderLines({ lines, mobileLimit }: { lines: CartLine[]; mobileLi
         const product = getProduct(q.line.productSlug)!;
         const variant = product.variants.find((v) => v.id === q.line.variantId);
         return (
-          <li key={q.line.id} className={cn("flex items-center gap-3 rounded-2xl bg-bg p-2.5", mobileLimit !== undefined && i >= mobileLimit && "max-sm:hidden")}>
+          <li key={q.line.id} className={cn("flex items-center gap-3 rounded-sm bg-bg p-2.5", mobileLimit !== undefined && i >= mobileLimit && "max-sm:hidden")}>
             <div className="w-16 shrink-0"><LineThumb art={product.art} pack={product.pack} tint={variant?.colorHex} name={product.name} /></div>
             <div className="min-w-0 flex-1 text-sm">
               <p className="font-bold">{q.line.quantity} × {product.name}</p>

@@ -84,7 +84,7 @@ function DayBody({ day, eventId, today, entries, onReschedule }: Omit<Props, "da
       ) : (
         <>
           {closed?.closure && (
-            <p className="flex flex-wrap items-center gap-2 rounded-2xl bg-surface p-3 text-sm shadow-[var(--shadow-card)]">
+            <p className="flex flex-wrap items-center gap-2 rounded-sm bg-surface p-3 text-sm shadow-[var(--shadow-card)]">
               <CalendarOff size={16} aria-hidden="true" className="text-muted" /><span className="min-w-0 flex-1 font-semibold">{closed.closure.name}</span>
               {isPresetHolidayDate(day)
                 ? day >= today && <Button size="sm" variant="secondary" onClick={() => { save(`${formatDay(day)}: se despacha`, () => removeClosure(day)); }}>Despachar ese día</Button>
@@ -101,7 +101,7 @@ function DayBody({ day, eventId, today, entries, onReschedule }: Omit<Props, "da
             {events.length ? (
               <ul className="flex flex-col gap-2">
                 {events.map((e) => (
-                  <li key={e.id} className="flex flex-wrap items-start gap-3 rounded-2xl bg-surface p-3 text-sm shadow-[var(--shadow-card)]">
+                  <li key={e.id} className="flex flex-wrap items-start gap-3 rounded-sm bg-surface p-3 text-sm shadow-[var(--shadow-card)]">
                     {e.kind === "pedido" ? <Link2 size={16} aria-hidden="true" className="mt-0.5 text-volt-ink" /> : <StickyNote size={16} aria-hidden="true" className="mt-0.5 text-volt-ink" />}
                     <span className="min-w-0 flex-1 basis-40">
                       <span className="block font-bold">{e.title}</span>
@@ -109,8 +109,8 @@ function DayBody({ day, eventId, today, entries, onReschedule }: Omit<Props, "da
                       {e.notes && <span className="mt-1 block text-muted">{e.notes}</span>}
                     </span>
                     <span className="flex gap-1">
-                      <button type="button" onClick={() => setMode({ form: eventDraft(day, e), id: e.id })} aria-label={`Editar ${e.title}`} className="grid h-10 w-10 place-items-center rounded-full hover:bg-accent/60"><Pencil size={16} aria-hidden="true" /></button>
-                      <button type="button" onClick={() => setMode({ remove: e })} aria-label={`Quitar ${e.title}`} className="grid h-10 w-10 place-items-center rounded-full text-muted hover:bg-danger-soft hover:text-danger"><Trash2 size={16} aria-hidden="true" /></button>
+                      <button type="button" onClick={() => setMode({ form: eventDraft(day, e), id: e.id })} aria-label={`Editar ${e.title}`} className="grid h-10 w-10 place-items-center rounded-sm hover:bg-accent/60"><Pencil size={16} aria-hidden="true" /></button>
+                      <button type="button" onClick={() => setMode({ remove: e })} aria-label={`Quitar ${e.title}`} className="grid h-10 w-10 place-items-center rounded-sm text-muted hover:bg-danger-soft hover:text-danger"><Trash2 size={16} aria-hidden="true" /></button>
                     </span>
                   </li>
                 ))}

@@ -3,7 +3,7 @@ import { ArrowDown, ArrowUp, Trash2 } from "lucide-react";
 
 /** Subir / bajar / quitar un elemento de una lista editable. */
 export function ListControls({ index, length, label, onMove, onRemove }: { index: number; length: number; label: string; onMove: (dir: -1 | 1) => void; onRemove?: () => void }) {
-  const cls = "grid h-11 w-11 place-items-center rounded-xl border border-line bg-surface disabled:opacity-40";
+  const cls = "grid h-11 w-11 place-items-center rounded-sm border border-line bg-surface disabled:opacity-40";
   return (
     <div className="flex gap-1">
       <button type="button" aria-label={`Subir ${label}`} disabled={index === 0} onClick={() => onMove(-1)} className={cls}><ArrowUp size={18} aria-hidden="true" /></button>

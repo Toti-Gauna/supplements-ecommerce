@@ -20,11 +20,11 @@ export function Step({ id, check, tried, children }: StepProps) {
   const errors = tried ? check.errors : [];
   return (
     <section id={`paso-${id}`} data-step={id} aria-labelledby={`paso-${id}-t`}
-      className={cn("flex scroll-mt-48 flex-col gap-4 rounded-[1.75rem] bg-surface p-5 shadow-[var(--shadow-card)] ring-1 @min-[56rem]:scroll-mt-28", errors.length ? "ring-danger/40" : "ring-ink/[0.04]")}>
+      className={cn("flex scroll-mt-48 flex-col gap-4 rounded-sm bg-surface p-5 shadow-[var(--shadow-card)] ring-1 @min-[56rem]:scroll-mt-28", errors.length ? "ring-danger/40" : "ring-ink/[0.04]")}>
       <h2 id={`paso-${id}-t`} tabIndex={-1} className="flex items-center gap-2.5 text-lg font-extrabold focus:outline-none">
-        <span aria-hidden="true" className="grid h-7 w-7 place-items-center rounded-full bg-accent text-xs tabular-nums">{i + 1}</span>{PRODUCT_STEPS[i]!.label}
+        <span aria-hidden="true" className="grid h-7 w-7 place-items-center rounded-sm bg-accent text-xs tabular-nums">{i + 1}</span>{PRODUCT_STEPS[i]!.label}
       </h2>
-      {errors.length > 0 && <ul role="alert" className="rounded-2xl bg-danger-soft p-3 text-sm font-semibold text-danger">{errors.map((e) => <li key={e}>{e}</li>)}</ul>}
+      {errors.length > 0 && <ul role="alert" className="rounded-sm bg-danger-soft p-3 text-sm font-semibold text-danger">{errors.map((e) => <li key={e}>{e}</li>)}</ul>}
       {check.warnings.length > 0 && id !== "revision" && <p className="text-xs font-semibold text-warning">{check.warnings.join(" ")}</p>}
       {children}
     </section>
@@ -40,7 +40,7 @@ function Chips({ legend, options, value, onChange }: { legend: string; options: 
       <legend className="mb-2 text-sm font-bold">{legend}</legend>
       <div className="flex flex-wrap gap-2">
         {options.map(([id, label]) => (
-          <label key={id} className={cn("inline-flex min-h-10 cursor-pointer items-center gap-2 rounded-full border px-3 text-sm font-semibold has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary/50", value.includes(id) ? "border-primary bg-primary text-on-primary" : "border-line bg-bg")}>
+          <label key={id} className={cn("inline-flex min-h-10 cursor-pointer items-center gap-2 rounded-sm border px-3 text-sm font-semibold has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary/50", value.includes(id) ? "border-primary bg-primary text-on-primary" : "border-line bg-bg")}>
             <input type="checkbox" className="sr-only" checked={value.includes(id)} onChange={(e) => onChange(e.target.checked ? [...value, id] : value.filter((x) => x !== id))} />{label}
           </label>
         ))}
@@ -106,7 +106,7 @@ export function EditorSections({ d, set, checks, tried, categories, products, on
           {PRODUCT_STEPS.filter((s) => s.id !== "revision").map((s) => {
             const c = checks[s.id];
             return (
-              <li key={s.id} className="flex flex-wrap items-center justify-between gap-2 rounded-2xl bg-bg px-3 py-2">
+              <li key={s.id} className="flex flex-wrap items-center justify-between gap-2 rounded-sm bg-bg px-3 py-2">
                 <span className="font-semibold">{s.label}</span>
                 <span className="flex items-center gap-3">
                   <span className={cn("text-xs font-bold", c.errors.length ? "text-danger" : c.complete ? "text-success" : "text-warning")}>{c.errors.length ? "Falta completar" : c.complete ? "Listo" : "Opcional pendiente"}</span>

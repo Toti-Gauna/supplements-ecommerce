@@ -25,7 +25,7 @@ export function GameTeaser({ className, heading = "h2" }: { className?: string; 
   const { config, tiers } = usePrizeTiers();
   const Title = heading;
   return (
-    <article aria-labelledby={id} className={cn("relative grid items-center gap-5 overflow-hidden rounded-[2rem] bg-night p-6 text-on-night sm:grid-cols-[1fr_minmax(0,14rem)] sm:p-8", className)}>
+    <article aria-labelledby={id} className={cn("relative grid items-center gap-5 overflow-hidden rounded-sm bg-night p-6 text-on-night sm:grid-cols-[1fr_minmax(0,14rem)] sm:p-8", className)}>
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_70%_at_85%_30%,color-mix(in_srgb,var(--brand-glow)_24%,transparent),transparent_70%)]" />
       <div className="relative order-2 flex flex-col gap-4 sm:order-1">
         <div>

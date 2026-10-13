@@ -45,19 +45,19 @@ export function StackShelf({ items, discountPct = 0, title = "Tu estante", class
   const bySlot = new Map(items.map((i) => [i.slot, i]));
   const complete = discountPct > 0;
   return (
-    <figure className={cn("relative overflow-hidden rounded-[1.75rem] bg-night p-2 text-on-night shadow-[0_30px_60px_-30px_color-mix(in_srgb,var(--brand-glow)_55%,transparent)] ring-1 ring-white/10", className)}>
+    <figure className={cn("relative overflow-hidden rounded-sm bg-night p-2 text-on-night shadow-[0_30px_60px_-30px_color-mix(in_srgb,var(--brand-glow)_55%,transparent)] ring-1 ring-white/10", className)}>
       <figcaption className="flex min-h-8 items-center justify-between gap-2 px-2.5 pb-1.5 pt-0.5">
         <span className="eyebrow flex min-w-0 items-center gap-2 text-[10px] tracking-[0.12em] text-night-muted">
-          <span aria-hidden="true" className={cn("h-1.5 w-1.5 rounded-full", items.length ? "bg-volt shadow-[0_0_8px_var(--color-volt)]" : "bg-white/25")} />
+          <span aria-hidden="true" className={cn("h-1.5 w-1.5 rounded-sm", items.length ? "bg-volt shadow-[0_0_8px_var(--color-volt)]" : "bg-white/25")} />
           <span className="truncate">{title} · {items.length} de {STACK_SLOTS.length}</span>
         </span>
         {complete && (
-          <span key="stack-on" className="animate-pop font-lab flex shrink-0 items-center gap-1 whitespace-nowrap rounded-full bg-volt px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-night">
+          <span key="stack-on" className="animate-pop font-lab flex shrink-0 items-center gap-1 whitespace-nowrap rounded-sm bg-volt px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-night">
             <Zap size={12} aria-hidden="true" className="fill-current" />Stack −{discountPct} %
           </span>
         )}
       </figcaption>
-      <svg viewBox="0 0 800 400" role="img" aria-label={describe(items)} className="block h-auto w-full rounded-[1.35rem]">
+      <svg viewBox="0 0 800 400" role="img" aria-label={describe(items)} className="block h-auto w-full rounded-sm">
         <ShelfDefs ids={ids} />
         <ShelfBackdrop ids={ids} />
         {STACK_SLOTS.map((s, i) => <ShelfCone key={s.id} index={i} lit={bySlot.has(s.id)} ids={ids} reduce={reduce} />)}

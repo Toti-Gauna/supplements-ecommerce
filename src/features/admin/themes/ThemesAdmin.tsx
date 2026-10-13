@@ -35,8 +35,8 @@ export function ThemesAdmin() {
           const skin = skinOf(t.id);
           const offer = themeOffer(t);
           return (
-            <li key={t.id} className="flex gap-4 rounded-3xl bg-surface p-4 shadow-[var(--shadow-card)]">
-              <span aria-hidden="true" className="grid h-20 w-20 shrink-0 place-items-center rounded-2xl" style={{ background: `linear-gradient(140deg, ${skin.from}, ${skin.to})` }}>
+            <li key={t.id} className="flex gap-4 rounded-sm bg-surface p-4 shadow-[var(--shadow-card)]">
+              <span aria-hidden="true" className="grid h-20 w-20 shrink-0 place-items-center rounded-sm" style={{ background: `linear-gradient(140deg, ${skin.from}, ${skin.to})` }}>
                 <Decor kind={skin.decor[0]} className="h-14 w-14" />
               </span>
               <div className="flex min-w-0 flex-1 flex-col gap-1.5">

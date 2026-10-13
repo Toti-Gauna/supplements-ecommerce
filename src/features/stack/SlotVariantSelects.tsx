@@ -33,7 +33,7 @@ export function SlotVariantSelects({ product, variant, onChange }: SlotVariantSe
       {fields.map((f) => (
         <div key={f.key} className={fields.length === 1 ? "col-span-2 flex flex-col gap-1 sm:col-span-1" : "flex min-w-0 flex-col gap-1"}>
           <label htmlFor={`${id}-${f.key}`} className="text-xs font-bold text-muted">{f.label}<span className="sr-only"> de {product.name}</span></label>
-          <Select id={`${id}-${f.key}`} value={f.value} className="min-h-11 rounded-xl px-3 text-sm"
+          <Select id={`${id}-${f.key}`} value={f.value} className="min-h-11 rounded-sm px-3 text-sm"
             onChange={(e) => { const next = choose(product, variant, f.key, e.target.value); if (next) onChange(next.id); }}>
             {f.options.map((o) => {
               const available = product.variants.some((v) => v[f.key] === o && inStock(v));

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { brand, brandCss } from "@/config/brand";
+import { brand, brandCss, STATE_COLORS } from "@/config/brand";
 import { BRAND_PRESETS, DEFAULT_BRAND, pickBrand } from "@/config/brands";
 import { defineBrand, type BrandPalette } from "@/config/brands/types";
 import { logoIconSvg, logoPaths } from "@/config/logo";
@@ -15,6 +15,7 @@ function palettePairs(c: BrandPalette): [string, string, string][] {
     [c.primary, c.surface, "primario/superficie"], [c.primary, c.background, "primario/fondo"],
     [c.onPrimary, c.primary, "texto sobre primario"], [c.onPrimary, c.primaryHover, "texto sobre primario (hover)"],
     [c.voltInk, c.background, "acento de texto/fondo"], [c.voltInk, c.surface, "acento de texto/superficie"],
+    [c.muted, c.accent, "apagado/acento"], [c.voltInk, c.accent, "acento de texto/acento (chips y placas)"],
   ];
 }
 
@@ -37,11 +38,33 @@ describe("paletas de cada marca (AA)", () => {
         expect(contrastRatio(c.night, s.voltSoft), "noche sobre firma clara").toBeGreaterThanOrEqual(AA);
       });
     }
+    it(`${id} · modo claro "Tiza": el ion y el voltio solo como luz; su texto es la variante oscura`, () => {
+      const c = b.light;
+      expect(contrastRatio(c.ion, c.background), `ion ${c.ion} sobre papel`).toBeGreaterThanOrEqual(AA);
+      expect(contrastRatio(c.voltInk, c.background), `voltio de texto ${c.voltInk} sobre papel`).toBeGreaterThanOrEqual(AA);
+      // El voltio puro no alcanza sobre el papel: por eso nunca se usa como texto en claro.
+      expect(contrastRatio(b.signature.volt, c.background)).toBeLessThan(AA);
+    });
     it(`${id} · escenario del regalo sin fecha (texto blanco y botón)`, () => {
       // Mismos colores que src/features/gifts/occasion.ts: fondo → plasma profundo, acento = color firma.
       for (const bg of [b.colors.background, shade(b.signature.plasma, -0.5)]) expect(contrastRatio("#ffffff", bg), `blanco sobre ${bg}`).toBeGreaterThanOrEqual(AA);
       expect(contrastRatio(b.colors.background, b.signature.volt), "texto del botón").toBeGreaterThanOrEqual(AA);
     });
+  }
+});
+
+describe("estados y tonos del marcador LED (AA en los dos modos)", () => {
+  for (const [id, b] of Object.entries(BRAND_PRESETS)) {
+    for (const [mode, c, st] of [["oscuro", b.colors, STATE_COLORS.dark], ["claro", b.light, STATE_COLORS.light]] as const) {
+      it(`${id} · modo ${mode}`, () => {
+        for (const tone of ["success", "warning", "danger"] as const) {
+          const soft = st[`${tone}Soft`];
+          for (const [bg, label] of [[c.background, "fondo"], [c.surface, "superficie"], [c.accent, "acento"], [soft, "su fondo suave"]] as const) {
+            expect(contrastRatio(st[tone], bg), `${tone} ${st[tone]} sobre ${label} ${bg}`).toBeGreaterThanOrEqual(AA);
+          }
+        }
+      });
+    }
   }
 });
 

@@ -54,7 +54,7 @@ export function AuthPanel() {
   const switchTo = (m: Mode) => { setMode(m); setErrors({}); setValues((s) => ({ ...s, password: "" })); };
   const fieldError = (k: keyof Errors, hint = false) => ({ "aria-invalid": errors[k] ? (true as const) : undefined, "aria-describedby": describedBy(`auth-${k}`, errors[k], hint) });
   return (
-    <div className="grid overflow-hidden rounded-[2.5rem] bg-surface shadow-[var(--shadow-card)] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
+    <div className="grid overflow-hidden rounded-sm bg-surface shadow-[var(--shadow-card)] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
       <aside className="relative flex flex-col gap-6 overflow-hidden bg-night p-6 text-on-night sm:p-10">
         <div aria-hidden="true" className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--brand-glow)_40%,transparent),transparent)]" />
         <div className="relative">
@@ -63,7 +63,7 @@ export function AuthPanel() {
         </div>
         <ul className="relative flex flex-col gap-3 max-sm:hidden">
           {BENEFITS.map(({ icon: Icon, text }) => (
-            <li key={text} className="flex items-center gap-3 text-[15px]"><span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-white/10"><Icon size={17} aria-hidden="true" className="text-volt" /></span>{text}</li>
+            <li key={text} className="flex items-center gap-3 text-[15px]"><span className="grid h-9 w-9 shrink-0 place-items-center rounded-sm bg-white/10"><Icon size={17} aria-hidden="true" className="text-volt" /></span>{text}</li>
           ))}
         </ul>
         <div aria-hidden="true" className="relative mt-auto flex items-end gap-2 pt-4 max-sm:hidden">
@@ -73,10 +73,10 @@ export function AuthPanel() {
         <p className="relative -mt-2 text-xs text-night-muted sm:mt-0">Demo: no hay registro real y nada sale de este navegador.</p>
       </aside>
       <div className="flex flex-col gap-5 p-6 sm:p-10">
-        <div role="group" aria-label="Ingresar o crear cuenta" className="grid grid-cols-2 gap-1 rounded-full bg-bg p-1">
+        <div role="group" aria-label="Ingresar o crear cuenta" className="grid grid-cols-2 gap-1 rounded-sm bg-bg p-1">
           {(["login", "signup"] as const).map((m) => (
             <button key={m} type="button" aria-pressed={mode === m} onClick={() => switchTo(m)}
-              className={cn("min-h-11 rounded-full text-sm font-bold transition-colors", mode === m ? "bg-night text-on-night shadow-[var(--shadow-card)]" : "text-muted hover:text-ink")}>
+              className={cn("min-h-11 rounded-sm text-sm font-bold transition-colors", mode === m ? "bg-night text-on-night shadow-[var(--shadow-card)]" : "text-muted hover:text-ink")}>
               {m === "login" ? "Iniciar sesión" : "Crear cuenta"}
             </button>
           ))}
@@ -96,7 +96,7 @@ export function AuthPanel() {
               <Input id="auth-password" type={show ? "text" : "password"} autoComplete="off" data-1p-ignore data-lpignore="true" value={values.password}
                 onChange={(e) => set("password", e.target.value)} className="pr-12" {...fieldError("password", mode === "signup")} />
               <button type="button" onClick={() => setShow((v) => !v)} aria-label={show ? "Ocultar contraseña" : "Mostrar contraseña"}
-                className="absolute right-1 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full text-muted hover:text-ink">
+                className="absolute right-1 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-sm text-muted hover:text-ink">
                 {show ? <EyeOff size={18} aria-hidden="true" /> : <Eye size={18} aria-hidden="true" />}
               </button>
             </div>

@@ -19,7 +19,7 @@ export function QuizRecap({ answers, notes, onEdit }: { answers: QuizAnswers; no
           return (
             <li key={s.id} className="flex">
               <button type="button" onClick={() => onEdit(i)} aria-label={`Cambiar ${s.label.toLowerCase()}: ${value}`} style={{ "--hue": hue } as CSSProperties}
-                className="group flex min-h-14 w-full items-center gap-2 rounded-2xl bg-white/[0.06] px-3.5 py-2 text-left ring-1 ring-white/[0.12] transition-colors hover:bg-white/[0.12] hover:ring-volt/40">
+                className="group flex min-h-14 w-full items-center gap-2 rounded-sm bg-white/[0.06] px-3.5 py-2 text-left ring-1 ring-white/[0.12] transition-colors hover:bg-white/[0.12] hover:ring-volt/40">
                 <span className="min-w-0 flex-1">
                   <span className="eyebrow block text-[10px] text-night-muted">{s.label}</span>
                   <span className="mt-0.5 flex items-center gap-1.5 text-sm font-bold leading-tight">
@@ -35,7 +35,7 @@ export function QuizRecap({ answers, notes, onEdit }: { answers: QuizAnswers; no
       {notes.length > 0 && (
         <ul aria-label="Ajustes por tus respuestas" className="flex flex-col gap-2">
           {notes.map((n) => (
-            <li key={n} className="flex items-start gap-2.5 rounded-2xl bg-ion/10 px-3.5 py-2.5 text-sm ring-1 ring-ion/25">
+            <li key={n} className="flex items-start gap-2.5 rounded-sm bg-ion/10 px-3.5 py-2.5 text-sm ring-1 ring-ion/25">
               <Info size={17} aria-hidden="true" className="mt-px shrink-0 text-ion" />{n}
             </li>
           ))}

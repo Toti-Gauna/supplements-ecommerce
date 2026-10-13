@@ -23,7 +23,7 @@ export function GamePrizeTable() {
         {tiers.map((t, i) => {
           const reached = hydrated && best >= t.minScore;
           return (
-            <li key={t.id} className="flex items-center gap-4 rounded-[1.5rem] bg-night p-5 text-on-night">
+            <li key={t.id} className="flex items-center gap-4 rounded-sm bg-night p-5 text-on-night">
               <span aria-hidden="true" className="flex h-12 w-7 shrink-0 flex-col-reverse gap-[3px] rounded-md p-[3px] ring-1 ring-white/25">
                 {tiers.map((_, j) => <span key={j} className={cn("flex-1 rounded-[2px]", j <= i ? "bg-volt shadow-[0_0_8px_color-mix(in_srgb,var(--brand-volt)_60%,transparent)]" : "bg-white/10")} />)}
               </span>
@@ -38,11 +38,11 @@ export function GamePrizeTable() {
         })}
       </ol>
       <ul className="grid gap-3 text-sm sm:grid-cols-2">
-        <li className="flex items-start gap-3 rounded-2xl border border-line bg-surface p-4">
+        <li className="flex items-start gap-3 rounded-sm border border-line bg-surface p-4">
           <CalendarClock size={18} aria-hidden="true" className="mt-0.5 shrink-0 text-primary" />
           <span>Jugá todas las veces que quieras: <strong>el cupón se gana una vez por día</strong>, con la primera partida que llegue a un nivel. Es de un uso y {expiry(tiers.map((t) => t.validDays))}.{!config.active && " Ahora los premios están pausados."}</span>
         </li>
-        <li className="flex items-start gap-3 rounded-2xl border border-line bg-surface p-4">
+        <li className="flex items-start gap-3 rounded-sm border border-line bg-surface p-4">
           <ShieldCheck size={18} aria-hidden="true" className="mt-0.5 shrink-0 text-primary" />
           <span>Demo: el límite diario es por navegador y se reinicia con “Reiniciar demo”. En la tienda real es por cuenta y el servidor valida el puntaje.</span>
         </li>

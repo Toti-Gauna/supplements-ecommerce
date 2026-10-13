@@ -42,7 +42,7 @@ export function PackagingItems({ items, materials, cost, errors, onChange }: Pro
                 </span>
                 <span className="w-20 text-right font-bold tabular-nums">{line ? formatARS(line.cost) : "—"}</span>
                 <button type="button" aria-label={`Quitar ${m?.name ?? it.materialId}`} onClick={() => onChange(items.filter((x) => x.materialId !== it.materialId))}
-                  className="grid h-10 w-10 place-items-center rounded-full text-muted hover:bg-danger-soft hover:text-danger"><Trash2 size={15} aria-hidden="true" /></button>
+                  className="grid h-10 w-10 place-items-center rounded-sm text-muted hover:bg-danger-soft hover:text-danger"><Trash2 size={15} aria-hidden="true" /></button>
               </li>
             );
           })}

@@ -30,7 +30,7 @@ export function SalesChart({ title, bars, selected = null, onSelect, detail }: P
   const total = bars.reduce((s, b) => s + b.amount, 0);
   const count = bars.reduce((s, b) => s + b.orders, 0);
   return (
-    <figure className="rounded-3xl bg-surface p-5 shadow-[var(--shadow-card)]">
+    <figure className="rounded-sm bg-surface p-5 shadow-[var(--shadow-card)]">
       <figcaption className="font-display mb-4 text-2xl">Ventas por día <span className="block text-sm font-sans text-muted">{title}</span></figcaption>
       <div role="group" aria-label="Ventas por día: elegí un día para ver sus pedidos" className="relative flex h-48 items-end gap-0.5 border-b border-line">
         {[0.5, 1].map((t) => <span key={t} aria-hidden="true" className="pointer-events-none absolute inset-x-0 border-t border-dashed border-line/70" style={{ bottom: `${t * 100}%` }} />)}

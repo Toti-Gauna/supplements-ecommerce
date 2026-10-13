@@ -50,7 +50,7 @@ export function CollectionFields({ form }: { form: CollectionForm }) {
   );
   return (
     <>
-      <p className="rounded-xl bg-warning-soft p-2.5 text-xs font-bold text-warning">Solo datos ficticios: se muestran en el checkout de este navegador como “datos de muestra”. No cargues datos bancarios reales.</p>
+      <p className="rounded-sm bg-warning-soft p-2.5 text-xs font-bold text-warning">Solo datos ficticios: se muestran en el checkout de este navegador como “datos de muestra”. No cargues datos bancarios reales.</p>
       <div className="grid gap-3 sm:grid-cols-3">
         {field("alias", "Alias", { autoComplete: "off" })}
         {field("cbu", "CBU / CVU", { inputMode: "numeric", maxLength: 22 })}
@@ -60,8 +60,8 @@ export function CollectionFields({ form }: { form: CollectionForm }) {
         {qr ? (
           <figure className="relative w-44">
             {/* eslint-disable-next-line @next/next/no-img-element -- vista previa local */}
-            <img src={qr} alt="QR cargado (vista previa local)" className="w-44 rounded-2xl border border-line opacity-60" />
-            <span className="absolute inset-0 grid place-items-center"><span className="rotate-[-12deg] rounded-lg bg-warning px-2 py-1 text-sm font-extrabold text-white">MUESTRA</span></span>
+            <img src={qr} alt="QR cargado (vista previa local)" className="w-44 rounded-sm border border-line opacity-60" />
+            <span className="absolute inset-0 grid place-items-center"><span className="rotate-[-12deg] rounded-sm bg-warning px-2 py-1 text-sm font-extrabold text-white">MUESTRA</span></span>
           </figure>
         ) : <SampleQr />}
         <div className="flex-1">

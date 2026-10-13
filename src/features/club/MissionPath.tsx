@@ -20,8 +20,8 @@ export function MissionPath({ missions }: { missions: Mission[] }) {
           {chain.map((m, i) => (
             <li key={m.id} className="flex flex-col items-stretch sm:flex-1 sm:flex-row sm:items-center">
               <motion.div initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.15 }}
-                className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-4 sm:flex-1">
-                <span className="font-display grid h-10 w-10 shrink-0 place-items-center rounded-full bg-volt text-night">{i + 1}</span>
+                className="flex items-center gap-3 rounded-sm border border-white/10 bg-white/5 p-4 sm:flex-1">
+                <span className="font-display grid h-10 w-10 shrink-0 place-items-center rounded-sm bg-volt text-night">{i + 1}</span>
                 <span className="min-w-0"><span className="block font-bold">{m.title}</span><span className="flex items-center gap-1 text-xs text-night-muted"><Gift size={12} aria-hidden="true" />{m.reward}</span></span>
               </motion.div>
               {i < chain.length - 1 && (

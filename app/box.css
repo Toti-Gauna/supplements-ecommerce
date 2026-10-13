@@ -1,0 +1,113 @@
+/*
+ * Piezas del sistema "BOX" (R1). De noche: placas de acero con bisel, carriles pintados en el piso de caucho y el
+ * voltio como luz de señal. De día ("Tiza"): la misma estructura sobre papel milimetrado, con tinta grafito.
+ * Todo sale de tokens: la marca (src/config/brand.ts) y el acento de temporada (src/features/themes/palettes.ts).
+ */
+
+:root {
+  /* Acento de temporada: sin temática, el color firma. Las fechas solo cambian estas tres variables. */
+  --season-accent: var(--brand-volt);
+  --season-accent-ink: var(--c-night);
+  --season-glow: color-mix(in srgb, var(--brand-volt) 40%, transparent);
+  /* Marcador LED: tonos encendidos, intensidad de los segmentos apagados y brillo. */
+  --led-volt: var(--brand-volt);
+  --led-chalk: var(--brand-text);
+  --led-amber: var(--c-warning);
+  --led-red: var(--c-danger);
+  --led-off: 0.08;
+  --led-glow: 5px;
+  /* Hoja milimetrada (8 px fina, 40 px mayor). */
+  --lab-grid:
+    linear-gradient(color-mix(in srgb, var(--brand-text) 6%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--brand-text) 6%, transparent) 1px, transparent 1px),
+    linear-gradient(color-mix(in srgb, var(--brand-text) 3%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--brand-text) 3%, transparent) 1px, transparent 1px);
+}
+/* De día el marcador es un display de laboratorio (segmentos de tinta, sin brillo), salvo sobre una banda noche. */
+html[data-theme="light"] {
+  --led-volt: var(--c-volt-ink);
+  --led-off: 0.07;
+  --led-glow: 0px;
+}
+html[data-theme="light"] .led-dark, html[data-theme="light"] .bg-night {
+  --led-volt: var(--brand-volt);
+  --led-chalk: var(--brand-on-night);
+  --led-amber: var(--c-warning-night);
+  --led-red: var(--c-danger-night);
+  --led-off: 0.08;
+  --led-glow: 5px;
+}
+
+/* Placa de acero cepillado con bisel (marcador, rótulos, módulos del rack). */
+@utility plate {
+  background:
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--color-ink) 2.5%, transparent) 0 1px, transparent 1px 3px),
+    linear-gradient(180deg, color-mix(in oklab, var(--color-surface), var(--color-ink) 7%), var(--color-surface));
+  box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--color-ink) 10%, transparent), inset -1px -1px 0 rgb(0 0 0 / 0.35);
+}
+
+/* Solo el bisel (sobre cualquier fondo). */
+@utility bevel {
+  box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--color-ink) 10%, transparent), inset -1px -1px 0 rgb(0 0 0 / 0.3);
+}
+
+/* Marca de carril pintada debajo de un rótulo (como las líneas del piso del box). */
+@utility lane {
+  background-image: repeating-linear-gradient(90deg, color-mix(in srgb, var(--color-ink) 45%, transparent) 0 18px, transparent 18px 30px);
+  background-size: 100% 2px;
+  background-repeat: no-repeat;
+  background-position: bottom;
+}
+
+/* Cinta de seguridad: solo para avisos (demo, urgente). */
+@utility hazard {
+  background: repeating-linear-gradient(-45deg, var(--color-warning) 0 8px, transparent 8px 16px);
+}
+
+/* Hoja milimetrada explícita (bloques de laboratorio en los dos modos). */
+@utility lab-grid {
+  background-image: var(--lab-grid);
+  background-size: 40px 40px, 40px 40px, 8px 8px, 8px 8px;
+  background-position: -1px -1px;
+}
+
+/* Piso de caucho: grano fino y carriles de tiza muy tenues (bandas noche). */
+@utility floor {
+  background-color: var(--color-night);
+  background-image:
+    radial-gradient(rgb(255 255 255 / 0.035) 0.6px, transparent 0.8px),
+    linear-gradient(90deg, rgb(242 240 234 / 0.045) 1px, transparent 1px);
+  background-size: 5px 5px, 120px 100%;
+}
+
+/* Filo de temporada: la línea de luz que una fecha puede teñir (header, placas destacadas). */
+@utility edge-season {
+  box-shadow: inset 0 -2px 0 var(--season-accent);
+}
+@utility glow-season {
+  box-shadow: 0 0 0 1px var(--season-accent), 0 0 22px -4px var(--season-glow);
+}
+
+/* ── Marcador LED: se enciende una sola vez, mecánico. Con "reducir movimiento" no corre nada. ── */
+@media (prefers-reduced-motion: no-preference) {
+  .led-power { animation: led-on 0.7s steps(1, end) both; animation-delay: calc(var(--i, 0) * 70ms + 150ms); }
+  .led-flip { animation: led-flip 0.32s cubic-bezier(0.2, 0.9, 0.2, 1) both; animation-delay: calc(var(--i, 0) * 40ms); transform-box: fill-box; transform-origin: center; }
+}
+@keyframes led-on {
+  0% { opacity: 0.08; }
+  18% { opacity: 1; }
+  30% { opacity: 0.15; }
+  48% { opacity: 1; }
+  60% { opacity: 0.4; }
+  72%, 100% { opacity: 1; }
+}
+@keyframes led-flip {
+  from { transform: scaleY(0.05); opacity: 0.2; }
+  to { transform: scaleY(1); opacity: 1; }
+}
+
+/* Sobre bandas noche (oscuras en los dos modos) el foco va en voltio: el grafito del modo claro no se vería. */
+html[data-theme="light"] :is(.bg-night, .floor, .led-dark) :focus-visible { outline-color: var(--brand-volt); }
+
+/* Cinta de avisos oculta por la sesión (el script del <head> marca data-ticker antes de pintar). */
+html[data-ticker="off"] [data-ticker] { display: none; }

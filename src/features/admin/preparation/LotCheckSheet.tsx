@@ -56,7 +56,7 @@ function LotCheckForm({ order, onClose }: { order: AdminOrder; onClose: () => vo
         <fieldset className="flex flex-col gap-2">
           <legend className="mb-2 text-sm font-bold">Productos del pedido</legend>
           {items.map(({ line, product, variant, lot }, i) => (
-            <label key={line.id} className={cn("flex cursor-pointer items-center gap-3 rounded-2xl bg-surface p-3 shadow-[var(--shadow-card)] ring-1 transition-colors", checked.has(line.id) ? "ring-success" : "ring-ink/[0.06] hover:ring-ink/20")}>
+            <label key={line.id} className={cn("flex cursor-pointer items-center gap-3 rounded-sm bg-surface p-3 shadow-[var(--shadow-card)] ring-1 transition-colors", checked.has(line.id) ? "ring-success" : "ring-ink/[0.06] hover:ring-ink/20")}>
               <input type="checkbox" checked={checked.has(line.id)} onChange={(e) => toggle(line.id, e.target.checked)} data-autofocus={i === 0 ? true : undefined}
                 aria-describedby={`lot-${line.id}`} className="h-5 w-5 shrink-0 accent-primary" />
               {product && <span className="w-12 shrink-0"><LineThumb art={product.art} pack={product.pack} tint={variant?.colorHex} name={product.name} /></span>}

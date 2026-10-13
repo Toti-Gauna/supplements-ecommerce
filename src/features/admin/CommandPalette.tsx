@@ -67,8 +67,8 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
             <li key={`${item.group}-${item.id}`} id={`cmd-${item.id}`} role="option" aria-selected={i === current}>
               {(i === 0 || results[i - 1]!.group !== item.group) && <p className="px-3 pb-1 pt-3 text-[11px] font-extrabold uppercase tracking-[0.16em] text-muted">{item.group}</p>}
               <button type="button" tabIndex={-1} onClick={() => go(item)} onMouseEnter={() => setActive(i)}
-                className={cn("flex min-h-12 w-full items-center gap-3 rounded-2xl px-3 text-left text-[15px] font-semibold", i === current ? "bg-accent text-ink" : "text-ink/85")}>
-                <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-bg text-primary">{item.icon}</span>
+                className={cn("flex min-h-12 w-full items-center gap-3 rounded-sm px-3 text-left text-[15px] font-semibold", i === current ? "bg-accent text-ink" : "text-ink/85")}>
+                <span className="grid h-8 w-8 shrink-0 place-items-center rounded-sm bg-bg text-primary">{item.icon}</span>
                 <span className="min-w-0 flex-1 truncate">{item.label}</span>
                 {item.hint && <span className="hidden shrink-0 text-xs text-muted sm:inline">{item.hint}</span>}
                 {i === current ? <CornerDownLeft size={15} aria-hidden="true" className="text-muted" /> : <ArrowRight size={15} aria-hidden="true" className="text-muted/50" />}

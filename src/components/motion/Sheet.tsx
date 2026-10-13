@@ -19,11 +19,11 @@ const OFFSET = { right: { x: "100%" }, left: { x: "-100%" }, bottom: { y: "100%"
 const PLACE = {
   right: "inset-y-0 right-0 w-full max-w-md",
   left: "inset-y-0 left-0 w-full max-w-sm",
-  bottom: "inset-x-0 bottom-0 max-h-[92dvh] rounded-t-[2rem]",
-  top: "inset-x-0 top-0 max-h-[100dvh] rounded-b-[2rem] sm:mx-auto sm:mt-4 sm:max-h-[88dvh] sm:w-[min(94vw,760px)] sm:rounded-[2rem]",
-  center: "inset-0 m-auto h-fit max-h-[94dvh] w-[min(94vw,540px)] overflow-y-auto rounded-[2rem]",
+  bottom: "inset-x-0 bottom-0 max-h-[92dvh] rounded-t-sm",
+  top: "inset-x-0 top-0 max-h-[100dvh] rounded-b-sm sm:mx-auto sm:mt-4 sm:max-h-[88dvh] sm:w-[min(94vw,760px)] sm:rounded-sm",
+  center: "inset-0 m-auto h-fit max-h-[94dvh] w-[min(94vw,540px)] overflow-y-auto rounded-sm",
   // Modal ancho y centrado; en el celular ocupa el ancho y sube desde abajo, con su propio scroll.
-  dialog: "inset-x-0 bottom-0 max-h-[94dvh] overflow-hidden rounded-t-[2rem] sm:inset-0 sm:m-auto sm:h-fit sm:max-h-[90dvh] sm:w-[min(94vw,920px)] sm:rounded-[2rem]",
+  dialog: "inset-x-0 bottom-0 max-h-[94dvh] overflow-hidden rounded-t-sm sm:inset-0 sm:m-auto sm:h-fit sm:max-h-[90dvh] sm:w-[min(94vw,920px)] sm:rounded-sm",
 };
 
 /**
@@ -63,7 +63,7 @@ export function Sheet({ open, onClose, title, side = "right", children, classNam
           <motion.div ref={panel} role="dialog" aria-modal="true" aria-label={title}
             className={cn("absolute flex flex-col bg-bg shadow-[var(--shadow-lift)]", /\bmax-w-/.test(className ?? "") ? PLACE[side].replace(/ max-w-\S+/g, "") : PLACE[side], className)}
             initial={OFFSET[side]} animate={{ x: 0, y: 0, opacity: 1, scale: 1 }} exit={OFFSET[side]} transition={{ type: "spring", stiffness: 380, damping: 38 }}>
-            <button type="button" onClick={onClose} aria-label="Cerrar" className="absolute right-4 top-4 z-10 grid h-11 w-11 place-items-center rounded-full bg-surface/80 text-ink hover:bg-accent">
+            <button type="button" onClick={onClose} aria-label="Cerrar" className="absolute right-4 top-4 z-10 grid h-11 w-11 place-items-center rounded-sm bg-surface/80 text-ink hover:bg-accent">
               <X size={20} aria-hidden="true" />
             </button>
             {children}

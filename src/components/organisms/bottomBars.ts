@@ -1,6 +1,6 @@
 /**
  * Qué barra fija inferior lleva cada ruta de la tienda en el celular (una sola por pantalla). La vista previa del panel
- * (8.3.21) lleva solo su franja "Volver al editor", en todos los tamaños, sin WhatsApp ni "Probar temáticas".
+ * (8.3.21) lleva solo su franja "Volver al editor", en todos los tamaños.
  */
 export type BottomBar = "nav" | "product" | "cart" | "preview" | "none";
 
@@ -13,9 +13,17 @@ export function bottomBarFor(pathname: string): BottomBar {
 }
 
 /**
- * Barra de compra del celular: cápsula flotante de vidrio, igual que la navegación inferior. Safari 26 de iPhone no
- * dibuja nada fijo por detrás de su barra de direcciones (una barra pegada al borde deja ver la página debajo), así
- * que la barra flota con aire alrededor en lugar de intentar llegar al borde.
+ * Placa fija de abajo (dock y barras de compra): recta, de acero, apenas separada del borde. Safari 26 de iPhone no
+ * dibuja nada fijo por detrás de su barra de direcciones, así que no se intenta llegar al borde.
  */
-export const FLOATING_BAR =
-  "fixed inset-x-3 bottom-[calc(0.625rem+env(safe-area-inset-bottom))] mx-auto flex max-w-md items-center gap-2 rounded-[1.75rem] border border-white/25 bg-surface/92 p-2 shadow-[0_18px_40px_-14px_rgb(0_0_0/0.45),inset_0_1px_0_rgb(255_255_255/0.45)] ring-1 ring-ink/[0.06] backdrop-blur-xl backdrop-saturate-150";
+export const DOCK =
+  "fixed inset-x-2 bottom-[calc(0.5rem+env(safe-area-inset-bottom))] mx-auto max-w-md rounded-sm border border-line bg-surface shadow-[inset_0_2px_0_var(--season-accent),var(--shadow-lift)]";
+
+/** Barra de compra del celular (ficha y carrito): la misma placa que el dock, con sus botones. */
+export const FLOATING_BAR = `${DOCK} flex items-center gap-2 p-2`;
+
+/**
+ * Lugar real que el contenido le deja a la placa de abajo en el celular: alto de la placa (4 rem), su separación del
+ * borde y un respiro. Lo usa el pie, así nada del final de la página queda tapado.
+ */
+export const DOCK_SPACE = "pb-[calc(5.5rem+env(safe-area-inset-bottom))] lg:pb-0";

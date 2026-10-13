@@ -13,18 +13,18 @@ interface OptionCardProps {
   disabled?: boolean;
 }
 
-/** Radio accesible con apariencia de tarjeta. */
+/** Radio accesible con apariencia de placa: la elegida se ilumina en el filo izquierdo. */
 export function OptionCard({ name, value, checked, onChange, title, description, aside, icon, disabled }: OptionCardProps) {
   return (
     <label
       className={cn(
-        "flex cursor-pointer items-start gap-3 rounded-3xl border-2 bg-surface p-5 transition-all duration-200 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary/50",
-        checked ? "border-primary bg-accent/30 shadow-[var(--shadow-card)]" : "border-transparent shadow-[0_1px_2px_rgb(0_0_0/0.06)] hover:border-ink/15",
+        "relative flex cursor-pointer items-start gap-3 rounded-sm border bg-surface p-4 transition-[border-color,box-shadow] duration-150 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-primary sm:p-5",
+        checked ? "border-volt-ink shadow-[inset_3px_0_0_var(--color-volt-ink),var(--shadow-card)]" : "border-line bevel hover:border-ink/40",
         disabled && "cursor-not-allowed opacity-60",
       )}
     >
       <input type="radio" name={name} value={value} checked={checked} disabled={disabled} onChange={() => onChange(value)} className="mt-1 h-4 w-4 accent-[var(--color-primary)]" />
-      {icon && <span className="mt-0.5 text-primary">{icon}</span>}
+      {icon && <span className="mt-0.5 text-volt-ink">{icon}</span>}
       <span className="flex min-w-0 flex-1 flex-col gap-0.5">
         <span className="font-bold text-ink">{title}</span>
         {description && <span className="text-sm text-muted">{description}</span>}

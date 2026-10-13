@@ -15,8 +15,8 @@ export function FavoritesView() {
   if (!hydrated) return <ProductGridSkeleton count={4} />;
   const products = slugs.flatMap((s) => getProduct(s) ?? []);
   if (products.length === 0) return (
-    <div className="flex flex-col items-center gap-4 rounded-[var(--radius-card)] border border-dashed border-line px-6 py-14 text-center">
-      <span className="grid h-14 w-14 place-items-center rounded-full bg-accent text-primary"><Heart size={26} aria-hidden="true" /></span>
+    <div className="flex flex-col items-center gap-4 rounded-sm border border-dashed border-line px-6 py-14 text-center">
+      <span className="grid h-14 w-14 place-items-center rounded-sm bg-accent text-primary"><Heart size={26} aria-hidden="true" /></span>
       <p className="max-w-xs text-muted">Todavía no guardaste favoritos. Tocá el corazón en cualquier producto y aparece acá.</p>
       <ButtonLink href="/categorias/">Explorar la tienda</ButtonLink>
     </div>

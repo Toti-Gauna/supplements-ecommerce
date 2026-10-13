@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "./box.css";
+@import "./keyframes.css";
 
 /*
  * Escritorio con mouse (Polish 8.3.2): desde 1024 px y con puntero fino que puede pasar por encima. Ahí el panel usa
@@ -7,9 +9,11 @@
 @custom-variant desk (@media (width >= 64rem) and (hover: hover) and (pointer: fine));
 
 /*
- * Sistema visual "Laboratorio eléctrico" (PROVISIONAL, marca de demo). Los valores de marca llegan como variables CSS
- * desde src/config/brand.ts (brandCss en <head>; en producción: tabla Setting). Oscuro por defecto; claro "Tiza" con
- * data-theme="light". Display: Archivo expandida. Texto: Archivo. Datos: JetBrains Mono.
+ * Sistema "BOX" (R1): de noche, un box de entrenamiento (carbono, acero, tiza, voltio como luz de señal); de día,
+ * "Tiza", el laboratorio (papel, grilla milimétrica, tinta grafito). Los valores de marca llegan como variables CSS desde
+ * src/config/brand.ts (brandCss en <head>; en producción: tabla Setting). Oscuro por defecto; claro con
+ * data-theme="light". Display: Big Shoulders Display. Texto: Archivo. Datos: JetBrains Mono y el marcador LED (Led.tsx).
+ * Piezas del sistema (placas, carriles, grilla, cinta de seguridad, acento de temporada): app/box.css.
  */
 @theme inline {
   --color-primary: var(--brand-primary);
@@ -42,7 +46,16 @@
   --font-display: var(--brand-display);
   --font-mono: var(--brand-mono);
   --font-script: "Caveat", cursive;
-  --radius-card: 1.25rem;
+  /* Forma recta: de 0 a 4 px en toda la app. Los radios grandes de Tailwind quedan topeados por si vuelven a aparecer. */
+  --radius-xs: 1px;
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --radius-lg: 4px;
+  --radius-xl: 4px;
+  --radius-2xl: 4px;
+  --radius-3xl: 4px;
+  --radius-4xl: 4px;
+  --radius-card: 2px;
   --shadow-card: var(--sh-card);
   --shadow-lift: var(--sh-lift);
   --shadow-glow: var(--sh-glow);
@@ -50,47 +63,33 @@
 }
 
 /*
- * Estados, sombras e íconos de controles. Oscuro en :root (la marca abre en oscuro) y claro "Tiza" con
- * data-theme="light". Las paletas de temporada (palettes.ts) pisan todo con html[data-season].
+ * Sombras de estudio: un bisel de placa (luz arriba, canto oscuro abajo) y una sombra corta y dura, como un módulo
+ * apoyado bajo el reflector. Los colores de estado llegan con la marca (src/config/states.ts).
  */
 :root {
   color-scheme: dark;
-  --c-ember: #ff6a3d;
-  --c-success: #5be38a;
-  --c-success-soft: #0f2418;
-  --c-warning: #ffc857;
-  --c-warning-soft: #2a220f;
-  --c-danger: #ff6b5a;
-  --c-danger-soft: #2c1512;
-  --sh-card: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 18px 40px -22px rgb(0 0 0 / 0.8);
-  --sh-lift: 0 1px 0 rgb(255 255 255 / 0.06) inset, 0 30px 60px -24px rgb(0 0 0 / 0.9);
-  --sh-glow: 0 0 0 1px color-mix(in srgb, var(--brand-volt) 35%, transparent), 0 12px 40px -12px color-mix(in srgb, var(--brand-volt) 45%, transparent);
-  --skeleton-a: #161b23;
-  --skeleton-b: #1f2530;
-  --studio-1: #1b212b;
-  --studio-2: #10141a;
-  --studio-3: #07090c;
+  --sh-card: inset 0 1px 0 rgb(255 255 255 / 0.05), 0 1px 0 rgb(0 0 0 / 0.6), 0 16px 30px -22px rgb(0 0 0 / 0.95);
+  --sh-lift: inset 0 1px 0 rgb(255 255 255 / 0.07), 0 2px 0 rgb(0 0 0 / 0.6), 0 30px 50px -26px rgb(0 0 0 / 0.95);
+  --sh-glow: 0 0 0 1px color-mix(in srgb, var(--brand-volt) 45%, transparent), 0 0 24px -6px color-mix(in srgb, var(--brand-volt) 45%, transparent);
+  --skeleton-a: #15171a;
+  --skeleton-b: #1f2225;
+  --studio-1: #1f2327;
+  --studio-2: #121417;
+  --studio-3: #070808;
 }
 html[data-theme="light"] {
   color-scheme: light;
-  --c-ember: #c2410c;
-  --c-success: #1e7a43;
-  --c-success-soft: #e3f3e8;
-  --c-warning: #7a5200;
-  --c-warning-soft: #f8edd4;
-  --c-danger: #b3261e;
-  --c-danger-soft: #fbe4e1;
-  --sh-card: 0 1px 2px rgb(11 13 16 / 0.05), 0 18px 40px -24px rgb(11 13 16 / 0.28);
-  --sh-lift: 0 2px 4px rgb(11 13 16 / 0.06), 0 30px 60px -28px rgb(11 13 16 / 0.4);
-  --sh-glow: 0 0 0 1px rgb(11 13 16 / 0.9), 0 12px 32px -14px color-mix(in srgb, var(--c-volt-ink) 55%, transparent);
-  --skeleton-a: #e3e6de;
-  --skeleton-b: #f4f5f1;
-  --studio-1: #20262f;
-  --studio-2: #141920;
-  --studio-3: #0a0c10;
+  --sh-card: 0 0 0 1px rgb(19 21 24 / 0.07), 0 1px 0 rgb(19 21 24 / 0.08), 0 14px 26px -20px rgb(19 21 24 / 0.32);
+  --sh-lift: 0 0 0 1px rgb(19 21 24 / 0.08), 0 2px 0 rgb(19 21 24 / 0.08), 0 30px 50px -28px rgb(19 21 24 / 0.42);
+  --sh-glow: 0 0 0 1px var(--color-ink), 0 0 0 4px color-mix(in srgb, var(--brand-volt) 55%, transparent);
+  --skeleton-a: #e3e5df;
+  --skeleton-b: #f1f2ee;
+  --studio-1: #23272c;
+  --studio-2: #16191d;
+  --studio-3: #0b0c0e;
 }
-/* Las bandas "noche" llevan un filo de voltaje muy sutil para separarse del fondo oscuro. */
-.bg-night { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--brand-volt) 6%, transparent); }
+/* Las bandas "noche" llevan un filo de acero muy sutil para separarse del fondo oscuro. */
+.bg-night { box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.05); }
 
 @layer base {
   /* Controles nativos con la estética de la tienda: el navegador sigue dibujando el selector, el calendario,
@@ -111,7 +110,7 @@ html[data-theme="light"] {
   }
   select option { background: var(--color-surface); color: var(--color-ink); }
   input[type="date"], input[type="time"], input[type="datetime-local"] { cursor: pointer; }
-  input[type="date"]::-webkit-calendar-picker-indicator { cursor: pointer; opacity: 0.75; padding: 0.25rem; border-radius: 0.5rem; }
+  input[type="date"]::-webkit-calendar-picker-indicator { cursor: pointer; opacity: 0.75; padding: 0.25rem; border-radius: 2px; }
   input[type="date"]::-webkit-calendar-picker-indicator:hover { opacity: 1; background: var(--color-accent); }
   input[type="date"]::-webkit-date-and-time-value { text-align: left; }
   /* Sin ancho intrínseco: no se sale de grillas ni tarjetas (Safari le da ~ancho fijo al date). */
@@ -119,8 +118,8 @@ html[data-theme="light"] {
   input[type="number"]::-webkit-inner-spin-button { opacity: 0.6; }
   input[type="color"] { appearance: none; -webkit-appearance: none; padding: 0.25rem; cursor: pointer; }
   input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
-  input[type="color"]::-webkit-color-swatch { border: none; border-radius: 0.6rem; }
-  input[type="color"]::-moz-color-swatch { border: none; border-radius: 0.6rem; }
+  input[type="color"]::-webkit-color-swatch { border: none; border-radius: 2px; }
+  input[type="color"]::-moz-color-swatch { border: none; border-radius: 2px; }
   input[type="file"]::file-selector-button { font: inherit; }
 
   html {
@@ -133,6 +132,8 @@ html[data-theme="light"] {
     font-family: var(--font-sans);
     font-feature-settings: "ss01", "ss02", "tnum" 0;
   }
+  /* Tiza: la hoja milimetrada del laboratorio, muy tenue, detrás de todo. */
+  html[data-theme="light"] body { background-image: var(--lab-grid); background-size: 40px 40px, 40px 40px, 8px 8px, 8px 8px; }
   /* Grano fino (como polvo de tiza bajo luz): textura premium sin imágenes externas. */
   body::before {
     content: "";
@@ -147,7 +148,7 @@ html[data-theme="light"] {
   :focus-visible {
     outline: 2.5px solid var(--color-primary);
     outline-offset: 3px;
-    border-radius: 0.6rem;
+    border-radius: 2px;
   }
   h1, h2, h3 {
     text-wrap: balance;
@@ -158,18 +159,18 @@ html[data-theme="light"] {
   }
 }
 
-/* Titulares: Archivo ensanchada y pesada (look atlético-tech). */
+/* Titulares de póster de competencia: condensada, muy pesada, en mayúsculas y apretada en altura. */
 @utility font-display {
   font-family: var(--font-display);
-  font-stretch: 112%;
   font-weight: 800;
-  letter-spacing: -0.03em;
-  text-transform: none;
+  letter-spacing: 0.01em;
+  line-height: 0.92;
+  text-transform: uppercase;
 }
 
-/* Ancho máximo (125 %): marca, portadas y cifras grandes. Va junto con font-display. */
+/* Más aire entre letras (marca, rótulos grandes). Va junto con font-display. */
 @utility font-wide {
-  font-stretch: 125%;
+  letter-spacing: 0.06em;
 }
 
 /* Rótulos de laboratorio: mono, mayúsculas y aire entre letras. */
@@ -205,10 +206,11 @@ html[data-theme="light"] {
   -webkit-backdrop-filter: saturate(1.4) blur(18px);
 }
 
-/* Filo eléctrico: borde con degradé voltio → plasma (tarjetas destacadas, cupones, club). */
+/* Filo eléctrico: placa con la luz de voltio en el canto superior (tarjetas destacadas, cupones, club). */
 @utility edge-volt {
-  border: 1px solid transparent;
-  background: linear-gradient(var(--color-surface), var(--color-surface)) padding-box, linear-gradient(135deg, color-mix(in srgb, var(--brand-volt) 70%, transparent), color-mix(in srgb, var(--brand-glow) 50%, transparent) 55%, color-mix(in srgb, var(--brand-spark) 35%, transparent)) border-box;
+  border: 1px solid var(--color-line);
+  background: linear-gradient(var(--color-surface), var(--color-surface)) padding-box;
+  box-shadow: inset 0 2px 0 var(--color-volt), var(--sh-card);
 }
 
 /* Header fijo: su fondo se extiende hacia arriba y tapa la franja de la hora (Safari deja ver la página detrás). */
@@ -222,62 +224,6 @@ html[data-theme="light"] {
 @utility no-scrollbar {
   scrollbar-width: none;
   &::-webkit-scrollbar { display: none; }
-}
-
-/* ---------- Motion base (CSS: funciona antes de hidratar) ---------- */
-@keyframes fade-up { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
-@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
-@keyframes pop { 0% { transform: scale(1); } 40% { transform: scale(1.3); } 100% { transform: scale(1); } }
-@keyframes shimmer { from { background-position: -200% 0; } to { background-position: 200% 0; } }
-@keyframes grow { from { width: var(--from, 0%); } to { width: var(--to, 0%); } }
-@keyframes confetti {
-  0% { opacity: 1; transform: translate(0, 0) rotate(0); }
-  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) rotate(var(--rot)); }
-}
-@keyframes toast-in { from { opacity: 0; transform: translateY(12px) scale(0.98); } to { opacity: 1; transform: none; } }
-@keyframes rise { from { opacity: 0; transform: translateY(0.5em); filter: blur(6px); } to { opacity: 1; transform: none; filter: blur(0); } }
-@keyframes float-a { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-10px) rotate(-1deg); } }
-
-.animate-fade-up { animation: fade-up 520ms var(--ease-out-expo) both; }
-.animate-fade-in { animation: fade-in 320ms ease-out both; }
-.animate-pop { animation: pop 420ms var(--ease-out-expo); }
-.animate-toast { animation: toast-in 260ms var(--ease-out-expo) both; }
-.animate-rise { animation: rise 900ms var(--ease-out-expo) both; }
-/* backwards (no both): al terminar no queda un transform que convierta a la página en contenedor de los `fixed`. */
-.page-enter { animation: fade-up 480ms var(--ease-out-expo) backwards; }
-.skeleton {
-  background: linear-gradient(90deg, var(--skeleton-a) 0%, var(--skeleton-b) 50%, var(--skeleton-a) 100%);
-  background-size: 200% 100%;
-  animation: shimmer 1.4s ease-in-out 3;
-}
-.progress-fill { animation: grow 1100ms var(--ease-out-expo) both; }
-/* Celdas de la batería (BatteryMeter): se encienden en cadena una sola vez. */
-@keyframes cell-in { from { opacity: 0.15; transform: scaleY(0.55); } to { opacity: 1; transform: none; } }
-.battery-cell-on { animation: cell-in 380ms var(--ease-out-expo) both; }
-/* La pantalla de carga de marca vive en app/splash.css. */
-.confetti-piece { animation: confetti 1000ms var(--ease-out-expo) both; }
-
-/* LED del aro del disco olímpico: cometas que corren mientras gira (solo mientras gira) y todas titilan al ganar. */
-@keyframes led-chase { 0% { opacity: 1; } 14% { opacity: .85; } 42% { opacity: .16; } 100% { opacity: .1; } }
-.led-chase { animation: led-chase .8s linear infinite; }
-@keyframes led-win { 0%, 100% { opacity: 1; } 50% { opacity: .12; } }
-.led-win { animation: led-win .26s steps(2) 5 both; }
-@keyframes confetti-fall {
-  0% { transform: translate3d(0, 0, 0) rotate(0); opacity: 1; }
-  85% { opacity: 1; }
-  100% { transform: translate3d(var(--drift), 105vh, 0) rotate(var(--spin)); opacity: 0; }
-}
-.confetti-fall { animation-name: confetti-fall; animation-timing-function: cubic-bezier(0.25, 0.4, 0.45, 1); animation-fill-mode: both; }
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 1ms !important;
-    animation-iteration-count: 1 !important;
-    animation-delay: 0ms !important;
-    transition-duration: 1ms !important;
-    scroll-behavior: auto !important;
-  }
-  .confetti-piece, .confetti-fall { display: none; }
 }
 
 /*

@@ -35,7 +35,7 @@ export function OrdersSection({ lastOrder }: { lastOrder: DemoOrder | null }) {
     <ul className="flex flex-col gap-2">
       {orders.map((o) => (
         <li key={o.code}>
-          <Link href={o.href} className="flex items-center gap-3 rounded-2xl border border-line bg-surface p-4 hover:border-primary">
+          <Link href={o.href} className="flex items-center gap-3 rounded-sm border border-line bg-surface p-4 hover:border-primary">
             <Package size={20} aria-hidden="true" className="text-primary" />
             <span className="flex-1"><span className="block font-bold">{o.code}</span><span className="text-sm text-muted">{o.status} (muestra)</span></span>
             <span className="font-bold tabular-nums">{formatARS(o.total)}</span>
@@ -76,7 +76,7 @@ export function RewardsSection({ used, onUse }: { used: string[]; onUse: (id: st
       {REWARDS.map((r) => {
         const isUsed = used.includes(r.id);
         return (
-          <li key={r.id} className="flex flex-col gap-2 rounded-2xl border border-line bg-surface p-4">
+          <li key={r.id} className="flex flex-col gap-2 rounded-sm border border-line bg-surface p-4">
             <p className="flex items-center gap-2 font-bold"><Gift size={18} aria-hidden="true" className="text-primary" /> {r.title}</p>
             <p className="text-sm text-muted">{r.expired ? `Venció el ${r.expires}` : `Vence el ${r.expires}`} · un solo uso</p>
             {r.expired ? <Badge tone="neutral" className="self-start">Vencido</Badge> : isUsed ? <Badge tone="success" className="self-start">Usado: no se puede volver a aplicar</Badge> : (
@@ -91,7 +91,7 @@ export function RewardsSection({ used, onUse }: { used: string[]; onUse: (id: st
 
 export function AddressesSection() {
   return (
-    <div className="flex items-start gap-3 rounded-2xl border border-line bg-surface p-4">
+    <div className="flex items-start gap-3 rounded-sm border border-line bg-surface p-4">
       <MapPin size={20} aria-hidden="true" className="text-primary" />
       <div className="text-sm"><p className="font-bold">Casa</p><p className="text-muted">Calle de Muestra 1234, Mar del Plata (7600), Buenos Aires</p></div>
     </div>

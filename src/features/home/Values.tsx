@@ -11,10 +11,10 @@ const VALUES = [
 
 export function Values() {
   return (
-    <ul className="grid gap-px overflow-hidden rounded-[2rem] border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
+    <ul className="grid gap-px overflow-hidden rounded-sm border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
       {VALUES.map(({ icon: Icon, title, text }, i) => (
         <Reveal as="li" key={title} delay={i * 0.06} className="flex flex-col gap-3 bg-bg p-6">
-          <span className="grid h-11 w-11 place-items-center rounded-xl bg-night text-volt ring-1 ring-volt/25"><Icon size={20} aria-hidden="true" /></span>
+          <span className="grid h-11 w-11 place-items-center rounded-sm bg-night text-volt ring-1 ring-volt/25"><Icon size={20} aria-hidden="true" /></span>
           <p className="text-lg font-extrabold">{title}</p>
           <p className="text-sm text-muted">{text}</p>
         </Reveal>

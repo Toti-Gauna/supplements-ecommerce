@@ -16,7 +16,7 @@ export function ClubBand() {
   const setWheel = useUi((s) => s.setWheel);
   const missions = all.filter((m) => m.active !== false).slice(0, 3);
   return (
-    <section aria-labelledby="club" className="relative overflow-hidden rounded-[2rem] bg-night px-5 py-12 text-on-night sm:rounded-[2.5rem] sm:px-10 sm:py-16 lg:px-14 lg:py-20">
+    <section aria-labelledby="club" className="relative overflow-hidden rounded-sm bg-night px-5 py-12 text-on-night sm:rounded-sm sm:px-10 sm:py-16 lg:px-14 lg:py-20">
       <div aria-hidden="true" className="absolute -left-32 bottom-0 h-96 w-96 rounded-full bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--brand-glow)_35%,transparent),transparent)]" />
       <Reveal className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <div>
@@ -25,7 +25,7 @@ export function ClubBand() {
         </div>
         <div className="flex flex-wrap gap-3">
           {wheelActive && <Button variant="light" size="lg" onClick={() => setWheel(true)}><Gift size={18} aria-hidden="true" /> Girar la ruleta</Button>}
-          <Link href="/club/" className="inline-flex min-h-14 items-center gap-2 rounded-full border border-white/25 px-6 font-bold hover:bg-white/10">Conocé el Club <ArrowRight size={18} aria-hidden="true" /></Link>
+          <Link href="/club/" className="inline-flex min-h-14 items-center gap-2 rounded-sm border border-white/25 px-6 font-bold hover:bg-white/10">Conocé el Club <ArrowRight size={18} aria-hidden="true" /></Link>
         </div>
       </Reveal>
       <ul className="relative mt-10 grid gap-4 md:grid-cols-3">

@@ -36,9 +36,9 @@ export function ThemeBanner({ theme, offer }: { theme: SeasonalTheme; offer: The
       <SeasonFx id={theme.id} />
       <AmbientField layers={AMBIENT[theme.id]} className="absolute inset-0" />
       {/* Detrás de la protagonista, un halo del acento y el aro eléctrico de VOLTA. */}
-      <span aria-hidden="true" className="pointer-events-none absolute right-[-6%] top-1/2 h-48 w-48 -translate-y-1/2 rounded-full opacity-60 sm:right-[5%] sm:h-96 sm:w-96"
+      <span aria-hidden="true" className="pointer-events-none absolute right-[-6%] top-1/2 h-48 w-48 -translate-y-1/2 rounded-sm opacity-60 sm:right-[5%] sm:h-96 sm:w-96"
         style={{ background: `radial-gradient(closest-side, ${skin.accent}55, transparent 70%)` }} />
-      <span aria-hidden="true" className="animate-fade-in pointer-events-none absolute right-[calc(3%-0.75rem)] top-1/2 h-[9.5rem] w-[9.5rem] -translate-y-1/2 rounded-full border sm:right-[calc(11%-1.5rem)] sm:h-[18rem] sm:w-[18rem]"
+      <span aria-hidden="true" className="animate-fade-in pointer-events-none absolute right-[calc(3%-0.75rem)] top-1/2 h-[9.5rem] w-[9.5rem] -translate-y-1/2 rounded-sm border sm:right-[calc(11%-1.5rem)] sm:h-[18rem] sm:w-[18rem]"
         style={{ borderColor: `${skin.accent}66`, boxShadow: `0 0 40px ${skin.accent}22, inset 0 0 30px ${skin.accent}1a` }} />
       {skin.decor.map((kind, i) => (
         <span key={`${kind}-${i}`} aria-hidden="true" className={`animate-fade-up pointer-events-none absolute ${SPOTS[i]}`} style={{ animationDelay: `${120 + i * 110}ms` }}>
@@ -50,7 +50,7 @@ export function ThemeBanner({ theme, offer }: { theme: SeasonalTheme; offer: The
         <h2 id="tematica-title" className="font-display mt-2 text-[1.75rem] leading-[1.04] sm:text-5xl lg:text-6xl">{theme.headline}</h2>
         <p className="mt-2 text-[14px] text-white/85 sm:mt-3 sm:text-lg">{theme.subtitle}</p>
         {offer && (
-          <p className="mt-4 inline-flex flex-wrap items-baseline gap-x-2 rounded-2xl bg-black/20 px-3 py-2 text-sm backdrop-blur-sm">
+          <p className="mt-4 inline-flex flex-wrap items-baseline gap-x-2 rounded-sm bg-black/20 px-3 py-2 text-sm backdrop-blur-sm">
             <strong className="text-xl font-extrabold" style={{ color: skin.accent }}>{offer.label}</strong>
             <span>con <span className="font-mono font-bold tracking-wider">{code}</span></span>
             {offer.condition && <span className="w-full text-xs text-white/75">{offer.condition}</span>}
@@ -59,11 +59,11 @@ export function ThemeBanner({ theme, offer }: { theme: SeasonalTheme; offer: The
         <div className="mt-5 flex flex-wrap gap-2">
           {code && (
             <button type="button" onClick={() => apply(code)} disabled={applied === code}
-              className="inline-flex h-11 items-center gap-2 rounded-full px-5 text-sm font-bold shadow-[0_12px_30px_-14px_rgb(0_0_0/0.6)] transition-transform hover:-translate-y-0.5 disabled:translate-y-0 disabled:opacity-90" style={{ background: skin.accent, color: skin.accentInk }}>
+              className="inline-flex h-11 items-center gap-2 rounded-sm px-5 text-sm font-bold shadow-[0_12px_30px_-14px_rgb(0_0_0/0.6)] transition-transform hover:-translate-y-0.5 disabled:translate-y-0 disabled:opacity-90" style={{ background: skin.accent, color: skin.accentInk }}>
               {applied === code ? <><Check size={16} aria-hidden="true" />Cupón en tu carrito</> : <><Ticket size={16} aria-hidden="true" />Usar {code}</>}
             </button>
           )}
-          <a href="#ofertas-tematicas" className="max-sm:hidden inline-flex h-11 items-center gap-2 rounded-full border border-white/30 px-5 text-sm font-bold transition-colors hover:bg-white/10">
+          <a href="#ofertas-tematicas" className="max-sm:hidden inline-flex h-11 items-center gap-2 rounded-sm border border-white/30 px-5 text-sm font-bold transition-colors hover:bg-white/10">
             Ver ofertas <ArrowDown size={16} aria-hidden="true" />
           </a>
         </div>

@@ -16,7 +16,7 @@ export function StackNudge({ stack, compact = false }: { stack: StackResult; com
   const names = stack.categories.map((c) => getCategory(c)?.name ?? c).join(" + ");
   const done = stack.missing === 0;
   return (
-    <div className="rounded-2xl bg-night px-4 py-3 text-on-night ring-1 ring-volt/20">
+    <div className="rounded-sm bg-night px-4 py-3 text-on-night ring-1 ring-volt/20">
       <p className="flex items-center gap-2 text-sm font-semibold">
         <Layers size={18} aria-hidden="true" className="shrink-0 text-volt" />
         {done

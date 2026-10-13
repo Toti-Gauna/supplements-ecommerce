@@ -2,7 +2,7 @@ import type { ComponentProps, ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
 export const inputClass =
-  "w-full min-h-12 rounded-2xl border border-ink/12 bg-surface px-4 text-base text-ink shadow-[inset_0_1px_2px_rgb(0_0_0/0.04)] transition-colors placeholder:text-muted/60 hover:border-ink/25 focus:border-primary focus:outline-none focus-visible:ring-4 focus-visible:ring-primary/12 aria-[invalid=true]:border-danger";
+  "w-full min-h-12 rounded-sm border border-line bg-surface px-4 text-base text-ink shadow-[inset_0_2px_0_rgb(0_0_0/0.12)] transition-colors placeholder:text-muted/70 hover:border-ink/40 focus:border-volt-ink focus:outline-none focus-visible:shadow-[inset_0_-2px_0_var(--color-volt-ink)] aria-[invalid=true]:border-danger";
 
 interface FieldProps {
   id: string;
@@ -17,7 +17,7 @@ interface FieldProps {
 export function Field({ id, label, hint, error, children, className }: FieldProps) {
   return (
     <div className={cn("flex flex-col gap-1.5", className)}>
-      <label htmlFor={id} className="text-sm font-bold text-ink">{label}</label>
+      <label htmlFor={id} className="font-mono text-[12px] font-bold uppercase tracking-[0.08em] text-ink">{label}</label>
       {children}
       {hint && !error && <p id={`${id}-hint`} className="text-xs text-muted">{hint}</p>}
       {error && <p id={`${id}-error`} role="alert" className="text-sm font-semibold text-danger">{error}</p>}

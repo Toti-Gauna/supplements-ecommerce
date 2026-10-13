@@ -48,7 +48,7 @@ export function SlideImageField({ slide, onChange }: Props) {
     </label>
   );
   return (
-    <fieldset className="flex min-w-0 flex-col gap-3 rounded-2xl border border-line p-3 sm:p-4">
+    <fieldset className="flex min-w-0 flex-col gap-3 rounded-sm border border-line p-3 sm:p-4">
       <legend className="px-1 text-sm font-extrabold">Imagen</legend>
       {!img && (
         <label className="flex flex-col gap-1 text-sm font-bold">Ilustración de la demo
@@ -56,7 +56,7 @@ export function SlideImageField({ slide, onChange }: Props) {
         </label>
       )}
       <div className="flex flex-wrap items-center gap-2">
-        <label htmlFor={id} className="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full border-2 border-dashed border-ion bg-surface px-4 text-sm font-bold text-primary hover:bg-accent has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary/50">
+        <label htmlFor={id} className="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-sm border-2 border-dashed border-ion bg-surface px-4 text-sm font-bold text-primary hover:bg-accent has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary/50">
           <ImageUp size={18} aria-hidden="true" />{busy ? "Procesando…" : img ? "Reemplazar imagen" : "Subir imagen propia"}
           <input id={id} type="file" accept={SLIDE_IMAGE.types.join(",")} className="sr-only" aria-describedby={`${id}-hint${error ? ` ${id}-error` : ""}`} onChange={(e) => void take(e.target)} />
         </label>

@@ -40,7 +40,7 @@ export function CouponsList() {
           const expired = Boolean(c.endsAt && c.endsAt < DEMO_TODAY);
           const pct = c.maxUses ? Math.min(100, Math.round((used / c.maxUses) * 100)) : null;
           return (
-            <li key={c.code} className="flex flex-col gap-2 rounded-3xl bg-surface shadow-[var(--shadow-card)] p-4">
+            <li key={c.code} className="flex flex-col gap-2 rounded-sm bg-surface shadow-[var(--shadow-card)] p-4">
               <div className="flex flex-wrap items-center gap-2">
                 <p className="font-mono text-lg font-extrabold">{c.code}</p>
                 <Badge>{valueLabel(c)}</Badge>
@@ -54,8 +54,8 @@ export function CouponsList() {
               <p className="text-sm text-muted">{c.description}{c.minSubtotal ? ` · mínimo ${formatARS(c.minSubtotal)}` : ""}{c.endsAt ? ` · vence ${formatDate(c.endsAt)}` : ""}</p>
               <p className="text-sm"><strong className="tabular-nums">{used}</strong>{c.maxUses ? ` de ${c.maxUses}` : ""} usos <span className="text-muted">(simulados)</span></p>
               {pct !== null && (
-                <div className="h-2 overflow-hidden rounded-full bg-accent" role="progressbar" aria-label={`Usos de ${c.code}`} aria-valuemin={0} aria-valuemax={100} aria-valuenow={pct}>
-                  <div className="h-full rounded-full bg-primary" style={{ width: `${pct}%` }} />
+                <div className="h-2 overflow-hidden rounded-sm bg-accent" role="progressbar" aria-label={`Usos de ${c.code}`} aria-valuemin={0} aria-valuemax={100} aria-valuenow={pct}>
+                  <div className="h-full rounded-sm bg-primary" style={{ width: `${pct}%` }} />
                 </div>
               )}
               <Switch checked={c.active !== false} onChange={(v) => save(v ? `Cupón ${c.code} activado` : `Cupón ${c.code} pausado`, () => saveCoupon({ ...c, active: v }))} label={c.active === false ? "Pausado" : "Activo"} />

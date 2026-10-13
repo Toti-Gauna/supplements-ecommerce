@@ -55,7 +55,7 @@ export function CarouselEditor() {
       <SubpageHeader trail={[MARKETING, CONTENT_SECTION]} back={CONTENT_SECTION} title="Carrusel"
         intro="Las diapositivas grandes del inicio. Elegí una, editala y mirá cómo queda arriba antes de guardar." />
       {session.restored && (
-        <div role="status" className="mb-4 flex flex-wrap items-center gap-3 rounded-2xl bg-warning-soft px-4 py-3 text-sm ring-1 ring-warning/30">
+        <div role="status" className="mb-4 flex flex-wrap items-center gap-3 rounded-sm bg-warning-soft px-4 py-3 text-sm ring-1 ring-warning/30">
           <p className="flex-1 font-bold text-warning">Recuperamos los cambios del carrusel que quedaron sin guardar.</p>
           <ConfirmButton size="sm" variant="secondary" title="Descartar los cambios del carrusel" confirmLabel="Descartar" description="El carrusel vuelve a como está guardado." onConfirm={() => session.reset()}>Descartar cambios</ConfirmButton>
         </div>

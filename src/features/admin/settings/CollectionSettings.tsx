@@ -10,8 +10,8 @@ export function CollectionSettings() {
   return (
     <div>
       <SubpageHeader trail={[SETTINGS_SECTION]} back={SETTINGS_SECTION} title="Datos de cobro" intro="Los datos que ve el comprador para transferir. Es el mismo editor que abre “Configurar datos de cobro” en Pagos." />
-      <section aria-label="Datos de cobro" className="flex max-w-3xl flex-col gap-4 rounded-3xl bg-surface p-4 shadow-[var(--shadow-card)] sm:p-5">
-        {form.restored && <p role="status" className="rounded-2xl bg-warning-soft px-3 py-2 text-sm font-bold text-warning">Recuperamos los datos que quedaron sin guardar.</p>}
+      <section aria-label="Datos de cobro" className="flex max-w-3xl flex-col gap-4 rounded-sm bg-surface p-4 shadow-[var(--shadow-card)] sm:p-5">
+        {form.restored && <p role="status" className="rounded-sm bg-warning-soft px-3 py-2 text-sm font-bold text-warning">Recuperamos los datos que quedaron sin guardar.</p>}
         <CollectionFields form={form} />
       </section>
       <SaveBar onSave={() => form.submit()} dirty={form.dirty} label="Guardar datos de cobro" discardText="Los datos de cobro vuelven a como están guardados." onDiscard={form.discard} />

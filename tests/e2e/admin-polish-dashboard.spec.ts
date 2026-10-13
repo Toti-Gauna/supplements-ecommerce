@@ -32,7 +32,8 @@ test("8.3.1 cada barra abre su día: fecha, cantidad, total y pedidos; la tabla 
   const table = page.locator("figure table");
   const total = await table.locator("tfoot td").nth(1).textContent();
   const kpi = page.locator("section[aria-label='Indicadores (demo)'] > *").filter({ hasText: "Ventas últimos 7 días" });
-  await expect(kpi).toContainText(total!.trim());
+  // El KPI es un marcador LED: la cifra es la lectura del dibujo (role img), no texto.
+  await expect(kpi.getByRole("img", { name: total!.trim() })).toBeVisible();
   await table.locator("tbody tr").nth(i).getByRole("button").click();
   await expect(bars.nth(i)).toHaveAttribute("aria-pressed", "true");
   // Recorrido A: barra → pedido del día → ficha → volver.

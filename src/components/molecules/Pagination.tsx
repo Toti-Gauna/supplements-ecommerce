@@ -8,9 +8,9 @@ interface Props { page: number; pages: number; from: number; to: number; total: 
 export function Pagination({ page, pages, from, to, total, noun, onPage }: Props) {
   if (pages <= 1) return null;
   const nums = Array.from({ length: pages }, (_, i) => i + 1).filter((n) => n === 1 || n === pages || Math.abs(n - page) <= 1);
-  const btn = "grid h-10 min-w-10 place-items-center rounded-full px-2 text-sm font-bold transition-colors disabled:opacity-30";
+  const btn = "grid h-10 min-w-10 place-items-center rounded-sm px-2 text-sm font-bold transition-colors disabled:opacity-30";
   return (
-    <nav aria-label={`Páginas de ${noun}`} className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-full bg-surface p-1.5 pl-5 shadow-[var(--shadow-card)]">
+    <nav aria-label={`Páginas de ${noun}`} className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-sm bg-surface p-1.5 pl-5 shadow-[var(--shadow-card)]">
       <p className="text-sm text-muted" aria-live="polite"><strong className="tabular-nums text-ink">{from}–{to}</strong> de {total} {noun} <span className="whitespace-nowrap">· página {page} de {pages}</span></p>
       <div className="flex items-center gap-1">
         <button type="button" onClick={() => onPage(page - 1)} disabled={page === 1} aria-label="Página anterior" className={cn(btn, "hover:bg-accent")}><ChevronLeft size={18} aria-hidden="true" /></button>

@@ -22,7 +22,7 @@ const FILTERS: FilterSpec<CategoryRow>[] = [
   { id: "destacada", label: "Destacada", allLabel: "Todas", options: [{ value: "si", label: "Destacadas" }, { value: "no", label: "No destacadas" }], test: (c, v) => c.featured === (v === "si") },
   { id: "reponer", label: "Reposición", allLabel: "Todas", options: [{ value: "si", label: "Con variantes para reponer" }, { value: "no", label: "Sin pendientes" }], test: (c, v) => (c.reorder > 0) === (v === "si") },
 ];
-const btn = "grid h-9 w-9 place-items-center rounded-xl border border-line bg-surface disabled:opacity-30";
+const btn = "grid h-9 w-9 place-items-center rounded-sm border border-line bg-surface disabled:opacity-30";
 
 /**
  * Categorías con la tabla común (8.3.22). El orden de la tienda es global: Subir/Bajar solo aparecen con la tabla en
@@ -53,7 +53,7 @@ export function CategoriesTable() {
     { id: "featured", header: "Destacada", cell: (c) => <Switch checked={c.featured} onChange={() => feature(c)} label="Destacada" ariaLabel={`Destacar ${c.name}`} />, sortValue: (c) => c.featured, exportValue: (c) => (c.featured ? "sí" : "no") },
   ];
   const Card = ({ row: c, selected, onToggle, onOpen }: RowCardProps<CategoryRow>) => (
-    <div className={`flex flex-col gap-2 rounded-3xl bg-bg p-3 ring-1 ${selected ? "ring-primary" : "ring-ink/[0.06]"}`}>
+    <div className={`flex flex-col gap-2 rounded-sm bg-bg p-3 ring-1 ${selected ? "ring-primary" : "ring-ink/[0.06]"}`}>
       <div className="flex items-start gap-3">
         <input type="checkbox" checked={selected} onChange={onToggle} aria-label={`Seleccionar ${c.name}`} className="mt-1 h-5 w-5 accent-primary" />
         <button type="button" onClick={onOpen} className="flex min-w-0 flex-1 items-start gap-2 text-left">

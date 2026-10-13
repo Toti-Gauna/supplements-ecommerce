@@ -11,7 +11,7 @@ interface Props<T> {
   onDensity: (d: Density) => void;
 }
 
-const tool = "inline-flex h-10 shrink-0 items-center gap-2 rounded-2xl border border-ink/12 bg-surface px-3 text-sm font-bold transition-colors hover:border-ink/25";
+const tool = "inline-flex h-10 shrink-0 items-center gap-2 rounded-sm border border-ink/12 bg-surface px-3 text-sm font-bold transition-colors hover:border-ink/25";
 
 /** Cómo se ve la tabla (no qué muestra): columnas visibles y densidad. Solo desde la tablet, donde hay tabla. */
 export function DataTableViewTools<T>(p: Props<T>) {
@@ -21,10 +21,10 @@ export function DataTableViewTools<T>(p: Props<T>) {
       {hideable.length > 0 && (
         <details className="relative hidden md:block">
           <summary className={cn(tool, "cursor-pointer list-none [&::-webkit-details-marker]:hidden")}><Columns3 size={16} aria-hidden="true" />Columnas</summary>
-          <fieldset className="absolute right-0 z-30 mt-2 flex w-56 flex-col gap-1 rounded-2xl border border-line bg-surface p-2 shadow-[var(--shadow-lift)]">
+          <fieldset className="absolute right-0 z-30 mt-2 flex w-56 flex-col gap-1 rounded-sm border border-line bg-surface p-2 shadow-[var(--shadow-lift)]">
             <legend className="sr-only">Columnas visibles</legend>
             {hideable.map((c) => (
-              <label key={c.id} className="flex min-h-10 items-center gap-3 rounded-xl px-2 text-sm font-semibold hover:bg-accent/60">
+              <label key={c.id} className="flex min-h-10 items-center gap-3 rounded-sm px-2 text-sm font-semibold hover:bg-accent/60">
                 <input type="checkbox" checked={!p.hidden.has(c.id)} onChange={() => p.onToggleColumn(c.id)} className="h-4 w-4 accent-primary" />{c.header}
               </label>
             ))}

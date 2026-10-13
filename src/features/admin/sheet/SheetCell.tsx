@@ -41,9 +41,9 @@ export function SheetCell<R>({ col, row, value, active, selected, dirty, error, 
           {value ? <Check size={13} aria-hidden="true" /> : null}<span className="sr-only">{value ? "Sí" : "No"}</span>
         </span>
       ) : <span className="block truncate" title={shown}>{shown}</span>}
-      {dirty && !editing && <span aria-hidden="true" className="absolute right-0.5 top-0.5 h-1.5 w-1.5 rounded-full bg-warning" />}
+      {dirty && !editing && <span aria-hidden="true" className="absolute right-0.5 top-0.5 h-1.5 w-1.5 rounded-sm bg-warning" />}
       {(editing?.error || (active && error)) && (
-        <span role="alert" className="absolute left-0 top-full z-30 mt-1 w-max max-w-64 rounded-xl bg-danger px-3 py-1.5 text-left text-xs font-bold leading-snug text-white shadow-[var(--shadow-lift)]">{editing?.error ?? error}</span>
+        <span role="alert" className="absolute left-0 top-full z-30 mt-1 w-max max-w-64 rounded-sm bg-danger px-3 py-1.5 text-left text-xs font-bold leading-snug text-white shadow-[var(--shadow-lift)]">{editing?.error ?? error}</span>
       )}
     </div>
   );

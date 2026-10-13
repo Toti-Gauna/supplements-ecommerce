@@ -18,7 +18,7 @@ export function VariantsEditor({ variants, onChange, idPrefix }: { variants: Var
         const id = `${idPrefix}-${i}`;
         const madeToOrder = v.stock < 0;
         return (
-          <details key={v.id} open={variants.length === 1} className="group rounded-2xl border border-line">
+          <details key={v.id} open={variants.length === 1} className="group rounded-sm border border-line">
             <summary className="flex min-h-12 cursor-pointer list-none flex-wrap items-center gap-x-3 px-3 py-2 [&::-webkit-details-marker]:hidden">
               <span className="font-extrabold">{v.label || `Variante ${i + 1}`}</span>
               <span className="text-sm text-muted">{madeToOrder ? "a pedido" : v.stock === 0 ? "sin stock" : `${v.stock} u.`}{v.priceDelta ? ` · +$${v.priceDelta.toLocaleString("es-AR")}` : ""}</span>
@@ -29,7 +29,7 @@ export function VariantsEditor({ variants, onChange, idPrefix }: { variants: Var
             <label className="flex flex-col gap-1 text-sm font-bold">Nombre visible<Input value={v.label} onChange={(e) => patch(i, { label: e.target.value })} /></label>
             <label className="flex flex-col gap-1 text-sm font-bold">Color<Input value={v.color ?? ""} onChange={(e) => patch(i, { color: e.target.value || undefined })} placeholder="Rosa" /></label>
             <label className="flex flex-col gap-1 text-sm font-bold">Muestra de color
-              <input type="color" value={v.colorHex ?? "#8b72ff"} onChange={(e) => patch(i, { colorHex: e.target.value })} className="h-11 w-full rounded-xl border border-line bg-surface" />
+              <input type="color" value={v.colorHex ?? "#8b72ff"} onChange={(e) => patch(i, { colorHex: e.target.value })} className="h-11 w-full rounded-sm border border-line bg-surface" />
             </label>
             <label className="flex flex-col gap-1 text-sm font-bold">Tamaño / opción<Input value={v.size ?? ""} onChange={(e) => patch(i, { size: e.target.value || undefined })} placeholder="Mediano" /></label>
             <NumberField id={`${id}-delta`} label="Recargo" suffix="ARS" value={v.priceDelta} onChange={(n) => patch(i, { priceDelta: n })} />

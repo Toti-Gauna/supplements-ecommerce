@@ -31,7 +31,7 @@ export function EditorPreview({ template, orders, sample, onSample, email, to }:
         <TabFilter label="Dispositivo" value={device} onChange={setDevice} tabs={[{ id: "desktop", label: "Escritorio" }, { id: "mobile", label: "Celular" }]} />
       </div>
       <label className="flex items-center gap-2 text-sm font-bold">{refill ? "Con la compra" : "Con el pedido"}
-        <select value={sample} onChange={(e) => onSample(e.target.value)} className="h-10 min-w-0 flex-1 rounded-2xl border border-ink/12 bg-surface px-3 font-semibold">
+        <select value={sample} onChange={(e) => onSample(e.target.value)} className="h-10 min-w-0 flex-1 rounded-sm border border-ink/12 bg-surface px-3 font-semibold">
           {options.map((o) => <option key={o.code} value={o.code}>{o.code} · {o.customer.name}</option>)}
         </select>
       </label>

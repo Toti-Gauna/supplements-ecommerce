@@ -26,7 +26,7 @@ export interface CartLineView {
 
 export function CartLineItem({ line, onQuantity, onRemove }: { line: CartLineView; onQuantity: (q: number) => void; onRemove: () => void }) {
   return (
-    <li className="relative animate-fade-up flex gap-3 rounded-3xl bg-surface p-3 shadow-[var(--shadow-card)] sm:gap-5 sm:p-4">
+    <li className="relative animate-fade-up flex gap-3 rounded-sm bg-surface p-3 shadow-[var(--shadow-card)] sm:gap-5 sm:p-4">
       <div className="w-20 shrink-0 sm:w-32"><LineThumb art={line.art} pack={line.pack} tint={line.tint} name={line.name} /></div>
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
         <Link href={`/p/${line.slug}/`} className="line-clamp-2 pr-8 text-[15px] font-bold leading-snug hover:underline sm:text-base">{line.name}</Link>
@@ -40,7 +40,7 @@ export function CartLineItem({ line, onQuantity, onRemove }: { line: CartLineVie
           </div>
         </div>
       </div>
-      <button type="button" onClick={onRemove} aria-label={`Quitar ${line.name}`} className="absolute right-2 top-2 grid h-10 w-10 place-items-center rounded-full text-danger hover:bg-danger-soft">
+      <button type="button" onClick={onRemove} aria-label={`Quitar ${line.name}`} className="absolute right-2 top-2 grid h-10 w-10 place-items-center rounded-sm text-danger hover:bg-danger-soft">
         <Trash2 size={18} aria-hidden="true" />
       </button>
     </li>

@@ -54,17 +54,17 @@ export function WheelAdmin() {
       <SubpageHeader trail={[MARKETING, COUPONS_SECTION]} back={COUPONS_SECTION} title="Configuración de ruleta"
         intro="Cada premio genera un cupón de un uso con vencimiento. En producción el sorteo se hace en el servidor (un giro por cuenta)." />
       {session.restored && (
-        <div role="status" className="mb-4 flex flex-wrap items-center gap-3 rounded-2xl bg-warning-soft px-4 py-3 text-sm ring-1 ring-warning/30">
+        <div role="status" className="mb-4 flex flex-wrap items-center gap-3 rounded-sm bg-warning-soft px-4 py-3 text-sm ring-1 ring-warning/30">
           <p className="flex-1 font-bold text-warning">Recuperamos los cambios de la ruleta que quedaron sin guardar.</p>
           <ConfirmButton size="sm" variant="secondary" title="Descartar los cambios de la ruleta" confirmLabel="Descartar" description="La ruleta vuelve a como está guardada." onConfirm={() => session.reset()}>Descartar cambios</ConfirmButton>
         </div>
       )}
       <form noValidate className="flex flex-col gap-6" onSubmit={(e) => { e.preventDefault(); submit(); }}>
-        <section aria-label="Vista previa de la ruleta" className="flex flex-col items-center gap-2 rounded-[1.75rem] bg-night px-4 py-6 text-on-night">
+        <section aria-label="Vista previa de la ruleta" className="flex flex-col items-center gap-2 rounded-sm bg-night px-4 py-6 text-on-night">
           <WheelDial segments={w.segments} className="mt-2 w-[min(72vw,18rem)]" />
           <p className="text-sm font-semibold text-on-night/80">{w.active ? "Así se ve en la tienda" : "Pausada: no se muestra en la tienda"} · {w.segments.filter((s) => s.active).length} gajos activos</p>
         </section>
-        <section aria-labelledby="w-config" className="flex flex-col gap-4 rounded-3xl bg-surface p-5 shadow-[var(--shadow-card)]">
+        <section aria-labelledby="w-config" className="flex flex-col gap-4 rounded-sm bg-surface p-5 shadow-[var(--shadow-card)]">
           <h2 id="w-config" className="font-bold">Visibilidad y vigencia</h2>
           <div className="flex flex-wrap items-end gap-6">
             <Switch checked={w.active} onChange={(active) => change({ ...w, active })} label={w.active ? "Ruleta visible en la tienda" : "Ruleta pausada"} />
@@ -76,7 +76,7 @@ export function WheelAdmin() {
             </div>
           </div>
         </section>
-        <section aria-labelledby="w-slots" className="flex flex-col gap-3 rounded-3xl bg-surface p-5 shadow-[var(--shadow-card)]">
+        <section aria-labelledby="w-slots" className="flex flex-col gap-3 rounded-sm bg-surface p-5 shadow-[var(--shadow-card)]">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <h2 id="w-slots" className="font-bold">Premios y pesos</h2>
             <Button size="sm" variant="secondary" onClick={() => setAdding(true)}><Plus size={16} aria-hidden="true" /> Agregar premio</Button>
@@ -87,7 +87,7 @@ export function WheelAdmin() {
               const prize = prizes.find((p) => p.id === s.prizeId);
               const pct = probability(config, s);
               return (
-                <li key={s.id} className={cn("grid grid-cols-[minmax(0,1fr)_5.5rem] items-end gap-2 rounded-2xl bg-bg p-3 sm:grid-cols-[3.5rem_minmax(0,1fr)_6rem_4.5rem_auto]", !s.active && "opacity-70")}>
+                <li key={s.id} className={cn("grid grid-cols-[minmax(0,1fr)_5.5rem] items-end gap-2 rounded-sm bg-bg p-3 sm:grid-cols-[3.5rem_minmax(0,1fr)_6rem_4.5rem_auto]", !s.active && "opacity-70")}>
                   <span className="col-span-2 text-sm font-extrabold sm:col-span-1 sm:pb-2.5">Gajo {i + 1}</span>
                   <Field id={`slot-${s.id}`} label="Premio" hint={prize ? prizeCondition(prize) : undefined} className="col-span-2 sm:col-span-1">
                     <Select id={`slot-${s.id}`} aria-label={`Premio del gajo ${i + 1}`} value={s.prizeId ?? ""} onChange={(e) => pick(i, e.target.value)}>
@@ -108,7 +108,7 @@ export function WheelAdmin() {
             })}
           </ul>
         </section>
-        {errors.length > 0 && <ul role="alert" className="flex flex-col gap-1 rounded-2xl bg-danger-soft p-3 text-sm font-semibold text-danger">{errors.map((e) => <li key={e}>{e}</li>)}</ul>}
+        {errors.length > 0 && <ul role="alert" className="flex flex-col gap-1 rounded-sm bg-danger-soft p-3 text-sm font-semibold text-danger">{errors.map((e) => <li key={e}>{e}</li>)}</ul>}
         <div className="flex flex-wrap items-center gap-3">
           <Button type="submit" disabled={!dirty}>Guardar ruleta</Button>
           {dirty && <p role="status" className="text-sm font-bold text-warning">Cambios sin guardar</p>}

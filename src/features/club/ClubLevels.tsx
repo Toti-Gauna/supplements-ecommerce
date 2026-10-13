@@ -16,7 +16,7 @@ export function ClubLevels({ spend, signedIn }: { spend: number; signedIn: boole
   const current = CLUB_LEVELS.indexOf(p.level);
   return (
     <div className="flex flex-col gap-6">
-      <div className="rounded-3xl border border-white/10 bg-white/[0.05] p-5 sm:p-6">
+      <div className="rounded-sm border border-white/10 bg-white/[0.05] p-5 sm:p-6">
         <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
           <p className="font-display text-2xl">Nivel {p.level.name}</p>
           <p className="text-sm text-night-muted">
@@ -32,8 +32,8 @@ export function ClubLevels({ spend, signedIn }: { spend: number; signedIn: boole
           const done = i < current;
           return (
             <li key={l.id} aria-current={on ? "step" : undefined}
-              className={cn("relative flex flex-col gap-3 rounded-3xl border p-4 sm:p-5", on ? "border-volt bg-volt/10 shadow-[0_0_32px_-12px_var(--color-volt)]" : "border-white/10 bg-white/[0.03]")}>
-              {on && <span className="font-lab absolute right-3 top-3 rounded-full bg-volt px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-night">Tu nivel</span>}
+              className={cn("relative flex flex-col gap-3 rounded-sm border p-4 sm:p-5", on ? "border-volt bg-volt/10 shadow-[0_0_32px_-12px_var(--color-volt)]" : "border-white/10 bg-white/[0.03]")}>
+              {on && <span className="font-lab absolute right-3 top-3 rounded-sm bg-volt px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-night">Tu nivel</span>}
               <LevelGlyph level={l.id} className={cn("h-12 w-12 sm:h-14 sm:w-14", on || done ? "text-volt" : "text-night-muted")} />
               <div>
                 <p className="font-display text-xl leading-tight">{l.name}</p>

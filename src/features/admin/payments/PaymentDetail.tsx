@@ -46,9 +46,9 @@ export function PaymentDetail() {
         </Panel>
       ) : (
         <div className="grid gap-6 @min-[48rem]:grid-cols-[minmax(0,20rem)_minmax(0,1fr)]">
-          <figure aria-label="Comprobante" className="self-start rounded-[1.75rem] bg-surface p-4 shadow-[var(--shadow-card)]">
+          <figure aria-label="Comprobante" className="self-start rounded-sm bg-surface p-4 shadow-[var(--shadow-card)]">
             {proof ? <SampleProof fileName={proof.fileName} amount={formatARS(order.total)} /> : (
-              <span className="grid aspect-[200/260] w-full max-w-56 place-items-center rounded-xl border border-dashed border-ink/20 bg-bg p-4 text-center text-sm font-bold text-muted">El comprador todavía no subió un comprobante.</span>
+              <span className="grid aspect-[200/260] w-full max-w-56 place-items-center rounded-sm border border-dashed border-ink/20 bg-bg p-4 text-center text-sm font-bold text-muted">El comprador todavía no subió un comprobante.</span>
             )}
           </figure>
           <div className="flex min-w-0 flex-col gap-6">

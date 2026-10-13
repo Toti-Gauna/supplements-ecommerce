@@ -43,13 +43,13 @@ export function HeroCarousel({ slides, lead }: { slides: CarouselSlide[]; lead?:
     return () => window.clearTimeout(t);
   });
   if (total === 0) return null;
-  const arrow = "absolute top-1/2 z-10 hidden h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-on-night/90 text-night shadow-[var(--shadow-card)] backdrop-blur transition hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-on-night sm:grid lg:h-12 lg:w-12";
+  const arrow = "absolute top-1/2 z-10 hidden h-11 w-11 -translate-y-1/2 place-items-center rounded-sm bg-on-night/90 text-night shadow-[var(--shadow-card)] backdrop-blur transition hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-on-night sm:grid lg:h-12 lg:w-12";
   return (
     <section aria-roledescription="carrusel" aria-label={`Destacados de ${brand.name}`} className="relative -mx-4 -mt-6 sm:mx-0 sm:mt-0 sm:[--hero-safe:4.5rem] lg:[--hero-safe:5.5rem]"
       onPointerEnter={(e) => e.pointerType === "mouse" && setHold(true)} onPointerLeave={() => setHold(false)} onTouchStart={() => setPaused(true)}
       onFocusCapture={() => setHold(true)} onBlurCapture={() => setHold(false)}>
       <div ref={track} onScroll={(e) => setIndex(Math.round(e.currentTarget.scrollLeft / Math.max(1, e.currentTarget.clientWidth)))}
-        className="no-scrollbar flex snap-x snap-mandatory overflow-x-auto overflow-y-hidden overscroll-x-contain sm:rounded-[2rem]">
+        className="no-scrollbar flex snap-x snap-mandatory overflow-x-auto overflow-y-hidden overscroll-x-contain sm:rounded-sm">
         {lead && (
           <div role="group" aria-roledescription="diapositiva" aria-label={`1 de ${total}: ${lead.label}`} className="relative flex w-full shrink-0 snap-center">{lead.node}</div>
         )}
@@ -64,13 +64,13 @@ export function HeroCarousel({ slides, lead }: { slides: CarouselSlide[]; lead?:
           <button type="button" aria-label="Diapositiva anterior" onClick={() => go(index - 1)} className={cn(arrow, "left-3 lg:left-5")}><ArrowLeft size={20} aria-hidden="true" /></button>
           <button type="button" aria-label="Diapositiva siguiente" onClick={() => go(index + 1)} className={cn(arrow, "right-3 lg:right-5")}><ArrowRight size={20} aria-hidden="true" /></button>
           <button type="button" onClick={() => setPaused((p) => !p)} aria-label={paused || reduce ? "Reproducir carrusel" : "Pausar carrusel"}
-            className="absolute bottom-2 right-3 z-10 grid h-8 w-8 place-items-center rounded-full bg-black/25 text-white backdrop-blur transition hover:bg-black/40 sm:bottom-4 sm:right-5">
+            className="absolute bottom-2 right-3 z-10 grid h-8 w-8 place-items-center rounded-sm bg-black/25 text-white backdrop-blur transition hover:bg-black/40 sm:bottom-4 sm:right-5">
             {paused || reduce ? <Play size={14} aria-hidden="true" /> : <Pause size={14} aria-hidden="true" />}
           </button>
           <div className="absolute inset-x-0 bottom-2 flex justify-center gap-1 sm:bottom-4">
             {Array.from({ length: total }, (_, i) => (
               <button key={i} type="button" onClick={() => go(i)} aria-label={`Ir a la diapositiva ${i + 1}`} aria-current={i === index ? "true" : undefined} className="grid h-6 min-w-6 place-items-center px-0.5">
-                <span className={cn("block h-1.5 rounded-full transition-all duration-500", i === index ? "w-8 bg-on-night" : "w-1.5 bg-white/40")} />
+                <span className={cn("block h-1.5 rounded-sm transition-all duration-500", i === index ? "w-8 bg-on-night" : "w-1.5 bg-white/40")} />
               </button>
             ))}
           </div>

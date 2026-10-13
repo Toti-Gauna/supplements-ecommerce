@@ -21,7 +21,7 @@ export function GameHud({ hud, onPause }: { hud: Hud; onPause: () => void }) {
     <div className="px-4 pt-[max(0.75rem,env(safe-area-inset-top))]">
       <div className="flex items-center gap-3">
         <button type="button" onClick={onPause} aria-label="Pausar (Escape)" disabled={hud.phase === "over" || hud.phase === "paused"}
-          className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-white/10 ring-1 ring-white/15 transition hover:bg-white/20 disabled:opacity-40">
+          className="grid h-11 w-11 shrink-0 place-items-center rounded-sm bg-white/10 ring-1 ring-white/15 transition hover:bg-white/20 disabled:opacity-40">
           <Pause size={18} aria-hidden="true" />
         </button>
         <div className="min-w-[4.5rem]">
@@ -45,12 +45,12 @@ export function GameHud({ hud, onPause }: { hud: Hud; onPause: () => void }) {
       </div>
       <div className="flex min-h-9 flex-wrap items-center justify-center gap-2 py-1.5 text-xs font-bold">
         {hud.combo >= 2 && (
-          <span className="rounded-full bg-white/10 px-3 py-1 font-lab tabular-nums">Combo {hud.combo}{hud.mult > 1 && <span className="text-volt"> · ×{hud.mult}</span>}</span>
+          <span className="rounded-sm bg-white/10 px-3 py-1 font-lab tabular-nums">Combo {hud.combo}{hud.mult > 1 && <span className="text-volt"> · ×{hud.mult}</span>}</span>
         )}
         {hud.boost > 0 && (
-          <span className="inline-flex items-center gap-1 rounded-full bg-volt px-3 py-1 font-lab text-night"><Zap size={13} aria-hidden="true" className="fill-current" />×2 · {hud.boost} s</span>
+          <span className="inline-flex items-center gap-1 rounded-sm bg-volt px-3 py-1 font-lab text-night"><Zap size={13} aria-hidden="true" className="fill-current" />×2 · {hud.boost} s</span>
         )}
-        <span className="rounded-full px-3 py-1 text-night-muted ring-1 ring-white/15">
+        <span className="rounded-sm px-3 py-1 text-night-muted ring-1 ring-white/15">
           {reached ? <>Premio: <span className="text-volt">{reached.label}</span></> : next ? `Premio desde ${next.minScore} pts` : null}
           {reached && next ? ` · ${next.label} en ${next.minScore}` : ""}
         </span>

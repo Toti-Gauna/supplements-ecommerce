@@ -29,7 +29,7 @@ export function SlidePreview({ slide, index, caption }: { slide: CarouselSlide; 
   }, []);
   return (
     <figure className="flex flex-col gap-2">
-      <div ref={outer} data-slide-preview className="relative overflow-hidden rounded-[1.5rem] bg-night shadow-[var(--shadow-card)]" style={{ height: m.height || undefined }}>
+      <div ref={outer} data-slide-preview className="relative overflow-hidden rounded-sm bg-night shadow-[var(--shadow-card)]" style={{ height: m.height || undefined }}>
         <div ref={inner} className="origin-top-left sm:[--hero-safe:4.5rem] lg:[--hero-safe:5.5rem]" style={{ width: m.width || "100%", transform: `scale(${m.scale})` }}>
           <div className={heroSlideClass(index)}><HeroSlideBody slide={slide} index={index} /></div>
         </div>

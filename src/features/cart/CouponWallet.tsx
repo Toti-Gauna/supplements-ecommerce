@@ -44,7 +44,7 @@ export function CouponWallet({ onApplied, compact, where = "tienda" }: { onAppli
               dimmed={status === "expired" || status === "used" || status === "paused"}
               action={status === "available" ? (
                 applied ? (
-                  <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-success-soft px-3 py-1.5 text-sm font-bold text-success"><Check size={15} aria-hidden="true" />Aplicado</span>
+                  <span className="inline-flex w-fit items-center gap-1.5 rounded-sm bg-success-soft px-3 py-1.5 text-sm font-bold text-success"><Check size={15} aria-hidden="true" />Aplicado</span>
                 ) : (
                   <Button size="sm" className="w-fit" onClick={() => { if (changeCoupon(coupon.code, where)) toast({ tone: "success", title: "Cupón aplicado", description: coupon.code }); onApplied?.(); }} aria-label={`Aplicar cupón ${coupon.code}`}>Aplicar</Button>
                 )

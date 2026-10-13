@@ -1,27 +1,23 @@
 "use client";
-import { usePathname } from "next/navigation";
-import { Sparkles } from "lucide-react";
+import { CalendarRange } from "lucide-react";
 import { useState } from "react";
-import { bottomBarFor } from "@/components/organisms/bottomBars";
 import { useDemoData } from "@/stores/admin";
 import { useHydrated } from "@/stores/hydration";
 import { ThemePicker } from "./ThemePicker";
 
-/** Botón flotante "Probar temáticas" (se apaga desde el panel). Va a la izquierda; WhatsApp queda a la derecha. */
-export function ThemeTryButton() {
+/**
+ * "Probar temáticas" (se apaga desde el panel). Ya no flota sobre la tienda: va en la cinta de avisos, en el menú del
+ * celular y en el pie, con la forma que le dé cada lugar (`className`).
+ */
+export function ThemeTryButton({ className, withIcon = false }: { className?: string; withIcon?: boolean }) {
   const [open, setOpen] = useState(false);
-  const pathname = usePathname();
   const show = useDemoData((d) => d.themeSettings.showTryButton);
   const hydrated = useHydrated();
   if (!hydrated || !show) return null;
-  const bar = bottomBarFor(pathname);
-  if (bar === "preview") return null;
-  const bottom = bar === "none" ? "bottom-5" : bar === "product" ? "bottom-[calc(6rem+env(safe-area-inset-bottom))] sm:bottom-6" : "bottom-[calc(5.5rem+env(safe-area-inset-bottom))] lg:bottom-6";
   return (
     <>
-      <button type="button" onClick={() => setOpen(true)} aria-haspopup="dialog"
-        className={`animate-fade-up fixed left-4 z-30 inline-flex items-center gap-2 rounded-full bg-night px-3.5 py-2.5 text-[13px] font-bold sm:px-4 sm:py-3 sm:text-sm text-on-night shadow-lg ring-1 ring-volt/40 transition-transform hover:-translate-y-0.5 ${bottom}`}>
-        <Sparkles size={18} aria-hidden="true" className="text-volt" />
+      <button type="button" onClick={() => setOpen(true)} aria-haspopup="dialog" className={className}>
+        {withIcon && <CalendarRange size={18} aria-hidden="true" className="shrink-0 text-volt-ink" />}
         Probar temáticas
       </button>
       <ThemePicker open={open} onClose={() => setOpen(false)} />

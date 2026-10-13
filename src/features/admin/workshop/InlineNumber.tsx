@@ -20,6 +20,6 @@ export function InlineNumber({ value, label, onCommit, min = 0, decimals = false
     <input type="text" inputMode={decimals ? "decimal" : "numeric"} aria-label={label} value={draft ?? String(value).replace(".", ",")}
       onChange={(e) => setDraft(e.target.value)} onBlur={commit} onFocus={(e) => e.currentTarget.select()}
       onKeyDown={(e) => { if (e.key === "Enter") e.currentTarget.blur(); if (e.key === "Escape") { cancelled.current = true; e.currentTarget.blur(); } }}
-      className={cn("h-9 w-24 rounded-xl border border-ink/12 bg-bg px-2 text-right font-bold tabular-nums focus:border-primary focus:outline-none", className)} />
+      className={cn("h-9 w-24 rounded-sm border border-ink/12 bg-bg px-2 text-right font-bold tabular-nums focus:border-primary focus:outline-none", className)} />
   );
 }

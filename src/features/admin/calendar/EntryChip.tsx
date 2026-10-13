@@ -48,7 +48,7 @@ export function EntryChip({ entry: e, onOpen, dnd, variant = "compact" }: Props)
   return (
     <button type="button" onClick={() => onOpen(e.order.code)} {...(draggable ? dnd.source({ kind: "order", code: e.order.code }) : {})}
       aria-label={entryLabel(e)} data-code={e.order.code}
-      className={cn("group relative z-10 flex w-full min-w-0 rounded-lg text-left font-bold transition-[transform,box-shadow] hover:-translate-y-px hover:shadow-[var(--shadow-card)] focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary motion-reduce:transition-none motion-reduce:hover:translate-y-0",
+      className={cn("group relative z-10 flex w-full min-w-0 rounded-sm text-left font-bold transition-[transform,box-shadow] hover:-translate-y-px hover:shadow-[var(--shadow-card)] focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary motion-reduce:transition-none motion-reduce:hover:translate-y-0",
         e.late ? "border border-danger bg-danger-soft text-danger" : e.blocked ? "border border-warning bg-warning-soft text-warning" : STATUS_TONE[e.order.status],
         variant === "compact" ? "h-7 items-center gap-1 px-1.5 text-[11px]" : "flex-col gap-0.5 px-2.5 py-2 text-xs",
         draggable && "cursor-grab active:cursor-grabbing")}>

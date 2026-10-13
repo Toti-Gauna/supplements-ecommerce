@@ -30,8 +30,8 @@ export function ContactSettings() {
   return (
     <div>
       <SubpageHeader trail={[SETTINGS_SECTION]} back={SETTINGS_SECTION} title="Contacto y WhatsApp" intro="El botón de WhatsApp de la tienda abre una conversación con este número." />
-      <section aria-label="WhatsApp" className="flex max-w-2xl flex-col gap-3 rounded-3xl bg-surface p-4 shadow-[var(--shadow-card)] sm:p-5">
-        {session.restored && <p role="status" className="rounded-2xl bg-warning-soft px-3 py-2 text-sm font-bold text-warning">Recuperamos el número que quedó sin guardar.</p>}
+      <section aria-label="WhatsApp" className="flex max-w-2xl flex-col gap-3 rounded-sm bg-surface p-4 shadow-[var(--shadow-card)] sm:p-5">
+        {session.restored && <p role="status" className="rounded-sm bg-warning-soft px-3 py-2 text-sm font-bold text-warning">Recuperamos el número que quedó sin guardar.</p>}
         <Field id="wa" label="Número para el botón de WhatsApp" error={error ?? undefined} hint="Con código de país y área. Vacío: el botón abre WhatsApp para elegir contacto. Usá un número de prueba en la demo.">
           <Input id="wa" value={session.draft} onChange={(e) => { session.setDraft(e.target.value); setError(null); }} inputMode="tel" placeholder="54 9 223 555 0000" aria-invalid={!!error} aria-describedby={describedBy("wa", error ?? undefined, true)} />
         </Field>

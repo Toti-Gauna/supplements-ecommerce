@@ -18,17 +18,17 @@ export function WeekView({ cursor, today, days, events, cal, capacity, dnd, onDa
         const closed = closureFor(day, cal);
         return (
           <li key={day} {...dnd.zone(day)} data-day={day}
-            className={cn("relative flex min-h-24 flex-col gap-2 rounded-2xl p-2.5 transition-colors lg:min-h-[22rem]",
+            className={cn("relative flex min-h-24 flex-col gap-2 rounded-sm p-2.5 transition-colors lg:min-h-[22rem]",
               dnd.over === day ? "bg-accent ring-2 ring-primary" : closed ? "bg-[repeating-linear-gradient(135deg,transparent_0_6px,rgb(0_0_0/0.04)_6px_12px)]" : "bg-surface",
               !closed && "shadow-[var(--shadow-card)]", dnd.blockOf(day) && "opacity-60")}>
             <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
               <h3 className="min-w-0">
                 <button type="button" onClick={() => onDay(day)} aria-label={dayLabel(day, list, evs, closed, capacity)}
-                  className={cn("inline-flex items-center gap-1 rounded-full text-sm font-extrabold first-letter:uppercase hover:underline", day === today && "text-primary")}>
+                  className={cn("inline-flex items-center gap-1 rounded-sm text-sm font-extrabold first-letter:uppercase hover:underline", day === today && "text-primary")}>
                   {formatDay(day)}<Plus size={13} aria-hidden="true" className="text-muted" />
                 </button>
               </h3>
-              {!closed && <span className={cn("ml-auto inline-flex items-center gap-1 rounded-full px-2 text-[11px] font-extrabold tabular-nums", used >= capacity ? "bg-warning-soft text-warning" : "bg-bg text-muted")}><Bike size={11} aria-hidden="true" /><span className="sr-only">Cadete: </span>{capacityText(used, capacity)}</span>}
+              {!closed && <span className={cn("ml-auto inline-flex items-center gap-1 rounded-sm px-2 text-[11px] font-extrabold tabular-nums", used >= capacity ? "bg-warning-soft text-warning" : "bg-bg text-muted")}><Bike size={11} aria-hidden="true" /><span className="sr-only">Cadete: </span>{capacityText(used, capacity)}</span>}
             </div>
             {closed && <p className="text-xs font-bold text-muted">{closed.reason}</p>}
             {list.length + evs.length ? (

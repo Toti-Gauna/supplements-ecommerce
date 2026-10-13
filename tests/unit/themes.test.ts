@@ -5,7 +5,6 @@ import { cardDeal, currentTheme, inSeason, nextTheme, offerPrice, themeForDate, 
 import { walletCoupons } from "@/demo/engine/wallet";
 import type { SeasonId } from "@/demo/types";
 import { AMBIENT } from "@/features/themes/ambient";
-import { PALETTES } from "@/features/themes/palettes";
 import { SKINS } from "@/features/themes/skins";
 
 const at = (iso: string) => new Date(`${iso}T12:00:00`);
@@ -19,10 +18,9 @@ const IDS: SeasonId[] = [
 describe("temáticas fitness (Fase 5)", () => {
   beforeEach(() => setDemoData(defaultDemoData()));
 
-  it("son las doce del plan, cada una con su paleta, su piel, su fondo y su cupón propio", () => {
+  it("son las doce del plan, cada una con su acento, su piel, su fondo y su cupón propio", () => {
     expect(seasonalThemes.map((t) => t.id).sort()).toEqual([...IDS].sort());
     for (const t of seasonalThemes) {
-      expect(PALETTES[t.id], t.id).toBeDefined();
       expect(SKINS[t.id].decor, t.id).toHaveLength(5);
       expect(AMBIENT[t.id].length, t.id).toBeGreaterThan(0);
       const coupon = themeCoupons.find((c) => c.code === t.couponCode);

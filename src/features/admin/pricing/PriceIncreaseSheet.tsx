@@ -14,7 +14,7 @@ import { PricePreview } from "./PricePreview";
 type Kind = PriceScope["kind"];
 const KINDS: { id: Kind; label: string }[] = [{ id: "brand", label: "Una marca" }, { id: "category", label: "Una categoría" }, { id: "all", label: "Todo el catálogo" }];
 const ROUNDINGS: Rounding[] = [100, 500, 1];
-const chip = "inline-flex min-h-11 cursor-pointer items-center rounded-full border px-4 text-sm font-bold has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary/50";
+const chip = "inline-flex min-h-11 cursor-pointer items-center rounded-sm border px-4 text-sm font-bold has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary/50";
 
 /**
  * Aumento masivo de precios por % (Fase 6): marca, categoría o todo; % positivo o negativo; redondeo; vista previa por

@@ -30,7 +30,7 @@ export function ClaimsAdmin() {
       <ul className="flex flex-col gap-3">
         {page.items.map((c) => (
           <li key={c.id}>
-            <Link href={claimHref(c.id)} className="animate-fade-up flex items-center gap-3 rounded-3xl bg-surface p-4 text-sm shadow-[var(--shadow-card)] transition-shadow hover:ring-1 hover:ring-primary">
+            <Link href={claimHref(c.id)} className="animate-fade-up flex items-center gap-3 rounded-sm bg-surface p-4 text-sm shadow-[var(--shadow-card)] transition-shadow hover:ring-1 hover:ring-primary">
               <span className="flex min-w-0 flex-1 flex-col gap-1.5">
                 <span className="flex flex-wrap items-center gap-2">
                   <span className="font-extrabold">{c.code}</span><Badge>{CLAIM_TYPE[c.type]}</Badge><Badge tone={CLAIM_STATUS[c.status].tone}>{CLAIM_STATUS[c.status].label}</Badge>

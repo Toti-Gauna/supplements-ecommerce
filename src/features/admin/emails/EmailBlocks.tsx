@@ -10,7 +10,7 @@ import { cn } from "@/lib/cn";
 const INK = "text-[#23272f]";
 const SOFT = "text-[#5b6370]";
 const NIGHT = "#0b0d10";
-const card = "mx-6 mt-5 rounded-2xl border border-[#e3e6ea]";
+const card = "mx-6 mt-5 rounded-sm border border-[#e3e6ea]";
 
 /** Rótulo de laboratorio: "LOTE VL-2610-C · VTO 03/2028". */
 const LabTag = ({ children }: { children: string }) => (
@@ -18,7 +18,7 @@ const LabTag = ({ children }: { children: string }) => (
 );
 
 function LineArt({ line, size = "w-14" }: { line: RenderedLine; size?: string }) {
-  return <ProductArt art={line.art} pack={line.pack} tint={line.tint} label={line.name} showBadge={false} className={cn("aspect-square shrink-0 rounded-xl", size)} />;
+  return <ProductArt art={line.art} pack={line.pack} tint={line.tint} label={line.name} showBadge={false} className={cn("aspect-square shrink-0 rounded-sm", size)} />;
 }
 
 export function OrderCard({ b }: { b: Extract<RenderedBlock, { type: "order-card" }> }) {
@@ -60,7 +60,7 @@ export function UsageList({ b }: { b: Extract<RenderedBlock, { type: "usage" }> 
     <ul className={cn(card, "flex flex-col gap-3 p-4 text-sm", INK)}>
       {b.lines.map((l) => (
         <li key={l.name}>
-          <p className="font-bold text-[#0b0d10]">{l.name}{l.dose && <span className="font-lab ml-2 rounded-full bg-[#0b0d10] px-2 py-0.5 text-[10.5px] text-volt">{l.dose}</span>}</p>
+          <p className="font-bold text-[#0b0d10]">{l.name}{l.dose && <span className="font-lab ml-2 rounded-sm bg-[#0b0d10] px-2 py-0.5 text-[10.5px] text-volt">{l.dose}</span>}</p>
           <p className="mt-0.5">{l.text}</p>
         </li>
       ))}
@@ -78,8 +78,8 @@ export function TrackingBattery({ b }: { b: Extract<RenderedBlock, { type: "trac
   const at = b.steps.findIndex((s) => s.state === "current");
   const next = b.steps[at + 1];
   return (
-    <div className="@container mx-6 mt-5 rounded-2xl bg-[#f6f7f9] p-4">
-      <ol className="flex gap-1.5 rounded-lg border-2 p-1" style={{ borderColor: NIGHT }}>
+    <div className="@container mx-6 mt-5 rounded-sm bg-[#f6f7f9] p-4">
+      <ol className="flex gap-1.5 rounded-sm border-2 p-1" style={{ borderColor: NIGHT }}>
         {b.steps.map((s) => (
           <li key={s.label} aria-label={`${s.label}: ${STEP_STATE[s.state]}`} className={cn("h-3.5 flex-1 rounded-[3px]", s.state === "done" ? "bg-[#0b0d10]" : s.state === "current" ? "bg-volt ring-1 ring-[#0b0d10]" : "bg-[#e3e6ea]")} />
         ))}

@@ -19,7 +19,7 @@ export function FulfillmentPicker({ value, onChange }: { value: FulfillmentType[
       <legend className="text-sm font-bold">Sale en pedidos con</legend>
       <div className="flex flex-wrap gap-2">
         {ALL.map((f) => (
-          <label key={f} className="inline-flex min-h-11 items-center gap-2 rounded-full bg-bg px-3.5 text-sm font-semibold ring-1 ring-ink/10 has-[:checked]:ring-primary/50">
+          <label key={f} className="inline-flex min-h-11 items-center gap-2 rounded-sm bg-bg px-3.5 text-sm font-semibold ring-1 ring-ink/10 has-[:checked]:ring-primary/50">
             <input type="checkbox" checked={on.includes(f)} onChange={(e) => toggle(f, e.target.checked)} className="h-5 w-5 accent-[var(--color-primary)]" />
             {FULFILLMENT_LABEL[f]}
           </label>

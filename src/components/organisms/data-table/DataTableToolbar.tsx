@@ -28,7 +28,7 @@ const MORE_GONE = ["@min-[50rem]:hidden", "@min-[62rem]:hidden", "@min-[73rem]:h
 const TIER = ["inline @min-[50rem]:hidden", "hidden @min-[50rem]:inline @min-[62rem]:hidden", "hidden @min-[62rem]:inline @min-[73rem]:hidden", "hidden @min-[73rem]:inline"];
 
 // Sin tailwind-merge: forma y colores van por separado para que nunca compitan dos fondos o dos bordes.
-const shape = "inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-2xl border px-3.5 text-sm font-bold transition-colors disabled:opacity-40";
+const shape = "inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-sm border px-3.5 text-sm font-bold transition-colors disabled:opacity-40";
 const idle = "border-ink/12 bg-surface hover:border-ink/25";
 
 /**
@@ -57,9 +57,9 @@ export function DataTableToolbar<T>(p: Props<T>) {
             <span className="relative min-w-0 flex-1">
               <Search size={17} aria-hidden="true" className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted" />
               <input id={`${uid}-q`} type="search" value={p.query} onChange={(e) => p.onQuery(e.target.value)} placeholder={p.searchPlaceholder} enterKeyHint="search"
-                className="h-11 w-full rounded-2xl border border-ink/12 bg-bg pl-10 pr-10 text-[15px] font-medium placeholder:text-muted/60 focus:border-primary focus:outline-none focus-visible:ring-4 focus-visible:ring-primary/12" />
+                className="h-11 w-full rounded-sm border border-ink/12 bg-bg pl-10 pr-10 text-[15px] font-medium placeholder:text-muted/60 focus:border-primary focus:outline-none focus-visible:ring-4 focus-visible:ring-primary/12" />
               {p.query && (
-                <button type="button" onClick={() => p.onQuery("")} aria-label="Borrar búsqueda" className="absolute right-2 top-1/2 grid h-7 w-7 -translate-y-1/2 place-items-center rounded-full text-muted hover:bg-accent">
+                <button type="button" onClick={() => p.onQuery("")} aria-label="Borrar búsqueda" className="absolute right-2 top-1/2 grid h-7 w-7 -translate-y-1/2 place-items-center rounded-sm text-muted hover:bg-accent">
                   <X size={15} aria-hidden="true" />
                 </button>
               )}
@@ -72,14 +72,14 @@ export function DataTableToolbar<T>(p: Props<T>) {
           {n > 0 && (
             <button type="button" aria-expanded={more} aria-controls={`${uid}-more`} onClick={() => setMore(!more)} className={cn(shape, more ? "border-primary bg-primary/[0.06]" : idle, n <= 3 && MORE_GONE[n - 1])}>
               <SlidersHorizontal size={16} aria-hidden="true" />Más filtros
-              {TIER.map((cls, t) => active(t) > 0 && <span key={t} className={cn(cls, "rounded-full bg-primary px-1.5 text-[11px] tabular-nums text-on-primary")}>{active(t)}<span className="sr-only"> activos</span></span>)}
+              {TIER.map((cls, t) => active(t) > 0 && <span key={t} className={cn(cls, "rounded-sm bg-primary px-1.5 text-[11px] tabular-nums text-on-primary")}>{active(t)}<span className="sr-only"> activos</span></span>)}
             </button>
           )}
           <button type="button" onClick={p.onReset} disabled={!p.dirty} className={cn(shape, idle)}><RotateCcw size={16} aria-hidden="true" />Reiniciar<span className="sr-only"> filtros</span></button>
         </div>
       </div>
       {n > 0 && more && (
-        <div id={`${uid}-more`} role="group" aria-label="Más filtros" className={cn("grid gap-3 rounded-2xl bg-bg p-3 @min-[30rem]:grid-cols-2 @min-[48rem]:grid-cols-3", n <= 3 && MORE_GONE[n - 1])}>
+        <div id={`${uid}-more`} role="group" aria-label="Más filtros" className={cn("grid gap-3 rounded-sm bg-bg p-3 @min-[30rem]:grid-cols-2 @min-[48rem]:grid-cols-3", n <= 3 && MORE_GONE[n - 1])}>
           {p.filters.map((f, i) => control(f, i, "more"))}
         </div>
       )}

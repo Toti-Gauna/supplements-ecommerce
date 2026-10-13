@@ -29,17 +29,17 @@ export function VariantPicker({ legend, options, value, onChange, swatches }: { 
           return (
             <label key={o.value} title={o.label}
               className={cn("relative flex cursor-pointer items-center justify-center has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary/50",
-                swatches && o.hex ? "h-12 w-12 rounded-full" : card ? "min-h-[4.5rem] flex-col rounded-2xl px-3 pb-2.5 pt-4 text-center" : "min-h-12 rounded-full px-5 text-sm font-bold",
+                swatches && o.hex ? "h-12 w-12 rounded-sm" : card ? "min-h-[4.5rem] flex-col rounded-sm px-3 pb-2.5 pt-4 text-center" : "min-h-12 rounded-sm px-5 text-sm font-bold",
                 !swatches && !selected && "border border-ink/15 bg-surface hover:border-ink/35",
                 o.disabled && "opacity-45")}>
               <input type="radio" className="sr-only" name={group} value={o.value} checked={selected} onChange={() => onChange(o.value)} />
               {selected && (
                 <motion.span layoutId={`${group}-pick`} transition={{ type: "spring", stiffness: 500, damping: 36 }} aria-hidden="true"
-                  className={cn("absolute inset-0", card ? "rounded-2xl bg-night ring-2 ring-primary" : "rounded-full", swatches && o.hex ? "ring-2 ring-primary ring-offset-2 ring-offset-bg" : !card && "bg-night")} />
+                  className={cn("absolute inset-0", card ? "rounded-sm bg-night ring-2 ring-primary" : "rounded-sm", swatches && o.hex ? "ring-2 ring-primary ring-offset-2 ring-offset-bg" : !card && "bg-night")} />
               )}
-              {o.badge && <span className="font-lab absolute -top-2.5 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-full bg-volt px-2 py-0.5 text-[9.5px] font-bold uppercase tracking-wider text-night">{o.badge}</span>}
+              {o.badge && <span className="font-lab absolute -top-2.5 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-sm bg-volt px-2 py-0.5 text-[9.5px] font-bold uppercase tracking-wider text-night">{o.badge}</span>}
               {swatches && o.hex ? (
-                <span aria-hidden="true" className="relative h-9 w-9 rounded-full border border-black/10 shadow-inner" style={{ background: o.hex }} />
+                <span aria-hidden="true" className="relative h-9 w-9 rounded-sm border border-black/10 shadow-inner" style={{ background: o.hex }} />
               ) : card ? (
                 <>
                   <span className={cn("relative text-sm font-bold", selected && "text-on-night", o.disabled && "line-through")}>{o.label}</span>

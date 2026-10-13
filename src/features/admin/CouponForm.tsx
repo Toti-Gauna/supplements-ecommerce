@@ -21,7 +21,7 @@ export function CouponForm({ onDone }: { onDone: () => void }) {
   const [error, setError] = useState<string | null>(null);
   const set = (p: Partial<Coupon>) => setC((x) => ({ ...x, ...p }));
   return (
-    <form noValidate className="flex flex-col gap-3 rounded-2xl border-2 border-primary bg-surface p-4" onSubmit={(e) => {
+    <form noValidate className="flex flex-col gap-3 rounded-sm border-2 border-primary bg-surface p-4" onSubmit={(e) => {
       e.preventDefault();
       const code = normalizeCode(c.code);
       if (!/^[A-Z0-9]{3,20}$/.test(code)) return setError("Código de 3 a 20 letras o números, sin espacios.");

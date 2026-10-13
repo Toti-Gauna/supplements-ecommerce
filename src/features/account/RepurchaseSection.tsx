@@ -28,7 +28,7 @@ export function RepurchaseSection() {
   const openCart = useUi((s) => s.openCart);
   if (items.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-line p-5 text-sm text-muted">
+      <div className="rounded-sm border border-dashed border-line p-5 text-sm text-muted">
         <p>Todavía no pediste avisos. En cada ficha, la calculadora <strong className="text-ink">¿Cuánto te dura?</strong> te deja pedir que te avisemos 5 días antes de que se termine el pote.</p>
         <Link href="/p/ionic-whey/" className="mt-3 inline-block font-bold text-primary underline">Probalo con una proteína</Link>
       </div>
@@ -41,7 +41,7 @@ export function RepurchaseSection() {
         const variant = product?.variants.find((v) => v.id === r.variantId);
         const pct = remainingPct(r);
         return (
-          <li key={r.id} className="flex gap-3 rounded-2xl border border-line bg-surface p-3 sm:gap-4 sm:p-4">
+          <li key={r.id} className="flex gap-3 rounded-sm border border-line bg-surface p-3 sm:gap-4 sm:p-4">
             {product && <div className="w-16 shrink-0 sm:w-20"><LineThumb art={product.art} pack={product.pack} tint={variant?.colorHex} name={product.name} /></div>}
             <div className="flex min-w-0 flex-1 flex-col gap-1">
               <p className="font-bold leading-snug">{r.name}</p>

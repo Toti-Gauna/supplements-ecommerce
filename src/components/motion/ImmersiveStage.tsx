@@ -75,7 +75,7 @@ export function ImmersiveStage({ open, onClose, label, glow = ["#1c1640", "#8b72
       <div aria-hidden="true" className="immersive-backdrop absolute inset-0" />
       {!lockExit && (
         <button type="button" onClick={onClose}
-          className="absolute right-[max(1rem,env(safe-area-inset-right))] top-[max(1rem,env(safe-area-inset-top))] z-20 flex h-11 items-center gap-1.5 rounded-full bg-white/10 px-4 text-sm font-bold text-on-night ring-1 ring-white/15 transition hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-on-night">
+          className="absolute right-[max(1rem,env(safe-area-inset-right))] top-[max(1rem,env(safe-area-inset-top))] z-20 flex h-11 items-center gap-1.5 rounded-sm bg-white/10 px-4 text-sm font-bold text-on-night ring-1 ring-white/15 transition hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-on-night">
           <X size={18} aria-hidden="true" /> {exitLabel}
         </button>
       )}

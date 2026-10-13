@@ -23,7 +23,7 @@ function SlideArt({ slide, tint }: { slide: CarouselSlide; tint: string }) {
   if (!slide.image) return <ProductArt art={slide.art} tint={tint} bare label="" showBadge={false} className={cn(ART, "drop-shadow-[0_40px_50px_rgb(0_0_0/0.55)]")} />;
   const f = frame(slide.image);
   return (
-    <div className={cn(ART, "overflow-hidden rounded-[1.4rem] shadow-[0_40px_80px_-30px_rgb(0_0_0/0.65)] sm:rounded-[2rem]")}>
+    <div className={cn(ART, "overflow-hidden rounded-sm shadow-[0_40px_80px_-30px_rgb(0_0_0/0.65)] sm:rounded-sm")}>
       {/* eslint-disable-next-line @next/next/no-img-element -- data URL local del panel demo */}
       <img src={slide.image.src} alt={slide.image.alt} className="h-full w-full object-cover" style={{ objectPosition: `${f.x}% ${f.y}%`, transform: `scale(${f.zoom})`, transformOrigin: `${f.x}% ${f.y}%` }} />
     </div>
@@ -44,7 +44,7 @@ export function HeroSlideBody({ slide, index }: { slide: CarouselSlide; index: n
         <p className={cn("eyebrow", tone.eyebrow)}>{brand.name} · {String(index + 1).padStart(2, "0")}</p>
         <p className="font-display font-wide mt-2 text-[1.6rem] leading-[1.02] [overflow-wrap:anywhere] sm:mt-3 sm:text-5xl lg:text-6xl">{slide.title}</p>
         <p className="mt-2 line-clamp-2 max-w-md text-[13px] text-white/80 sm:mt-3 sm:line-clamp-none sm:text-lg">{slide.subtitle}</p>
-        <span className="mt-5 inline-flex w-fit max-w-full items-center gap-2 rounded-full bg-volt px-4 py-2.5 text-[13px] font-extrabold sm:mt-6 sm:px-6 sm:py-3 sm:text-sm text-night shadow-[0_12px_34px_-12px_color-mix(in_srgb,var(--brand-volt)_70%,transparent)] transition-transform group-hover:translate-x-1">
+        <span className="mt-5 inline-flex w-fit max-w-full items-center gap-2 rounded-sm bg-volt px-4 py-2.5 text-[13px] font-extrabold sm:mt-6 sm:px-6 sm:py-3 sm:text-sm text-night shadow-[0_12px_34px_-12px_color-mix(in_srgb,var(--brand-volt)_70%,transparent)] transition-transform group-hover:translate-x-1">
           {slide.ctaLabel} <ArrowRight size={16} aria-hidden="true" />
         </span>
       </div>

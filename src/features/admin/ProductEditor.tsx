@@ -119,7 +119,7 @@ export function ProductEditor() {
   return (
     <>
       <Link href={back} className="mb-3 flex w-fit items-center gap-1 text-sm font-bold text-primary"><ArrowLeft size={16} aria-hidden="true" /> Productos</Link>
-      <h1 className="mb-4 text-2xl font-extrabold">{product ? `Editar: ${product.name}` : "Nuevo producto"}</h1>
+      <h1 className="font-display mb-4 text-4xl sm:text-5xl">{product ? `Editar: ${product.name}` : "Nuevo producto"}</h1>
       <Editor key={key} draftKey={key} origin={isNew ? "new" : "edit"} saved={product ?? null} />
     </>
   );

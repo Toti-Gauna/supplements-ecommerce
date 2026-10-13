@@ -111,14 +111,14 @@ test("buscador superpuesto con resultados en vivo y búsquedas recientes", async
   await page.goto("");
   await page.getByRole("button", { name: "Buscar", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "Buscar" });
-  await expect(dialog.getByRole("searchbox")).toBeFocused();
+  await expect(dialog.getByRole("combobox", { name: "Buscar productos" })).toBeFocused();
   // Con un error de tipeo igual encuentra el producto.
   await page.keyboard.type("glutamna");
   await expect(dialog.getByRole("status")).toContainText("resultado");
-  await dialog.getByRole("link", { name: /Glutamina micronizada/ }).click();
+  await dialog.getByRole("option", { name: /Glutamina micronizada/ }).click();
   await expect(page.getByRole("heading", { level: 1, name: "Glutamina micronizada" })).toBeVisible();
   await page.getByRole("button", { name: "Buscar productos" }).click();
-  await expect(page.getByRole("dialog", { name: "Buscar" }).getByRole("button", { name: "glutamna" })).toBeVisible();
+  await expect(page.getByRole("dialog", { name: "Buscar" }).getByRole("option", { name: "glutamna" })).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(page.getByRole("dialog", { name: "Buscar" })).toBeHidden();
 });

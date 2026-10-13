@@ -27,6 +27,14 @@ const PLACE = {
   dialog: "shadow-[var(--shadow-lift)] inset-x-0 bottom-0 max-h-[94dvh] overflow-hidden rounded-t-sm sm:inset-0 sm:m-auto sm:h-fit sm:max-h-[90dvh] sm:w-[min(94vw,920px)] sm:rounded-sm",
 };
 
+/** Un `max-w-*` o `sm:w-*` propio reemplaza al del lado (si no, las dos clases compiten). */
+function place(side: keyof typeof PLACE, className = ""): string {
+  let base = PLACE[side];
+  if (/\bmax-w-/.test(className)) base = base.replace(/ max-w-\S+/g, "");
+  if (/(^|\s)sm:w-/.test(className)) base = base.replace(/ sm:w-\S+/g, "");
+  return base;
+}
+
 /**
  * Panel modal accesible: foco atrapado, Escape cierra, scroll de fondo bloqueado, devuelve el foco.
  * Se monta en <body> por portal: un ancestro con backdrop-filter (el header) recortaría un `fixed`.
@@ -62,7 +70,7 @@ export function Sheet({ open, onClose, title, side = "right", children, classNam
         <div className="fixed inset-0 z-[70]">
           <motion.div className="absolute inset-0 bg-night/45 backdrop-blur-[3px]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} onClick={onClose} />
           <motion.div ref={panel} role="dialog" aria-modal="true" aria-label={title}
-            className={cn("absolute flex flex-col bg-bg", /\bmax-w-/.test(className ?? "") ? PLACE[side].replace(/ max-w-\S+/g, "") : PLACE[side], className)}
+            className={cn("absolute flex flex-col bg-bg", place(side, className), className)}
             initial={OFFSET[side]} animate={{ x: 0, y: 0, opacity: 1, scale: 1 }} exit={OFFSET[side]} transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}>
             <button type="button" onClick={onClose} aria-label="Cerrar" className="bevel absolute right-4 top-4 z-10 grid h-11 w-11 place-items-center rounded-xs border border-line bg-surface text-ink hover:bg-accent">
               <X size={20} aria-hidden="true" />

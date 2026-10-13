@@ -1,99 +1,91 @@
 "use client";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowUpRight, Clock, Search, TrendingUp } from "lucide-react";
-import { useMemo, useState } from "react";
-import { ProductVisual } from "@/components/illustrations/ProductVisual";
+import { useMemo, useRef, useState } from "react";
+import { Button } from "@/components/atoms/Button";
 import { Sheet } from "@/components/motion/Sheet";
-import { activeProducts, bestSellers, fromPrice, getCategory, productHref } from "@/demo/engine/catalog";
-import { recommendForCart } from "@/demo/engine/recommend";
-import { searchProducts, suggestTerm } from "@/demo/engine/search";
-import type { Product } from "@/demo/types";
-import { formatARS } from "@/lib/money";
-import { useDemoVersion } from "@/stores/admin";
-import { useCart } from "@/stores/cart";
+import { bestSellers, productHref } from "@/demo/engine/catalog";
+import { popularSearches } from "@/demo/fixtures/search";
+import { plural } from "@/lib/plural";
 import { useRecentSearches } from "@/stores/recentSearches";
 import { useUi } from "@/stores/ui";
+import { ChipToggles, DetectedChips } from "./search/SearchChips";
+import { SearchField } from "./search/SearchField";
+import { IgnoredNote, SearchSuggestions } from "./search/SearchFixes";
+import { optionId, SearchListbox, type OptionGroup, type SearchOption } from "./search/SearchListbox";
+import { toRackRow, useCatalogSearch } from "./search/useCatalogSearch";
+import { useListNav } from "./search/useListNav";
 
-const TRENDING = ["whey", "creatina", "pre entreno", "vegano", "omega 3", "alfajor proteico"];
+const LIST_ID = "buscador-opciones";
+const LIVE_ROWS = 6;
+const productOption = (p: Parameters<typeof toRackRow>[0]): SearchOption => ({ key: p.slug, kind: "product", href: productHref(p.slug), row: toRackRow(p) });
 
-/** Buscador superpuesto: recientes, tendencias, recomendados y resultados en vivo mientras escribís. */
+/**
+ * Buscador superpuesto (protagonista): campo grande, filtros del rubro para tocar, resultados en vivo como filas de
+ * rack y búsquedas populares. Teclado completo (↑ ↓ Enter, Escape cierra), foco atrapado por el `Sheet` y, en el
+ * celular, a pantalla completa.
+ */
 export function SearchModal() {
   const { searchOpen, setSearch } = useUi();
   const router = useRouter();
-  const data = useDemoVersion();
-  const lines = useCart((s) => s.lines);
-  const { terms, remember, clear } = useRecentSearches();
+  const input = useRef<HTMLInputElement>(null);
+  const { terms: recent, remember, clear } = useRecentSearches();
   const [q, setQ] = useState("");
-  const results = useMemo(() => (q.trim() ? searchProducts(q, data.products.filter((p) => p.active !== false), data.categories) : []), [q, data]);
-  const suggestion = q.trim() && results.length === 0 ? suggestTerm(q, activeProducts()) : null;
+  const { outcome, options: chipGroups } = useCatalogSearch(q);
+  const typed = q.trim() !== "";
+  const { results } = outcome;
+
+  const groups: OptionGroup[] = useMemo(() => {
+    if (typed) return [{ id: "productos", label: "Productos", options: results.slice(0, LIVE_ROWS).map((r) => productOption(r.product)) }];
+    const asQuery = (recentList: boolean) => (text: string): SearchOption => ({ key: `${recentList ? "r" : "p"}:${text}`, kind: "query", text, recent: recentList });
+    return [
+      { id: "recientes", label: "Tus búsquedas", options: recent.map(asQuery(true)) },
+      { id: "populares", label: "Lo que más se busca", options: popularSearches.map(asQuery(false)) },
+      { id: "elegidos", label: "Lo más elegido del box", options: bestSellers(3).map(productOption), className: "sm:col-start-2 sm:row-span-2 sm:row-start-1" },
+    ];
+  }, [typed, results, recent]);
+  const flat = groups.flatMap((g) => g.options);
+
   const close = () => { setSearch(false); setQ(""); };
-  const goSearch = (term: string) => { if (!term.trim()) return; remember(term); close(); router.push(`/buscar/?q=${encodeURIComponent(term.trim())}`); };
-  const pick = () => { remember(q); close(); };
-  const recommended = lines.length ? recommendForCart(lines, 4) : bestSellers(4);
-  const chip = "inline-flex min-h-10 items-center gap-1.5 rounded-sm border border-line bg-surface px-4 text-sm font-semibold hover:border-ink/30 hover:bg-accent/40";
+  const refine = (next: string) => { setQ(next); input.current?.focus(); };
+  const goAll = () => { if (!typed) return; remember(q); close(); router.push(`/buscar/?q=${encodeURIComponent(q.trim())}`); };
+  const pick = (o: SearchOption) => {
+    if (o.kind === "query") return refine(o.text);
+    if (typed) remember(q);
+    close();
+    router.push(o.href);
+  };
+  const nav = useListNav(flat, q, pick, goAll);
+  const status = !typed ? "" : results.length ? `${plural(results.length, "resultado", "resultados")} para “${q.trim()}”` : `No encontramos “${q.trim()}”`;
 
   return (
-    <Sheet open={searchOpen} onClose={close} title="Buscar" side="top">
-      <form role="search" onSubmit={(e) => { e.preventDefault(); goSearch(q); }} className="border-b border-line px-4 pb-4 pt-5 pr-16 sm:px-6 sm:pr-20">
-        <label htmlFor="search-modal" className="sr-only">Buscar productos</label>
-        <div className="relative">
-          <Search size={20} aria-hidden="true" className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted" />
-          <input id="search-modal" data-autofocus type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Whey, creatina, pre…" autoComplete="off" enterKeyHint="search"
-            className="min-h-13 w-full rounded-sm border-2 border-ink/10 bg-surface pl-12 pr-4 text-[17px] outline-none transition-colors focus:border-primary" />
-        </div>
-      </form>
-      <div className="flex-1 overflow-y-auto px-4 pb-8 pt-5 sm:px-6">
-        {q.trim() === "" ? (
-          <div className="flex flex-col gap-7">
-            {terms.length > 0 && (
-              <section aria-labelledby="recientes">
-                <div className="mb-3 flex items-center justify-between">
-                  <h2 id="recientes" className="eyebrow text-muted">Búsquedas recientes</h2>
-                  <button type="button" onClick={clear} className="text-xs font-bold text-primary underline underline-offset-4">Borrar</button>
-                </div>
-                <ul className="flex flex-wrap gap-2">{terms.map((t) => <li key={t}><button type="button" onClick={() => goSearch(t)} className={chip}><Clock size={14} aria-hidden="true" className="text-muted" />{t}</button></li>)}</ul>
-              </section>
-            )}
-            <section aria-labelledby="tendencias">
-              <h2 id="tendencias" className="eyebrow mb-3 text-muted">Lo más buscado</h2>
-              <ul className="flex flex-wrap gap-2">{TRENDING.map((t) => <li key={t}><button type="button" onClick={() => setQ(t)} className={chip}><TrendingUp size={14} aria-hidden="true" className="text-volt-ink" />{t}</button></li>)}</ul>
-            </section>
-            <section aria-labelledby="sugeridos">
-              <h2 id="sugeridos" className="eyebrow mb-3 text-muted">{lines.length ? "Combina con tu carrito" : "Recomendados"}</h2>
-              <ul className="grid grid-cols-[minmax(0,1fr)] gap-2 sm:grid-cols-2">{recommended.map((p) => <ResultRow key={p.slug} product={p} onPick={close} />)}</ul>
-            </section>
-          </div>
-        ) : results.length > 0 ? (
-          <section aria-label="Resultados">
-            <p role="status" className="mb-3 text-sm text-muted">{results.length} {results.length === 1 ? "resultado" : "resultados"} para “{q}”</p>
-            <ul className="grid grid-cols-[minmax(0,1fr)] gap-2">{results.slice(0, 6).map((r) => <ResultRow key={r.product.slug} product={r.product} onPick={pick} />)}</ul>
-            {results.length > 6 && <button type="button" onClick={() => goSearch(q)} className="mt-4 w-full rounded-sm bg-night py-3 text-sm font-bold text-on-night">Ver los {results.length} resultados</button>}
-          </section>
+    <Sheet open={searchOpen} onClose={close} title="Buscar" side="top" className="h-dvh sm:h-auto sm:w-[min(94vw,960px)]">
+      <div className="plate flex h-14 shrink-0 items-center gap-3 border-b border-line pl-4 pr-16 sm:pl-6">
+        <span className="eyebrow text-volt-ink">Buscador</span>
+        <span aria-hidden="true" className="hidden font-mono text-[11px] text-muted sm:inline">↑ ↓ elegir · Enter abrir · Esc cerrar</span>
+      </div>
+      <div className="shrink-0 border-b border-line px-4 pb-4 pt-4 sm:px-6">
+        <SearchField id="search-modal" size="hero" inputRef={input} value={q} onValue={setQ} onSubmit={goAll} data-autofocus
+          role="combobox" aria-expanded={flat.length > 0} aria-controls={LIST_ID} aria-autocomplete="list"
+          aria-activedescendant={nav.active >= 0 ? optionId(LIST_ID, nav.active) : undefined} onKeyDown={nav.onKeyDown} />
+        <DetectedChips query={q} chips={outcome.chips} onQuery={refine} className="mt-3" />
+        <ChipToggles query={q} groups={chipGroups} active={outcome.chips} onQuery={refine} className="mt-3" />
+      </div>
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pb-8 pt-4 sm:px-6">
+        <p role="status" className="mb-3 font-mono text-[12px] uppercase tracking-[0.08em] text-muted empty:hidden">{status}</p>
+        <IgnoredNote ignored={outcome.ignored} className="mb-3" />
+        {!typed && recent.length > 0 && (
+          <button type="button" onClick={clear} className="float-right ml-3 font-mono text-[11px] font-bold uppercase tracking-[0.08em] text-volt-ink underline underline-offset-4">Borrar tus búsquedas</button>
+        )}
+        {typed && !results.length ? (
+          <SearchSuggestions suggestions={outcome.suggestions} onQuery={refine} />
         ) : (
-          <div role="status" className="rounded-sm bg-surface p-6 text-center">
-            <p className="font-display text-2xl">No encontramos “{q}”</p>
-            {suggestion ? <p className="mt-2 text-sm">¿Quisiste decir <button type="button" onClick={() => setQ(suggestion)} className="font-bold text-primary underline">{suggestion}</button>?</p> : <p className="mt-2 text-sm text-muted">Probá con otra palabra o mirá las categorías.</p>}
-          </div>
+          <SearchListbox id={LIST_ID} label={typed ? "Resultados" : "Sugerencias"} groups={groups} active={nav.active} onActive={nav.setActive} onPick={pick}
+            className={typed ? undefined : "sm:grid sm:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] sm:gap-x-8"} />
+        )}
+        {results.length > LIVE_ROWS && (
+          <Button variant="secondary" onClick={goAll} className="mt-4 w-full">Ver los {results.length} resultados</Button>
         )}
       </div>
     </Sheet>
   );
 }
-
-function ResultRow({ product: p, onPick }: { product: Product; onPick: () => void }) {
-  return (
-    <li>
-      <Link href={productHref(p.slug)} onClick={onPick} className="group flex items-center gap-3 rounded-sm p-2 transition-colors hover:bg-surface">
-        <ProductVisual art={p.art} pack={p.pack} photoUrl={p.photoDataUrl} tint={p.variants[0]?.colorHex} label="" showBadge={false} className="h-16 w-16 shrink-0 overflow-hidden rounded-sm" />
-        <span className="min-w-0 flex-1">
-          <span className="block truncate font-bold">{p.name}</span>
-          <span className="block text-xs text-muted">{getCategory(p.categorySlug)?.name} · {p.brand}</span>
-        </span>
-        <span className="shrink-0 text-right text-sm font-extrabold tabular-nums">{formatARS(fromPrice(p))}</span>
-        <ArrowUpRight size={16} aria-hidden="true" className="shrink-0 text-muted transition-transform group-hover:rotate-45" />
-      </Link>
-    </li>
-  );
-}
-

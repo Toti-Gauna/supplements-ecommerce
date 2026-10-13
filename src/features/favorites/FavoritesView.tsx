@@ -2,7 +2,7 @@
 import { Heart } from "lucide-react";
 import { ButtonLink } from "@/components/atoms/Button";
 import { ProductGridSkeleton } from "@/components/atoms/Skeleton";
-import { ProductCard } from "@/components/molecules/ProductCard";
+import { IllustrativeNote, ProductCard } from "@/components/molecules/ProductCard";
 import { getProduct } from "@/demo/engine/catalog";
 import { useFavorites } from "@/stores/favorites";
 import { useHydrated } from "@/stores/hydration";
@@ -22,8 +22,11 @@ export function FavoritesView() {
     </div>
   );
   return (
-    <ul aria-label="Favoritos guardados" className="grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-3 lg:grid-cols-4">
-      {products.map((p) => <li key={p.slug}><ProductCard product={toCard(p)} /></li>)}
-    </ul>
+    <>
+      <ul aria-label="Favoritos guardados" className="grid grid-cols-2 gap-x-3 gap-y-5 sm:grid-cols-3 sm:gap-x-5 lg:grid-cols-4">
+        {products.map((p) => <li key={p.slug}><ProductCard product={toCard(p)} /></li>)}
+      </ul>
+      <IllustrativeNote className="mt-4" />
+    </>
   );
 }

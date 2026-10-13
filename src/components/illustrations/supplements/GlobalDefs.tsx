@@ -1,3 +1,4 @@
+import { RackDefs } from "../RackShot";
 import { PackDefs } from "./defs";
 import { GymDefs, StudioDefs } from "./scenes";
 
@@ -13,6 +14,7 @@ export function GlobalArtDefs() {
       <PackDefs />
       <StudioDefs />
       <GymDefs />
+      <RackDefs />
     </svg>
   );
 }

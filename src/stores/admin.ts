@@ -4,7 +4,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { createCatalogActions, type CatalogActions } from "@/demo/admin/catalog-slice";
 import { createCustomerActions, type CustomerActions } from "@/demo/admin/customers-slice";
-import { normalizeSlides } from "@/demo/admin/content-slides";
+import { isHeroList } from "@/demo/admin/content-hero";
 import { createDataActions, type DataActions } from "@/demo/admin/data-slice";
 import { auditEntry, defaultAdminData, type AdminData } from "@/demo/admin/defaults";
 import { createOrdersActions, type OrdersActions } from "@/demo/admin/orders-slice";
@@ -67,8 +67,11 @@ export const useAdmin = create<AdminState>()(
         const data = { ...current.data, ...(p.data ?? {}) };
         // La ruleta guardada antes de 8.3.25 no tenía catálogo de premios: se completa con sus gajos, sin cambiar IDs.
         data.wheel = withPrizeCatalog(data.wheel);
-        // Diapositivas (8.3.28): una imagen propia rota se descarta y queda la ilustración; una lista rota vuelve a la de muestra.
-        data.content = { ...current.data.content, ...data.content, slides: Array.isArray(data.content?.slides) ? normalizeSlides(data.content.slides) : current.data.content.slides };
+        // Hero del inicio (R1): reemplaza al carrusel. Si falta (datos de antes) o viene roto, quedan los destacados de muestra.
+        // Las diapositivas del carrusel viejo (con sus imágenes) se descartan para liberar lugar en el navegador.
+        const content = { ...current.data.content, ...data.content } as DemoData["content"] & { slides?: unknown };
+        delete content.slides;
+        data.content = { ...content, hero: isHeroList(content.hero) ? content.hero : current.data.content.hero };
         return { ...current, ...p, data, workshop, emails: { ...current.emails, ...(p.emails ?? {}) } };
       },
       partialize: (s) => ({ data: s.data, orders: s.orders, users: s.users, claims: s.claims, audit: s.audit, lastImport: s.lastImport, lastPriceChange: s.lastPriceChange, workshop: s.workshop, emails: s.emails }),

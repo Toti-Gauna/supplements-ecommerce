@@ -16,6 +16,8 @@ export interface ScoreCell {
   hint?: ReactNode;
   /** Ancho relativo en escritorio (las celdas de plata suelen ir más anchas). */
   wide?: boolean;
+  /** Lectura que no es una cifra ("Llega mañana", luces de stock): reemplaza al LED. */
+  display?: ReactNode;
 }
 
 interface ScoreboardProps {
@@ -37,9 +39,9 @@ export function Scoreboard({ cells, label, motion = "power", className }: Scoreb
         <div key={c.key} className={cn("plate flex min-w-0 flex-col gap-2 p-3 sm:p-4", c.wide && "col-span-2 sm:col-span-1")}>
           <dt className="eyebrow text-muted">{c.label}</dt>
           <dd>
-            {c.money
+            {c.display ?? (c.money
               ? <LedPrice amount={c.value} tone={c.tone} motion={motion} className="h-9 sm:h-10" signClassName="text-3xl" />
-              : <Led value={String(c.value).padStart(c.pad ?? 2, "0")} label={c.reading ?? String(c.value)} tone={c.tone} motion={motion} className="h-9 sm:h-10" />}
+              : <Led value={String(c.value).padStart(c.pad ?? 2, "0")} label={c.reading ?? String(c.value)} tone={c.tone} motion={motion} className="h-9 sm:h-10" />)}
           </dd>
           {c.hint && <dd className="font-mono text-[11px] text-muted">{c.hint}</dd>}
         </div>

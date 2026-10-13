@@ -31,6 +31,7 @@ test("reducir movimiento: quieto, navegación circular y compra de la diapositiv
   await expect(page.locator(current)).toContainText("Creatina");
   await page.locator(current).getByRole("button", { name: /^Agregar / }).click();
   await expect(page.getByRole("dialog", { name: /Elegí/ })).toBeVisible();
+  await expect(page.getByRole("dialog", { name: /Elegí/ })).toContainText("Creatina");
 });
 
 test("mouse, foco y pausa mantienen la escena; salir del carrusel permite reproducir", async ({ page }) => {

@@ -1,0 +1,9 @@
+/* El titular se puede leer desde el primer cuadro; conserva el golpe mecánico del rack. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-hero-track] .rk-slam,
+  [data-hero-track] .rk-slam-2 { animation-name: carousel-slam; }
+}
+@keyframes carousel-slam {
+  from { transform: translateY(-0.18em); opacity: 1; }
+  to { transform: none; opacity: 1; }
+}

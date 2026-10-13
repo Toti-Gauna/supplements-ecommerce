@@ -1,5 +1,6 @@
 "use client";
 import { ArrowRight, Check, Plus, Ticket } from "lucide-react";
+import { memo } from "react";
 import { Button, ButtonLink } from "@/components/atoms/Button";
 import { productHref } from "@/demo/engine/catalog";
 import type { HeroPick } from "@/demo/engine/home";
@@ -19,7 +20,7 @@ interface Props {
 }
 
 /** La misma escena del editor, con compra nativa y el cupón de campaña cuando corresponde. */
-export function HeroSlide({ pick, campaign, preview = false, deferred = false, cadete, onAdd, onCoupon, applied }: Props) {
+export const HeroSlide = memo(function HeroSlide({ pick, campaign, preview = false, deferred = false, cadete, onAdd, onCoupon, applied }: Props) {
   const facts = rackFacts(pick.product);
   const code = campaign?.offer?.code;
   return <>
@@ -33,4 +34,11 @@ export function HeroSlide({ pick, campaign, preview = false, deferred = false, c
       </Button>}
     </>} />
   </>;
-}
+}, (a, b) => {
+  // La rehidratación puede reconstruir la selección sin cambiar los datos de la escena.
+  const x = a.pick, y = b.pick;
+  return x.key === y.key && x.kind === y.kind && x.product === y.product && x.headline === y.headline
+    && x.pitch === y.pitch && x.image === y.image && a.campaign === b.campaign && a.preview === b.preview
+    && a.deferred === b.deferred && a.cadete === b.cadete && a.onAdd === b.onAdd
+    && a.onCoupon === b.onCoupon && a.applied === b.applied;
+});

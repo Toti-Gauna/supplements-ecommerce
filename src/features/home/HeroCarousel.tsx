@@ -6,6 +6,7 @@ import { cn } from "@/lib/cn";
 import { useAddFlow } from "../cart/useAddFlow";
 import { useThemeCoupon } from "../themes/useThemeCoupon";
 import { HeroSlide } from "./HeroSlide";
+import { useHeroAction } from "./useHeroAction";
 import type { HeroCampaign } from "./HeroStage";
 import { useHeroCarousel } from "./useHeroCarousel";
 import { useHeroCadete } from "./useHeroCadete";
@@ -18,6 +19,8 @@ export function HeroCarousel({ picks, campaign, campaignId }: { picks: HeroPick[
   const cadete = useHeroCadete();
   const { add, sheet } = useAddFlow(picks[index]?.product);
   const { apply, applied } = useThemeCoupon();
+  const onAdd = useHeroAction(add);
+  const onCoupon = useHeroAction(apply);
   if (!picks.length) return null;
   return (
     <section aria-roledescription="carrusel" aria-label={`Destacados de ${brand.name}`} className="relative -mx-4 -mt-6 border-b border-line sm:-mx-6 sm:-mt-10"
@@ -52,7 +55,7 @@ export function HeroCarousel({ picks, campaign, campaignId }: { picks: HeroPick[
           onClickCapture={() => setPaused(true)}
           className="relative w-full min-w-0 shrink-0 snap-center">
           <HeroSlide pick={p} campaign={p.kind === "campaign" ? campaign : undefined} deferred={!prepared && i !== index}
-            cadete={cadete} onAdd={add} onCoupon={apply} applied={applied} />
+            cadete={cadete} onAdd={onAdd} onCoupon={onCoupon} applied={applied} />
         </div>)}
       </div>
       {sheet}

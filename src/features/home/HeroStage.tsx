@@ -75,7 +75,7 @@ export function HeroStage({ pick, facts, cadete, campaign, actions, markers, mot
             // eslint-disable-next-line @next/next/no-img-element -- foto cargada en el panel demo (data URL local)
             ? <img src={p.photoDataUrl} alt={p.imageAlt || p.name} className="h-full w-full object-contain" />
             : <RackShot items={[{ art: p.art, pack: p.pack, tint: facts.lead.colorHex }]} label={p.imageAlt || p.name} uprights lightUp fit />}
-          <span className="absolute bottom-1 right-4 font-mono text-[10px] uppercase tracking-[0.14em] text-muted">Imagen ilustrativa</span>
+          <span className="plate absolute bottom-1 right-4 border border-line bg-bg px-1 py-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-muted">Imagen ilustrativa</span>
         </div>
         <Scoreboard key={pick.key} cells={readings} label={`Datos de ${p.name}`} motion={motion} className="lg:col-span-2 lg:row-start-4 lg:grid-cols-[1.4fr_1fr_1.3fr]" />
         <div className="pb-2 pt-2 lg:col-start-1 lg:row-start-2 lg:pb-8">

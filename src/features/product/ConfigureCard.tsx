@@ -1,11 +1,9 @@
 "use client";
 import type { ReactNode } from "react";
 import { VariantPicker } from "@/components/molecules/VariantPicker";
-import { bestValueSize, pricePerServing, variantPrice } from "@/demo/engine/servings";
-import { findVariant } from "@/demo/engine/catalog";
 import type { Product } from "@/demo/types";
-import { formatARS } from "@/lib/money";
 import { QuantityPicker } from "./QuantityPicker";
+import { sizeOptionsWithServings } from "./sizeOptions";
 import type { useVariantSelection } from "./useVariantSelection";
 
 interface Props {
@@ -23,12 +21,7 @@ interface Props {
  * servicio, con la de mejor precio marcada), cantidad y compra.
  */
 export function ConfigureCard({ product, sel, quantity, max, stockNote, onQuantity, actions }: Props) {
-  const best = bestValueSize(product, sel.color);
-  const sizeOptions = sel.sizeOptions.map((o) => {
-    const v = findVariant(product, sel.color, o.value) ?? findVariant(product, undefined, o.value);
-    const pps = v ? pricePerServing(variantPrice(product, v), v.servings) : null;
-    return { ...o, detail: v?.servings && v.servings > 1 && pps ? `${v.servings} servicios\n${formatARS(pps)} c/u` : undefined, badge: o.value === best ? "Mejor precio por servicio" : undefined };
-  });
+  const sizeOptions = sizeOptionsWithServings(product, sel);
   return (
     <section id="elegir" aria-label="Elegí sabor, tamaño y cantidad" className="flex scroll-mt-28 flex-col gap-5 rounded-sm border border-line bg-surface p-5 shadow-[var(--shadow-card)] sm:p-6">
       {(sel.colorOptions.length > 0 || sizeOptions.length > 0) && (

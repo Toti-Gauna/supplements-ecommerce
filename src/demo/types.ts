@@ -170,26 +170,15 @@ export interface ShippingZone {
   active?: boolean;
 }
 
-/** Imagen propia de una diapositiva (8.3.28): optimizada en el navegador, con su descripción y encuadre. */
-export interface SlideImage {
-  src: string;
-  alt: string;
-  /** Punto que queda a la vista, en % del ancho y del alto. */
-  x: number;
-  y: number;
-  /** Acercamiento, de 1 a 2. */
-  zoom: number;
-}
-
-export interface CarouselSlide {
+/**
+ * Destacado del hero del inicio (R1, Contenido → Hero): el producto en el rack con su titular de póster y una bajada.
+ * El primero visible es el "producto estrella"; si hay una campaña vigente, la campaña va antes y no rota.
+ */
+export interface HeroFeature {
   id: string;
-  title: string;
-  subtitle: string;
-  ctaLabel: string;
-  ctaHref: string;
-  /** Ilustración de la demo; se usa si no hay imagen propia. */
-  art: ArtKey;
-  image?: SlideImage;
+  productSlug: string;
+  headline: string;
+  pitch: string;
   active?: boolean;
 }
 

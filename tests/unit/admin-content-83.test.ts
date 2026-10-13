@@ -1,13 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { checkImageFile, checkImageSize, checkSlide, frame, isSlideList, newSlide, normalizeSlides, SLIDE_LIMITS } from "@/demo/admin/content-slides";
 import { BADGE_EDGE, coverRatio, offerParts, overlaps, postLayout, potRect, storyBadge } from "@/demo/admin/studio/offer";
 import { defaultDemoData } from "@/demo/engine/source";
-import type { CarouselSlide } from "@/demo/types";
 import { splitAccent } from "@/lib/accent";
 
-/** Polish 8.3 · Lote 7: cartel de oferta del Estudio y carrusel del inicio. */
+/** Polish 8.3 · Lote 7: cartel de oferta del Estudio y textos de inicio. */
 const { content } = defaultDemoData();
-const img = { src: "data:image/jpeg;base64,AAAA", alt: "Pote de whey sobre la mesada", x: 50, y: 50, zoom: 1 };
 
 describe("cartel de oferta del Estudio (8.3.27)", () => {
   it("separa el valor de OFF y deja frases como 'Envío gratis' enteras", () => {
@@ -41,41 +38,7 @@ describe("cartel de oferta del Estudio (8.3.27)", () => {
   });
 });
 
-describe("carrusel del inicio (8.3.28)", () => {
-  it("las diapositivas de muestra y una nueva pasan la validación", () => {
-    for (const s of content.slides) expect(checkSlide(s)).toEqual([]);
-    expect(checkSlide(newSlide("s-x"))).toEqual([]);
-    expect(isSlideList(content.slides)).toBe(true);
-  });
-
-  it("texto largo, botón vacío e imagen sin descripción fallan con mensajes claros", () => {
-    const s = newSlide("s-x");
-    expect(checkSlide({ ...s, title: "x".repeat(SLIDE_LIMITS.title + 5) })).toEqual([`El título tiene ${SLIDE_LIMITS.title + 5} caracteres; el máximo es ${SLIDE_LIMITS.title}.`]);
-    expect(checkSlide({ ...s, title: " " })).toEqual(["Escribí el título."]);
-    expect(checkSlide({ ...s, ctaLabel: "" })).toEqual(["Escribí el texto del botón."]);
-    expect(checkSlide({ ...s, image: { ...img, alt: "" } })).toEqual(["Describí la imagen en pocas palabras (texto alternativo)."]);
-    expect(checkSlide({ ...s, image: img })).toEqual([]);
-  });
-
-  it("valida formato, peso y medidas de la imagen; el encuadre queda dentro de los límites", () => {
-    expect(checkImageFile({ type: "image/gif", size: 10 })).toMatch(/JPG, PNG o WEBP/);
-    expect(checkImageFile({ type: "image/png", size: 11 * 1024 * 1024 })).toMatch(/El máximo es 10 MB/);
-    expect(checkImageFile({ type: "image/webp", size: 1024 })).toBeNull();
-    expect(checkImageSize(300, 900)).toMatch(/al menos 400 px/);
-    expect(checkImageSize(640, 480)).toBeNull();
-    expect(frame({ x: -10, y: 140, zoom: 5 })).toEqual({ x: 0, y: 100, zoom: 2 });
-  });
-
-  it("datos guardados antes de 8.3.28 o rotos: la imagen inválida se descarta y queda la ilustración", () => {
-    const broken = { ...newSlide("s-x"), image: { src: "https://externo/foto.jpg", alt: "x", x: 1, y: 1, zoom: 1 } } as CarouselSlide;
-    const [fixed] = normalizeSlides([broken]);
-    expect(fixed!.image).toBeUndefined();
-    expect(fixed!.art).toBe("tub");
-    expect(normalizeSlides(content.slides)).toEqual(content.slides);
-    expect(isSlideList([broken])).toBe(false);
-    expect(isSlideList([])).toBe(false);
-  });
-});
+// El carrusel del inicio (8.3.28) se reemplazó por el hero del rack (R1): sus reglas se prueban en r1-vidriera.test.ts.
 
 describe("textos de inicio", () => {
   it("el bloque “Armá tu stack” arranca con textos de suplementos y pinta en voltio lo que sigue a la coma", () => {

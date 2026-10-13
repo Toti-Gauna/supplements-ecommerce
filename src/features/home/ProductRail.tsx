@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import { Reveal } from "@/components/motion/Reveal";
-import { ProductCard, type ProductCardData } from "@/components/molecules/ProductCard";
+import { IllustrativeNote, ProductCard, type ProductCardData } from "@/components/molecules/ProductCard";
 import { useRail } from "@/lib/useRail";
 
 interface Props { id: string; eyebrow: string; title: string; accent?: string; products: ProductCardData[]; href?: string }
@@ -36,11 +36,12 @@ export function ProductRail({ id, eyebrow, title, accent, products, href }: Prop
       <Reveal y={16} delay={0.08}>
         <ul ref={ref} className="no-scrollbar -mx-4 flex snap-x scroll-px-4 gap-3 overflow-x-auto overflow-y-hidden overscroll-x-contain px-4 pb-3 pt-2 sm:-mx-6 sm:gap-5 sm:scroll-px-6 sm:px-6 lg:mx-0 lg:scroll-px-0 lg:px-0">
           {products.map((p) => (
-            <li key={p.slug} className="w-[46%] shrink-0 snap-start sm:w-[31%] lg:w-[calc(25%-15px)]">
+            <li key={p.slug} className="w-[47%] shrink-0 snap-start sm:w-[31%] lg:w-[calc(25%-15px)]">
               <ProductCard product={p} />
             </li>
           ))}
         </ul>
+        <IllustrativeNote className="mt-2" />
       </Reveal>
     </section>
   );

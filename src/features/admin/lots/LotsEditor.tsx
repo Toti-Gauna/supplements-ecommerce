@@ -29,14 +29,14 @@ export function LotsEditor({ lots, onChange, idPrefix, name }: Props) {
   const patch = (i: number, p: Partial<Lot>) => onChange(lots.map((l, k) => (k === i ? { ...l, ...p } : l)));
   const first = fefo(lots).find((l) => l.units > 0);
   return (
-    <fieldset className="flex flex-col gap-2 rounded-2xl bg-bg p-3">
+    <fieldset className="flex flex-col gap-2 rounded-sm bg-bg p-3">
       <legend className="sr-only">Lotes de {name}</legend>
       <p className="text-sm font-bold">Lotes <span className="font-normal text-muted">· el stock es la suma; sale primero el que vence antes</span></p>
       {lots.map((l, i) => {
         const id = `${idPrefix}-lot-${i}`;
         const valid = /^\d{4}-\d{2}$/.test(l.expires);
         return (
-          <div key={i} className="grid grid-cols-2 items-end gap-2 rounded-xl border border-line bg-surface p-2.5 sm:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,0.8fr)_auto]">
+          <div key={i} className="grid grid-cols-2 items-end gap-2 rounded-sm border border-line bg-surface p-2.5 sm:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,0.8fr)_auto]">
             <label className="col-span-2 flex flex-col gap-1 text-sm font-bold sm:col-span-1" htmlFor={`${id}-code`}>Código
               <Input id={`${id}-code`} value={l.code} onChange={(e) => patch(i, { code: e.target.value.toUpperCase() })} placeholder="VL-2610-W" className="font-lab" />
             </label>

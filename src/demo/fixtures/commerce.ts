@@ -1,5 +1,5 @@
 import { DISPATCH_PROMISE } from "../engine/lead-time";
-import type { CarouselSlide, Coupon, Mission, PaymentMethod, ShippingZone } from "../types";
+import type { Coupon, HeroFeature, Mission, PaymentMethod, ShippingZone } from "../types";
 import { HOUSE_SHAKER } from "./house";
 import { brand } from "@/config/brand";
 import { ORDER_PREFIX } from "./house";
@@ -69,10 +69,11 @@ export const shippingZones: ShippingZone[] = [
   { id: "national", type: "SHIPPING", name: "Envío al resto del país", price: 9800, etaText: "3–7 días hábiles por correo" },
 ];
 
-export const slides: CarouselSlide[] = [
-  { id: "s1", title: "Cargá tu mejor versión", subtitle: "Proteínas, creatinas y pre-entrenos con lote y vencimiento a la vista.", ctaLabel: "Ver proteínas", ctaHref: "/c/proteinas/", art: "tub" },
-  { id: "s2", title: "Creatina: 5\u00a0g que se notan", subtitle: "La más estudiada para fuerza. Ahora también en gomitas.", ctaLabel: "Ver creatinas", ctaHref: "/c/creatinas/", art: "jar" },
-  { id: "s3", title: "Entrená con todo, recuperá mejor", subtitle: "Electrolitos, magnesio y omega 3 para volver mañana como nuevo.", ctaLabel: "Ver vitaminas y salud", ctaHref: "/c/salud/", art: "shaker" },
+/** Destacados del hero del inicio (textos de MUESTRA; se editan en el panel → Contenido → Hero). */
+export const heroFeatures: HeroFeature[] = [
+  { id: "h1", productSlug: "ionic-whey", headline: "Cargá tu mejor versión", pitch: "24 g de proteína por scoop, con lote y vencimiento a la vista." },
+  { id: "h2", productSlug: "creatina-monohidrato", headline: "5\u00a0g que se notan", pitch: "La más estudiada para fuerza. Sin sabor: va con lo que tomes." },
+  { id: "h3", productSlug: "overvolt-pre", headline: "Entrená con todo", pitch: "Pre-entreno con cafeína y beta-alanina para las series pesadas." },
 ];
 
 export const DEMO_TRACKING_TOKEN = `demo-${brand.id}`;

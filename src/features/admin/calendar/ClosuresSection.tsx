@@ -66,7 +66,7 @@ export function ClosuresSection({ today }: { today: string }) {
   };
 
   return (
-    <section id="despachos-cierres" aria-label="Días cerrados y feriados" className="flex flex-col gap-4 rounded-3xl bg-surface p-4 shadow-[var(--shadow-card)] sm:p-5">
+    <section id="despachos-cierres" aria-label="Días cerrados y feriados" className="flex flex-col gap-4 rounded-sm bg-surface p-4 shadow-[var(--shadow-card)] sm:p-5">
       <form aria-label="Agregar un cierre del local" className="grid grid-cols-[minmax(0,1fr)] gap-2 sm:grid-cols-[10rem_minmax(0,1fr)_auto]" noValidate onSubmit={(e) => { e.preventDefault(); add(); }}>
         <DateInput aria-label="Fecha del cierre" min={today} value={date} onChange={(e) => { setDate(e.target.value); setError(null); }} />
         <Input aria-label="Motivo" placeholder="Vacaciones, inventario…" value={name} onChange={(e) => setName(e.target.value)} />
@@ -103,7 +103,7 @@ export function ClosuresSection({ today }: { today: string }) {
             : paged.items.map((c) => <OwnClosureRow key={c.date} closure={c} today={today} editing={editing === c.date} onEdit={() => setEditing(c.date)} onCancel={() => setEditing(null)}
                 onSave={(next) => edit(c.date, next)} onRemove={() => setPending({ remove: c })} />)}
         </ul>
-      ) : <p className="rounded-2xl border border-dashed border-ink/15 p-4 text-center text-sm text-muted">{tab === "feriados" ? "No hay feriados en ese período." : "No hay cierres del local en ese período. Agregá uno arriba."}</p>}
+      ) : <p className="rounded-sm border border-dashed border-ink/15 p-4 text-center text-sm text-muted">{tab === "feriados" ? "No hay feriados en ese período." : "No hay cierres del local en ese período. Agregá uno arriba."}</p>}
       <Pagination {...paged} noun={tab === "feriados" ? "feriados" : "cierres"} onPage={paged.setPage} />
     </section>
   );

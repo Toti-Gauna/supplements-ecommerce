@@ -16,8 +16,8 @@ export function WheelPrizeTicket({ badge = "Ruleta" }: { badge?: string }) {
   const meta = `${coupon.endsAt && status !== "utilizado" ? `Vence ${formatDate(coupon.endsAt)} · ` : ""}${PRIZE_STATUS_LABEL[status]}`;
   const action = status === "utilizado" ? null : status === "aplicado" ? (
     <span className="flex flex-wrap items-center gap-2">
-      <span className="inline-flex items-center gap-1.5 rounded-full bg-success-soft px-3 py-1.5 text-sm font-bold text-success"><Check size={15} aria-hidden="true" />Aplicado</span>
-      <button type="button" onClick={() => changeCoupon(null)} className="min-h-9 rounded-full px-3 text-sm font-bold text-primary underline underline-offset-4">Quitar del carrito</button>
+      <span className="inline-flex items-center gap-1.5 rounded-sm bg-success-soft px-3 py-1.5 text-sm font-bold text-success"><Check size={15} aria-hidden="true" />Aplicado</span>
+      <button type="button" onClick={() => changeCoupon(null)} className="min-h-9 rounded-sm px-3 text-sm font-bold text-primary underline underline-offset-4">Quitar del carrito</button>
     </span>
   ) : (
     <Button size="sm" className="w-fit" aria-label={`Aplicar cupón ${coupon.code}`}

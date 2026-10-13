@@ -49,14 +49,14 @@ export function BlockList({ blocks, onChange, tokens, hasOrder, arts }: Props) {
     [next[i], next[i + dir]] = [next[i + dir]!, next[i]!];
     onChange(next);
   };
-  const tool = "grid h-9 w-9 place-items-center rounded-full text-muted hover:bg-accent hover:text-ink disabled:opacity-30";
+  const tool = "grid h-9 w-9 place-items-center rounded-sm text-muted hover:bg-accent hover:text-ink disabled:opacity-30";
   return (
     <div className="flex flex-col gap-3">
       <ol className="flex flex-col gap-3">
         {blocks.map((b, i) => {
           const label = BLOCK_LABEL[b.type];
           return (
-            <li key={b.id} className="rounded-3xl bg-surface p-3.5 shadow-[var(--shadow-card)] ring-1 ring-ink/[0.04]">
+            <li key={b.id} className="rounded-sm bg-surface p-3.5 shadow-[var(--shadow-card)] ring-1 ring-ink/[0.04]">
               <div className="mb-2 flex items-center gap-1">
                 <span className="mr-auto text-sm font-extrabold">{i + 1}. {label}</span>
                 <button type="button" className={tool} aria-label={`Subir ${label} ${i + 1}`} disabled={i === 0} onClick={() => move(i, -1)}><ArrowUp size={16} aria-hidden="true" /></button>
@@ -71,7 +71,7 @@ export function BlockList({ blocks, onChange, tokens, hasOrder, arts }: Props) {
                 <div className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_12rem]">
                   <ChipEditor id={`blk-${b.id}`} label={`Texto del botón ${i + 1}`} value={b.label} tokens={tokens} onChange={(l) => patch(i, { ...b, label: l })} />
                   <label className="flex flex-col gap-1 text-xs font-bold">Lleva a
-                    <select value={b.link} onChange={(e) => patch(i, { ...b, link: e.target.value as ButtonLink })} className="h-11 rounded-2xl border border-ink/12 bg-surface px-3 text-sm font-semibold">
+                    <select value={b.link} onChange={(e) => patch(i, { ...b, link: e.target.value as ButtonLink })} className="h-11 rounded-sm border border-ink/12 bg-surface px-3 text-sm font-semibold">
                       {(Object.keys(LINK_LABEL) as ButtonLink[]).filter((l) => l === b.link || (hasOrder ? l !== "product" : l !== "tracking")).map((l) => <option key={l} value={l}>{LINK_LABEL[l]}</option>)}
                     </select>
                   </label>
@@ -80,7 +80,7 @@ export function BlockList({ blocks, onChange, tokens, hasOrder, arts }: Props) {
               {b.type === "image" && (
                 <div className="grid gap-2 sm:grid-cols-[12rem_minmax(0,1fr)]">
                   <label className="flex flex-col gap-1 text-xs font-bold">Ilustración
-                    <select value={b.art} onChange={(e) => patch(i, { ...b, art: e.target.value as ArtKey })} className="h-11 rounded-2xl border border-ink/12 bg-surface px-3 text-sm font-semibold">
+                    <select value={b.art} onChange={(e) => patch(i, { ...b, art: e.target.value as ArtKey })} className="h-11 rounded-sm border border-ink/12 bg-surface px-3 text-sm font-semibold">
                       {arts.map((a) => <option key={a.art} value={a.art}>{a.name}</option>)}
                     </select>
                   </label>
@@ -97,9 +97,9 @@ export function BlockList({ blocks, onChange, tokens, hasOrder, arts }: Props) {
           );
         })}
       </ol>
-      <div className="flex flex-wrap items-end gap-2 rounded-3xl border border-dashed border-ink/15 p-3">
+      <div className="flex flex-wrap items-end gap-2 rounded-sm border border-dashed border-ink/15 p-3">
         <label className="flex min-w-0 flex-1 flex-col gap-1 text-xs font-bold">Agregar bloque
-          <select value={add} onChange={(e) => setAdd(e.target.value as EmailBlockType)} className="h-11 rounded-2xl border border-ink/12 bg-surface px-3 text-sm font-semibold">
+          <select value={add} onChange={(e) => setAdd(e.target.value as EmailBlockType)} className="h-11 rounded-sm border border-ink/12 bg-surface px-3 text-sm font-semibold">
             {ADDABLE.map((t) => <option key={t} value={t}>{BLOCK_LABEL[t]}</option>)}
           </select>
         </label>
@@ -107,7 +107,7 @@ export function BlockList({ blocks, onChange, tokens, hasOrder, arts }: Props) {
           const footer = blocks.findIndex((b) => b.type === "footer");
           const at = footer < 0 ? blocks.length : footer;
           onChange([...blocks.slice(0, at), newBlock(add), ...blocks.slice(at)]);
-        }} className="inline-flex h-11 items-center gap-1.5 rounded-full bg-primary px-4 text-sm font-bold text-on-primary hover:bg-primary-hover">
+        }} className="inline-flex h-11 items-center gap-1.5 rounded-sm bg-primary px-4 text-sm font-bold text-on-primary hover:bg-primary-hover">
           <Plus size={16} aria-hidden="true" /> Agregar
         </button>
       </div>

@@ -5,19 +5,26 @@ import { cn } from "@/lib/cn";
 type Variant = "primary" | "secondary" | "ghost" | "danger" | "dark" | "light";
 type Size = "sm" | "md" | "lg";
 
+/**
+ * Botones del sistema BOX: rectos, rótulo en mono mayúscula y golpe seco al apretar.
+ * - `primary`: el de compra. Placa llena (voltio de noche, grafito con letra voltio de día) con filo de luz arriba y
+ *   canto oscuro abajo, como una placa apoyada.
+ * - `secondary`: placa de acero con filo fino.
+ * - `ghost`: solo el rótulo.
+ * - `dark` / `light`: para bandas noche (oscuras en los dos modos).
+ */
 const base =
-  "group/btn relative inline-flex items-center justify-center gap-2 rounded-full font-bold tracking-[-0.005em] transition-[background-color,color,box-shadow,transform] duration-200 ease-[var(--ease-out-expo)] active:scale-[0.98] disabled:pointer-events-none disabled:opacity-45 select-none";
-/** Destello que cruza el botón al pasar el mouse (primario y oscuro). */
-const SHEEN = "after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:bg-[linear-gradient(110deg,transparent_30%,rgb(255_255_255/0.22)_50%,transparent_70%)] after:bg-[length:240%_100%] after:bg-[position:130%_0] after:transition-[background-position] after:duration-700 hover:after:bg-[position:-30%_0]";
+  "group/btn relative inline-flex select-none items-center justify-center gap-2 rounded-sm font-mono font-bold uppercase tracking-[0.08em] transition-[background-color,color,box-shadow,border-color,filter] duration-150 active:translate-y-px disabled:pointer-events-none disabled:opacity-45";
+const EDGE = "shadow-[inset_0_1px_0_rgb(255_255_255/0.35),inset_0_-3px_0_rgb(0_0_0/0.28)]";
 const variants: Record<Variant, string> = {
-  primary: SHEEN + " bg-primary text-on-primary shadow-[inset_0_1px_0_rgb(255_255_255/0.14),0_10px_24px_-12px_color-mix(in_srgb,var(--brand-volt)_70%,transparent)] hover:bg-primary-hover hover:shadow-[inset_0_1px_0_rgb(255_255_255/0.14),0_16px_30px_-12px_color-mix(in_srgb,var(--brand-volt)_75%,transparent)]",
-  dark: SHEEN + " bg-night text-on-night shadow-[inset_0_1px_0_rgb(255_255_255/0.08)] ring-1 ring-inset ring-white/15 hover:bg-night-2 hover:ring-volt/40",
-  light: SHEEN + " bg-volt text-night shadow-[0_12px_34px_-14px_color-mix(in_srgb,var(--brand-volt)_70%,transparent)] hover:bg-volt-soft",
-  secondary: "border border-ink/15 bg-surface text-ink hover:border-ink/30 hover:bg-accent/40",
-  ghost: "text-primary hover:bg-accent/60",
+  primary: cn(EDGE, "bg-primary text-on-primary hover:bg-primary-hover"),
+  dark: "bg-night text-on-night shadow-[inset_0_1px_0_rgb(255_255_255/0.08)] ring-1 ring-inset ring-white/20 hover:bg-night-2 hover:ring-volt/60",
+  light: cn(EDGE, "bg-volt text-night hover:bg-volt-soft"),
+  secondary: "plate border border-line text-ink hover:border-ink/50",
+  ghost: "text-volt-ink hover:bg-accent/70",
   danger: "text-danger hover:bg-danger-soft",
 };
-const sizes: Record<Size, string> = { sm: "min-h-10 px-4 text-sm", md: "min-h-12 px-6 text-[15px]", lg: "min-h-14 px-8 text-base" };
+const sizes: Record<Size, string> = { sm: "min-h-10 px-3.5 text-[12px]", md: "min-h-12 px-5 text-[13px]", lg: "min-h-14 px-7 text-sm" };
 
 export function buttonClass(variant: Variant = "primary", size: Size = "md", className?: string): string {
   return cn(base, variants[variant], sizes[size], className);

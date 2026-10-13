@@ -33,13 +33,13 @@ export function ImportPreview({ plan, onBack, onApply }: { plan: ImportPlan; onB
       <ul className={`grid grid-cols-2 gap-2 ${plan.kind === "supplier" ? "sm:grid-cols-4" : "sm:grid-cols-5"}`} aria-label="Resumen de la importación">
         {SHOWN[plan.kind].map((a) => {
           const { label, icon: Icon } = ACTION[a];
-          return <li key={a} className="rounded-3xl bg-surface p-4 shadow-[var(--shadow-card)]"><Icon size={18} aria-hidden="true" className={a === "error" ? "text-danger" : "text-primary"} /><p className="font-display mt-2 text-3xl tabular-nums">{plan.counts[a]}</p><p className="text-sm text-muted">{label}</p></li>;
+          return <li key={a} className="rounded-sm bg-surface p-4 shadow-[var(--shadow-card)]"><Icon size={18} aria-hidden="true" className={a === "error" ? "text-danger" : "text-primary"} /><p className="font-display mt-2 text-3xl tabular-nums">{plan.counts[a]}</p><p className="text-sm text-muted">{label}</p></li>;
         })}
       </ul>
-      {plan.newCategories.length > 0 && <p className="rounded-2xl bg-accent/60 px-4 py-3 text-sm"><strong>Categorías nuevas:</strong> {plan.newCategories.join(", ")}</p>}
+      {plan.newCategories.length > 0 && <p className="rounded-sm bg-accent/60 px-4 py-3 text-sm"><strong>Categorías nuevas:</strong> {plan.newCategories.join(", ")}</p>}
       <TabFilter label="Filas de la vista previa" value={tab} onChange={setTab} tabs={[{ id: "changes", label: "Con cambios", count: applicable }, { id: "error", label: "Con error", count: plan.counts.error }, { id: "all", label: "Todas", count: plan.rows.length }]} />
       {/* Tres columnas para que el detalle (lo que cambia) se lea también en el celular, sin desplazar de costado. */}
-      <div className="overflow-hidden rounded-[1.75rem] bg-surface shadow-[var(--shadow-card)]">
+      <div className="overflow-hidden rounded-sm bg-surface shadow-[var(--shadow-card)]">
         <table className="w-full text-left text-sm">
           <caption className="sr-only">Vista previa por fila</caption>
           <thead className="text-[12px] font-bold uppercase tracking-[0.06em] text-muted"><tr className="border-b border-line"><th className="w-14 px-4 py-3">Fila</th><th className="px-3">Producto</th><th className="px-3">Resultado</th></tr></thead>

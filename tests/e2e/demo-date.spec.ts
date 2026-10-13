@@ -6,7 +6,10 @@ import { expect, test } from "@playwright/test";
  */
 test("la promesa del cadete es la misma en el inicio, la ficha y el seguimiento de ejemplo", async ({ page }) => {
   await page.goto("./");
-  await expect(page.getByRole("region", { name: "Beneficios" })).toContainText("Pedí hoy y llega mañana, mar 6 oct");
+  // El marcador del hero (R1) dice cuándo llega lo que se pide hoy.
+  const board = page.locator("dl[aria-label^='Datos de ']");
+  await expect(board).toContainText("Llega mañana");
+  await expect(board).toContainText("mar 6 oct");
   await expect(page.getByText(/Cadete en el día/)).toHaveCount(0);
   await page.goto("p/ionic-whey/");
   await expect(page.getByText("Lo despachamos mañana, martes 6 de octubre")).toBeVisible();
@@ -41,7 +44,7 @@ test("transferencia: la fecha del checkout queda en la confirmación y, con el c
 
   await expect(page).toHaveURL(/checkout\/confirmacion\/$/);
   await expect(page.getByText(/Entrega: Llega mañana, mar 6 oct/)).toBeVisible();
-  await page.getByLabel("Subir comprobante (demo)").setInputFiles({ name: "comprobante.pdf", mimeType: "application/pdf", buffer: Buffer.from("%PDF-1.4 demo") });
+  await page.getByLabel("Subir comprobante").setInputFiles({ name: "comprobante.pdf", mimeType: "application/pdf", buffer: Buffer.from("%PDF-1.4 demo") });
   await expect(page.getByText(/Estado de muestra: comprobante en revisión/)).toBeVisible();
 
   await page.getByRole("link", { name: "Seguir mi pedido", exact: true }).click();

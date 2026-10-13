@@ -46,7 +46,7 @@ export function CheckoutView() {
 
   if (!hydrated) return (
     <div role="status" aria-label="Cargando checkout" className="mx-auto flex w-full max-w-3xl flex-col gap-4">
-      <Skeleton className="h-10 w-full rounded-full" /><Skeleton className="h-72 w-full rounded-3xl" /><Skeleton className="h-48 w-full rounded-3xl" />
+      <Skeleton className="h-10 w-full rounded-sm" /><Skeleton className="h-72 w-full rounded-sm" /><Skeleton className="h-48 w-full rounded-sm" />
     </div>
   );
   if (lines.length === 0 && !checkout.lastOrder?.code) {
@@ -91,7 +91,7 @@ export function CheckoutView() {
         {step === 3 && <ConfirmStep onBack={() => setStep(2)} onConfirm={confirm} onEdit={setStep} />}
       </div>
       {/* El cupón se puede quitar o cambiar hasta confirmar; quitar el de la ruleta lo deja guardado (8.2.14). */}
-      <section aria-label="Cupón del pedido" className="rounded-3xl bg-surface p-4 shadow-[var(--shadow-card)] sm:p-5">
+      <section aria-label="Cupón del pedido" className="rounded-sm bg-surface p-4 shadow-[var(--shadow-card)] sm:p-5">
         <CouponForm subtotal={quote.subtotal} isRegistered={isRegistered} check={couponCheck} where="checkout" />
       </section>
       <CheckoutSummary quote={quote} />

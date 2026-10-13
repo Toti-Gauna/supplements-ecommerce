@@ -11,9 +11,9 @@ import { useGameStats } from "./useGameStats";
 export function GameHero({ onPlay }: { onPlay: () => void }) {
   const { hydrated, best, today } = useGameStats();
   return (
-    <section aria-labelledby="game-title" className="relative grid items-center gap-6 overflow-hidden rounded-[2rem] bg-night p-6 text-on-night sm:rounded-[2.5rem] sm:p-10 lg:grid-cols-[1.1fr_1fr] lg:p-14">
+    <section aria-labelledby="game-title" className="relative grid items-center gap-6 overflow-hidden rounded-sm bg-night p-6 text-on-night sm:rounded-sm sm:p-10 lg:grid-cols-[1.1fr_1fr] lg:p-14">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_60%_at_80%_20%,color-mix(in_srgb,var(--brand-glow)_22%,transparent),transparent_70%),radial-gradient(60%_50%_at_20%_100%,color-mix(in_srgb,var(--brand-volt)_12%,transparent),transparent_70%)]" />
-      <SoundToggle className="absolute right-4 top-4 z-10 h-11 w-11 rounded-full bg-white/10 ring-1 ring-white/15 hover:bg-white/20 sm:right-6 sm:top-6" />
+      <SoundToggle className="absolute right-4 top-4 z-10 h-11 w-11 rounded-sm bg-white/10 ring-1 ring-white/15 hover:bg-white/20 sm:right-6 sm:top-6" />
       <div className="relative flex flex-col gap-5">
         <div>
           <p className="eyebrow pr-12 text-volt">Juego del Club · {gameRules.durationSec} segundos</p>
@@ -21,11 +21,11 @@ export function GameHero({ onPlay }: { onPlay: () => void }) {
           <p className="mt-4 max-w-md text-night-muted sm:text-lg">Atrapá la energía, esquivá la chatarra y cargá el shaker. Tu puntaje desbloquea un cupón para la tienda.</p>
         </div>
         <dl className="grid max-w-md grid-cols-2 gap-3 text-sm">
-          <div className="rounded-2xl bg-white/5 p-3 ring-1 ring-white/10">
+          <div className="rounded-sm bg-white/5 p-3 ring-1 ring-white/10">
             <dt className="eyebrow text-[10px] text-night-muted">Tu récord</dt>
             <dd className="font-lab mt-1 text-2xl font-bold tabular-nums text-volt">{hydrated ? best.toLocaleString("es-AR") : "—"}</dd>
           </div>
-          <div className="rounded-2xl bg-white/5 p-3 ring-1 ring-white/10">
+          <div className="rounded-sm bg-white/5 p-3 ring-1 ring-white/10">
             <dt className="eyebrow text-[10px] text-night-muted">Cupón de hoy</dt>
             <dd className="mt-1 font-bold leading-tight">{!hydrated ? "—" : today ? <>Ganado: <span className="text-volt">{today.label}</span></> : "Disponible"}</dd>
           </div>

@@ -1,12 +1,12 @@
 import { categories } from "../fixtures/categories";
-import { coupons, demoSettings, homeCta, missions, shippingZones, slides, type DemoSettings } from "../fixtures/commerce";
+import { coupons, demoSettings, heroFeatures, homeCta, missions, shippingZones, type DemoSettings } from "../fixtures/commerce";
 import { storeFaqs } from "../fixtures/content";
 import { goals, type GoalInfo } from "../fixtures/goals";
 import { gamePrizes, type GamePrizeConfig } from "../fixtures/game";
 import { products } from "../fixtures/products";
 import { seasonalThemes, themeCoupons, themeSettings } from "../fixtures/themes";
 import { defaultWheel, type WheelConfig } from "../fixtures/wheel";
-import type { CarouselSlide, Category, Coupon, Faq, Mission, Product, SeasonalTheme, ShippingZone, ThemeSettings } from "../types";
+import type { Category, Coupon, Faq, HeroFeature, Mission, Product, SeasonalTheme, ShippingZone, ThemeSettings } from "../types";
 
 /**
  * Datos editables de la demo. La tienda los lee de acá; el panel demo los modifica
@@ -22,7 +22,7 @@ export interface DemoData {
   wheel: WheelConfig;
   /** Premios por puntaje de Shaker Rush (Marketing → Cupones y ruleta → Premios del juego). */
   game: GamePrizeConfig;
-  content: { slides: CarouselSlide[]; homeCta: { title: string; text: string }; faqs: Faq[] };
+  content: { hero: HeroFeature[]; homeCta: { title: string; text: string }; faqs: Faq[] };
   themes: SeasonalTheme[];
   themeSettings: ThemeSettings;
   /** Objetivos de entrenamiento (nombre, bajada y color se editan en el panel → Categorías). */
@@ -39,7 +39,7 @@ export function defaultDemoData(): DemoData {
     settings: demoSettings,
     wheel: defaultWheel,
     game: gamePrizes,
-    content: { slides: slides.map((s) => ({ ...s, active: true })), homeCta, faqs: storeFaqs },
+    content: { hero: heroFeatures.map((h) => ({ ...h, active: true })), homeCta, faqs: storeFaqs },
     themes: seasonalThemes,
     themeSettings,
     goals,

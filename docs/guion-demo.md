@@ -75,7 +75,7 @@ Cerrá con: **"Bueno, te muestro cómo se ve todo eso resuelto. Primero lo que v
 
 ## 1:00 · La ficha que vende sola (1 minuto, celular)
 
-**Tocá**: inicio de la tienda (si aparece la pantalla de carga "Cargando energía", dejala terminar: son 5 segundos) →
+**Tocá**: inicio de la tienda (la pantalla de carga dura un segundo y sale solo la primera vez) →
 **¿Cuál es tu objetivo?** se ve al bajar → abrí **Ionic Whey 100%** (o directo `/p/ionic-whey/`).
 
 ![Tamaño con servicios y "Mejor precio por servicio" en la ficha](img/celular-tienda-tamano.png)
@@ -225,7 +225,7 @@ Inicio, Pedidos, Pagos, Productos, Más).
 |---|---|
 | El carrito tiene cosas viejas, la ruleta ya no aparece o el juego dice "Hoy ya ganaste tu cupón" | **Reiniciar demo** y volvé a entrar |
 | No hay internet o anda lento | Compartí datos del celular. Si no hay caso, mostrá las capturas de [manual-del-dueno.md](manual-del-dueno.md) desde el celular |
-| La pantalla de carga tarda | Escape (en la compu) o esperá los 5 segundos; con "reducir movimiento" no aparece |
+| La cinta de avisos de arriba molesta | Cerrala con la **X**; vuelve con "Reiniciar demo" |
 | La temática no es la que querías | **Probar temáticas** y elegí otra; **Probar Original** la saca |
 | El dueño no logra abrir la bolsa | **Abrirlo de una vez**, abajo de la bolsa |
 | Shaker Rush no suena (iPhone) | Tocá **Sonidos** y seguí; se juega igual sin sonido |

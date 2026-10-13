@@ -29,7 +29,7 @@ export function ClaimDetail() {
         status={<><TrackChip label="Estado" value={status.label} tone={status.tone} /><TrackChip label="Tipo" value={CLAIM_TYPE[claim.type]} tone="neutral" />{claim.fromShop && <TrackChip label="Origen" value="tienda demo" tone="warning" />}</>} />
       <div className="grid gap-6 @min-[56rem]:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
         <div className="flex min-w-0 flex-col gap-6">
-          <Panel title="Mensaje del comprador"><p className="whitespace-pre-line rounded-2xl bg-bg p-4 text-sm leading-relaxed">{claim.message}</p></Panel>
+          <Panel title="Mensaje del comprador"><p className="whitespace-pre-line rounded-sm bg-bg p-4 text-sm leading-relaxed">{claim.message}</p></Panel>
           {claim.resolution && <Panel title={claim.status === "REJECTED" ? "Motivo del rechazo" : "Resolución"}><p className="text-sm">{claim.resolution}</p></Panel>}
           <Panel title="Acciones">
             {isOpenClaim(claim.status) ? (

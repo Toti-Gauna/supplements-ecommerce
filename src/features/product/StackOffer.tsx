@@ -39,7 +39,7 @@ export function StackOffer({ product, variant }: { product: Product; variant: Va
     openCart(product.slug);
   };
   return (
-    <section aria-labelledby="stack-title" className="rounded-[var(--radius-card)] p-5 edge-volt sm:p-6">
+    <section aria-labelledby="stack-title" className="rounded-sm p-5 edge-volt sm:p-6">
       <p className="eyebrow flex items-center gap-2 text-volt-ink"><Layers size={14} aria-hidden="true" />Armá tu stack</p>
       <h2 id="stack-title" className="font-display mt-1 text-2xl">{rule.pct > 0 ? `Sumá ${rule.minCategories} categorías y llevate ${rule.pct} % off` : "Sumá lo que va con este suplemento"}</h2>
       <ul className="mt-4 grid grid-cols-3 gap-2 sm:gap-3">
@@ -49,12 +49,12 @@ export function StackOffer({ product, variant }: { product: Product; variant: Va
             <li key={p.product.slug} className="relative">
               <button type="button" disabled={i === 0} aria-pressed={on} onClick={() => setOff((o) => (o.includes(p.product.slug) ? o.filter((x) => x !== p.product.slug) : [...o, p.product.slug]))}
                 aria-label={i === 0 ? `${p.product.name} (este producto)` : `${on ? "Quitar" : "Sumar"} ${p.product.name}`}
-                className={cn("flex w-full flex-col gap-1.5 rounded-2xl border p-1.5 text-left transition-[opacity,border-color]", on ? "border-primary/60" : "border-line opacity-55", i > 0 && "hover:border-primary")}>
-                <ProductArt art={p.product.art} pack={p.product.pack} tint={p.variant.colorHex} label="" showBadge={false} className="aspect-square rounded-xl" />
+                className={cn("flex w-full flex-col gap-1.5 rounded-sm border p-1.5 text-left transition-[opacity,border-color]", on ? "border-primary/60" : "border-line opacity-55", i > 0 && "hover:border-primary")}>
+                <ProductArt art={p.product.art} pack={p.product.pack} tint={p.variant.colorHex} label="" showBadge={false} className="aspect-square rounded-sm" />
                 <span className="line-clamp-2 px-1 text-[12px] font-bold leading-tight">{p.product.name}</span>
                 <span className="font-lab px-1 pb-1 text-[12px] text-muted">{formatARS(variantPrice(p.product, p.variant))}</span>
               </button>
-              <span aria-hidden="true" className={cn("absolute right-2.5 top-2.5 grid h-6 w-6 place-items-center rounded-full", on ? "bg-primary text-on-primary" : "bg-surface ring-1 ring-line")}>{on && <Check size={14} />}</span>
+              <span aria-hidden="true" className={cn("absolute right-2.5 top-2.5 grid h-6 w-6 place-items-center rounded-sm", on ? "bg-primary text-on-primary" : "bg-surface ring-1 ring-line")}>{on && <Check size={14} />}</span>
             </li>
           );
         })}

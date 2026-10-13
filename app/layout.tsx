@@ -1,3 +1,4 @@
+import "@fontsource-variable/big-shoulders-display";
 import "@fontsource-variable/archivo/wdth.css";
 import "@fontsource-variable/archivo/wdth-italic.css";
 import "@fontsource-variable/jetbrains-mono";
@@ -16,12 +17,13 @@ import { ClientShell } from "@/components/organisms/ClientShell";
 import { Splash, splashScript } from "@/components/organisms/Splash";
 import { GlobalArtDefs } from "@/components/illustrations/supplements/GlobalDefs";
 import { themeScript } from "@/components/atoms/ThemeToggle";
-import { seasonPaletteCss } from "@/features/themes/palettes";
+import { seasonAccentCss } from "@/features/themes/palettes";
 import { seasonScript } from "@/features/themes/seasonScript";
+import { sessionScript } from "@/features/shell/session";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: { default: site.title, template: `%s · ${brand.name} (demo)` },
+  title: { default: site.title, template: `%s · ${brand.name}` },
   description: site.description,
   robots: site.indexable ? undefined : { index: false, follow: false },
   // Favicon con el símbolo y los colores de la marca, generado en build (app/brand-icon.svg/route.ts).
@@ -52,8 +54,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <style dangerouslySetInnerHTML={{ __html: brandCss() }} />
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <script dangerouslySetInnerHTML={{ __html: seasonScript }} />
+        <script dangerouslySetInnerHTML={{ __html: sessionScript }} />
         <script dangerouslySetInnerHTML={{ __html: splashScript }} />
-        <style dangerouslySetInnerHTML={{ __html: seasonPaletteCss() }} />
+        <style dangerouslySetInnerHTML={{ __html: seasonAccentCss() }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationLd) }} />
       </head>
       <body className="min-h-dvh pt-[env(safe-area-inset-top)] antialiased">
@@ -61,7 +64,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <Splash />
         {/* Tapa la zona de la barra de estado del celular: el contenido no se ve por detrás al hacer scroll. */}
         <div aria-hidden="true" className="pointer-events-none fixed inset-x-0 top-0 z-[60] h-[env(safe-area-inset-top)] bg-bg" />
-        <a href="#contenido" className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-50 focus:rounded-full focus:bg-primary focus:px-4 focus:py-2 focus:text-on-primary">
+        <a href="#contenido" className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-50 focus:bg-primary focus:px-4 focus:py-2 focus:text-on-primary">
           Saltar al contenido
         </a>
         <MotionRoot>

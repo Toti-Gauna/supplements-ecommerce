@@ -43,7 +43,7 @@ export function PrizeAside({ score }: { score: number }) {
         {tiers.map((t) => {
           const reached = score >= t.minScore;
           return (
-            <li key={t.id} className={cn("rounded-2xl p-3 ring-1", reached ? "bg-volt/10 ring-volt/60" : "ring-white/10")}>
+            <li key={t.id} className={cn("rounded-sm p-3 ring-1", reached ? "bg-volt/10 ring-volt/60" : "ring-white/10")}>
               <span className="font-lab block text-xs text-night-muted">{t.minScore.toLocaleString("es-AR")} pts</span>
               <span className="flex items-center gap-1.5 font-display text-xl">{reached && <Check size={16} aria-label="alcanzado" className="text-volt" />}{t.label}</span>
             </li>

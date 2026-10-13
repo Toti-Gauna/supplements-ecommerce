@@ -89,7 +89,7 @@ export function defaultAdminData(): AdminData {
     orders,
     users: structuredClone(adminUsers),
     claims: structuredClone(adminClaims),
-    audit: [{ id: "a0", at: "2026-10-05T08:00:00-03:00", actor: "Sistema (demo)", action: "Datos de muestra cargados", entity: "Panel" }],
+    audit: [{ id: "a0", at: "2026-10-05T08:00:00-03:00", actor: "Sistema", action: "Datos de muestra cargados", entity: "Panel" }],
     lastImport: null,
     lastPriceChange: null,
     workshop: structuredClone({ settings: workshopSettings, materials, recipes, profiles: customerProfiles, events: calendarEvents, suppliers, stockLevels, purchases: [] }),
@@ -99,5 +99,5 @@ export function defaultAdminData(): AdminData {
 
 let seq = 0;
 export function auditEntry(action: string, entity: string): AuditEntry {
-  return { id: `a-${Date.now().toString(36)}-${++seq}`, at: demoNow(), actor: `${brand.name} (demo)`, action, entity };
+  return { id: `a-${Date.now().toString(36)}-${++seq}`, at: demoNow(), actor: brand.name, action, entity };
 }

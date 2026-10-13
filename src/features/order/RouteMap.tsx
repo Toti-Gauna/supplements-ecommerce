@@ -36,7 +36,7 @@ export function RouteMap({ progress, traveler, accent = brand.signature.volt, de
   const move = reduce ? { duration: 0 } : { duration: 1.6, ease: EASE };
   const who = traveler ? `${traveler.label} lleva el pedido: ` : "";
   return (
-    <div className="relative overflow-hidden rounded-3xl bg-night-2" role="img"
+    <div className="relative overflow-hidden rounded-sm bg-night-2" role="img"
       aria-label={`${who}${delivered ? "llegó a tu casa" : `${Math.round(progress * 100)}% del camino entre el local y tu casa`} (ilustrativo)`}>
       {/* Margen arriba: el viajero de la temática (con su gorro) se dibuja por encima del recorrido y no se corta. */}
       <div className={cn("relative", traveler && "mt-5 sm:mt-6")}>
@@ -67,7 +67,7 @@ export function RouteMap({ progress, traveler, accent = brand.signature.volt, de
               return (
                 <motion.span key={i} className="absolute -ml-2.5 -mt-2.5 block h-5 w-5" initial={{ x: 0, y: 0, opacity: 0, scale: 0.4 }}
                   animate={{ x: Math.cos(a) * 46, y: Math.sin(a) * 34, opacity: [0, 1, 0], scale: 1 }} transition={{ duration: 1.3, delay: 1.5 + i * 0.03, ease: EASE }}>
-                  {kind ? <Decor kind={kind} className="h-full w-full" /> : <span className="block h-2.5 w-2.5 rounded-full" style={{ background: accent }} />}
+                  {kind ? <Decor kind={kind} className="h-full w-full" /> : <span className="block h-2.5 w-2.5 rounded-sm" style={{ background: accent }} />}
                 </motion.span>
               );
             })}
@@ -76,8 +76,8 @@ export function RouteMap({ progress, traveler, accent = brand.signature.volt, de
       </div>
       {/* En el celular los rótulos van en una fila debajo del recorrido, para no tapar la salida ni al viajero. */}
       <div className="flex justify-between gap-2 px-3 pb-3 sm:contents">
-        <span className="flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-xs font-bold text-on-night sm:absolute sm:bottom-3 sm:left-3"><Store size={14} aria-hidden="true" /> Local {brand.name} · {brand.city}</span>
-        <span className={cn("flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold transition-colors duration-500 sm:absolute sm:right-3 sm:top-3", delivered ? "bg-on-night text-night" : "bg-white/10 text-on-night")}>
+        <span className="flex items-center gap-1.5 rounded-sm bg-white/10 px-3 py-1.5 text-xs font-bold text-on-night sm:absolute sm:bottom-3 sm:left-3"><Store size={14} aria-hidden="true" /> Local {brand.name} · {brand.city}</span>
+        <span className={cn("flex items-center gap-1.5 rounded-sm px-3 py-1.5 text-xs font-bold transition-colors duration-500 sm:absolute sm:right-3 sm:top-3", delivered ? "bg-on-night text-night" : "bg-white/10 text-on-night")}>
           {delivered ? <Check size={14} aria-hidden="true" /> : <Home size={14} aria-hidden="true" />} {delivered ? "Llegó a tu casa" : "Tu casa"}
         </span>
       </div>

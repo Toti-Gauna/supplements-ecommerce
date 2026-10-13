@@ -9,7 +9,7 @@ import { formatDay } from "@/lib/date";
 import { cn } from "@/lib/cn";
 
 export const KIND_LABEL: Record<ClosureKind, string> = { feriado: "Feriado nacional", "no-laborable": "Día no laborable", cierre: "Cierre del local" };
-const action = "inline-flex h-10 items-center gap-1.5 rounded-full border border-ink/15 px-3.5 text-sm font-bold hover:bg-accent/50";
+const action = "inline-flex h-10 items-center gap-1.5 rounded-sm border border-ink/15 px-3.5 text-sm font-bold hover:bg-accent/50";
 
 /** Fecha de una fila: "jue, 8 oct · 2027" cuando no es el año en curso. */
 function When({ date, today }: { date: string; today: string }) {
@@ -57,7 +57,7 @@ export function OwnClosureRow({ closure: c, today, editing, onEdit, onCancel, on
       <span className="flex gap-1.5">
         <button type="button" className={action} onClick={onEdit} aria-label={`Editar el cierre del ${formatDay(c.date)}`}><Pencil size={15} aria-hidden="true" /> Editar</button>
         <button type="button" onClick={onRemove} aria-label={`Quitar el cierre del ${formatDay(c.date)}`}
-          className="grid h-10 w-10 place-items-center rounded-full text-muted hover:bg-danger-soft hover:text-danger"><Trash2 size={16} aria-hidden="true" /></button>
+          className="grid h-10 w-10 place-items-center rounded-sm text-muted hover:bg-danger-soft hover:text-danger"><Trash2 size={16} aria-hidden="true" /></button>
       </span>
     </li>
   );

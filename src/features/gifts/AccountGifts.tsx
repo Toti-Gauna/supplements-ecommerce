@@ -16,7 +16,7 @@ export function AccountGifts({ email }: { email: string }) {
   return (
     <div className="flex flex-col gap-6">
       {received.length === 0 ? (
-        <p className="rounded-2xl bg-surface p-4 text-sm text-muted">Todavía no recibiste regalos en esta cuenta.</p>
+        <p className="rounded-sm bg-surface p-4 text-sm text-muted">Todavía no recibiste regalos en esta cuenta.</p>
       ) : (
         <ul className="grid gap-3 sm:grid-cols-2">
           {received.map((g) => {
@@ -25,8 +25,8 @@ export function AccountGifts({ email }: { email: string }) {
             return (
               <li key={g.code}>
                 <Link href={`/regalo/?c=${g.code}`} style={{ "--g-from": c.from, "--g-to": c.to } as CSSProperties}
-                  className="group relative flex items-center gap-4 overflow-hidden rounded-[1.6rem] bg-[linear-gradient(135deg,var(--g-from),var(--g-to))] p-4 text-on-night shadow-[var(--shadow-card)]">
-                  <span className={`grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-white/15 ${isNew ? "gift-tile-new" : ""}`}><GiftIcon size={26} aria-hidden="true" style={{ color: c.accent }} /></span>
+                  className="group relative flex items-center gap-4 overflow-hidden rounded-sm bg-[linear-gradient(135deg,var(--g-from),var(--g-to))] p-4 text-on-night shadow-[var(--shadow-card)]">
+                  <span className={`grid h-14 w-14 shrink-0 place-items-center rounded-sm bg-white/15 ${isNew ? "gift-tile-new" : ""}`}><GiftIcon size={26} aria-hidden="true" style={{ color: c.accent }} /></span>
                   <span className="min-w-0">
                     <span className="block text-xs font-bold uppercase tracking-wider opacity-80">{isNew ? "Sin abrir" : "Abierto"} · de {g.from}</span>
                     <span className="block font-bold leading-snug">{isNew ? bagName(g.occasion) : g.item.name}</span>

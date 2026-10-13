@@ -4,12 +4,11 @@ import { SKINS } from "./skins";
 
 /**
  * Script del <head>: decide la temática ANTES de pintar (vista previa de "Probar temáticas", modo del panel y
- * fechas, guardados en localStorage) y marca `data-season` + colores del splash. Así la pantalla de carga y
- * la paleta salen de temporada sin parpadeo. Repite la regla de `currentTheme` (src/demo/engine/themes.ts);
+ * fechas, guardados en localStorage) y marca `data-season`: el acento de temporada sale sin parpadeo. Repite la regla de `currentTheme` (src/demo/engine/themes.ts);
  * después de hidratar, ThemeStage la vuelve a aplicar con el engine. El panel queda sin temática.
  */
 const defaults = seasonalThemes.map(({ id, active, startsOn, endsOn }) => ({ id, active, startsOn, endsOn }));
-const skins = Object.fromEntries(Object.entries(SKINS).map(([id, s]) => [id, [s.from, s.to, s.accent]]));
+const skins = Object.fromEntries(Object.keys(SKINS).map((id) => [id, 1]));
 
 export const seasonScript = `(function(){try{
 var d=document.documentElement,ls=window.localStorage;
@@ -25,5 +24,5 @@ if(pid==="original")id=null;else if(pid&&K[pid])id=pid;else if(S.mode==="fixed")
 var n=new Date(),md=("0"+(n.getMonth()+1)).slice(-2)+"-"+("0"+n.getDate()).slice(-2);
 for(var i=0;i<T.length;i++){var t=T[i],f=t.startsOn.slice(5),e=t.endsOn.slice(5);
 if(t.active&&(f<=e?md>=f&&md<=e:md>=f||md<=e)){id=t.id;break}}}
-if(id&&K[id]){d.setAttribute("data-season",id);d.style.setProperty("--sp-from",K[id][0]);d.style.setProperty("--sp-to",K[id][1]);d.style.setProperty("--sp-accent",K[id][2]);}
+if(id&&K[id])d.setAttribute("data-season",id);
 }catch(e){}})();`;

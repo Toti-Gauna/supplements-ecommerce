@@ -26,7 +26,7 @@ export function QuizView() {
           intro="Contanos cómo entrenás y te armamos un stack con el porqué de cada producto.">
           <div className="flex flex-col gap-5">
             {quiz.step === 0 && quiz.saved && (
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 rounded-2xl bg-white/[0.05] px-4 py-3 text-sm ring-1 ring-white/10">
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 rounded-sm bg-white/[0.05] px-4 py-3 text-sm ring-1 ring-white/10">
                 <History size={18} aria-hidden="true" className="shrink-0 text-ion" />
                 <p className="min-w-0 flex-1">Tu último stack: <strong>{QUIZ_STEPS.map((s) => answerLabel(quiz.saved!, s.id)).join(" · ")}</strong></p>
                 <button type="button" onClick={quiz.resume} className="min-h-11 font-bold text-volt underline underline-offset-4">Ver mi último stack</button>

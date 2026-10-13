@@ -32,7 +32,7 @@ export function ThemeMode() {
   const nextNote = settings.mode === "fixed" ? `En modo fijo no cambia sola: sigue ${fixedName ?? "la elegida"}.`
     : settings.mode === "off" ? "Saldría en modo automático." : "Sale sola cuando llegue su fecha.";
   return (
-    <section aria-labelledby="modo-title" className="@container mb-6 rounded-3xl bg-surface p-5 shadow-[var(--shadow-card)]">
+    <section aria-labelledby="modo-title" className="@container mb-6 rounded-sm bg-surface p-5 shadow-[var(--shadow-card)]">
       <div className="grid gap-5 @min-[58rem]:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
         <div className="flex min-w-0 flex-col gap-4">
           <h2 id="modo-title" className="text-lg font-bold">Cómo se elige</h2>
@@ -52,17 +52,17 @@ export function ThemeMode() {
               </div>
             )}
           </div>
-          <p id="tm-mode-hint" className="flex gap-2 rounded-2xl bg-bg p-3 text-sm text-muted"><Info size={16} aria-hidden="true" className="mt-0.5 shrink-0" />{mode.hint}</p>
+          <p id="tm-mode-hint" className="flex gap-2 rounded-sm bg-bg p-3 text-sm text-muted"><Info size={16} aria-hidden="true" className="mt-0.5 shrink-0" />{mode.hint}</p>
           <Switch checked={settings.showTryButton} onChange={(v) => save(v ? "Botón “Probar temáticas” visible" : "Botón “Probar temáticas” oculto", () => saveSettings({ showTryButton: v }))}
             label="Botón “Probar temáticas” en la tienda" description="Para mostrarle la demo al cliente: cada visitante puede ver cualquier temática solo en su navegador." />
         </div>
         <div className="grid content-start grid-cols-[repeat(auto-fit,minmax(min(100%,14rem),1fr))] gap-3">
-          <p className="rounded-2xl bg-accent/60 p-4 text-sm">
+          <p className="rounded-sm bg-accent/60 p-4 text-sm">
             <span className="block text-xs font-bold uppercase tracking-wider text-muted">Hoy ve el cliente</span>
             <strong className="mt-1 block text-xl">{today?.name ?? "Sin temática"}</strong>
             <span className="block text-muted">{today ? (settings.mode === "fixed" ? "Temática fija, sin importar la fecha" : formatDayRange(today.startsOn, today.endsOn)) : settings.mode === "off" ? "Modo sin temática" : "Hoy no hay ninguna en fecha"}</span>
           </p>
-          <p className="rounded-2xl bg-accent/60 p-4 text-sm">
+          <p className="rounded-sm bg-accent/60 p-4 text-sm">
             <span className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-muted"><CalendarClock size={14} aria-hidden="true" />Próxima por fecha</span>
             <strong className="mt-1 block text-xl">{next?.name ?? "—"}</strong>
             {next && <span className="block text-muted">{formatDayRange(next.startsOn, next.endsOn)}</span>}

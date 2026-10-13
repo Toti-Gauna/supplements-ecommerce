@@ -7,7 +7,7 @@ import type { ReadSheet } from "../table/excel";
 
 /** Letra de columna como en Excel: 0 → A, 25 → Z, 26 → AA. */
 const letter = (i: number): string => (i >= 26 ? letter(Math.floor(i / 26) - 1) : "") + String.fromCharCode(65 + (i % 26));
-const select = "h-11 w-full rounded-2xl border border-ink/12 bg-bg px-3 text-sm font-bold";
+const select = "h-11 w-full rounded-sm border border-ink/12 bg-bg px-3 text-sm font-bold";
 
 interface Props<F extends string> {
   sheets: ReadSheet[];
@@ -40,7 +40,7 @@ export function ImportMapping<F extends string>({ sheets, sheetIndex, onSheet, h
           <select id="map-sheet" value={sheetIndex} onChange={(e) => onSheet(Number(e.target.value))} className={select}>{sheets.map((s, i) => <option key={s.name} value={i}>{s.name}</option>)}</select>
         </div>
       )}
-      <div className="grid gap-3 rounded-3xl bg-surface p-4 shadow-[var(--shadow-card)] sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 rounded-sm bg-surface p-4 shadow-[var(--shadow-card)] sm:grid-cols-2 lg:grid-cols-4">
         {fields.map((f) => (
           <div key={f} className="flex flex-col gap-1 text-sm font-bold">
             <label htmlFor={`map-${f}`}>{labels[f]}{required.includes(f) && <span className="sr-only"> (obligatorio)</span>}</label>
@@ -51,7 +51,7 @@ export function ImportMapping<F extends string>({ sheets, sheetIndex, onSheet, h
           </div>
         ))}
       </div>
-      <div className="overflow-x-auto rounded-3xl bg-surface shadow-[var(--shadow-card)]">
+      <div className="overflow-x-auto rounded-sm bg-surface shadow-[var(--shadow-card)]">
         <table className="w-full min-w-[520px] text-left text-sm">
           <caption className="px-4 pt-3 text-left text-xs font-bold uppercase tracking-[0.12em] text-muted">Primeras filas de “{sheets[sheetIndex]?.name}”</caption>
           <tbody>

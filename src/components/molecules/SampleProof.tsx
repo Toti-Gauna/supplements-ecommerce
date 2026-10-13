@@ -2,7 +2,7 @@
 export function SampleProof({ fileName, amount }: { fileName: string; amount: string }) {
   return (
     <figure className="flex w-full max-w-56 flex-col gap-1">
-      <svg viewBox="0 0 200 260" role="img" aria-label={`Comprobante de muestra ${fileName}`} className="w-full rounded-xl border border-line bg-white">
+      <svg viewBox="0 0 200 260" role="img" aria-label={`Comprobante de muestra ${fileName}`} className="w-full rounded-sm border border-line bg-white">
         <rect x="16" y="18" width="90" height="10" rx="5" fill="#e4dccb" />
         <rect x="16" y="40" width="168" height="1" fill="#e4dccb" />
         {[60, 80, 100, 120].map((y) => <rect key={y} x="16" y={y} width={y % 40 === 0 ? 120 : 150} height="8" rx="4" fill="#efe8da" />)}

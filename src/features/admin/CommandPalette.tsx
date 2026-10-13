@@ -30,7 +30,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
     { id: "sheet", group: "Acciones", label: "Productos y stock en formato Excel", icon: icon(FileSpreadsheet), href: "/admin-demo/productos/?formato=excel", search: "planilla excel grilla stock editar precios" },
     { id: "wheel", group: "Acciones", label: "Configuración de la ruleta", icon: icon(Disc3), href: "/admin-demo/cupones/ruleta/", search: "ruleta premios pesos gajos cupones" },
     { id: "outbox", group: "Acciones", label: "Bandeja de salida de emails", icon: icon(Inbox), href: "/admin-demo/emails/enviados/", search: "emails enviados bandeja salida" },
-    { id: "slides", group: "Acciones", label: "Carrusel del inicio", icon: icon(GalleryHorizontal), href: "/admin-demo/contenido/carrusel/", search: "carrusel diapositivas portada inicio banner imagen" },
+    { id: "hero", group: "Acciones", label: "Hero del inicio", icon: icon(GalleryHorizontal), href: "/admin-demo/contenido/carrusel/", search: "hero carrusel destacados producto estrella portada inicio banner titular" },
     { id: "faqs", group: "Acciones", label: "Preguntas frecuentes", icon: icon(MessageCircleQuestion), href: "/admin-demo/contenido/preguntas/", search: "preguntas frecuentes ayuda faq" },
     { id: "collection", group: "Acciones", label: "Datos de cobro de muestra", icon: icon(Landmark), href: "/admin-demo/ajustes/cobro/", search: "alias cbu cvu titular qr transferencia cobro ajustes" },
     { id: "shipping", group: "Acciones", label: "Envíos y retiro", icon: icon(Truck), href: "/admin-demo/ajustes/envios/", search: "envio gratis zonas cadete retiro codigos postales ajustes" },
@@ -67,8 +67,8 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
             <li key={`${item.group}-${item.id}`} id={`cmd-${item.id}`} role="option" aria-selected={i === current}>
               {(i === 0 || results[i - 1]!.group !== item.group) && <p className="px-3 pb-1 pt-3 text-[11px] font-extrabold uppercase tracking-[0.16em] text-muted">{item.group}</p>}
               <button type="button" tabIndex={-1} onClick={() => go(item)} onMouseEnter={() => setActive(i)}
-                className={cn("flex min-h-12 w-full items-center gap-3 rounded-2xl px-3 text-left text-[15px] font-semibold", i === current ? "bg-accent text-ink" : "text-ink/85")}>
-                <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-bg text-primary">{item.icon}</span>
+                className={cn("flex min-h-12 w-full items-center gap-3 rounded-sm px-3 text-left text-[15px] font-semibold", i === current ? "bg-accent text-ink" : "text-ink/85")}>
+                <span className="grid h-8 w-8 shrink-0 place-items-center rounded-sm bg-bg text-primary">{item.icon}</span>
                 <span className="min-w-0 flex-1 truncate">{item.label}</span>
                 {item.hint && <span className="hidden shrink-0 text-xs text-muted sm:inline">{item.hint}</span>}
                 {i === current ? <CornerDownLeft size={15} aria-hidden="true" className="text-muted" /> : <ArrowRight size={15} aria-hidden="true" className="text-muted/50" />}

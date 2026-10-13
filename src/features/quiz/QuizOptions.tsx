@@ -16,7 +16,7 @@ const DAYS_LIT: Record<TrainingDays, number> = { "1-2": 2, "3-4": 4, "5+": 6 };
 function WeekBars({ lit }: { lit: number }) {
   return (
     <span className="flex h-6 items-end gap-[3px]">
-      {Array.from({ length: 7 }, (_, i) => <span key={i} className={cn("w-1 rounded-full", i < lit ? "h-6 bg-[var(--hue)] shadow-[0_0_6px_var(--hue)]" : "h-3 bg-white/20")} />)}
+      {Array.from({ length: 7 }, (_, i) => <span key={i} className={cn("w-1 rounded-sm", i < lit ? "h-6 bg-[var(--hue)] shadow-[0_0_6px_var(--hue)]" : "h-3 bg-white/20")} />)}
     </span>
   );
 }

@@ -40,7 +40,7 @@ export function SupplierDialog({ supplier, onClose }: { supplier: Supplier | nul
           <legend className="mb-2 text-sm font-bold">Días de reparto</legend>
           <div className="flex flex-wrap gap-2">
             {DAYS.map(({ d, label }) => (
-              <label key={d} className="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full bg-surface px-3.5 text-sm font-semibold ring-1 ring-ink/10 has-[:checked]:ring-primary">
+              <label key={d} className="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-sm bg-surface px-3.5 text-sm font-semibold ring-1 ring-ink/10 has-[:checked]:ring-primary">
                 <input type="checkbox" className="h-4 w-4 accent-primary" checked={draft.days.includes(d)} onChange={(e) => set({ days: e.target.checked ? [...draft.days, d] : draft.days.filter((x) => x !== d) })} />{label}
               </label>
             ))}

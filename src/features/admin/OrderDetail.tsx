@@ -42,7 +42,7 @@ export function OrderDetail() {
       <DetailHeader list={{ href: "/admin-demo/pedidos/", label: "Pedidos" }} title={order.code} eyebrow={`Pedido ficticio · ${formatDateTime(order.createdAt)}`}
         status={<><TrackChip label="Pago" value={pay.label} tone={pay.tone} /><TrackChip label="Preparación y entrega" value={ful.label} tone={ful.tone} /></>}
         aside={<><p className="text-xs font-bold text-muted">Total</p><p className="text-3xl font-extrabold tabular-nums">{formatARS(order.total)}</p></>} />
-      <section aria-labelledby="o-next" className="flex flex-col gap-3 rounded-[1.75rem] bg-surface p-5 shadow-[var(--shadow-card)] ring-2 ring-primary/15">
+      <section aria-labelledby="o-next" className="flex flex-col gap-3 rounded-sm bg-surface p-5 shadow-[var(--shadow-card)] ring-2 ring-primary/15">
         <div>
           <h2 id="o-next" className="eyebrow text-muted">Próxima acción</h2>
           <p className="mt-1 text-lg font-extrabold">{step ?? "Nada pendiente con este pedido."}</p>
@@ -82,7 +82,7 @@ export function OrderDetail() {
             </ol>
           </Panel>
           <Panel title="Notas internas (ficticias)">
-            <ul className="mb-3 flex flex-col gap-1.5 text-sm">{order.notes.length ? order.notes.map((n, i) => <li key={i} className="rounded-xl bg-accent/50 p-2.5">{n}</li>) : <li className="text-muted">Sin notas.</li>}</ul>
+            <ul className="mb-3 flex flex-col gap-1.5 text-sm">{order.notes.length ? order.notes.map((n, i) => <li key={i} className="rounded-sm bg-accent/50 p-2.5">{n}</li>) : <li className="text-muted">Sin notas.</li>}</ul>
             <form onSubmit={(e) => { e.preventDefault(); if (!note.trim()) return; save("Nota agregada", () => addNote(order.code, note.trim())); setNote(""); }} className="flex flex-col gap-2">
               <label htmlFor="note" className="text-sm font-bold">Nueva nota (no la ve el comprador)</label>
               <Textarea id="note" value={note} onChange={(e) => setNote(e.target.value)} className="min-h-20" />

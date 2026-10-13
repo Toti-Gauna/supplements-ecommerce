@@ -14,7 +14,7 @@ import { formatDay } from "@/lib/date";
 import { useReminders } from "@/stores/reminders";
 import { useToasts } from "@/stores/toast";
 
-const field = "min-h-11 w-full rounded-xl border border-line bg-bg px-3 font-lab text-base text-ink";
+const field = "min-h-11 w-full rounded-sm border border-line bg-bg px-3 font-lab text-base text-ink";
 
 /**
  * "¿Cuánto te dura?": servicios por día → días y fecha en que se termina, con aviso de recompra. Para proteínas suma
@@ -45,7 +45,7 @@ export function ServingCalculator({ product, variant }: { product: Product; vari
     push({ tone: "success", title: "Te avisamos antes de que se termine", description: `Aviso de muestra para el ${formatDay(remind, "long")}.`, action: { label: "Ver en Mi cuenta", href: "/cuenta/#recompras" } });
   };
   return (
-    <section aria-labelledby={`${id}-t`} className="rounded-[var(--radius-card)] border border-line bg-surface p-5 sm:p-6">
+    <section aria-labelledby={`${id}-t`} className="rounded-sm border border-line bg-surface p-5 sm:p-6">
       <p className="eyebrow text-volt-ink">Calculadora</p>
       <h2 id={`${id}-t`} className="font-display mt-1 text-2xl">¿Cuánto te dura?</h2>
       <fieldset className="mt-4">
@@ -53,7 +53,7 @@ export function ServingCalculator({ product, variant }: { product: Product; vari
         <div className="mt-2 flex gap-2">
           {[1, 2, 3].map((n) => (
             <button key={n} type="button" onClick={() => setPerDay(n)} aria-pressed={perDay === n}
-              className={cn("min-h-11 flex-1 rounded-xl border font-lab text-sm font-bold transition-colors", perDay === n ? "border-primary bg-primary text-on-primary" : "border-line hover:border-ink/30")}>{n} por día</button>
+              className={cn("min-h-11 flex-1 rounded-sm border font-lab text-sm font-bold transition-colors", perDay === n ? "border-primary bg-primary text-on-primary" : "border-line hover:border-ink/30")}>{n} por día</button>
           ))}
         </div>
       </fieldset>
@@ -69,7 +69,7 @@ export function ServingCalculator({ product, variant }: { product: Product; vari
           )}
         </div>
       )}
-      <div className="mt-5 rounded-2xl bg-night p-4 text-on-night">
+      <div className="mt-5 rounded-sm bg-night p-4 text-on-night">
         <div className="flex items-end justify-between gap-3">
           <p><span className="font-display font-wide text-4xl text-volt">{days}</span> <span className="font-bold">días</span></p>
           <p className="text-right text-xs text-night-muted">{servings} servicios<br />se termina el {formatDay(end, "dayMonth")}</p>

@@ -1,60 +1,51 @@
 "use client";
-import { bestSellers, newArrivals } from "@/demo/engine/catalog";
+import type { ReactNode } from "react";
+import { boxLeaderboard } from "@/demo/engine/home";
 import { recommendForHome } from "@/demo/engine/recommend";
-import { brand } from "@/config/brand";
 import { useDemoVersion } from "@/stores/admin";
 import { useCart } from "@/stores/cart";
 import { useHydrated } from "@/stores/hydration";
-import { BenefitsBar } from "../home/BenefitsBar";
-import { CategoryCircles } from "../home/CategoryCircles";
+import { AttributeReviews } from "../home/AttributeReviews";
+import { BoxLeaderboard } from "../home/BoxLeaderboard";
 import { ClubBand } from "../home/ClubBand";
-import { GameTeaser } from "../game/GameTeaser";
-import { HeroCarousel } from "../home/HeroCarousel";
-import { GoalRail } from "../home/GoalRail";
+import { GoalPanels } from "../home/GoalPanels";
+import { HomeCategories } from "../home/HomeCategories";
+import { HomeHero } from "../home/HomeHero";
 import { ProductRail } from "../home/ProductRail";
-import { ProductStories } from "../home/ProductStories";
 import { HomeStackBlock } from "../stack/HomeStackBlock";
-import { Values } from "../home/Values";
-import { ThemeBanner } from "../themes/ThemeBanner";
 import { ThemeOffersRail } from "../themes/ThemeOffersRail";
 import { useCurrentTheme } from "../themes/useCurrentTheme";
 import { toCard } from "./mappers";
-import type { ReactNode } from "react";
 
 /** Sección de más abajo: el navegador no la dibuja hasta que se acerca a la pantalla (menos trabajo al cargar y al scrollear). */
 function Later({ size, children }: { size: number; children: ReactNode }) {
   return <div className="cv-auto cv-bleed" style={{ containIntrinsicSize: `auto ${size}px` }}>{children}</div>;
 }
 
-/** Inicio de tienda: carrusel (con la temática vigente primero), ofertas de la temática, beneficios, categorías, objetivos, "Armá tu stack" en vivo, recomendados, más vendidos, ciencia simple y novedades. */
+/**
+ * Inicio (R1), pocos bloques y con propósito: el hero del rack (campaña o producto estrella, con su marcador), las
+ * ofertas de la campaña, los objetivos, el stack en vivo, las categorías como estantes, la tabla del box, lo
+ * recomendado para vos, las reseñas por atributo y el club. El h1 es el titular del hero.
+ */
 export function HomeSections() {
-  const data = useDemoVersion();
+  useDemoVersion();
   const hydrated = useHydrated();
   const lines = useCart((s) => s.lines);
   const { theme, offer } = useCurrentTheme();
-  const slides = data.content.slides.filter((s) => s.active !== false);
-  const best = bestSellers(8);
-  // Recomendados: si hay carrito, complementos; si no, lo destacado que no está en "más vendidos".
-  const recommended = recommendForHome(hydrated ? lines : [], 8, best.length);
+  const ranking = boxLeaderboard(5);
+  // Recomendados: si hay carrito, complementos; si no, lo destacado que no está en la tabla del box.
+  const recommended = recommendForHome(hydrated ? lines : [], 8, ranking.map((r) => r.product.slug));
   return (
-    <div className="flex flex-col gap-12 sm:gap-20">
-      {/* El título del carrusel cambia con cada diapositiva: el h1 de la página va oculto y dice qué es la tienda. */}
-      <h1 className="sr-only">{brand.name} · {brand.tagline}</h1>
-      <div className="flex flex-col gap-6">
-        <HeroCarousel key={theme?.id ?? "base"} slides={slides} lead={theme ? { node: <ThemeBanner theme={theme} offer={offer} />, label: theme.headline } : undefined} />
-        <BenefitsBar />
-      </div>
+    <div className="flex flex-col gap-12 sm:gap-16">
+      <HomeHero />
       {theme && <ThemeOffersRail theme={theme} offer={offer} />}
-      <CategoryCircles />
-      <GoalRail />
+      <GoalPanels n={1} />
       <HomeStackBlock />
-      <ProductRail id="recomendados" eyebrow="Elegidos para vos" title="Recomendados" products={recommended.map(toCard)} href="/categorias/" />
-      <Later size={480}><ProductRail id="mas-vendidos" eyebrow="Los favoritos" title="Más vendidos" accent="de la semana" products={best.map(toCard)} href="/categorias/" /></Later>
-      <Later size={640}><ProductStories /></Later>
-      <Later size={480}><ProductRail id="novedades" eyebrow="Recién salidos" title="Novedades" products={newArrivals(8).map(toCard)} /></Later>
+      <Later size={420}><HomeCategories n={2} /></Later>
+      <Later size={520}><BoxLeaderboard rows={ranking} n={3} /></Later>
+      <Later size={620}><ProductRail id="recomendados" eyebrow="Elegidos para vos" title="Recomendados" products={recommended.map(toCard)} href="/categorias/" /></Later>
+      <Later size={520}><AttributeReviews n={4} /></Later>
       <Later size={420}><ClubBand /></Later>
-      <Later size={360}><section aria-label="Juego Shaker Rush"><GameTeaser /></section></Later>
-      <Later size={320}><Values /></Later>
     </div>
   );
 }

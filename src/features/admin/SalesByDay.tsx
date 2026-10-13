@@ -25,7 +25,7 @@ export function SalesByDay({ days, orders }: { days: DaySales[]; orders: AdminOr
       {!day ? (
         <p className="text-sm text-muted">Tocá una barra para ver los pedidos de ese día.</p>
       ) : (
-        <section aria-labelledby="dia-elegido" className="rounded-2xl bg-bg p-4">
+        <section aria-labelledby="dia-elegido" className="rounded-sm bg-bg p-4">
           <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
             <h3 id="dia-elegido" className="font-bold capitalize">{LONG.format(atNoon(day.day))}</h3>
             <p className="text-sm text-muted"><strong className="text-ink tabular-nums">{day.orders}</strong> {day.orders === 1 ? "pedido" : "pedidos"} · <strong className="text-ink tabular-nums">{formatARS(day.amount)}</strong></p>
@@ -36,7 +36,7 @@ export function SalesByDay({ days, orders }: { days: DaySales[]; orders: AdminOr
             <ul className="mt-3 flex flex-col gap-1.5">
               {list.map((o) => (
                 <li key={o.code}>
-                  <Link href={`/admin-demo/pedidos/detalle/?codigo=${o.code}`} className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-xl bg-surface px-3 py-2 text-sm hover:bg-accent/50">
+                  <Link href={`/admin-demo/pedidos/detalle/?codigo=${o.code}`} className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-sm bg-surface px-3 py-2 text-sm hover:bg-accent/50">
                     <span className="font-extrabold">{o.code}</span>
                     <span className="min-w-0 flex-1 truncate">{o.customer.name}</span>
                     <StatusBadge status={o.status} />

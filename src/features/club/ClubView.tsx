@@ -40,7 +40,7 @@ export function ClubView() {
   return (
     <div className="flex flex-col gap-14 sm:gap-20">
       <ClubHero missions={missions} done={done} />
-      <section aria-labelledby="niveles" className="rounded-[2rem] bg-night p-6 text-on-night sm:rounded-[2.5rem] sm:p-10 lg:p-14">
+      <section aria-labelledby="niveles" className="rounded-sm bg-night p-6 text-on-night sm:rounded-sm sm:p-10 lg:p-14">
         <p className="eyebrow text-volt">Niveles</p>
         <h2 id="niveles" className="font-display mb-8 mt-2 scroll-mt-28 text-4xl leading-tight sm:text-5xl">Cargá tu batería</h2>
         <ClubLevels spend={user ? (demoAccountProgress["m-gasto"] ?? 0) : 0} signedIn={Boolean(user)} />
@@ -51,16 +51,16 @@ export function ClubView() {
           {missions.map((m, i) => <Reveal as="li" key={m.id} delay={i * 0.08}><MissionCard mission={m} progress={user ? (demoAccountProgress[m.id] ?? 0) : 0} /></Reveal>)}
         </ul>
       </section>
-      <section aria-labelledby="ruleta" className="grid items-center gap-10 rounded-[2rem] bg-surface p-6 shadow-[var(--shadow-card)] sm:rounded-[2.5rem] sm:p-10 lg:grid-cols-2 lg:p-14">
+      <section aria-labelledby="ruleta" className="grid items-center gap-10 rounded-sm bg-surface p-6 shadow-[var(--shadow-card)] sm:rounded-sm sm:p-10 lg:grid-cols-2 lg:p-14">
         <Heading id="ruleta" eyebrow="Ruleta de cupones" title="Girá y llevate un premio">Envío gratis, un shaker de regalo, sachets de muestra o un descuento para tu próxima compra. Todos los premios ganan.</Heading>
         <WheelTeaser />
       </section>
       <section aria-label="Juego Shaker Rush" id="juego" className="scroll-mt-28">
         <GameTeaser />
       </section>
-      <section aria-labelledby="path" className="rounded-[2rem] bg-night p-6 text-on-night sm:rounded-[2.5rem] sm:p-10 lg:p-14">
-        <p className="eyebrow text-volt">Cadenas</p>
-        <h2 id="path" className="font-display mb-8 mt-2 text-4xl leading-tight sm:text-5xl">Camino de premios</h2>
+      <section aria-labelledby="path" className="rounded-sm bg-night p-6 text-on-night sm:rounded-sm sm:p-10 lg:p-14">
+        <p className="eyebrow text-volt">Series</p>
+        <h2 id="path" className="font-display mb-8 mt-2 text-4xl leading-tight sm:text-5xl">Misión por misión</h2>
         <MissionPath missions={missions} />
       </section>
       <section aria-labelledby="wallet" className="flex flex-col gap-8">
@@ -68,7 +68,7 @@ export function ClubView() {
         <RewardsWallet />
         <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {RULES.map(({ icon: Icon, text }) => (
-            <li key={text} className="flex items-start gap-3 rounded-2xl border border-line bg-surface p-4 text-sm">
+            <li key={text} className="flex items-start gap-3 rounded-sm border border-line bg-surface p-4 text-sm">
               <Icon size={18} aria-hidden="true" className="mt-0.5 shrink-0 text-primary" />{text}
             </li>
           ))}

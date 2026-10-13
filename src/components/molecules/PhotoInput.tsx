@@ -29,7 +29,7 @@ export function PhotoInput({ label, hint, onFile }: { label: string; hint: strin
   return (
     <div className="flex flex-col gap-1.5">
       <span className="text-sm font-bold">{label}</span>
-      <label htmlFor={id} className="flex min-h-14 cursor-pointer items-center gap-3 rounded-2xl border-2 border-dashed border-ion bg-surface px-4 py-3 font-bold text-primary hover:bg-accent has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary/50">
+      <label htmlFor={id} className="flex min-h-14 cursor-pointer items-center gap-3 rounded-sm border-2 border-dashed border-ion bg-surface px-4 py-3 font-bold text-primary hover:bg-accent has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary/50">
         <Upload size={20} aria-hidden="true" />
         <span className="min-w-0 truncate">{name ? `Cambiar foto (${name})` : "Elegir foto"}</span>
         <input

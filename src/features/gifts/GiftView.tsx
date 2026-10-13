@@ -40,7 +40,7 @@ export function GiftView() {
   if (!gift) {
     return (
       <section className="mx-auto flex max-w-xl flex-col items-center gap-6 py-6 text-center">
-        <span className="grid h-16 w-16 place-items-center rounded-full bg-night text-volt"><GiftIcon size={28} aria-hidden="true" /></span>
+        <span className="grid h-16 w-16 place-items-center rounded-sm bg-night text-volt"><GiftIcon size={28} aria-hidden="true" /></span>
         <div>
           <h1 className="font-display text-4xl sm:text-5xl">{failed ? "No pudimos abrir ese regalo" : "¿Te hicieron un regalo?"}</h1>
           <p className="mt-3 text-muted">
@@ -73,9 +73,9 @@ function GiftExperience({ gift, preview }: { gift: Gift; preview: boolean }) {
   const done = () => { setOpen(true); if (!preview) markOpened(gift.code); };
   return (
     <section className="mx-auto flex max-w-xl flex-col items-center gap-5 py-6 text-center">
-      <span className="grid h-16 w-16 place-items-center rounded-full bg-night text-volt"><GiftIcon size={28} aria-hidden="true" /></span>
+      <span className="grid h-16 w-16 place-items-center rounded-sm bg-night text-volt"><GiftIcon size={28} aria-hidden="true" /></span>
       <h1 className="font-display text-4xl sm:text-5xl">{gift.to}, tenés un regalo de {gift.from}</h1>
-      <button type="button" onClick={() => setStage(true)} className="rounded-full bg-primary px-6 py-3 font-bold text-on-primary">{isOpen ? "Ver mi regalo" : "Abrir mi regalo"}</button>
+      <button type="button" onClick={() => setStage(true)} className="rounded-sm bg-primary px-6 py-3 font-bold text-on-primary">{isOpen ? "Ver mi regalo" : "Abrir mi regalo"}</button>
       <ImmersiveStage open={stage} onClose={() => setStage(false)} label={`Regalo de ${gift.from} para ${gift.to}`} glow={[colors.from, colors.to]}>
         {isOpen ? (
           <GiftCard gift={gift} saved={isSaved} preview={preview} onSave={() => save(gift)} onReplay={() => setOpen(false)} />

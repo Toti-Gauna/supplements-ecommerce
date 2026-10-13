@@ -32,7 +32,7 @@ export function CategoryProducts({ categorySlug, hadProducts }: { categorySlug: 
         <p className="text-sm text-muted" aria-live="polite">{cards.length} {cards.length === 1 ? "producto" : "productos"}</p>
         <label className="flex min-w-0 items-center gap-2 text-sm font-bold">
           Ordenar por
-          <select value={sort} onChange={(e) => setSort(e.target.value as SortKey)} className="min-h-11 min-w-0 max-w-full rounded-full border border-ink/12 bg-surface pl-4 font-semibold text-ink hover:border-ink/25 focus:border-primary focus:outline-none">
+          <select value={sort} onChange={(e) => setSort(e.target.value as SortKey)} className="min-h-11 min-w-0 max-w-full rounded-sm border border-ink/12 bg-surface pl-4 font-semibold text-ink hover:border-ink/25 focus:border-primary focus:outline-none">
             {SORTS.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
           </select>
         </label>

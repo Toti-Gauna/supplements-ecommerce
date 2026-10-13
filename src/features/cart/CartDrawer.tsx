@@ -36,17 +36,17 @@ export function CartDrawer() {
         <AnimatePresence>
           {added && (
             <motion.p initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} role="status" className="mt-2 flex items-center gap-2 text-sm font-bold text-success">
-              <span className="grid h-5 w-5 place-items-center rounded-full bg-success text-white"><Check size={13} aria-hidden="true" /></span>Agregaste {added.name}
+              <span className="grid h-5 w-5 place-items-center rounded-sm bg-success text-white"><Check size={13} aria-hidden="true" /></span>Agregaste {added.name}
             </motion.p>
           )}
         </AnimatePresence>
       </div>
       <div className="flex-1 overflow-y-auto px-6">
         {lines.length === 0 ? (
-          <p className="rounded-3xl bg-surface p-6 text-center text-muted">Todavía no agregaste nada.</p>
+          <p className="rounded-sm bg-surface p-6 text-center text-muted">Todavía no agregaste nada.</p>
         ) : (
           <>
-            <div className="mb-4 rounded-2xl bg-surface p-3">
+            <div className="mb-4 rounded-sm bg-surface p-3">
               <p className="flex items-center gap-2 text-sm font-semibold"><Truck size={16} aria-hidden="true" className="text-primary" />{missing > 0 ? `Te faltan ${formatARS(missing)} para envío gratis` : "¡Tenés envío gratis!"}</p>
               <BatteryMeter pct={Math.min(100, (quote.subtotal / threshold) * 100)} label="Avance hacia el envío gratis" className="mt-2" tone={missing > 0 ? "volt" : "success"} />
             </div>
@@ -57,7 +57,7 @@ export function CartDrawer() {
                 const variant = product?.variants.find((v) => v.id === q.line.variantId);
                 if (!product || !variant) return null;
                 return (
-                  <motion.li layout key={q.line.id} className="flex gap-3 rounded-2xl bg-surface p-3">
+                  <motion.li layout key={q.line.id} className="flex gap-3 rounded-sm bg-surface p-3">
                     <div className="w-16 shrink-0"><LineThumb art={product.art} pack={product.pack} tint={variant.colorHex} name={product.name} /></div>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-bold">{product.name}</p>
@@ -67,7 +67,7 @@ export function CartDrawer() {
                         <span className="text-sm font-extrabold tabular-nums">{formatARS(q.lineTotal)}</span>
                       </div>
                     </div>
-                    <button type="button" onClick={() => remove(q.line.id)} aria-label={`Quitar ${product.name}`} className="grid h-9 w-9 place-items-center self-start rounded-full text-muted hover:bg-danger-soft hover:text-danger"><Trash2 size={16} aria-hidden="true" /></button>
+                    <button type="button" onClick={() => remove(q.line.id)} aria-label={`Quitar ${product.name}`} className="grid h-9 w-9 place-items-center self-start rounded-sm text-muted hover:bg-danger-soft hover:text-danger"><Trash2 size={16} aria-hidden="true" /></button>
                   </motion.li>
                 );
               })}

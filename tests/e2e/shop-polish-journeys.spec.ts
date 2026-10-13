@@ -224,7 +224,7 @@ for (const d of DEVICES) {
       };
       await run();
       await expect(page.locator("[data-trk-traveler]")).toHaveCount(0);
-      await page.getByRole("button", { name: "Probar temáticas" }).click();
+      await page.getByRole("button", { name: "Probar temáticas" }).first().click();
       await page.getByRole("dialog", { name: "Probar temáticas" }).getByRole("button", { name: "Probar Navidad" }).click();
       await expect(page.locator("html")).toHaveAttribute("data-season", "navidad");
       await page.keyboard.press("Escape");

@@ -17,7 +17,7 @@ export function ProductMediaFields({ draft, onChange }: { draft: Product; onChan
   const [error, setError] = useState<string | null>(null);
   return (
     <div className="grid gap-4 sm:grid-cols-[160px_1fr]">
-      <ProductVisual art={draft.art} pack={draft.pack} photoUrl={draft.photoDataUrl} tint={draft.variants[0]?.colorHex} label={draft.imageAlt || draft.name} className="aspect-square w-40 rounded-2xl" />
+      <ProductVisual art={draft.art} pack={draft.pack} photoUrl={draft.photoDataUrl} tint={draft.variants[0]?.colorHex} label={draft.imageAlt || draft.name} className="aspect-square w-40 rounded-sm" />
       <div className="flex flex-col gap-3">
         <label className="flex flex-col gap-1 text-sm font-bold">Envase de la ilustración
           <Select value={draft.art} onChange={(e) => onChange({ art: e.target.value as ArtKey })}>{ARTS.map((a) => <option key={a.key} value={a.key}>{a.label}</option>)}</Select>

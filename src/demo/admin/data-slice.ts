@@ -2,7 +2,7 @@ import type { DemoData } from "../engine/source";
 import type { DemoSettings } from "../fixtures/commerce";
 import type { GamePrizeConfig } from "../fixtures/game";
 import type { WheelConfig, WheelPrize } from "../fixtures/wheel";
-import type { CarouselSlide, Coupon, Faq, Mission, Product, SeasonalTheme, ShippingZone, ThemeSettings } from "../types";
+import type { Coupon, HeroFeature, Faq, Mission, Product, SeasonalTheme, ShippingZone, ThemeSettings } from "../types";
 import { auditEntry, type AdminData } from "./defaults";
 import type { ClaimStatus } from "./types";
 
@@ -28,7 +28,7 @@ export interface DataActions {
   redeemCoupon: (code: string) => void;
   saveSettings: (patch: Partial<DemoSettings>) => void;
   saveZone: (zone: ShippingZone) => void;
-  saveSlides: (slides: CarouselSlide[]) => void;
+  saveHero: (hero: HeroFeature[]) => void;
   saveHomeCta: (cta: DemoData["content"]["homeCta"]) => void;
   saveFaqs: (faqs: Faq[]) => void;
   saveTheme: (theme: SeasonalTheme) => void;
@@ -68,7 +68,7 @@ export function createDataActions(set: Set): DataActions {
     redeemCoupon: (code) => edit("Cupón usado en un pedido", code, (d) => ({ coupons: d.coupons.map((c) => (c.code === code ? { ...c, usedCount: (c.usedCount ?? 0) + 1 } : c)) })),
     saveSettings: (patch) => edit("Ajustes guardados", Object.keys(patch).join(", "), (d) => ({ settings: { ...d.settings, ...patch } })),
     saveZone: (z) => edit("Zona de envío", z.name, (d) => ({ zones: upsert(d.zones, z, (x) => x.id === z.id) })),
-    saveSlides: (slides) => edit("Carrusel actualizado", "Inicio", (d) => ({ content: { ...d.content, slides } })),
+    saveHero: (hero) => edit("Hero del inicio actualizado", "Inicio", (d) => ({ content: { ...d.content, hero } })),
     saveHomeCta: (homeCta) => edit("Textos de inicio", "Inicio", (d) => ({ content: { ...d.content, homeCta } })),
     saveFaqs: (faqs) => edit("Preguntas frecuentes", "Ayuda", (d) => ({ content: { ...d.content, faqs } })),
     saveTheme: (t) => edit("Temática guardada", t.name, (d) => ({ themes: upsert(d.themes, t, (x) => x.id === t.id) })),

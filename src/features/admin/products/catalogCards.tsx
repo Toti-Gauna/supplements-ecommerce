@@ -15,7 +15,7 @@ import { ExpiringBadge, minPrice, ProductThumb } from "./productColumns";
 /** Tarjetas del celular para Productos y stock: tocar la tarjeta abre la ficha; el switch y el stock no navegan. */
 export function ProductCard({ row: p, selected, onToggle, onOpen, categories, low, onVisible }: RowCardProps<Product> & { categories: Category[]; low: number; onVisible: (p: Product) => void }) {
   return (
-    <div className={`flex flex-col gap-3 rounded-3xl bg-bg p-3 ring-1 ${selected ? "ring-primary" : "ring-ink/[0.06]"}`}>
+    <div className={`flex flex-col gap-3 rounded-sm bg-bg p-3 ring-1 ${selected ? "ring-primary" : "ring-ink/[0.06]"}`}>
       <div className="flex items-start gap-3">
         <input type="checkbox" checked={selected} onChange={onToggle} aria-label={`Seleccionar ${p.name}`} className="mt-1 h-5 w-5 shrink-0 accent-primary" />
         <button type="button" onClick={onOpen} className="flex min-w-0 flex-1 items-start gap-3 text-left">
@@ -35,7 +35,7 @@ export function ProductCard({ row: p, selected, onToggle, onOpen, categories, lo
 
 export function VariantCard({ row: r, selected, onToggle, onOpen, setStock, onClear }: RowCardProps<StockRow> & { setStock: (r: StockRow, stock: number) => void; onClear: (lot: LotRow) => void }) {
   return (
-    <div className={`flex flex-col gap-3 rounded-3xl bg-bg p-3 ring-1 ${selected ? "ring-primary" : "ring-ink/[0.06]"}`}>
+    <div className={`flex flex-col gap-3 rounded-sm bg-bg p-3 ring-1 ${selected ? "ring-primary" : "ring-ink/[0.06]"}`}>
       <div className="flex items-start gap-3">
         <input type="checkbox" checked={selected} onChange={onToggle} aria-label={`Seleccionar ${r.productName} · ${r.variantLabel}`} className="mt-1 h-5 w-5 accent-primary" />
         <button type="button" onClick={onOpen} className="min-w-0 flex-1 text-left"><span className="block font-bold">{r.productName}</span><span className="text-sm text-muted">{r.variantLabel} · {formatARS(r.price)}</span>{r.cost ? <span className="block text-xs text-muted">Costo {formatARS(r.cost)} · margen {stockMargin(r)} %</span> : null}</button>

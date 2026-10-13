@@ -11,9 +11,9 @@ interface Props { href: string; icon: ComponentType<{ size?: number; "aria-hidde
 export function HubCard({ href, icon: Icon, title, description, meta, action = "Abrir" }: Props) {
   return (
     <li className="flex">
-      <Link href={href} className="group flex w-full flex-col gap-3 rounded-[1.75rem] bg-surface p-5 shadow-[var(--shadow-card)] ring-1 ring-ink/[0.04] transition-[transform,box-shadow] hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary motion-reduce:transition-none motion-reduce:hover:translate-y-0">
+      <Link href={href} className="group flex w-full flex-col gap-3 rounded-sm bg-surface p-5 shadow-[var(--shadow-card)] ring-1 ring-ink/[0.04] transition-[transform,box-shadow] hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary motion-reduce:transition-none motion-reduce:hover:translate-y-0">
         <span className="flex items-start gap-3">
-          <span aria-hidden="true" className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-accent text-primary"><Icon size={20} aria-hidden="true" /></span>
+          <span aria-hidden="true" className="grid h-11 w-11 shrink-0 place-items-center rounded-sm bg-accent text-primary"><Icon size={20} aria-hidden="true" /></span>
           <span className="min-w-0 flex-1">
             <span className="block text-lg font-extrabold leading-snug">{title}</span>
             <span className="mt-0.5 block text-sm text-muted">{description}</span>

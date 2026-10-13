@@ -17,11 +17,11 @@ export function MoveConfirm({ move, onConfirm, onClose }: { move: PendingMove | 
         <div className="flex flex-col gap-4 p-6 pt-7">
           <h2 className="pr-12 font-display text-2xl">¿Mover {move.code}?</h2>
           <p className="text-sm text-muted">{move.customer}</p>
-          <p className="flex flex-wrap items-center gap-2 rounded-2xl bg-surface p-3 font-bold shadow-[var(--shadow-card)]">
+          <p className="flex flex-wrap items-center gap-2 rounded-sm bg-surface p-3 font-bold shadow-[var(--shadow-card)]">
             <span className="first-letter:uppercase">{move.from ? formatDay(move.from) : "Sin fecha"}</span><ArrowRight size={16} aria-hidden="true" /><span className="text-primary first-letter:uppercase">{formatDay(move.to, "long")}</span>
           </p>
           {move.warnings.length > 0 && (
-            <ul className="flex flex-col gap-1 rounded-2xl bg-warning-soft p-3 text-sm font-semibold text-warning">
+            <ul className="flex flex-col gap-1 rounded-sm bg-warning-soft p-3 text-sm font-semibold text-warning">
               {move.warnings.map((w) => <li key={w} className="flex gap-2"><TriangleAlert size={16} aria-hidden="true" className="mt-0.5 shrink-0" />{w}</li>)}
             </ul>
           )}

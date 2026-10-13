@@ -43,9 +43,9 @@ y distinta de las que hay hoy (negro + rojo agresivo, o blanco clínico). Todo s
   sabor). Tres vistas: estudio con pedestal iluminado, detalle (scoop colmado, cápsulas, gomitas, gotas) y gimnasio.
 - **Rótulo por marca**: rayo (VOLTA Lab), franjas (Krono, Forja), pulso (Brava) y grilla (Ozono).
 - **Íconos de objetivos** (`GoalGlyph`): brazo, barra, rayo, luna, llama, pulso y escudo.
-- **Pantalla de carga "Cargando energía"** (`Splash.tsx` + `app/splash.css`): pulso, la "V" que se arma con el rayo y
-  un fogonazo, batería de 10 celdas que llega a 100 %, aro eléctrico con cometa y envases en órbita. Solo
-  transform/opacity, 5 s, Escape la cierra y con "reducir movimiento" no aparece.
+- **Pantalla de carga** (`Splash.tsx` + `app/splash.css`, rediseño R1): el símbolo se enciende como un marcador, sube el
+  nombre y se carga una barra de 12 placas. ~1,2 s, **solo la primera vez de la sesión**; Escape la cierra y con
+  "reducir movimiento" no aparece. Con temática solo cambia el filo de la barra (`--season-accent`).
 - **Ruleta "Disco olímpico"** (`src/features/club/Wheel*.tsx`): disco de pesas con los gajos en los colores
   reglamentarios (rojo 25 kg, azul 20, amarillo 15, verde 10) con goma moteada y relieve, aro con 24 LED voltio que
   corren en cadena al girar y titilan al ganar, maza de acero moleteada con "VOLTA · 20 KG" y "Girar" en el agujero
@@ -55,9 +55,9 @@ y distinta de las que hay hoy (negro + rojo agresivo, o blanco clínico). Todo s
   neón con el sello "Stack −10 %".
 - **Bolsa de boxeo del regalo** (`src/features/gifts/scenes/`): cuelga de su cadena con la marca VOLTA; cada golpe
   la balancea, suelta tiza y abre una costura con luz; en el último sale el pote "Edición regalo". Una variante por fecha.
-- **Temáticas fitness** (`src/features/themes/`, `src/components/illustrations/seasonal/`): cada fecha tiñe la estética
-  eléctrica con su paleta y suma decoraciones propias (mancuerna, pesa rusa, disco, medalla, trofeo, guantes, calabaza
-  musculosa, arbolito de discos, chip…), guirnalda, fondo con FX y una pantalla de carga que rodea al logo compacto.
+- **Temáticas fitness** (`src/features/themes/`): desde R1 la fecha **no repinta la tienda**: solo `--season-accent` y
+  `--season-glow` para filos, halos y la cinta del ticker (test `season-rule`). Sin guirnaldas, sin adorno en el logo y
+  sin escena en la pantalla de carga. El arte de cada fecha llega como campaña en R3 (lenguaje "Arena").
 - **Niveles del club** (`LevelGlyph`): un disco visto de frente con una batería que se carga una celda por nivel
   (Novato, Atleta, Élite, Bestia; Bestia suma el rayo).
 - Fondo con grano fino y grilla de puntos; bandas oscuras con filo voltio muy sutil; botón primario con destello.
@@ -69,3 +69,16 @@ y distinta de las que hay hoy (negro + rojo agresivo, o blanco clínico). Todo s
 - El rótulo recorta su dibujo con un `<svg>` anidado (sin `clipPath` con id) por la misma razón.
 - Las ilustraciones no usan variables CSS adentro (salvo el estudio, con respaldo): el Estudio de contenido las pasa a
   imagen.
+
+## Rediseño "BOX" (R1, octubre 2026)
+Ver `docs/plan-rediseno.md` (§2 y "Dirección elegida"). Resumen:
+- **Oscuro (marca) = BOX Industrial:** carbono, caucho, acero, tiza; voltio como luz de señal; esquinas 0–4 px;
+  módulos que encastran (`plate`, `bevel`, `lane`, `floor` en `app/box.css`).
+- **Claro "Tiza" = laboratorio:** papel hueso, grilla milimétrica (`lab-grid`), tinta grafito; voltio/ion solo como
+  luz y sus variantes oscuras para texto.
+- **Tipografía:** Big Shoulders Display (titulares, mayúsculas), Archivo (texto), JetBrains Mono (datos y rótulos).
+- **Marcador LED** (`src/components/atoms/Led.tsx`: `Led`, `LedPrice`, `Scoreboard`): dígitos de 7 segmentos en SVG,
+  con `aria-label`, para precio por servicio, contadores y el panel.
+- **Íconos de marca** (`GymIcons.tsx`): disco, barra, pesa rusa, shaker y cronómetro.
+- **Estructura:** header de una línea con ticker ocultable, dock del celular con Buscar al centro, sin flotantes, pie
+  "ficha técnica del local".

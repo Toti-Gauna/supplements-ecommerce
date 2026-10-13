@@ -14,10 +14,10 @@ export function LowStockField({ value }: { value: number }) {
     setDraft(null);
   };
   return (
-    <label className="flex items-center gap-2 rounded-2xl bg-surface px-3 py-2 text-sm font-bold shadow-[var(--shadow-card)]">
+    <label className="flex items-center gap-2 rounded-sm bg-surface px-3 py-2 text-sm font-bold shadow-[var(--shadow-card)]">
       Avisar con
       <input type="number" min={0} max={99} value={draft ?? value} aria-label="Avisar de stock bajo con estas unidades o menos" onChange={(e) => setDraft(e.target.value)}
-        onBlur={commit} onKeyDown={(e) => { if (e.key === "Enter") e.currentTarget.blur(); }} className="h-9 w-16 rounded-xl border border-ink/12 bg-bg text-center tabular-nums" />
+        onBlur={commit} onKeyDown={(e) => { if (e.key === "Enter") e.currentTarget.blur(); }} className="h-9 w-16 rounded-sm border border-ink/12 bg-bg text-center tabular-nums" />
       o menos
     </label>
   );

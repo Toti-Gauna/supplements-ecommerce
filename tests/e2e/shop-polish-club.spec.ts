@@ -7,9 +7,9 @@ const preview = (page: Page, id: string) =>
 
 test("8.2.13 portada del Club: métricas, próximo premio y accesos; las funciones siguen igual", async ({ page }) => {
   await page.goto("club/");
-  const hero = page.getByRole("region", { name: "Comprás, sumás, ganás." });
+  const hero = page.getByRole("region", { name: "Sumá carga. Subí de nivel." });
   await expect(hero.getByRole("heading", { level: 1 })).toBeVisible();
-  for (const label of ["Misiones activas", "Completadas (demo)", "Premios en producto"]) await expect(hero.getByText(label, { exact: true })).toBeVisible();
+  for (const label of ["Misiones activas", "Completadas", "Premios en producto"]) await expect(hero.getByText(label, { exact: true })).toBeVisible();
   await expect(hero.getByText("Tu próximo premio")).toBeVisible();
   await expect(hero.getByRole("progressbar", { name: /Progreso hacia/ })).toHaveAttribute("aria-valuenow", "0");
   // Con la cuenta demo, el próximo premio toma el progreso de ejemplo (motor de misiones, sin cambios).
@@ -22,10 +22,10 @@ test("8.2.13 portada del Club: métricas, próximo premio y accesos; las funcion
   await expect(page.getByRole("heading", { name: "Girá y llevate un premio" })).toBeInViewport();
 });
 
-test("8.2.13 la portada toma el acento y el adorno de la temática vigente", async ({ page }) => {
+test("8.2.13 la portada toma solo el acento de la temática vigente", async ({ page }) => {
   await preview(page, "halloween");
   await page.goto("club/");
-  const hero = page.getByRole("region", { name: "Comprás, sumás, ganás." });
+  const hero = page.getByRole("region", { name: "Sumá carga. Subí de nivel." });
   await expect(hero.getByText("Club Volta · Halloween")).toBeVisible();
   expect(await hero.locator("h1 .italic").evaluate((el) => getComputedStyle(el).color)).toBe("rgb(255, 138, 31)");
 });
@@ -39,13 +39,13 @@ for (const [width, height] of [[1280, 900], [820, 1180], [390, 844]] as const) {
     for (const card of await cards.all()) {
       await card.scrollIntoViewIfNeeded();
       // El estado entra en una línea y el título no se parte en más de dos renglones.
-      expect(await card.locator("span.rounded-full").first().evaluate((el) => el.getBoundingClientRect().height)).toBeLessThan(32);
+      expect(await card.locator("span.whitespace-nowrap").first().evaluate((el) => el.getBoundingClientRect().height)).toBeLessThan(32);
       expect(await card.locator("h3").evaluate((el) => el.getBoundingClientRect().height / parseFloat(getComputedStyle(el).lineHeight))).toBeLessThan(2.5);
     }
     expect(await horizontalOverflow(page)).toBeLessThanOrEqual(0);
   });
 
-  test(`banda del Club en el inicio a ${width}px: deja aire a la izquierda y a la derecha`, async ({ page }) => {
+  test(`banda del Club en el inicio a ${width}px: deja aire a la izquierda y a la derecha y es recta`, async ({ page }) => {
     await page.setViewportSize({ width, height });
     await page.goto("");
     const band = page.locator("section[aria-labelledby=club]");
@@ -53,6 +53,7 @@ for (const [width, height] of [[1280, 900], [820, 1180], [390, 844]] as const) {
     const box = (await band.boundingBox())!;
     expect(box.x).toBeGreaterThanOrEqual(12);
     expect(width - (box.x + box.width)).toBeGreaterThanOrEqual(12);
-    expect(await band.evaluate((el) => parseFloat(getComputedStyle(el).borderTopLeftRadius))).toBeGreaterThan(16);
+    // Sistema BOX: placa recta (radio de 0 a 4 px), nada de burbujas.
+    expect(await band.evaluate((el) => parseFloat(getComputedStyle(el).borderTopLeftRadius))).toBeLessThanOrEqual(4);
   });
 }

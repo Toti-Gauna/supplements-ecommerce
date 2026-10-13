@@ -2,11 +2,9 @@
 import Link from "next/link";
 import { Plus, Search } from "lucide-react";
 import { ButtonLink } from "@/components/atoms/Button";
-import { Counter } from "@/components/motion/Counter";
 import { countByStatus, delta, salesSummary } from "@/demo/admin/metrics";
 import { DEMO_TODAY } from "@/demo/fixtures/admin-orders";
 import { formatDate } from "@/lib/date";
-import { formatARS } from "@/lib/money";
 import { useAdmin } from "@/stores/admin";
 import { ActivityFeed, ClubPerformance, TopProducts } from "./DashboardInsights";
 import { KpiTile } from "./KpiTile";
@@ -32,7 +30,7 @@ export function Dashboard() {
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="eyebrow text-volt-ink">Panel demo · {formatDate(DEMO_TODAY)}</p>
-          <h1 className="font-display mt-2 text-4xl sm:text-5xl">Buen día, {brand.name} <span className="font-sans align-middle text-sm font-bold text-warning">(demo)</span></h1>
+          <h1 className="font-display mt-2 text-4xl sm:text-5xl">Buen día, {brand.name}</h1>
           <p className="mt-2 text-muted">Tenés <strong className="text-ink">{counts.PAYMENT_REVIEW} comprobantes</strong> por revisar y <strong className="text-ink">{active} pedidos</strong> en marcha. Datos ficticios.</p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -40,11 +38,11 @@ export function Dashboard() {
           <ButtonLink href="/admin-demo/productos/" variant="secondary"><Plus size={16} aria-hidden="true" /> Productos</ButtonLink>
         </div>
       </header>
-      <section aria-label="Indicadores (demo)" className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
-        <KpiTile className="col-span-2 sm:col-span-1" label="Ventas últimos 7 días" value={formatARS(sales.week)} delta={delta(sales.week, sales.prevWeek)} spark={sales.days.map((d) => d.amount)} />
-        <KpiTile className="col-span-2 sm:col-span-1" label="Ticket promedio" value={formatARS(sales.avgTicket)} hint={`${sales.paidCount} pedidos pagados · demo`} />
-        <KpiTile label="Pedidos en marcha" value={<Counter value={active} />} hint="pagados, en preparación, listos y enviados" />
-        <KpiTile label="Comprobantes a verificar" value={<Counter value={counts.PAYMENT_REVIEW} />} hint="transferencia y QR · demo" dark />
+      <section aria-label="Indicadores" className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
+        <KpiTile className="col-span-2 sm:col-span-1" label="Ventas últimos 7 días" value={sales.week} money delta={delta(sales.week, sales.prevWeek)} spark={sales.days.map((d) => d.amount)} hint="contra la semana anterior" />
+        <KpiTile className="col-span-2 sm:col-span-1" label="Ticket promedio" value={sales.avgTicket} money hint={`${sales.paidCount} pedidos pagados`} />
+        <KpiTile label="Pedidos en marcha" value={active} hint="pagados, en preparación, listos y enviados" />
+        <KpiTile label="Comprobantes a verificar" value={counts.PAYMENT_REVIEW} hint="transferencia y QR" alert />
       </section>
       <section aria-labelledby="pipe">
         <div className="mb-3 flex items-end justify-between"><h2 id="pipe" className="font-display text-2xl">Pedidos por estado</h2><Link href="/admin-demo/pedidos/" className="text-sm font-bold text-primary underline">Ver todos</Link></div>
@@ -70,8 +68,8 @@ export function Dashboard() {
       <section aria-labelledby="reclamos">
         <div className="mb-3 flex items-end justify-between"><h2 id="reclamos" className="font-display text-2xl">Reclamos de ejemplo</h2><Link href="/admin-demo/reclamos/" className="text-sm font-bold text-primary underline">Gestionar</Link></div>
         <ul className="grid gap-3 md:grid-cols-3">
-          {openClaims.map((c) => <li key={c.id} className="rounded-3xl bg-surface p-4 text-sm shadow-[var(--shadow-card)]"><p className="font-bold">{c.code} · {c.name}</p><p className="text-muted">{c.message}</p></li>)}
-          {openClaims.length === 0 && <li className="rounded-3xl border border-dashed border-line p-4 text-sm text-muted">Sin reclamos abiertos.</li>}
+          {openClaims.map((c) => <li key={c.id} className="rounded-sm bg-surface p-4 text-sm shadow-[var(--shadow-card)]"><p className="font-bold">{c.code} · {c.name}</p><p className="text-muted">{c.message}</p></li>)}
+          {openClaims.length === 0 && <li className="rounded-sm border border-dashed border-line p-4 text-sm text-muted">Sin reclamos abiertos.</li>}
         </ul>
       </section>
     </div>

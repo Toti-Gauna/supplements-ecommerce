@@ -10,11 +10,11 @@ const diffText = (d: number) => (d === 0 ? "sin cambio" : `${d > 0 ? "+" : "−"
 export function PricePreview({ lines }: { lines: PriceLine[] }) {
   const products = new Set(lines.map((l) => l.productSlug)).size;
   const changed = lines.filter((l) => l.to !== l.from).length;
-  if (!lines.length) return <p className="rounded-2xl border border-dashed border-line p-4 text-sm text-muted">No hay productos en lo que elegiste.</p>;
+  if (!lines.length) return <p className="rounded-sm border border-dashed border-line p-4 text-sm text-muted">No hay productos en lo que elegiste.</p>;
   return (
     <section aria-label="Vista previa de los precios" className="flex flex-col gap-2">
       <p role="status" className="text-sm"><strong className="tabular-nums">{changed}</strong> {changed === 1 ? "variante cambia" : "variantes cambian"} de precio, en {products} {products === 1 ? "producto" : "productos"}.</p>
-      <ul className="flex max-h-[min(40dvh,22rem)] flex-col divide-y divide-line overflow-y-auto rounded-2xl bg-surface ring-1 ring-ink/[0.06]">
+      <ul className="flex max-h-[min(40dvh,22rem)] flex-col divide-y divide-line overflow-y-auto rounded-sm bg-surface ring-1 ring-ink/[0.06]">
         {lines.map((l) => (
           <li key={l.key} className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 px-3 py-2.5 text-sm">
             <span className="min-w-0 flex-1 basis-44"><span className="block font-bold leading-tight">{l.productName}</span><span className="text-xs text-muted">{l.variantLabel} · {l.brand}</span></span>

@@ -24,10 +24,10 @@ export function StudioCaption({ text, hookName, onAnother }: { text: string; hoo
     }
   };
   return (
-    <section aria-labelledby="st-caption" className="rounded-3xl border border-line bg-surface p-5">
+    <section aria-labelledby="st-caption" className="rounded-sm border border-line bg-surface p-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 id="st-caption" className="font-display text-2xl">Texto para el posteo</h2>
-        <span className="rounded-full bg-accent px-3 py-1 text-xs font-bold text-primary">Gancho: {hookName}</span>
+        <span className="rounded-sm bg-accent px-3 py-1 text-xs font-bold text-primary">Gancho: {hookName}</span>
       </div>
       <label htmlFor="st-caption-text" className="sr-only">Texto para el posteo</label>
       <textarea id="st-caption-text" value={value} onChange={(e) => setValue(e.target.value)} rows={11} className={cn(inputClass.replace("text-base", "text-sm"), "mt-3 min-h-28 py-2.5 font-mono leading-relaxed")} />

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { PageHeader } from "@/components/templates/PageHeader";
 import { AccountView } from "@/features/account/AccountView";
 
-export const metadata: Metadata = { title: "Mi cuenta (demo)" };
+export const metadata: Metadata = { title: "Mi cuenta" };
 
 export default function AccountPage() {
   return (

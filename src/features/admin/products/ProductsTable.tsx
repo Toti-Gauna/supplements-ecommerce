@@ -106,7 +106,7 @@ export function ProductsTable() {
               <BulkButton onClick={() => { save(`${list.length} productos visibles`, () => setProductsActive(list.map((p) => p.slug), true)); clear(); }}>Mostrar en la tienda</BulkButton>
               <BulkButton onClick={() => { save(`${list.length} productos pausados`, () => setProductsActive(list.map((p) => p.slug), false)); clear(); }}>Pausar</BulkButton>
               <select aria-label="Mover a la categoría" value="" onChange={(e) => { const to = e.target.value; if (!to) return; save(`${list.length} productos movidos`, () => setProductsCategory(list.map((p) => p.slug), to)); clear(); }}
-                className="h-9 rounded-full bg-white/10 px-3 text-[13px] font-bold text-on-night">
+                className="h-9 rounded-sm bg-white/10 px-3 text-[13px] font-bold text-on-night">
                 <option value="">Mover a…</option>{cats.map((c) => <option key={c.slug} value={c.slug} className="text-ink">{c.name}</option>)}
               </select>
             </>

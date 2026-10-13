@@ -19,7 +19,7 @@ export function InlineConfirm({ label, title, action, cancel = "Seguir editando"
   const ref = useRef<HTMLButtonElement>(null);
   useEffect(() => { ref.current?.focus(); }, []);
   return (
-    <div role="alertdialog" aria-label={label} className="flex flex-col gap-3 rounded-2xl bg-warning-soft p-4 text-sm ring-1 ring-warning/30">
+    <div role="alertdialog" aria-label={label} className="flex flex-col gap-3 rounded-sm bg-warning-soft p-4 text-sm ring-1 ring-warning/30">
       <p className="flex items-center gap-2 font-bold text-warning"><TriangleAlert size={17} aria-hidden="true" className="shrink-0" />{title}</p>
       {children}
       <div className="flex flex-wrap justify-end gap-2">

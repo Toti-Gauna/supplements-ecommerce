@@ -31,7 +31,7 @@ export function PaymentStep({ onNext, onBack }: { onNext: () => void; onBack: ()
         ))}
         {missing && <p role="alert" className="text-sm font-semibold text-danger">Elegí un medio de pago.</p>}
       </fieldset>
-      <p className="rounded-2xl border border-dashed border-warning bg-warning-soft p-3 text-sm text-warning">
+      <p className="rounded-sm border border-dashed border-warning bg-warning-soft p-3 text-sm text-warning">
         <strong>Demo:</strong> ningún medio cobra de verdad. Vas a ver pantallas de muestra; no se piden datos de tarjeta ni se redirige a Mercado Pago.
       </p>
       <div className="flex gap-3">

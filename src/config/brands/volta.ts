@@ -1,8 +1,8 @@
 import { defineBrand } from "./types";
 
 /**
- * VOLTA (marca INVENTADA para la demo). Identidad "Laboratorio eléctrico": grafito profundo, verde voltio y violeta
- * plasma (ver docs/tono-visual.md). Para armar la demo de otra tienda se copia este archivo (ver docs/marca-blanca.md).
+ * VOLTA (marca INVENTADA para la demo). Sistema "BOX": de noche, el box de entrenamiento (carbono, acero, tiza
+ * y el voltio como luz de señal); de día, "Tiza", el laboratorio (papel, grilla milimétrica y tinta grafito). Para armar la demo de otra tienda se copia este archivo (ver docs/marca-blanca.md).
  */
 export const volta = defineBrand({
   id: "volta",
@@ -23,34 +23,34 @@ export const volta = defineBrand({
   colors: {
     primary: "#c8ff2e",
     primaryHover: "#d9ff6e",
-    onPrimary: "#0a0c10",
-    accent: "#1a1f28",
+    onPrimary: "#0b0c0d",
+    accent: "#1f2225",
     ion: "#2ee6d6",
     plasma: "#8b72ff",
-    background: "#0a0c10",
-    surface: "#12161d",
-    text: "#eef1f5",
-    muted: "#9aa4b2",
-    border: "#252b36",
-    night: "#050608",
-    night2: "#0e1117",
+    background: "#0b0c0d",
+    surface: "#151719",
+    text: "#f2f0ea",
+    muted: "#a6abb0",
+    border: "#33383d",
+    night: "#060707",
+    night2: "#121416",
     voltInk: "#c8ff2e",
   },
   light: {
-    primary: "#0b0d10",
-    primaryHover: "#1c2129",
+    primary: "#131518",
+    primaryHover: "#2a2e33",
     onPrimary: "#c8ff2e",
-    accent: "#e6eae0",
-    ion: "#0fa89b",
+    accent: "#e8eae5",
+    ion: "#0a7770",
     plasma: "#5a3fe6",
-    background: "#f2f3ee",
-    surface: "#ffffff",
-    text: "#0b0d10",
-    muted: "#545c68",
-    border: "#daded4",
-    night: "#0b0d10",
-    night2: "#161a22",
-    voltInk: "#4e6e00",
+    background: "#f3f3ef",
+    surface: "#fcfcfa",
+    text: "#131518",
+    muted: "#4a5058",
+    border: "#d3d6d0",
+    night: "#111317",
+    night2: "#1b1e23",
+    voltInk: "#4a6a00",
   },
-  signature: { volt: "#c8ff2e", voltSoft: "#e3ff8f", plasma: "#8b72ff", ion: "#2ee6d6", onNight: "#eef1f5", nightMuted: "#a3acba" },
+  signature: { volt: "#c8ff2e", voltSoft: "#e3ff8f", plasma: "#8b72ff", ion: "#2ee6d6", onNight: "#f2f0ea", nightMuted: "#a6abb0" },
 });

@@ -82,7 +82,7 @@ function Editor({ draftKey: key, origin, saved }: EditorProps) {
     <div className="@container">
       <EditorStepper layout="compact" checks={checks} current={nav.current} tried={tried} onGo={nav.goTo} />
       {restored && dirty && (
-        <div role="status" className="mb-4 flex flex-wrap items-center gap-3 rounded-2xl bg-warning-soft px-4 py-3 text-sm ring-1 ring-warning/30">
+        <div role="status" className="mb-4 flex flex-wrap items-center gap-3 rounded-sm bg-warning-soft px-4 py-3 text-sm ring-1 ring-warning/30">
           <p className="flex-1 font-bold text-warning">Recuperamos los cambios sin guardar de la última vez.</p>
           <Button size="sm" variant="secondary" onClick={() => setAsking(true)}>Descartar cambios</Button>
         </div>
@@ -119,7 +119,7 @@ export function ProductEditor() {
   return (
     <>
       <Link href={back} className="mb-3 flex w-fit items-center gap-1 text-sm font-bold text-primary"><ArrowLeft size={16} aria-hidden="true" /> Productos</Link>
-      <h1 className="mb-4 text-2xl font-extrabold">{product ? `Editar: ${product.name}` : "Nuevo producto"} <span className="text-sm text-warning">(demo)</span></h1>
+      <h1 className="font-display mb-4 text-4xl sm:text-5xl">{product ? `Editar: ${product.name}` : "Nuevo producto"}</h1>
       <Editor key={key} draftKey={key} origin={isNew ? "new" : "edit"} saved={product ?? null} />
     </>
   );

@@ -40,7 +40,7 @@ export function QuizOutcome({ answers, titleRef, animate, onEdit, onRestart }: P
         <section aria-labelledby="quiz-picks-title">
           <h2 id="quiz-picks-title" className="font-display text-2xl sm:text-3xl">Qué lleva y por qué</h2>
           {summary.lines.length === 0 ? (
-            <p className="mt-4 rounded-3xl bg-surface p-6 text-muted">Con estas restricciones no encontramos productos con stock. Probá con menos restricciones o armalo a mano.</p>
+            <p className="mt-4 rounded-sm bg-surface p-6 text-muted">Con estas restricciones no encontramos productos con stock. Probá con menos restricciones o armalo a mano.</p>
           ) : (
             <ul className="mt-4 grid grid-cols-[minmax(0,1fr)] gap-3 md:grid-cols-2">
               {summary.lines.map((line, i) => (

@@ -39,7 +39,7 @@ export function SearchForm({ initial = "", value, compact, autoFocus, onSearch }
           onSearch?.(e.target.value);
         }}
         placeholder="Buscar: whey, creatina, pre…"
-        className={cn("w-full rounded-full border border-line bg-bg pl-11 pr-4 text-base focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40", compact ? "h-10" : "h-12")}
+        className={cn("w-full rounded-sm border border-line bg-bg pl-11 pr-4 text-base focus:border-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40", compact ? "h-10" : "h-12")}
       />
       <Search size={18} aria-hidden="true" className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted" />
     </form>

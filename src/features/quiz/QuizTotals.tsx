@@ -30,7 +30,7 @@ export function QuizTotals({ summary, rule, builderHref, onRestart }: Props) {
     openCart(lines[0]?.product.slug);
   };
   return (
-    <aside aria-labelledby="quiz-total-title" className="relative overflow-hidden rounded-[var(--radius-card)] bg-night p-5 text-on-night sm:p-6 lg:sticky lg:top-24">
+    <aside aria-labelledby="quiz-total-title" className="relative overflow-hidden rounded-sm bg-night p-5 text-on-night sm:p-6 lg:sticky lg:top-24">
       <span aria-hidden="true" className="pointer-events-none absolute -right-14 -top-16 h-48 w-48 rounded-full bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--brand-volt)_16%,transparent),transparent)]" />
       <p className="eyebrow relative text-volt">Tu stack · {lines.length} producto{lines.length === 1 ? "" : "s"}</p>
       <h2 id="quiz-total-title" className="font-display relative mt-1 text-2xl">{stack.discount > 0 ? "Con el descuento stack" : "Resumen"}</h2>

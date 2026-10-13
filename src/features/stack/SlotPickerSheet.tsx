@@ -31,11 +31,11 @@ function OptionTile({ product, goal, selected, onPick }: { product: Product; goa
   const forGoal = goal !== null && (product.goals ?? []).includes(goal);
   return (
     <button type="button" onClick={onPick} aria-pressed={selected}
-      className={cn("relative flex h-full w-full flex-col gap-2 rounded-2xl border bg-surface p-2 text-left transition-[border-color,box-shadow]", selected ? "border-primary shadow-[0_0_0_1px_var(--color-primary)]" : "border-line hover:border-ink/35")}>
+      className={cn("relative flex h-full w-full flex-col gap-2 rounded-sm border bg-surface p-2 text-left transition-[border-color,box-shadow]", selected ? "border-primary shadow-[0_0_0_1px_var(--color-primary)]" : "border-line hover:border-ink/35")}>
       <span aria-hidden="true" className="relative block">
-        <ProductArt art={product.art} pack={product.pack} tint={variant.colorHex} label="" showBadge={false} className="aspect-square rounded-xl" />
-        {forGoal && <span className="font-lab absolute left-1.5 top-1.5 flex items-center gap-1 rounded-full bg-volt px-2 py-0.5 text-[9.5px] font-bold uppercase tracking-wider text-night"><Target size={10} />Tu objetivo</span>}
-        {selected && <span className="absolute right-1.5 top-1.5 grid h-6 w-6 place-items-center rounded-full bg-primary text-on-primary"><Check size={14} /></span>}
+        <ProductArt art={product.art} pack={product.pack} tint={variant.colorHex} label="" showBadge={false} className="aspect-square rounded-sm" />
+        {forGoal && <span className="font-lab absolute left-1.5 top-1.5 flex items-center gap-1 rounded-sm bg-volt px-2 py-0.5 text-[9.5px] font-bold uppercase tracking-wider text-night"><Target size={10} />Tu objetivo</span>}
+        {selected && <span className="absolute right-1.5 top-1.5 grid h-6 w-6 place-items-center rounded-sm bg-primary text-on-primary"><Check size={14} /></span>}
       </span>
       <span className="flex flex-col gap-0.5 px-1">
         <span className="eyebrow text-[9.5px] text-muted">{getCategory(product.categorySlug)?.name}</span>

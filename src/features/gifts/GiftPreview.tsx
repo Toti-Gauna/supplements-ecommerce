@@ -15,13 +15,13 @@ export function GiftPreview({ draft, productName }: { draft: LineGift; productNa
   const message = draft.message.trim();
   return (
     <div style={{ "--g-from": c.from, "--g-to": c.to, "--g-accent": c.accent } as CSSProperties}
-      className="relative flex h-full flex-col overflow-hidden rounded-[1.75rem] bg-[linear-gradient(150deg,var(--g-from),var(--g-to))] p-5 text-on-night sm:p-6">
+      className="relative flex h-full flex-col overflow-hidden rounded-sm bg-[linear-gradient(150deg,var(--g-from),var(--g-to))] p-5 text-on-night sm:p-6">
       <p className="eyebrow text-[color:var(--g-accent)]">Vista previa · así lo recibe</p>
       <div aria-hidden="true" className="mx-auto my-3 aspect-[11/15] w-[min(50%,10rem)]">
         <GiftScene occasion={draft.occasion} hits={0} total={GIFT_HITS} opened={false} reduce />
       </div>
       <p className="text-center text-xs font-bold uppercase tracking-wider opacity-80">{bagName(draft.occasion)}</p>
-      <div className="mt-4 rounded-2xl bg-black/20 p-4 backdrop-blur-[2px]">
+      <div className="mt-4 rounded-sm bg-black/20 p-4 backdrop-blur-[2px]">
         <p className="font-display text-2xl leading-tight">Para {draft.to.trim() || "…"}</p>
         <p className={`mt-2 whitespace-pre-line break-words text-sm ${message ? "" : "italic opacity-70"}`}>{message ? `“${message}”` : "Tu mensaje aparece acá."}</p>
         <p className="mt-3 text-sm font-bold">De {draft.from.trim() || "…"}</p>

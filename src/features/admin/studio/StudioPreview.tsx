@@ -57,5 +57,5 @@ export function StudioPreview({ scene, slide = 0, animate, replay = 0, scale, la
     return () => cancelAnimationFrame(raf);
   }, [scene, slide, animate, replay, reduce, scale, fonts]);
   return <canvas ref={ref} role={decorative ? undefined : "img"} aria-hidden={decorative || undefined} aria-label={decorative ? undefined : label}
-    className={cn("block h-auto w-full rounded-2xl bg-night shadow-[var(--shadow-card)]", className)} style={{ aspectRatio: `${scene.W} / ${scene.H}` }} />;
+    className={cn("block h-auto w-full rounded-sm bg-night shadow-[var(--shadow-card)]", className)} style={{ aspectRatio: `${scene.W} / ${scene.H}` }} />;
 }

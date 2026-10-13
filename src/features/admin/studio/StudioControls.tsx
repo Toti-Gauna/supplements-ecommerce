@@ -30,7 +30,7 @@ export interface StudioControlsProps {
   onListen: () => void;
 }
 
-const card = "rounded-3xl border border-line bg-surface p-5";
+const card = "rounded-sm border border-line bg-surface p-5";
 
 /** Plantilla, fecha, productos o foto propia, textos, precio y oferta, duración y música. */
 export function StudioControls(p: StudioControlsProps) {
@@ -62,14 +62,14 @@ export function StudioControls(p: StudioControlsProps) {
               const on = piece.selected.includes(prod.slug);
               return (
                 <button key={prod.slug} type="button" aria-pressed={on} disabled={!on && full && max > 1} onClick={() => piece.toggle(prod.slug)}
-                  className={cn("min-h-10 rounded-full border px-3.5 text-sm font-bold transition-colors disabled:opacity-40", on ? "border-ink bg-ink text-bg" : "border-ink/15 bg-surface hover:border-ink/35")}>
+                  className={cn("min-h-10 rounded-sm border px-3.5 text-sm font-bold transition-colors disabled:opacity-40", on ? "border-ink bg-ink text-bg" : "border-ink/15 bg-surface hover:border-ink/35")}>
                   {on && max > 1 && <span aria-hidden="true">{piece.selected.indexOf(prod.slug) + 1} · </span>}{prod.name}
                 </button>
               );
             })}
           </div>
-          <div className="mt-4 rounded-2xl bg-bg p-3">
-            <label htmlFor="st-photo" className="inline-flex cursor-pointer items-center gap-2 rounded-full px-1 text-sm font-bold text-primary has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary/50">
+          <div className="mt-4 rounded-sm bg-bg p-3">
+            <label htmlFor="st-photo" className="inline-flex cursor-pointer items-center gap-2 rounded-sm px-1 text-sm font-bold text-primary has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary/50">
               <ImagePlus size={18} aria-hidden="true" />Usar una foto propia
               {/* Se vacía después de elegir: así se puede volver a elegir la misma foto después de quitarla. */}
               <input id="st-photo" type="file" accept="image/*" className="sr-only" onChange={(e) => { p.onPhoto(e.target.files?.[0] ?? null); e.target.value = ""; }} />
@@ -78,7 +78,7 @@ export function StudioControls(p: StudioControlsProps) {
             {p.photoUrl && (
               <div className="mt-2 flex items-center gap-3">
                 {/* eslint-disable-next-line @next/next/no-img-element -- foto local del dueño (blob) */}
-                <img src={p.photoUrl} alt="Tu foto" className="h-14 w-14 rounded-xl object-cover" />
+                <img src={p.photoUrl} alt="Tu foto" className="h-14 w-14 rounded-sm object-cover" />
                 <Button size="sm" variant="ghost" onClick={() => p.onPhoto(null)}><X size={16} aria-hidden="true" />Quitar foto</Button>
               </div>
             )}

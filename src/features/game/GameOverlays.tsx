@@ -12,7 +12,7 @@ export function Countdown({ count, first }: { count: number; first: boolean }) {
       <p key={count} aria-hidden="true" className={`${styles.count} font-display font-wide text-7xl leading-none text-volt drop-shadow-[0_0_24px_color-mix(in_srgb,var(--brand-volt)_45%,transparent)]`}>
         {count > 0 ? count : "¡Ya!"}
       </p>
-      {first && <p className="max-w-[16rem] rounded-full bg-night/80 px-4 py-2 text-sm font-semibold text-on-night">Arrastrá el shaker o usá ← → · Esc pausa</p>}
+      {first && <p className="max-w-[16rem] rounded-sm bg-night/80 px-4 py-2 text-sm font-semibold text-on-night">Arrastrá el shaker o usá ← → · Esc pausa</p>}
     </div>
   );
 }
@@ -23,14 +23,14 @@ export function PauseMenu({ onResume, onRestart, onExit }: { onResume: () => voi
   useEffect(() => { resume.current?.focus({ preventScroll: true }); }, []);
   return (
     <div className="absolute inset-0 flex items-center justify-center bg-night/70 p-5 backdrop-blur-sm">
-      <section aria-labelledby="game-pause-title" className={`${styles.panel} flex w-full max-w-xs flex-col gap-3 rounded-[1.75rem] bg-night-2 p-6 ring-1 ring-white/10`}>
+      <section aria-labelledby="game-pause-title" className={`${styles.panel} flex w-full max-w-xs flex-col gap-3 rounded-sm bg-night-2 p-6 ring-1 ring-white/10`}>
         <p className="eyebrow text-volt">Shaker Rush</p>
         <h2 id="game-pause-title" className="font-display text-4xl">Pausa</h2>
         <p className="text-sm text-night-muted">El tiempo está frenado. Cuando sigas, arranca con una cuenta de 3.</p>
         <Button ref={resume} variant="light" onClick={onResume} className="mt-2"><Play size={17} aria-hidden="true" className="fill-current" />Seguir</Button>
         <Button variant="dark" onClick={onRestart}><RotateCcw size={17} aria-hidden="true" />Empezar de nuevo</Button>
         <Button variant="dark" onClick={onExit}><LogOut size={17} aria-hidden="true" />Salir del juego</Button>
-        <SoundToggle withLabel className="mt-1 min-h-11 justify-center rounded-full text-sm font-bold text-night-muted hover:text-on-night" />
+        <SoundToggle withLabel className="mt-1 min-h-11 justify-center rounded-sm text-sm font-bold text-night-muted hover:text-on-night" />
       </section>
     </div>
   );

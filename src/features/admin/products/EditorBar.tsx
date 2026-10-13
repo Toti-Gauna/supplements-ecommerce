@@ -22,7 +22,7 @@ export function EditorBar({ missing, dirty, isNew, onShowMissing, onDiscard, onP
     ? <>Faltan datos en {missing} {missing === 1 ? "paso" : "pasos"}. <button type="button" onClick={onShowMissing} className="underline">Ver qué falta</button></>
     : dirty ? "Cambios sin guardar. Se conservan si vas a la vista previa." : isNew ? "Completá los pasos y guardá para crearlo." : "Sin cambios.";
   return (
-    <div data-editor-bar className="sticky bottom-[calc(5.25rem+env(safe-area-inset-bottom))] z-20 flex flex-wrap items-center gap-2 rounded-[1.5rem] bg-surface/95 p-3 shadow-[0_18px_40px_-18px_rgb(0_0_0/0.45)] ring-1 ring-ink/[0.08] backdrop-blur desk:bottom-4">
+    <div data-editor-bar className="sticky bottom-[calc(5.25rem+env(safe-area-inset-bottom))] z-20 flex flex-wrap items-center gap-2 rounded-sm bg-surface/95 p-3 shadow-[0_18px_40px_-18px_rgb(0_0_0/0.45)] ring-1 ring-ink/[0.08] backdrop-blur desk:bottom-4">
       <p role="status" className={cn("min-w-0 basis-full text-xs font-bold sm:flex-1 sm:basis-auto", missing > 0 ? "text-danger" : dirty ? "text-warning" : "text-muted")}>{status}</p>
       <div className="flex flex-1 flex-wrap justify-end gap-2 sm:flex-none">
         {dirty && <Button variant="ghost" onClick={onDiscard} className="px-4">Descartar</Button>}

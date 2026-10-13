@@ -19,7 +19,7 @@ export function BirthdayPicker({ id, value, onChange }: { id: string; value: str
     else if (!mm && !day) { setDraft(null); if (value) onChange(""); }
     else setDraft({ m: mm, d: day });
   };
-  const cls = "h-12 rounded-2xl border border-ink/12 bg-surface px-3 font-semibold";
+  const cls = "h-12 rounded-sm border border-ink/12 bg-surface px-3 font-semibold";
   return (
     <span className="flex gap-2">
       <label htmlFor={`${id}-d`} className="sr-only">Día del cumpleaños</label>

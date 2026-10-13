@@ -41,13 +41,13 @@ export function PurchaseGroupCard({ group }: { group: PurchaseGroup }) {
     push({ tone: "success", title: `Pedido a ${supplier.name} registrado`, description: "Deja de sugerirse hasta que lo recibas. Cambio guardado solo en esta demo." });
   };
   return (
-    <article aria-labelledby={`${id}-t`} className="flex w-full flex-col gap-4 rounded-[1.75rem] bg-surface p-4 shadow-[var(--shadow-card)] ring-1 ring-ink/[0.04] sm:p-5">
+    <article aria-labelledby={`${id}-t`} className="flex w-full flex-col gap-4 rounded-sm bg-surface p-4 shadow-[var(--shadow-card)] ring-1 ring-ink/[0.04] sm:p-5">
       <header className="flex flex-wrap items-start gap-x-3 gap-y-1">
         <div className="min-w-0 flex-1 basis-56">
           <h3 id={`${id}-t`} className="text-lg font-extrabold leading-snug">{name}</h3>
           <p className="text-sm text-muted">{supplier ? `${supplier.contact} · ${supplier.phone} · reparte ${deliveryDaysText(supplier.deliveryWeekdays)}` : "Asigná la marca a un proveedor en la pestaña Proveedores."}</p>
         </div>
-        {next && <span className="inline-flex items-center gap-1 rounded-full bg-accent px-2.5 py-1 text-xs font-bold"><CalendarClock size={13} aria-hidden="true" /> Próxima entrega: {formatDay(next)}</span>}
+        {next && <span className="inline-flex items-center gap-1 rounded-sm bg-accent px-2.5 py-1 text-xs font-bold"><CalendarClock size={13} aria-hidden="true" /> Próxima entrega: {formatDay(next)}</span>}
       </header>
       <ul aria-label={`Productos para pedir a ${name}`} className="flex flex-col divide-y divide-line">
         {group.lines.map((l) => (
@@ -59,7 +59,7 @@ export function PurchaseGroupCard({ group }: { group: PurchaseGroup }) {
           </li>
         ))}
       </ul>
-      <div className="flex flex-wrap items-center justify-between gap-2 rounded-2xl bg-bg p-3 text-sm">
+      <div className="flex flex-wrap items-center justify-between gap-2 rounded-sm bg-bg p-3 text-sm">
         <span>Total al costo <strong className="block text-xl tabular-nums">{formatARS(group.total)}</strong></span>
         {supplier && (missing > 0
           ? <span className="inline-flex flex-wrap items-center gap-x-1 font-bold text-warning"><TriangleAlert size={15} aria-hidden="true" /> Faltan <span className="whitespace-nowrap">{formatARS(missing)}</span> para el mínimo de <span className="whitespace-nowrap">{formatARS(supplier.minOrder)}</span></span>
@@ -68,7 +68,7 @@ export function PurchaseGroupCard({ group }: { group: PurchaseGroup }) {
       {group.withoutCost > 0 && <p className="text-xs font-semibold text-warning">{group.withoutCost === 1 ? "1 producto no tiene" : `${group.withoutCost} productos no tienen`} costo cargado: el total no lo incluye.</p>}
       <details open={preview} onToggle={(e) => setPreview(e.currentTarget.open)} className="text-sm">
         <summary className="cursor-pointer font-bold text-primary"><MessageCircle size={14} aria-hidden="true" className="mr-1 inline" />Ver el mensaje<span className="sr-only"> para {name}</span></summary>
-        <pre className="mt-2 whitespace-pre-wrap rounded-2xl bg-bg p-3 font-sans text-sm">{message}</pre>
+        <pre className="mt-2 whitespace-pre-wrap rounded-sm bg-bg p-3 font-sans text-sm">{message}</pre>
       </details>
       <div className="mt-auto flex flex-wrap justify-end gap-2">
         <Button variant="secondary" size="sm" onClick={copy}><Copy size={15} aria-hidden="true" /> Copiar pedido para WhatsApp<span className="sr-only"> ({name})</span></Button>

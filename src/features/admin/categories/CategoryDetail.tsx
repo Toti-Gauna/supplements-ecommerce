@@ -18,7 +18,7 @@ import { minPrice, ProductThumb } from "../products/productColumns";
 import { StockChip } from "../table/StockChip";
 import { useDemoSave } from "../useDemoSave";
 
-const card = "rounded-[1.75rem] bg-surface p-5 shadow-[var(--shadow-card)] ring-1 ring-ink/[0.04]";
+const card = "rounded-sm bg-surface p-5 shadow-[var(--shadow-card)] ring-1 ring-ink/[0.04]";
 
 function Details({ category }: { category: Category }) {
   const saveCategory = useAdmin((s) => s.saveCategory);
@@ -48,14 +48,14 @@ export function CategoryDetail() {
   const back = <Link href="/admin-demo/categorias/" className="inline-flex items-center gap-1.5 self-start text-sm font-bold text-muted hover:text-ink"><ArrowLeft size={16} aria-hidden="true" /> Categorías</Link>;
   if (!category || !row) return <div className="flex flex-col gap-4">{back}<EmptyState title="No encontramos esa categoría">Puede que la hayas renombrado en otra pestaña o que el enlace esté incompleto.</EmptyState></div>;
   const products = data.products.filter((p) => p.categorySlug === slug).sort((a, b) => a.name.localeCompare(b.name, "es"));
-  const btn = "inline-flex h-10 items-center gap-1.5 rounded-xl border border-line bg-surface px-3 text-sm font-bold disabled:opacity-30";
+  const btn = "inline-flex h-10 items-center gap-1.5 rounded-sm border border-line bg-surface px-3 text-sm font-bold disabled:opacity-30";
   return (
     <div className="flex flex-col gap-6">
       {back}
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <p className="eyebrow text-muted">Categoría · {row.position} de {data.categories.length} en la tienda</p>
-          <h1 className="font-display text-4xl sm:text-5xl">{category.name} <span className="align-middle font-sans text-sm font-bold text-warning">(demo)</span></h1>
+          <h1 className="font-display text-4xl sm:text-5xl">{category.name}</h1>
         </div>
         {row.active > 0 && <ButtonLink href={shopHref(slug)} variant="secondary"><ExternalLink size={16} aria-hidden="true" /> Ver en la tienda</ButtonLink>}
       </header>
@@ -82,7 +82,7 @@ export function CategoryDetail() {
           <ul className="flex flex-col gap-2">
             {products.map((p) => (
               <li key={p.slug}>
-                <Link href={`/admin-demo/productos/editar/?id=${p.slug}`} className="flex flex-wrap items-center gap-3 rounded-2xl bg-bg p-2.5 pr-4 text-sm hover:ring-1 hover:ring-primary">
+                <Link href={`/admin-demo/productos/editar/?id=${p.slug}`} className="flex flex-wrap items-center gap-3 rounded-sm bg-bg p-2.5 pr-4 text-sm hover:ring-1 hover:ring-primary">
                   <ProductThumb product={p} />
                   <span className="min-w-0 flex-1"><span className="block font-bold">{p.name}</span><span className="text-muted">desde {formatARS(minPrice(p))} · {p.active === false ? "Pausado" : "Visible"}</span></span>
                   <StockChip {...productStockBadge(p, low)} />

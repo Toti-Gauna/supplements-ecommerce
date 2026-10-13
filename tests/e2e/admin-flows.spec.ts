@@ -46,7 +46,7 @@ test("pagos manuales: aprobar y rechazar con motivo sin declararlo pago real", a
   const card123 = page.getByRole("article").filter({ hasText: "VOL-000123" });
   await card123.getByRole("button", { name: "Aprobar" }).click();
   await expect(page.getByRole("dialog")).toContainText("verificaste el ingreso");
-  await confirmDialog(page, "Aprobar (demo)");
+  await confirmDialog(page, "Aprobar");
   await expect(page.getByRole("article").filter({ hasText: "VOL-000123" })).toHaveCount(0);
 
   const card124 = page.getByRole("article").filter({ hasText: "VOL-000124" });
@@ -80,7 +80,7 @@ test("un comprobante subido en la tienda queda en revisión en el panel, nunca p
   await page.getByRole("button", { name: "Revisar pedido" }).click();
   await page.getByRole("checkbox", { name: /Acepto los/ }).check();
   await page.getByRole("button", { name: "Confirmar pedido de demostración" }).click();
-  await page.getByLabel("Subir comprobante (demo)").setInputFiles({ name: "transferencia.pdf", mimeType: "application/pdf", buffer: Buffer.from("%PDF demo") });
+  await page.getByLabel("Subir comprobante").setInputFiles({ name: "transferencia.pdf", mimeType: "application/pdf", buffer: Buffer.from("%PDF demo") });
   await page.goto("admin-demo/pagos/");
   const card = page.getByRole("article").filter({ hasText: "VOL-DEMO-0001" });
   await expect(card).toContainText("Comprobante en revisión");

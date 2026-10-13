@@ -10,7 +10,7 @@ export function generateStaticParams() {
   return [{ token: DEMO_TRACKING_TOKEN }];
 }
 
-export const metadata: Metadata = { title: "Seguimiento (demo)" };
+export const metadata: Metadata = { title: "Seguimiento" };
 
 export default function TrackingPage() {
   return (

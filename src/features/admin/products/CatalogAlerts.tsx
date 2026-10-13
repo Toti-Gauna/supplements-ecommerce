@@ -16,7 +16,7 @@ interface Props {
   onUndoPrice: () => void;
 }
 
-const banner = "flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-bold ring-1";
+const banner = "flex w-full items-center gap-3 rounded-sm px-4 py-3 text-left text-sm font-bold ring-1";
 
 function AlertButton({ onClick, icon, children, cta }: { onClick: () => void; icon: ReactNode; children: ReactNode; cta: string }) {
   return (

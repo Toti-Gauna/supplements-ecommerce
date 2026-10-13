@@ -69,7 +69,7 @@ export function CartView() {
   return (
     <div className="grid grid-cols-[minmax(0,1fr)] gap-6 pb-28 lg:grid-cols-[minmax(0,1fr)_400px] lg:gap-x-12 lg:pb-0">
       <div className="flex flex-col gap-4 lg:col-start-1">
-        <div className="rounded-2xl bg-surface px-4 py-3 shadow-[var(--shadow-card)]">
+        <div className="rounded-sm bg-surface px-4 py-3 shadow-[var(--shadow-card)]">
           <p className="flex items-center gap-2 text-sm font-semibold"><Truck size={18} aria-hidden="true" className="text-primary" />{missing > 0 ? <>Te faltan <strong>{formatARS(missing)}</strong> para envío gratis</> : "¡Tenés envío gratis!"}</p>
           <BatteryMeter pct={Math.min(100, (quote.subtotal / threshold) * 100)} label="Avance hacia el envío gratis" className="mt-2" tone={missing > 0 ? "volt" : "success"} />
         </div>
@@ -83,7 +83,7 @@ export function CartView() {
       </div>
       {/* En el celular: cupón y resumen justo debajo de los productos. En escritorio: columna fija a la derecha. */}
       <aside className="flex flex-col gap-4 lg:sticky lg:top-28 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-start">
-        <section aria-label="Cupones" className="rounded-3xl bg-surface p-4 shadow-[var(--shadow-card)]"><CouponForm subtotal={quote.subtotal} isRegistered={isRegistered} check={couponCheck} /></section>
+        <section aria-label="Cupones" className="rounded-sm bg-surface p-4 shadow-[var(--shadow-card)]"><CouponForm subtotal={quote.subtotal} isRegistered={isRegistered} check={couponCheck} /></section>
         {summary}
       </aside>
       <div className="flex flex-col gap-6 lg:col-start-1">

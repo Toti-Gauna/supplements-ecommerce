@@ -16,7 +16,7 @@ import { PackagingItems } from "./PackagingItems";
 import { MARGIN_TONE, VariantCosts } from "./VariantCosts";
 
 const EMPTY: Recipe = { items: [] };
-const block = "rounded-3xl bg-surface p-4 shadow-[var(--shadow-card)]";
+const block = "rounded-sm bg-surface p-4 shadow-[var(--shadow-card)]";
 
 /**
  * Costo de un producto en un modal (8.3.17, Fase 7): costo del proveedor, el de otras presentaciones, embalaje por
@@ -83,7 +83,7 @@ export function RecipeSheet({ product, onClose }: { product: Product | null; onC
             <Field id="r-trial" label="Probar con el precio (pesos)" error={trialCheck && !trialCheck.ok ? trialCheck.error : undefined} hint={`Precio actual: desde ${formatARS(price)}. Probar no cambia nada.`}>
               <Input id="r-trial" inputMode="numeric" value={trial} placeholder={String(newPrice ?? price)} onChange={(e) => setTrial(e.target.value)} aria-describedby={describedBy("r-trial", trialCheck && !trialCheck.ok ? trialCheck.error : undefined, true)} />
             </Field>
-            <div className="rounded-2xl bg-bg p-3">
+            <div className="rounded-sm bg-bg p-3">
               <p className="text-xs font-bold text-muted">Margen con {formatARS(test)}</p>
               <p className={cn("text-2xl font-extrabold tabular-nums", MARGIN_TONE[state])}>{margin === null || state === "missing" ? "—" : `${margin}%`}</p>
               <p className={cn("text-xs font-bold", MARGIN_TONE[state])}>{MARGIN_LABEL[state]} · ganancia {formatARS(test - cost.total)}</p>

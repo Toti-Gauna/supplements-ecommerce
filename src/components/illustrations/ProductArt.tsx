@@ -51,7 +51,7 @@ export function ProductArt({ art, view = "front", tint = "#8b72ff", pack, label,
       </svg>
       {showBadge && (
         // Sin backdrop-blur: en una grilla de tarjetas era una capa de desenfoque por tarjeta (cara en celulares).
-        <span className="absolute bottom-2.5 left-2.5 rounded-full bg-black/65 px-2 py-0.5 font-mono text-[9.5px] font-bold uppercase tracking-[0.12em] text-white/80">
+        <span className="absolute bottom-2.5 left-2.5 rounded-sm bg-black/65 px-2 py-0.5 font-mono text-[9.5px] font-bold uppercase tracking-[0.12em] text-white/80">
           Imagen ilustrativa
         </span>
       )}

@@ -29,22 +29,22 @@ export function GameHowTo() {
         </p>
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
-        <div className="rounded-[1.75rem] bg-surface p-5 shadow-[var(--shadow-card)]">
+        <div className="rounded-sm bg-surface p-5 shadow-[var(--shadow-card)]">
           <h3 className="font-display text-2xl">Atrapá</h3>
           <ul className="mt-3 flex flex-col gap-2.5">
             {GOOD.map((k) => (
-              <li key={k} className="flex items-center gap-3 rounded-2xl bg-night px-3 py-2 text-on-night">
+              <li key={k} className="flex items-center gap-3 rounded-sm bg-night px-3 py-2 text-on-night">
                 <GameGlyph kind={k} />
                 <span className="min-w-0 text-sm"><span className="block font-bold">{r.items[k].label}</span><span className="font-lab text-xs text-volt">{goodNote(k)}</span></span>
               </li>
             ))}
           </ul>
         </div>
-        <div className="rounded-[1.75rem] bg-surface p-5 shadow-[var(--shadow-card)]">
+        <div className="rounded-sm bg-surface p-5 shadow-[var(--shadow-card)]">
           <h3 className="font-display text-2xl">Esquivá</h3>
           <ul className="mt-3 flex flex-col gap-2.5">
             {JUNK.map((k) => (
-              <li key={k} className="flex items-center gap-3 rounded-2xl bg-night px-3 py-2 text-on-night">
+              <li key={k} className="flex items-center gap-3 rounded-sm bg-night px-3 py-2 text-on-night">
                 <GameGlyph kind={k} />
                 <span className="min-w-0 text-sm"><span className="block font-bold">{r.items[k].label}</span><span className="font-lab text-xs text-night-muted">Te saca una vida</span></span>
               </li>

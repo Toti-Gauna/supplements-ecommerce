@@ -1,7 +1,7 @@
 "use client";
 import { Download, Sheet } from "lucide-react";
 
-const tool = "inline-flex h-11 items-center gap-2 rounded-2xl border border-ink/12 bg-surface px-4 text-sm font-bold transition-colors hover:border-ink/25";
+const tool = "inline-flex h-11 items-center gap-2 rounded-sm border border-ink/12 bg-surface px-4 text-sm font-bold transition-colors hover:border-ink/25";
 
 interface Props {
   noun: string;

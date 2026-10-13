@@ -6,7 +6,7 @@ import { brand } from "./brand";
  * Activar con DEMO_INDEXABLE=true solo si Volta lo aprueba.
  */
 export const site = {
-  title: `${brand.name} · Tienda (demo)`,
+  title: `${brand.name} · Suplementos en ${brand.city}`,
   description: `${brand.tagline}. Proteínas, creatinas, pre-entrenos y vitaminas originales, con lote y vencimiento a la vista. Cadete en ${brand.city} ${DISPATCH_PROMISE}.`,
   indexable: process.env.DEMO_INDEXABLE === "true",
 };

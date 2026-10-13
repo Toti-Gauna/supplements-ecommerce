@@ -19,7 +19,7 @@ export function TokenPalette({ tokens }: { tokens: EmailToken[] }) {
             onMouseDown={(e) => e.preventDefault()}
             onClick={() => { if (!ctx.insert(token)) push({ tone: "info", title: "Elegí dónde va el dato", description: "Tocá primero el asunto, un título, un texto o un botón; después la ficha." }); }}
             aria-label={`Insertar ${TOKEN_LABEL[token]}`}
-            className={cn("inline-flex h-9 shrink-0 items-center gap-1 rounded-full px-3 text-[13px] font-bold ring-1 transition-colors",
+            className={cn("inline-flex h-9 shrink-0 items-center gap-1 rounded-sm px-3 text-[13px] font-bold ring-1 transition-colors",
               ok ? "bg-primary/12 text-primary ring-primary/25 hover:bg-primary/20" : "bg-surface text-muted ring-ink/10 hover:bg-accent")}>
             <Plus size={13} aria-hidden="true" />{TOKEN_LABEL[token]}
           </button>

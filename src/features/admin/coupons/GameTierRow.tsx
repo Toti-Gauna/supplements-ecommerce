@@ -25,15 +25,15 @@ export function GameTierRow({ tier: t, n, errors: e = {}, canRemove, onChange, o
   const valueLabel = t.kind === "PERCENT" ? "Porcentaje" : "Monto en pesos";
   const setKind = (kind: PrizeKind) => onChange({ kind, value: kind === "PERCENT" ? 10 : kind === "FIXED" ? 3000 : 0 });
   return (
-    <li className="@container rounded-2xl bg-bg p-3 sm:p-4">
+    <li className="@container rounded-sm bg-bg p-3 sm:p-4">
       <fieldset className="flex min-w-0 flex-col gap-3">
         <legend className="sr-only">Nivel {n}</legend>
         <div className="flex items-center gap-2">
-          <span aria-hidden="true" className="font-lab grid h-8 min-w-8 place-items-center rounded-full bg-accent px-2 text-xs font-bold text-volt-ink">{n}</span>
+          <span aria-hidden="true" className="font-lab grid h-8 min-w-8 place-items-center rounded-sm bg-accent px-2 text-xs font-bold text-volt-ink">{n}</span>
           <p className="min-w-0 flex-1 font-extrabold">Nivel {n} · <span className="text-muted">{gamePrizeLabel(t.kind, t.value)}</span></p>
           {canRemove && (
             <button type="button" onClick={onRemove} aria-label={`Quitar el nivel ${n}`}
-              className="grid h-10 w-10 place-items-center rounded-full text-muted hover:bg-danger-soft hover:text-danger">
+              className="grid h-10 w-10 place-items-center rounded-sm text-muted hover:bg-danger-soft hover:text-danger">
               <Trash2 size={16} aria-hidden="true" />
             </button>
           )}

@@ -16,7 +16,7 @@ export function ModuleMoved({ to, label, carry = {} }: { to: string; label: stri
   const href = next.size ? `${path}?${next}` : path!;
   useEffect(() => { router.replace(href); }, [router, href]);
   return (
-    <p role="status" className="rounded-2xl bg-surface p-5 text-sm shadow-[var(--shadow-card)]">
+    <p role="status" className="rounded-sm bg-surface p-5 text-sm shadow-[var(--shadow-card)]">
       Esta sección ahora está en <Link href={href} className="font-bold text-primary underline">{label}</Link>. Te llevamos…
     </p>
   );

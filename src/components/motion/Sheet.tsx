@@ -16,15 +16,24 @@ interface SheetProps {
 
 const noop = () => () => {};
 const OFFSET = { right: { x: "100%" }, left: { x: "-100%" }, bottom: { y: "100%" }, top: { y: "-100%" }, center: { opacity: 0, scale: 0.94, y: 20 }, dialog: { opacity: 0, scale: 0.96, y: 24 } };
+// Filo de luz del lado por donde entra (acento de temporada; sin fecha, el color firma).
 const PLACE = {
-  right: "inset-y-0 right-0 w-full max-w-md",
-  left: "inset-y-0 left-0 w-full max-w-sm",
-  bottom: "inset-x-0 bottom-0 max-h-[92dvh] rounded-t-[2rem]",
-  top: "inset-x-0 top-0 max-h-[100dvh] rounded-b-[2rem] sm:mx-auto sm:mt-4 sm:max-h-[88dvh] sm:w-[min(94vw,760px)] sm:rounded-[2rem]",
-  center: "inset-0 m-auto h-fit max-h-[94dvh] w-[min(94vw,540px)] overflow-y-auto rounded-[2rem]",
+  right: "inset-y-0 right-0 w-full max-w-md border-l border-line [box-shadow:inset_2px_0_0_var(--season-accent),var(--shadow-lift)]",
+  left: "inset-y-0 left-0 w-full max-w-sm border-r border-line [box-shadow:inset_-2px_0_0_var(--season-accent),var(--shadow-lift)]",
+  bottom: "inset-x-0 bottom-0 max-h-[92dvh] rounded-t-sm border-t border-line [box-shadow:inset_0_2px_0_var(--season-accent),var(--shadow-lift)]",
+  top: "shadow-[var(--shadow-lift)] inset-x-0 top-0 max-h-[100dvh] rounded-b-sm sm:mx-auto sm:mt-4 sm:max-h-[88dvh] sm:w-[min(94vw,760px)] sm:rounded-sm",
+  center: "shadow-[var(--shadow-lift)] inset-0 m-auto h-fit max-h-[94dvh] w-[min(94vw,540px)] overflow-y-auto rounded-sm",
   // Modal ancho y centrado; en el celular ocupa el ancho y sube desde abajo, con su propio scroll.
-  dialog: "inset-x-0 bottom-0 max-h-[94dvh] overflow-hidden rounded-t-[2rem] sm:inset-0 sm:m-auto sm:h-fit sm:max-h-[90dvh] sm:w-[min(94vw,920px)] sm:rounded-[2rem]",
+  dialog: "shadow-[var(--shadow-lift)] inset-x-0 bottom-0 max-h-[94dvh] overflow-hidden rounded-t-sm sm:inset-0 sm:m-auto sm:h-fit sm:max-h-[90dvh] sm:w-[min(94vw,920px)] sm:rounded-sm",
 };
+
+/** Un `max-w-*` o `sm:w-*` propio reemplaza al del lado (si no, las dos clases compiten). */
+function place(side: keyof typeof PLACE, className = ""): string {
+  let base = PLACE[side];
+  if (/\bmax-w-/.test(className)) base = base.replace(/ max-w-\S+/g, "");
+  if (/(^|\s)sm:w-/.test(className)) base = base.replace(/ sm:w-\S+/g, "");
+  return base;
+}
 
 /**
  * Panel modal accesible: foco atrapado, Escape cierra, scroll de fondo bloqueado, devuelve el foco.
@@ -61,9 +70,9 @@ export function Sheet({ open, onClose, title, side = "right", children, classNam
         <div className="fixed inset-0 z-[70]">
           <motion.div className="absolute inset-0 bg-night/45 backdrop-blur-[3px]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} onClick={onClose} />
           <motion.div ref={panel} role="dialog" aria-modal="true" aria-label={title}
-            className={cn("absolute flex flex-col bg-bg shadow-[var(--shadow-lift)]", /\bmax-w-/.test(className ?? "") ? PLACE[side].replace(/ max-w-\S+/g, "") : PLACE[side], className)}
-            initial={OFFSET[side]} animate={{ x: 0, y: 0, opacity: 1, scale: 1 }} exit={OFFSET[side]} transition={{ type: "spring", stiffness: 380, damping: 38 }}>
-            <button type="button" onClick={onClose} aria-label="Cerrar" className="absolute right-4 top-4 z-10 grid h-11 w-11 place-items-center rounded-full bg-surface/80 text-ink hover:bg-accent">
+            className={cn("absolute flex flex-col bg-bg", place(side, className), className)}
+            initial={OFFSET[side]} animate={{ x: 0, y: 0, opacity: 1, scale: 1 }} exit={OFFSET[side]} transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}>
+            <button type="button" onClick={onClose} aria-label="Cerrar" className="bevel absolute right-4 top-4 z-10 grid h-11 w-11 place-items-center rounded-xs border border-line bg-surface text-ink hover:bg-accent">
               <X size={20} aria-hidden="true" />
             </button>
             {children}

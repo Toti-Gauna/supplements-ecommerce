@@ -18,7 +18,7 @@ export function RedeemForm({ initial = "" }: { initial?: string }) {
     router.push(`/regalo/?c=${code}`);
   };
   return (
-    <form onSubmit={submit} noValidate className="flex w-full flex-col gap-3 rounded-[1.6rem] bg-surface p-5 text-left shadow-[var(--shadow-card)]">
+    <form onSubmit={submit} noValidate className="flex w-full flex-col gap-3 rounded-sm bg-surface p-5 text-left shadow-[var(--shadow-card)]">
       <Field id="gift-code" label="Código del regalo" hint="Lo encontrás en el mensaje que te mandaron." error={error}>
         <Input id="gift-code" value={value} autoComplete="off" autoCapitalize="characters" spellCheck={false} placeholder="REGALO-XXXX-XXXX"
           onChange={(e) => { setValue(e.target.value); setError(undefined); }} aria-invalid={Boolean(error)} aria-describedby={describedBy("gift-code", error, true)}

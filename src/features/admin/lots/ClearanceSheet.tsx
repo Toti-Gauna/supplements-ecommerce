@@ -15,7 +15,7 @@ import { useToasts } from "@/stores/toast";
 import { expiryText } from "./LotBadge";
 
 const PRESETS = [10, 20, 30, 40, 50];
-const chip = "inline-flex h-11 min-w-14 cursor-pointer items-center justify-center rounded-full border px-4 text-sm font-bold has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary/50";
+const chip = "inline-flex h-11 min-w-14 cursor-pointer items-center justify-center rounded-sm border px-4 text-sm font-bold has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary/50";
 
 /**
  * "Liquidar con descuento" (Fase 6): elegís el % y ves el precio de liquidación antes de confirmar. La lista no cambia,
@@ -70,13 +70,13 @@ function ClearanceForm({ lot, onClose }: { lot: LotRow; onClose: () => void }) {
             Entre {CLEARANCE_LIMITS.min} % y {CLEARANCE_LIMITS.max} %, en números enteros.
           </p>
         </fieldset>
-        <div role="status" aria-label="Vista previa del precio" className="flex flex-col gap-1 rounded-3xl bg-night p-4 text-on-night">
+        <div role="status" aria-label="Vista previa del precio" className="flex flex-col gap-1 rounded-sm bg-night p-4 text-on-night">
           <p className="text-sm text-night-muted">En la tienda se va a ver</p>
           <p className="flex flex-wrap items-baseline gap-x-3"><s className="text-night-muted tabular-nums"><span className="sr-only">Precio de lista </span>{formatARS(lot.listPrice)}</s><span className="text-3xl font-extrabold tabular-nums text-volt">{formatARS(price)}</span></p>
           <p className="font-lab text-xs">Liquidación · vence {formatExpiry(lot.lot.expires)} · redondeado a $100</p>
           {margin !== null && <p className={cn("text-xs font-bold", margin < 0 ? "text-danger" : "text-night-muted")}>{margin < 0 ? `Queda por debajo del costo (${formatARS(lot.cost!)})` : `Margen con el costo del proveedor: ${margin} %`}</p>}
         </div>
-        {!lot.firstOut && <p className="rounded-2xl bg-warning-soft px-4 py-3 text-sm font-semibold text-warning">Este lote no es el que sale primero: el precio de liquidación se ve en la tienda cuando se terminen los lotes que vencen antes.</p>}
+        {!lot.firstOut && <p className="rounded-sm bg-warning-soft px-4 py-3 text-sm font-semibold text-warning">Este lote no es el que sale primero: el precio de liquidación se ve en la tienda cuando se terminen los lotes que vencen antes.</p>}
       </div>
       <div className="flex flex-wrap justify-end gap-2 border-t border-line bg-surface px-5 py-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:px-7">
         {current && <Button variant="ghost" onClick={() => apply(null)} className="mr-auto"><Undo2 size={16} aria-hidden="true" /> Quitar liquidación</Button>}

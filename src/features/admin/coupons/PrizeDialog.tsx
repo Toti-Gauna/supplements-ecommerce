@@ -53,7 +53,7 @@ export function PrizeDialog({ open, onClose, onCreated }: { open: boolean; onClo
         <legend className="mb-2 text-sm font-bold">Tipo de premio</legend>
         <div className="grid gap-2 sm:grid-cols-2">
           {PRIZE_TEMPLATES.map((t) => (
-            <label key={t.id} className={cn("flex cursor-pointer items-start gap-3 rounded-2xl p-3 ring-1 transition-colors", d.template === t.id ? "bg-primary/[0.07] ring-primary" : "bg-surface ring-ink/10 hover:bg-accent/40")}>
+            <label key={t.id} className={cn("flex cursor-pointer items-start gap-3 rounded-sm p-3 ring-1 transition-colors", d.template === t.id ? "bg-primary/[0.07] ring-primary" : "bg-surface ring-ink/10 hover:bg-accent/40")}>
               <input type="radio" name="prize-template" value={t.id} checked={d.template === t.id} onChange={() => set(prizeDraft(t.id))} className="mt-1 h-4 w-4 accent-[var(--color-primary)]" />
               <RewardGlyph kind={TEMPLATE_GLYPH[t.id]} size={26} color="currentColor" className="mt-0.5 shrink-0 text-volt-ink" />
               <span><span className="block font-bold">{t.label}</span><span className="text-xs text-muted">{t.hint}</span></span>
@@ -76,7 +76,7 @@ export function PrizeDialog({ open, onClose, onCreated }: { open: boolean; onClo
         <Pesos id="pz-min" label="Compra mínima (ARS)" value={d.minSubtotal} error={errors.minSubtotal} hint="0 = sin mínimo." onChange={(minSubtotal) => set({ minSubtotal })} />
       </div>
       {errors.template && <p role="alert" className="text-sm font-semibold text-danger">{errors.template}</p>}
-      <p className="rounded-2xl bg-bg p-3 text-sm"><span className="block text-xs font-bold text-muted">Así se va a ver</span>
+      <p className="rounded-sm bg-bg p-3 text-sm"><span className="block text-xs font-bold text-muted">Así se va a ver</span>
         <strong>{prizeName(d, products)}</strong> · cupón de un uso, vence a los {validDays} días, {prizeCondition({ minSubtotal: d.minSubtotal || undefined })}.</p>
     </EditDialog>
   );

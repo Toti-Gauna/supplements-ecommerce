@@ -43,18 +43,18 @@ export function ShippingSettings() {
   return (
     <div>
       <SubpageHeader trail={[SETTINGS_SECTION]} back={SETTINGS_SECTION} title="Envíos y retiro" intro="Lo que ve el comprador al elegir cómo recibe su pedido." />
-      {session.restored && <p role="status" className="mb-4 rounded-2xl bg-warning-soft px-4 py-3 text-sm font-bold text-warning">Recuperamos los cambios de envíos que quedaron sin guardar.</p>}
+      {session.restored && <p role="status" className="mb-4 rounded-sm bg-warning-soft px-4 py-3 text-sm font-bold text-warning">Recuperamos los cambios de envíos que quedaron sin guardar.</p>}
       <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,22rem),1fr))] items-start gap-4">
-        <section aria-labelledby="free-title" className="flex flex-col gap-3 rounded-3xl bg-surface p-4 shadow-[var(--shadow-card)] sm:p-5">
+        <section aria-labelledby="free-title" className="flex flex-col gap-3 rounded-sm bg-surface p-4 shadow-[var(--shadow-card)] sm:p-5">
           <h2 id="free-title" className="font-extrabold">Envío gratis</h2>
           <NumberField id="free" label="Envío gratis desde" suffix="ARS" value={d.free} onChange={(free) => { session.setDraft({ ...d, free }); setErrors({ zones: {} }); }} hint="El carrito muestra cuánto falta." />
           {errors.free && <p role="alert" className="text-sm font-semibold text-danger">{errors.free}</p>}
         </section>
         {d.zones.map((z) => (
-          <section key={z.id} aria-labelledby={`${z.id}-title`} className="flex flex-col gap-3 rounded-3xl bg-surface p-4 shadow-[var(--shadow-card)] sm:p-5">
+          <section key={z.id} aria-labelledby={`${z.id}-title`} className="flex flex-col gap-3 rounded-sm bg-surface p-4 shadow-[var(--shadow-card)] sm:p-5">
             <h2 id={`${z.id}-title`} className="font-extrabold">{z.name}</h2>
             {errors.zones[z.id] && (
-              <div role="alert" className="flex gap-2 rounded-2xl bg-danger-soft p-3 text-sm font-semibold text-danger">
+              <div role="alert" className="flex gap-2 rounded-sm bg-danger-soft p-3 text-sm font-semibold text-danger">
                 <AlertCircle size={18} aria-hidden="true" className="mt-0.5 shrink-0" /><ul>{errors.zones[z.id]!.map((e) => <li key={e}>{e}</li>)}</ul>
               </div>
             )}

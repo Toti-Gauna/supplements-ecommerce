@@ -19,14 +19,14 @@ interface StackSummaryPanelProps {
 function PerDay({ summary }: { summary: StackSummary }) {
   if (summary.perDay === null) return null;
   return (
-    <div className="rounded-2xl bg-night px-4 py-3 text-on-night ring-1 ring-white/10">
+    <div className="rounded-sm bg-night px-4 py-3 text-on-night ring-1 ring-white/10">
       <p className="flex items-baseline justify-between gap-3">
         <span className="eyebrow text-[10px] text-night-muted">Te sale por día</span>
         <span className="font-lab text-2xl font-bold text-volt" data-per-day>{formatARS(summary.perDay)}</span>
       </p>
       <ul className="mt-1.5 flex flex-wrap gap-1.5" aria-label="Precio por servicio">
         {summary.lines.map((l) => l.perServing !== null && (
-          <li key={l.slot} className="font-lab rounded-full bg-white/[0.07] px-2 py-0.5 text-[11px] text-night-muted">
+          <li key={l.slot} className="font-lab rounded-sm bg-white/[0.07] px-2 py-0.5 text-[11px] text-night-muted">
             {SLOT_SHORT[l.slot]} <span className="text-on-night">{formatARS(l.perServing)}</span>
           </li>
         ))}

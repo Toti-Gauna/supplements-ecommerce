@@ -57,7 +57,7 @@ export function CostsTable() {
     { id: "suggested", header: `Sugerido (${settings.targetMarginPct}%)`, align: "right", money: true, cell: (r) => (r.suggested ? formatARS(r.suggested) : "—"), sortValue: (r) => r.suggested, exportValue: (r) => r.suggested ?? "" },
   ];
   const Card = ({ row: r, onOpen }: RowCardProps<CostRow>) => (
-    <button type="button" onClick={onOpen} className="flex w-full flex-col gap-2 rounded-3xl bg-bg p-3 text-left ring-1 ring-ink/[0.06]">
+    <button type="button" onClick={onOpen} className="flex w-full flex-col gap-2 rounded-sm bg-bg p-3 text-left ring-1 ring-ink/[0.06]">
       <span className="flex items-start gap-2"><span className="min-w-0 flex-1 font-bold">{r.name}</span><MarginChip state={r.state} margin={r.margin} /></span>
       <span className="grid grid-cols-3 gap-2 text-xs text-muted">
         <span>Precio<strong className="block text-sm text-ink tabular-nums">{formatARS(r.price)}</strong></span>
@@ -73,10 +73,10 @@ export function CostsTable() {
   return (
     <>
       <AdminPageHeader title="Costos y margen">Cuánto te cuesta cada producto (lo que le pagás al proveedor más el embalaje) y cuánto deja al precio actual, en la presentación más barata. Tocá un producto para cargar sus costos y ver el margen de cada presentación.</AdminPageHeader>
-      <section aria-label="Margen de la tienda" className="mb-5 grid grid-cols-2 gap-3 rounded-[1.75rem] bg-surface p-4 shadow-[var(--shadow-card)] sm:grid-cols-3">
+      <section aria-label="Margen de la tienda" className="mb-5 grid grid-cols-2 gap-3 rounded-sm bg-surface p-4 shadow-[var(--shadow-card)] sm:grid-cols-3">
         <CommitNumberField id="c-target" label="Margen objetivo" suffix="%" max={90} value={settings.targetMarginPct} onCommit={(n) => save(`Margen objetivo: ${n}%`, () => saveWorkshopSettings({ targetMarginPct: n }))} hint="Sobre el precio de venta" className="col-span-2 flex flex-col gap-1 sm:col-span-1" />
-        <div className="rounded-2xl bg-bg p-3"><p className="text-xs font-bold text-muted">Margen promedio</p><p className={cn("text-2xl font-extrabold tabular-nums", avg !== null && avg < settings.targetMarginPct ? "text-warning" : "text-success")}>{avg === null ? "—" : `${avg}%`}</p></div>
-        <div className="rounded-2xl bg-bg p-3"><p className="text-xs font-bold text-muted">Para revisar</p><p className={cn("text-2xl font-extrabold tabular-nums", MARGIN_TONE.low)}>{all.filter(toReview).length}</p><p className="text-xs text-muted">{all.filter((r) => r.state === "missing").length} sin costo cargado</p></div>
+        <div className="rounded-sm bg-bg p-3"><p className="text-xs font-bold text-muted">Margen promedio</p><p className={cn("text-2xl font-extrabold tabular-nums", avg !== null && avg < settings.targetMarginPct ? "text-warning" : "text-success")}>{avg === null ? "—" : `${avg}%`}</p></div>
+        <div className="rounded-sm bg-bg p-3"><p className="text-xs font-bold text-muted">Para revisar</p><p className={cn("text-2xl font-extrabold tabular-nums", MARGIN_TONE.low)}>{all.filter(toReview).length}</p><p className="text-xs text-muted">{all.filter((r) => r.state === "missing").length} sin costo cargado</p></div>
       </section>
       <DataTable caption="Costo y margen por producto" noun="productos" rows={all} columns={columns} state={state} {...table}
         rowKey={(r) => r.slug} rowLabel={(r) => `Seleccionar ${r.name}`} onRowOpen={(r) => setOpen(r.slug)} onExport={onExport} onExcel={() => state.setView("excel")} renderCard={Card} rowTone={(r) => (r.state === "loss" ? "danger" : r.state === "low" ? "warning" : undefined)}

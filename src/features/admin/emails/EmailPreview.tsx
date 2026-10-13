@@ -28,7 +28,7 @@ function Block({ block: b }: { block: RenderedBlock }) {
     case "image":
       return (
         <figure className="px-6 pt-5">
-          <ProductVisual art={b.art} label={b.caption || "Imagen de la tienda"} showBadge={false} className="aspect-[16/9] w-full rounded-2xl" />
+          <ProductVisual art={b.art} label={b.caption || "Imagen de la tienda"} showBadge={false} className="aspect-[16/9] w-full rounded-sm" />
           {b.caption && <figcaption className="mt-2 text-center text-xs text-[#5b6370]">{b.caption}</figcaption>}
         </figure>
       );
@@ -37,7 +37,7 @@ function Block({ block: b }: { block: RenderedBlock }) {
       return (
         <div className="px-6 pt-5 text-center">
           <a href={b.href.startsWith("/") ? withBase(b.href) : b.href} target="_blank" rel="noopener noreferrer" style={{ background: brand.colors.primary, color: brand.colors.onPrimary }}
-            className="inline-block rounded-full px-7 py-3.5 text-[15px] font-extrabold no-underline">{b.label}</a>
+            className="inline-block rounded-sm px-7 py-3.5 text-[15px] font-extrabold no-underline">{b.label}</a>
         </div>
       );
     case "order-card": return <OrderCard b={b} />;
@@ -63,7 +63,7 @@ function Block({ block: b }: { block: RenderedBlock }) {
  */
 export function EmailPreview({ email, to, device = "desktop", className }: { email: RenderedEmail; to: string; device?: "desktop" | "mobile"; className?: string }) {
   return (
-    <div className={cn("overflow-hidden rounded-[1.5rem] bg-[#e6e9ee] ring-1 ring-ink/10", className)}>
+    <div className={cn("overflow-hidden rounded-sm bg-[#e6e9ee] ring-1 ring-ink/10", className)}>
       <div className="border-b border-black/5 bg-[#fafbfc] px-4 py-3 text-xs text-[#23272f]">
         <p className="truncate"><span className="text-[#5b6370]">De:</span> {FROM}</p>
         <p className="truncate"><span className="text-[#5b6370]">Para:</span> {to}</p>
@@ -71,7 +71,7 @@ export function EmailPreview({ email, to, device = "desktop", className }: { ema
         <p className="truncate text-[#5b6370]">{email.preheader}</p>
       </div>
       <div className="p-3 sm:p-5">
-        <article aria-label={`Email: ${email.subject}`} className={cn("mx-auto overflow-hidden rounded-2xl bg-white pb-2 shadow-[0_10px_30px_-18px_rgb(0_0_0/0.35)]", device === "mobile" ? "max-w-[360px]" : "max-w-[600px]")}>
+        <article aria-label={`Email: ${email.subject}`} className={cn("mx-auto overflow-hidden rounded-sm bg-white pb-2 shadow-[0_10px_30px_-18px_rgb(0_0_0/0.35)]", device === "mobile" ? "max-w-[360px]" : "max-w-[600px]")}>
           {email.blocks.map((b) => <Block key={b.id} block={b} />)}
         </article>
       </div>

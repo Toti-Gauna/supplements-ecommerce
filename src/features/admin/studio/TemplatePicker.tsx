@@ -14,7 +14,7 @@ export function TemplatePicker({ value, onChange }: { value: StudioTemplate; onC
         const on = value === t.id;
         return (
           <button key={t.id} type="button" aria-pressed={on} onClick={() => onChange(t.id)} title={t.hint}
-            className={cn("flex min-h-20 flex-col items-start gap-1.5 rounded-2xl p-3 text-left text-sm font-bold ring-1 transition-colors", on ? "bg-accent ring-2 ring-primary" : "bg-bg ring-ink/10 hover:bg-accent/60")}>
+            className={cn("flex min-h-20 flex-col items-start gap-1.5 rounded-sm p-3 text-left text-sm font-bold ring-1 transition-colors", on ? "bg-accent ring-2 ring-primary" : "bg-bg ring-ink/10 hover:bg-accent/60")}>
             <Icon size={18} aria-hidden="true" className={on ? "text-primary" : "text-muted"} />
             {t.name}
           </button>

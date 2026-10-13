@@ -20,7 +20,7 @@ const STATUS_TEXT: Record<Status, string> = { error: "con errores", complete: "c
 
 function Dot({ n, status, current }: { n: number; status: Status; current: boolean }) {
   return (
-    <span aria-hidden="true" className={cn("grid h-7 w-7 shrink-0 place-items-center rounded-full text-xs font-extrabold tabular-nums ring-2",
+    <span aria-hidden="true" className={cn("grid h-7 w-7 shrink-0 place-items-center rounded-sm text-xs font-extrabold tabular-nums ring-2",
       status === "error" ? "bg-danger text-white ring-danger" : status === "complete" ? "bg-success text-white ring-success" : "bg-surface text-muted ring-ink/15",
       current && status === "pending" && "ring-primary text-primary")}>
       {status === "error" ? <CircleAlert size={15} /> : status === "complete" ? <Check size={15} /> : n}
@@ -47,14 +47,14 @@ export function EditorStepper({ layout, checks, current, tried, onGo }: Props) {
   if (layout === "rail") {
     return (
       <nav aria-label="Pasos del producto" className="sticky top-28 hidden self-start @min-[56rem]:block">
-        <ol className="flex flex-col gap-1 rounded-[1.75rem] bg-surface p-3 shadow-[var(--shadow-card)] ring-1 ring-ink/[0.04]">
+        <ol className="flex flex-col gap-1 rounded-sm bg-surface p-3 shadow-[var(--shadow-card)] ring-1 ring-ink/[0.04]">
           {PRODUCT_STEPS.map((s, i) => {
             const status = statusOf(checks[s.id], tried);
             const on = s.id === current;
             return (
               <li key={s.id}>
                 <button type="button" onClick={() => onGo(s.id)} aria-current={on ? "step" : undefined} aria-label={`${i + 1}. ${s.label}, ${STATUS_TEXT[status]}`}
-                  className={cn("flex w-full items-center gap-3 rounded-2xl px-2.5 py-2 text-left text-sm transition-colors hover:bg-accent/60", on && "bg-primary/[0.07] font-bold")}>
+                  className={cn("flex w-full items-center gap-3 rounded-sm px-2.5 py-2 text-left text-sm transition-colors hover:bg-accent/60", on && "bg-primary/[0.07] font-bold")}>
                   <Dot n={i + 1} status={status} current={on} />
                   <span className="min-w-0 flex-1 leading-snug">{s.label}</span>
                 </button>
@@ -75,7 +75,7 @@ export function EditorStepper({ layout, checks, current, tried, onGo }: Props) {
           return (
             <li key={s.id} className="shrink-0">
               <button type="button" onClick={() => onGo(s.id)} aria-current={on ? "step" : undefined} aria-label={`${i + 1}. ${s.label}, ${STATUS_TEXT[status]}`}
-                className={cn("flex h-10 items-center gap-2 rounded-full pl-1.5 pr-3 text-sm font-bold ring-1", on ? "bg-night text-on-night ring-night" : "bg-surface ring-ink/10")}>
+                className={cn("flex h-10 items-center gap-2 rounded-sm pl-1.5 pr-3 text-sm font-bold ring-1", on ? "bg-night text-on-night ring-night" : "bg-surface ring-ink/10")}>
                 <Dot n={i + 1} status={status} current={on} />{s.short}
               </button>
             </li>

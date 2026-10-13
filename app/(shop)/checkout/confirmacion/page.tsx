@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: "Pedido de demostración" };
 export default function ConfirmationPage() {
   return (
     <>
-      <PageHeader title="Confirmación (demo)" />
+      <PageHeader title="Confirmación" />
       <ConfirmationView />
     </>
   );

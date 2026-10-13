@@ -19,7 +19,7 @@ interface Props {
 
 /**
  * Encabezado de las fichas completas (8.3.5): migas de pan, Volver (a la lista con sus filtros y página), ID, estado y
- * acciones. El título lleva la marca "(demo)" como el resto del panel.
+ * acciones.
  */
 export function DetailHeader({ list, title, eyebrow, status, aside, actions }: Props) {
   const back = useBackHref(list.href);
@@ -37,7 +37,7 @@ export function DetailHeader({ list, title, eyebrow, status, aside, actions }: P
       <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
         <div className="min-w-0">
           {eyebrow && <p className="eyebrow text-muted">{eyebrow}</p>}
-          <h1 className="font-display mt-1 break-words text-4xl sm:text-5xl">{title} <span className="align-middle font-sans text-sm font-bold text-warning">(demo)</span></h1>
+          <h1 className="font-display mt-1 break-words text-4xl sm:text-5xl">{title}</h1>
           {status && <div className="mt-3 flex flex-wrap items-center gap-2">{status}</div>}
         </div>
         {aside && <div className="text-right">{aside}</div>}
@@ -51,7 +51,7 @@ export function DetailHeader({ list, title, eyebrow, status, aside, actions }: P
 export function TrackChip({ label, value, tone }: { label: string; value: string; tone: "neutral" | "warning" | "success" | "danger" | "brand" }) {
   const TONE = { neutral: "bg-accent text-ink", warning: "bg-warning-soft text-warning", success: "bg-success-soft text-success", danger: "bg-danger-soft text-danger", brand: "bg-primary/10 text-primary" };
   return (
-    <span className={`inline-flex max-w-full flex-wrap items-baseline gap-x-1.5 rounded-2xl px-3 py-1 text-sm ${TONE[tone]}`}>
+    <span className={`inline-flex max-w-full flex-wrap items-baseline gap-x-1.5 rounded-sm px-3 py-1 text-sm ${TONE[tone]}`}>
       <span className="whitespace-nowrap font-semibold opacity-80">{label}:</span><strong>{value}</strong>
     </span>
   );

@@ -22,10 +22,10 @@ export function ClubCard({ user, missions }: { user?: AdminUser; missions: Missi
             const n = user.missionProgress[m.id] ?? 0;
             const done = n >= m.threshold;
             return (
-              <li key={m.id} className="rounded-2xl bg-bg p-3 text-sm">
+              <li key={m.id} className="rounded-sm bg-bg p-3 text-sm">
                 <span className="flex flex-wrap items-center justify-between gap-2"><span className="font-bold">{m.title}</span><Badge tone={done ? "success" : "neutral"}>{done ? "Completada" : "En curso"}</Badge></span>
                 <span className="mt-1 block text-muted">{amount(m, Math.min(n, m.threshold))} de {amount(m, m.threshold)} · premio: {m.reward}</span>
-                <span aria-hidden="true" className="mt-2 block h-1.5 overflow-hidden rounded-full bg-line"><span className="block h-full rounded-full bg-primary" style={{ width: `${Math.min(100, Math.round((n / m.threshold) * 100))}%` }} /></span>
+                <span aria-hidden="true" className="mt-2 block h-1.5 overflow-hidden rounded-sm bg-line"><span className="block h-full rounded-sm bg-primary" style={{ width: `${Math.min(100, Math.round((n / m.threshold) * 100))}%` }} /></span>
               </li>
             );
           })}
@@ -35,7 +35,7 @@ export function ClubCard({ user, missions }: { user?: AdminUser; missions: Missi
       {user.rewards.length ? (
         <ul className="flex flex-col gap-2">
           {user.rewards.map((r) => (
-            <li key={r.title + r.expiresAt} className="flex flex-wrap items-center justify-between gap-2 rounded-2xl bg-bg p-3 text-sm">
+            <li key={r.title + r.expiresAt} className="flex flex-wrap items-center justify-between gap-2 rounded-sm bg-bg p-3 text-sm">
               <span><span className="block font-bold">{r.title}</span><span className="text-muted">Vence el {formatDate(r.expiresAt)}</span></span>
               <Badge tone={r.used ? "neutral" : "success"}>{r.used ? "Usado" : "Disponible"}</Badge>
             </li>

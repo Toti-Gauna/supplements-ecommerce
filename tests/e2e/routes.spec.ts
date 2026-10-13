@@ -3,7 +3,7 @@ import { horizontalOverflow } from "./helpers";
 
 // Rutas relativas (sin "/" inicial) para respetar el basePath del baseURL.
 const ROUTES = [
-  ["", "Destacados de Volta"],
+  ["", "Cargá tu mejor versión"],
   ["buscar/?q=creatna", "Buscar"],
   ["buscar/?objetivo=masa-muscular", "Buscar"],
   ["categorias/", "Todas las categorías"],
@@ -13,15 +13,15 @@ const ROUTES = [
   ["crear/quiz/", "¿Qué necesitás?"],
   ["cupones/", "Mis cupones"],
   ["carrito/", "Tu carrito"],
-  ["checkout/", "Checkout de demostración"],
-  ["checkout/confirmacion/", "Confirmación (demo)"],
+  ["checkout/", "Finalizar compra"],
+  ["checkout/confirmacion/", "Confirmación"],
   ["pedido/demo-volta/", "Seguimiento de tu pedido"],
   ["cuenta/", "Mi cuenta"],
   ["preguntas/", "Preguntas frecuentes"],
   ["terminos/", "Términos y condiciones"],
   ["privacidad/", "Política de privacidad"],
   ["arrepentimiento/", "Botón de arrepentimiento"],
-  ["club/", "Comprás, sumás, ganás."],
+  ["club/", "Sumá carga. Subí de nivel."],
   ["regalo/", "¿Te hicieron un regalo?"],
 ] as const;
 
@@ -30,7 +30,7 @@ test.describe("rutas directas y refresh bajo el subpath", () => {
     test(`/${path}`, async ({ page }) => {
       const res = await page.goto(path);
       expect(res?.status()).toBe(200);
-      const target = path === "" ? page.getByRole("region", { name: heading }) : page.getByRole("heading", { level: 1, name: heading });
+      const target = page.getByRole("heading", { level: 1, name: heading });
       await expect(target).toBeVisible();
       await page.reload();
       await expect(target).toBeVisible();

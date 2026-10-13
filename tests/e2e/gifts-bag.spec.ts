@@ -126,7 +126,8 @@ test("regalo desde el checkout para Navidad: el link abre la bolsa navideña en 
   await expect(stage.getByRole("heading", { name: "Overvolt pre-entreno" })).toBeVisible();
   await expect(stage.getByText("¡Feliz Navidad! Para que el 2027 arranque con todo.")).toBeVisible();
   await expect(stage.getByText(PRICE)).toHaveCount(0);
-  await expect(friend.getByText(PRICE)).toHaveCount(0);
+  // En la página tampoco hay precios del regalo (la cinta y el pie del local solo dicen desde cuánto el envío es gratis).
+  await expect(friend.locator("main").getByText(PRICE)).toHaveCount(0);
   await other.close();
   assertNoExternal();
 });

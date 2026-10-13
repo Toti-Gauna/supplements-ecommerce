@@ -9,6 +9,6 @@ export function StatTile({ label, value, hint, href, icon }: { label: string; va
       {hint && <span className="text-xs text-muted">{hint}</span>}
     </>
   );
-  const cls = "flex min-h-28 flex-col gap-1 rounded-2xl border border-line bg-surface p-4";
+  const cls = "flex min-h-28 flex-col gap-1 rounded-sm border border-line bg-surface p-4";
   return href ? <Link href={href} className={`${cls} hover:border-primary`}>{body}</Link> : <div className={cls}>{body}</div>;
 }

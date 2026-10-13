@@ -30,10 +30,10 @@ export function GoalRail({ heading = true }: { heading?: boolean }) {
           return (
             <Reveal as="li" key={g.id} y={0} delay={i * 0.05} className={heading ? "w-[72%] shrink-0 snap-start sm:w-auto" : undefined}>
               <Link href={goalHref(g.id)} style={{ "--hue": g.hue } as CSSProperties}
-                className="group relative flex h-full min-h-[11.5rem] overflow-hidden rounded-[var(--radius-card)] bg-night p-5 text-on-night ring-1 ring-white/[0.06] transition-[box-shadow,transform] duration-500 hover:-translate-y-0.5 hover:shadow-[0_0_0_1px_var(--hue),0_24px_50px_-24px_var(--hue)]">
+                className="group relative flex h-full min-h-[11.5rem] overflow-hidden rounded-sm bg-night p-5 text-on-night ring-1 ring-white/[0.06] transition-[box-shadow,transform] duration-500 hover:-translate-y-0.5 hover:shadow-[0_0_0_1px_var(--hue),0_24px_50px_-24px_var(--hue)]">
                 <span aria-hidden="true" className="absolute -right-10 -top-10 h-44 w-44 rounded-full opacity-30 blur-2xl transition-opacity duration-500 group-hover:opacity-60" style={{ background: "var(--hue)" }} />
                 <span className="relative z-10 flex min-w-0 flex-1 flex-col">
-                  <span className="grid h-10 w-10 place-items-center rounded-xl bg-white/[0.06] ring-1 ring-white/10" style={{ color: "var(--hue)" }}><GoalGlyph goal={g.id} /></span>
+                  <span className="grid h-10 w-10 place-items-center rounded-sm bg-white/[0.06] ring-1 ring-white/10" style={{ color: "var(--hue)" }}><GoalGlyph goal={g.id} /></span>
                   <span className="font-display mt-auto pt-6 text-xl leading-tight">{g.name}</span>
                   <span className="mt-1 max-w-[64%] text-[13px] leading-snug text-night-muted">{g.pitch}</span>
                   <span className="mt-3 flex items-center gap-1 font-mono text-[11px] font-bold uppercase tracking-wider" style={{ color: "var(--hue)" }}>

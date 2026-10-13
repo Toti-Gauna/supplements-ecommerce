@@ -19,7 +19,7 @@ export function MissionProgress({ title, reward, pctFrom, pctTo, valueLabel, sta
   const style = { "--from": `${pctFrom}%`, "--to": `${pctTo}%`, width: `${pctTo}%` } as CSSProperties;
   const done = status !== "progress";
   return (
-    <div className={cn("relative rounded-2xl border bg-surface", compact ? "p-3" : "p-4", done ? "border-success/40" : "border-line")}>
+    <div className={cn("relative rounded-sm border bg-surface", compact ? "p-3" : "p-4", done ? "border-success/40" : "border-line")}>
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="font-bold text-ink">{title}</p>
@@ -28,14 +28,14 @@ export function MissionProgress({ title, reward, pctFrom, pctTo, valueLabel, sta
         <span className="shrink-0 text-sm font-bold tabular-nums text-primary">{valueLabel}</span>
       </div>
       <div
-        className="mt-3 h-3 overflow-hidden rounded-full bg-accent"
+        className="mt-3 h-3 overflow-hidden rounded-sm bg-accent"
         role="progressbar"
         aria-label={`Progreso de ${title}`}
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={pctTo}
       >
-        <div className={cn("progress-fill h-full rounded-full", done ? "bg-success" : "bg-primary")} style={style} />
+        <div className={cn("progress-fill h-full rounded-sm", done ? "bg-success" : "bg-primary")} style={style} />
       </div>
       {status === "completes-now" && (
         <p className="mt-2 flex items-center gap-1.5 text-sm font-bold text-success" role="status">

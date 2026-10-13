@@ -17,7 +17,7 @@ interface Props<T> {
   help?: { open: boolean; controls: string; onToggle: () => void };
 }
 
-const field = "h-11 w-full rounded-2xl border px-3 text-sm font-bold focus:border-primary focus:outline-none focus-visible:ring-4 focus-visible:ring-primary/12";
+const field = "h-11 w-full rounded-sm border px-3 text-sm font-bold focus:border-primary focus:outline-none focus-visible:ring-4 focus-visible:ring-primary/12";
 
 /** Un filtro de la tabla: select con el conteo de cada opción (resaltado cuando filtra), o una fecha. */
 export function FilterControl<T>({ spec, value, onChange, count, idPrefix, className, help }: Props<T>) {

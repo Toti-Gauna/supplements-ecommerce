@@ -17,16 +17,16 @@ export function ProofUpload({ orderCode }: { orderCode?: string }) {
   const [error, setError] = useState<string | null>(null);
   if (file) {
     return (
-      <div role="status" className="flex items-start gap-3 rounded-2xl bg-warning-soft p-4 text-sm text-warning">
+      <div role="status" className="flex items-start gap-3 rounded-sm bg-warning-soft p-4 text-sm text-warning">
         <FileCheck2 size={20} aria-hidden="true" className="shrink-0" />
-        <p><strong>Comprobante cargado (demo): {file}.</strong> El pago queda <strong>en revisión</strong>. En la tienda real, {brand.name} verifica el ingreso en su cuenta y recién ahí aprueba el pedido. Subir un comprobante no confirma el pago.</p>
+        <p><strong>Comprobante cargado: {file}.</strong> El pago queda <strong>en revisión</strong>. En la tienda real, {brand.name} verifica el ingreso en su cuenta y recién ahí aprueba el pedido. Subir un comprobante no confirma el pago.</p>
       </div>
     );
   }
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="flex min-h-12 w-fit cursor-pointer items-center gap-2 rounded-full border-2 border-primary px-4 font-bold text-primary hover:bg-accent has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary/50">
-        <Upload size={18} aria-hidden="true" /> Subir comprobante (demo)
+      <label htmlFor={id} className="flex min-h-12 w-fit cursor-pointer items-center gap-2 rounded-sm border-2 border-primary px-4 font-bold text-primary hover:bg-accent has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary/50">
+        <Upload size={18} aria-hidden="true" /> Subir comprobante
         <input id={id} type="file" accept={ACCEPT.join(",")} className="sr-only" aria-describedby={`${id}-hint`}
           onChange={(e) => {
             const f = e.target.files?.[0];

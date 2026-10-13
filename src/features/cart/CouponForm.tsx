@@ -16,7 +16,7 @@ export function CouponForm({ subtotal, isRegistered, check, where = "tienda" }: 
   const [error, setError] = useState<string | null>(null);
   const setCoupons = useUi((s) => s.setCoupons);
   const picker = (
-    <button type="button" onClick={() => setCoupons(true)} className="flex w-full items-center gap-3 rounded-2xl bg-night px-4 py-3 text-left text-on-night transition-colors hover:bg-night-2">
+    <button type="button" onClick={() => setCoupons(true)} className="flex w-full items-center gap-3 rounded-sm bg-night px-4 py-3 text-left text-on-night transition-colors hover:bg-night-2">
       <TicketPercent size={20} aria-hidden="true" className="shrink-0 text-volt" />
       <span className="flex-1 text-sm font-bold">Elegir de mis cupones<span className="block text-xs font-semibold text-night-muted">Los ganados en el Club y los vigentes de la tienda</span></span>
       <ChevronRight size={18} aria-hidden="true" />
@@ -25,9 +25,9 @@ export function CouponForm({ subtotal, isRegistered, check, where = "tienda" }: 
   if (code && check?.ok) {
     return (
       <div className="flex flex-col gap-3">
-        <div className="flex items-center justify-between gap-2 rounded-2xl bg-success-soft p-3 text-sm">
+        <div className="flex items-center justify-between gap-2 rounded-sm bg-success-soft p-3 text-sm">
           <span className="flex items-center gap-2 font-bold text-success"><TicketPercent size={18} aria-hidden="true" /> {code}: {check.coupon.description}</span>
-          <button type="button" onClick={() => changeCoupon(null, where)} aria-label={`Quitar cupón ${code}`} className="grid h-9 w-9 place-items-center rounded-full hover:bg-surface"><X size={16} aria-hidden="true" /></button>
+          <button type="button" onClick={() => changeCoupon(null, where)} aria-label={`Quitar cupón ${code}`} className="grid h-9 w-9 place-items-center rounded-sm hover:bg-surface"><X size={16} aria-hidden="true" /></button>
         </div>
         <button type="button" onClick={() => setCoupons(true)} className="text-left text-sm font-bold text-primary underline underline-offset-4">Cambiar por otro de mis cupones</button>
       </div>
@@ -37,9 +37,9 @@ export function CouponForm({ subtotal, isRegistered, check, where = "tienda" }: 
     <div className="flex flex-col gap-3">
     {/* Un cupón elegido que no cumple las condiciones (mínimo, cuenta, vencido) se puede quitar igual. */}
     {code && check && !check.ok && (
-      <div className="flex items-center justify-between gap-2 rounded-2xl bg-warning-soft p-3 text-sm">
+      <div className="flex items-center justify-between gap-2 rounded-sm bg-warning-soft p-3 text-sm">
         <span className="font-bold">{code} no se aplica a este pedido</span>
-        <button type="button" onClick={() => changeCoupon(null, where)} aria-label={`Quitar cupón ${code}`} className="grid h-9 w-9 shrink-0 place-items-center rounded-full hover:bg-surface"><X size={16} aria-hidden="true" /></button>
+        <button type="button" onClick={() => changeCoupon(null, where)} aria-label={`Quitar cupón ${code}`} className="grid h-9 w-9 shrink-0 place-items-center rounded-sm hover:bg-surface"><X size={16} aria-hidden="true" /></button>
       </div>
     )}
     {picker}

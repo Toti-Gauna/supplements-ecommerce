@@ -37,9 +37,9 @@ export function HomeTextsEditor() {
   return (
     <div>
       <SubpageHeader trail={[MARKETING, CONTENT_SECTION]} back={CONTENT_SECTION} title="Textos de inicio" intro="El bloque del inicio con el estante en vivo: el cliente toca un objetivo y ve el stack sugerido. Lo que va después de la coma del título se pinta en voltio." />
-      <section aria-label="Bloque “Armá tu stack”" className="flex max-w-2xl flex-col gap-4 rounded-3xl bg-surface p-4 shadow-[var(--shadow-card)] sm:p-5">
+      <section aria-label="Bloque “Armá tu stack”" className="flex max-w-2xl flex-col gap-4 rounded-sm bg-surface p-4 shadow-[var(--shadow-card)] sm:p-5">
         {errors.length > 0 && (
-          <div role="alert" className="flex gap-2 rounded-2xl bg-danger-soft p-3 text-sm font-semibold text-danger">
+          <div role="alert" className="flex gap-2 rounded-sm bg-danger-soft p-3 text-sm font-semibold text-danger">
             <AlertCircle size={18} aria-hidden="true" className="mt-0.5 shrink-0" /><ul>{errors.map((e) => <li key={e}>{e}</li>)}</ul>
           </div>
         )}

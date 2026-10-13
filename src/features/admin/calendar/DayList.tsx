@@ -12,19 +12,19 @@ import { capacityText } from "./MonthView";
 /** Fila de un pedido con fecha: estado, cliente, productos y botón para reprogramar. */
 export function EntryRow({ entry: e, onOpen }: { entry: Entry; onOpen: (code: string) => void }) {
   return (
-    <li className={cn("flex flex-wrap items-center gap-x-3 gap-y-1.5 rounded-2xl bg-surface p-3 shadow-[var(--shadow-card)]", e.late ? "ring-1 ring-danger" : e.blocked && "ring-1 ring-warning")}>
+    <li className={cn("flex flex-wrap items-center gap-x-3 gap-y-1.5 rounded-sm bg-surface p-3 shadow-[var(--shadow-card)]", e.late ? "ring-1 ring-danger" : e.blocked && "ring-1 ring-warning")}>
       <span className="min-w-0 flex-1">
         <span className="flex flex-wrap items-center gap-2">
           <span className="font-extrabold tabular-nums">{e.order.code}</span>
           <StatusBadge status={e.order.status} />
-          {e.late && <span className="inline-flex items-center gap-1 rounded-full bg-danger-soft px-2.5 py-0.5 text-xs font-bold text-danger"><AlarmClock size={12} aria-hidden="true" /> Atrasado</span>}
-          {e.blocked && <span className="inline-flex items-center gap-1 rounded-full bg-warning-soft px-2.5 py-0.5 text-xs font-bold text-warning">Día cerrado: reprogramar</span>}
+          {e.late && <span className="inline-flex items-center gap-1 rounded-sm bg-danger-soft px-2.5 py-0.5 text-xs font-bold text-danger"><AlarmClock size={12} aria-hidden="true" /> Atrasado</span>}
+          {e.blocked && <span className="inline-flex items-center gap-1 rounded-sm bg-warning-soft px-2.5 py-0.5 text-xs font-bold text-warning">Día cerrado: reprogramar</span>}
         </span>
         <span className="mt-1 block text-sm font-semibold">{e.order.customer.name} <span className="font-normal text-muted">· {fulfillmentLabel(e.order.fulfillment)}</span></span>
         <span className="block text-sm text-muted">{e.summary}</span>
       </span>
       <button type="button" onClick={() => onOpen(e.order.code)} aria-label={`${e.movable ? "Reprogramar" : "Ver"} ${e.order.code}`}
-        className="inline-flex h-10 items-center gap-1.5 rounded-full border border-ink/15 px-3.5 text-sm font-bold hover:bg-accent/50">
+        className="inline-flex h-10 items-center gap-1.5 rounded-sm border border-ink/15 px-3.5 text-sm font-bold hover:bg-accent/50">
         <CalendarClock size={16} aria-hidden="true" /> {e.movable ? "Reprogramar" : "Ver"}
       </button>
     </li>
@@ -61,7 +61,7 @@ export function AgendaView({ entries, events, today, cal, capacity, onOpen, onEv
               {list.map((e) => <EntryRow key={e.order.code} entry={e} onOpen={onOpen} />)}
               {ahead.filter((e) => e.date === day).map((e) => (
                 <li key={e.id}>
-                  <button type="button" onClick={() => onEvent(e.id)} className="flex w-full items-center gap-3 rounded-2xl border border-dashed border-volt-ink/40 bg-bg p-3 text-left text-sm hover:bg-accent/40">
+                  <button type="button" onClick={() => onEvent(e.id)} className="flex w-full items-center gap-3 rounded-sm border border-dashed border-volt-ink/40 bg-bg p-3 text-left text-sm hover:bg-accent/40">
                     {e.kind === "pedido" ? <Link2 size={16} aria-hidden="true" className="shrink-0 text-volt-ink" /> : <StickyNote size={16} aria-hidden="true" className="shrink-0 text-volt-ink" />}
                     <span className="min-w-0 flex-1"><span className="block font-bold">{e.title}</span>{e.orderCode && <span className="text-xs text-muted">{e.orderCode}</span>}</span>
                     <span className="text-xs font-bold text-primary">Editar</span>

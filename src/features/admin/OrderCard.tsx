@@ -18,7 +18,7 @@ export const fulfillmentLabel = (f: AdminOrder["fulfillment"]) => SHIP[f];
 export function OrderCard({ order }: { order: AdminOrder }) {
   const meta = `${formatDateTime(order.createdAt)} · ${PAY[order.paymentMethod]} · ${SHIP[order.fulfillment]}${order.fromShop ? " · desde la tienda demo" : ""}`;
   return (
-    <Link href={`/admin-demo/pedidos/detalle/?codigo=${order.code}`} className="flex items-center gap-3 rounded-2xl bg-surface p-4 shadow-[var(--shadow-card)] transition-colors hover:bg-accent/40 sm:gap-4">
+    <Link href={`/admin-demo/pedidos/detalle/?codigo=${order.code}`} className="flex items-center gap-3 rounded-sm bg-surface p-4 shadow-[var(--shadow-card)] transition-colors hover:bg-accent/40 sm:gap-4">
       <div className="flex min-w-0 flex-1 flex-col gap-1 sm:flex-row sm:items-center sm:gap-4">
         <span className="flex flex-wrap items-center gap-2 sm:w-32 sm:shrink-0">
           <span className="whitespace-nowrap font-extrabold">{order.code}</span>

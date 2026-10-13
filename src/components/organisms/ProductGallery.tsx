@@ -30,12 +30,12 @@ export function ProductGallery({ art, pack, views, tint, name, photoUrl, alt }: 
     const r = e.currentTarget.getBoundingClientRect();
     setZoom({ x: ((e.clientX - r.left) / r.width) * 100, y: ((e.clientY - r.top) / r.height) * 100 });
   };
-  if (photoUrl) return <div data-vt-hero className={cn(hero && "vt-hero")}><ProductVisual art={art} pack={pack} photoUrl={photoUrl} label={alt || name} className="aspect-square rounded-[2rem] shadow-[var(--shadow-card)]" /></div>;
+  if (photoUrl) return <div data-vt-hero className={cn(hero && "vt-hero")}><ProductVisual art={art} pack={pack} photoUrl={photoUrl} label={alt || name} className="aspect-square rounded-sm shadow-[var(--shadow-card)]" /></div>;
   return (
     <div className="flex flex-col gap-3 lg:flex-row-reverse lg:justify-end">
       {/* En escritorio la galería queda fija mientras se eligen las opciones: su alto no pasa del espacio que deja el
           header (si no, en una pantalla baja la parte de abajo nunca se ve). */}
-      <div data-vt-hero onPointerMove={onMove} onPointerLeave={() => setZoom(null)} className={cn("relative aspect-square flex-1 overflow-hidden rounded-[2rem] bg-accent shadow-[var(--shadow-card)] lg:max-w-[calc(100dvh-12rem)]", hero && "vt-hero", "lg:cursor-zoom-in")}>
+      <div data-vt-hero onPointerMove={onMove} onPointerLeave={() => setZoom(null)} className={cn("relative aspect-square flex-1 overflow-hidden rounded-sm bg-accent shadow-[var(--shadow-card)] lg:max-w-[calc(100dvh-12rem)]", hero && "vt-hero", "lg:cursor-zoom-in")}>
         <AnimatePresence initial={false} mode="popLayout">
           {photoUrl ? (
             <motion.div key="photo" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0">
@@ -54,7 +54,7 @@ export function ProductGallery({ art, pack, views, tint, name, photoUrl, alt }: 
         <div role="group" aria-label="Fotos del producto" className="no-scrollbar flex gap-2 overflow-x-auto overflow-y-hidden overscroll-x-contain p-1 lg:flex-col">
           {(photoUrl ? [] : views).map((v, i) => (
             <button key={v} type="button" onClick={() => setActive(i)} aria-pressed={i === active} aria-label={`Ver ${VIEW_LABEL[v].toLowerCase()}`}
-              className={cn("relative w-20 shrink-0 overflow-hidden rounded-2xl transition-all duration-300 lg:w-24", i === active ? "ring-2 ring-primary ring-offset-2 ring-offset-bg" : "opacity-70 hover:opacity-100")}>
+              className={cn("relative w-20 shrink-0 overflow-hidden rounded-sm transition-all duration-300 lg:w-24", i === active ? "ring-2 ring-primary ring-offset-2 ring-offset-bg" : "opacity-70 hover:opacity-100")}>
               <ProductArt art={art} pack={pack} view={v} tint={tint} label="" showBadge={false} className="aspect-square" />
             </button>
           ))}

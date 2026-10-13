@@ -1,8 +1,10 @@
 "use client";
 import { AlertCircle } from "lucide-react";
 import { useState, type CSSProperties } from "react";
+import { Select } from "@/components/atoms/Select";
 import { GoalGlyph } from "@/components/illustrations/GoalGlyph";
 import { goalErrors } from "@/demo/engine/goals";
+import { goalProduct } from "@/demo/engine/rack";
 import { goals as defaults, type GoalInfo } from "@/demo/fixtures/goals";
 import { contrastRatio } from "@/lib/color";
 import { useAdmin } from "@/stores/admin";
@@ -23,6 +25,7 @@ const isGoals = (x: unknown): x is GoalInfo[] => Array.isArray(x) && x.every((g:
 export function GoalsEditor() {
   const saved = useGoals();
   const saveGoals = useAdmin((s) => s.saveGoals);
+  const products = useAdmin((s) => s.data.products);
   const push = useToasts((s) => s.push);
   const session = useSessionDraft<GoalInfo[]>("volta-ui:goals-draft", saved, isGoals);
   const [errors, setErrors] = useState<string[]>([]);
@@ -37,9 +40,9 @@ export function GoalsEditor() {
   return (
     <section aria-labelledby="objetivos" className="mt-10">
       <h2 id="objetivos" className="text-lg font-extrabold">Objetivos</h2>
-      <p className="mb-3 max-w-2xl text-sm text-muted">Los círculos de “¿Cuál es tu objetivo?”, el filtro por objetivo, el quiz y Armá tu stack usan estos nombres, bajadas y colores. Qué productos van en cada objetivo se elige en la ficha del producto.</p>
+      <p className="mb-3 max-w-2xl text-sm text-muted">Los paneles de “Entrená por objetivo”, el filtro por objetivo, el quiz y Armá tu stack usan estos nombres, bajadas y colores. Qué productos van en cada objetivo se elige en la ficha del producto; acá, cuál representa al objetivo en el inicio.</p>
       {errors.length > 0 && (
-        <div role="alert" className="mb-3 flex gap-2 rounded-2xl bg-danger-soft p-3 text-sm font-semibold text-danger">
+        <div role="alert" className="mb-3 flex gap-2 rounded-sm bg-danger-soft p-3 text-sm font-semibold text-danger">
           <AlertCircle size={18} aria-hidden="true" className="mt-0.5 shrink-0" /><ul>{errors.map((e) => <li key={e}>{e}</li>)}</ul>
         </div>
       )}
@@ -47,20 +50,25 @@ export function GoalsEditor() {
         {session.draft.map((g) => {
           const low = /^#[0-9a-f]{6}$/i.test(g.hue) && contrastRatio(g.hue, NIGHT) < 4.5;
           return (
-            <li key={g.id} style={{ "--hue": g.hue } as CSSProperties} className="rounded-3xl bg-surface p-4 shadow-[var(--shadow-card)]">
+            <li key={g.id} style={{ "--hue": g.hue } as CSSProperties} className="rounded-sm bg-surface p-4 shadow-[var(--shadow-card)]">
               <fieldset className="flex min-w-0 flex-col gap-3">
               <legend className="sr-only">Objetivo {defaults.find((d) => d.id === g.id)?.name ?? g.id}</legend>
-              <div className="flex items-center gap-3 rounded-2xl bg-night p-3 text-on-night" aria-hidden="true">
-                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-white/[0.06] ring-1 ring-white/10" style={{ color: "var(--hue)" }}><GoalGlyph goal={g.id} /></span>
+              <div className="flex items-center gap-3 rounded-sm bg-night p-3 text-on-night" aria-hidden="true">
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-sm bg-white/[0.06] ring-1 ring-white/10" style={{ color: "var(--hue)" }}><GoalGlyph goal={g.id} /></span>
                 <span className="min-w-0"><span className="font-display block truncate text-lg leading-tight">{g.name || "Sin nombre"}</span><span className="block truncate text-xs text-night-muted">{g.pitch}</span></span>
               </div>
               <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
                 <CountedField label="Nombre" value={g.name} max={24} onChange={(name) => set(g.id, { name })} />
                 <label className="flex flex-col gap-1 text-sm font-bold">Color
-                  <input type="color" value={g.hue} onChange={(e) => set(g.id, { hue: e.target.value })} aria-label={`Color de ${g.name || g.id}`} className="h-12 w-16 cursor-pointer rounded-xl border border-line bg-surface" />
+                  <input type="color" value={g.hue} onChange={(e) => set(g.id, { hue: e.target.value })} aria-label={`Color de ${g.name || g.id}`} className="h-12 w-16 cursor-pointer rounded-sm border border-line bg-surface" />
                 </label>
               </div>
               <CountedField label="Bajada" value={g.pitch} max={70} onChange={(pitch) => set(g.id, { pitch })} />
+              <label className="flex flex-col gap-1 text-sm font-bold">Producto en el inicio
+                <Select value={goalProduct(g.id, g.productSlug)?.slug ?? ""} onChange={(e) => set(g.id, { productSlug: e.target.value })}>
+                  {products.filter((p) => p.active !== false && p.goals?.includes(g.id)).map((p) => <option key={p.slug} value={p.slug}>{p.name}</option>)}
+                </Select>
+              </label>
               {low && <p className="text-xs font-bold text-warning">Este color se lee poco sobre el fondo oscuro de la tienda: probá uno más claro.</p>}
               </fieldset>
             </li>

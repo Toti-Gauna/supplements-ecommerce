@@ -16,7 +16,7 @@ import { productExpiring } from "./catalogTable";
 export const minPrice = productMinPrice;
 
 export function ProductThumb({ product, size = "w-12" }: { product: Product; size?: string }) {
-  return <ProductVisual art={product.art} pack={product.pack} photoUrl={product.photoDataUrl} tint={product.variants[0]?.colorHex} label="" showBadge={false} className={`aspect-square ${size} shrink-0 rounded-xl`} />;
+  return <ProductVisual art={product.art} pack={product.pack} photoUrl={product.photoDataUrl} tint={product.variants[0]?.colorHex} label="" showBadge={false} className={`aspect-square ${size} shrink-0 rounded-sm`} />;
 }
 
 /** Insignia de la fila: algún lote vence en menos de 60 días (o hay variantes en liquidación). */

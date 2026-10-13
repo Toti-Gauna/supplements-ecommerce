@@ -64,7 +64,7 @@ function Card({ row: c, selected, onToggle, onOpen }: RowCardProps<CustomerView>
   // En el celular entra una línea: primero lo de esta semana, después lo atrasado.
   const soon = c.repurchases.find((i) => i.state === "week") ?? c.repurchases.find((i) => i.state === "overdue");
   return (
-    <div className={`flex items-center gap-3 rounded-3xl bg-bg p-3 ring-1 ${selected ? "ring-primary" : "ring-ink/[0.06]"}`}>
+    <div className={`flex items-center gap-3 rounded-sm bg-bg p-3 ring-1 ${selected ? "ring-primary" : "ring-ink/[0.06]"}`}>
       <input type="checkbox" checked={selected} onChange={onToggle} aria-label={`Seleccionar ${c.name}`} className="h-5 w-5 accent-primary" />
       <button type="button" onClick={onOpen} className="flex min-w-0 flex-1 items-center gap-3 text-left">
         <span className="min-w-0 flex-1">

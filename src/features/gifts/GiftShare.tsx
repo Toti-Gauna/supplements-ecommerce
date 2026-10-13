@@ -30,10 +30,10 @@ export function GiftShare({ gift, compact }: { gift: GiftData; compact?: boolean
     catch { toast({ tone: "error", title: "No se pudo copiar", description: "Copialo a mano: " + value }); }
   };
   return (
-    <div className="rounded-[1.6rem] bg-night p-5 text-on-night sm:p-6">
+    <div className="rounded-sm bg-night p-5 text-on-night sm:p-6">
       {!compact && (
         <div className="flex items-start gap-4">
-          <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-volt/20 text-volt"><Gift size={22} aria-hidden="true" /></span>
+          <span className="grid h-12 w-12 shrink-0 place-items-center rounded-sm bg-volt/20 text-volt"><Gift size={22} aria-hidden="true" /></span>
           <div className="min-w-0">
             <p className="eyebrow text-volt">Regalo listo para mandar</p>
             <p className="mt-1 font-bold">Para {gift.to} · {gift.item.name}</p>
@@ -42,22 +42,22 @@ export function GiftShare({ gift, compact }: { gift: GiftData; compact?: boolean
         </div>
       )}
       <button type="button" onClick={() => void copy(gift.code, "Código copiado")} aria-label={`Copiar código ${gift.code}`}
-        className={`${compact ? "" : "mt-5 "}flex w-full items-center justify-center gap-2 rounded-2xl border border-dashed border-volt/60 px-4 py-3 font-mono text-lg font-extrabold tracking-[0.12em] text-volt transition hover:bg-white/5`}>
+        className={`${compact ? "" : "mt-5 "}flex w-full items-center justify-center gap-2 rounded-sm border border-dashed border-volt/60 px-4 py-3 font-mono text-lg font-extrabold tracking-[0.12em] text-volt transition hover:bg-white/5`}>
         {gift.code} <Copy size={16} aria-hidden="true" />
       </button>
       <div className="mt-3 grid grid-cols-2 gap-2">
         <a href={`https://wa.me/?text=${encodeURIComponent(text(giftUrl(gift)))}`} target="_blank" rel="noopener noreferrer"
-          className="flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#25d366] px-4 text-sm font-bold text-[#0b2e17] hover:brightness-105">
+          className="flex min-h-12 items-center justify-center gap-2 rounded-sm bg-[#25d366] px-4 text-sm font-bold text-[#0b2e17] hover:brightness-105">
           <MessageCircle size={17} aria-hidden="true" /> WhatsApp
         </a>
         {share ? (
           <button type="button" onClick={() => void navigator.share({ title: `Un regalo de ${brand.name}`, text: shareText, url: giftUrl(gift) }).catch(() => {})}
-            className="flex min-h-12 items-center justify-center gap-2 rounded-full bg-on-night px-4 text-sm font-bold text-night hover:bg-white">
+            className="flex min-h-12 items-center justify-center gap-2 rounded-sm bg-on-night px-4 text-sm font-bold text-night hover:bg-white">
             <Share2 size={17} aria-hidden="true" /> Compartir
           </button>
         ) : (
           <button type="button" onClick={() => void copy(giftUrl(gift), "Link copiado")}
-            className="flex min-h-12 items-center justify-center gap-2 rounded-full bg-on-night px-4 text-sm font-bold text-night hover:bg-white">
+            className="flex min-h-12 items-center justify-center gap-2 rounded-sm bg-on-night px-4 text-sm font-bold text-night hover:bg-white">
             <Copy size={17} aria-hidden="true" /> Copiar link
           </button>
         )}

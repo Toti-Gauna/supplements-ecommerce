@@ -12,17 +12,17 @@ export function NutritionFacts({ nutrition }: { nutrition: Nutrition }) {
   const [col, setCol] = useState<"serving" | "per100">("serving");
   const tab = (id: typeof col, label: string) => (
     <button type="button" onClick={() => setCol(id)} aria-pressed={col === id}
-      className={cn("rounded-full px-3 py-1.5 text-xs font-bold transition-colors", col === id ? "bg-primary text-on-primary" : "text-muted hover:text-ink")}>{label}</button>
+      className={cn("rounded-sm px-3 py-1.5 text-xs font-bold transition-colors", col === id ? "bg-primary text-on-primary" : "text-muted hover:text-ink")}>{label}</button>
   );
   return (
-    <section aria-labelledby="nutri-title" className="rounded-[var(--radius-card)] border border-line bg-surface p-5 sm:p-6">
+    <section aria-labelledby="nutri-title" className="rounded-sm border border-line bg-surface p-5 sm:p-6">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <p className="eyebrow text-volt-ink">Rótulo</p>
           <h2 id="nutri-title" className="font-display mt-1 text-2xl">Información nutricional</h2>
           <p className="font-lab mt-1 text-sm text-muted">Porción: {nutrition.serving}</p>
         </div>
-        {has100 && <div className="flex gap-1 rounded-full bg-accent p-1 sm:hidden">{tab("serving", "Por porción")}{tab("per100", "Por 100 g")}</div>}
+        {has100 && <div className="flex gap-1 rounded-sm bg-accent p-1 sm:hidden">{tab("serving", "Por porción")}{tab("per100", "Por 100 g")}</div>}
       </div>
       <table className="font-lab mt-4 w-full border-collapse text-[13px]">
         <thead>

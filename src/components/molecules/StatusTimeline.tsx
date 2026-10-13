@@ -15,7 +15,7 @@ export function StatusTimeline({ steps }: { steps: TimelineStep[] }) {
         <li key={s.label} className="relative" aria-current={s.state === "current" ? "step" : undefined}>
           <span
             className={cn(
-              "absolute -left-[35px] top-0.5 grid h-5 w-5 place-items-center rounded-full border-2",
+              "absolute -left-[35px] top-0.5 grid h-5 w-5 place-items-center rounded-sm border-2",
               s.state === "done" && "border-primary bg-primary text-on-primary",
               s.state === "current" && "border-primary bg-surface ring-4 ring-primary/15",
               s.state === "pending" && "border-line bg-surface",

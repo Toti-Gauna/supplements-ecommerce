@@ -24,7 +24,7 @@ export function ThemedCoupon({ coupon, label, occasion }: { coupon: Coupon | und
   const copy = () => { void navigator.clipboard?.writeText(code).then(() => toast({ tone: "success", title: "Código copiado", description: code }), () => {}); };
   return (
     <div className="themed-coupon relative w-[min(88vw,420px)] text-left" style={{ "--c-from": c.from, "--c-to": c.to, "--c-accent": c.accent, "--c-ink": c.ink } as CSSProperties}>
-      <div className="relative flex min-h-[9.5rem] overflow-hidden rounded-[1.6rem] bg-[linear-gradient(135deg,var(--c-from),var(--c-to))] text-on-night shadow-[0_40px_90px_-30px_rgb(0_0_0/0.9)] ring-1 ring-white/15">
+      <div className="relative flex min-h-[9.5rem] overflow-hidden rounded-sm bg-[linear-gradient(135deg,var(--c-from),var(--c-to))] text-on-night shadow-[0_40px_90px_-30px_rgb(0_0_0/0.9)] ring-1 ring-white/15">
         {/* Talón: valor grande sobre un guilloché del color de acento y las decoraciones de la fecha. */}
         <div className="relative grid w-[38%] shrink-0 place-items-center overflow-hidden bg-black/25 px-2 py-4 text-center">
           <svg aria-hidden="true" viewBox="0 0 120 150" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 h-full w-full opacity-35">
@@ -41,8 +41,8 @@ export function ThemedCoupon({ coupon, label, occasion }: { coupon: Coupon | und
           </span>
         </div>
         <div aria-hidden="true" className="relative w-0">
-          <span className="absolute -left-3 -top-3 h-6 w-6 rounded-full bg-[#07080a]" />
-          <span className="absolute -bottom-3 -left-3 h-6 w-6 rounded-full bg-[#07080a]" />
+          <span className="absolute -left-3 -top-3 h-6 w-6 rounded-sm bg-[#07080a]" />
+          <span className="absolute -bottom-3 -left-3 h-6 w-6 rounded-sm bg-[#07080a]" />
           <span className="absolute inset-y-4 left-0 border-l-2 border-dashed border-white/30" />
         </div>
         <div className="flex min-w-0 flex-1 flex-col justify-between gap-3 p-4 pl-5">
@@ -53,7 +53,7 @@ export function ThemedCoupon({ coupon, label, occasion }: { coupon: Coupon | und
           </div>
           {code && (
             <button type="button" onClick={copy} aria-label={`Copiar código ${code}`}
-              className="flex w-full items-center justify-between gap-2 rounded-xl border border-dashed border-white/45 bg-black/20 px-3 py-2 font-mono text-[15px] font-extrabold tracking-wider hover:bg-black/30">
+              className="flex w-full items-center justify-between gap-2 rounded-sm border border-dashed border-white/45 bg-black/20 px-3 py-2 font-mono text-[15px] font-extrabold tracking-wider hover:bg-black/30">
               <span className="truncate">{code}</span> <Copy size={15} aria-hidden="true" className="shrink-0" />
             </button>
           )}

@@ -25,11 +25,11 @@ function DueChip({ order, today }: { order: AdminOrder; today: string }) {
   const Icon = FULFILLMENT_ICON[order.fulfillment];
   return (
     <span className="flex flex-wrap gap-1.5">
-      <span className={cn("inline-flex w-fit items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold", late ? "bg-danger-soft text-danger" : left <= 1 && order.status !== "READY" ? "bg-warning-soft text-warning" : "bg-bg text-muted")}>
+      <span className={cn("inline-flex w-fit items-center gap-1 rounded-sm px-2 py-0.5 text-[11px] font-bold", late ? "bg-danger-soft text-danger" : left <= 1 && order.status !== "READY" ? "bg-warning-soft text-warning" : "bg-bg text-muted")}>
         {late ? <AlarmClock size={12} aria-hidden="true" /> : <CalendarDays size={12} aria-hidden="true" />}
         {late ? `Atrasado · era el ${formatDay(order.promisedDate)}` : `Despacho ${formatDay(order.promisedDate)}`}
       </span>
-      <span className="inline-flex w-fit items-center gap-1 rounded-full bg-bg px-2 py-0.5 text-[11px] font-bold text-muted"><Icon size={12} aria-hidden="true" />{fulfillmentLabel(order.fulfillment)}</span>
+      <span className="inline-flex w-fit items-center gap-1 rounded-sm bg-bg px-2 py-0.5 text-[11px] font-bold text-muted"><Icon size={12} aria-hidden="true" />{fulfillmentLabel(order.fulfillment)}</span>
     </span>
   );
 }
@@ -52,7 +52,7 @@ export function PreparationCard({ order, column, today, onMove, onCheckLots, onD
   const advance = () => (column === "lot-check" ? onCheckLots(order.code) : next && onMove(order.code, next));
   return (
     <article draggable={draggable} onDragStart={draggable ? start : undefined} onDragEnd={onDragEnd} aria-label={`Pedido ${order.code}`}
-      className={cn("flex flex-col gap-3 rounded-3xl bg-surface p-3.5 shadow-[var(--shadow-card)] ring-1", isLate(order, today) ? "ring-danger" : "ring-ink/[0.05]", draggable && "cursor-grab active:cursor-grabbing")}>
+      className={cn("flex flex-col gap-3 rounded-sm bg-surface p-3.5 shadow-[var(--shadow-card)] ring-1", isLate(order, today) ? "ring-danger" : "ring-ink/[0.05]", draggable && "cursor-grab active:cursor-grabbing")}>
       <header className="flex items-start gap-2">
         <span className="min-w-0 flex-1">
           <Link href={`/admin-demo/pedidos/detalle/?codigo=${order.code}`} className="font-extrabold tabular-nums hover:text-primary hover:underline">{order.code}</Link>
@@ -80,12 +80,12 @@ export function PreparationCard({ order, column, today, onMove, onCheckLots, onD
           );
         })}
       </ul>
-      {order.notes.length > 0 && <p className="flex gap-1.5 rounded-2xl bg-bg p-2 text-xs text-muted"><MessageSquareText size={14} aria-hidden="true" className="mt-px shrink-0" />{order.notes.at(-1)}</p>}
+      {order.notes.length > 0 && <p className="flex gap-1.5 rounded-sm bg-bg p-2 text-xs text-muted"><MessageSquareText size={14} aria-hidden="true" className="mt-px shrink-0" />{order.notes.at(-1)}</p>}
       {next && (
         <div className="mt-auto flex flex-wrap items-center gap-2 border-t border-line pt-3">
           <MoveStage order={order} column={column} onMove={(to) => (to === "ready" ? onCheckLots(order.code) : onMove(order.code, to))} />
           <button type="button" onClick={advance} aria-label={column === "lot-check" ? `Controlar lotes de ${order.code}` : `Pasar ${order.code} a ${prepLabel(next)}`}
-            className="ml-auto inline-flex h-9 items-center gap-1 rounded-full bg-primary px-3.5 text-xs font-bold text-on-primary hover:bg-primary-hover">
+            className="ml-auto inline-flex h-9 items-center gap-1 rounded-sm bg-primary px-3.5 text-xs font-bold text-on-primary hover:bg-primary-hover">
             {column === "lot-check" ? <><ScanBarcode size={14} aria-hidden="true" /> Controlar lotes</> : <>{prepLabel(next)} <ArrowRight size={14} aria-hidden="true" /></>}
           </button>
         </div>

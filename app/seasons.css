@@ -1,5 +1,5 @@
 /*
- * Temáticas fitness (Fase 5): fondos animados y pantalla de carga de temporada.
+ * Temáticas: partículas y efectos del banner de la fecha (ThemeBanner) y el acento de temporada en la tienda.
  * Solo transform/opacity; con "reducir movimiento" no se muestran, y la cinta tiene "Pausar animaciones".
  */
 :root { --amb-snow: #9fb0c4; }
@@ -36,22 +36,6 @@ html[data-theme="dark"] { --amb-snow: #ffffff; }
   to { transform: translate3d(112cqw, 0, 0); }
 }
 @keyframes amb-twinkle { 0%, 100% { opacity: 0; transform: scale(0.5); } 50% { opacity: var(--o); transform: scale(1); } }
-
-/* Fondo de la página: aurora animada + grano sutil + partículas, detrás de todo el contenido. */
-.season-backdrop { position: fixed; inset: 0; z-index: -1; overflow: hidden; contain: strict; }
-.season-aurora { position: absolute; inset: 0; }
-.aurora-blob { position: absolute; width: 75vmax; height: 75vmax; border-radius: 9999px; will-change: transform; animation: aurora-0 28s ease-in-out infinite alternate; }
-.aurora-0 { left: -20vmax; top: -30vmax; }
-.aurora-1 { right: -25vmax; top: 10vh; animation-name: aurora-1; animation-duration: 34s; }
-.aurora-2 { left: 10vw; bottom: -40vmax; animation-name: aurora-2; animation-duration: 40s; }
-/* En el celular, dos manchas de luz alcanzan y alivian la composición. */
-@media (max-width: 640px) { .aurora-2 { display: none; } }
-@keyframes aurora-0 { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(30vw, 22vh, 0) scale(1.25); } }
-@keyframes aurora-1 { from { transform: translate3d(0, 0, 0) scale(1.1); } to { transform: translate3d(-35vw, 30vh, 0) scale(0.9); } }
-@keyframes aurora-2 { from { transform: translate3d(0, 0, 0) scale(0.9); } to { transform: translate3d(25vw, -30vh, 0) scale(1.2); } }
-/* Sin mix-blend-mode: una capa de mezcla a pantalla completa obliga a recomponer todo en cada cuadro (Fase 5, VEL-55). */
-.season-grain { position: absolute; inset: 0; opacity: 0.035; background-image: radial-gradient(rgb(255 255 255 / 0.9) 0.6px, transparent 0.8px); background-size: 3px 3px; }
-.amb-paused .aurora-blob { animation-play-state: paused; }
 
 /* Efecto "firma" de cada temática en el fondo (backdrop/fx-*.tsx). */
 .fx-layer { position: absolute; inset: 0; overflow: hidden; }
@@ -98,44 +82,15 @@ html[data-theme="dark"] { --amb-snow: #ffffff; }
 @keyframes fx-beat { 0%, 30%, 60%, 100% { transform: translate(-50%, -50%) scale(1); } 10%, 40% { transform: translate(-50%, -50%) scale(1.05); } }
 .amb-paused [class^="fx-"], .amb-paused [class^="fx-"] i, .amb-paused .fx-star, .amb-paused .fx-node, .amb-paused .fx-ecg-trk { animation-play-state: paused !important; }
 
-/* Componentes de la tienda durante una temática: vidrio tintado, filo luminoso y brillo del color al pasar. */
-/* Vidrio solo en escritorio: en el celular el header es sólido para que la franja de la hora no deje ver la página. */
-@media (min-width: 64rem) {
-  html[data-season] [data-shop-header] {
-    background: color-mix(in oklab, var(--color-surface) 74%, transparent);
-    backdrop-filter: saturate(1.6) blur(18px);
-    -webkit-backdrop-filter: saturate(1.6) blur(18px);
-  }
-}
-html[data-season] [data-shop-header] { border-bottom-color: color-mix(in oklab, var(--color-primary) 22%, transparent); }
-html[data-season] [data-product-card] > div:first-child {
-  box-shadow: 0 0 0 1px color-mix(in oklab, var(--color-primary) 18%, transparent), var(--sh-card);
-  transition: box-shadow 500ms var(--ease-out-expo), transform 500ms var(--ease-out-expo);
-}
-html[data-season] [data-product-card]:hover > div:first-child {
-  box-shadow: 0 0 0 1px color-mix(in oklab, var(--color-primary) 45%, transparent), 0 26px 60px -24px color-mix(in oklab, var(--color-primary) 60%, transparent);
-  transform: translateY(-3px);
-}
-.garland-bulb { animation: bulb 2.1s ease-in-out infinite alternate; filter: drop-shadow(0 0 4px currentColor); }
-@keyframes bulb { from { opacity: 0.55; } to { opacity: 1; } }
-.amb-paused .garland-bulb,
-.amb-paused .amb, .amb-paused .scene-anim { animation-play-state: paused !important; }
-
-/* ---------- Pantalla de carga de temporada ---------- */
-html[data-season] #volta-splash {
-  background: radial-gradient(120% 85% at 50% 35%, var(--sp-to, #262c1d) 0%, var(--sp-from, #1c2016) 58%, #050505 125%);
-}
-html[data-season] #volta-splash > .splash-orbit, html[data-season] #volta-splash .splash-city,
-html[data-season] #volta-splash .splash-rays, html[data-season] #volta-splash .splash-halo, html[data-season] #volta-splash .splash-dust { display: none; }
-html[data-season] #volta-splash .splash-glow { background: radial-gradient(closest-side, color-mix(in srgb, var(--sp-accent, var(--brand-volt)) 30%, transparent), transparent); }
-html[data-season] #volta-splash .splash-mark { color: var(--sp-accent, var(--brand-volt)); }
-/* La escena llega cuando baja su archivo (después de la carga inicial): entra fundida, no de golpe. */
-#volta-splash .season-scene { position: absolute; inset: 0; animation: fade-in 450ms ease-out both; }
-#volta-splash .season-tag { position: absolute; top: calc(9% + env(safe-area-inset-top)); color: var(--sp-accent); opacity: 0; animation: fade-up 700ms var(--ease-out-expo) 500ms both; }
+/*
+ * Regla de marca (R1): durante una temática la tienda NO se repinta. Solo el acento de temporada tiñe filos y halos:
+ * el filo de abajo del header y el canto de las tarjetas al pasar. El primario, el fondo y la compra no cambian.
+ */
+html[data-season] [data-shop-header] { box-shadow: inset 0 -2px 0 var(--season-accent); }
+html[data-season] [data-product-card]:hover > div:first-child { box-shadow: 0 0 0 1px var(--season-accent), 0 18px 40px -24px var(--season-glow); }
+.amb-paused .amb { animation-play-state: paused !important; }
 
 @media (prefers-reduced-motion: reduce) {
-  .amb-field, .season-backdrop .amb-field { display: none; }
-  .aurora-blob { animation: none; }
+  .amb-field { display: none; }
   .fx-layer { display: none; }
-  .garland-bulb { animation: none; }
 }

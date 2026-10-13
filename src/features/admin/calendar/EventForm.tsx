@@ -28,7 +28,7 @@ export function EventForm({ initial, today, orders, allowClosure, editing, onSav
   const closure = d.kind === "cierre";
   const codes = orders.map((o) => o.code);
   return (
-    <form noValidate aria-label={editing ? "Editar entrada" : "Nueva entrada"} className="flex flex-col gap-3 rounded-3xl bg-surface p-4 shadow-[var(--shadow-card)]"
+    <form noValidate aria-label={editing ? "Editar entrada" : "Nueva entrada"} className="flex flex-col gap-3 rounded-sm bg-surface p-4 shadow-[var(--shadow-card)]"
       onSubmit={(e) => { e.preventDefault(); const found = checkEvent(d, today, codes); setErrors(found); if (Object.keys(found).length) return; const error = onSave({ ...d, title: d.title.trim(), notes: d.notes.trim() }); if (error) setErrors({ date: error }); }}>
       <h3 className="font-bold">{editing ? "Editar entrada" : "Nueva entrada"}</h3>
       <div className="grid gap-3 sm:grid-cols-2">

@@ -70,7 +70,7 @@ export function SheetView<R>(p: Props<R>) {
     setSort(sort?.col !== col ? by("asc") : sort.dir === "asc" ? by("desc") : null);
   };
   const back = () => (changes ? setLeaving(true) : p.onBack());
-  const tool = "grid h-11 w-11 place-items-center rounded-2xl border border-ink/12 bg-surface transition-colors hover:border-ink/25 disabled:opacity-30";
+  const tool = "grid h-11 w-11 place-items-center rounded-sm border border-ink/12 bg-surface transition-colors hover:border-ink/25 disabled:opacity-30";
   return (
     <>
       <AdminPageHeader title={`${p.title} · formato Excel`} actions={editable ? (
@@ -91,14 +91,14 @@ export function SheetView<R>(p: Props<R>) {
         {restored > 0 && changes > 0 && <p role="status" className="text-sm font-bold text-warning">Recuperamos los cambios sin guardar de la última vez.</p>}
       </div>
       {leaving && (
-        <div role="alertdialog" aria-label="Cambios sin guardar" className="mb-3 flex flex-wrap items-center gap-2 rounded-2xl bg-warning-soft px-4 py-3 text-sm ring-1 ring-warning/30">
+        <div role="alertdialog" aria-label="Cambios sin guardar" className="mb-3 flex flex-wrap items-center gap-2 rounded-sm bg-warning-soft px-4 py-3 text-sm ring-1 ring-warning/30">
           <p className="flex-1 font-bold text-warning">Tenés {changes} {changes === 1 ? "cambio" : "cambios"} sin guardar.</p>
           <Button size="sm" onClick={() => { save(); p.onBack(); }}>Guardar y volver</Button>
           <Button size="sm" variant="secondary" onClick={() => { discard(); p.onBack(); }}>Descartar y volver</Button>
           <Button size="sm" variant="ghost" onClick={() => setLeaving(false)}>Seguir editando</Button>
         </div>
       )}
-      <div className="mb-3 overflow-hidden rounded-[1.75rem] bg-surface shadow-[var(--shadow-card)] ring-1 ring-ink/[0.04]">{p.toolbar}</div>
+      <div className="mb-3 overflow-hidden rounded-sm bg-surface shadow-[var(--shadow-card)] ring-1 ring-ink/[0.04]">{p.toolbar}</div>
       <SheetGrid id={`sheet-${p.id}`} label={`${p.title} en formato Excel`} rows={rows} rowKey={p.spec.rowKey} g={g} sort={sort} onSort={toggleSort} onSave={editable ? save : undefined} />
       <div className="mt-3 flex flex-wrap items-center justify-between gap-3 text-sm">
         <p className="text-muted">Flechas para moverte · Shift + flechas para elegir varias · Ctrl+C / Ctrl+V con Excel{editable ? " · Enter o escribir para editar · Ctrl+Z deshacer" : ""}</p>

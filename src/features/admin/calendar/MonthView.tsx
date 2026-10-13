@@ -38,7 +38,7 @@ export function dayLabel(day: string, list: Entry[], events: CalendarEvent[], cl
 /** Mientras se arrastra: el día bajo el cursor que no acepta muestra por qué (cerrado, completo, ya pasó). */
 export function BlockedBadge({ dnd, day }: { dnd: CalendarDnd; day: string }) {
   if (dnd.blocked?.day !== day) return null;
-  return <span aria-hidden="true" className="pointer-events-none absolute inset-0 z-20 grid place-items-center rounded-xl bg-danger-soft/95 p-1 text-center text-[11px] font-extrabold leading-tight text-danger ring-2 ring-danger">No se puede: {dnd.blocked.short}</span>;
+  return <span aria-hidden="true" className="pointer-events-none absolute inset-0 z-20 grid place-items-center rounded-sm bg-danger-soft/95 p-1 text-center text-[11px] font-extrabold leading-tight text-danger ring-2 ring-danger">No se puede: {dnd.blocked.short}</span>;
 }
 
 /**
@@ -66,24 +66,24 @@ export function MonthView({ cursor, today, days, events, cal, capacity, dnd, onD
               const chips = [...list.map((e) => ({ key: e.order.code, node: <EntryChip entry={e} onOpen={onOpen} dnd={dnd} /> })), ...evs.map((e) => ({ key: e.id, node: <EventChip event={e} onOpen={onEvent} dnd={dnd} /> }))];
               return (
                 <td key={day} {...dnd.zone(day)} data-day={day}
-                  className={cn("relative h-16 rounded-xl align-top transition-colors sm:h-32",
+                  className={cn("relative h-16 rounded-sm align-top transition-colors sm:h-32",
                     dnd.over === day ? "bg-accent ring-2 ring-primary" : closed ? "bg-[repeating-linear-gradient(135deg,transparent_0_6px,rgb(0_0_0/0.04)_6px_12px)]" : outside ? "bg-surface/55" : "bg-surface",
                     !closed && "shadow-[var(--shadow-card)]", invalid && "opacity-60")}>
                   <button type="button" onClick={() => onDay(day)} aria-label={dayLabel(day, list, evs, closed, capacity)}
-                    className="absolute inset-0 rounded-xl hover:bg-accent/30 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary" />
+                    className="absolute inset-0 rounded-sm hover:bg-accent/30 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary" />
                   <div className="pointer-events-none relative flex items-center gap-1 px-1.5 pt-1.5">
-                    <span className={cn("grid h-6 min-w-6 place-items-center rounded-full px-1 text-xs font-extrabold tabular-nums",
+                    <span className={cn("grid h-6 min-w-6 place-items-center rounded-sm px-1 text-xs font-extrabold tabular-nums",
                       day === today ? "bg-night text-on-night" : closed || outside ? "text-muted" : "text-ink")}>{Number(day.slice(8))}</span>
                     {!closed && day >= today && used > 0 && (
-                      <span className={cn("ml-auto hidden items-center gap-0.5 rounded-full px-1.5 text-[10px] font-extrabold tabular-nums sm:inline-flex", used >= capacity ? "bg-warning-soft text-warning" : "bg-bg text-muted")}><Bike size={10} aria-hidden="true" />{capacityText(used, capacity)}</span>
+                      <span className={cn("ml-auto hidden items-center gap-0.5 rounded-sm px-1.5 text-[10px] font-extrabold tabular-nums sm:inline-flex", used >= capacity ? "bg-warning-soft text-warning" : "bg-bg text-muted")}><Bike size={10} aria-hidden="true" />{capacityText(used, capacity)}</span>
                     )}
                   </div>
                   {closed?.closure && <p className="pointer-events-none absolute inset-x-1.5 bottom-1.5 hidden truncate text-[10px] font-bold text-muted sm:block">{closed.reason}</p>}
                   {/* Celular: puntos por pedido y por entrada (decorativos: el botón del día lleva la cuenta). */}
                   {chips.length > 0 && (
                     <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-2 flex justify-center gap-0.5 sm:hidden">
-                      {list.slice(0, 4).map((e) => <span key={e.order.code} className={cn("h-1.5 w-1.5 rounded-full", e.late || e.blocked ? "bg-danger" : e.counts ? "bg-primary" : "bg-muted/50")} />)}
-                      {evs.slice(0, 2).map((e) => <span key={e.id} className="h-1.5 w-1.5 rounded-full bg-volt-ink" />)}
+                      {list.slice(0, 4).map((e) => <span key={e.order.code} className={cn("h-1.5 w-1.5 rounded-sm", e.late || e.blocked ? "bg-danger" : e.counts ? "bg-primary" : "bg-muted/50")} />)}
+                      {evs.slice(0, 2).map((e) => <span key={e.id} className="h-1.5 w-1.5 rounded-sm bg-volt-ink" />)}
                     </span>
                   )}
                   <ul className="pointer-events-none relative hidden flex-col gap-1 px-1.5 pb-1.5 pt-1 sm:flex">

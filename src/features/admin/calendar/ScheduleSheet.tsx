@@ -46,7 +46,7 @@ export function ScheduleSheet({ order, orders, settings, today, late, movable, w
     setOverload(null);
     onMove(order.code, d);
   };
-  const step = "inline-flex h-11 items-center justify-center gap-1 rounded-full border border-ink/15 px-3 text-sm font-bold hover:bg-accent/50 disabled:opacity-40";
+  const step = "inline-flex h-11 items-center justify-center gap-1 rounded-sm border border-ink/15 px-3 text-sm font-bold hover:bg-accent/50 disabled:opacity-40";
   return (
     <Sheet open={!!order} onClose={onClose} title={order ? `Despacho ${order.code}` : "Despacho"} side="right" className="max-w-lg bg-bg">
       {order && (
@@ -61,7 +61,7 @@ export function ScheduleSheet({ order, orders, settings, today, late, movable, w
             </div>
           </header>
           <div className="flex flex-col gap-5 p-6">
-            <section aria-label="Pedido" className="rounded-3xl bg-surface p-4 shadow-[var(--shadow-card)]">
+            <section aria-label="Pedido" className="rounded-sm bg-surface p-4 shadow-[var(--shadow-card)]">
               <p className="font-bold">{order.code} · {order.customer.name}</p>
               <p className="text-sm text-muted">{fulfillmentLabel(order.fulfillment)}{order.address ? ` · ${order.address}` : ""}</p>
               <ul className="mt-3 flex flex-col gap-2">
@@ -79,7 +79,7 @@ export function ScheduleSheet({ order, orders, settings, today, late, movable, w
               <p className="mt-3 text-xs text-muted">Plazo de preparación: {orderLeadDays(order.lines)} {orderLeadDays(order.lines) === 1 ? "día hábil" : "días hábiles"}.</p>
             </section>
             {movable ? (
-              <section aria-labelledby="move-title" className="flex flex-col gap-3 rounded-3xl bg-surface p-4 shadow-[var(--shadow-card)]">
+              <section aria-labelledby="move-title" className="flex flex-col gap-3 rounded-sm bg-surface p-4 shadow-[var(--shadow-card)]">
                 <h3 id="move-title" className="font-bold">Reprogramar</h3>
                 <div className="grid grid-cols-2 gap-2">
                   <button type="button" className={step} disabled={!day || prevWorkday(day, cal) < today} onClick={() => day && move(prevWorkday(day, cal))}><ChevronLeft size={16} aria-hidden="true" /> Día hábil anterior</button>
@@ -96,7 +96,7 @@ export function ScheduleSheet({ order, orders, settings, today, late, movable, w
                   </InlineConfirm>
                 )}
                 {warnings.length > 0 && (
-                  <ul role="status" className="flex flex-col gap-1 rounded-2xl bg-warning-soft p-3 text-sm font-semibold text-warning">
+                  <ul role="status" className="flex flex-col gap-1 rounded-sm bg-warning-soft p-3 text-sm font-semibold text-warning">
                     {warnings.map((w) => <li key={w} className="flex gap-2"><TriangleAlert size={16} aria-hidden="true" className="mt-0.5 shrink-0" />{w}</li>)}
                   </ul>
                 )}

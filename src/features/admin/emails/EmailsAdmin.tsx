@@ -44,9 +44,9 @@ export function EmailsAdmin() {
           const sent = outbox.filter((m) => m.templateId === t.id && !m.test);
           const only = audience(t);
           return (
-            <li key={t.id} className="flex flex-col gap-3 rounded-3xl bg-surface p-4 shadow-[var(--shadow-card)] ring-1 ring-ink/[0.04]">
+            <li key={t.id} className="flex flex-col gap-3 rounded-sm bg-surface p-4 shadow-[var(--shadow-card)] ring-1 ring-ink/[0.04]">
               <div className="flex items-start gap-3">
-                <span aria-hidden="true" className="font-lab grid h-9 w-9 shrink-0 place-items-center rounded-full bg-night text-sm font-bold text-volt">{i + 1}</span>
+                <span aria-hidden="true" className="font-lab grid h-9 w-9 shrink-0 place-items-center rounded-sm bg-night text-sm font-bold text-volt">{i + 1}</span>
                 <span className="min-w-0 flex-1">
                   <span className="eyebrow block text-muted">{TRIGGER_LABEL[t.trigger]}</span>
                   <span className="mt-1 block text-lg font-extrabold leading-snug">{t.name}</span>
@@ -54,11 +54,11 @@ export function EmailsAdmin() {
                 <Badge tone={t.active ? "success" : "neutral"}>{t.active ? "Activo" : "Pausado"}</Badge>
               </div>
               <p className="text-sm text-muted">{TRIGGER_HINT[t.trigger]}{only && <> <strong className="font-bold text-ink">{only}.</strong></>}</p>
-              <p className="rounded-2xl bg-bg p-3 text-sm"><span className="block text-xs font-bold text-muted">Asunto (ejemplo)</span>{resolveInline(t.subject, sampleContext(t, orders))}</p>
+              <p className="rounded-sm bg-bg p-3 text-sm"><span className="block text-xs font-bold text-muted">Asunto (ejemplo)</span>{resolveInline(t.subject, sampleContext(t, orders))}</p>
               <p className="flex items-center gap-1.5 text-xs font-semibold text-muted"><MailCheck size={14} aria-hidden="true" />{sent.length} {sent.length === 1 ? "enviado" : "enviados"}{sent[0] ? ` · último ${formatDateTime(sent[0].at)}` : ""}</p>
               <div className="mt-auto flex flex-wrap items-center justify-between gap-2">
                 <Switch checked={t.active} label="Se envía solo" ariaLabel={`Se envía solo: ${t.name}`} onChange={(v) => save(v ? `“${t.name}” activado` : `“${t.name}” pausado`, () => setEmailTemplateActive(t.id, v))} />
-                <Link href={`/admin-demo/emails/editar/?id=${t.id}`} aria-label={`Editar ${t.name}`} className="inline-flex h-10 items-center gap-1.5 rounded-full bg-primary px-4 text-sm font-bold text-on-primary hover:bg-primary-hover">
+                <Link href={`/admin-demo/emails/editar/?id=${t.id}`} aria-label={`Editar ${t.name}`} className="inline-flex h-10 items-center gap-1.5 rounded-sm bg-primary px-4 text-sm font-bold text-on-primary hover:bg-primary-hover">
                   <PencilLine size={15} aria-hidden="true" /> Editar
                 </Link>
               </div>

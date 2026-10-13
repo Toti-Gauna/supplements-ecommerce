@@ -18,7 +18,7 @@ export function PickDate({ id, label, value, min, action, onPick }: { id: string
           <DateInput id={id} min={min} value={draft ?? value} onChange={(e) => setDraft(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); apply(); } }} className="font-semibold" />
         </span>
         <button type="button" onClick={apply} disabled={!pending}
-          className="h-12 shrink-0 rounded-full bg-primary px-4 text-sm font-bold text-on-primary hover:bg-primary-hover disabled:opacity-40">{action}</button>
+          className="h-12 shrink-0 rounded-sm bg-primary px-4 text-sm font-bold text-on-primary hover:bg-primary-hover disabled:opacity-40">{action}</button>
       </div>
     </div>
   );

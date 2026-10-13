@@ -18,7 +18,7 @@ export function RewardsWallet() {
   const gameCodes = hydrated ? codes.filter((code) => coupons.some((c) => c.code === code)) : [];
   const engraving = { code: "PREMIO-MISION", type: "FIXED" as const, value: 0, description: "Envío gratis en la próxima compra" };
   const empty = !prize && !user && gameCodes.length === 0;
-  if (empty) return <p className="rounded-2xl border border-dashed border-line p-5 text-sm text-muted">Todavía no tenés premios. Girá la ruleta, jugá Shaker Rush o completá una misión.</p>;
+  if (empty) return <p className="rounded-sm border border-dashed border-line p-5 text-sm text-muted">Todavía no tenés premios. Girá la ruleta, jugá Shaker Rush o completá una misión.</p>;
   return (
     <ul className="grid gap-3 sm:grid-cols-2">
       {prize && <li><WheelPrizeTicket /></li>}

@@ -18,7 +18,7 @@ interface Props {
  */
 export function QuizStage({ eyebrow, title, titleRef, intro, step, children }: Props) {
   return (
-    <section aria-labelledby="quiz-title" className="relative isolate overflow-hidden rounded-[2rem] bg-night px-5 py-7 text-on-night sm:rounded-[2.5rem] sm:p-10 lg:p-12">
+    <section aria-labelledby="quiz-title" className="relative isolate overflow-hidden rounded-sm bg-night px-5 py-7 text-on-night sm:rounded-sm sm:p-10 lg:p-12">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(60%_55%_at_0%_0%,color-mix(in_srgb,var(--brand-glow)_22%,transparent),transparent_70%),radial-gradient(55%_45%_at_100%_100%,color-mix(in_srgb,var(--brand-volt)_9%,transparent),transparent_70%)]" />
       <svg aria-hidden="true" viewBox="0 0 120 200" className="pointer-events-none absolute -right-6 top-6 -z-10 h-48 w-28 opacity-[0.07] sm:h-72 sm:w-44 lg:-bottom-10 lg:left-[30%] lg:right-auto lg:top-auto lg:h-96 lg:w-56">
         <path d="M74 0 18 112h38l-12 88 58-120H64Z" fill={brand.signature.volt} />

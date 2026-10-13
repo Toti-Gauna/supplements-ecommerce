@@ -24,7 +24,7 @@ import { ORDER_PREFIX } from "@/demo/fixtures/house";
 
 function OrderRowCard({ row: o, selected, onToggle, onOpen }: RowCardProps<AdminOrder>) {
   return (
-    <div className={`flex items-center gap-3 rounded-3xl bg-bg p-3 ring-1 ${selected ? "ring-primary" : "ring-ink/[0.06]"}`}>
+    <div className={`flex items-center gap-3 rounded-sm bg-bg p-3 ring-1 ${selected ? "ring-primary" : "ring-ink/[0.06]"}`}>
       <input type="checkbox" checked={selected} onChange={onToggle} aria-label={`Seleccionar ${o.code}`} className="h-5 w-5 shrink-0 accent-primary" />
       <button type="button" onClick={onOpen} className="flex min-w-0 flex-1 items-center gap-3 text-left">
         <span className="flex min-w-0 flex-1 flex-col gap-1">

@@ -86,7 +86,7 @@ export function ProductDetail({ product: initial, preview = false }: { product: 
         <div className="flex flex-col gap-4 lg:sticky lg:top-24 lg:self-start">
           <ProductGallery art={product.art} pack={product.pack} views={product.gallery} tint={sel.variant.colorHex} name={product.name} photoUrl={product.photoDataUrl} alt={product.imageAlt} />
           {inactive && !preview ? (
-            <p role="status" className="rounded-2xl bg-warning-soft p-3 text-sm font-bold text-warning">Este producto está pausado desde el panel demo y no se puede comprar.</p>
+            <p role="status" className="rounded-sm bg-warning-soft p-3 text-sm font-bold text-warning">Este producto está pausado desde el panel demo y no se puede comprar.</p>
           ) : <StockMeter availability={avail} />}
         </div>
         <div className="flex flex-col gap-6">
@@ -103,7 +103,7 @@ export function ProductDetail({ product: initial, preview = false }: { product: 
           <div className="flex flex-wrap items-end gap-x-4 gap-y-1">
             {clearance && <ClearanceTag clearance={clearance} />}
             <span className="text-4xl font-extrabold tabular-nums tracking-tight"><span key={price} className="animate-num">{formatARS(price)}</span></span>
-            {settings.transferDiscountPct > 0 && <span className="mb-1 rounded-full bg-success-soft px-3 py-1 text-sm font-bold text-success">{formatARS(transferPrice)} con transferencia o QR</span>}
+            {settings.transferDiscountPct > 0 && <span className="mb-1 rounded-sm bg-success-soft px-3 py-1 text-sm font-bold text-success">{formatARS(transferPrice)} con transferencia o QR</span>}
             <span className="w-full pt-2"><ServingPrice price={price} servings={sel.variant.servings} /></span>
             <span className="w-full text-xs text-muted">Precio sin impuestos nacionales: {formatARS(withoutNationalTaxes(price, settings.nationalTaxRate))} · precio de muestra</span>
           </div>
@@ -128,7 +128,7 @@ export function ProductDetail({ product: initial, preview = false }: { product: 
             <MissionChip units={quantity} />
             <DeliveryEstimate product={product} variant={sel.variant} />
             <ul className="grid grid-cols-3 gap-2 text-center text-xs font-semibold text-muted">
-              {TRUST.map(({ icon: Icon, t }) => <li key={t} className="flex flex-col items-center gap-2 rounded-2xl bg-surface p-3"><Icon size={18} aria-hidden="true" className="text-volt-ink" />{t}</li>)}
+              {TRUST.map(({ icon: Icon, t }) => <li key={t} className="flex flex-col items-center gap-2 rounded-sm bg-surface p-3"><Icon size={18} aria-hidden="true" className="text-volt-ink" />{t}</li>)}
             </ul>
           </div>
         </div>

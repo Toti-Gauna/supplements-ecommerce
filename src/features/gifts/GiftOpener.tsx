@@ -87,7 +87,7 @@ export function GiftOpener({ occasion, accent, onOpened, autoFocus }: Props) {
       <p className="min-h-[1.5rem] text-center text-sm font-extrabold uppercase tracking-[0.18em] text-volt-soft sm:text-base" aria-hidden="true">{opened ? "¡La rompiste!" : PROMPTS[Math.min(hits, PROMPTS.length - 1)]}</p>
       <button ref={button} type="button" onClick={hit} aria-disabled={opened}
         aria-label={opened ? "Regalo abierto" : `Golpeá la bolsa para abrir el regalo. ${missing(left)}.`}
-        className="gift-hit relative mt-3 aspect-[11/15] w-[min(72vw,calc(50dvh*0.733),330px)] touch-manipulation rounded-[2rem] outline-none focus-visible:ring-4 focus-visible:ring-volt-soft/70 aria-disabled:cursor-default">
+        className="gift-hit relative mt-3 aspect-[11/15] w-[min(72vw,calc(50dvh*0.733),330px)] touch-manipulation rounded-sm outline-none focus-visible:ring-4 focus-visible:ring-volt-soft/70 aria-disabled:cursor-default">
         <div ref={box} className="h-full w-full will-change-transform">
           <GiftScene occasion={occasion} hits={hits} total={GIFT_HITS} opened={opened} reduce={reduce} />
         </div>
@@ -102,7 +102,7 @@ export function GiftOpener({ occasion, accent, onOpened, autoFocus }: Props) {
       <p aria-live="polite" className="sr-only">{opened ? "¡Se abrió el regalo!" : hits > 0 ? `${missing(left)}.` : ""}</p>
       <div className="mt-4 h-10">
         {idle && !opened && (
-          <button type="button" onClick={openNow} className="rounded-full px-4 py-2 text-sm font-semibold text-night-muted underline-offset-4 hover:text-on-night hover:underline">
+          <button type="button" onClick={openNow} className="rounded-sm px-4 py-2 text-sm font-semibold text-night-muted underline-offset-4 hover:text-on-night hover:underline">
             Abrirlo de una vez
           </button>
         )}

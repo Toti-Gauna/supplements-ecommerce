@@ -35,7 +35,7 @@ export function OrderStatusActions({ order }: { order: AdminOrder }) {
           <ConfirmButton key={to} size="sm" variant={to === "CANCELLED" || to === "IN_CLAIM" || to === "RETURNED" ? "danger" : "primary"}
             title={`Pasar ${order.code} a “${STATUS_LABEL[to]}”`} confirmLabel="Confirmar cambio"
             description="El comprador vería este cambio en su seguimiento. Si hay un email automático activo para este paso, queda en la bandeja de salida simulada: en la demo no se envía nada."
-            onConfirm={() => save(`Pedido en “${STATUS_LABEL[to]}” (demo)`, () => transition(order.code, to))}>
+            onConfirm={() => save(`Pedido en “${STATUS_LABEL[to]}”`, () => transition(order.code, to))}>
             {STATUS_LABEL[to]}
           </ConfirmButton>
         ))}

@@ -9,7 +9,7 @@ export function ProductVisual({ photoUrl, ...art }: ProductArtProps & { photoUrl
       {/* eslint-disable-next-line @next/next/no-img-element -- data URL local del panel demo */}
       <img src={photoUrl} alt={art.label} className="h-full w-full object-cover" />
       {art.showBadge !== false && (
-        <span className="absolute bottom-2 left-2 rounded-full bg-white/85 px-2 py-0.5 text-[11px] font-semibold text-muted">Foto cargada en la demo</span>
+        <span className="absolute bottom-2 left-2 rounded-sm bg-white/85 px-2 py-0.5 text-[11px] font-semibold text-muted">Foto cargada en la demo</span>
       )}
     </div>
   );

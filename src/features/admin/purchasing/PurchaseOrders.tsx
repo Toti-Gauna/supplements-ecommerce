@@ -23,7 +23,7 @@ export function PurchaseOrders() {
       <h2 id="po-title" className="font-display text-2xl">Pedidos hechos</h2>
       <ul className="flex flex-col gap-2">
         {list.map((p) => (
-          <li key={p.id} className="flex flex-wrap items-center gap-x-4 gap-y-2 rounded-3xl bg-surface p-4 text-sm shadow-[var(--shadow-card)]">
+          <li key={p.id} className="flex flex-wrap items-center gap-x-4 gap-y-2 rounded-sm bg-surface p-4 text-sm shadow-[var(--shadow-card)]">
             <span className="min-w-0 flex-1 basis-56">
               <span className="flex flex-wrap items-center gap-2 font-bold">{supplierName(p.supplierId)}
                 {p.status === "ordered" ? <Badge tone="warning">Pedido, sin recibir</Badge> : <Badge tone="success">Recibido</Badge>}

@@ -25,13 +25,13 @@ export function EmailOutbox() {
   return (
     <>
       <SubpageHeader trail={[MARKETING, EMAILS_SECTION]} back={EMAILS_SECTION} title="Bandeja de salida" intro="Lo que la demo “envió”: emails de los pedidos y pruebas. Nada sale de este navegador." />
-      <section aria-label="Bandeja de salida" className="rounded-[1.75rem] bg-surface p-4 shadow-[var(--shadow-card)]">
+      <section aria-label="Bandeja de salida" className="rounded-sm bg-surface p-4 shadow-[var(--shadow-card)]">
         <div className="mb-3 flex flex-wrap items-end gap-2">
           <label className="flex min-w-[min(100%,16rem)] flex-1 flex-col gap-1 text-sm font-bold">Buscar en la bandeja
-            <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Cliente, email, asunto o pedido" className="h-11 rounded-2xl border border-ink/12 bg-bg px-3 font-semibold" />
+            <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Cliente, email, asunto o pedido" className="h-11 rounded-sm border border-ink/12 bg-bg px-3 font-semibold" />
           </label>
           <label className="flex flex-col gap-1 text-sm font-bold">Momento
-            <select value={trigger} onChange={(e) => setTrigger(e.target.value as EmailTrigger | "all")} className="h-11 rounded-2xl border border-ink/12 bg-bg px-3 font-semibold">
+            <select value={trigger} onChange={(e) => setTrigger(e.target.value as EmailTrigger | "all")} className="h-11 rounded-sm border border-ink/12 bg-bg px-3 font-semibold">
               <option value="all">Todos</option>
               {(Object.keys(TRIGGER_LABEL) as EmailTrigger[]).map((t) => <option key={t} value={t}>{TRIGGER_LABEL[t]}</option>)}
             </select>

@@ -5,7 +5,7 @@ import { cn } from "@/lib/cn";
 export function Panel({ title, action, children, className, id }: { title: string; action?: ReactNode; children: ReactNode; className?: string; id?: string }) {
   const heading = id ?? `p-${title.toLowerCase().normalize("NFD").replace(/[^a-z0-9]+/g, "-")}`;
   return (
-    <section aria-labelledby={heading} className={cn("min-w-0 rounded-[1.75rem] bg-surface p-5 shadow-[var(--shadow-card)] ring-1 ring-ink/[0.04]", className)}>
+    <section aria-labelledby={heading} className={cn("min-w-0 rounded-sm bg-surface p-5 shadow-[var(--shadow-card)] ring-1 ring-ink/[0.04]", className)}>
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
         <h2 id={heading} className="text-lg font-extrabold">{title}</h2>
         {action}

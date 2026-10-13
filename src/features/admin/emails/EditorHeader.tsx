@@ -46,10 +46,10 @@ export function EditorHeader({ savedName, draft, dirty, restored, canTest, onAct
       <header className="flex flex-col gap-3">
         <div>
           <p className="eyebrow text-muted">Se envía con: {TRIGGER_LABEL[draft.trigger]}</p>
-          <h1 className="font-display mt-1 text-4xl text-balance sm:text-5xl">{draft.name} <span className="font-sans align-middle text-sm font-bold text-warning">(demo)</span></h1>
+          <h1 className="font-display mt-1 text-4xl text-balance sm:text-5xl">{draft.name}</h1>
           <p className="mt-1 max-w-2xl text-sm text-muted">{TRIGGER_HINT[draft.trigger]}</p>
         </div>
-        <div role="group" aria-label="Acciones de la plantilla" className="flex flex-wrap items-center gap-2 rounded-[1.5rem] bg-surface p-2 pl-4 shadow-[var(--shadow-card)] ring-1 ring-ink/[0.04]">
+        <div role="group" aria-label="Acciones de la plantilla" className="flex flex-wrap items-center gap-2 rounded-sm bg-surface p-2 pl-4 shadow-[var(--shadow-card)] ring-1 ring-ink/[0.04]">
           <Switch checked={draft.active} onChange={onActive} label={draft.active ? "Activo" : "Pausado"} />
           <Button variant="ghost" size="sm" onClick={onRestore}><RotateCcw size={15} aria-hidden="true" /> Restaurar</Button>
           <Button variant="secondary" size="sm" disabled={dirty || !canTest} title={dirty ? "Guardá los cambios para mandar la prueba" : undefined} onClick={onTest}>
@@ -61,14 +61,14 @@ export function EditorHeader({ savedName, draft, dirty, restored, canTest, onAct
           </span>
         </div>
         {restored && (
-          <div role="status" className="flex flex-wrap items-center gap-3 rounded-2xl bg-warning-soft px-4 py-3 text-sm ring-1 ring-warning/30">
+          <div role="status" className="flex flex-wrap items-center gap-3 rounded-sm bg-warning-soft px-4 py-3 text-sm ring-1 ring-warning/30">
             <p className="flex-1 font-bold text-warning">Recuperamos los cambios sin guardar de esta plantilla.</p>
             <ConfirmButton size="sm" variant="secondary" title="Descartar los cambios" confirmLabel="Descartar" description="La plantilla vuelve a como está guardada." onConfirm={onDiscard}>Descartar cambios</ConfirmButton>
           </div>
         )}
         <nav aria-label="Partes del editor" className="flex flex-wrap items-center gap-1.5 text-sm">
           <span className="mr-1 font-bold text-muted">Ir a:</span>
-          {SECTIONS.map(([id, label]) => <button key={id} type="button" onClick={() => goToSection(id)} className="h-9 rounded-full bg-surface px-3 font-bold ring-1 ring-ink/10 hover:bg-accent">{label}</button>)}
+          {SECTIONS.map(([id, label]) => <button key={id} type="button" onClick={() => goToSection(id)} className="h-9 rounded-sm bg-surface px-3 font-bold ring-1 ring-ink/10 hover:bg-accent">{label}</button>)}
         </nav>
       </header>
     </>

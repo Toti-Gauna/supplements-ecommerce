@@ -4,7 +4,7 @@ import { guardNetwork } from "./helpers";
 test("flujo móvil completo hasta la confirmación de demostración", async ({ page }) => {
   const assertNoExternal = guardNetwork(page);
   await page.goto("");
-  await expect(page.getByRole("note").filter({ hasText: "No se cobra nada" })).toBeVisible();
+  await expect(page.getByRole("region", { name: "Avisos de la tienda" })).toContainText("No se cobra nada");
 
   // Búsqueda tolerante a errores
   await page.goto("buscar/?q=creatna");

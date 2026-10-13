@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { guardNetwork } from "./helpers";
 
-test("probar temáticas: Halloween cambia cinta, logo, carrusel y ofertas; el cupón queda en el carrito", async ({ page }) => {
+test("probar temáticas: Halloween cambia cinta, acento, carrusel y ofertas (el logo queda limpio); el cupón queda en el carrito", async ({ page }) => {
   const assertNoExternal = guardNetwork(page);
   // Desde la Fase 5 el botón arranca prendido (para mostrarle la demo al cliente) y la tienda va por fecha.
   await page.goto("admin-demo/tematicas/");
@@ -11,19 +11,19 @@ test("probar temáticas: Halloween cambia cinta, logo, carrusel y ofertas; el cu
   await page.getByLabel("Modo", { exact: true }).selectOption("fixed");
   await page.getByLabel("Temática fija").selectOption("navidad");
   await page.goto("");
-  await page.getByRole("button", { name: "Probar temáticas" }).click();
+  await page.getByRole("button", { name: "Probar temáticas" }).first().click();
   const picker = page.getByRole("dialog", { name: "Probar temáticas" });
   await expect(picker.getByRole("button", { name: /^Probar / })).toHaveCount(13);
   await picker.getByRole("button", { name: "Probar Halloween" }).click();
   await expect(picker).toBeHidden();
 
-  // Elegir recarga la página (sale la pantalla de carga de temporada) y toda la tienda toma la paleta.
+  // Elegir recarga la página: la fecha llega a la cinta, al banner y al acento de temporada (no repinta la tienda).
   await expect(page.locator("[data-theme-ribbon='halloween']")).toContainText("MONSTER20");
   await expect(page.locator("html")).toHaveAttribute("data-season", "halloween");
   await expect(page.getByRole("heading", { name: "Monster pump" })).toBeVisible();
-  // El logo lleva los cuernitos de la fecha y la guirnalda, lamparitas.
-  await expect(page.locator("[data-shop-header] a[aria-label='Volta, ir al inicio'] svg")).toHaveCount(2);
-  await expect(page.locator("[data-garland='lights']")).toHaveCount(1);
+  // Regla de marca (R1): el logo queda limpio (sin adornos) y no hay guirnaldas.
+  await expect(page.locator("[data-shop-header] a[aria-label='Volta, ir al inicio'] svg")).toHaveCount(1);
+  await expect(page.locator("[data-garland]")).toHaveCount(0);
   const rail = page.locator("section").filter({ has: page.getByRole("heading", { name: /Ofertas de Halloween/ }) });
   await expect(rail.getByText("20% OFF").first()).toBeVisible();
 
@@ -41,7 +41,7 @@ test("probar temáticas: Halloween cambia cinta, logo, carrusel y ofertas; el cu
   await expect(page.locator("[data-theme-ribbon='navidad']")).toBeVisible();
 
   // "Original": la marca sin temática, aunque el panel tenga una puesta
-  await page.getByRole("button", { name: "Probar temáticas" }).click();
+  await page.getByRole("button", { name: "Probar temáticas" }).first().click();
   await page.getByRole("dialog", { name: "Probar temáticas" }).getByRole("button", { name: "Probar Original" }).click();
   await expect(page.locator("[data-theme-ribbon]")).toHaveCount(0);
   await expect(page.locator("html")).not.toHaveAttribute("data-season", /.+/);
@@ -64,7 +64,7 @@ test("el panel edita la temática y su modo; la tienda lo refleja", async ({ pag
   await page.goto("");
   await expect(page.getByRole("heading", { name: "Feliz Navidad con energía" })).toBeVisible();
   await expect(page.locator("[data-theme-ribbon='navidad']")).toContainText("NAVIDAD15");
-  await expect(page.getByRole("button", { name: "Probar temáticas" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Probar temáticas" }).first()).toBeVisible();
 
   // Sin temática y sin el botón de la demo: la tienda vuelve a VOLTA de siempre.
   await page.goto("admin-demo/tematicas/");

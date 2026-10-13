@@ -34,7 +34,7 @@ export function StoreSpecs() {
   const pays = settings.enabledMethods.map((m) => (m === "BANK_TRANSFER" ? `${PAY[m]} (−${settings.transferDiscountPct} %)` : PAY[m]));
   return (
     <dl aria-label="Ficha técnica del local" className="border-t border-white/10">
-      <Row code="01" label="Local">Retiro en el local · {brand.city}</Row>
+      <Row code="01" label="Local">{brand.city} · pasá a buscar tu pedido sin cargo</Row>
       <Row code="02" label="Horarios">
         {storeHours.map((h) => <span key={h.days} className="block">{h.days}: {h.time}</span>)}
         {!storeHoursConfirmed && <span className="block text-xs text-night-muted">Horarios de muestra</span>}

@@ -60,12 +60,14 @@ test("barra inferior de la tienda y carrusel con pausa", async ({ page }) => {
   await page.goto("");
   const nav = page.getByRole("navigation", { name: "Navegación inferior" });
   await expect(nav.getByRole("link", { name: "Inicio" })).toHaveAttribute("aria-current", "page");
-  await nav.getByRole("link", { name: "Cupones" }).click();
-  await expect(page.getByRole("heading", { level: 1, name: "Mis cupones" })).toBeVisible();
   await nav.getByRole("link", { name: "Favoritos" }).click();
   await expect(page.getByRole("heading", { level: 1, name: "Favoritos" })).toBeVisible();
-  await nav.getByRole("link", { name: "Categorías" }).click();
+  await nav.getByRole("link", { name: "Tienda" }).click();
   await expect(page).toHaveURL(/categorias\/$/);
+  // Buscar va al centro del dock y abre el buscador superpuesto.
+  await nav.getByRole("button", { name: "Buscar", exact: true }).click();
+  await expect(page.getByRole("dialog", { name: "Buscar" })).toBeVisible();
+  await page.keyboard.press("Escape");
   // En la ficha la barra inferior se reemplaza por la de compra
   await page.goto("p/ionic-whey/");
   await expect(page.locator("[data-buy-bar]")).toBeVisible();
@@ -107,7 +109,7 @@ test("carrito: elegir cupón sin escribir el código y ruleta al ir a pagar", as
 
 test("buscador superpuesto con resultados en vivo y búsquedas recientes", async ({ page }) => {
   await page.goto("");
-  await page.getByRole("button", { name: "Buscar" }).click();
+  await page.getByRole("button", { name: "Buscar", exact: true }).click();
   const dialog = page.getByRole("dialog", { name: "Buscar" });
   await expect(dialog.getByRole("searchbox")).toBeFocused();
   // Con un error de tipeo igual encuentra el producto.
@@ -115,7 +117,7 @@ test("buscador superpuesto con resultados en vivo y búsquedas recientes", async
   await expect(dialog.getByRole("status")).toContainText("resultado");
   await dialog.getByRole("link", { name: /Glutamina micronizada/ }).click();
   await expect(page.getByRole("heading", { level: 1, name: "Glutamina micronizada" })).toBeVisible();
-  await page.getByRole("button", { name: "Buscar" }).click();
+  await page.getByRole("button", { name: "Buscar productos" }).click();
   await expect(page.getByRole("dialog", { name: "Buscar" }).getByRole("button", { name: "glutamna" })).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(page.getByRole("dialog", { name: "Buscar" })).toBeHidden();
@@ -158,12 +160,12 @@ test("sin desborde horizontal a 375 px con productos en carrito, checkout y conf
 test("modo claro: se activa, se recuerda al recargar y llega al panel", async ({ page }) => {
   await page.goto("");
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
-  expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe("rgb(10, 12, 16)");
+  expect(await page.evaluate(() => getComputedStyle(document.body).backgroundColor)).toBe("rgb(11, 12, 13)");
   await page.getByRole("button", { name: "Abrir menú" }).click();
   await page.getByRole("dialog", { name: "Menú" }).getByRole("button", { name: "Activar modo claro" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
   const bg = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
-  expect(bg).toBe("rgb(242, 243, 238)");
+  expect(bg).toBe("rgb(243, 243, 239)");
   await page.reload();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
   await page.goto("admin-demo/");

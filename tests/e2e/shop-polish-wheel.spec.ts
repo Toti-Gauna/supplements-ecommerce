@@ -46,6 +46,8 @@ test("8.2.14 aplicado: sigue aplicado al navegar y recargar, se quita en el chec
   await stage.getByRole("button", { name: "Listo, ya está aplicado" }).click();
   // Checkout: se ve aplicado, se quita y el total vuelve a subir.
   await page.goto("checkout/");
+  // El ticket (con el cupón) va plegado arriba en el celular.
+  await page.getByRole("button", { name: /Ver ticket/ }).click();
   const coupon = page.getByRole("region", { name: "Cupón del pedido" });
   const summary = page.getByRole("region", { name: "Resumen de tu compra" });
   await expect(coupon.getByText(new RegExp(`${code}: Ruleta`))).toBeVisible();
@@ -53,6 +55,7 @@ test("8.2.14 aplicado: sigue aplicado al navegar y recargar, se quita en el chec
   await coupon.getByRole("button", { name: `Quitar cupón ${code}` }).click();
   await expect(summary.getByText("Cupón", { exact: true })).toHaveCount(0);
   await page.reload();
+  await page.getByRole("button", { name: /Ver ticket/ }).click();
   await expect(coupon.getByRole("button", { name: "Elegir de mis cupones" })).toBeVisible();
   // En Mis cupones queda desactivado (no aplicado) y se puede volver a aplicar desde el checkout.
   await coupon.getByRole("button", { name: /Elegir de mis cupones/ }).click();
@@ -80,13 +83,12 @@ test("8.2.14 guardado y utilizado: un solo premio, un solo cupón y no se puede 
   await page.getByLabel("Nombre y apellido").fill("Juana Pérez");
   await page.getByLabel("Email").fill("juana@ejemplo.com");
   await page.getByLabel("Teléfono / WhatsApp").fill("223 555-1234");
-  await page.getByRole("button", { name: "Continuar a la entrega" }).click();
   await page.getByText("Retiro en el local").click();
   await page.getByRole("button", { name: "Continuar al pago" }).click();
   await page.getByText("Transferencia bancaria").click();
   await page.getByRole("button", { name: "Revisar pedido" }).click();
   await page.getByRole("checkbox", { name: /Acepto los/ }).check();
-  await page.getByRole("button", { name: "Confirmar pedido de demostración" }).click();
+  await page.getByRole("button", { name: "Confirmar pedido" }).click();
   await expect(page).toHaveURL(/checkout\/confirmacion\/$/);
   await page.goto("club/");
   await expect(page.getByText("Ya lo usaste en un pedido").first()).toBeVisible();

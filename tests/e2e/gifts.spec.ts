@@ -7,13 +7,12 @@ async function checkout(page: Page) {
   await page.getByLabel("Nombre y apellido").fill("Lucía Gómez");
   await page.getByLabel("Email").fill("lucia@ejemplo.com");
   await page.getByLabel("Teléfono / WhatsApp").fill("223 555-1234");
-  await page.getByRole("button", { name: "Continuar a la entrega" }).click();
   await page.getByText("Retiro en el local").first().click();
   await page.getByRole("button", { name: "Continuar al pago" }).click();
   await page.getByText("Transferencia bancaria").click();
   await page.getByRole("button", { name: "Revisar pedido" }).click();
   await page.getByRole("checkbox", { name: /Acepto los/ }).check();
-  await page.getByRole("button", { name: "Confirmar pedido de demostración" }).click();
+  await page.getByRole("button", { name: "Confirmar pedido" }).click();
   await expect(page).toHaveURL(/checkout\/confirmacion\/$/);
 }
 
@@ -37,7 +36,6 @@ test("regalar: ficha → carrito → checkout → link que se abre a golpes, sin
   await page.goto("carrito/");
   await expect(page.getByText("Regalo para Sofía · de Lucía")).toBeVisible();
   await page.getByRole("button", { name: "Continuar al checkout" }).click();
-  await page.getByRole("dialog", { name: "Ruleta de cupones" }).getByRole("button", { name: "Continuar sin girar" }).click();
   await checkout(page);
 
   // Confirmación: el regalo listo para mandar con su código y su link

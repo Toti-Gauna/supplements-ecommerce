@@ -1,12 +1,17 @@
 import { expect, test, type Page } from "@playwright/test";
+import { horizontalOverflow } from "./helpers";
 
-/** Polish 8.2 · Lote 5: resumen y total debajo del paso, botones Atrás/Siguiente en su lugar y opción de tarjetas. */
+/**
+ * R2 · checkout en 3 pasos (Datos y entrega · Pago · Revisar): el ticket fijo a la derecha en escritorio y plegable en
+ * el celular, el cupón una sola vez, la fecha real del calendario del cadete por forma de entrega y el total arriba de
+ * confirmar. Reemplaza los tests del checkout de 4 pasos de Velmar (8.2.9: resumen debajo de cada paso).
+ */
 
 async function toCheckout(page: Page) {
-  // Un producto en el carrito y un premio de la ruleta ya guardado (así no se abre la ruleta antes del checkout).
   await page.addInitScript(() => {
+    if (sessionStorage.getItem("seeded")) return;
+    sessionStorage.setItem("seeded", "1");
     localStorage.setItem("volta-demo:cart", JSON.stringify({ state: { lines: [{ id: "l1", productSlug: "overvolt-pre", variantId: "ov-frutos-rojos-300", quantity: 2 }] }, version: 0 }));
-    localStorage.setItem("volta-demo:account", JSON.stringify({ state: { wheelPrize: { code: "DEMO", label: "Premio", at: "2026-10-10T12:00:00.000Z" } }, version: 0 }));
   });
   await page.goto("checkout/");
   await page.getByLabel("Nombre y apellido").fill("Juana Pérez");
@@ -14,59 +19,70 @@ async function toCheckout(page: Page) {
   await page.getByLabel("Teléfono / WhatsApp").fill("223 555-1234");
 }
 
-/** El resumen va después de los botones del paso y el total se lee ahí. */
-const layout = (page: Page) => page.evaluate(() => {
-  const summary = document.querySelector("section[aria-label='Resumen de tu compra']")!.getBoundingClientRect();
-  const buttons = [...document.querySelectorAll("main form button")].filter((b) => /Atrás|Continuar|Revisar|Confirmar/.test(b.textContent ?? "")).map((b) => ({ t: b.textContent?.trim(), x: Math.round(b.getBoundingClientRect().x), bottom: b.getBoundingClientRect().bottom }));
-  const fieldsets = [...document.querySelectorAll("main form fieldset")].map((f) => f.getBoundingClientRect().bottom);
-  return { summaryTop: summary.top, buttons, optionsBottom: Math.max(0, ...fieldsets) };
-});
+/** Abre el ticket si está plegado (celular). */
+async function openTicket(page: Page) {
+  const toggle = page.getByRole("button", { name: /Ver ticket/ });
+  if (await toggle.isVisible()) await toggle.click();
+}
 
 for (const width of [1180, 390]) {
-  test(`8.2.9 a ${width}px: el resumen va debajo de las opciones de cada paso y se actualiza; Atrás y Siguiente en su lugar`, async ({ page }) => {
+  test(`R2 a ${width}px: 3 pasos con la fecha del calendario, ticket con el cupón una vez y el total arriba de confirmar`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await toCheckout(page);
+    const steps = page.getByRole("list", { name: "Pasos" }).getByRole("listitem");
+    await expect(steps).toHaveCount(3);
+    await expect(steps.nth(0)).toContainText("Datos y entrega");
+    await expect(page.getByRole("heading", { level: 2, name: "Datos y entrega" })).toBeVisible();
+    // Cada forma de entrega con su fecha real (lunes 5/10: cadete y retiro el martes; correo entre el vie 9 y el vie 16).
+    await expect(page.locator("label", { hasText: "Cadete en Mar del Plata" })).toContainText("Llega mañana, mar 6 oct");
+    await expect(page.locator("label", { hasText: "Retiro en el local" })).toContainText("Retiralo desde mañana, mar 6 oct");
+    await expect(page.locator("label", { hasText: "Envío al resto del país" })).toContainText("Llega entre el vie, 9 oct y el vie, 16 oct");
+    // El ticket: a la derecha en escritorio, plegado arriba en el celular.
     const summary = page.getByRole("region", { name: "Resumen de tu compra" });
+    if (width < 1024) {
+      await expect(summary).toBeHidden();
+      await openTicket(page);
+    }
     await expect(summary).toBeVisible();
     await expect(summary.getByText("2 × Overvolt pre-entreno")).toBeVisible();
-    let l = await layout(page);
-    expect(l.summaryTop).toBeGreaterThan(l.optionsBottom);
-    await page.getByRole("button", { name: "Continuar a la entrega" }).click();
-    await expect(summary.getByText("Elegí la entrega")).toBeVisible();
-    await page.getByText("Envío al resto del país").click();
-    await expect(summary.getByText("Elegí la entrega")).toHaveCount(0);
-    l = await layout(page);
-    expect(l.summaryTop).toBeGreaterThan(l.optionsBottom);
-    // Atrás primero, después Siguiente, en la misma fila y antes del resumen.
-    expect(l.buttons.map((b) => b.t)).toEqual(["Atrás", "Continuar al pago"]);
-    expect(l.buttons[0]!.x).toBeLessThan(l.buttons[1]!.x);
-    expect(l.summaryTop).toBeGreaterThan(Math.max(...l.buttons.map((b) => b.bottom)));
+    if (width >= 1024) {
+      const [form, ticket] = await Promise.all([page.locator("main form").first().boundingBox(), summary.boundingBox()]);
+      expect(ticket!.x).toBeGreaterThan(form!.x + form!.width - 1);
+    }
+    // El cupón aparece una sola vez en todo el checkout.
+    await expect(page.getByRole("region", { name: "Cupón del pedido" })).toHaveCount(1);
+    await expect(page.getByLabel("¿Tenés un código?")).toHaveCount(1);
+    await page.getByText("Cadete en Mar del Plata").click();
+    await expect(summary.getByText("Llega mañana, mar 6 oct")).toBeVisible();
     await page.getByLabel("Calle").fill("Güemes");
     await page.getByLabel("Altura").fill("2500");
-    await page.getByLabel("Código postal").fill("1000");
-    await page.getByLabel("Ciudad").fill("CABA");
-    await page.getByLabel("Provincia").fill("Buenos Aires");
+    await page.getByLabel("Código postal").fill("7600");
     await page.getByRole("button", { name: "Continuar al pago" }).click();
-    // Medio de pago: con transferencia aparece el descuento y baja el total; con tarjeta, no.
+    await expect(page.getByRole("heading", { level: 2, name: "Pago" })).toBeVisible();
+    // El descuento por transferencia se lee como cifra en la opción y baja el total del ticket.
+    await expect(page.locator("label", { hasText: "Transferencia bancaria" })).toContainText(/ahorrás \$\s?7\.380/);
     const total = () => summary.locator("dd").last().textContent();
     await page.getByText("Tarjetas de débito, crédito y prepagas", { exact: true }).click();
     const withCard = await total();
-    await expect(summary.getByText("Descuento transferencia/QR")).toHaveCount(0);
     await page.getByText("Transferencia bancaria").click();
     await expect(summary.getByText("Descuento transferencia/QR")).toBeVisible();
     expect(await total()).not.toBe(withCard);
-    await page.getByText("Tarjetas de débito, crédito y prepagas", { exact: true }).click();
-    await expect(summary.getByText("Descuento transferencia/QR")).toHaveCount(0);
-    expect(await total()).toBe(withCard);
-    l = await layout(page);
-    expect(l.buttons.map((b) => b.t)).toEqual(["Atrás", "Revisar pedido"]);
-    expect(l.summaryTop).toBeGreaterThan(Math.max(...l.buttons.map((b) => b.bottom)));
+    await page.getByRole("button", { name: "Revisar pedido" }).click();
+    await expect(page.getByRole("heading", { level: 2, name: "Revisar" })).toBeVisible();
+    // Revisar: la fecha de la entrega y el total justo arriba de confirmar.
+    await expect(page.getByText("Llega mañana, mar 6 oct").first()).toBeVisible();
+    const pay = page.getByText("Total a pagar");
+    const confirm = page.getByRole("button", { name: "Confirmar pedido" });
+    expect((await pay.boundingBox())!.y).toBeLessThan((await confirm.boundingBox())!.y);
+    // "Cambiar" en Entrega vuelve al primer paso con lo cargado.
+    await page.getByRole("button", { name: "Cambiar entrega" }).click();
+    await expect(page.getByLabel("Calle")).toHaveValue("Güemes");
+    expect(await horizontalOverflow(page)).toBeLessThanOrEqual(0);
   });
 }
 
 test("8.2.10 tarjetas de débito, crédito y prepagas: se entiende cómo se pagaría y en la demo no se cobra", async ({ page }) => {
   await toCheckout(page);
-  await page.getByRole("button", { name: "Continuar a la entrega" }).click();
   await page.getByText("Retiro en el local").click();
   await page.getByRole("button", { name: "Continuar al pago" }).click();
   const card = page.locator("label", { hasText: "Tarjetas de débito, crédito y prepagas" });
@@ -79,4 +95,18 @@ test("8.2.10 tarjetas de débito, crédito y prepagas: se entiende cómo se paga
   await card.click();
   await page.getByRole("button", { name: "Revisar pedido" }).click();
   await expect(page.getByText(/Tarjeta de débito, crédito o prepaga, vía Mercado Pago \(muestra\)/)).toBeVisible();
+});
+
+test("R2 la dirección solo se pide con envío y el código postal sin cadete se avisa en el mismo paso", async ({ page }) => {
+  await toCheckout(page);
+  await page.getByText("Cadete en Mar del Plata").click();
+  await page.getByLabel("Calle").fill("Corrientes");
+  await page.getByLabel("Altura").fill("1000");
+  await page.getByLabel("Código postal").fill("1000");
+  await page.getByRole("button", { name: "Continuar al pago" }).click();
+  await expect(page.getByText(/Ese código postal no tiene cadete/)).toBeVisible();
+  await page.getByText("Retiro en el local").click();
+  await expect(page.getByLabel("Calle")).toHaveCount(0);
+  await page.getByRole("button", { name: "Continuar al pago" }).click();
+  await expect(page.getByRole("heading", { level: 2, name: "Pago" })).toBeVisible();
 });

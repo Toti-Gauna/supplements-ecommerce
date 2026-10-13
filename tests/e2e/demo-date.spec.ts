@@ -24,7 +24,6 @@ test("transferencia: la fecha del checkout queda en la confirmación y, con el c
   await page.getByLabel("Nombre y apellido").fill("Juana Pérez");
   await page.getByLabel("Email").fill("juana@ejemplo.com");
   await page.getByLabel("Teléfono / WhatsApp").fill("223 555-1234");
-  await page.getByRole("button", { name: "Continuar a la entrega" }).click();
   const local = page.locator("label").filter({ hasText: "Cadete en Mar del Plata" });
   await expect(local).toContainText("Llega mañana, mar 6 oct");
   await expect(page.locator("label").filter({ hasText: "Retiro en el local" })).toContainText("Retiralo desde mañana, mar 6 oct");
@@ -37,7 +36,7 @@ test("transferencia: la fecha del checkout queda en la confirmación y, con el c
   await page.getByRole("button", { name: "Revisar pedido" }).click();
   await expect(page.getByText(/Cadete en Mar del Plata · Llega mañana, mar 6 oct/)).toBeVisible();
   await page.getByRole("checkbox", { name: /Acepto los/ }).check();
-  await page.getByRole("button", { name: "Confirmar pedido de demostración" }).click();
+  await page.getByRole("button", { name: "Confirmar pedido" }).click();
 
   await expect(page).toHaveURL(/checkout\/confirmacion\/$/);
   await expect(page.getByText(/Entrega: Llega mañana, mar 6 oct/)).toBeVisible();

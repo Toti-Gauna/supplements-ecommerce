@@ -59,9 +59,9 @@ for (const [width, height] of [[1180, 820], [820, 1180], [390, 844]] as const) {
     await page.getByRole("button", { name: "Entrar a la cuenta demo" }).click();
     const nav = page.getByRole("navigation", { name: "Secciones de la cuenta" });
     await expect(nav.getByRole("link")).toHaveCount(6);
-    await expect(nav.getByRole("link", { name: /^Mis pedidos/ })).toHaveAttribute("aria-current", "true");
-    await expect(page.getByRole("heading", { level: 2, name: "Mis pedidos" })).toBeVisible();
-    for (const [tile, check] of [["Recompras", "Todavía no pediste avisos"], ["Mis regalos", /de Lucía/], ["Misiones", /Comprá 2 productos/], ["Premios", "Envío gratis en la próxima compra"], ["Direcciones", "Casa"]] as const) {
+    await expect(nav.getByRole("link", { name: /^Mi box/ })).toHaveAttribute("aria-current", "true");
+    await expect(page.getByRole("heading", { level: 2, name: "Mi box" })).toBeVisible();
+    for (const [tile, check] of [["Mis pedidos", /DEMO-0000/], ["Mis regalos", /de Lucía/], ["Misiones", /Comprá 2 productos/], ["Premios", "Envío gratis en la próxima compra"], ["Direcciones", "Casa"]] as const) {
       await nav.getByRole("link", { name: new RegExp(`^${tile}`) }).click();
       const panel = page.locator("#cuenta-seccion");
       await expect(panel.getByRole("heading", { level: 2, name: tile })).toBeVisible();
@@ -79,7 +79,7 @@ for (const [width, height] of [[1180, 820], [820, 1180], [390, 844]] as const) {
   });
 }
 
-test("Fase 2 · aviso de recompra: la calculadora de la ficha lo guarda y Mi cuenta → Recompras lo muestra, recompra y lo quita", async ({ page }) => {
+test("Fase 2 · aviso de recompra: la calculadora de la ficha lo guarda y Mi box lo muestra, recompra y lo quita", async ({ page }) => {
   const assertNoExternal = guardNetwork(page);
   await page.goto("p/ionic-whey/");
   const calc = page.getByRole("region", { name: "¿Cuánto te dura?" });
@@ -95,12 +95,12 @@ test("Fase 2 · aviso de recompra: la calculadora de la ficha lo guarda y Mi cue
 
   await page.goto("cuenta/");
   await page.getByRole("button", { name: "Entrar a la cuenta demo" }).click();
-  const nav = page.getByRole("navigation", { name: "Secciones de la cuenta" });
-  await expect(nav.getByRole("link", { name: /^Recompras/ })).toContainText("1 aviso");
+  // El link viejo de los avisos (#recompras) abre Mi box.
   await page.goto("cuenta/#recompras");
   const panel = page.locator("#cuenta-seccion");
-  await expect(panel.getByRole("heading", { level: 2, name: "Recompras" })).toBeVisible();
-  const item = panel.getByRole("listitem").filter({ hasText: "Ionic Whey 100%" });
+  await expect(panel.getByRole("heading", { level: 2, name: "Mi box" })).toBeVisible();
+  const reminders = panel.getByRole("list", { name: "Avisos de recompra" });
+  const item = reminders.getByRole("listitem").filter({ hasText: "Ionic Whey 100%" });
   await expect(item).toContainText("Chocolate · 2 lb (907 g)");
   await expect(item).toContainText("2 por día");
   // Recomprar suma el mismo pote al carrito en un toque.
@@ -110,8 +110,7 @@ test("Fase 2 · aviso de recompra: la calculadora de la ficha lo guarda y Mi cue
   await page.keyboard.press("Escape");
   await expect(drawer).toBeHidden();
   await item.getByRole("button", { name: "Quitar aviso" }).click();
-  await expect(panel.getByText("Ionic Whey 100%")).toHaveCount(0);
+  await expect(reminders).toHaveCount(0);
   await expect(panel.getByText(/Todavía no pediste avisos/)).toBeVisible();
-  await expect(nav.getByRole("link", { name: /^Recompras/ })).toContainText("Sin avisos");
   assertNoExternal();
 });

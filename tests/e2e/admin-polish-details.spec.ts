@@ -84,13 +84,12 @@ test.describe("escritorio con mouse", () => {
     await page.getByLabel("Nombre y apellido").fill("Ana Prueba");
     await page.getByLabel("Email").fill("ana@ejemplo.com");
     await page.getByLabel("Teléfono / WhatsApp").fill("223 555-9999");
-    await page.getByRole("button", { name: "Continuar a la entrega" }).click();
     await page.getByText("Retiro en el local").click();
     await page.getByRole("button", { name: "Continuar al pago" }).click();
     await page.getByText("Transferencia bancaria").click();
     await page.getByRole("button", { name: "Revisar pedido" }).click();
     await page.getByRole("checkbox", { name: /Acepto los/ }).check();
-    await page.getByRole("button", { name: "Confirmar pedido de demostración" }).click();
+    await page.getByRole("button", { name: "Confirmar pedido" }).click();
     await expect(page.getByText("volta.cobros.demo")).toBeVisible();
   });
 

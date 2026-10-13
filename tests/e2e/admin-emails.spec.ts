@@ -17,13 +17,12 @@ test("compra en la tienda: el email de compra aparece en la bandeja y es el úni
   await page.getByRole("button", { name: "Agregar al carrito" }).filter({ visible: true }).click();
   await page.goto("checkout/");
   await page.getByRole("button", { name: "Ingresar con cuenta demo" }).click();
-  await page.getByRole("button", { name: "Continuar a la entrega" }).click();
   await page.getByText("Retiro en el local").click();
   await page.getByRole("button", { name: "Continuar al pago" }).click();
   await page.getByText("Tarjetas de débito, crédito y prepagas", { exact: true }).click();
   await page.getByRole("button", { name: "Revisar pedido" }).click();
   await page.getByRole("checkbox", { name: /Acepto los/ }).check();
-  await page.getByRole("button", { name: "Confirmar pedido de demostración" }).click();
+  await page.getByRole("button", { name: "Confirmar pedido" }).click();
   await expect(page).toHaveURL(/checkout\/confirmacion\/$/);
 
   await page.goto("admin-demo/emails/enviados/");

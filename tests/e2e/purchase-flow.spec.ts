@@ -35,31 +35,36 @@ test("flujo móvil completo hasta la confirmación de demostración", async ({ p
   await code.fill("bienvenida10");
   await code.press("Enter");
   await expect(page.getByText(/BIENVENIDA10: 10%/)).toBeVisible();
-  await expect(page.locator("main").getByRole("progressbar", { name: /Comprá 2 productos/ })).toBeVisible();
-  // Al ir a pagar aparece la ruleta (todavía no se giró); se puede seguir sin girar
+  // Como invitado, la misión no promete premios: dice que no suma y ofrece entrar.
+  await expect(page.locator("main").getByText(/Como invitado este pedido no suma/)).toBeVisible();
+  await expect(page.getByText(/Desbloque/)).toHaveCount(0);
+  // La ruleta se ofrece en el bolso; ir a pagar va directo al checkout, sin cortar el flujo.
+  await expect(page.getByRole("region", { name: "Disco olímpico" })).toBeVisible();
   await page.getByRole("button", { name: "Continuar al checkout" }).click();
-  await page.getByRole("dialog", { name: "Ruleta de cupones" }).getByRole("button", { name: "Continuar sin girar" }).click();
   await expect(page).toHaveURL(/checkout\/$/);
+  await expect(page.getByRole("dialog", { name: "Ruleta de cupones" })).toHaveCount(0);
 
-  // Checkout como invitado
-  await page.getByRole("button", { name: "Continuar a la entrega" }).click();
+  // Checkout como invitado: datos y entrega en el mismo paso
+  await page.getByRole("button", { name: "Continuar al pago" }).click();
   await expect(page.getByText("Escribí tu nombre y apellido.")).toBeVisible();
+  await expect(page.getByText("Elegí una forma de entrega.")).toBeVisible();
   await page.getByLabel("Nombre y apellido").fill("Juana Pérez");
   await page.getByLabel("Email").fill("juana@ejemplo.com");
   await page.getByLabel("Teléfono / WhatsApp").fill("223 555-1234");
-  await page.getByRole("button", { name: "Continuar a la entrega" }).click();
   await page.getByText("Cadete en Mar del Plata").click();
   await page.getByLabel("Calle").fill("Güemes");
   await page.getByLabel("Altura").fill("2500");
   await page.getByLabel("Código postal").fill("7600");
   await page.getByRole("button", { name: "Continuar al pago" }).click();
   await page.getByText("Transferencia bancaria").click();
-  await expect(page.getByText("Descuento transferencia/QR")).toBeVisible();
+  // El ticket va plegado arriba en el celular: se abre y muestra el descuento.
+  await page.getByRole("button", { name: /Ver ticket/ }).click();
+  await expect(page.getByRole("region", { name: "Resumen de tu compra" }).getByText("Descuento transferencia/QR")).toBeVisible();
   await page.getByRole("button", { name: "Revisar pedido" }).click();
-  await page.getByRole("button", { name: "Confirmar pedido de demostración" }).click();
+  await page.getByRole("button", { name: "Confirmar pedido" }).click();
   await expect(page.getByText("Para continuar, aceptá los términos.")).toBeVisible();
   await page.getByRole("checkbox", { name: /Acepto los/ }).check();
-  await page.getByRole("button", { name: "Confirmar pedido de demostración" }).click();
+  await page.getByRole("button", { name: "Confirmar pedido" }).click();
 
   // Confirmación rotulada como demo; nunca "acreditado"
   await expect(page).toHaveURL(/checkout\/confirmacion\/$/);
@@ -99,13 +104,12 @@ test("checkout con cuenta demo, retiro y Mercado Pago simulado", async ({ page }
   await add.click();
   await page.goto("checkout/");
   await page.getByRole("button", { name: "Ingresar con cuenta demo" }).click();
-  await page.getByRole("button", { name: "Continuar a la entrega" }).click();
   await page.getByText("Retiro en el local").click();
   await page.getByRole("button", { name: "Continuar al pago" }).click();
   await page.getByText("Tarjetas de débito, crédito y prepagas", { exact: true }).click();
   await page.getByRole("button", { name: "Revisar pedido" }).click();
   await page.getByRole("checkbox", { name: /Acepto los/ }).check();
-  await page.getByRole("button", { name: "Confirmar pedido de demostración" }).click();
+  await page.getByRole("button", { name: "Confirmar pedido" }).click();
   await expect(page.getByRole("progressbar", { name: /Comprá 2 productos/ })).toBeVisible();
   await expect(page.getByText("¡Con este pedido completás la misión!")).toBeVisible();
   await page.getByRole("button", { name: /Simular ida y vuelta/ }).click();

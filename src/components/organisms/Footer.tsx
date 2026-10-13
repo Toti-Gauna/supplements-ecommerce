@@ -26,7 +26,7 @@ export function Footer() {
         <div className="grid grid-cols-[minmax(0,1fr)] gap-12 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
           <div className="flex flex-col gap-5">
             <Logo tone="light" />
-            <p className="font-display max-w-md text-[2.6rem] text-on-night">Suplementos con lote, vencimiento y cadete en {brand.city}</p>
+            <p className="font-display max-w-md text-[2.6rem] text-on-night">Lote y vencimiento a la vista. Cadete propio en {brand.city}</p>
             <StoreSpecs />
             <div className="flex flex-wrap gap-x-6 gap-y-3 text-sm font-bold">
               <WhatsAppLink className="text-on-night hover:text-volt" />

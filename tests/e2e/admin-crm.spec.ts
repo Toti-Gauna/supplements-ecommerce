@@ -20,8 +20,14 @@ test("importar Excel: planilla de ejemplo, vista previa con errores, importar, v
 
   // El producto nuevo de la planilla aparece en su categoría de la tienda.
   await page.goto("categorias/");
-  await page.getByRole("link", { name: /Accesorios/ }).first().click();
-  await expect(page).toHaveURL(/c\/accesorios\/$/);
+  // El estante de la categoría (dentro del contenido, no el del menú). Si el clic cae mientras la página termina de
+  // hidratar o de encastrar los estantes, se reintenta: lo que se prueba es que la categoría exista y abra.
+  const shelf = page.getByRole("main").getByRole("link", { name: /Accesorios/ }).first();
+  await expect(shelf).toBeVisible();
+  await expect(async () => {
+    await shelf.click();
+    await expect(page).toHaveURL(/c\/accesorios\/$/, { timeout: 2_000 });
+  }).toPass({ timeout: 12_000 });
   await expect(page.getByText("Guantes de entrenamiento")).toBeVisible();
 
   await page.goto("admin-demo/importar/");

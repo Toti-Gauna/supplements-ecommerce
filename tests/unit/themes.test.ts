@@ -74,8 +74,10 @@ describe("temáticas fitness (Fase 5)", () => {
     expect(inSeason(range, at("2027-01-07"))).toBe(false);
   });
 
-  it("la demo arranca en modo automático con Probar temáticas: en octubre sale el Día de la Madre", () => {
-    expect(themeSettings).toMatchObject({ mode: "auto", showTryButton: true });
+  it("la demo arranca con la temática original y Probar temáticas; en automático, en octubre sale el Día de la Madre", () => {
+    expect(themeSettings).toMatchObject({ mode: "off", showTryButton: true });
+    expect(currentTheme(at("2026-10-12"), null)).toBeNull();
+    setDemoData({ ...demoData(), themeSettings: { ...themeSettings, mode: "auto" } });
     expect(currentTheme(at("2026-10-12"), null)?.id).toBe("dia-de-la-madre");
   });
 
@@ -84,6 +86,7 @@ describe("temáticas fitness (Fase 5)", () => {
     expect(currentTheme(now, "navidad")?.id).toBe("navidad");
     expect(currentTheme(now, "original")).toBeNull();
     // Una vista previa que ya no existe (una temática de Velmar guardada antes de la Fase 5) no tapa la del día.
+    setDemoData({ ...demoData(), themeSettings: { ...themeSettings, mode: "auto" } });
     expect(currentTheme(now, "orgullo" as never)?.id).toBe("dia-de-la-madre");
     setDemoData({ ...demoData(), themeSettings: { mode: "fixed", fixedId: "cyber-monday", showTryButton: true } });
     expect(currentTheme(now, null)?.id).toBe("cyber-monday");

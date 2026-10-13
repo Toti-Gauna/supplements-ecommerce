@@ -19,8 +19,10 @@ test.describe("escritorio con mouse", () => {
     await expect(page.getByRole("link", { name: "Volver a Marketing" })).toBeVisible();
     await expect(page.getByRole("heading", { level: 1, name: /Temáticas/ })).toBeVisible();
     const mode = page.getByLabel("Modo", { exact: true });
-    // Desde la Fase 5 la tienda arranca en automático por fecha, con las doce temáticas fitness.
-    await expect(mode).toHaveValue("auto");
+    // La tienda arranca con la temática original; en automático usa las doce temáticas fitness por fecha.
+    await expect(mode).toHaveValue("off");
+    await expect(page.locator("p").filter({ hasText: "Hoy ve el cliente" })).toContainText("Sin temática");
+    await mode.selectOption("auto");
     await expect(page.getByRole("list", { name: "Temáticas por fecha" }).getByRole("listitem")).toHaveCount(12);
     // En automático no hay selector de temática fija: no se confunde con la que sale por fecha.
     await expect(page.getByLabel("Temática fija")).toHaveCount(0);

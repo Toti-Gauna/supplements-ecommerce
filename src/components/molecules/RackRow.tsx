@@ -26,7 +26,7 @@ const LIGHT: Record<ShelfStock, string> = {
   "made-to-order": "bg-muted",
 };
 
-export function stockText(stock: ShelfStock, units: number): string {
+function stockText(stock: ShelfStock, units: number): string {
   if (stock === "low") return `Quedan ${units}`;
   return { ok: "En stock", out: "Sin stock", "made-to-order": "A pedido", low: "" }[stock];
 }

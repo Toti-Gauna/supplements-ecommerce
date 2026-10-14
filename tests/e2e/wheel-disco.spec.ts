@@ -57,10 +57,14 @@ test("disco olímpico: con animación, las luces corren, el gajo ganador queda b
   await expect(stage).toBeVisible();
   // Al frenar: el premio se anuncia, las luces titilan y el gajo bajo el puntero es el premio sorteado.
   const landed = stage.getByText(/^¡Te tocó /);
-  await expect(landed).toBeVisible({ timeout: 12_000 });
-  await expect(stage.locator(".led-win").first()).toBeAttached();
-  await expect(stage.locator(".wheel-landed")).toHaveCount(1);
-  const label = (await landed.textContent())!.replace(/^¡Te tocó /, "").replace(/!$/, "");
+  // Las señales breves se observan juntas antes de que el escenario muestre el cupón.
+  const [, , , text] = await Promise.all([
+    expect(landed).toBeVisible({ timeout: 12_000 }),
+    expect(stage.locator(".led-win").first()).toBeAttached({ timeout: 12_000 }),
+    expect(stage.locator(".wheel-landed")).toHaveCount(1, { timeout: 12_000 }),
+    landed.textContent({ timeout: 12_000 }),
+  ]);
+  const label = text!.replace(/^¡Te tocó /, "").replace(/!$/, "");
   expect(underPointer(await rotation(stage))).toBe(label);
   await expect(stage.locator("[aria-live=polite]")).toHaveText(`Te tocó: ${label}`);
   // Después de la pausa, el cupón con el foco en "Aplicar ahora".

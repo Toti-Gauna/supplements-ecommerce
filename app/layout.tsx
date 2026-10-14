@@ -7,9 +7,12 @@ import "./globals.css";
 import "./splash.css";
 import "./seasons.css";
 import "./motion.css";
+import "./shop-shell.css";
+import "./carousel.css";
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import { brand, brandCss } from "@/config/brand";
+import { boxDisplay } from "@/config/box-fonts";
 import { site } from "@/config/site";
 import { SITE_URL, withBase } from "@/lib/base-path";
 import { MotionRoot } from "@/components/motion/MotionRoot";
@@ -49,7 +52,7 @@ const organizationLd = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="es-AR" data-theme={brand.defaultMode} suppressHydrationWarning>
+    <html lang="es-AR" className={boxDisplay.variable} data-theme={brand.defaultMode} suppressHydrationWarning>
       <head>
         <style dangerouslySetInnerHTML={{ __html: brandCss() }} />
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
@@ -63,7 +66,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <GlobalArtDefs />
         <Splash />
         {/* Tapa la zona de la barra de estado del celular: el contenido no se ve por detrás al hacer scroll. */}
-        <div aria-hidden="true" className="pointer-events-none fixed inset-x-0 top-0 z-[60] h-[env(safe-area-inset-top)] bg-bg" />
+        <div aria-hidden="true" data-safe-area-cover className="pointer-events-none fixed inset-x-0 top-0 z-[60] h-[env(safe-area-inset-top)] bg-bg" />
         <a href="#contenido" className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-50 focus:bg-primary focus:px-4 focus:py-2 focus:text-on-primary">
           Saltar al contenido
         </a>

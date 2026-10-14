@@ -73,6 +73,27 @@ test("navegar entre páginas usa View Transitions y la imagen del producto vuela
   expect(errors).toEqual([]);
 });
 
+test("con movimiento reducido navegar y elegir sabor no inicia capturas nativas ni errores", async ({ page }) => {
+  await page.addInitScript(() => {
+    const start = document.startViewTransition.bind(document);
+    const state = window as unknown as { __vtCalls: number };
+    state.__vtCalls = 0;
+    document.startViewTransition = ((arg: Parameters<typeof start>[0]) => {
+      state.__vtCalls++;
+      return start(arg);
+    }) as typeof document.startViewTransition;
+  });
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.goto("c/pre-entrenos/");
+  await page.getByRole("link", { name: "Overvolt pre-entreno", exact: true }).click();
+  const card = page.getByRole("region", { name: "Elegí sabor, tamaño y cantidad" });
+  await card.getByTitle("Limón").click();
+  await expect(card.getByRole("radio", { name: "Limón" })).toBeChecked();
+  expect(await page.evaluate(() => (window as unknown as { __vtCalls: number }).__vtCalls)).toBe(0);
+  expect(errors).toEqual([]);
+});
+
 test("microinteracciones: la cantidad rueda sin duplicar el número y el corazón de favoritos destella", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("p/ionic-whey/");

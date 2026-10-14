@@ -9,11 +9,12 @@ import { themeProducts } from "./themes";
 
 export interface HeroPick {
   key: string;
-  /** "campaign": la fecha vigente (va primero y no rota); "featured": un destacado del panel. */
+  /** "campaign": la fecha vigente (va primero); "featured": un destacado del panel. */
   kind: "campaign" | "featured";
   product: Product;
   headline: string;
   pitch: string;
+  image?: HeroFeature["image"];
 }
 
 const visible = (p: Product | undefined): p is Product => Boolean(p && p.active !== false);
@@ -25,11 +26,14 @@ const visible = (p: Product | undefined): p is Product => Boolean(p && p.active 
 export function heroPicks(features: HeroFeature[], theme: SeasonalTheme | null): HeroPick[] {
   const picks: HeroPick[] = [];
   const lead = theme ? themeProducts(theme)[0] : undefined;
-  if (theme && lead) picks.push({ key: `campaign-${theme.id}`, kind: "campaign", product: lead, headline: theme.headline, pitch: theme.subtitle });
+  if (theme && lead) {
+    const image = features.find((f) => f.active !== false && f.productSlug === lead.slug)?.image;
+    picks.push({ key: `campaign-${theme.id}`, kind: "campaign", product: lead, headline: theme.headline, pitch: theme.subtitle, image });
+  }
   for (const f of features) {
     const product = getProduct(f.productSlug);
     if (f.active === false || !visible(product) || picks.some((p) => p.product.slug === product.slug)) continue;
-    picks.push({ key: f.id, kind: "featured", product, headline: f.headline, pitch: f.pitch });
+    picks.push({ key: f.id, kind: "featured", product, headline: f.headline, pitch: f.pitch, image: f.image });
   }
   const top = bestSellers(1)[0];
   if (!picks.length && top) picks.push({ key: "best", kind: "featured", product: top, headline: top.name, pitch: top.short });

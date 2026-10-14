@@ -428,10 +428,35 @@ Placas para Instagram con tus potes animados, sin diseñador.
 
 En **Contenido** cambiás lo que se lee en el inicio y en la ayuda, sin pedirle nada a nadie:
 
-- **Carrusel**: las diapositivas grandes del inicio (imagen, título, bajada y botón). Podés crear, reordenar y quitar.
-  **Guardar carrusel**.
-- **Textos de inicio**: el bloque "Tu estante, según tu objetivo". **Guardar textos**.
+- **Carrusel del inicio**: las diapositivas grandes con producto, imagen, titular, bajada y datos de compra.
+- **Textos de inicio**: el bloque del stack en vivo. **Guardar textos**.
 - **Preguntas frecuentes**: las de la página de ayuda. **Guardar preguntas**.
+
+### Cambiar el carrusel del inicio
+
+1. Entrá a **Contenido → Carrusel del inicio**. Arriba ves la misma diapositiva que aparece en la tienda.
+2. Elegí una diapositiva de la lista y su **Producto**. Escribí el **Titular** (hasta 40 caracteres) y la **Bajada**
+   (hasta 120); el contador te muestra cuánto queda.
+3. Para poner una foto, elegí **Subir imagen propia**. Acepta JPG, PNG o WebP de hasta **10 MB**, con al menos **400 px
+   en el lado más chico**. El panel la reduce a un máximo de 900 px en el lado más largo para que cargue liviana.
+4. Escribí el **Texto alternativo** (hasta 120 caracteres): una descripción breve de lo que muestra la foto, para
+   quien usa lector de pantalla. Ajustá la posición horizontal y vertical (0–100 %) y el zoom (1–2) mirando la vista
+   previa. **Quitar imagen** vuelve a mostrar el envase dibujado del producto.
+   Si una campaña muestra ese producto, también usa su imagen y encuadre, con el texto y cupón de la campaña.
+5. Podés **Agregar** hasta 4 diapositivas, ordenarlas con **Subir**/**Bajar**, quitarlas o apagar **Visible** para
+   ocultarlas sin borrarlas. El primer destacado visible sale primero; si hay una campaña vigente, va antes.
+6. Tocá **Guardar carrusel** para publicar en la tienda de este navegador. Si te vas sin guardar, al volver podés
+   recuperar el borrador o descartarlo.
+
+Las fotos se procesan y guardan **solo en tu navegador**, sin subirse a ningún servicio. Si no queda espacio para
+guardar, el panel te avisa: quitá alguna imagen o usá una más liviana y volvé a guardar. **Reiniciar demo** borra los
+cambios y las fotos de ese navegador.
+
+En la tienda el carrusel avanza cada 4–5 segundos. Se frena con el mouse encima, al enfocar sus controles o tocarlo;
+tiene flechas, indicadores y un botón de pausa, y en el celular se puede deslizar con el dedo. Con **reducir movimiento**
+activado no avanza solo. Debajo quedan **Comprá por categoría**, **Entrená por objetivo** y las ofertas de campaña.
+
+![Carrusel del inicio en el editor](img/rediseno/carrusel/despues-editor-1440-oscuro.png)
 
 ---
 

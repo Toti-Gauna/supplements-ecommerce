@@ -30,7 +30,7 @@ test.describe("rutas directas y refresh bajo el subpath", () => {
     test(`/${path}`, async ({ page }) => {
       const res = await page.goto(path);
       expect(res?.status()).toBe(200);
-      const target = page.getByRole("heading", { level: 1, name: heading });
+      const target = page.getByRole("heading", { level: path ? 1 : 2, name: heading });
       await expect(target).toBeVisible();
       await page.reload();
       await expect(target).toBeVisible();

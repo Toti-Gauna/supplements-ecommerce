@@ -1,36 +1,41 @@
 import { expect, test, type Page } from "@playwright/test";
 
-/**
- * Polish 8.2 · Lote 1, al día con R1: el hero del rack (sin carrusel: ninguna flecha pisa nada porque no hay flechas),
- * las categorías como estantes en una fila y el riel de Recomendados sin huecos.
- */
+/** Carrusel BOX: campaña primera, autoplay y controles en una franja que no pisa la escena. */
 const preview = (page: Page, id: string) =>
   page.addInitScript((v) => localStorage.setItem("volta-demo:theme-preview", JSON.stringify({ state: { previewId: v }, version: 0 })), id);
 
 for (const [width, height] of [[375, 812], [820, 1180], [1440, 900]] as const) {
-  test(`R1 hero a ${width}×${height}: la campaña va primero y no rota; los destacados se eligen como un marcador`, async ({ page }) => {
+  test(`carrusel a ${width}×${height}: campaña primera, autoplay y altura estable`, async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "no-preference" });
     await preview(page, "dia-de-la-madre");
     await page.setViewportSize({ width, height });
     await page.goto("");
     await page.keyboard.press("Escape");
-    const hero = page.locator("[data-theme-banner='dia-de-la-madre']");
-    await expect(hero).toBeVisible();
+    const hero = page.locator("section[aria-roledescription='carrusel']");
+    const campaign = hero.locator("[data-theme-banner='dia-de-la-madre']");
+    const markers = hero.getByRole("group", { name: "Destacados" }).getByRole("button");
+    await expect(campaign).toHaveAttribute("aria-hidden", "false");
     await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
-    const markers = page.getByRole("group", { name: "Destacados" }).getByRole("button");
-    await expect(markers.first()).toHaveAttribute("aria-pressed", "true");
-    // Sin autoplay: pasado el tiempo del carrusel viejo, la campaña sigue en pantalla.
-    await page.waitForTimeout(4500);
-    await expect(hero).toBeVisible();
-    await expect(page.getByRole("button", { name: /carrusel/i })).toHaveCount(0);
-    // Elegir otro destacado cambia el titular y el marcador de datos (y la campaña deja de estar).
-    const title = await page.getByRole("heading", { level: 1 }).innerText();
+    await expect(markers.first()).toHaveAttribute("aria-current", "true");
+    const before = (await hero.boundingBox())!.height;
+    await page.mouse.move(0, 0);
+    await expect(markers.nth(1)).toHaveAttribute("aria-current", "true", { timeout: 8000 });
+    await expect(campaign).toHaveAttribute("aria-hidden", "true");
+    expect((await hero.boundingBox())!.height).toBeCloseTo(before, 0);
+    await markers.first().click();
+    await expect(markers.first()).toHaveAttribute("aria-current", "true");
+    await expect(hero.getByRole("button", { name: "Reproducir carrusel" })).toBeVisible();
+    const title = await hero.getByRole("heading", { level: 2 }).innerText();
     await markers.nth(1).click();
-    await expect(markers.nth(1)).toHaveAttribute("aria-pressed", "true");
-    await expect(page.locator("[data-theme-banner]")).toHaveCount(0);
-    await expect(page.getByRole("heading", { level: 1 })).not.toHaveText(title);
-    const name = (await markers.nth(1).innerText()).replace(/^\d+\s*/, "").replace(/…$/, "");
-    await expect(page.locator(`dl[aria-label^="Datos de "]`)).toHaveAttribute("aria-label", new RegExp(name.slice(0, 8), "i"));
+    await expect(markers.nth(1)).toHaveAttribute("aria-current", "true");
+    await expect(hero.getByRole("heading", { level: 2 })).not.toHaveText(title);
+    await expect(hero.getByRole("button", { name: "Diapositiva anterior" })).toBeVisible();
+    await expect(hero.getByRole("button", { name: "Diapositiva siguiente" })).toBeVisible();
+    const arrow = (await hero.getByRole("button", { name: "Diapositiva siguiente" }).boundingBox())!;
+    const heading = (await hero.getByRole("heading", { level: 2 }).boundingBox())!;
+    expect(arrow.y + arrow.height).toBeLessThanOrEqual(heading.y);
+    const sections = await page.locator("section[aria-roledescription='carrusel'], section[aria-labelledby='cats-title'], section[aria-labelledby='objetivos-title'], #ofertas-tematicas").evaluateAll((els) => els.map((el) => el.id || el.getAttribute("aria-labelledby") || "carrusel"));
+    expect(sections).toEqual(["carrusel", "cats-title", "objetivos-title", "ofertas-tematicas"]);
     expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(0);
   });
 }

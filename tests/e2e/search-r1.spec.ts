@@ -38,7 +38,7 @@ test.describe("/buscar/", () => {
     await expect(page.getByRole("heading", { name: "No encontramos “creatina vainilla”" })).toBeVisible();
     await page.getByRole("button", { name: /Sin «Vainilla» hay 4 productos/ }).click();
     await expect(page).toHaveURL(/q=creatina$/);
-    await expect(page.getByRole("status").filter({ hasText: "4 resultados para" })).toBeVisible();
+    await expect(page.getByRole("region", { name: "Resultados", exact: true }).getByRole("status").filter({ hasText: "4 resultados para" })).toBeVisible();
 
     await field(page).fill("wey chocolate");
     await page.getByRole("button", { name: /¿Quisiste decir «whey chocolate»\? 2 productos/ }).click();
@@ -52,6 +52,8 @@ test.describe("buscador superpuesto en el escritorio", () => {
 
   test("«/» lo abre y se maneja con flechas, Enter y Escape", async ({ page }) => {
     await page.goto("");
+    // El control nativo confirma la hidratación antes de probar el atajo global.
+    await expect(page.getByRole("button", { name: "Reproducir carrusel" })).toBeDisabled();
     await page.locator("body").press("/");
     const dialog = page.getByRole("dialog", { name: "Buscar" });
     await expect(combo(page)).toBeFocused();
@@ -79,7 +81,7 @@ test.describe("buscador superpuesto en el escritorio", () => {
     await combo(page).fill("creatina");
     await page.keyboard.press("Enter");
     await expect(page).toHaveURL(/buscar\/\?q=creatina$/);
-    await expect(page.getByRole("status").filter({ hasText: "4 resultados para" })).toBeVisible();
+    await expect(page.getByRole("region", { name: "Resultados", exact: true }).getByRole("status").filter({ hasText: "4 resultados para" })).toBeVisible();
 
     // El foco no sale del buscador y Escape lo cierra devolviendo el foco.
     const opener = page.getByRole("button", { name: "Buscar productos" }).first();

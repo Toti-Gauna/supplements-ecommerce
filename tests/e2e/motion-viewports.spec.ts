@@ -13,12 +13,17 @@ test.describe("movimiento reducido", () => {
 
 test("la pantalla de carga sale solo la primera vez de la sesión, dura ~1,2 s y se cierra con Escape", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
-  await page.goto("");
+  // Controla el cierre breve incluso si cargar la página lleva más de 1,2 s en la suite.
+  const now = new Date();
+  await page.clock.install({ time: now });
+  await page.clock.pauseAt(new Date(now.getTime() + 5_000));
+  await page.goto("", { waitUntil: "domcontentloaded" });
   const splash = page.locator("#volta-splash");
   await expect(splash).toBeVisible();
   await expect(splash.locator(".splash-bar span")).toHaveCount(12);
   await page.keyboard.press("Escape");
   await expect(splash).toBeHidden();
+  await page.clock.resume();
   await page.getByRole("link", { name: "Ver todas" }).click();
   await expect(page).toHaveURL(/categorias\/$/);
   // En la misma sesión no vuelve, ni al recargar.
@@ -27,8 +32,13 @@ test("la pantalla de carga sale solo la primera vez de la sesión, dura ~1,2 s y
   await expect(splash).toBeHidden();
   // En una sesión nueva vuelve y se va sola en ~1,2 s.
   await page.evaluate(() => sessionStorage.clear());
-  await page.reload();
+  const reloadTime = await page.evaluate(() => Date.now());
+  await page.clock.pauseAt(new Date(reloadTime + 5_000));
+  await page.reload({ waitUntil: "domcontentloaded" });
   await expect(splash).toBeVisible();
+  await page.clock.runFor(1200);
+  await expect(splash).toBeVisible();
+  await page.clock.runFor(200);
   await expect(splash).toBeHidden({ timeout: 2500 });
 });
 

@@ -34,7 +34,10 @@ test.describe("escritorio, con mouse", () => {
     const rail = page.getByRole("region", { name: /^Recomendados/ });
     const card = rail.locator("[data-product-card]").first();
     await card.scrollIntoViewIfNeeded();
-    const name = (await card.getByRole("heading", { level: 3 }).innerText()).trim();
+    const heading = card.getByRole("heading", { level: 3 });
+    await expect(heading).toHaveText(/\S/);
+    // content-visibility puede omitir innerText antes de pintar el riel; el nombre ya está en el DOM.
+    const name = (await heading.textContent())!.trim();
     await card.hover();
     const add = card.getByRole("button", { name: `Agregar ${name} al carrito` });
     await expect(add).toBeVisible();

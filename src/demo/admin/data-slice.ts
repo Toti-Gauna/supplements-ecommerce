@@ -68,7 +68,7 @@ export function createDataActions(set: Set): DataActions {
     redeemCoupon: (code) => edit("Cupón usado en un pedido", code, (d) => ({ coupons: d.coupons.map((c) => (c.code === code ? { ...c, usedCount: (c.usedCount ?? 0) + 1 } : c)) })),
     saveSettings: (patch) => edit("Ajustes guardados", Object.keys(patch).join(", "), (d) => ({ settings: { ...d.settings, ...patch } })),
     saveZone: (z) => edit("Zona de envío", z.name, (d) => ({ zones: upsert(d.zones, z, (x) => x.id === z.id) })),
-    saveHero: (hero) => edit("Hero del inicio actualizado", "Inicio", (d) => ({ content: { ...d.content, hero } })),
+    saveHero: (hero) => edit("Carrusel del inicio actualizado", "Inicio", (d) => ({ content: { ...d.content, hero } })),
     saveHomeCta: (homeCta) => edit("Textos de inicio", "Inicio", (d) => ({ content: { ...d.content, homeCta } })),
     saveFaqs: (faqs) => edit("Preguntas frecuentes", "Ayuda", (d) => ({ content: { ...d.content, faqs } })),
     saveTheme: (t) => edit("Temática guardada", t.name, (d) => ({ themes: upsert(d.themes, t, (x) => x.id === t.id) })),

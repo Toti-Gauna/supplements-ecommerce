@@ -4,7 +4,8 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { createCatalogActions, type CatalogActions } from "@/demo/admin/catalog-slice";
 import { createCustomerActions, type CustomerActions } from "@/demo/admin/customers-slice";
-import { isHeroList } from "@/demo/admin/content-hero";
+import { normalizeHeroList } from "@/demo/admin/content-hero";
+import { migrateAdminData } from "@/demo/admin/migrate";
 import { createDataActions, type DataActions } from "@/demo/admin/data-slice";
 import { auditEntry, defaultAdminData, type AdminData } from "@/demo/admin/defaults";
 import { createOrdersActions, type OrdersActions } from "@/demo/admin/orders-slice";
@@ -52,12 +53,11 @@ export const useAdmin = create<AdminState>()(
       // v10: panel de las Fases 6 y 7 (fichas sin mascotas, con objetivo y avisos de recompra; lotes y vencimientos por
       // variante, último aumento de precios, objetivos editables; emails de suplementos y premios del juego editables;
       // preparación con control de lote, cupo del cadete, costos sin horas de taller, proveedores y compras).
-      // Al cambiar de versión la demo vuelve a los datos de muestra.
+      // v13: imágenes del carrusel. Las versiones de suplementos conservan datos y ediciones del dueño.
       version: ADMIN_STORE_VERSION,
       storage: demoStorage,
       skipHydration: true,
-      // Versiones viejas de la demo: se descartan y vuelven a los fixtures.
-      migrate: () => defaultAdminData(),
+      migrate: migrateAdminData,
       // Campos nuevos de `data` toman el valor por defecto si el estado guardado no los tiene.
       merge: (persisted, current) => {
         const p = (persisted ?? {}) as Partial<AdminData>;
@@ -67,11 +67,10 @@ export const useAdmin = create<AdminState>()(
         const data = { ...current.data, ...(p.data ?? {}) };
         // La ruleta guardada antes de 8.3.25 no tenía catálogo de premios: se completa con sus gajos, sin cambiar IDs.
         data.wheel = withPrizeCatalog(data.wheel);
-        // Hero del inicio (R1): reemplaza al carrusel. Si falta (datos de antes) o viene roto, quedan los destacados de muestra.
-        // Las diapositivas del carrusel viejo (con sus imágenes) se descartan para liberar lugar en el navegador.
+        // El carrusel vive en content.hero. Una imagen rota vuelve al envase sin perder los textos del dueño.
         const content = { ...current.data.content, ...data.content } as DemoData["content"] & { slides?: unknown };
         delete content.slides;
-        data.content = { ...content, hero: isHeroList(content.hero) ? content.hero : current.data.content.hero };
+        data.content = { ...content, hero: normalizeHeroList(content.hero) ?? current.data.content.hero };
         return { ...current, ...p, data, workshop, emails: { ...current.emails, ...(p.emails ?? {}) } };
       },
       partialize: (s) => ({ data: s.data, orders: s.orders, users: s.users, claims: s.claims, audit: s.audit, lastImport: s.lastImport, lastPriceChange: s.lastPriceChange, workshop: s.workshop, emails: s.emails }),

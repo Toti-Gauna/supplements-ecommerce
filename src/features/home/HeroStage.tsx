@@ -23,8 +23,10 @@ interface HeroStageProps {
   actions?: ReactNode;
   markers?: ReactNode;
   motion?: LedMotion;
+  /** Reserva las mismas medidas sin construir el arte fuera de pantalla antes de la primera interacción. */
+  deferred?: boolean;
   /** En la vista previa del panel el titular no es el h1 de la página. */
-  headingLevel?: "h1" | "p";
+  headingLevel?: "h1" | "h2" | "p";
 }
 
 /** Tira de datos del producto en el marcador: precio por servicio, servicios, stock por variante y el cadete. */
@@ -44,14 +46,16 @@ function cells(facts: RackFacts, cadete: HeroStageProps["cadete"]): ScoreCell[] 
  * Primer pantallazo del inicio: el producto en el rack bajo el reflector, el titular como póster de competencia y, abajo,
  * el marcador con lo que vende. Lo usan el inicio y la vista previa del panel (Contenido → Hero), así se ven igual.
  */
-export function HeroStage({ pick, facts, cadete, campaign, actions, markers, motion = "power", headingLevel = "h1" }: HeroStageProps) {
+export function HeroStage({ pick, facts, cadete, campaign, actions, markers, motion = "power", headingLevel = "h1", deferred = false }: HeroStageProps) {
   const p = pick.product;
   const words = pick.headline.trim().split(/\s+/);
   const Heading = headingLevel;
+  const readings = cells(facts, cadete).map((cell) => deferred && (cell.money || cell.key === "serv")
+    ? { ...cell, display: <span aria-hidden="true" className="block h-10" /> } : cell);
   // Celular: titular, rack y marcador en el primer pantallazo; después el texto, los botones y los destacados.
   // Escritorio: titular y texto a la izquierda del rack; abajo, los destacados y el marcador a todo el ancho.
   return (
-    <div className="stage relative overflow-hidden">
+    <div className={`stage relative h-full overflow-hidden${deferred ? " invisible" : ""}`}>
       <div className="relative mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)] gap-y-3 px-4 pb-4 pt-6 sm:px-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:gap-x-10 lg:gap-y-2 lg:pt-12">
         <div className="lg:col-start-1 lg:row-start-1 lg:self-end">
           <p className="eyebrow flex items-center gap-2 text-muted">
@@ -64,13 +68,16 @@ export function HeroStage({ pick, facts, cadete, campaign, actions, markers, mot
           </Heading>
         </div>
         <div className="relative -mx-4 h-52 sm:mx-0 sm:h-[24rem] lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:h-[31rem]">
-          {p.photoDataUrl
+          {deferred ? <span aria-hidden="true" className="block h-full" /> : pick.image
+            // eslint-disable-next-line @next/next/no-img-element -- imagen propia local del carrusel, sin red
+            ? <div className="rack-bay h-full overflow-hidden border-y border-line sm:rounded-sm sm:border"><img src={pick.image.src} alt={pick.image.alt} width={900} height={900} className="h-full w-full object-cover" style={{ objectPosition: `${pick.image.frame.x}% ${pick.image.frame.y}%`, transform: `scale(${pick.image.frame.zoom})`, transformOrigin: `${pick.image.frame.x}% ${pick.image.frame.y}%` }} /></div>
+            : p.photoDataUrl
             // eslint-disable-next-line @next/next/no-img-element -- foto cargada en el panel demo (data URL local)
             ? <img src={p.photoDataUrl} alt={p.imageAlt || p.name} className="h-full w-full object-contain" />
             : <RackShot items={[{ art: p.art, pack: p.pack, tint: facts.lead.colorHex }]} label={p.imageAlt || p.name} uprights lightUp fit />}
-          <span className="absolute bottom-1 right-4 font-mono text-[10px] uppercase tracking-[0.14em] text-muted">Imagen ilustrativa</span>
+          <span className="plate absolute bottom-1 right-4 border border-line bg-bg px-1 py-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-muted">Imagen ilustrativa</span>
         </div>
-        <Scoreboard key={pick.key} cells={cells(facts, cadete)} label={`Datos de ${p.name}`} motion={motion} className="lg:col-span-2 lg:row-start-4 lg:grid-cols-[1.4fr_1fr_1fr_1.3fr]" />
+        <Scoreboard key={pick.key} cells={readings} label={`Datos de ${p.name}`} motion={motion} className="lg:col-span-2 lg:row-start-4 lg:grid-cols-[1.4fr_1fr_1.3fr]" />
         <div className="pb-2 pt-2 lg:col-start-1 lg:row-start-2 lg:pb-8">
           <p className="max-w-[40ch] text-base sm:text-lg">
             <Link href={productHref(p.slug)} className="font-bold underline decoration-line underline-offset-4 hover:decoration-current">{p.name}</Link>

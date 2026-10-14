@@ -1,0 +1,236 @@
+{
+  "measuredAt": "2026-10-13T22:56:30.855Z",
+  "browser": "154.0.8037.57",
+  "baselineCommit": "ae0b07c",
+  "viewport": "390×844",
+  "cpu": 4,
+  "cache": "disabled in every context",
+  "network": "local static exports; no network throttle",
+  "splash": "already seen",
+  "method": "15 alternating pairs after one warmup visit per version; fresh context per visit; 2500ms after load",
+  "urls": {
+    "antes": "http://localhost:4174/supplements-ecommerce/",
+    "despues": "http://localhost:4173/supplements-ecommerce/"
+  },
+  "warmup": {
+    "antes": {
+      "lcp": 1948,
+      "cls": 0.004398769573736162,
+      "fcp": 624
+    },
+    "despues": {
+      "lcp": 1856,
+      "cls": 0.004398769573736162,
+      "fcp": 600
+    }
+  },
+  "samples": [
+    {
+      "iteration": 1,
+      "antes": {
+        "lcp": 1620,
+        "cls": 0.004398769573736162,
+        "fcp": 632
+      },
+      "despues": {
+        "lcp": 1720,
+        "cls": 0.004398769573736162,
+        "fcp": 684
+      }
+    },
+    {
+      "iteration": 2,
+      "despues": {
+        "lcp": 1644,
+        "cls": 0.004398769573736162,
+        "fcp": 616
+      },
+      "antes": {
+        "lcp": 1732,
+        "cls": 0.004398769573736162,
+        "fcp": 460
+      }
+    },
+    {
+      "iteration": 3,
+      "antes": {
+        "lcp": 1860,
+        "cls": 0.004398769573736162,
+        "fcp": 740
+      },
+      "despues": {
+        "lcp": 1676,
+        "cls": 0.004398769573736162,
+        "fcp": 548
+      }
+    },
+    {
+      "iteration": 4,
+      "despues": {
+        "lcp": 2344,
+        "cls": 0.004398769573736162,
+        "fcp": 608
+      },
+      "antes": {
+        "lcp": 1972,
+        "cls": 0.004398769573736162,
+        "fcp": 772
+      }
+    },
+    {
+      "iteration": 5,
+      "antes": {
+        "lcp": 1748,
+        "cls": 0.004398769573736162,
+        "fcp": 604
+      },
+      "despues": {
+        "lcp": 1564,
+        "cls": 0.004398769573736162,
+        "fcp": 648
+      }
+    },
+    {
+      "iteration": 6,
+      "despues": {
+        "lcp": 1472,
+        "cls": 0.004398769573736162,
+        "fcp": 616
+      },
+      "antes": {
+        "lcp": 1660,
+        "cls": 0.004398769573736162,
+        "fcp": 488
+      }
+    },
+    {
+      "iteration": 7,
+      "antes": {
+        "lcp": 1788,
+        "cls": 0.004398769573736162,
+        "fcp": 536
+      },
+      "despues": {
+        "lcp": 3116,
+        "cls": 0.004398769573736162,
+        "fcp": 904
+      }
+    },
+    {
+      "iteration": 8,
+      "despues": {
+        "lcp": 1952,
+        "cls": 0.004398769573736162,
+        "fcp": 848
+      },
+      "antes": {
+        "lcp": 1520,
+        "cls": 0.004398769573736162,
+        "fcp": 872
+      }
+    },
+    {
+      "iteration": 9,
+      "antes": {
+        "lcp": 1840,
+        "cls": 0.004398769573736162,
+        "fcp": 564
+      },
+      "despues": {
+        "lcp": 2388,
+        "cls": 0.004398769573736162,
+        "fcp": 696
+      }
+    },
+    {
+      "iteration": 10,
+      "despues": {
+        "lcp": 1652,
+        "cls": 0.004398769573736162,
+        "fcp": 468
+      },
+      "antes": {
+        "lcp": 2172,
+        "cls": 0.011224676368602918,
+        "fcp": 888
+      }
+    },
+    {
+      "iteration": 11,
+      "antes": {
+        "lcp": 1780,
+        "cls": 0.004398769573736162,
+        "fcp": 532
+      },
+      "despues": {
+        "lcp": 1708,
+        "cls": 0.004398769573736162,
+        "fcp": 592
+      }
+    },
+    {
+      "iteration": 12,
+      "despues": {
+        "lcp": 1832,
+        "cls": 0.004398769573736162,
+        "fcp": 548
+      },
+      "antes": {
+        "lcp": 1928,
+        "cls": 0.004398769573736162,
+        "fcp": 588
+      }
+    },
+    {
+      "iteration": 13,
+      "antes": {
+        "lcp": 6704,
+        "cls": 0.004398769573736162,
+        "fcp": 944
+      },
+      "despues": {
+        "lcp": 3248,
+        "cls": 0.004398769573736162,
+        "fcp": 1212
+      }
+    },
+    {
+      "iteration": 14,
+      "despues": {
+        "lcp": 1520,
+        "cls": 0.004398769573736162,
+        "fcp": 512
+      },
+      "antes": {
+        "lcp": 1696,
+        "cls": 0.004398769573736162,
+        "fcp": 536
+      }
+    },
+    {
+      "iteration": 15,
+      "antes": {
+        "lcp": 1568,
+        "cls": 0.004398769573736162,
+        "fcp": 500
+      },
+      "despues": {
+        "lcp": 1932,
+        "cls": 0.004398769573736162,
+        "fcp": 544
+      }
+    }
+  ],
+  "median": {
+    "antes": {
+      "lcp": 1780,
+      "fcp": 588,
+      "cls": 0.004398769573736162
+    },
+    "despues": {
+      "lcp": 1720,
+      "fcp": 616,
+      "cls": 0.004398769573736162
+    }
+  }
+}

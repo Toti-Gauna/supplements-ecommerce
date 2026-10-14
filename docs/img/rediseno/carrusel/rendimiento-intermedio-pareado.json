@@ -1,0 +1,132 @@
+{
+  "measuredAt": "2026-10-13T13:38:55.284Z",
+  "browser": "154.0.8037.57",
+  "baselineCommit": "ae0b07c",
+  "viewport": "390×844",
+  "cpu": 4,
+  "cache": "disabled in every context",
+  "network": "local static exports; no network throttle",
+  "splash": "already seen",
+  "method": "7 alternating pairs after one warmup visit per version; fresh context per visit; 2500ms after load",
+  "urls": {
+    "antes": "http://localhost:4174/supplements-ecommerce/",
+    "despues": "http://localhost:4173/supplements-ecommerce/"
+  },
+  "warmup": {
+    "antes": {
+      "lcp": 3040,
+      "cls": 0.004398769573736162,
+      "fcp": 880
+    },
+    "despues": {
+      "lcp": 3684,
+      "cls": 0.004398769573736162,
+      "fcp": 1388
+    }
+  },
+  "samples": [
+    {
+      "iteration": 1,
+      "antes": {
+        "lcp": 1872,
+        "cls": 0.004398769573736162,
+        "fcp": 572
+      },
+      "despues": {
+        "lcp": 2364,
+        "cls": 0.004398769573736162,
+        "fcp": 948
+      }
+    },
+    {
+      "iteration": 2,
+      "despues": {
+        "lcp": 1476,
+        "cls": 0.004398769573736162,
+        "fcp": 1476
+      },
+      "antes": {
+        "lcp": 2120,
+        "cls": 0.004398769573736162,
+        "fcp": 632
+      }
+    },
+    {
+      "iteration": 3,
+      "antes": {
+        "lcp": 1836,
+        "cls": 0.004398769573736162,
+        "fcp": 912
+      },
+      "despues": {
+        "lcp": 2312,
+        "cls": 0.004398769573736162,
+        "fcp": 656
+      }
+    },
+    {
+      "iteration": 4,
+      "despues": {
+        "lcp": 2132,
+        "cls": 0.004398769573736162,
+        "fcp": 812
+      },
+      "antes": {
+        "lcp": 3284,
+        "cls": 0.004398769573736162,
+        "fcp": 1012
+      }
+    },
+    {
+      "iteration": 5,
+      "antes": {
+        "lcp": 1788,
+        "cls": 0.004398769573736162,
+        "fcp": 584
+      },
+      "despues": {
+        "lcp": 4452,
+        "cls": 0.004398769573736162,
+        "fcp": 920
+      }
+    },
+    {
+      "iteration": 6,
+      "despues": {
+        "lcp": 5472,
+        "cls": 0.004398769573736162,
+        "fcp": 2312
+      },
+      "antes": {
+        "lcp": 2088,
+        "cls": 0.004398769573736162,
+        "fcp": 632
+      }
+    },
+    {
+      "iteration": 7,
+      "antes": {
+        "lcp": 2104,
+        "cls": 0.004398769573736162,
+        "fcp": 680
+      },
+      "despues": {
+        "lcp": 2524,
+        "cls": 0.004398769573736162,
+        "fcp": 704
+      }
+    }
+  ],
+  "median": {
+    "antes": {
+      "lcp": 2088,
+      "fcp": 632,
+      "cls": 0.004398769573736162
+    },
+    "despues": {
+      "lcp": 2364,
+      "fcp": 920,
+      "cls": 0.004398769573736162
+    }
+  }
+}

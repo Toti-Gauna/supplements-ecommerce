@@ -1,0 +1,43 @@
+{
+  "checkedAt": "2026-10-14T14:44:02.838169+00:00",
+  "sourceCommit": "5a4c7fe0c3a8fbcf9cd79e58fa48101fd250466e",
+  "baselineCommit": "ae0b07c32d7876f8b645e7e93d9507020f38fb66",
+  "lint": "passed",
+  "typecheck": "passed",
+  "unit": {
+    "files": 55,
+    "tests": 447,
+    "status": "passed"
+  },
+  "brand": {
+    "files": 3,
+    "tests": 30,
+    "status": "passed",
+    "includedInUnit": true
+  },
+  "export": {
+    "pagesBasePath": "/supplements-ecommerce",
+    "status": "passed"
+  },
+  "e2e": {
+    "project": "mobile",
+    "tests": 417,
+    "workers": 2,
+    "retries": 0,
+    "skipped": 0,
+    "duration": "41.0m",
+    "status": "passed",
+    "report": "playwright-417.txt"
+  },
+  "webkit": {
+    "engine": "WebKit 26.0",
+    "device": "iPhone 13 emulated on Linux",
+    "viewport": "390×844",
+    "modes": [
+      "dark",
+      "light"
+    ],
+    "status": "passed",
+    "report": "webkit-26.json"
+  }
+}

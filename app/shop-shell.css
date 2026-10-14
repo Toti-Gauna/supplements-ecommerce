@@ -1,0 +1,25 @@
+/* Las instantáneas de la página se pintan en una capa superior al DOM normal. El header, el dock y la zona
+   segura también se capturan: siguen encima del contenido durante la navegación, sin fundirse ni moverse. */
+[data-shop-header] { view-transition-name: shop-header; }
+[data-shop-bottomnav] { view-transition-name: shop-dock; }
+body [data-ticker] { view-transition-name: shop-ticker; }
+[data-safe-area-cover] { view-transition-name: safe-area-cover; }
+
+::view-transition-group(shop-header),
+::view-transition-group(shop-dock),
+::view-transition-group(shop-ticker),
+::view-transition-group(safe-area-cover) {
+  z-index: 60;
+  animation: none;
+}
+::view-transition-old(shop-header),
+::view-transition-old(shop-dock),
+::view-transition-old(shop-ticker),
+::view-transition-old(safe-area-cover) { display: none; }
+::view-transition-new(shop-header),
+::view-transition-new(shop-dock),
+::view-transition-new(shop-ticker),
+::view-transition-new(safe-area-cover) {
+  animation: none;
+  mix-blend-mode: normal;
+}

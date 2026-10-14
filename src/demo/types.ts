@@ -171,15 +171,19 @@ export interface ShippingZone {
 }
 
 /**
- * Destacado del hero del inicio (R1, Contenido → Hero): el producto en el rack con su titular de póster y una bajada.
- * El primero visible es el "producto estrella"; si hay una campaña vigente, la campaña va antes y no rota.
+ * Diapositiva del carrusel del inicio: producto en el rack, titular y bajada. La campaña vigente va primera.
  */
+export interface HeroImageFrame { x: number; y: number; zoom: number }
+export interface HeroImage { src: string; alt: string; frame: HeroImageFrame }
+
 export interface HeroFeature {
   id: string;
   productSlug: string;
   headline: string;
   pitch: string;
   active?: boolean;
+  /** Imagen propia optimizada: data URL local que nunca sale del navegador. */
+  image?: HeroImage;
 }
 
 /** Fechas comerciales con temática fitness propia (Fase 5, docs/plan-por-fases.md). */

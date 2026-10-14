@@ -75,3 +75,12 @@ node scripts/check-carousel-webkit.mjs
 ```
 
 `PLAYWRIGHT_WEBKIT_PATH` permite indicar un ejecutable propio cuando el entorno lo requiere.
+
+## Verificación de entrega
+
+- `npm run lint && npm run typecheck && npm test && npm run check:marca`: verde; 55 archivos y **447 tests unitarios**, incluidos los **30 tests de marca**.
+- `PAGES_BASE_PATH=/supplements-ecommerce npm run build`: export estático en verde.
+- `PAGES_BASE_PATH=/supplements-ecommerce npx playwright test --workers=2`: **417 de 417**, sin reintentos ni omitidos. [Reporte completo](playwright-417.txt).
+- Chromium 154.0.8037.57 del entorno, seleccionado con `PLAYWRIGHT_CHROMIUM_PATH=/usr/bin/chromium`; WebKit 26.0 también comprobado como se detalla arriba.
+
+[Registro de verificación](verificacion.json). Las capturas y la medición corresponden al mismo código de la tienda; los ajustes finales afectan solo las pruebas.

@@ -31,6 +31,9 @@ test("con los avisos ocultos el contenido sigue visible durante la navegación",
   await page.keyboard.press("Escape");
   await page.getByRole("button", { name: "Ocultar avisos" }).click();
   const title = page.getByRole("heading", { level: 1 });
+  await page.evaluate(() => document.fonts.ready);
+  // Las capturas nativas usan antialias en gris: la referencia también necesita una capa compuesta, sin LCD RGB.
+  await title.evaluate((el) => { el.style.willChange = "transform"; });
   const clip = (await title.boundingBox())!;
   const reference = await page.screenshot({ clip, scale: "css" });
   await page.goto("cuenta/");

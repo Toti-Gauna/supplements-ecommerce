@@ -30,20 +30,23 @@ La imagen de ejemplo es una captura del arte SVG propio de la demo, subida desde
 Chromium 154.0.8037.57, viewport 390 × 844, CPU ×4, caché de red desactivada, export estático local bajo
 `/supplements-ecommerce`, sin limitar la red. Movimiento habilitado, temática Original y splash ya visto.
 
-Comparación final: quince pares alternados de `main` (`ae0b07c`) y `rediseno-carrusel` en el mismo navegador, con una
+Comparación final, repetida tras corregir el CI: quince pares alternados de `main` (`ae0b07c`) y `rediseno-carrusel` en el mismo navegador, con una
 visita de calentamiento a cada versión y un contexto nuevo por visita. Se registra LCP/CLS con PerformanceObserver
 hasta 2,5 s después de `load`; la tabla muestra medianas. [Datos completos](rendimiento-pareado.json).
 
 | Métrica | Main | Carrusel | Cambio |
 |---|---|---|---|
-| LCP | 1780 ms | 1720 ms | -3.4 % |
-| FCP | 588 ms | 616 ms | +4.8 % |
+| LCP | 1908 ms | 1888 ms | -1.0 % |
+| FCP | 620 ms | 632 ms | +1.9 % |
 | CLS | 0.0044 | 0.0044 | Sin cambio |
 
 La medición inicial previa a editar fue **2272 ms de LCP**, **668 ms de FCP** y **0,0044 de CLS** (siete visitas,
 [datos](rendimiento-antes.json)). Los lotes intermedios se conservan en los JSON `rendimiento-intermedio-*`; mostraron
 variación de carga y motivaron la comparación alternada final. El LCP final también queda por debajo de esa medición
 inicial. Las pruebas verifican que rotar o preparar las escenas conserva la altura del carrusel.
+
+La comparación de la entrega inicial (1780 → 1720 ms de LCP) se conserva en
+[rendimiento-pareado-inicial.json](rendimiento-pareado-inicial.json); la tabla refleja el código corregido.
 
 Se difieren el dibujo de las escenas fuera de pantalla y los envases de los estantes; sus medidas se reservan. La
 entrega y el flujo de compra se calculan una vez para el carrusel. El titular se lee desde el primer cuadro y conserva
@@ -83,4 +86,22 @@ node scripts/check-carousel-webkit.mjs
 - `PAGES_BASE_PATH=/supplements-ecommerce npx playwright test --workers=2`: **417 de 417**, sin reintentos ni omitidos. [Reporte completo](playwright-417.txt).
 - Chromium 154.0.8037.57 del entorno, seleccionado con `PLAYWRIGHT_CHROMIUM_PATH=/usr/bin/chromium`; WebKit 26.0 también comprobado como se detalla arriba.
 
-[Registro de verificación](verificacion.json). Las capturas y la medición corresponden al mismo código de la tienda; los ajustes finales afectan solo las pruebas.
+[Registro de la verificación inicial](verificacion.json), anterior a la corrección del CI indicada abajo.
+
+## Corrección del CI (14/10/2026)
+
+La primera ejecución de Actions pasó lint, tipos, 447 unitarios y export, pero fallaron 3 de 417 e2e:
+[ejecución y trazas](https://github.com/Toti-Gauna/supplements-ecommerce/actions/runs/38583420753).
+
+- Un toque durante la primera captura nativa abortó una transición con movimiento reducido. `PageTransition`
+  evita montar la transición en ese modo; las animaciones habilitadas conservan su comportamiento. La regresión
+  verifica cero llamadas nativas y cero errores al navegar y elegir sabor; en el export anterior detectó 3 llamadas.
+- `innerText` devolvió un nombre vacío en el riel con `content-visibility`. La prueba espera un nombre real en el DOM
+  y lo lee con `textContent`, conservando la verificación de hover, apilamiento, compra y destino.
+- El título estático tenía antialias LCD y su captura nativa usaba gris. La referencia visual espera la fuente y
+  compone el título en su propia capa; se conserva la tolerancia de 0,005 y las comprobaciones de superposición.
+
+La corrección se comprueba con Chromium **141.0.7390.37**, el navegador incluido en Playwright 1.56.1 que instala
+Actions. Se añade una prueba: la suite completa pasa a tener **418 e2e**, con cero reintentos y cero omitidos.
+Lint, tipos, los 447 unitarios (incluidos 30 de marca), el export con subpath y los **55 e2e afectados** pasan
+localmente con ese navegador. La ejecución completa de Actions queda vinculada en el PR.

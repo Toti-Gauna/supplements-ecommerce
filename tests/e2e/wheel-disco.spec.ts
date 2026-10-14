@@ -1,20 +1,8 @@
-import { expect, test, type Locator, type Page } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 import { horizontalOverflow } from "./helpers";
+import { DISC, flickLeft, recordSpinDuration, rotation, spinDuration, underPointer } from "./wheel-helpers";
 
 /** Fase 4 · Ruleta "Disco olímpico": disco de pesas, luces, pausa al frenar, premios de suplementos y accesibilidad. */
-
-const LABELS = ["5% OFF", "Envío gratis", "Muestra de regalo", "10% OFF", "$3.000 OFF", "Shaker VOLTA de regalo", "15% OFF", "Envío gratis"];
-const DISC = "Ruleta: tocala o arrastrala para girar";
-
-/** Gajo bajo el puntero para una rotación (la misma cuenta que `segmentAt` del engine). */
-const underPointer = (deg: number) => {
-  const m = (a: number) => ((a % 360) + 360) % 360;
-  return LABELS[Math.floor(m(360 - m(deg)) / 45) % 8]!;
-};
-const rotation = async (stage: Locator) => {
-  const style = (await stage.getByRole("button", { name: /^Ruleta/ }).getAttribute("style")) ?? "";
-  return Number(/rotate\((-?[\d.]+)deg\)/.exec(style)?.[1] ?? 0);
-};
 
 /** El club con la animación encendida (la pantalla de carga ya pasó con "reducir movimiento"). */
 async function openWithMotion(page: Page) {
@@ -76,13 +64,7 @@ test("disco olímpico: con animación, las luces corren, el gajo ganador queda b
 test("disco olímpico: un empujón hacia la izquierda lo gira en contra del reloj y frena en el premio", async ({ page }) => {
   const stage = await openWithMotion(page);
   const disc = stage.getByRole("button", { name: DISC });
-  const box = (await disc.boundingBox())!;
-  const cx = box.x + box.width / 2, cy = box.y + box.height / 2;
-  await page.mouse.move(cx, cy - box.height * 0.4);
-  await page.mouse.down();
-  await page.mouse.move(cx - box.width * 0.3, cy - box.height * 0.3, { steps: 3 });
-  await page.mouse.move(cx - box.width * 0.4, cy, { steps: 3 });
-  await page.mouse.up();
+  await flickLeft(page, disc);
   const landed = stage.getByText(/^¡Te tocó /);
   await expect(landed).toBeVisible({ timeout: 12_000 });
   const deg = await rotation(stage);
@@ -94,10 +76,11 @@ test("disco olímpico: con movimiento reducido no hay pausa ni giro largo", asyn
   await page.goto("club/");
   await page.getByRole("button", { name: "Girar la ruleta" }).click();
   const stage = page.getByRole("dialog", { name: "Ruleta de cupones" });
-  const started = Date.now();
-  await stage.getByRole("button", { name: "Girar la ruleta" }).click();
+  const spin = stage.getByRole("button", { name: "Girar la ruleta" });
+  await recordSpinDuration(spin);
+  await spin.click();
   await expect(stage.getByText("¡Ganaste!")).toBeVisible();
-  expect(Date.now() - started).toBeLessThan(1_200);
+  expect(await spinDuration(stage)).toBeLessThan(1_200);
   await expect(stage.locator(".wheel-landed")).toHaveCount(0);
 });
 

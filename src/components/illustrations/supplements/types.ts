@@ -1,7 +1,8 @@
-/** Envases de la librería SVG de suplementos (todos dibujados en un lienzo de 400 × 400, piso en y = 330). */
+/** Envases y accesorios de la librería SVG (todos dibujados en un lienzo de 400 × 400, piso en y = 330). */
 export type ContainerKind =
   | "tub" | "tub-tall" | "jar" | "pouch" | "caps" | "gummies" | "bottle"
-  | "bar" | "box" | "sachet" | "gel" | "spread" | "shaker" | "chalk";
+  | "bar" | "box" | "sachet" | "gel" | "spread" | "shaker" | "chalk"
+  | "straps" | "wraps" | "gloves" | "belt" | "sleeves" | "rope" | "bands" | "bottle-sport" | "gym-bag";
 
 /** Dibujo del rótulo: cada marca de muestra tiene el suyo. */
 export type LabelPattern = "bolt" | "stripes" | "wave" | "grid";
@@ -29,6 +30,6 @@ export interface PackStyle {
 
 export interface ContainerProps {
   pack: PackStyle;
-  /** Color del sabor (franja del rótulo, polvo, cápsulas, líquido). */
+  /** Color del sabor (franja del rótulo, polvo, cápsulas, líquido) o, en accesorios, el color del producto. */
   tint: string;
 }

@@ -1,6 +1,7 @@
 import type { Pack } from "../types";
 import { goalInfo } from "./goals";
 import { isGear } from "./catalog";
+import type { PackQuote } from "./packs";
 import type { QuizResult } from "./quiz";
 
 /**
@@ -38,4 +39,15 @@ export function programPack(result: QuizResult): Pack | null {
     featured: false,
     custom: true,
   };
+}
+
+/**
+ * Cuánto sale por día lo que se repite (un servicio de cada suplemento) al precio del pack comprado una vez. null si
+ * algún suplemento no informa servicios (no se puede estimar) o si no hay suplementos.
+ */
+export function programPerDay(quote: PackQuote): number | null {
+  const daily = quote.lines.filter((l) => l.recurring);
+  if (!daily.length || daily.some((l) => (l.variant.servings ?? 0) < 1)) return null;
+  const full = daily.reduce((sum, l) => sum + l.unitPrice / l.variant.servings!, 0);
+  return Math.round(full * (1 - quote.pack.discountPct / 100));
 }

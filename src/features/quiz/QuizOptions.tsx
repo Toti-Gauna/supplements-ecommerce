@@ -1,13 +1,11 @@
 "use client";
 import { LayoutGrid, Moon, Sun, Sunrise, type LucideIcon } from "lucide-react";
 import { BadgeGlyph } from "@/components/illustrations/BadgeGlyph";
-import { GoalGlyph } from "@/components/illustrations/GoalGlyph";
-import { useGoals } from "../catalog/useGoals";
-import { sports } from "@/demo/fixtures/sports";
-import type { Goal } from "@/demo/types";
-import { MAX_GOALS, QUIZ_DAYS, QUIZ_RESTRICTIONS, QUIZ_TIMES, type Restriction, type TrainingDays, type TrainingTime } from "@/demo/fixtures/stack-builder";
+import { QUIZ_DAYS, QUIZ_RESTRICTIONS, QUIZ_TIMES, type Restriction, type TrainingDays, type TrainingTime } from "@/demo/fixtures/stack-builder";
 import { cn } from "@/lib/cn";
 import { QuizChoice } from "./QuizChoice";
+import { QuizGoalOptions } from "./QuizGoalOptions";
+import { QuizSportOptions } from "./QuizSportOptions";
 import type { QuizDraft, QuizStepId } from "./quiz-steps";
 
 const TIME_ICON: Record<TrainingTime, LucideIcon> = { manana: Sunrise, tarde: Sun, noche: Moon };
@@ -29,36 +27,10 @@ interface Props {
   onAnswer: (patch: QuizDraft) => void;
 }
 
-/** Las opciones de cada pregunta: objetivos con su ícono y color, días, horario y restricciones (con "Ninguna"). */
+/** Las opciones de cada pregunta: objetivos (hasta 3), deporte, días, horario y restricciones (con "Ninguna"). */
 export function QuizOptions({ step, draft, onAnswer }: Props) {
-  const goals = useGoals();
-  if (step === "goals") {
-    const chosen = draft.goals ?? [];
-    const toggle = (g: Goal, on: boolean) => {
-      const rest = chosen.filter((x) => x !== g);
-      onAnswer({ goals: on ? [...rest, g].slice(-MAX_GOALS) : rest });
-    };
-    return (
-      <div className="grid grid-cols-[minmax(0,1fr)] gap-2.5 min-[420px]:grid-cols-2 min-[420px]:[&>*:last-child:nth-child(odd)]:col-span-2">
-        {goals.map((g) => (
-          <QuizChoice key={g.id} type="checkbox" name="goals" value={g.id} hue={g.hue} checked={chosen.includes(g.id)} onChange={(on) => toggle(g.id, on)}
-            icon={<GoalGlyph goal={g.id} />} title={g.name} description={g.pitch} />
-        ))}
-      </div>
-    );
-  }
-  if (step === "sport") {
-    return (
-      <div className="grid grid-cols-[minmax(0,1fr)] gap-2.5 min-[420px]:grid-cols-2">
-        <QuizChoice type="radio" name="sport" value="gimnasio" checked={draft.sport === null} onChange={() => onAnswer({ sport: null })}
-          icon={<LayoutGrid size={22} />} title="Solo gimnasio" description="Armamos con tus objetivos" className="min-[420px]:col-span-2" />
-        {sports.map((s) => (
-          <QuizChoice key={s.id} type="radio" name="sport" value={s.id} hue={s.hue} checked={draft.sport === s.id} onChange={() => onAnswer({ sport: s.id })}
-            title={s.name} description={s.pitch} />
-        ))}
-      </div>
-    );
-  }
+  if (step === "goals") return <QuizGoalOptions chosen={draft.goals ?? []} onChange={(goals) => onAnswer({ goals })} />;
+  if (step === "sport") return <QuizSportOptions value={draft.sport} onChange={(sport) => onAnswer({ sport })} />;
   if (step === "days") {
     return (
       <div className="grid grid-cols-[minmax(0,1fr)] gap-2.5">

@@ -1,5 +1,5 @@
 import { goalInfo } from "@/demo/engine/goals";
-import { QUIZ_DAYS, QUIZ_RESTRICTIONS, QUIZ_TIMES, type QuizAnswers, type Restriction, type TrainingDays, type TrainingTime } from "@/demo/fixtures/stack-builder";
+import { MAX_GOALS, QUIZ_DAYS, QUIZ_RESTRICTIONS, QUIZ_TIMES, type QuizAnswers, type Restriction, type TrainingDays, type TrainingTime } from "@/demo/fixtures/stack-builder";
 import { sportById } from "@/demo/fixtures/sports";
 import type { Goal, SportId } from "@/demo/types";
 
@@ -25,8 +25,8 @@ export interface QuizStepInfo {
 
 /** Las cinco pantallas del quiz, en orden. */
 export const QUIZ_STEPS: QuizStepInfo[] = [
-  { id: "goals", label: "Objetivo", question: "¿Qué querés lograr?", hint: "Podés elegir hasta 3: armamos un solo stack, sin repetir productos." },
-  { id: "sport", label: "Deporte", question: "¿Hacés algún deporte?", hint: "Sumamos lo que tu deporte pide y el equipamiento que usás." },
+  { id: "goals", label: "Objetivos", question: "¿Qué querés lograr?", hint: "Elegí hasta 3. Armamos un solo programa, sin repetir productos." },
+  { id: "sport", label: "Deporte", question: "¿Hacés algún deporte?", hint: "Sumamos lo que tu deporte pide y el equipamiento que usás. Si no, elegí Solo gimnasio." },
   { id: "days", label: "Días", question: "¿Cuántos días por semana entrenás?", hint: "Con 5 o más sumamos algo para recuperarte." },
   { id: "time", label: "Horario", question: "¿A qué hora entrenás?", hint: "Lo usamos para elegir el pre-entreno." },
   { id: "restrictions", label: "Restricciones", question: "¿Tenés alguna restricción?", hint: "Podés marcar varias, o Ninguna." },
@@ -36,6 +36,18 @@ export const QUIZ_STEPS: QuizStepInfo[] = [
 export const RESULT_STEP = QUIZ_STEPS.length;
 
 export const isAnswered = (draft: QuizDraft, id: QuizStepId) => (id === "goals" ? !!draft.goals?.length : draft[id] !== undefined);
+
+/**
+ * Marcar o desmarcar un objetivo. Con el tope lleno, marcar otro NO reemplaza a ninguno (eso confunde): queda como
+ * estaba y `blocked` pide avisar "sacá uno para sumar otro".
+ */
+export function toggleGoal(chosen: Goal[], goal: Goal, on: boolean, max = MAX_GOALS): { goals: Goal[]; blocked: boolean } {
+  const rest = chosen.filter((g) => g !== goal);
+  if (!on) return { goals: rest, blocked: false };
+  if (chosen.includes(goal)) return { goals: chosen, blocked: false };
+  if (chosen.length >= max) return { goals: chosen, blocked: true };
+  return { goals: [...chosen, goal], blocked: false };
+}
 
 export function completeAnswers(d: QuizDraft): QuizAnswers | null {
   return d.goals?.length && d.sport !== undefined && d.days && d.time && d.restrictions
@@ -52,4 +64,13 @@ export function answerLabel(draft: QuizDraft, id: QuizStepId): string {
   if (!draft.restrictions) return "";
   if (draft.restrictions.length === 0) return "Sin restricciones";
   return draft.restrictions.map((r) => QUIZ_RESTRICTIONS.find((x) => x.value === r)?.label ?? r).join(" · ");
+}
+
+/** Un nombre dentro de la frase: en minúscula, salvo marcas con mayúscula adentro ("CrossFit"). */
+const inSentence = (name: string) => (/[A-ZÁÉÍÓÚÑ]/.test(name.slice(1)) ? name : name.toLowerCase());
+
+/** Título del resultado: "Tu programa para fuerza, salud y fútbol" (los objetivos elegidos y el deporte). */
+export function programTitle(goalNames: string[], sportName?: string | null): string {
+  const parts = [...goalNames, ...(sportName ? [sportName] : [])].map(inSentence);
+  return parts.length ? `Tu programa para ${new Intl.ListFormat("es", { type: "conjunction" }).format(parts)}` : "Tu programa";
 }

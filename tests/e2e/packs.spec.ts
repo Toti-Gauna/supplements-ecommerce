@@ -1,27 +1,11 @@
 import { expect, test, type Page } from "@playwright/test";
-import { guardNetwork, horizontalOverflow } from "./helpers";
+import { checkoutAsGuest, guardNetwork, horizontalOverflow } from "./helpers";
 
 /** L3 · Packs mensuales: lista, detalle, carrito, suscripción simulada de punta a punta y Mi cuenta → Suscripciones. */
 const base = new URL(process.env.PAGES_BASE_PATH ?? "", "http://x").pathname.replace(/\/$/, "");
 
 const ledPrice = (page: Page) => page.getByRole("region", { name: "Comprar el pack" }).getByRole("img").first().getAttribute("aria-label");
 const cart = (page: Page) => page.getByRole("dialog", { name: "Carrito" });
-
-/** Del carrito al pedido confirmado: invitado, cadete, transferencia. */
-async function checkout(page: Page) {
-  await page.goto("checkout/");
-  await page.getByLabel("Nombre y apellido").fill("Juana Pérez");
-  await page.getByLabel("Email").fill("juana@ejemplo.com");
-  await page.getByLabel("Teléfono / WhatsApp").fill("223 555-1234");
-  await page.getByRole("button", { name: "Continuar a la entrega" }).click();
-  await page.getByText("Cadete en Mar del Plata").click();
-  await page.getByLabel("Calle").fill("Güemes");
-  await page.getByLabel("Altura").fill("2500");
-  await page.getByLabel("Código postal").fill("7600");
-  await page.getByRole("button", { name: "Continuar al pago" }).click();
-  await page.getByText("Transferencia bancaria").click();
-  await page.getByRole("button", { name: "Revisar pedido" }).click();
-}
 
 test("la lista muestra los packs activos y el detalle se abre y vuelve con “Todos los packs”", async ({ page }) => {
   const assertNoExternal = guardNetwork(page);
@@ -101,7 +85,7 @@ test("suscribirse (día 12) pasa por el checkout, crea la suscripción simulada 
   await page.getByRole("button", { name: "Quiero este pack todos los meses" }).click();
   await expect(cart(page).getByText("Todos los meses · día 12")).toBeVisible();
   await expect(cart(page).getByText("Descuento pack mensual (15 %)")).toBeVisible();
-  await checkout(page);
+  await checkoutAsGuest(page);
   await expect(page.getByText("Descuento pack mensual (15 %)")).toBeVisible();
   await expect(page.getByText("Se crea una suscripción simulada: la vas a ver en Mi cuenta.")).toBeVisible();
   await page.getByRole("checkbox", { name: /Acepto los/ }).check();

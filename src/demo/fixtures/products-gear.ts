@@ -33,7 +33,10 @@ const TALLES = [{ size: "S" }, { size: "M" }, { size: "L" }, { size: "XL", delta
 const garantia = { q: "¿Tiene garantía?", a: "Sí: 3 meses por fallas de fabricación (costuras, abrojos, hebillas). No cubre el desgaste normal del uso." };
 const cambio = { q: "¿Lo puedo cambiar de talle?", a: "Sí, dentro de los 10 días, sin uso y con la etiqueta. El cambio de talle en Mar del Plata lo lleva el cadete sin costo." };
 
-/** Equipamiento de marcas de MUESTRA (L2: la tienda vende marcas de terceros). Precios ORIENTATIVOS. */
+/**
+ * Equipamiento de marcas de MUESTRA (L2: la tienda vende marcas de terceros). Precios ORIENTATIVOS. Sin objetivos: los
+ * objetivos filtran suplementos; el equipamiento por deporte llega con L4.
+ */
 export const gearProducts: Product[] = [
   {
     slug: "straps-algodon", name: "Straps de levantamiento", short: "Algodón reforzado de 60 cm para peso muerto y remo",
@@ -41,7 +44,7 @@ export const gearProducts: Product[] = [
     categorySlug: "accesorios", brand: "Hierro", basePrice: 14900, art: "straps", gallery: ["front", "context"],
     pack: pack.hierro({ line: "STRAPS", sub: "60 CM · PAR" }),
     variants: gearGrid("st", 14900, ["negro", "rojo", "naranja"], null, { negro: 22, rojo: 9, naranja: 4 }),
-    goals: ["fuerza", "masa-muscular"], faqs: [{ q: "¿Sirven para competir?", a: "En powerlifting no se permiten; en el gimnasio y en strongman, sí." }, garantia],
+    goals: [], faqs: [{ q: "¿Sirven para competir?", a: "En powerlifting no se permiten; en el gimnasio y en strongman, sí." }, garantia],
     featured: true, isNew: true, soldCount: 142, tags: ["straps", "agarre", "peso muerto", "accesorio", "levantamiento"], optionNames: { color: "Color" },
     dims: { lengthCm: 60, widthCm: 4, heightCm: 2, weightG: 120 },
   },
@@ -51,7 +54,7 @@ export const gearProducts: Product[] = [
     categorySlug: "accesorios", brand: "Hierro", basePrice: 74900, art: "belt", gallery: ["front", "context"],
     pack: pack.hierro({ line: "CINTURÓN", sub: "10 MM · PALANCA" }),
     variants: gearGrid("cp", 74900, ["negro", "rojo"], TALLES, (c, i) => (c === "negro" ? [3, 6, 5, 2][i]! : [0, 2, 2, 1][i]!)),
-    goals: ["fuerza"], faqs: [{ q: "¿Cómo elijo el talle?", a: "Medí la cintura a la altura del ombligo: S 65–80 cm, M 75–95 cm, L 90–110 cm, XL 105–125 cm." }, cambio, garantia],
+    goals: [], faqs: [{ q: "¿Cómo elijo el talle?", a: "Medí la cintura a la altura del ombligo: S 65–80 cm, M 75–95 cm, L 90–110 cm, XL 105–125 cm." }, cambio, garantia],
     featured: true, isNew: false, soldCount: 61, tags: ["cinturón", "cinturon", "sentadilla", "peso muerto", "levantamiento"], optionNames: { color: "Color", size: "Talle" },
     dims: { lengthCm: 110, widthCm: 10, heightCm: 1, weightG: 980 },
   },
@@ -61,7 +64,7 @@ export const gearProducts: Product[] = [
     categorySlug: "accesorios", brand: "Hierro", basePrice: 42900, art: "sleeves", gallery: ["front", "context"],
     pack: pack.hierro({ line: "RODILLERAS", sub: "7 MM · PAR" }),
     variants: gearGrid("rn", 42900, ["negro", "gris"], TALLES, (c, i) => (c === "negro" ? [4, 7, 5, 2][i]! : [2, 3, 0, 1][i]!)),
-    goals: ["fuerza", "resistencia"], faqs: [{ q: "¿Cómo elijo el talle?", a: "Medí la pierna 10 cm arriba de la rótula, estirada: S 30–34 cm, M 34–38 cm, L 38–42 cm, XL 42–46 cm." }, cambio, garantia],
+    goals: [], faqs: [{ q: "¿Cómo elijo el talle?", a: "Medí la pierna 10 cm arriba de la rótula, estirada: S 30–34 cm, M 34–38 cm, L 38–42 cm, XL 42–46 cm." }, cambio, garantia],
     featured: false, isNew: true, soldCount: 47, tags: ["rodilleras", "neoprene", "sentadilla", "crossfit"], optionNames: { color: "Color", size: "Talle" },
   },
   {
@@ -70,8 +73,8 @@ export const gearProducts: Product[] = [
     categorySlug: "accesorios", brand: "Hierro", basePrice: 16900, art: "wraps", gallery: ["front"],
     pack: pack.hierro({ line: "MUÑEQUERAS", sub: "45 CM · PAR" }),
     variants: gearGrid("mu", 16900, ["negro", "rojo", "azul"], null, { negro: 15, rojo: 6, azul: 3 }),
-    goals: ["fuerza"], faqs: [garantia],
-    featured: false, isNew: false, soldCount: 88, tags: ["muñequeras", "munequeras", "press", "accesorio"], optionNames: { color: "Color" },
+    goals: [], faqs: [garantia],
+    featured: false, isNew: false, soldCount: 88, tags: ["muñequeras", "munequeras", "banca", "accesorio"], optionNames: { color: "Color" },
   },
   {
     slug: "guantes-boxeo", name: "Guantes de boxeo", short: "Cuero sintético con espuma de doble densidad",
@@ -79,7 +82,7 @@ export const gearProducts: Product[] = [
     categorySlug: "boxeo", brand: "Doce Rounds", basePrice: 59900, art: "gloves", gallery: ["front", "context"],
     pack: pack.doceRounds({ line: "PRO", sub: "TRAINING" }),
     variants: gearGrid("gb", 59900, ["rojo", "negro", "azul"], [{ size: "10 oz" }, { size: "12 oz" }, { size: "14 oz", delta: 3000 }, { size: "16 oz", delta: 5000 }], (c, i) => (c === "rojo" ? [4, 5, 3, 2][i]! : c === "negro" ? [3, 4, 4, 1][i]! : [1, 2, 0, 0][i]!)),
-    goals: ["resistencia", "definicion"], faqs: [{ q: "¿Qué onzas me convienen?", a: "10 oz para bolsa y clases; 12 oz si pesás más de 70 kg; 14 o 16 oz para sparring." }, garantia],
+    goals: [], faqs: [{ q: "¿Qué onzas me convienen?", a: "10 oz para bolsa y clases; 12 oz si pesás más de 70 kg; 14 o 16 oz para sparring." }, garantia],
     featured: true, isNew: true, soldCount: 96, tags: ["guantes", "boxeo", "kickboxing", "sparring", "combate"], optionNames: { color: "Color", size: "Peso" },
     dims: { lengthCm: 30, widthCm: 20, heightCm: 15, weightG: 680 },
   },
@@ -89,7 +92,7 @@ export const gearProducts: Product[] = [
     categorySlug: "boxeo", brand: "Doce Rounds", basePrice: 9900, art: "wraps", gallery: ["front"],
     pack: pack.doceRounds({ line: "VENDAS", sub: "4,5 M · PAR" }),
     variants: gearGrid("vb", 9900, ["negro", "rojo", "blanco"], null, { negro: 30, rojo: 14, blanco: 0 }),
-    goals: ["resistencia"], faqs: [{ q: "¿Se lavan?", a: "Sí, a mano o en bolsa de red, con agua fría. Secalas a la sombra para que no pierdan elasticidad." }],
+    goals: [], faqs: [{ q: "¿Se lavan?", a: "Sí, a mano o en bolsa de red, con agua fría. Secalas a la sombra para que no pierdan elasticidad." }],
     featured: false, isNew: false, soldCount: 211, tags: ["vendas", "boxeo", "combate", "accesorio"], optionNames: { color: "Color" },
   },
   {
@@ -98,7 +101,7 @@ export const gearProducts: Product[] = [
     categorySlug: "funcional", brand: "Pulso", basePrice: 18900, art: "rope", gallery: ["front", "context"],
     pack: pack.pulso({ line: "SPEED", sub: "3 M · REGULABLE" }),
     variants: gearGrid("sr", 18900, ["negro", "verde", "violeta"], null, { negro: 12, verde: 7, violeta: 5 }),
-    goals: ["resistencia", "definicion"], faqs: [{ q: "¿Cómo la regulo?", a: "Pisala al medio: los mangos tienen que llegarte a las axilas. Cortá el sobrante y ajustá el tornillo." }, garantia],
+    goals: [], faqs: [{ q: "¿Cómo la regulo?", a: "Pisala al medio: los mangos tienen que llegarte a las axilas. Cortá el sobrante y ajustá el tornillo." }, garantia],
     featured: false, isNew: true, soldCount: 74, tags: ["soga", "saltar", "cardio", "hiit", "crossfit", "funcional"], optionNames: { color: "Color" },
   },
   {
@@ -107,7 +110,7 @@ export const gearProducts: Product[] = [
     categorySlug: "funcional", brand: "Pulso", basePrice: 27900, art: "bands", gallery: ["front"],
     pack: pack.pulso({ line: "BANDS", sub: "5–40 KG · X4" }),
     variants: gearGrid("be", 27900, ["verde", "violeta", "negro"], null, { verde: 10, violeta: 6, negro: 4 }),
-    goals: ["salud", "definicion", "recuperacion"], faqs: [{ q: "¿Sirven para dominadas?", a: "Sí: la fuerte y la extra fuerte te asisten hasta que las hacés solo." }, garantia],
+    goals: [], faqs: [{ q: "¿Sirven para dominadas?", a: "Sí: la fuerte y la extra fuerte te asisten hasta que las hacés solo." }, garantia],
     featured: false, isNew: false, soldCount: 58, tags: ["bandas", "elásticas", "movilidad", "glúteos", "funcional"], optionNames: { color: "Color del kit" },
   },
   {
@@ -116,7 +119,7 @@ export const gearProducts: Product[] = [
     categorySlug: "shakers", brand: "Pulso", basePrice: 14900, art: "bottle-sport", gallery: ["front"],
     pack: pack.pulso({ line: "1 L", sub: "BPA FREE" }),
     variants: gearGrid("bt", 14900, ["negro", "verde", "arena"], null, { negro: 18, verde: 9, arena: 6 }),
-    goals: ["salud", "resistencia"], faqs: [{ q: "¿Aguanta líquidos calientes?", a: "No: es para agua, bebidas frías o batidos. Para el mate, un termo." }],
+    goals: [], faqs: [{ q: "¿Aguanta líquidos calientes?", a: "No: es para agua, bebidas frías o batidos. Para el mate, un termo." }],
     featured: false, isNew: false, soldCount: 133, tags: ["botella", "agua", "hidratación", "accesorio"], optionNames: { color: "Color" },
   },
   {

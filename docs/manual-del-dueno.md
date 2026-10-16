@@ -188,8 +188,11 @@ sabor y tamaño, con su stock.
 1. Tocá **Nuevo producto**, o **Editar** en el renglón de un producto.
 2. Completá los pasos: foto (o el envase dibujado), nombre y descripción, categoría y precio, **variantes** (sabor,
    tamaño, precio, servicios y costo del proveedor), medidas de envío, marca, objetivos y sellos (sin TACC, vegano…).
-3. En cada variante cargá sus **lotes**: código, mes de vencimiento y unidades. El stock es la suma de los lotes y
-   **sale primero el que vence primero** (lo marca como "Sale primero").
+   En **Qué elige el cliente** decidís cómo se llaman las opciones en la tienda: **sabor y tamaño** (suplementos),
+   **color y talle** (cinturones, rodilleras) o **color y medida** (guantes, sogas, botellas).
+3. En cada variante de un suplemento cargá sus **lotes**: código, mes de vencimiento y unidades. El stock es la suma de
+   los lotes y **sale primero el que vence primero** (lo marca como "Sale primero"). El equipamiento (categorías de
+   accesorios, boxeo, funcional y shakers) no vence: lleva stock por color y talle, sin lotes.
 4. Tocá **Guardar**. Te avisa si falta algo (por ejemplo, un lote con unidades pero sin código).
 
 **Pausar un producto**: apagá el interruptor **Visible** en su renglón. Deja de verse en la tienda sin borrarlo.

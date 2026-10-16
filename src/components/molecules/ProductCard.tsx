@@ -37,6 +37,8 @@ export interface ProductCardData {
   state: StockState;
   stockText: string;
   flavors: number;
+  /** Cómo se llaman las opciones de color: sabores en suplementos, colores en equipamiento. */
+  flavorWord?: [string, string];
   isNew: boolean;
   clearance?: boolean;
   /** Oferta de temática: precio con el cupón (o null si pide un mínimo) y su insignia. */
@@ -89,7 +91,7 @@ export function ProductCard({ product, priority }: { product: ProductCardData; p
         <Stamps badges={product.badges} max={2} />
         <div className="mt-auto flex flex-wrap items-center justify-between gap-x-2 gap-y-1 border-t border-line pt-2.5 font-mono text-[11px]">
           <span className="flex min-w-0 items-center gap-2"><StockLights items={product.lights} /><span className={out ? "text-danger" : "text-ink"}>{product.stockText}</span></span>
-          {product.flavors > 1 && <span className="text-muted">{plural(product.flavors, "sabor", "sabores")}</span>}
+          {product.flavors > 1 && <span className="text-muted">{plural(product.flavors, ...(product.flavorWord ?? ["sabor", "sabores"]))}</span>}
         </div>
         {full && (
           <button type="button" onClick={add} disabled={out} aria-label={`Agregar ${product.name} al carrito`} aria-haspopup={choose ? "dialog" : undefined}

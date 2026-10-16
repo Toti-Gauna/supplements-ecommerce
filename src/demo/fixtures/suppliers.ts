@@ -31,6 +31,10 @@ export const suppliers: Supplier[] = [
     id: "sur", name: "Sur Suplementos (muestra)", brands: ["Brava Sport", "Forja"], contact: "Germán Paz", phone: "223 555-0183",
     email: "sursuple@ejemplo.com", deliveryWeekdays: [3], minOrder: 800000, notes: "Reparte en Mar del Plata los miércoles a la mañana.",
   },
+  {
+    id: "deportes-costa", name: "Deportes de la Costa (muestra)", brands: ["Hierro", "Doce Rounds", "Pulso"], contact: "Lucas Ferro", phone: "223 555-0184",
+    email: "deportescosta@ejemplo.com", deliveryWeekdays: [5], minOrder: 300000, notes: "Equipamiento: talles y colores a pedido, llega los viernes.",
+  },
 ];
 
 /** Stock mínimo y objetivo de una variante: con el mínimo o menos se sugiere comprar hasta llegar al objetivo. */

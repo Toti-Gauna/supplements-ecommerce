@@ -172,4 +172,15 @@ export const recipes: Record<string, Recipe> = {
   "gel-energetico": { supplierCost: 7100, items: [{ materialId: "bolsa", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }] },
   [HOUSE_SHAKER_SLUG]: { supplierCost: 4300, items: [{ materialId: "bolsa", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }] },
   "magnesio-tiza": { supplierCost: 2400, items: [{ materialId: "bolsa", qty: 1 }, { materialId: "folleto", qty: 1 }, { materialId: "precinto", qty: 1 }] },
+  // Equipamiento (L2): va en bolsa con el folleto, sin precinto (no es un alimento).
+  "straps-algodon": { supplierCost: 8200, items: [{ materialId: "bolsa", qty: 1 }, { materialId: "folleto", qty: 1 }] },
+  "cinturon-palanca": { supplierCost: 41200, items: [{ materialId: "bolsa", qty: 1 }, { materialId: "folleto", qty: 1 }] },
+  "rodilleras-neoprene": { supplierCost: 23600, items: [{ materialId: "bolsa", qty: 1 }, { materialId: "folleto", qty: 1 }] },
+  "munequeras-abrojo": { supplierCost: 9300, items: [{ materialId: "bolsa", qty: 1 }, { materialId: "folleto", qty: 1 }] },
+  "guantes-boxeo": { supplierCost: 32900, items: [{ materialId: "bolsa", qty: 1 }, { materialId: "folleto", qty: 1 }] },
+  "vendas-boxeo": { supplierCost: 5400, items: [{ materialId: "bolsa", qty: 1 }, { materialId: "folleto", qty: 1 }] },
+  "soga-rulemanes": { supplierCost: 10400, items: [{ materialId: "bolsa", qty: 1 }, { materialId: "folleto", qty: 1 }] },
+  "bandas-elasticas": { supplierCost: 15300, items: [{ materialId: "bolsa", qty: 1 }, { materialId: "folleto", qty: 1 }] },
+  "botella-1l": { supplierCost: 8200, items: [{ materialId: "bolsa", qty: 1 }, { materialId: "folleto", qty: 1 }] },
+  "bolso-40l": { supplierCost: 30200, items: [{ materialId: "bolsa", qty: 1 }, { materialId: "folleto", qty: 1 }] },
 };

@@ -17,6 +17,8 @@ export interface Category {
   art: ArtKey;
   featured: boolean;
   sortOrder: number;
+  /** "gear": equipamiento (straps, guantes, shakers…): sin servicios, lote ni vencimiento; se elige por color y talle. */
+  kind?: "gear";
 }
 
 export interface Variant {

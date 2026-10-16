@@ -70,6 +70,6 @@ describe("aumento masivo de precios", () => {
     expect(priceChangeLabel({ kind: "brand", brand: "Forja" }, 8, categories)).toBe("+8 % a Forja");
     expect(priceChangeLabel({ kind: "category", slug: "proteinas" }, -7.5, categories)).toBe("−7,5 % a Proteínas");
     expect(priceChangeLabel({ kind: "all" }, 5, categories)).toBe("+5 % a todo el catálogo");
-    expect(brandsOf(products)).toEqual(["Brava Sport", "Forja", "Krono Nutrition", "Ozono", "VOLTA Lab"]);
+    expect(brandsOf(products)).toEqual(["Brava Sport", "Doce Rounds", "Forja", "Hierro", "Krono Nutrition", "Ozono", "Pulso", "VOLTA Lab"]);
   });
 });

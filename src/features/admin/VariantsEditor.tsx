@@ -3,12 +3,24 @@ import { Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/atoms/Button";
 import { Input } from "@/components/atoms/Field";
 import { setVariantLots } from "@/demo/admin/lots";
-import type { Variant } from "@/demo/types";
+import type { Product, Variant } from "@/demo/types";
 import { LotsEditor } from "./lots/LotsEditor";
 import { NumberField } from "./NumberField";
 
-/** Variantes con sabor/tamaño, recargo, costo, stock y lotes. Stock -1 = a pedido; con lotes, el stock es su suma. */
-export function VariantsEditor({ variants, onChange, idPrefix }: { variants: Variant[]; onChange: (v: Variant[]) => void; idPrefix: string }) {
+interface Props {
+  variants: Variant[];
+  onChange: (v: Variant[]) => void;
+  idPrefix: string;
+  /** Cómo se llaman las opciones en la tienda (Sabor y Tamaño, Color y Talle…). */
+  optionNames?: Product["optionNames"];
+  /** Equipamiento: no vence, así que no lleva lotes. */
+  gear?: boolean;
+}
+
+/** Variantes con sabor/tamaño (o color/talle), recargo, costo, stock y lotes. Stock -1 = a pedido; con lotes, el stock es su suma. */
+export function VariantsEditor({ variants, onChange, idPrefix, optionNames, gear = false }: Props) {
+  const colorLabel = optionNames?.color ?? (gear ? "Color" : "Sabor");
+  const sizeLabel = optionNames?.size ?? (gear ? "Talle o medida" : "Tamaño");
   const patch = (i: number, p: Partial<Variant>) => onChange(variants.map((v, k) => (k === i ? { ...v, ...p } : v)));
   // Volver de "a pedido" con lotes cargados: el stock vuelve a ser la suma de los lotes.
   const setMadeToOrder = (i: number, on: boolean) => { const v = variants[i]!; patch(i, on ? { stock: -1 } : setVariantLots({ ...v, stock: 0 }, v.lots ?? [])); };
@@ -27,11 +39,11 @@ export function VariantsEditor({ variants, onChange, idPrefix }: { variants: Var
             <fieldset className="grid gap-3 border-t border-line p-3 sm:grid-cols-2 lg:grid-cols-3">
             <legend className="sr-only">Variante {i + 1}</legend>
             <label className="flex flex-col gap-1 text-sm font-bold">Nombre visible<Input value={v.label} onChange={(e) => patch(i, { label: e.target.value })} /></label>
-            <label className="flex flex-col gap-1 text-sm font-bold">Color<Input value={v.color ?? ""} onChange={(e) => patch(i, { color: e.target.value || undefined })} placeholder="Rosa" /></label>
+            <label className="flex flex-col gap-1 text-sm font-bold">{colorLabel}<Input value={v.color ?? ""} onChange={(e) => patch(i, { color: e.target.value || undefined })} placeholder={gear ? "Negro" : "Chocolate"} /></label>
             <label className="flex flex-col gap-1 text-sm font-bold">Muestra de color
               <input type="color" value={v.colorHex ?? "#8b72ff"} onChange={(e) => patch(i, { colorHex: e.target.value })} className="h-11 w-full rounded-sm border border-line bg-surface" />
             </label>
-            <label className="flex flex-col gap-1 text-sm font-bold">Tamaño / opción<Input value={v.size ?? ""} onChange={(e) => patch(i, { size: e.target.value || undefined })} placeholder="Mediano" /></label>
+            <label className="flex flex-col gap-1 text-sm font-bold">{sizeLabel}<Input value={v.size ?? ""} onChange={(e) => patch(i, { size: e.target.value || undefined })} placeholder={gear ? "M" : "2 lb"} /></label>
             <NumberField id={`${id}-delta`} label="Recargo" suffix="ARS" value={v.priceDelta} onChange={(n) => patch(i, { priceDelta: n })} />
             <NumberField id={`${id}-lead`} label="Plazo propio" suffix="días hábiles" value={v.leadDays} onChange={(n) => patch(i, { leadDays: n || undefined })} hint="Vacío o 0 = el del producto (o 1 día si está en stock). Usalo si, por ejemplo, el tamaño grande tarda más" />
             <div className="flex flex-col gap-2">
@@ -44,7 +56,7 @@ export function VariantsEditor({ variants, onChange, idPrefix }: { variants: Var
                 : <NumberField id={`${id}-stock`} label="Stock" suffix="unidades" value={v.stock} onChange={(n) => patch(i, { stock: n })} hint="0 = sin stock: la tienda no deja agregarla" />)}
             </div>
             <NumberField id={`${id}-cost`} label="Costo del proveedor" suffix="ARS" value={v.cost} onChange={(n) => patch(i, { cost: n || undefined })} hint="Lo actualiza la lista de precios del proveedor (Importar Excel)" />
-            <div className="sm:col-span-full"><LotsEditor lots={v.lots ?? []} idPrefix={id} name={v.label || `Variante ${i + 1}`} onChange={(lots) => onChange(variants.map((x, k) => (k === i ? setVariantLots(x, lots) : x)))} /></div>
+            {!gear && <div className="sm:col-span-full"><LotsEditor lots={v.lots ?? []} idPrefix={id} name={v.label || `Variante ${i + 1}`} onChange={(lots) => onChange(variants.map((x, k) => (k === i ? setVariantLots(x, lots) : x)))} /></div>}
             {variants.length > 1 && (
               <Button variant="danger" size="sm" className="self-end sm:col-span-full sm:justify-self-end" onClick={() => onChange(variants.filter((_, k) => k !== i))}>
                 <Trash2 size={16} aria-hidden="true" /> Quitar variante

@@ -74,10 +74,11 @@ function fieldScore(token: string, words: string[], weight: number, min: number)
 
 /**
  * Exigencia por campo: en la descripción no se toleran errores de tipeo (daban ruido: "caseina" ≈ "cafeína") y las
- * palabras de hasta 3 letras ("pre") van enteras. Una palabra del rubro bien escrita tampoco se busca con errores.
+ * palabras de hasta 3 letras ("pre") van enteras; en el nombre y las etiquetas, al menos como comienzo de palabra
+ * ("pre" no es "neoprene"). Una palabra del rubro bien escrita tampoco se busca con errores.
  */
 function minScore(term: QueryTerm, weight: number): number {
-  if (weight === 1 && term.text.length <= 3) return 4;
+  if (term.text.length <= 3) return weight === 1 ? 4 : 3;
   return weight === 1 || term.known ? 2 : 1;
 }
 

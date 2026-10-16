@@ -151,10 +151,10 @@ test("8.3.19 un solo módulo: menú sin Stock ni Planilla, “Ver stock” filtr
   await alert.click();
   await expect(page).toHaveURL(/ver=variantes/);
   await expect(page).toHaveURL(/stock=reponer/);
-  await expect(page.getByText(`${count} variantes de 63`)).toBeVisible();
+  await expect(page.getByText(`${count} variantes de 112`)).toBeVisible();
   await page.goto("admin-demo/stock/?vista=reponer");
   await expect(page).toHaveURL(/productos\/\?ver=variantes&stock=reponer/);
-  await expect(page.getByText(`${count} variantes de 63`)).toBeVisible();
+  await expect(page.getByText(`${count} variantes de 112`)).toBeVisible();
   // Importar sigue como acción del módulo.
   await page.getByRole("link", { name: "Importar Excel" }).click();
   await expect(page.getByRole("heading", { level: 1, name: /Importar desde Excel/ })).toBeVisible();

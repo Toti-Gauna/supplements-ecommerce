@@ -305,8 +305,8 @@ Orden acordado: **L1 → L2 → L3 → L4**, después R2a, R2b, R2c, R3a, R3b, R
 
 | Lote | Qué | Estado |
 |---|---|---|
-| **L1** · Inicio y navegación | Carrusel de **imágenes** automático (al estilo Velmar, con identidad BOX); inicio: carrusel → categorías → recomendados → "¿Para qué lo querés?" y el stack; **precio total primero** y el precio por servicio chico; el dock del celular siempre arriba al cambiar de página; la pantalla de carga **en cada recarga** hasta terminar su animación | En curso |
-| **L2** · Tienda deportiva multimarca | Textos de comercio que vende marcas de terceros; accesorios (straps, shakers, vendas, cinturones, guantes, rodilleras, sogas, bandas, magnesio, bolsos) con talle y color | Pendiente |
+| **L1** · Inicio y navegación | Carrusel de **imágenes** automático (al estilo Velmar, con identidad BOX); inicio: carrusel → categorías → recomendados → "¿Para qué lo querés?" y el stack; **precio total primero** y el precio por servicio chico; el dock del celular siempre arriba al cambiar de página; la pantalla de carga **en cada recarga** hasta terminar su animación | Hecho (PR #11) |
+| **L2** · Tienda deportiva multimarca | Textos de comercio que vende marcas de terceros; accesorios (straps, shakers, vendas, cinturones, guantes, rodilleras, sogas, bandas, magnesio, bolsos) con talle y color | Hecho (PR de L2) |
 | **L3** · Packs mensuales | Packs por objetivo y deporte, "Quiero este pack todos los meses" (simulado) y panel de packs y suscriptores | Pendiente |
 | **L4** · Objetivos, deportes, stack y quiz | SVG por deporte (fútbol, tenis, pádel, running, etc.), stack con varios objetivos, invitación al quiz al entrar y quiz con opción mensual | Pendiente |
 

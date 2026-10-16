@@ -10,6 +10,7 @@ import { cn } from "@/lib/cn";
 import { NumberField } from "../NumberField";
 import { ProductMediaFields } from "../ProductMediaFields";
 import { VariantsEditor } from "../VariantsEditor";
+import { OptionNamesField } from "./OptionNamesField";
 import { brand } from "@/config/brand";
 
 interface StepProps { id: StepId; check: StepCheck; tried: boolean; children: ReactNode }
@@ -81,7 +82,13 @@ export function EditorSections({ d, set, checks, tried, categories, products, on
           </div>
         </>
       ))}
-      {step("variantes", <VariantsEditor variants={d.variants} onChange={(variants) => set({ variants })} idPrefix={d.slug} />)}
+      {step("variantes", (
+        <>
+          <div className="max-w-md"><OptionNamesField value={d.optionNames} onChange={(optionNames) => set({ optionNames })} /></div>
+          <VariantsEditor variants={d.variants} onChange={(variants) => set({ variants })} idPrefix={d.slug} optionNames={d.optionNames}
+            gear={categories.find((c) => c.slug === d.categorySlug)?.kind === "gear"} />
+        </>
+      ))}
       {step("envio", (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <NumberField id="d-l" label="Largo" suffix="cm" value={dims.lengthCm} onChange={(n) => set({ dims: { ...dims, lengthCm: n } })} />

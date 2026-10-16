@@ -162,6 +162,8 @@ export interface Pack {
   monthlyPct: number;
   featured: boolean;
   active?: boolean;
+  /** Pack armado a medida por el quiz ("Tu programa", L4): no está en el catálogo, viaja con el carrito y la suscripción. */
+  custom?: boolean;
 }
 
 export interface Coupon {

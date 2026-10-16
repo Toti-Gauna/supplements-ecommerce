@@ -1,4 +1,4 @@
-import type { Coupon, FulfillmentType, PaymentMethod } from "../types";
+import type { Coupon, FulfillmentType, Pack, PaymentMethod } from "../types";
 import type { CartLine } from "./cart-types";
 import { getProduct, unitPrice } from "./catalog";
 import { couponDiscount } from "./coupons";
@@ -35,6 +35,8 @@ export interface QuoteOptions {
   coupon?: Coupon | null;
   paymentMethod?: PaymentMethod | null;
   fulfillment?: FulfillmentType | null;
+  /** Packs a medida del carrito (el programa del quiz, L4), además de los del catálogo. */
+  packs?: Pack[];
 }
 
 export function quoteLines(lines: CartLine[]): QuotedLine[] {
@@ -57,7 +59,7 @@ export function quoteCart(lines: CartLine[], options: QuoteOptions = {}): Quote 
   const subtotal = quoted.reduce((sum, q) => sum + q.lineTotal, 0);
   const settings = demoData().settings;
   // Lo que está en un pack completo tiene su propio descuento y no suma al stack (no se acumulan los dos).
-  const pack = quoted.some((q) => q.line.packId) ? packDiscount(quoted, demoData().packs ?? []) : NO_PACK_DISCOUNT;
+  const pack = quoted.some((q) => q.line.packId) ? packDiscount(quoted, [...(demoData().packs ?? []), ...(options.packs ?? [])]) : NO_PACK_DISCOUNT;
   const covered = new Set(pack.coveredLineIds);
   const stackLines = quoted.flatMap((q) => { const product = getProduct(q.line.productSlug); return product && !covered.has(q.line.id) ? [{ product, lineTotal: q.lineTotal }] : []; });
   const stack = stackDiscount(stackLines, settings.stack ?? DEFAULT_STACK_RULE);

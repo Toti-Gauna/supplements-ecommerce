@@ -3,7 +3,7 @@ import type { Ref } from "react";
 import { recommendStack } from "@/demo/engine/quiz";
 import { DEFAULT_STACK_RULE } from "@/demo/engine/stack";
 import { encodeStack, stackSummary } from "@/demo/engine/stack-builder";
-import { useGoal } from "../catalog/useGoals";
+import { useGoals } from "../catalog/useGoals";
 import type { QuizAnswers } from "@/demo/fixtures/stack-builder";
 import { useDemoData } from "@/stores/admin";
 import { QuizPickCard } from "./QuizPickCard";
@@ -29,10 +29,14 @@ export function QuizOutcome({ answers, titleRef, animate, onEdit, onRestart }: P
   const rule = useDemoData((d) => d.settings.stack) ?? DEFAULT_STACK_RULE;
   const result = recommendStack(answers, catalog);
   const summary = stackSummary(result.picks, catalog, rule);
-  const goal = useGoal(answers.goal)?.name.toLowerCase() ?? answers.goal;
+  const goals = useGoals();
+  const focus = new Intl.ListFormat("es", { type: "conjunction" }).format([
+    ...answers.goals.map((g) => (goals.find((x) => x.id === g)?.name ?? g).toLowerCase()),
+    ...(result.sport ? [result.sport.name.toLowerCase()] : []),
+  ]);
   return (
     <>
-      <QuizStage eyebrow="¿Qué necesitás? · Tu resultado" title={`Tu stack para ${goal}`} titleRef={titleRef} step={RESULT_STEP}
+      <QuizStage eyebrow="¿Qué necesitás? · Tu resultado" title={`Tu stack para ${focus}`} titleRef={titleRef} step={RESULT_STEP}
         intro="Recomendación orientativa según tus respuestas: no reemplaza la consulta con un profesional de la salud o del deporte.">
         <QuizRecap answers={answers} notes={result.notes} onEdit={onEdit} />
       </QuizStage>
@@ -49,7 +53,7 @@ export function QuizOutcome({ answers, titleRef, animate, onEdit, onRestart }: P
             </ul>
           )}
         </section>
-        <QuizTotals summary={summary} rule={rule} builderHref={`/crear/?${encodeStack(answers.goal, result.picks)}`} onRestart={onRestart} />
+        <QuizTotals summary={summary} rule={rule} builderHref={`/crear/?${encodeStack(result.goals, result.picks, answers.sport)}`} onRestart={onRestart} />
       </div>
     </>
   );

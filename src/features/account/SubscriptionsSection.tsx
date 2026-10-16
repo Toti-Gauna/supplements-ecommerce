@@ -1,6 +1,7 @@
 "use client";
 import { ButtonLink } from "@/components/atoms/Button";
 import { useAdmin, useDemoData } from "@/stores/admin";
+import { subscriptionPack } from "@/demo/engine/subscriptions";
 import { useSubscriptions } from "@/stores/subscriptions";
 import { SubscriptionCard } from "./SubscriptionCard";
 
@@ -28,7 +29,7 @@ export function SubscriptionsSection() {
   return (
     <ul className="flex flex-col gap-4" aria-label="Tus suscripciones">
       {subs.map((sub) => (
-        <SubscriptionCard key={sub.id} sub={sub} pack={packs.find((p) => p.id === sub.packId)} packs={packs} cal={{ closedWeekdays, closures }} />
+        <SubscriptionCard key={sub.id} sub={sub} pack={subscriptionPack(sub, packs)} packs={packs} cal={{ closedWeekdays, closures }} />
       ))}
     </ul>
   );

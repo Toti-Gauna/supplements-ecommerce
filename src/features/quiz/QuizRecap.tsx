@@ -6,11 +6,11 @@ import type { QuizAnswers } from "@/demo/fixtures/stack-builder";
 import { answerLabel, QUIZ_STEPS } from "./quiz-steps";
 
 /**
- * Arriba del resultado: las cuatro respuestas (cada una vuelve a su pregunta para cambiarla) y los ajustes que hizo
+ * Arriba del resultado: las respuestas (cada una vuelve a su pregunta para cambiarla) y los ajustes que hizo
  * el quiz por esas respuestas ("Entrenás de noche: el pre va sin cafeína…").
  */
 export function QuizRecap({ answers, notes, onEdit }: { answers: QuizAnswers; notes: string[]; onEdit: (step: number) => void }) {
-  const hue = useGoal(answers.goal)?.hue;
+  const hue = useGoal(answers.goals[0]!)?.hue;
   return (
     <div className="flex flex-col gap-4">
       <ul aria-label="Tus respuestas" className="grid grid-cols-2 gap-2">
@@ -23,7 +23,7 @@ export function QuizRecap({ answers, notes, onEdit }: { answers: QuizAnswers; no
                 <span className="min-w-0 flex-1">
                   <span className="eyebrow block text-[10px] text-night-muted">{s.label}</span>
                   <span className="mt-0.5 flex items-center gap-1.5 text-sm font-bold leading-tight">
-                    {s.id === "goal" && <GoalGlyph goal={answers.goal} className="h-4 w-4 shrink-0 text-[color:var(--hue)]" />}{value}
+                    {s.id === "goals" && <GoalGlyph goal={answers.goals[0]!} className="h-4 w-4 shrink-0 text-[color:var(--hue)]" />}{value}
                   </span>
                 </span>
                 <Pencil size={14} aria-hidden="true" className="shrink-0 text-night-muted transition-colors group-hover:text-volt" />

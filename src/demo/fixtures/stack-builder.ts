@@ -1,4 +1,4 @@
-import type { Goal } from "../types";
+import type { Goal, SportId } from "../types";
 
 /**
  * Armador de stack y quiz "¿Qué necesitás?" (Fase 3). Los lugares del estante, qué lugares lleva cada objetivo y las
@@ -43,12 +43,18 @@ export const EXTRA_PREFERENCE: Record<Goal, string[]> = {
   salud: ["salud", "aminoacidos"],
 };
 
+/** Hasta cuántos objetivos se combinan en un stack (más ya no entra en el estante). */
+export const MAX_GOALS = 3;
+
 export type TrainingDays = "1-2" | "3-4" | "5+";
 export type TrainingTime = "manana" | "tarde" | "noche";
 export type Restriction = "vegano" | "sin-tacc" | "sin-azucar" | "sin-cafeina";
 
 export interface QuizAnswers {
-  goal: Goal;
+  /** Uno o más objetivos (L4: "fuerza y salud"), en orden de importancia. Puede ir vacío si eligió un deporte. */
+  goals: Goal[];
+  /** El deporte que practica, o null si solo va al gimnasio. */
+  sport: SportId | null;
   days: TrainingDays;
   time: TrainingTime;
   restrictions: Restriction[];

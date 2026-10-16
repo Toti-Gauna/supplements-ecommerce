@@ -1,5 +1,5 @@
 import { quotePack } from "../engine/packs";
-import { deliveriesWithin, monthlyAmount, nextDelivery, type Subscription, type SubscriptionStatus } from "../engine/subscriptions";
+import { deliveriesWithin, monthlyAmount, nextDelivery, subscriptionPack, type Subscription, type SubscriptionStatus } from "../engine/subscriptions";
 import type { WorkCalendar } from "../engine/workdays";
 import type { Pack } from "../types";
 
@@ -21,7 +21,7 @@ export interface SubscriptionRow {
 
 export function subscriptionRows(subs: Subscription[], packs: Pack[], today: string, cal: WorkCalendar): SubscriptionRow[] {
   return subs.map((sub) => {
-    const pack = packs.find((p) => p.id === sub.packId);
+    const pack = subscriptionPack(sub, packs);
     return {
       sub, customer: sub.customer ?? "Cliente sin nombre", packName: pack?.name ?? "Pack quitado", packFound: !!pack,
       next: nextDelivery(sub, today, cal), amount: monthlyAmount(sub, packs), fromShop: !sub.seed,
@@ -62,7 +62,7 @@ export function prepareList(subs: Subscription[], packs: Pack[], today: string, 
   const byDate = new Map<string, PrepareDelivery[]>();
   const totals = new Map<string, PrepareTotal>();
   for (const { sub, date } of deliveriesWithin(subs, today, PREPARE_DAYS, cal)) {
-    const pack = packs.find((p) => p.id === sub.packId);
+    const pack = subscriptionPack(sub, packs);
     const lines: PrepareLine[] = pack
       ? quotePack(pack, sub.choices).lines.filter((l) => l.recurring).map((l) => ({ productSlug: l.product.slug, name: l.product.name, variantLabel: l.variant.label, qty: l.item.qty }))
       : [];

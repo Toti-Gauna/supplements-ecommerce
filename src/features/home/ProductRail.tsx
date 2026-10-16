@@ -5,6 +5,9 @@ import { Reveal } from "@/components/motion/Reveal";
 import { IllustrativeNote, ProductCard, type ProductCardData } from "@/components/molecules/ProductCard";
 import { useRail } from "@/lib/useRail";
 
+/** Flecha de un riel (pasa de a tarjetas enteras; se apaga en los extremos). */
+export const RAIL_ARROW = "hidden h-11 w-11 place-items-center rounded-sm border border-ink/15 bg-surface transition-[background-color,color,opacity] hover:bg-ink hover:text-bg aria-disabled:cursor-default aria-disabled:opacity-35 aria-disabled:hover:bg-surface aria-disabled:hover:text-ink sm:grid";
+
 interface Props { id: string; eyebrow: string; title: string; accent?: string; products: ProductCardData[]; href?: string }
 
 /**
@@ -15,7 +18,6 @@ interface Props { id: string; eyebrow: string; title: string; accent?: string; p
 export function ProductRail({ id, eyebrow, title, accent, products, href }: Props) {
   const { ref, atStart, atEnd, page } = useRail<HTMLUListElement>(products.map((p) => p.slug).join());
   if (products.length === 0) return null;
-  const arrow = "hidden h-11 w-11 place-items-center rounded-sm border border-ink/15 bg-surface transition-[background-color,color,opacity] hover:bg-ink hover:text-bg aria-disabled:cursor-default aria-disabled:opacity-35 aria-disabled:hover:bg-surface aria-disabled:hover:text-ink sm:grid";
   return (
     <section aria-labelledby={id}>
       <Reveal className="mb-6 flex items-end justify-between gap-4">
@@ -27,8 +29,8 @@ export function ProductRail({ id, eyebrow, title, accent, products, href }: Prop
           {href && <Link href={href} className="mr-2 inline-flex items-center gap-1 text-sm font-bold text-primary hover:underline">Ver todo <ArrowUpRight size={16} aria-hidden="true" /></Link>}
           {products.length > 4 && (
             <>
-              <button type="button" aria-label={`Anteriores de ${title}`} aria-disabled={atStart || undefined} onClick={() => !atStart && page(-1)} className={arrow}><ArrowLeft size={18} aria-hidden="true" /></button>
-              <button type="button" aria-label={`Más de ${title}`} aria-disabled={atEnd || undefined} onClick={() => !atEnd && page(1)} className={arrow}><ArrowRight size={18} aria-hidden="true" /></button>
+              <button type="button" aria-label={`Anteriores de ${title}`} aria-disabled={atStart || undefined} onClick={() => !atStart && page(-1)} className={RAIL_ARROW}><ArrowLeft size={18} aria-hidden="true" /></button>
+              <button type="button" aria-label={`Más de ${title}`} aria-disabled={atEnd || undefined} onClick={() => !atEnd && page(1)} className={RAIL_ARROW}><ArrowRight size={18} aria-hidden="true" /></button>
             </>
           )}
         </div>

@@ -18,6 +18,7 @@ import { useSearchShortcut } from "./useSearchShortcut";
 
 export const NAV = [
   { href: "/categorias/", label: "Tienda" },
+  { href: "/packs/", label: "Packs" },
   { href: "/crear/", label: "Armá tu stack" },
   { href: "/club/", label: brand.club },
   { href: "/club/juego/", label: "Shaker Rush" },

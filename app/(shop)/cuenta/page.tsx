@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: "Mi cuenta" };
 export default function AccountPage() {
   return (
     <>
-      <PageHeader title="Mi cuenta">Pedidos, avisos de recompra, regalos, misiones, premios y direcciones (datos de muestra).</PageHeader>
+      <PageHeader title="Mi cuenta">Pedidos, suscripciones a packs, avisos de recompra, regalos, misiones, premios y direcciones (datos de muestra).</PageHeader>
       <AccountView />
     </>
   );

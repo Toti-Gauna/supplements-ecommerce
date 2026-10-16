@@ -1,7 +1,7 @@
 import { weeklySales, type WeeklySales } from "../fixtures/box-ranking";
 import { sampleReviews, type ProductReviews } from "../fixtures/reviews";
 import type { HeroFeature, Product, SeasonalTheme } from "../types";
-import { bestSellers, getProduct } from "./catalog";
+import { bestSellers, getProduct, productsInCategory } from "./catalog";
 import { rackFacts } from "./rack";
 import { themeProducts } from "./themes";
 
@@ -38,6 +38,19 @@ export function heroPicks(features: HeroFeature[], theme: SeasonalTheme | null):
   const top = bestSellers(1)[0];
   if (!picks.length && top) picks.push({ key: "best", kind: "featured", product: top, headline: top.name, pitch: top.short });
   return picks;
+}
+
+/**
+ * Vecinos del destacado en el rack de la escena del carrusel: hasta `n` productos visibles de su misma categoría,
+ * los más vendidos primero (a igual venta, por slug), prefiriendo envases distintos al suyo para que se lean como
+ * otros productos. Sin otros en la categoría, el destacado queda solo.
+ */
+export function heroNeighbors(product: Product, n = 2): Product[] {
+  const others = productsInCategory(product.categorySlug)
+    .filter((p) => p.slug !== product.slug)
+    .sort((a, b) => b.soldCount - a.soldCount || a.slug.localeCompare(b.slug));
+  const distinct = others.filter((p) => p.art !== product.art);
+  return [...distinct, ...others.filter((p) => p.art === product.art)].slice(0, Math.max(0, n));
 }
 
 export interface RankRow {

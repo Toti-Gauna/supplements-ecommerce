@@ -17,6 +17,7 @@ const PAGES: [string, string, string][] = [
   ["packs", "packs/", "h1"],
   ["pack (detalle)", "packs/?pack=hipertrofia", "h1"],
   ["armador", "crear/", "h1"],
+  ["armador con dos objetivos y deporte", "crear/?objetivo=fuerza,salud&deporte=futbol", "h1"],
   ["carrito", "carrito/", "h1"],
   ["club", "club/", "h1"],
   ["juego", "club/juego/", "h1"],
@@ -64,6 +65,16 @@ for (const mode of ["dark", "light"] as const) {
         expect(found, describe(found)).toEqual([]);
       });
     }
+    test("inicio: pestaña Deportes de \"Entrená por objetivo o por deporte\"", async ({ page }) => {
+      await page.goto("");
+      const section = page.locator("section[aria-labelledby='objetivos-title']");
+      await section.scrollIntoViewIfNeeded();
+      await section.getByRole("tab", { name: /Deportes/ }).click();
+      await expect(section.getByRole("tabpanel", { name: /Deportes/ })).toBeVisible();
+      await page.waitForTimeout(400);
+      const found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+    });
     test("buscador superpuesto con resultados y una opción activa", async ({ page }) => {
       await page.goto("");
       await page.getByRole("button", { name: "Buscar productos" }).filter({ visible: true }).first().click();

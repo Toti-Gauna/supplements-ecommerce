@@ -1,8 +1,7 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useRef, useState } from "react";
-import { goalInfo } from "@/demo/engine/goals";
-import type { Goal } from "@/demo/types";
+import { decodeGoals } from "@/demo/engine/stack-builder";
 import { GoalView } from "./GoalView";
 import { ChipToggles, DetectedChips } from "./search/SearchChips";
 import { SearchField } from "./search/SearchField";
@@ -10,11 +9,14 @@ import { IgnoredNote } from "./search/SearchFixes";
 import { SearchResults } from "./search/SearchResults";
 import { useCatalogSearch } from "./search/useCatalogSearch";
 
-/** /buscar/: `?objetivo=` muestra la grilla de ese objetivo; `?q=` la búsqueda del rubro (va dentro de `<Suspense>`). */
+/**
+ * /buscar/: `?objetivo=` muestra la grilla de ese objetivo (con varios, como en los links del armador, el primero);
+ * `?q=` la búsqueda del rubro (va dentro de `<Suspense>`).
+ */
 export function SearchView() {
   const params = useSearchParams();
-  const goal = params.get("objetivo");
-  if (goal && goalInfo(goal as Goal)) return <GoalView goal={goal as Goal} />;
+  const goal = decodeGoals(params.get("objetivo"))[0];
+  if (goal) return <GoalView goal={goal} />;
   return <TextSearch />;
 }
 

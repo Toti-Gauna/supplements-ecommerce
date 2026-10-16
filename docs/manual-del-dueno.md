@@ -412,6 +412,11 @@ mensual** de descuento.
 la primera entrega. Por eso un pack mensual necesita al menos un suplemento. La vista previa los separa en "Se repite cada
 mes" y "Solo la primera entrega".
 
+**"Tu programa" (del quiz).** Quien hace el quiz (objetivos, deporte, días, horario y restricciones) recibe un pack a
+medida llamado **Tu programa**: los suplementos que le recomendó el quiz y, si eligió un deporte, un equipamiento para ese
+deporte. Lleva el mismo 10 % por llevar todo junto y el 5 % extra si lo pide todos los meses. No aparece en la lista de
+Packs porque es de cada cliente; sus suscripciones sí aparecen en **Suscripciones** con el nombre "Tu programa".
+
 **En la lista de Packs**: el precio de la primera entrega y el de cada mes, el descuento, cuántas suscripciones activas
 tiene y el interruptor **Visible en la tienda** (apagado, el pack no se ve ni se compra). **Duplicar** hace una copia
 oculta para que la revises; **Quitar** pide confirmación y avisa si tiene suscripciones activas.

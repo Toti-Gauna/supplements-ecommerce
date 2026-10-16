@@ -35,7 +35,8 @@ test("importar Excel: planilla de ejemplo, vista previa con errores, importar, v
   await expect(page.getByRole("dialog")).toContainText("también se pierde");
   await page.getByRole("dialog").getByRole("button", { name: "Deshacer" }).click();
   await expect(page.getByText(/Última importación/)).toHaveCount(0);
-  await page.goto("c/accesorios/");
+  // El shaker de la casa vive en "Shakers, botellas y bolsos" desde L2.
+  await page.goto("c/shakers/");
   await expect(page.getByText("Shaker VOLTA 700 ml").first()).toBeVisible();
   await expect(page.getByText("Guantes de entrenamiento")).toHaveCount(0);
   assertNoExternal();

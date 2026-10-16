@@ -192,7 +192,7 @@ sabor y tamaño, con su stock.
    **color y talle** (cinturones, rodilleras) o **color y medida** (guantes, sogas, botellas).
 3. En cada variante de un suplemento cargá sus **lotes**: código, mes de vencimiento y unidades. El stock es la suma de
    los lotes y **sale primero el que vence primero** (lo marca como "Sale primero"). El equipamiento (categorías de
-   accesorios, boxeo, funcional y shakers) no vence: lleva stock por color y talle, sin lotes.
+   accesorios de gym, boxeo y shakers) no vence: lleva stock por color y talle, sin lotes.
 4. Tocá **Guardar**. Te avisa si falta algo (por ejemplo, un lote con unidades pero sin código).
 
 **Pausar un producto**: apagá el interruptor **Visible** en su renglón. Deja de verse en la tienda sin borrarlo.

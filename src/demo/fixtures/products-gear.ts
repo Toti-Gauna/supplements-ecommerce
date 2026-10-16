@@ -98,7 +98,7 @@ export const gearProducts: Product[] = [
   {
     slug: "soga-rulemanes", name: "Soga de saltar con rulemanes", short: "Cable de acero recubierto, largo regulable",
     description: "Soga de velocidad con cable de acero recubierto, mangos de aluminio y rulemanes. El largo se regula en segundos. Para dobles, HIIT y la entrada en calor.",
-    categorySlug: "funcional", brand: "Pulso", basePrice: 18900, art: "rope", gallery: ["front", "context"],
+    categorySlug: "accesorios", brand: "Pulso", basePrice: 18900, art: "rope", gallery: ["front", "context"],
     pack: pack.pulso({ line: "SPEED", sub: "3 M · REGULABLE" }),
     variants: gearGrid("sr", 18900, ["negro", "verde", "violeta"], null, { negro: 12, verde: 7, violeta: 5 }),
     goals: [], faqs: [{ q: "¿Cómo la regulo?", a: "Pisala al medio: los mangos tienen que llegarte a las axilas. Cortá el sobrante y ajustá el tornillo." }, garantia],
@@ -107,7 +107,7 @@ export const gearProducts: Product[] = [
   {
     slug: "bandas-elasticas", name: "Bandas elásticas x4", short: "Cuatro resistencias, de 5 a 40 kg",
     description: "Kit de 4 bandas de látex en loop: liviana, media, fuerte y extra fuerte. Para movilidad, asistencia en dominadas y trabajo de glúteos en casa o en el gym.",
-    categorySlug: "funcional", brand: "Pulso", basePrice: 27900, art: "bands", gallery: ["front"],
+    categorySlug: "accesorios", brand: "Pulso", basePrice: 27900, art: "bands", gallery: ["front"],
     pack: pack.pulso({ line: "BANDS", sub: "5–40 KG · X4" }),
     variants: gearGrid("be", 27900, ["verde", "violeta", "negro"], null, { verde: 10, violeta: 6, negro: 4 }),
     goals: [], faqs: [{ q: "¿Sirven para dominadas?", a: "Sí: la fuerte y la extra fuerte te asisten hasta que las hacés solo." }, garantia],

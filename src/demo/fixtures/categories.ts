@@ -14,9 +14,8 @@ export const categories: Category[] = [
   { slug: "salud", name: "Vitaminas y salud", description: "Multivitamínicos, omega 3, magnesio y colágeno.", art: "caps", featured: true, sortOrder: 7 },
   { slug: "snacks", name: "Barras y snacks", description: "Barras, alfajores proteicos y mantequilla de maní.", art: "bar", featured: false, sortOrder: 8 },
   { slug: "hidratacion", name: "Hidratación", description: "Electrolitos y geles para entrenamientos largos.", art: "sachet", featured: false, sortOrder: 9 },
-  { slug: "accesorios", name: "Accesorios de gym", description: "Straps, cinturones, rodilleras, muñequeras y magnesio para levantar más y mejor.", art: "straps", featured: true, sortOrder: 10, kind: "gear" },
+  { slug: "accesorios", name: "Accesorios de gym", description: "Straps, cinturones, rodilleras, muñequeras, sogas, bandas y magnesio para el gym y el funcional.", art: "straps", featured: true, sortOrder: 10, kind: "gear" },
   { slug: "boxeo", name: "Boxeo y combate", description: "Guantes y vendas para la bolsa, el sparring y la clase.", art: "gloves", featured: true, sortOrder: 11, kind: "gear" },
-  { slug: "funcional", name: "Funcional y cardio", description: "Sogas, bandas elásticas y todo para el circuito.", art: "rope", featured: false, sortOrder: 12, kind: "gear" },
   { slug: "shakers", name: "Shakers, botellas y bolsos", description: "Para llevar el batido, el agua y todo lo del gym.", art: "shaker", featured: false, sortOrder: 13, kind: "gear" },
   { slug: "indumentaria", name: "Indumentaria", description: "Próximamente.", art: "box", featured: false, sortOrder: 14 },
 ];

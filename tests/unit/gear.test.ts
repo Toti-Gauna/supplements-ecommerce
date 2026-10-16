@@ -13,8 +13,8 @@ const gear = products.filter((p) => categories.find((c) => c.slug === p.category
 const slugs = (q: string) => searchCatalog(q, products, categories).results.map((r) => r.product.slug);
 
 describe("equipamiento", () => {
-  it("hay accesorios de gym, boxeo, funcional y shakers, de marcas de terceros además de la propia", () => {
-    for (const slug of ["accesorios", "boxeo", "funcional", "shakers"]) expect(gear.some((p) => p.categorySlug === slug)).toBe(true);
+  it("hay accesorios de gym (con el funcional), boxeo y shakers, de marcas de terceros además de la propia", () => {
+    for (const slug of ["accesorios", "boxeo", "shakers"]) expect(gear.some((p) => p.categorySlug === slug)).toBe(true);
     expect(new Set(gear.map((p) => p.brand)).size).toBeGreaterThanOrEqual(4);
     expect(gear.length).toBeGreaterThanOrEqual(12);
   });

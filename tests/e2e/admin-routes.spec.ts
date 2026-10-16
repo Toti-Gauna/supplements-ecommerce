@@ -9,6 +9,7 @@ const ADMIN_ROUTES = [
   ["admin-demo/insumos/", "Insumos de embalaje"], ["admin-demo/proveedores/", "Proveedores y compras"],
   ["admin-demo/usuarios/ficha/?email=diego.a@ejemplo.com", "Diego Álvarez"],
   ["admin-demo/usuarios/", "Clientes"], ["admin-demo/reclamos/", "Reclamos"], ["admin-demo/contenido/", "Contenido"], ["admin-demo/estudio/", "Estudio de contenido"], ["admin-demo/ajustes/", "Ajustes"],
+  ["admin-demo/packs/", "Packs y suscripciones"], ["admin-demo/packs/?ver=suscripciones", "Packs y suscripciones"], ["admin-demo/packs/editar/?id=hipertrofia", "Editar: Pack Hipertrofia"], ["admin-demo/packs/editar/?nuevo=1", "Nuevo pack"],
 ] as const;
 
 test.describe("panel demo: rutas directas y refresh", () => {

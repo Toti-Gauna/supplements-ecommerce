@@ -9,6 +9,7 @@ import { migrateAdminData } from "@/demo/admin/migrate";
 import { createDataActions, type DataActions } from "@/demo/admin/data-slice";
 import { auditEntry, defaultAdminData, type AdminData } from "@/demo/admin/defaults";
 import { createOrdersActions, type OrdersActions } from "@/demo/admin/orders-slice";
+import { createPackActions, type PacksActions } from "@/demo/admin/packs-slice";
 import { createPurchasingActions, type PurchasingActions } from "@/demo/admin/purchasing-slice";
 import { withPrizeCatalog } from "@/demo/admin/wheel-prizes";
 import type { AdminClaim } from "@/demo/admin/types";
@@ -17,7 +18,7 @@ import { createEmailActions, type EmailActions } from "@/demo/admin/emails-slice
 import { setDemoData, type DemoData } from "@/demo/engine/source";
 import { ADMIN_STORE_VERSION, demoStorage, STORAGE_PREFIX } from "./storage";
 
-export type AdminState = AdminData & OrdersActions & DataActions & CatalogActions & WorkshopActions & PurchasingActions & EmailActions & CustomerActions & {
+export type AdminState = AdminData & OrdersActions & DataActions & CatalogActions & WorkshopActions & PurchasingActions & EmailActions & CustomerActions & PacksActions & {
   addClaim: (claim: Omit<AdminClaim, "id" | "status" | "createdAt">) => void;
   resetAdmin: () => void;
 };
@@ -37,6 +38,7 @@ export const useAdmin = create<AdminState>()(
       ...createPurchasingActions(set),
       ...createEmailActions(set, get),
       ...createCustomerActions(set, get),
+      ...createPackActions(set, get),
       addClaim: (claim) =>
         set((s) => ({
           claims: [{ ...claim, id: `c-${Date.now().toString(36)}`, status: "OPEN", createdAt: demoNow(), fromShop: true }, ...s.claims],

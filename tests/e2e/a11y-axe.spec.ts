@@ -26,6 +26,9 @@ const PAGES: [string, string, string][] = [
   ["panel clientes", "admin-demo/usuarios/", "h1"],
   ["panel marketing", "admin-demo/marketing/", "h1"],
   ["panel carrusel", "admin-demo/contenido/carrusel/", "h1"],
+  ["panel packs", "admin-demo/packs/", "h1"],
+  ["panel editor de pack", "admin-demo/packs/editar/?id=hipertrofia", "h1"],
+  ["panel suscripciones", "admin-demo/packs/?ver=suscripciones", "h1"],
 ];
 
 interface Violation { id: string; impact: string | null; help: string; nodes: { target: string[]; failureSummary?: string }[] }

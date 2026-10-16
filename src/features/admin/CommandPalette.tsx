@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Boxes, ClipboardList, CornerDownLeft, Disc3, FileSpreadsheet, GalleryHorizontal, Inbox, Landmark, MessageCircleQuestion, Plus, Store, Truck, UserRound } from "lucide-react";
+import { ArrowRight, Boxes, ClipboardList, CornerDownLeft, Disc3, FileSpreadsheet, GalleryHorizontal, Inbox, Landmark, MessageCircleQuestion, PackagePlus, Plus, Repeat, Store, Truck, UserRound } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { Sheet } from "@/components/motion/Sheet";
 import { customerRows } from "@/demo/admin/customers";
@@ -21,11 +21,14 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
   const orders = useAdmin((s) => s.orders);
   const users = useAdmin((s) => s.users);
   const products = useAdmin((s) => s.data.products);
+  const packs = useAdmin((s) => s.data.packs);
   const [q, setQ] = useState("");
   const [active, setActive] = useState(0);
   const all: Item[] = [
     ...ADMIN_NAV.map((n) => ({ id: n.href, group: "Ir a", label: n.label, icon: <n.icon size={17} aria-hidden="true" />, href: n.href, search: `${n.label} ${n.group}` })),
     { id: "new-product", group: "Acciones", label: "Nuevo producto", icon: icon(Plus), href: "/admin-demo/productos/editar/?nuevo=1", search: "crear producto nuevo alta" },
+    { id: "new-pack", group: "Acciones", label: "Nuevo pack", icon: icon(PackagePlus), href: "/admin-demo/packs/editar/?nuevo=1", search: "crear pack nuevo armar combo mensual" },
+    { id: "subscriptions", group: "Acciones", label: "Suscripciones y qué preparar", icon: icon(Repeat), href: "/admin-demo/packs/?ver=suscripciones", search: "suscripciones packs todos los meses entregas preparar mensual" },
     { id: "import", group: "Acciones", label: "Importar categorías y stock desde Excel", icon: icon(FileSpreadsheet), href: "/admin-demo/importar/", search: "importar excel csv planilla subir" },
     { id: "sheet", group: "Acciones", label: "Productos y stock en formato Excel", icon: icon(FileSpreadsheet), href: "/admin-demo/productos/?formato=excel", search: "planilla excel grilla stock editar precios" },
     { id: "wheel", group: "Acciones", label: "Configuración de la ruleta", icon: icon(Disc3), href: "/admin-demo/cupones/ruleta/", search: "ruleta premios pesos gajos cupones" },
@@ -36,10 +39,11 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
     { id: "shipping", group: "Acciones", label: "Envíos y retiro", icon: icon(Truck), href: "/admin-demo/ajustes/envios/", search: "envio gratis zonas cadete retiro codigos postales ajustes" },
     { id: "shop", group: "Acciones", label: "Ver la tienda", icon: icon(Store), href: "/", search: "tienda sitio web" },
     ...orders.map((o) => ({ id: o.code, group: "Pedidos", label: `${o.code} · ${o.customer.name}`, hint: STATUS_LABEL[o.status], icon: icon(ClipboardList), href: `/admin-demo/pedidos/detalle/?codigo=${o.code}`, search: `${o.code} ${o.customer.name} ${o.customer.email}` })),
+    ...packs.map((p) => ({ id: `pack-${p.id}`, group: "Packs", label: p.name, hint: p.active === false ? "Oculto" : p.focus, icon: icon(PackagePlus), href: `/admin-demo/packs/editar/?id=${p.id}`, search: `${p.name} ${p.focus} pack` })),
     ...products.map((p) => ({ id: p.slug, group: "Productos", label: p.name, hint: p.active === false ? "Pausado" : undefined, icon: icon(Boxes), href: `/admin-demo/productos/editar/?id=${p.slug}`, search: `${p.name} ${p.tags.join(" ")}` })),
     ...customerRows(users, orders).map((c) => ({ id: c.key, group: "Clientes", label: c.name, hint: c.email, icon: icon(UserRound), href: profileHref(c.email), search: `${c.name} ${c.email}` })),
   ];
-  const results = (q.trim() ? all.filter((i) => matchesQuery(q, i.search, i.label)) : all.filter((i) => i.group !== "Productos" && i.group !== "Clientes" && i.group !== "Pedidos")).slice(0, 12);
+  const results = (q.trim() ? all.filter((i) => matchesQuery(q, i.search, i.label)) : all.filter((i) => !["Productos", "Clientes", "Pedidos", "Packs"].includes(i.group))).slice(0, 12);
   const current = Math.min(active, Math.max(0, results.length - 1));
   const go = (item?: Item) => {
     if (!item) return;

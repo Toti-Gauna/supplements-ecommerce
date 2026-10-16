@@ -37,6 +37,7 @@ const ADMIN = [
   ["admin-demo/contenido/carrusel/", "Carrusel del inicio"], ["admin-demo/contenido/textos/", "Textos de inicio"], ["admin-demo/contenido/preguntas/", "Preguntas frecuentes"],
   ["admin-demo/ajustes/contacto/", "Contacto y WhatsApp"], ["admin-demo/ajustes/pagos/", "Medios de pago"], ["admin-demo/ajustes/cobro/", "Datos de cobro"],
   ["admin-demo/ajustes/envios/", "Envíos y retiro"],
+  ["admin-demo/packs/", "Packs y suscripciones"], ["admin-demo/packs/editar/?id=hipertrofia", "Editar: Pack Hipertrofia"],
 ] as const;
 
 /** Errores que no son de la demo: el navegador de pruebas no tiene GPU ni códecs propietarios. */

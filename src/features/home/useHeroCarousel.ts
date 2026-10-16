@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { scrollBehavior } from "@/lib/scroll";
 import { useHydrated } from "@/stores/hydration";
 
-/** Carril nativo: pausa al interactuar, con foco, mouse, pestaña oculta o movimiento reducido. */
+/** Carril nativo: pausa al interactuar, con foco, mouse, pestaña oculta o movimiento reducido (sin autoplay). */
 export function useHeroCarousel(total: number) {
   const track = useRef<HTMLDivElement>(null);
   const [index, setIndex] = useState(0);
@@ -27,11 +27,8 @@ export function useHeroCarousel(total: number) {
     latestIndex.current = next;
     el.scrollTo({ left: next * el.clientWidth, behavior: scrollBehavior() });
   }, [total]);
-  useEffect(() => {
-    if (!auto) return;
-    const timer = window.setTimeout(() => go(index + 1), 4500);
-    return () => window.clearTimeout(timer);
-  }, [auto, index, go]);
+  // El reloj del autoplay es la barra de carga del carril actual (CSS): se congela con la pausa y avisa al terminar.
+  const lap = useCallback(() => { if (auto) go(latestIndex.current + 1); }, [auto, go]);
   useEffect(() => {
     const change = () => setVisible(document.visibilityState === "visible");
     document.addEventListener("visibilitychange", change);
@@ -45,5 +42,5 @@ export function useHeroCarousel(total: number) {
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
-  return { track, index, setIndex, paused, setPaused, setHover, setFocus, reduce, auto, go, prepared, prepare: () => setPrepared(true) };
+  return { track, index, setIndex, paused, setPaused, setHover, setFocus, reduce, hydrated, auto, go, lap, prepared, prepare: () => setPrepared(true) };
 }

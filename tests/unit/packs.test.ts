@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { CartLine } from "@/demo/engine/cart-types";
-import { NO_PACK_DISCOUNT, packCartLines, packDiscount, packId, packMissingItems, quotePack, validatePack } from "@/demo/engine/packs";
+import { NO_PACK_DISCOUNT, packCartLines, packId, packMissingItems, quotePack, validatePack } from "@/demo/engine/packs";
 import { quoteCart } from "@/demo/engine/pricing";
 import { demoData } from "@/demo/engine/source";
 import {
@@ -67,7 +67,7 @@ describe("packs (L3)", () => {
     expect(quote.pack.entries[0]).toMatchObject({ pct: 15, monthly: true });
     expect(quote.stack.discount).toBe(0);
     // Suelto, el mismo carrito sí junta categorías para el stack.
-    const loose = quoteCart(lines.map(({ packId: _p, monthlyDay: _m, ...l }) => l));
+    const loose = quoteCart(lines.map((l) => ({ id: l.id, productSlug: l.productSlug, variantId: l.variantId, quantity: l.quantity })));
     expect(loose.pack.discount).toBe(0);
     expect(loose.stack.discount).toBeGreaterThan(0);
   });

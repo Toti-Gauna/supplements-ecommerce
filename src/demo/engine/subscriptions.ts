@@ -23,6 +23,10 @@ export interface Subscription {
   orderCode: string;
   /** La próxima entrega se saltea (viaje, todavía tenés stock). */
   skipNext: boolean;
+  /** Nombre de quien compró (sale del pedido). */
+  customer?: string;
+  /** Suscripción de MUESTRA del panel: Mi cuenta no la muestra, es de un cliente inventado. */
+  seed?: boolean;
 }
 
 export const SUBSCRIPTION_LABEL: Record<SubscriptionStatus, string> = { active: "Activa", paused: "Pausada", cancelled: "Cancelada" };
@@ -32,9 +36,12 @@ export function validDay(day: number): boolean {
   return Number.isInteger(day) && day >= 1 && day <= 28;
 }
 
-export function createSubscription(input: { pack: Pack; choices: Record<string, string>; day: number; today: string; orderCode: string; id: string }): Subscription {
+export function createSubscription(input: { pack: Pack; choices: Record<string, string>; day: number; today: string; orderCode: string; id: string; customer?: string }): Subscription {
   if (!validDay(input.day)) throw new Error("El día de entrega va de 1 a 28.");
-  return { id: input.id, packId: input.pack.id, choices: input.choices, day: input.day, status: "active", startedOn: input.today, orderCode: input.orderCode, skipNext: false };
+  return {
+    id: input.id, packId: input.pack.id, choices: input.choices, day: input.day, status: "active", startedOn: input.today, orderCode: input.orderCode, skipNext: false,
+    ...(input.customer ? { customer: input.customer } : {}),
+  };
 }
 
 /** El día `day` del mes de `from`, o del mes siguiente si ya pasó (o es el mismo día). */
@@ -90,7 +97,7 @@ export function monthlySavingOf(sub: Subscription, packs: Pack[]): number {
  * Suscripciones que arma un pedido: una por cada pack del carrito que se compró "todos los meses" y llegó completo
  * (si faltaba un producto no hubo descuento y no es el pack, así que tampoco se suscribe).
  */
-export function subscriptionsFromLines(lines: CartLine[], packs: Pack[], ctx: { today: string; orderCode: string; newId: () => string }): Subscription[] {
+export function subscriptionsFromLines(lines: CartLine[], packs: Pack[], ctx: { today: string; orderCode: string; newId: () => string; customer?: string }): Subscription[] {
   const ids = [...new Set(lines.filter((l) => l.packId && l.monthlyDay !== undefined).map((l) => l.packId!))];
   return ids.flatMap((packId) => {
     const pack = packs.find((p) => p.id === packId);
@@ -98,6 +105,6 @@ export function subscriptionsFromLines(lines: CartLine[], packs: Pack[], ctx: { 
     const complete = pack && pack.items.every((it) => group.some((l) => l.productSlug === it.productSlug && l.quantity >= it.qty));
     if (!pack || !complete) return [];
     const choices = Object.fromEntries(group.map((l) => [l.productSlug, l.variantId]));
-    return [createSubscription({ pack, choices, day: group[0]!.monthlyDay!, today: ctx.today, orderCode: ctx.orderCode, id: ctx.newId() })];
+    return [createSubscription({ pack, choices, day: group[0]!.monthlyDay!, today: ctx.today, orderCode: ctx.orderCode, id: ctx.newId(), customer: ctx.customer })];
   });
 }

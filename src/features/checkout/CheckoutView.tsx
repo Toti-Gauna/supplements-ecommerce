@@ -76,7 +76,7 @@ export function CheckoutView() {
     };
     checkout.placeOrder(order);
     // "Todos los meses" (L3): cada pack suscripto queda en Mi cuenta → Mis suscripciones (simulado, sin cobro).
-    const subs = subscriptionsFromLines(lines, demoData().packs ?? [], { today: toDayKey(createdAt), orderCode: DEMO_ORDER_CODE, newId: () => `sub-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}` });
+    const subs = subscriptionsFromLines(lines, demoData().packs ?? [], { today: toDayKey(createdAt), orderCode: DEMO_ORDER_CODE, customer: checkout.contact.name || undefined, newId: () => `sub-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}` });
     if (subs.length) useSubscriptions.getState().add(subs);
     useAdmin.getState().syncShopOrder(order); // aparece en el panel demo de este navegador
     // El cupón aplicado suma un uso: el premio de la ruleta (un uso) queda como utilizado y no se puede volver a aplicar.

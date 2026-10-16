@@ -75,7 +75,7 @@ Cerrá con: **"Bueno, te muestro cómo se ve todo eso resuelto. Primero lo que v
 
 ## 1:00 · La ficha que vende sola (1 minuto, celular)
 
-**Tocá**: inicio de la tienda (la pantalla de carga dura un segundo y sale solo la primera vez) →
+**Tocá**: inicio de la tienda (la pantalla de carga dura un segundo y sale en cada recarga) →
 **¿Cuál es tu objetivo?** se ve al bajar → abrí **Ionic Whey 100%** (o directo `/p/ionic-whey/`).
 
 ![Tamaño con servicios y "Mejor precio por servicio" en la ficha](img/celular-tienda-tamano.png)

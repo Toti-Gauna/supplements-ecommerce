@@ -29,7 +29,7 @@ export const SPORT_ART: Record<SportId, ComponentType> = {
 export function SportArt({ sport, className }: { sport: SportId; className?: string }) {
   const Scene = SPORT_ART[sport] ?? SPORT_ART.running;
   return (
-    <Stage className={className}>
+    <Stage className={className} sport={sport}>
       <Scene />
     </Stage>
   );

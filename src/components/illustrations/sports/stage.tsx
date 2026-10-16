@@ -5,9 +5,9 @@ import { cn } from "@/lib/cn";
  * Lienzo común de los deportes: 160 × 200 con el piso en y = 186, para que todas las escenas queden alineadas en
  * una grilla. Todo en `currentColor`; los detalles van con opacidad (sin colores fijos ni degradados).
  */
-export function Stage({ className, children }: { className?: string; children: ReactNode }) {
+export function Stage({ className, sport, children }: { className?: string; sport?: string; children: ReactNode }) {
   return (
-    <svg viewBox="0 0 160 200" aria-hidden="true" focusable="false" className={cn("block", className)}
+    <svg viewBox="0 0 160 200" aria-hidden="true" focusable="false" data-sport={sport} className={cn("block", className)}
       fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="80" cy="92" r="74" fill="currentColor" fillOpacity=".06" stroke="none" />
       <circle cx="80" cy="92" r="74" strokeOpacity=".1" strokeWidth="1" />

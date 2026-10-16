@@ -12,6 +12,7 @@ import { splitAccent } from "@/lib/accent";
 import { formatARS } from "@/lib/money";
 import { useDemoData } from "@/stores/admin";
 import { GoalChips } from "./GoalChips";
+import { QuizCard } from "./QuizCard";
 import { StackShelf, shelfItems } from "./shelf/StackShelf";
 
 /** El stack que abre el bloque: proteína, creatina y pre, el clásico. */
@@ -56,6 +57,8 @@ export function HomeStackBlock() {
             </p>
           </div>
           <GoalChips tone="night" value={goals} onToggle={toggle} capped={capped} legend="Probá combinando objetivos" />
+          {/* El quiz se puede volver a hacer desde el inicio (la invitación aparece una sola vez). */}
+          <QuizCard className="bg-white/[0.04]" />
         </div>
         <div ref={shelfRef} className="flex min-w-0 flex-col gap-5">
           <StackShelf items={shelf} discountPct={discount && inView ? summary.stack.pct : 0} title={names.join(" + ") || undefined} />

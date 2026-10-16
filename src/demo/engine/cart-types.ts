@@ -16,4 +16,8 @@ export interface CartLine {
   variantId: string;
   quantity: number;
   gift?: LineGift;
+  /** La línea viene de un pack (L3): el descuento del pack vale solo si el pack está completo. */
+  packId?: string;
+  /** Día del mes (1–28) en que se recibe cada mes: la compra del pack es una suscripción simulada. */
+  monthlyDay?: number;
 }

@@ -132,6 +132,33 @@ export interface Product {
   optionNames?: { color?: string; size?: string };
 }
 
+/** Un producto del pack: variante fija o, sin ella, la primera con stock. */
+export interface PackItem {
+  productSlug: string;
+  variantId?: string;
+  qty: number;
+}
+
+/**
+ * Pack (L3): productos pensados para un objetivo o un deporte, con descuento por llevar todo junto y un extra por
+ * recibirlo todos los meses. Los suplementos se repiten cada mes; el equipamiento (no se consume) viaja solo en la primera entrega.
+ */
+export interface Pack {
+  id: string;
+  name: string;
+  tagline: string;
+  description: string;
+  /** Para qué es: un objetivo ("Masa muscular") o un deporte ("Fútbol"). */
+  focus: string;
+  items: PackItem[];
+  /** % por llevar todo junto. */
+  discountPct: number;
+  /** % extra por recibirlo todos los meses. */
+  monthlyPct: number;
+  featured: boolean;
+  active?: boolean;
+}
+
 export interface Coupon {
   code: string;
   type: "PERCENT" | "FIXED" | "FREE_SHIPPING";

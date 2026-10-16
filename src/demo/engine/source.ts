@@ -3,10 +3,11 @@ import { coupons, demoSettings, heroFeatures, homeCta, missions, shippingZones, 
 import { storeFaqs } from "../fixtures/content";
 import { goals, type GoalInfo } from "../fixtures/goals";
 import { gamePrizes, type GamePrizeConfig } from "../fixtures/game";
+import { packs } from "../fixtures/packs";
 import { products } from "../fixtures/products";
 import { seasonalThemes, themeCoupons, themeSettings } from "../fixtures/themes";
 import { defaultWheel, type WheelConfig } from "../fixtures/wheel";
-import type { Category, Coupon, Faq, HeroFeature, Mission, Product, SeasonalTheme, ShippingZone, ThemeSettings } from "../types";
+import type { Category, Coupon, Faq, HeroFeature, Mission, Pack, Product, SeasonalTheme, ShippingZone, ThemeSettings } from "../types";
 
 /**
  * Datos editables de la demo. La tienda los lee de acá; el panel demo los modifica
@@ -27,6 +28,8 @@ export interface DemoData {
   themeSettings: ThemeSettings;
   /** Objetivos de entrenamiento (nombre, bajada y color se editan en el panel → Categorías). */
   goals: GoalInfo[];
+  /** Packs mensuales (L3; Packs en el panel). */
+  packs: Pack[];
 }
 
 export function defaultDemoData(): DemoData {
@@ -43,6 +46,7 @@ export function defaultDemoData(): DemoData {
     themes: seasonalThemes,
     themeSettings,
     goals,
+    packs: packs.map((p) => ({ ...p, active: true })),
   });
 }
 

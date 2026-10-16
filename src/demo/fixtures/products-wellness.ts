@@ -129,7 +129,7 @@ export const wellnessProducts: Product[] = [
   {
     slug: HOUSE_SHAKER_SLUG, name: `${HOUSE_SHAKER} 700 ml`, short: "Con resorte mezclador y tapa a prueba de mochila",
     description: "Shaker de 700 ml libre de BPA, con resorte mezclador de acero, marcas de medida y tapa a rosca con cierre a presión.",
-    categorySlug: "accesorios", brand: HOUSE_BRAND, basePrice: 8900, art: "shaker", gallery: ["front", "context"],
+    categorySlug: "shakers", brand: HOUSE_BRAND, basePrice: 8900, art: "shaker", gallery: ["front", "context"],
     pack: { ...pack.house({ line: brand.mark, sub: "700 ML" }), body: brand.colors.accent, accent: brand.signature.volt },
     variants: [
       { id: "sh-grafito", label: "Grafito", color: "Grafito", colorHex: "#3a4250", priceDelta: 0, stock: 25 },

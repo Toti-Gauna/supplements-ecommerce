@@ -41,7 +41,7 @@ export function ConfirmStep({ onBack, onConfirm, onEdit }: { onBack: () => void;
         <span className="text-sm">
           Acepto los <Link href="/terminos/" target="_blank" className="font-bold text-primary underline">términos y condiciones</Link> y la{" "}
           <Link href="/privacidad/" target="_blank" className="font-bold text-primary underline">política de privacidad</Link> (textos de muestra).
-          Entiendo que los suplementos abiertos o sin precinto no tienen cambio por razones de higiene.
+          Entiendo que los suplementos abiertos o sin precinto y el equipamiento usado o sin etiqueta no tienen cambio por razones de higiene.
         </span>
       </label>
       {error && <p id="terms-error" role="alert" className="-mt-3 text-sm font-semibold text-danger">Para continuar, aceptá los términos.</p>}

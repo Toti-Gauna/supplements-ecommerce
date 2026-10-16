@@ -6,7 +6,7 @@ import { Button } from "@/components/atoms/Button";
 import { FLOATING_BAR } from "@/components/organisms/bottomBars";
 import { StockMeter } from "@/components/molecules/StockMeter";
 import { ProductGallery } from "@/components/organisms/ProductGallery";
-import { availability, getCategory, isPurchasable, maxQuantity, unitPrice, type Availability } from "@/demo/engine/catalog";
+import { availability, getCategory, isGear, isPurchasable, maxQuantity, unitPrice, type Availability } from "@/demo/engine/catalog";
 import { variantClearance } from "@/demo/engine/lots";
 import type { Product } from "@/demo/types";
 import { cn } from "@/lib/cn";
@@ -28,7 +28,12 @@ import { ClearanceTag, LotNote, ProductBadges, ServingPrice } from "./Supplement
 import { UsageTimeline } from "./UsageTimeline";
 import { useProductPurchase } from "./useProductPurchase";
 import { useVariantSelection } from "./useVariantSelection";
-const TRUST = [{ icon: ShieldCheck, t: "Original, con lote y vencimiento" }, { icon: Zap, t: `Cadete en Mar del Plata ${DISPATCH_PROMISE}` }, { icon: Undo2, t: "Botón de arrepentimiento" }];
+/** Lo que da confianza: en suplementos, lote y vencimiento; en equipamiento (no vence), la garantía y el cambio de talle. */
+const trust = (gear: boolean) => [
+  { icon: ShieldCheck, t: gear ? "Original, con garantía de la marca" : "Original, con lote y vencimiento" },
+  { icon: Zap, t: `Cadete en Mar del Plata ${DISPATCH_PROMISE}` },
+  { icon: Undo2, t: gear ? "Cambio de talle sin costo" : "Botón de arrepentimiento" },
+];
 
 function stockNote(a: Availability): string {
   return a.kind === "in-stock" ? `(${a.units} disponibles)` : a.kind === "made-to-order" ? "Por encargo" : "Sin stock";
@@ -128,7 +133,7 @@ export function ProductDetail({ product: initial, preview = false }: { product: 
             <MissionChip units={quantity} />
             <DeliveryEstimate product={product} variant={sel.variant} />
             <ul className="grid grid-cols-3 gap-2 text-center text-xs font-semibold text-muted">
-              {TRUST.map(({ icon: Icon, t }) => <li key={t} className="flex flex-col items-center gap-2 rounded-sm bg-surface p-3"><Icon size={18} aria-hidden="true" className="text-volt-ink" />{t}</li>)}
+              {trust(isGear(product)).map(({ icon: Icon, t }) => <li key={t} className="flex flex-col items-center gap-2 rounded-sm bg-surface p-3"><Icon size={18} aria-hidden="true" className="text-volt-ink" />{t}</li>)}
             </ul>
           </div>
         </div>

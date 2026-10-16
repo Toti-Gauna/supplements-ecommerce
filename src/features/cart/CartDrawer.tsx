@@ -1,18 +1,19 @@
 "use client";
 import { AnimatePresence, motion } from "motion/react";
-import { Check, Trash2, Truck } from "lucide-react";
+import { Check, Truck } from "lucide-react";
 import { Button, ButtonLink } from "@/components/atoms/Button";
 import { Sheet } from "@/components/motion/Sheet";
 import { BatteryMeter } from "@/components/molecules/BatteryMeter";
-import { QuantityStepper } from "@/components/molecules/QuantityStepper";
-import { LineThumb } from "@/components/organisms/LineThumb";
-import { getProduct, maxQuantity } from "@/demo/engine/catalog";
+import { getProduct } from "@/demo/engine/catalog";
+import { packDiscountRows } from "@/demo/engine/pack-cart";
 import { missingForFreeShipping } from "@/demo/engine/pricing";
 import { recommendForCart } from "@/demo/engine/recommend";
 import { demoData } from "@/demo/engine/source";
 import { formatARS } from "@/lib/money";
 import { useCart } from "@/stores/cart";
 import { useUi } from "@/stores/ui";
+import { DrawerLine } from "./DrawerLine";
+import { QuotedGroups } from "./QuotedGroups";
 import { StackNudge } from "./StackNudge";
 import { CartMissionNudge } from "./CartMissionNudge";
 import { MiniRecommendations } from "./MiniRecommendations";
@@ -25,7 +26,6 @@ export function CartDrawer() {
   const { quote } = useCartQuote();
   const goToCheckout = useGoToCheckout();
   const lines = useCart((s) => s.lines);
-  const { setQuantity, remove } = useCart();
   const missing = missingForFreeShipping(quote.subtotal);
   const threshold = demoData().settings.freeShippingFrom;
   const added = lastAdded ? getProduct(lastAdded) : undefined;
@@ -52,25 +52,7 @@ export function CartDrawer() {
             </div>
             <div className="mb-4"><StackNudge stack={quote.stack} compact /></div>
             <ul className="flex flex-col gap-3">
-              {quote.lines.map((q) => {
-                const product = getProduct(q.line.productSlug);
-                const variant = product?.variants.find((v) => v.id === q.line.variantId);
-                if (!product || !variant) return null;
-                return (
-                  <motion.li layout key={q.line.id} className="flex gap-3 rounded-sm bg-surface p-3">
-                    <div className="w-16 shrink-0"><LineThumb art={product.art} pack={product.pack} tint={variant.colorHex} name={product.name} /></div>
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-bold">{product.name}</p>
-                      <p className="truncate text-xs text-muted">{variant.label}</p>
-                      <div className="mt-1 flex items-center justify-between">
-                        <QuantityStepper label={`Cantidad de ${product.name}`} value={q.line.quantity} max={maxQuantity(variant)} onChange={(n) => setQuantity(q.line.id, n)} />
-                        <span className="text-sm font-extrabold tabular-nums">{formatARS(q.lineTotal)}</span>
-                      </div>
-                    </div>
-                    <button type="button" onClick={() => remove(q.line.id)} aria-label={`Quitar ${product.name}`} className="grid h-9 w-9 place-items-center self-start rounded-sm text-muted hover:bg-danger-soft hover:text-danger"><Trash2 size={16} aria-hidden="true" /></button>
-                  </motion.li>
-                );
-              })}
+              <QuotedGroups quote={quote} renderLine={(q, inPack) => <DrawerLine key={q.line.id} q={q} inPack={inPack} />} />
             </ul>
             <div className="mt-4"><CartMissionNudge units={quote.units} total={quote.total} /></div>
           </>
@@ -79,8 +61,9 @@ export function CartDrawer() {
       </div>
       {lines.length > 0 && (
         <div className="border-t border-line bg-surface px-6 py-4">
+          {packDiscountRows(quote.pack.entries).map((r) => <p key={r.label} className="mb-1 flex justify-between text-sm font-semibold text-success"><span>{r.label}</span><span className="tabular-nums">−{formatARS(r.amount)}</span></p>)}
           {quote.stack.discount > 0 && <p className="mb-1 flex justify-between text-sm font-semibold text-success"><span>Descuento stack ({quote.stack.pct} %)</span><span className="tabular-nums">−{formatARS(quote.stack.discount)}</span></p>}
-          <div className="mb-3 flex items-end justify-between"><span className="text-sm text-muted">Subtotal (muestra)</span><span className="text-2xl font-extrabold tabular-nums">{formatARS(quote.subtotal - quote.stack.discount)}</span></div>
+          <div className="mb-3 flex items-end justify-between"><span className="text-sm text-muted">Subtotal (muestra)</span><span className="text-2xl font-extrabold tabular-nums">{formatARS(quote.subtotal - quote.stack.discount - quote.pack.discount)}</span></div>
           <div className="grid gap-2">
             <Button onClick={goToCheckout} size="lg" className="w-full">Ir al checkout</Button>
             <ButtonLink href="/carrito/" onClick={closeCart} variant="ghost" className="w-full">Ver carrito completo</ButtonLink>

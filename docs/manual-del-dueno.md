@@ -388,6 +388,47 @@ ves cuánto ahorra un stack de ejemplo. Tocá **Guardar descuento stack**.
 
 > En la demo: los usos de cupones son simulados y el giro de la ruleta y el cupón del juego valen uno por navegador.
 
+### Packs y suscripciones
+
+Marketing → **Packs** (la tarjeta del resumen dice cuántos packs hay y cuántas suscripciones están activas). Tiene dos
+pestañas: **Packs** y **Suscripciones**.
+
+**Qué es un pack.** Una selección de productos para un objetivo o un deporte (Hipertrofia, Fútbol, Pádel y tenis…), con un
+descuento por llevar todo junto. Quien lo compra puede elegir recibirlo **todos los meses** y se lleva un **extra
+mensual** de descuento.
+
+**Cómo se arma** (**Nuevo pack**, o **Editar** en uno existente)
+1. Completá **Nombre**, **Para qué es** (el objetivo o el deporte), **Bajada** y **Descripción**.
+2. Elegí el **Descuento del pack** (de 0 a 40 %) y el **Extra mensual** (de 0 a 20 %).
+3. En **Productos del pack**, elegí un producto en **Agregar un producto** (están agrupados por categoría) y tocá
+   **Agregar al pack**. Por cada uno elegís la **Cantidad** (de 1 a 5) y, si querés, una **Variante** fija; con las flechas
+   cambiás el orden y con la X lo quitás.
+4. A la derecha (o abajo, en el celular) la **Vista previa** muestra los precios reales: **primera entrega**, **por mes**,
+   cuánto se ahorra y "te dura N días".
+5. **Guardar pack**. Si falta algo (por ejemplo, un solo producto) te avisa al lado del botón y no guarda nada. Si salís sin
+   guardar, el borrador te espera cuando volvés.
+
+**Qué se repite cada mes.** Los **suplementos**. El equipamiento (straps, botellas, bolsos) **no se consume**: viaja solo en
+la primera entrega. Por eso un pack mensual necesita al menos un suplemento. La vista previa los separa en "Se repite cada
+mes" y "Solo la primera entrega".
+
+**En la lista de Packs**: el precio de la primera entrega y el de cada mes, el descuento, cuántas suscripciones activas
+tiene y el interruptor **Visible en la tienda** (apagado, el pack no se ve ni se compra). **Duplicar** hace una copia
+oculta para que la revises; **Quitar** pide confirmación y avisa si tiene suscripciones activas.
+
+**Suscripciones**
+- Arriba ves las **activas**, las **pausadas**, el **ingreso mensual estimado** y las **entregas de los próximos 30 días**.
+- La lista muestra cliente, pack, estado, **próxima entrega** (siempre un día hábil de tu calendario), importe mensual y el
+  pedido de origen. "Viene de la tienda" son las que se hicieron comprando en este navegador; "Muestra" son de clientes
+  inventados. Se filtran por estado y por pack, y se pueden **Pausar**, **Reanudar** o **Cancelar** (esta última pide
+  confirmación y no se puede deshacer).
+
+**Cómo ver las entregas que vienen.** Debajo de la lista, **Qué preparar** agrupa por fecha las entregas de los próximos 30
+días, con los productos que lleva cada una (solo lo que se repite). A la derecha, el **total de unidades por producto** de
+todo el período: es lo que tenés que tener en stock o pedirle al proveedor (**Ver compras** te lleva a Proveedores y compras).
+
+> En la demo: las suscripciones son simuladas, no se cobra ni se envía nada, y el ingreso mensual es una estimación.
+
 ---
 
 ## 12. Temáticas
@@ -511,5 +552,6 @@ activado no avanza solo. Debajo quedan **Comprá por categoría**, **Entrená po
 | No sale ningún email: quedan en la Bandeja de salida | Le llegan al cliente |
 | El WhatsApp se abre con el mensaje escrito, pero lo mandás vos | Igual |
 | El giro de la ruleta y el cupón del juego valen uno por navegador | Uno por cuenta |
+| Las suscripciones a un pack no cobran ni envían nada: solo se cuentan y se listan | El cobro mensual y los avisos de cada entrega se definen con el medio de pago real |
 | Proveedores, clientes, pedidos y códigos de lote son inventados | Son los tuyos |
 | La fecha del panel está fija en el lunes 5 de octubre de 2026 | Es la fecha de hoy |

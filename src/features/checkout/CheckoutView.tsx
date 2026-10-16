@@ -6,6 +6,9 @@ import { Skeleton } from "@/components/atoms/Skeleton";
 import { EmptyState } from "@/components/molecules/EmptyState";
 import { StepIndicator } from "@/components/molecules/StepIndicator";
 import { giftsFromLines } from "@/demo/engine/gifts";
+import { subscriptionsFromLines } from "@/demo/engine/subscriptions";
+import { demoData } from "@/demo/engine/source";
+import { toDayKey } from "@/lib/date";
 import { missingForFreeShipping, totalsOf } from "@/demo/engine/pricing";
 import { demoNow } from "@/demo/clock";
 import { DEMO_ORDER_CODE, DEMO_TRACKING_TOKEN } from "@/demo/fixtures/commerce";
@@ -14,6 +17,7 @@ import { useAdmin } from "@/stores/admin";
 import { useCart } from "@/stores/cart";
 import { useCheckout } from "@/stores/checkout";
 import { useGifts } from "@/stores/gifts";
+import { useSubscriptions } from "@/stores/subscriptions";
 import { useHydrated } from "@/stores/hydration";
 import { CouponForm } from "../cart/CouponForm";
 import { useCartQuote } from "../cart/useCartQuote";
@@ -71,6 +75,9 @@ export function CheckoutView() {
       ...(gifts.length ? { gifts: gifts.map((g) => g.code) } : {}),
     };
     checkout.placeOrder(order);
+    // "Todos los meses" (L3): cada pack suscripto queda en Mi cuenta → Mis suscripciones (simulado, sin cobro).
+    const subs = subscriptionsFromLines(lines, demoData().packs ?? [], { today: toDayKey(createdAt), orderCode: DEMO_ORDER_CODE, customer: checkout.contact.name || undefined, newId: () => `sub-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}` });
+    if (subs.length) useSubscriptions.getState().add(subs);
     useAdmin.getState().syncShopOrder(order); // aparece en el panel demo de este navegador
     // El cupón aplicado suma un uso: el premio de la ruleta (un uso) queda como utilizado y no se puede volver a aplicar.
     if (couponCheck?.ok) useAdmin.getState().redeemCoupon(couponCheck.coupon.code);

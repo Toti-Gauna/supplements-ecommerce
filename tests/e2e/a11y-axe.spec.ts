@@ -14,6 +14,8 @@ const PAGES: [string, string, string][] = [
   ["categoría", "categorias/", "h1"],
   ["búsqueda con chips", "buscar/?q=proteina sin lactosa", "h1"],
   ["búsqueda sin resultados", "buscar/?q=creatina vainilla", "h1"],
+  ["packs", "packs/", "h1"],
+  ["pack (detalle)", "packs/?pack=hipertrofia", "h1"],
   ["armador", "crear/", "h1"],
   ["carrito", "carrito/", "h1"],
   ["club", "club/", "h1"],
@@ -26,6 +28,9 @@ const PAGES: [string, string, string][] = [
   ["panel clientes", "admin-demo/usuarios/", "h1"],
   ["panel marketing", "admin-demo/marketing/", "h1"],
   ["panel carrusel", "admin-demo/contenido/carrusel/", "h1"],
+  ["panel packs", "admin-demo/packs/", "h1"],
+  ["panel editor de pack", "admin-demo/packs/editar/?id=hipertrofia", "h1"],
+  ["panel suscripciones", "admin-demo/packs/?ver=suscripciones", "h1"],
 ];
 
 interface Violation { id: string; impact: string | null; help: string; nodes: { target: string[]; failureSummary?: string }[] }

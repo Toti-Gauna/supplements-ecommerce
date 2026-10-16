@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { BadgePercent, Boxes, Calculator, CalendarDays, Clapperboard, ClipboardList, Layers, LayoutDashboard, Mail, LifeBuoy, Megaphone, PackageCheck, PackageOpen, Palette, PartyPopper, Settings, Shapes, Target, Users, Wallet, Warehouse } from "lucide-react";
+import { BadgePercent, Boxes, Calculator, CalendarDays, Clapperboard, ClipboardList, Layers, LayoutDashboard, Mail, LifeBuoy, Megaphone, PackageCheck, PackageOpen, PackagePlus, Palette, PartyPopper, Settings, Shapes, Target, Users, Wallet, Warehouse } from "lucide-react";
 
 export const ADMIN_GROUPS = ["Ventas", "Operaciones", "Catálogo", "Marketing", "Ajustes"] as const;
 
@@ -43,6 +43,8 @@ export const ADMIN_NAV: AdminNavItem[] = [
   { href: "/admin-demo/cupones/", label: "Cupones y ruleta", short: "Cupones", icon: BadgePercent, group: "Marketing" },
   // Fase 3: regla del descuento stack (porcentaje y categorías distintas) que usan ficha, armador, quiz y carrito.
   { href: "/admin-demo/descuento-stack/", label: "Descuento stack", short: "Stack", icon: Layers, group: "Marketing" },
+  // L3: packs por objetivo o deporte, con su descuento y la compra "todos los meses" (suscripciones simuladas).
+  { href: "/admin-demo/packs/", label: "Packs", short: "Packs", icon: PackagePlus, group: "Marketing" },
   { href: "/admin-demo/tematicas/", label: "Temáticas", short: "Temáticas", icon: PartyPopper, group: "Marketing" },
   { href: "/admin-demo/estudio/", label: "Estudio de contenido", short: "Estudio", icon: Clapperboard, group: "Marketing" },
   { href: "/admin-demo/contenido/", label: "Contenido", short: "Contenido", icon: Palette, group: "Marketing" },

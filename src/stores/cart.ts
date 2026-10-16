@@ -9,6 +9,9 @@ interface CartState {
   lines: CartLine[];
   couponCode: string | null;
   add: (line: Omit<CartLine, "id">) => void;
+  /** Pone un pack en el carrito (L3). Si ya estaba, lo reemplaza: un pack se lleva una vez. */
+  addPack: (packId: string, lines: Omit<CartLine, "id">[]) => void;
+  removePack: (packId: string) => void;
   setQuantity: (id: string, quantity: number) => void;
   /** Marca (o desmarca) un ítem del carrito como regalo, desde el checkout. */
   setGift: (id: string, gift: LineGift | null) => void;
@@ -27,7 +30,7 @@ export const useCart = create<CartState>()(
       add: (line) => {
         set((state) => {
           // Dos regalos son dos ítems (cada uno con su destinatario); lo demás se agrupa por variante.
-          const existing = !line.gift && state.lines.find((l) => !l.gift && l.variantId === line.variantId);
+          const existing = !line.gift && !line.packId && state.lines.find((l) => !l.gift && !l.packId && l.variantId === line.variantId);
           if (existing) {
             return { lines: state.lines.map((l) => (l.id === existing.id ? { ...l, quantity: Math.min(10, l.quantity + line.quantity) } : l)) };
           }
@@ -35,6 +38,11 @@ export const useCart = create<CartState>()(
         });
         playSound("add");
       },
+      addPack: (packId, lines) => {
+        set((state) => ({ lines: [...state.lines.filter((l) => l.packId !== packId), ...lines.map((l) => ({ ...l, packId, id: newId() }))] }));
+        playSound("add");
+      },
+      removePack: (packId) => set((s) => ({ lines: s.lines.filter((l) => l.packId !== packId) })),
       setQuantity: (id, quantity) => set((s) => ({ lines: s.lines.map((l) => (l.id === id ? { ...l, quantity } : l)) })),
       setGift: (id, gift) => set((s) => ({ lines: s.lines.map((l) => (l.id !== id ? l : gift ? { ...l, gift } : { ...l, gift: undefined })) })),
       remove: (id) => set((s) => ({ lines: s.lines.filter((l) => l.id !== id) })),

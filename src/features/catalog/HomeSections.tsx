@@ -11,6 +11,7 @@ import { ClubBand } from "../home/ClubBand";
 import { GoalPanels } from "../home/GoalPanels";
 import { HomeCategories } from "../home/HomeCategories";
 import { HomeHero } from "../home/HomeHero";
+import { HomePacks } from "../home/HomePacks";
 import { ProductRail } from "../home/ProductRail";
 import { HomeStackBlock } from "../stack/HomeStackBlock";
 import { ThemeOffersRail } from "../themes/ThemeOffersRail";
@@ -41,6 +42,7 @@ export function HomeSections() {
       <Later size={420}><HomeCategories n={1} /></Later>
       {theme && <ThemeOffersRail theme={theme} offer={offer} />}
       <Later size={620}><ProductRail id="recomendados" eyebrow="Elegidos para vos" title="Recomendados" products={recommended.map(toCard)} href="/categorias/" /></Later>
+      <Later size={620}><HomePacks /></Later>
       <Later size={560}><GoalPanels n={2} /></Later>
       <Later size={560}><HomeStackBlock /></Later>
       <Later size={520}><BoxLeaderboard rows={ranking} n={3} /></Later>

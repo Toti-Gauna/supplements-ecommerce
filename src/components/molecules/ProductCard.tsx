@@ -46,8 +46,8 @@ export interface ProductCardData {
 const TAG = "px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.08em]";
 
 /**
- * "Ficha de rack": el envase en su estante y, abajo, lo que vende: precio por servicio en el marcador, servicios y
- * precio del pote, sellos, una luz de stock por variante y agregar. La caja de arriba va en su propia capa (z-[1], sin
+ * "Ficha de rack": el envase en su estante y, abajo, lo que vende: el precio del producto en el marcador, el precio
+ * por servicio chico (para comparar), sellos, una luz de stock por variante y agregar. La caja de arriba va en su propia capa (z-[1], sin
  * puntero) y el botón en otra (z-[2]) por encima del link estirado del nombre (arreglo de R0, `motion.css`).
  */
 export function ProductCard({ product, priority }: { product: ProductCardData; priority?: boolean }) {
@@ -77,11 +77,14 @@ export function ProductCard({ product, priority }: { product: ProductCardData; p
           <Link href={product.href} prefetch={priority} onClick={(e) => markProductHero(e.currentTarget.closest("[data-product-card]"), e)} className="after:absolute after:inset-0 focus-visible:outline-none">{product.name}</Link>
         </h3>
         <div>
-          <p className="eyebrow text-[10px] text-muted">{product.perServing ? `Por servicio${product.from ? " · desde" : ""}` : "Precio"}</p>
-          <div className="mt-1"><LedPrice amount={product.perServing ?? product.price} suffix={product.perServing ? " por servicio" : ""} motion="none" className="h-7 sm:h-8" signClassName="text-xl" /></div>
+          {/* Primero el precio del producto (lo que se paga); el precio por servicio va chico abajo, para comparar. */}
+          <p className="eyebrow text-[10px] text-muted">{product.deal?.price ? "Con el cupón" : "Precio"}</p>
+          <div className="mt-1"><LedPrice amount={product.deal?.price ?? product.price} motion="none" className="h-6 sm:h-8" signClassName="text-lg sm:text-xl" /></div>
+          {product.deal?.price && <p className="mt-1 font-mono text-[11px] text-muted"><span className="sr-only">Antes </span><s>{formatARS(product.price)}</s></p>}
           <p className="mt-1.5 font-mono text-[11px] text-muted">
-            {product.servings && product.servings > 1 ? `${product.servings} serv · ` : ""}{product.size ? `${product.size} · ` : ""}
-            {product.deal?.price ? <><span className="sr-only">Antes </span><s>{formatARS(product.price)}</s> <span className="sr-only">Con el cupón </span><strong className="text-ink">{formatARS(product.deal.price)}</strong></> : <strong className="text-ink">{formatARS(product.price)}</strong>}
+            {product.perServing ? <><span className="text-ink">{product.from ? "desde " : ""}{formatARS(product.perServing)}</span> por servicio</> : null}
+            {product.perServing && (product.servings || product.size) ? " · " : ""}
+            {product.servings && product.servings > 1 ? `${product.servings} serv` : ""}{product.servings && product.servings > 1 && product.size ? " · " : ""}{product.size ?? ""}
           </p>
         </div>
         <Stamps badges={product.badges} max={2} />

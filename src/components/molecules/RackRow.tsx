@@ -6,7 +6,8 @@ import { cn } from "@/lib/cn";
 import { formatARS } from "@/lib/money";
 
 /**
- * Fila de rack: el pote en su estante, marca y nombre, el precio por servicio en el marcador y la luz de stock. La usa
+ * Fila de rack: el pote en su estante, marca y nombre, el precio del producto en el marcador (con el precio por servicio
+ * chico abajo) y la luz de stock. La usa
  * el buscador para los resultados en vivo (sin abrir la ficha se ve lo que decide la compra).
  */
 export interface RackRowData {
@@ -36,7 +37,6 @@ export function RackRow({ item, active, className }: { item: RackRowData; active
   const out = facts.stock === "out";
   // Un envase de un solo servicio (bloque de tiza, shaker) se lee mejor como precio común.
   const perServing = facts.perServing !== null && (facts.servings ?? 0) > 1;
-  const amount = perServing ? facts.perServing! : facts.price;
   return (
     <div className={cn("relative flex items-center gap-3 border border-line bg-surface p-2 pr-3 transition-colors sm:gap-4", active && "border-ink/60 bg-accent", className)}>
       <span aria-hidden="true" className={cn("absolute inset-y-0 left-0 w-1 bg-volt transition-opacity", active ? "opacity-100" : "opacity-0")} />
@@ -55,11 +55,9 @@ export function RackRow({ item, active, className }: { item: RackRowData; active
         </span>
       </span>
       <span className="flex shrink-0 flex-col items-end gap-0.5 text-right">
-        <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted">
-          {perServing ? `${facts.from ? "Desde · " : ""}Por serv.` : facts.from ? "Desde" : "Precio"}
-        </span>
-        <LedPrice amount={amount} suffix={perServing ? " por servicio" : ""} tone={out ? "chalk" : "volt"} motion="none" className="h-6 sm:h-7" signClassName="text-lg" />
-        <span className="hidden font-mono text-[11px] tabular-nums text-muted sm:block">{formatARS(facts.price)}</span>
+        <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted">{facts.from ? "Desde" : "Precio"}</span>
+        <LedPrice amount={facts.price} tone={out ? "chalk" : "volt"} motion="none" className="h-6 sm:h-7" signClassName="text-lg" />
+        {perServing && <span className="font-mono text-[11px] tabular-nums text-muted">{formatARS(facts.perServing!)} / serv</span>}
       </span>
     </div>
   );

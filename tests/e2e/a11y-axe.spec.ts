@@ -14,6 +14,8 @@ const PAGES: [string, string, string][] = [
   ["categoría", "categorias/", "h1"],
   ["búsqueda con chips", "buscar/?q=proteina sin lactosa", "h1"],
   ["búsqueda sin resultados", "buscar/?q=creatina vainilla", "h1"],
+  ["packs", "packs/", "h1"],
+  ["pack (detalle)", "packs/?pack=hipertrofia", "h1"],
   ["armador", "crear/", "h1"],
   ["carrito", "carrito/", "h1"],
   ["club", "club/", "h1"],

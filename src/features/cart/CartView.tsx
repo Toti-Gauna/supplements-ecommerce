@@ -10,6 +10,7 @@ import { StackNudge } from "./StackNudge";
 import { CartLineItem, type CartLineView } from "@/components/organisms/CartLineItem";
 import { getProduct, maxQuantity } from "@/demo/engine/catalog";
 import { missingForFreeShipping, type QuotedLine } from "@/demo/engine/pricing";
+import { packDiscountRows } from "@/demo/engine/pack-cart";
 import { recommendForCart } from "@/demo/engine/recommend";
 import { demoData } from "@/demo/engine/source";
 import { cn } from "@/lib/cn";
@@ -20,6 +21,7 @@ import { useHydrated } from "@/stores/hydration";
 import { CartMissionNudge } from "./CartMissionNudge";
 import { CouponForm } from "./CouponForm";
 import { MiniRecommendations } from "./MiniRecommendations";
+import { QuotedGroups } from "./QuotedGroups";
 import { useCartQuote } from "./useCartQuote";
 import { useGoToCheckout } from "./useGoToCheckout";
 
@@ -55,6 +57,7 @@ export function CartView() {
     <OrderSummary
       rows={[
         { label: `Subtotal (${quote.units} ${quote.units === 1 ? "producto" : "productos"})`, amount: quote.subtotal },
+        ...packDiscountRows(quote.pack.entries),
         ...(quote.stack.discount > 0 ? [{ label: `Descuento stack (${quote.stack.pct} %)`, amount: quote.stack.discount, negative: true }] : []),
         ...(quote.couponDiscount > 0 ? [{ label: "Cupón", amount: quote.couponDiscount, negative: true }] : []),
         { label: "Envío", amount: null, pendingLabel: "Se calcula en el checkout" },
@@ -75,10 +78,10 @@ export function CartView() {
         </div>
         <StackNudge stack={quote.stack} />
         <ul className="flex flex-col gap-3" aria-label="Productos en el carrito">
-          {quote.lines.map((q) => {
+          <QuotedGroups quote={quote} renderLine={(q, inPack) => {
             const view = toLineView(q);
-            return view && <CartLineItem key={view.id} line={view} onQuantity={(n) => setQuantity(view.id, n)} onRemove={() => remove(view.id)} />;
-          })}
+            return view && <CartLineItem key={view.id} line={view} inPack={inPack} onQuantity={(n) => setQuantity(view.id, n)} onRemove={() => remove(view.id)} />;
+          }} />
         </ul>
       </div>
       {/* En el celular: cupón y resumen justo debajo de los productos. En escritorio: columna fija a la derecha. */}
@@ -92,7 +95,7 @@ export function CartView() {
       </div>
       <div data-buy-bar className={cn(FLOATING_BAR, "z-30 pl-5 lg:hidden")}>
         <div className="min-w-0 flex-1">
-          <p className="text-xs text-muted">Total{quote.couponDiscount > 0 || quote.stack.discount > 0 ? " con descuentos" : ""} · sin envío</p>
+          <p className="text-xs text-muted">Total{quote.couponDiscount > 0 || quote.stack.discount > 0 || quote.pack.discount > 0 ? " con descuentos" : ""} · sin envío</p>
           <p className="text-xl font-extrabold tabular-nums">{formatARS(quote.total)}</p>
         </div>
         <Button size="lg" onClick={goToCheckout} className="px-6"><Lock size={16} aria-hidden="true" /> Ir a pagar</Button>

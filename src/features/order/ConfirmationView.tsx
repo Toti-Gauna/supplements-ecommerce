@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Check, MessageCircle } from "lucide-react";
+import { CalendarClock, Check, MessageCircle } from "lucide-react";
 import { motion } from "motion/react";
 import { Celebration } from "@/components/molecules/Celebration";
 import { ConfettiRain } from "@/components/molecules/ConfettiRain";
@@ -15,6 +15,7 @@ import { STATUS_LABEL } from "@/demo/engine/orders";
 import { DEMO_TODAY } from "@/demo/fixtures/admin-orders";
 import { demoAccountProgress } from "@/demo/fixtures/commerce";
 import { useAdmin, useDemoData } from "@/stores/admin";
+import Link from "next/link";
 import { whatsappLink } from "@/lib/whatsapp";
 import { useCheckout } from "@/stores/checkout";
 import { useGifts } from "@/stores/gifts";
@@ -79,6 +80,12 @@ export function ConfirmationView() {
             ))}
           </ol>
         </section>
+        {order.quote.pack?.entries.some((e) => e.monthly) && (
+          <p role="note" className="edge-volt flex items-start gap-3 p-4 text-sm font-semibold">
+            <CalendarClock size={18} aria-hidden="true" className="mt-0.5 shrink-0 text-volt-ink" />
+            <span>Creamos una suscripción simulada para tu pack: la ves, con su próxima entrega, en <Link href="/cuenta/#suscripciones" className="font-bold text-primary underline">Mi cuenta → Suscripciones</Link>. No se cobra ni se debita nada.</span>
+          </p>
+        )}
         {gifts.length > 0 && (
           <section aria-labelledby="regalos" className="flex flex-col gap-3">
             <h2 id="regalos" className="font-display text-3xl">{gifts.length === 1 ? "Tu regalo, listo para mandar" : "Tus regalos, listos para mandar"}</h2>

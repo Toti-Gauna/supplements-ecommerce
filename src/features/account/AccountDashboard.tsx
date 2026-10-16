@@ -1,5 +1,5 @@
 "use client";
-import { BellRing, Gift, LogOut, MapPin, Package, Sparkles, Trophy, type LucideIcon } from "lucide-react";
+import { BellRing, CalendarClock, Gift, LogOut, MapPin, Package, Sparkles, Trophy, type LucideIcon } from "lucide-react";
 import type { MouseEvent, ReactNode } from "react";
 import { LevelGlyph } from "@/components/illustrations/LevelGlyph";
 import { levelFor } from "@/demo/engine/club-levels";
@@ -18,6 +18,7 @@ import { useWheelPrize } from "../club/useWheelPrize";
 import { AccountGifts } from "../gifts/AccountGifts";
 import { AddressesSection, MissionsSection, OrdersSection, RewardsSection, availableRewards } from "./AccountSections";
 import { RepurchaseSection } from "./RepurchaseSection";
+import { SubscriptionsSection, useOwnSubscriptions } from "./SubscriptionsSection";
 import { useAccountTab, type AccountTab } from "./useAccountTab";
 
 interface Section { id: AccountTab; title: string; icon: LucideIcon; summary: string; intro: string; body: ReactNode }
@@ -43,9 +44,11 @@ export function AccountDashboard({ user }: { user: { name: string; email: string
   const gameLeft = gameCodes.filter((code) => { const c = coupons.find((x) => x.code === code); return c && !(c.maxUses !== undefined && (c.usedCount ?? 0) >= c.maxUses); }).length;
   const rewards = availableRewards(usedRewards) + (prizeStatus && prizeStatus !== "utilizado" ? 1 : 0) + gameLeft;
   const reminders = useReminders((s) => s.items.length);
+  const subscriptions = useOwnSubscriptions().filter((s) => s.status !== "cancelled").length;
   const [tab, select] = useAccountTab();
   const sections: Section[] = [
     { id: "pedidos", title: "Mis pedidos", icon: Package, summary: plural(lastOrder ? 2 : 1, "pedido", "pedidos"), intro: "Seguí cada pedido paso a paso.", body: <OrdersSection lastOrder={lastOrder} /> },
+    { id: "suscripciones", title: "Suscripciones", icon: CalendarClock, summary: subscriptions ? plural(subscriptions, "activa", "activas") : "Sin suscripciones", intro: "Los packs que recibís todos los meses (simulado: no se cobra nada).", body: <SubscriptionsSection /> },
     { id: "recompras", title: "Recompras", icon: BellRing, summary: reminders ? plural(reminders, "aviso", "avisos") : "Sin avisos", intro: "Te avisamos antes de que se termine el pote y lo recomprás en un toque.", body: <RepurchaseSection /> },
     { id: "regalos", title: "Mis regalos", icon: Gift, summary: unopened ? plural(unopened, "sin abrir", "sin abrir") : plural(received.length, "regalo", "regalos"), intro: "Los que te mandaron se abren sin el link; los que hiciste, para volver a mandarlos.", body: <AccountGifts email={user.email} /> },
     { id: "misiones", title: "Misiones", icon: Sparkles, summary: plural(missions.length, "activa", "activas"), intro: "Tus compras suman a cada misión (progreso de ejemplo).", body: <MissionsSection /> },

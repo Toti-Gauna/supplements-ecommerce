@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { ArrowUpRight, Gift, Heart, TicketPercent, UserRound } from "lucide-react";
+import { ArrowUpRight, Gift, Heart, PackageOpen, TicketPercent, UserRound } from "lucide-react";
 import { IconBarbell, IconKettlebell, IconShaker } from "@/components/illustrations/GymIcons";
 import { Logo } from "@/components/atoms/Logo";
 import { Sheet } from "@/components/motion/Sheet";
@@ -14,6 +14,7 @@ import { brand } from "@/config/brand";
 import { WhatsAppLink } from "./WhatsAppLink";
 
 const LINKS = [
+  { href: "/packs/", label: "Packs", icon: PackageOpen },
   { href: "/crear/", label: "Armá tu stack", icon: IconBarbell },
   { href: "/club/", label: brand.club, icon: IconKettlebell },
   { href: "/club/juego/", label: "Shaker Rush", icon: IconShaker },

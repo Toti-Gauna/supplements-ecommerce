@@ -5,13 +5,15 @@ test("inicio: carrusel, categorías, recomendados y recién después objetivos y
   await page.goto("");
   // Con la suite cargada, las secciones de abajo pueden montarse un instante después: se espera la última que se mide.
   await expect(page.locator("main section[aria-labelledby='home-stack-title']")).toBeAttached();
+  await expect(page.locator("main section[aria-labelledby='packs-home-title']")).toBeAttached();
   await expect(page.locator("main section[aria-roledescription='carrusel']")).toBeAttached();
   const order = await page.locator("main section[aria-labelledby], main section[aria-roledescription='carrusel']").evaluateAll((els) =>
     els.map((el) => el.getAttribute("aria-roledescription") === "carrusel" ? "carrusel" : el.getAttribute("aria-labelledby")));
   const at = (id: string) => order.findIndex((x) => x?.startsWith(id));
   expect(at("carrusel")).toBe(0);
   expect(at("cats-title")).toBeLessThan(at("recomendados"));
-  expect(at("recomendados")).toBeLessThan(at("objetivos-title"));
+  expect(at("recomendados")).toBeLessThan(at("packs-home-title"));
+  expect(at("packs-home-title")).toBeLessThan(at("objetivos-title"));
   expect(at("objetivos-title")).toBeLessThan(at("home-stack-title"));
 });
 

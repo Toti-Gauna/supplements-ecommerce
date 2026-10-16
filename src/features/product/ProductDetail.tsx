@@ -23,7 +23,7 @@ import { MissionChip } from "./MissionChip";
 import { NutritionFacts } from "./NutritionFacts";
 import { ProductAccordions } from "./ProductAccordions";
 import { ServingCalculator } from "./ServingCalculator";
-import { StackOffer } from "./StackOffer";
+import { ProductOffers } from "./ProductOffers";
 import { ClearanceTag, LotNote, ProductBadges, ServingPrice } from "./SupplementFacts";
 import { UsageTimeline } from "./UsageTimeline";
 import { useProductPurchase } from "./useProductPurchase";
@@ -127,7 +127,7 @@ export function ProductDetail({ product: initial, preview = false }: { product: 
           <div className="max-lg:order-6"><ProductAccordions product={product} /></div>
         </div>
         <div className="max-lg:contents lg:flex lg:flex-col lg:gap-6">
-          {!preview && <div className="max-lg:order-1"><StackOffer product={product} variant={sel.variant} /></div>}
+          {!preview && <div className="max-lg:order-1"><ProductOffers product={product} variant={sel.variant} /></div>}
           <div className="max-lg:order-3"><ServingCalculator product={product} variant={sel.variant} /></div>
           <div className="flex flex-col gap-6 max-lg:order-5">
             <MissionChip units={quantity} />

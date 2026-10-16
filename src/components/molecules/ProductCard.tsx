@@ -79,12 +79,11 @@ export function ProductCard({ product, priority }: { product: ProductCardData; p
         <div>
           {/* Primero el precio del producto (lo que se paga); el precio por servicio va chico abajo, para comparar. */}
           <p className="eyebrow text-[10px] text-muted">{product.deal?.price ? "Con el cupón" : "Precio"}</p>
-          <div className="mt-1"><LedPrice amount={product.deal?.price ?? product.price} motion="none" className="h-6 sm:h-8" signClassName="text-lg sm:text-xl" /></div>
+          <div className="mt-1"><LedPrice amount={product.deal?.price ?? product.price} motion="none" className="h-[1.15rem] max-w-full sm:h-8" signClassName="text-base sm:text-xl" /></div>
           {product.deal?.price && <p className="mt-1 font-mono text-[11px] text-muted"><span className="sr-only">Antes </span><s>{formatARS(product.price)}</s></p>}
-          <p className="mt-1.5 font-mono text-[11px] text-muted">
-            {product.perServing ? <><span className="text-ink">{product.from ? "desde " : ""}{formatARS(product.perServing)}</span> por servicio</> : null}
-            {product.perServing && (product.servings || product.size) ? " · " : ""}
-            {product.servings && product.servings > 1 ? `${product.servings} serv` : ""}{product.servings && product.servings > 1 && product.size ? " · " : ""}{product.size ?? ""}
+          {product.perServing && <p className="mt-1.5 font-mono text-[11px] text-muted"><span className="text-ink">{product.from ? "desde " : ""}{formatARS(product.perServing)}</span> por servicio</p>}
+          <p className="mt-0.5 truncate font-mono text-[11px] text-muted">
+            {[product.servings && product.servings > 1 ? `${product.servings} serv` : "", product.size ?? ""].filter(Boolean).join(" · ")}
           </p>
         </div>
         <Stamps badges={product.badges} max={2} />

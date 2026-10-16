@@ -63,6 +63,8 @@ test("deslizar con el dedo usa scroll-snap y frena la reproducción", async ({ p
   await page.goto("");
   await page.keyboard.press("Escape");
   const track = page.locator("[data-hero-track]");
+  // Con la suite cargada, la página puede no haber pintado el carril todavía: se espera antes de medirlo.
+  await expect(track).toBeVisible();
   const box = (await track.boundingBox())!;
   const session = await page.context().newCDPSession(page);
   const y = Math.min(box.y + 140, 550);

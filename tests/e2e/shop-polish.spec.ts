@@ -38,7 +38,8 @@ for (const [width, height] of [[375, 812], [820, 1180], [1440, 900]] as const) {
     expect(arrow.y).toBeGreaterThanOrEqual(track.y + track.height - 1);
     expect(heading.y + heading.height).toBeLessThanOrEqual(track.y + track.height);
     const sections = await page.locator("section[aria-roledescription='carrusel'], section[aria-labelledby='cats-title'], section[aria-labelledby='objetivos-title'], #ofertas-tematicas").evaluateAll((els) => els.map((el) => el.id || el.getAttribute("aria-labelledby") || "carrusel"));
-    expect(sections).toEqual(["carrusel", "cats-title", "objetivos-title", "ofertas-tematicas"]);
+    // L1: las ofertas de la fecha van junto a lo recomendado, antes de "¿Para qué lo querés?".
+    expect(sections).toEqual(["carrusel", "cats-title", "ofertas-tematicas", "objetivos-title"]);
     expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(0);
   });
 }

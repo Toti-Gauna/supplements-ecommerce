@@ -56,7 +56,7 @@ export function RackRow({ item, active, className }: { item: RackRowData; active
       </span>
       <span className="flex shrink-0 flex-col items-end gap-0.5 text-right">
         <span className="font-mono text-[10px] font-bold uppercase tracking-[0.12em] text-muted">{facts.from ? "Desde" : "Precio"}</span>
-        <LedPrice amount={facts.price} tone={out ? "chalk" : "volt"} motion="none" className="h-6 sm:h-7" signClassName="text-lg" />
+        <LedPrice amount={facts.price} tone={out ? "chalk" : "volt"} motion="none" className="h-[1.1rem] sm:h-7" signClassName="text-base sm:text-lg" />
         {perServing && <span className="font-mono text-[11px] tabular-nums text-muted">{formatARS(facts.perServing!)} / serv</span>}
       </span>
     </div>

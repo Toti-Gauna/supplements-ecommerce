@@ -3,7 +3,12 @@ import { ArrowLeft, ArrowRight, Zap } from "lucide-react";
 import type { FormEvent, KeyboardEvent, Ref } from "react";
 import { Button } from "@/components/atoms/Button";
 import { QuizOptions } from "./QuizOptions";
-import { QUIZ_STEPS, RESULT_STEP, type QuizDraft } from "./quiz-steps";
+import { QUIZ_STEPS, RESULT_STEP, type QuizDraft, type QuizStepId } from "./quiz-steps";
+
+const ERROR: Partial<Record<QuizStepId, string>> = {
+  goals: "Elegí al menos un objetivo.",
+  restrictions: "Marcá al menos una opción, o Ninguna.",
+};
 
 interface Props {
   step: number;
@@ -37,13 +42,13 @@ export function QuizQuestion({ step, draft, error, headingRef, onAnswer, onNext,
         </legend>
         <QuizOptions step={info.id} draft={draft} onAnswer={onAnswer} />
       </fieldset>
-      {error && <p id={`quiz-error-${info.id}`} role="alert" className="mt-4 rounded-sm bg-danger-soft px-3 py-2 text-sm font-bold text-danger">{info.id === "restrictions" ? "Marcá al menos una opción, o Ninguna." : "Elegí una opción para seguir."}</p>}
+      {error && <p id={`quiz-error-${info.id}`} role="alert" className="mt-4 rounded-sm bg-danger-soft px-3 py-2 text-sm font-bold text-danger">{ERROR[info.id] ?? "Elegí una opción para seguir."}</p>}
       <div className="mt-6 flex items-center justify-between gap-3">
         {step > 0 ? (
           <Button variant="dark" onClick={onBack} className="px-5"><ArrowLeft size={17} aria-hidden="true" />Atrás</Button>
         ) : <span />}
         <Button type="submit" variant="light" className="min-w-[9.5rem] px-6">
-          {last ? <><Zap size={17} aria-hidden="true" className="fill-current" />Ver mi stack</> : <>Siguiente<ArrowRight size={17} aria-hidden="true" /></>}
+          {last ? <><Zap size={17} aria-hidden="true" className="fill-current" />Ver mi programa</> : <>Siguiente<ArrowRight size={17} aria-hidden="true" /></>}
         </Button>
       </div>
     </form>

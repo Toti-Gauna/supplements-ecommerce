@@ -27,7 +27,12 @@ export interface Subscription {
   customer?: string;
   /** Suscripción de MUESTRA del panel: Mi cuenta no la muestra, es de un cliente inventado. */
   seed?: boolean;
+  /** Copia del pack cuando es a medida (el programa del quiz): no está en el catálogo de packs. */
+  pack?: Pack;
 }
+
+/** El pack de una suscripción: su copia si es a medida, o el del catálogo vigente. */
+export const subscriptionPack = (sub: Subscription, packs: Pack[]): Pack | undefined => sub.pack ?? packs.find((p) => p.id === sub.packId);
 
 export const SUBSCRIPTION_LABEL: Record<SubscriptionStatus, string> = { active: "Activa", paused: "Pausada", cancelled: "Cancelada" };
 export const DELIVERY_DAYS = Array.from({ length: 28 }, (_, i) => i + 1);
@@ -41,6 +46,7 @@ export function createSubscription(input: { pack: Pack; choices: Record<string, 
   return {
     id: input.id, packId: input.pack.id, choices: input.choices, day: input.day, status: "active", startedOn: input.today, orderCode: input.orderCode, skipNext: false,
     ...(input.customer ? { customer: input.customer } : {}),
+    ...(input.pack.custom ? { pack: structuredClone(input.pack) } : {}),
   };
 }
 
@@ -83,13 +89,13 @@ export const changeDay = (sub: Subscription, day: number): Subscription => (sub.
 
 /** Cuánto sale cada entrega (suplementos con los dos descuentos) con lo elegido, o null si el pack ya no existe. */
 export function monthlyAmount(sub: Subscription, packs: Pack[]): number | null {
-  const pack = packs.find((p) => p.id === sub.packId);
+  const pack = subscriptionPack(sub, packs);
   return pack ? quotePack(pack, sub.choices).monthlyPrice : null;
 }
 
 /** Cuántas veces al año recibe y cuánto ahorra frente a comprar suelto: para el cartel "ahorrás $X por mes". */
 export function monthlySavingOf(sub: Subscription, packs: Pack[]): number {
-  const pack = packs.find((p) => p.id === sub.packId);
+  const pack = subscriptionPack(sub, packs);
   return pack ? quotePack(pack, sub.choices).monthlySaving : 0;
 }
 

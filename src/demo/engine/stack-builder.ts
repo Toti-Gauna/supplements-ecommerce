@@ -1,5 +1,7 @@
-import { EXTRA_PREFERENCE, GOAL_SLOTS, STACK_SLOTS, type Restriction, type StackSlotId } from "../fixtures/stack-builder";
-import type { Goal, Product, Variant } from "../types";
+import { EXTRA_PREFERENCE, GOAL_SLOTS, MAX_GOALS, STACK_SLOTS, type Restriction, type StackSlotId } from "../fixtures/stack-builder";
+import type { Goal, Product, SportId, Variant } from "../types";
+import { goals as goalFixtures } from "../fixtures/goals";
+import { isSportId } from "../fixtures/sports";
 import { unitPrice } from "./catalog";
 import { pricePerServing } from "./servings";
 import { DEFAULT_STACK_RULE, stackDiscount, type StackResult, type StackRule } from "./stack";
@@ -40,17 +42,41 @@ export function meetsRestrictions(p: Product, restrictions: Restriction[]): bool
   return restrictions.every((r) => (r === "sin-cafeina" ? !hasCaffeine(p) : (p.badges ?? []).includes(r)));
 }
 
+/** Uno o varios objetivos, sin repetir y sin vacíos. */
+export const goalList = (goal: Goal | Goal[] | null | undefined): Goal[] => [...new Set(goal == null ? [] : Array.isArray(goal) ? goal : [goal])];
+
+/**
+ * Lugares del estante para varios objetivos (L4): primero el más importante de cada uno, después el segundo, y así,
+ * sin repetir. "Fuerza + Salud" arma base, extra, creatina y pre-entreno: un producto por lugar, nunca dos iguales.
+ */
+export function goalSlots(goal: Goal | Goal[]): StackSlotId[] {
+  const list = goalList(goal);
+  const out: StackSlotId[] = [];
+  for (let rank = 0; rank < 4; rank++) for (const g of list) { const s = GOAL_SLOTS[g][rank]; if (s && !out.includes(s)) out.push(s); }
+  return out;
+}
+
+/** Categorías que convienen en "Extra" para varios objetivos, en el orden de los objetivos. */
+export function extraPreference(goal: Goal | Goal[] | null): string[] {
+  const list = goalList(goal);
+  const out: string[] = [];
+  for (let rank = 0; rank < 2; rank++) for (const g of list) { const c = EXTRA_PREFERENCE[g][rank]; if (c && !out.includes(c)) out.push(c); }
+  return out;
+}
+
 export const firstInStock = (p: Product): Variant | undefined => p.variants.find((v) => v.stock !== 0);
 
 /**
  * Opciones de un lugar del estante: activas, con stock y que cumplen las restricciones; primero las del objetivo (en
  * "Extra", además, según la categoría que conviene) y después las más vendidas.
  */
-export function slotOptions(slotId: StackSlotId, goal: Goal | null, catalog: Product[], restrictions: Restriction[] = []): Product[] {
+export function slotOptions(slotId: StackSlotId, goal: Goal | Goal[] | null, catalog: Product[], restrictions: Restriction[] = []): Product[] {
   const slot = STACK_SLOTS.find((s) => s.id === slotId)!;
-  const prefs = goal && slotId === "extra" ? EXTRA_PREFERENCE[goal] : [];
+  const list = goalList(goal);
+  const prefs = slotId === "extra" ? extraPreference(list) : [];
   const score = (p: Product) => {
-    const goalMatch = goal && p.goals?.includes(goal) ? 10 : 0;
+    // Cuantos más objetivos cubre, mejor; a igualdad, el del objetivo más importante.
+    const goalMatch = list.reduce((s, g, i) => s + (p.goals?.includes(g) ? 10 - i : 0), 0);
     const pref = prefs.indexOf(p.categorySlug);
     return goalMatch + (pref >= 0 ? (prefs.length - pref) * 3 : 0) + p.soldCount / 1000;
   };
@@ -59,8 +85,8 @@ export function slotOptions(slotId: StackSlotId, goal: Goal | null, catalog: Pro
     .sort((a, b) => score(b) - score(a) || a.slug.localeCompare(b.slug));
 }
 
-/** El stack sugerido para un objetivo: el mejor producto de cada lugar que arma ese objetivo. */
-export function defaultStack(goal: Goal, catalog: Product[], restrictions: Restriction[] = [], slots: StackSlotId[] = GOAL_SLOTS[goal]): StackPick[] {
+/** El stack sugerido para uno o varios objetivos: el mejor producto de cada lugar que arman. */
+export function defaultStack(goal: Goal | Goal[], catalog: Product[], restrictions: Restriction[] = [], slots: StackSlotId[] = goalSlots(goal)): StackPick[] {
   return slots.flatMap((slot) => {
     const p = slotOptions(slot, goal, catalog, restrictions)[0];
     const v = p && firstInStock(p);
@@ -85,10 +111,12 @@ export function stackSummary(picks: StackPick[], catalog: Product[], rule: Stack
   return { lines, subtotal, stack, total: subtotal - stack.discount, perDay };
 }
 
-/** El estante en la URL (`?objetivo=fuerza&stack=base.ionic-whey.iw-chocolate-2lb,…`), para compartirlo o venir del quiz. */
-export function encodeStack(goal: Goal | null, picks: StackPick[]): string {
+/** El estante en la URL (`?objetivo=fuerza,salud&stack=base.ionic-whey.iw-chocolate-2lb,…`), para compartirlo o venir del quiz. */
+export function encodeStack(goal: Goal | Goal[] | null, picks: StackPick[], sport?: SportId | null): string {
   const q = new URLSearchParams();
-  if (goal) q.set("objetivo", goal);
+  const list = goalList(goal);
+  if (list.length) q.set("objetivo", list.join(","));
+  if (sport) q.set("deporte", sport);
   if (picks.length) q.set("stack", picks.map((p) => `${p.slot}.${p.slug}.${p.variantId}`).join(","));
   return q.toString();
 }
@@ -107,3 +135,11 @@ export function decodeStack(raw: string | null, catalog: Product[]): StackPick[]
     return [{ slot, slug, variantId }];
   });
 }
+
+/** Los objetivos de la URL (`objetivo=fuerza,salud`), sin los que no existen ni repetidos, hasta el máximo. */
+export function decodeGoals(raw: string | null): Goal[] {
+  if (!raw) return [];
+  return [...new Set(raw.split(","))].filter((g): g is Goal => goalFixtures.some((x) => x.id === g)).slice(0, MAX_GOALS);
+}
+
+export const decodeSport = (raw: string | null): SportId | null => (isSportId(raw) ? raw : null);

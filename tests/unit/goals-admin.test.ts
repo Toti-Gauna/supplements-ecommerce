@@ -20,7 +20,7 @@ describe("objetivos editables desde el panel", () => {
     const data = defaultDemoData();
     setDemoData({ ...data, goals: normalizeGoals([{ ...goals[1]!, name: "Fuerza bruta" }]) });
     expect(goalInfo("fuerza")?.name).toBe("Fuerza bruta");
-    const result = recommendStack({ goal: "fuerza", days: "3-4", time: "tarde", restrictions: [] }, data.products);
+    const result = recommendStack({ goals: ["fuerza"], sport: null, days: "3-4", time: "tarde", restrictions: [] }, data.products);
     expect(result.picks.some((p) => p.reasons.some((r) => r.includes("fuerza bruta")))).toBe(true);
   });
   it("valida nombre, largo de la bajada y color", () => {

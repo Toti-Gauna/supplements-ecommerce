@@ -13,7 +13,9 @@ import { useCart } from "@/stores/cart";
  * y, si le sacaron un producto, el aviso de qué falta para el descuento con un botón para completarlo. Las líneas van adentro.
  */
 export function PackGroup({ packId, entry, children }: { packId: string; entry?: PackDiscountEntry; children: ReactNode }) {
-  const pack = useDemoData((d) => d.packs?.find((p) => p.id === packId));
+  const listed = useDemoData((d) => d.packs?.find((p) => p.id === packId));
+  const custom = useCart((s) => s.customPacks?.find((p) => p.id === packId));
+  const pack = listed ?? custom;
   const lines = useCart((s) => s.lines);
   const { addPack, removePack } = useCart();
   const group = lines.filter((l) => l.packId === packId);
@@ -23,7 +25,7 @@ export function PackGroup({ packId, entry, children }: { packId: string; entry?:
   const complete = () => {
     if (!pack) return;
     const keep = group.map((l) => ({ productSlug: l.productSlug, variantId: l.variantId, quantity: l.quantity, packId, ...(l.monthlyDay !== undefined ? { monthlyDay: l.monthlyDay } : {}) }));
-    addPack(packId, [...keep, ...completePackLines(lines, pack)]);
+    addPack(packId, [...keep, ...completePackLines(lines, pack)], custom);
   };
   return (
     <li className="overflow-hidden border border-line bg-surface shadow-[var(--shadow-card)]" data-cart-pack={packId}>

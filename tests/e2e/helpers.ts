@@ -34,3 +34,19 @@ export async function makePng(page: Page, color = "#c9a77a"): Promise<Buffer> {
   }, color);
   return Buffer.from(dataUrl.split(",")[1]!, "base64");
 }
+
+/** Del carrito al pedido listo para confirmar: invitado, cadete en Mar del Plata, transferencia. */
+export async function checkoutAsGuest(page: Page) {
+  await page.goto("checkout/");
+  await page.getByLabel("Nombre y apellido").fill("Juana Pérez");
+  await page.getByLabel("Email").fill("juana@ejemplo.com");
+  await page.getByLabel("Teléfono / WhatsApp").fill("223 555-1234");
+  await page.getByRole("button", { name: "Continuar a la entrega" }).click();
+  await page.getByText("Cadete en Mar del Plata").click();
+  await page.getByLabel("Calle").fill("Güemes");
+  await page.getByLabel("Altura").fill("2500");
+  await page.getByLabel("Código postal").fill("7600");
+  await page.getByRole("button", { name: "Continuar al pago" }).click();
+  await page.getByText("Transferencia bancaria").click();
+  await page.getByRole("button", { name: "Revisar pedido" }).click();
+}

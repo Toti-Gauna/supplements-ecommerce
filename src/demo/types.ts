@@ -59,6 +59,11 @@ export interface Faq {
 /** Objetivos de entrenamiento: filtran el catálogo y arman stacks. */
 export type Goal = "masa-muscular" | "fuerza" | "energia" | "recuperacion" | "definicion" | "salud" | "resistencia";
 
+/** Deportes (L4): el quiz, el armador y "Entrená por objetivo" también arman por deporte. */
+export type SportId =
+  | "futbol" | "tenis" | "padel" | "running" | "ciclismo" | "natacion"
+  | "boxeo" | "crossfit" | "basquet" | "rugby" | "hockey" | "voley";
+
 /** Sellos del rótulo. */
 export type ProductBadge = "sin-tacc" | "vegano" | "sin-azucar" | "keto" | "marca-propia" | "sin-cafeina";
 
@@ -157,6 +162,8 @@ export interface Pack {
   monthlyPct: number;
   featured: boolean;
   active?: boolean;
+  /** Pack armado a medida por el quiz ("Tu programa", L4): no está en el catálogo, viaja con el carrito y la suscripción. */
+  custom?: boolean;
 }
 
 export interface Coupon {

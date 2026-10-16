@@ -17,6 +17,7 @@ const PAGES: [string, string, string][] = [
   ["packs", "packs/", "h1"],
   ["pack (detalle)", "packs/?pack=hipertrofia", "h1"],
   ["armador", "crear/", "h1"],
+  ["armador con dos objetivos y deporte", "crear/?objetivo=fuerza,salud&deporte=futbol", "h1"],
   ["carrito", "carrito/", "h1"],
   ["club", "club/", "h1"],
   ["juego", "club/juego/", "h1"],
@@ -64,6 +65,16 @@ for (const mode of ["dark", "light"] as const) {
         expect(found, describe(found)).toEqual([]);
       });
     }
+    test("inicio: pestaña Deportes de \"Entrená por objetivo o por deporte\"", async ({ page }) => {
+      await page.goto("");
+      const section = page.locator("section[aria-labelledby='objetivos-title']");
+      await section.scrollIntoViewIfNeeded();
+      await section.getByRole("tab", { name: /Deportes/ }).click();
+      await expect(section.getByRole("tabpanel", { name: /Deportes/ })).toBeVisible();
+      await page.waitForTimeout(400);
+      const found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+    });
     test("buscador superpuesto con resultados y una opción activa", async ({ page }) => {
       await page.goto("");
       await page.getByRole("button", { name: "Buscar productos" }).filter({ visible: true }).first().click();
@@ -73,6 +84,31 @@ for (const mode of ["dark", "light"] as const) {
       await combo.press("ArrowDown");
       await page.waitForTimeout(500);
       const found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+    });
+    test("invitación al quiz de la primera visita", async ({ page }) => {
+      await page.addInitScript(() => { try { localStorage.removeItem("volta-quiz-invite"); } catch { /* sin almacenamiento */ } });
+      await page.goto("");
+      await expect(page.getByRole("dialog", { name: "¿Armamos tu rutina en 1 minuto?" })).toBeVisible();
+      await page.waitForTimeout(500);
+      const found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+    });
+    test("quiz: deporte y resultado con Tu programa", async ({ page }) => {
+      const answers = { goals: ["fuerza", "salud"], sport: "futbol", days: "3-4", time: "tarde", restrictions: [] };
+      await page.addInitScript((a) => { try { localStorage.setItem("volta-demo:quiz", a); } catch { /* sin almacenamiento */ } }, JSON.stringify(answers));
+      await page.goto("crear/quiz/");
+      await page.getByRole("checkbox", { name: /^Fuerza/ }).check();
+      await page.getByRole("button", { name: "Siguiente" }).click();
+      await page.getByRole("radio", { name: /^Fútbol/ }).check();
+      await page.waitForTimeout(400);
+      let found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+      await page.goto("crear/quiz/");
+      await page.getByRole("button", { name: "Ver mi último programa" }).click();
+      await expect(page.getByRole("region", { name: "Comprar tu programa" })).toBeVisible();
+      await page.waitForTimeout(800);
+      found = await audit(page);
       expect(found, describe(found)).toEqual([]);
     });
   });

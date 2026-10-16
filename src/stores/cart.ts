@@ -2,15 +2,18 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { CartLine, LineGift } from "@/demo/engine/cart-types";
+import type { Pack } from "@/demo/types";
 import { demoStorage, STORAGE_PREFIX } from "./storage";
 import { playSound } from "@/lib/sound";
 
 interface CartState {
   lines: CartLine[];
+  /** Packs a medida del carrito (el programa del quiz, L4): no están en el catálogo, viajan con sus líneas. */
+  customPacks: Pack[];
   couponCode: string | null;
   add: (line: Omit<CartLine, "id">) => void;
   /** Pone un pack en el carrito (L3). Si ya estaba, lo reemplaza: un pack se lleva una vez. */
-  addPack: (packId: string, lines: Omit<CartLine, "id">[]) => void;
+  addPack: (packId: string, lines: Omit<CartLine, "id">[], custom?: Pack) => void;
   removePack: (packId: string) => void;
   setQuantity: (id: string, quantity: number) => void;
   /** Marca (o desmarca) un ítem del carrito como regalo, desde el checkout. */
@@ -26,6 +29,7 @@ export const useCart = create<CartState>()(
   persist(
     (set) => ({
       lines: [],
+      customPacks: [],
       couponCode: null,
       add: (line) => {
         set((state) => {
@@ -38,16 +42,19 @@ export const useCart = create<CartState>()(
         });
         playSound("add");
       },
-      addPack: (packId, lines) => {
-        set((state) => ({ lines: [...state.lines.filter((l) => l.packId !== packId), ...lines.map((l) => ({ ...l, packId, id: newId() }))] }));
+      addPack: (packId, lines, custom) => {
+        set((state) => ({
+          lines: [...state.lines.filter((l) => l.packId !== packId), ...lines.map((l) => ({ ...l, packId, id: newId() }))],
+          customPacks: custom ? [...(state.customPacks ?? []).filter((p) => p.id !== packId), custom] : state.customPacks ?? [],
+        }));
         playSound("add");
       },
-      removePack: (packId) => set((s) => ({ lines: s.lines.filter((l) => l.packId !== packId) })),
+      removePack: (packId) => set((s) => ({ lines: s.lines.filter((l) => l.packId !== packId), customPacks: (s.customPacks ?? []).filter((p) => p.id !== packId) })),
       setQuantity: (id, quantity) => set((s) => ({ lines: s.lines.map((l) => (l.id === id ? { ...l, quantity } : l)) })),
       setGift: (id, gift) => set((s) => ({ lines: s.lines.map((l) => (l.id !== id ? l : gift ? { ...l, gift } : { ...l, gift: undefined })) })),
       remove: (id) => set((s) => ({ lines: s.lines.filter((l) => l.id !== id) })),
       setCoupon: (couponCode) => { set({ couponCode }); if (couponCode) playSound("coupon"); },
-      clear: () => set({ lines: [], couponCode: null }),
+      clear: () => set({ lines: [], customPacks: [], couponCode: null }),
     }),
     { name: `${STORAGE_PREFIX}cart`, storage: demoStorage, skipHydration: true },
   ),

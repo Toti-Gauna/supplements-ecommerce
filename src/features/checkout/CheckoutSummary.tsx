@@ -4,6 +4,7 @@ import type { Quote } from "@/demo/engine/pricing";
 import { getProduct } from "@/demo/engine/catalog";
 import { groupByPack, monthlyDayOf, packDiscountRows } from "@/demo/engine/pack-cart";
 import { useDemoData } from "@/stores/admin";
+import { useCart } from "@/stores/cart";
 import { formatARS } from "@/lib/money";
 
 export function summaryRows(quote: Omit<Quote, "lines">) {
@@ -21,13 +22,15 @@ export function summaryRows(quote: Omit<Quote, "lines">) {
 
 /** Resumen del checkout (subtotal, cupón, descuento por transferencia/QR, envío, total y productos), debajo del paso. */
 export function CheckoutSummary({ quote }: { quote: Quote }) {
-  const packs = useDemoData((d) => d.packs);
+  const listed = useDemoData((d) => d.packs);
+  const custom = useCart((s) => s.customPacks);
+  const packs = [...(listed ?? []), ...(custom ?? [])];
   return (
     <OrderSummary title="Resumen de tu compra" rows={summaryRows(quote)} total={quote.total} totalNote="Total de muestra. En la tienda real el servidor recalcula precios y stock antes de cobrar.">
       <ul className="flex flex-col gap-1.5 border-t border-line pt-3 text-sm">
         {groupByPack(quote.lines).flatMap((g) => {
           const day = monthlyDayOf(g.items.map((q) => q.line));
-          const title = g.packId ? `${packs?.find((p) => p.id === g.packId)?.name ?? "Pack"}${day !== undefined ? ` · todos los meses, día ${day}` : ""}` : null;
+          const title = g.packId ? `${packs.find((p) => p.id === g.packId)?.name ?? "Pack"}${day !== undefined ? ` · todos los meses, día ${day}` : ""}` : null;
           return [
             ...(title ? [<li key={`pack-${g.packId}`} className="eyebrow pt-1 text-volt-ink">{title}</li>] : []),
             ...g.items.map((q) => (

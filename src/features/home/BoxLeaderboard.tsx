@@ -7,6 +7,7 @@ import { DEMO_TODAY } from "@/demo/fixtures/admin-orders";
 import type { RankRow } from "@/demo/engine/home";
 import { cn } from "@/lib/cn";
 import { formatDay } from "@/lib/date";
+import { formatARS } from "@/lib/money";
 import { plural } from "@/lib/plural";
 import { HomeBlockTitle } from "./HomeBlockTitle";
 
@@ -25,7 +26,7 @@ const TH = "eyebrow px-2 py-2 text-left font-bold text-muted sm:px-3";
 
 /**
  * "El más elegido del box": tabla de posiciones de la semana, como el pizarrón de un box. Puesto en LED, unidades
- * vendidas, cambio contra la semana anterior y precio por servicio. Ventas de muestra (fixtures).
+ * vendidas, cambio contra la semana anterior y precio (con el precio por servicio chico). Ventas de muestra (fixtures).
  */
 export function BoxLeaderboard({ rows, n }: { rows: RankRow[]; n: number }) {
   if (!rows.length) return null;
@@ -34,10 +35,10 @@ export function BoxLeaderboard({ rows, n }: { rows: RankRow[]; n: number }) {
       <HomeBlockTitle id="ranking-title" n={n} kicker="Tabla de la semana" title="El más elegido del box" action={{ href: "/categorias/", label: "Ver todo" }} />
       <div className="overflow-hidden border border-line bg-surface shadow-[var(--shadow-card)]">
         <table className="w-full table-fixed border-collapse text-sm">
-          <caption className="sr-only">Los 5 productos más vendidos de la semana, con el cambio de puesto y el precio por servicio</caption>
+          <caption className="sr-only">Los 5 productos más vendidos de la semana, con el cambio de puesto, el precio y el precio por servicio</caption>
           <colgroup><col className="w-12 sm:w-20" /><col /><col className="w-16 sm:w-36" /><col className="w-[6.75rem] sm:w-48" /></colgroup>
           <thead className="plate">
-            <tr><th scope="col" className={TH}>Pos.</th><th scope="col" className={TH}>Producto</th><th scope="col" className={TH}>Semana</th><th scope="col" className={cn(TH, "text-right")}>Por servicio</th></tr>
+            <tr><th scope="col" className={TH}>Pos.</th><th scope="col" className={TH}>Producto</th><th scope="col" className={TH}>Semana</th><th scope="col" className={cn(TH, "text-right")}>Precio</th></tr>
           </thead>
           <tbody>
             {rows.map((r) => (
@@ -52,7 +53,8 @@ export function BoxLeaderboard({ rows, n }: { rows: RankRow[]; n: number }) {
                   <Move move={r.move} />
                 </td>
                 <td className="py-3 pl-1 pr-2 text-right sm:px-3">
-                  {r.perServing ? <span className="inline-flex justify-end"><LedPrice amount={r.perServing} suffix=" por servicio" motion="none" className="h-[1.1rem] sm:h-7" signClassName="text-base sm:text-lg" /></span> : <span className="text-muted">—</span>}
+                  <span className="inline-flex justify-end"><LedPrice amount={r.price} motion="none" className="h-[1.1rem] sm:h-7" signClassName="text-base sm:text-lg" /></span>
+                  {r.perServing && <span className="mt-1 block font-mono text-[10.5px] tabular-nums text-muted">{formatARS(r.perServing)} / serv</span>}
                 </td>
               </tr>
             ))}

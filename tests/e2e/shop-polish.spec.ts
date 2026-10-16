@@ -31,11 +31,15 @@ for (const [width, height] of [[375, 812], [820, 1180], [1440, 900]] as const) {
     await expect(hero.getByRole("heading", { level: 2 })).not.toHaveText(title);
     await expect(hero.getByRole("button", { name: "Diapositiva anterior" })).toBeVisible();
     await expect(hero.getByRole("button", { name: "Diapositiva siguiente" })).toBeVisible();
+    // Los controles van en la franja de carriles, debajo de la imagen: no pisan la escena ni el titular.
     const arrow = (await hero.getByRole("button", { name: "Diapositiva siguiente" }).boundingBox())!;
     const heading = (await hero.getByRole("heading", { level: 2 }).boundingBox())!;
-    expect(arrow.y + arrow.height).toBeLessThanOrEqual(heading.y);
+    const track = (await hero.locator("[data-hero-track]").boundingBox())!;
+    expect(arrow.y).toBeGreaterThanOrEqual(track.y + track.height - 1);
+    expect(heading.y + heading.height).toBeLessThanOrEqual(track.y + track.height);
     const sections = await page.locator("section[aria-roledescription='carrusel'], section[aria-labelledby='cats-title'], section[aria-labelledby='objetivos-title'], #ofertas-tematicas").evaluateAll((els) => els.map((el) => el.id || el.getAttribute("aria-labelledby") || "carrusel"));
-    expect(sections).toEqual(["carrusel", "cats-title", "objetivos-title", "ofertas-tematicas"]);
+    // L1: las ofertas de la fecha van junto a lo recomendado, antes de "¿Para qué lo querés?".
+    expect(sections).toEqual(["carrusel", "cats-title", "ofertas-tematicas", "objetivos-title"]);
     expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(0);
   });
 }

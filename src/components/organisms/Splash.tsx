@@ -5,14 +5,15 @@ import { brand } from "@/config/brand";
 /** Doce placas de la barra que se cargan de a una (como los discos en la barra). */
 const PLATES = Array.from({ length: 12 }, (_, i) => i);
 
-/** Lo que dura la pantalla de carga, con el telón (ms). Si la animación no corre, el script la retira a este tiempo. */
-export const SPLASH_MS = 1200;
+/** La animación dura ~1,2 s con el telón (app/splash.css). Red de seguridad: si la animación no llega a terminar (pestaña en segundo plano, CSS bloqueado), se retira igual. */
+export const SPLASH_FALLBACK_MS = 4000;
 
 /**
- * Pantalla de carga del box (HTML + CSS; se ve aunque no haya JS), solo la primera vez de la sesión
- * (`features/shell/session.ts`). En ~1,2 s: el símbolo se enciende como un marcador, sube el nombre, la barra carga
+ * Pantalla de carga del box (HTML + CSS; se ve aunque no haya JS), en cada carga completa de la página (L1: no solo la
+ * primera vez de la sesión; al navegar dentro de la tienda no aparece). En ~1,2 s: el símbolo se enciende como un marcador, sube el nombre, la barra carga
  * sus placas y un telón la retira. Todo es transform/opacity (app/splash.css). Con temática, solo el filo de la barra
- * toma el acento de temporada. Con "reducir movimiento" no se muestra.
+ * toma el acento de temporada. Se retira cuando TERMINA la animación del telón, nunca a mitad. Con "reducir movimiento"
+ * no se muestra.
  *
  * Va en la capa superior del navegador (popover, abierto por el script de abajo apenas se lee la etiqueta, antes de
  * pintar): ahí no compite con ningún z-index.
@@ -38,11 +39,12 @@ export function Splash() {
   );
 }
 
-/** Abre el splash en la capa superior; si ya salió en esta sesión (o con "reducir movimiento") no se abre. */
+/** Abre el splash en la capa superior apenas se lee la etiqueta (con "reducir movimiento" no se abre). */
 const splashOpenScript = `(function(){var s=document.getElementById("volta-splash");if(!s||!s.showPopover||document.documentElement.classList.contains("splash-done"))return;if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;try{s.showPopover()}catch(e){}})();`;
 
 /**
- * Cierra la pantalla de carga con Escape y la retira sola al terminar. Si está a la vista, el Escape que la cierra queda
+ * Cierra la pantalla de carga con Escape y la retira sola cuando termina la animación del telón (no a un tiempo fijo:
+ * en un celular lento la animación arranca más tarde y no se corta). Si está a la vista, el Escape que la cierra queda
  * "usado" (preventDefault) y no cierra además lo que esté abierto debajo; oculta, el Escape sigue de largo.
  */
-export const splashScript = `(function(){var d=document.documentElement;function hide(){d.classList.add("splash-done");var s=document.getElementById("volta-splash");try{if(s&&s.matches(":popover-open"))s.hidePopover()}catch(e){}}document.addEventListener("keydown",function(e){if(e.key!=="Escape")return;var s=document.getElementById("volta-splash");if(s&&!d.classList.contains("splash-done")&&getComputedStyle(s).display!=="none")e.preventDefault();hide()});setTimeout(hide,${SPLASH_MS + 150})})();`;
+export const splashScript = `(function(){var d=document.documentElement;function hide(){d.classList.add("splash-done");var s=document.getElementById("volta-splash");try{if(s&&s.matches(":popover-open"))s.hidePopover()}catch(e){}}document.addEventListener("keydown",function(e){if(e.key!=="Escape")return;var s=document.getElementById("volta-splash");if(s&&!d.classList.contains("splash-done")&&getComputedStyle(s).display!=="none")e.preventDefault();hide()});document.addEventListener("animationend",function(e){if(e.animationName==="splash-curtain")hide()});setTimeout(hide,${SPLASH_FALLBACK_MS})})();`;

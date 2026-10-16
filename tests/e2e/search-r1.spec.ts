@@ -63,8 +63,8 @@ test.describe("buscador superpuesto en el escritorio", () => {
     await expect(dialog.getByRole("status")).toHaveText("2 resultados para “whey”");
     const options = dialog.getByRole("option");
     await expect(options).toHaveCount(2);
-    // Fila de rack: el precio por servicio en el marcador (se lee entero) y la luz de stock.
-    await expect(options.first()).toHaveAccessibleName(/Ionic Whey 100%.*En stock.*1\.559 por servicio/);
+    // Fila de rack: el precio en el marcador (se lee entero), el precio por servicio chico y la luz de stock.
+    await expect(options.first()).toHaveAccessibleName(/Ionic Whey 100%.*En stock.*116\.900.*1\.559 \/ serv/);
     await page.keyboard.press("ArrowDown");
     await expect(options.first()).toHaveAttribute("aria-selected", "true");
     await expect(combo(page)).toHaveAttribute("aria-activedescendant", (await options.first().getAttribute("id"))!);

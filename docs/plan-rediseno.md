@@ -300,6 +300,22 @@ mañana.
 
 ---
 
+## 7 bis. Lotes pedidos por Ignacio el 16/10/2026 (antes de seguir con R2)
+Orden acordado: **L1 → L2 → L3 → L4**, después R2a, R2b, R2c, R3a, R3b, R4a, R4b y R4c.
+
+| Lote | Qué | Estado |
+|---|---|---|
+| **L1** · Inicio y navegación | Carrusel de **imágenes** automático (al estilo Velmar, con identidad BOX); inicio: carrusel → categorías → recomendados → "¿Para qué lo querés?" y el stack; **precio total primero** y el precio por servicio chico; el dock del celular siempre arriba al cambiar de página; la pantalla de carga **en cada recarga** hasta terminar su animación | En curso |
+| **L2** · Tienda deportiva multimarca | Textos de comercio que vende marcas de terceros; accesorios (straps, shakers, vendas, cinturones, guantes, rodilleras, sogas, bandas, magnesio, bolsos) con talle y color | Pendiente |
+| **L3** · Packs mensuales | Packs por objetivo y deporte, "Quiero este pack todos los meses" (simulado) y panel de packs y suscriptores | Pendiente |
+| **L4** · Objetivos, deportes, stack y quiz | SVG por deporte (fútbol, tenis, pádel, running, etc.), stack con varios objetivos, invitación al quiz al entrar y quiz con opción mensual | Pendiente |
+
+Cambian decisiones anteriores: el precio por servicio deja de ser el número grande, la pantalla de carga sale en cada
+recarga y el inicio vuelve a tener un carrusel que avanza solo. Los puntos 9 (días del deporte) y 11 (un regalo único
+por fecha) entran en R3a y R3b.
+
+---
+
 ## 8. Cómo se trabaja cada fase
 1. **Dirección:** prototipos de las pantallas clave en celular y escritorio, con capturas para que Ignacio elija o
    corrija antes de construir todo.

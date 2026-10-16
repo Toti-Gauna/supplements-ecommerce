@@ -6,8 +6,8 @@ import { expect, test } from "@playwright/test";
  */
 test("la promesa del cadete es la misma en el inicio, la ficha y el seguimiento de ejemplo", async ({ page }) => {
   await page.goto("./");
-  // El marcador de la diapositiva actual dice cuándo llega lo que se pide hoy.
-  const board = page.locator("[aria-roledescription='diapositiva'][aria-hidden='false'] dl[aria-label^='Datos de ']");
+  // El rótulo del cadete sobre la imagen de la diapositiva actual dice cuándo llega lo que se pide hoy.
+  const board = page.locator("[aria-roledescription='diapositiva'][aria-hidden='false']").getByText(/^Cadete · Llega/).locator("..");
   await expect(board).toContainText("Llega mañana");
   await expect(board).toContainText("mar 6 oct");
   await expect(page.getByText(/Cadete en el día/)).toHaveCount(0);

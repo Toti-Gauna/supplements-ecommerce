@@ -102,13 +102,14 @@ describe("hero del inicio", () => {
 });
 
 describe("el más elegido del box y reseñas", () => {
-  it("ordena por ventas de la semana, marca el cambio de puesto y trae el precio por servicio", () => {
+  it("ordena por ventas de la semana, marca el cambio de puesto y trae el precio y el precio por servicio", () => {
     const rows = boxLeaderboard(5);
     expect(rows.map((r) => r.rank)).toEqual([1, 2, 3, 4, 5]);
     expect(rows[0]).toMatchObject({ product: { slug: "ionic-whey" }, move: 1 });
     expect(rows[1]).toMatchObject({ product: { slug: "creatina-monohidrato" }, move: -1 });
     expect(rows.every((r, i) => i === 0 || rows[i - 1]!.week >= r.week)).toBe(true);
     expect(rows[0]!.perServing).toBe(rackFacts(product("ionic-whey")).perServing);
+    expect(rows[0]!.price).toBe(rackFacts(product("ionic-whey")).price);
   });
 
   it("«Recomendados» no repite la tabla del box", () => {

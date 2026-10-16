@@ -106,10 +106,12 @@ test("inicio: tiene un h1 y «Recomendados» no repite «El más elegido del box
   expect(recommended.filter((n) => best.includes(n))).toEqual([]);
 });
 
-test("ficha de rack: precio por servicio en el marcador, luces de stock y un solo aviso de imagen ilustrativa", async ({ page }) => {
+test("ficha de rack: precio del producto en el marcador (y por servicio chico), luces de stock y un solo aviso de imagen ilustrativa", async ({ page }) => {
   await page.goto("c/proteinas/");
   const card = page.locator("[data-product-card]").filter({ hasText: "Ionic Whey 100%" });
-  await expect(card.getByRole("img", { name: /por servicio$/ })).toBeVisible();
+  // L1: primero lo que se paga; el precio por servicio va abajo, en letra chica.
+  await expect(card.getByRole("img", { name: /^\$\s?\d{1,3}(\.\d{3})+$/ })).toBeVisible();
+  await expect(card.getByText(/por servicio/)).toBeVisible();
   await expect(card.getByRole("img", { name: /^Stock por variante\. Chocolate · 2 lb \(907 g\): en stock;/ })).toBeVisible();
   await expect(card.locator("[data-light]")).toHaveCount(8);
   await expect(card.locator("[data-light='out']")).toHaveCount(1);

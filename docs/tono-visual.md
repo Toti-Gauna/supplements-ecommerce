@@ -44,7 +44,8 @@ y distinta de las que hay hoy (negro + rojo agresivo, o blanco clínico). Todo s
 - **Rótulo por marca**: rayo (VOLTA Lab), franjas (Krono, Forja), pulso (Brava) y grilla (Ozono).
 - **Íconos de objetivos** (`GoalGlyph`): brazo, barra, rayo, luna, llama, pulso y escudo.
 - **Pantalla de carga** (`Splash.tsx` + `app/splash.css`, rediseño R1): el símbolo se enciende como un marcador, sube el
-  nombre y se carga una barra de 12 placas. ~1,2 s, **solo la primera vez de la sesión**; Escape la cierra y con
+  nombre y se carga una barra de 12 placas. ~1,2 s, **en cada carga completa de la página** (L1; al navegar dentro de la tienda no sale) y se
+  retira cuando termina la animación del telón; Escape la cierra y con
   "reducir movimiento" no aparece. Con temática solo cambia el filo de la barra (`--season-accent`).
 - **Ruleta "Disco olímpico"** (`src/features/club/Wheel*.tsx`): disco de pesas con los gajos en los colores
   reglamentarios (rojo 25 kg, azul 20, amarillo 15, verde 10) con goma moteada y relieve, aro con 24 LED voltio que

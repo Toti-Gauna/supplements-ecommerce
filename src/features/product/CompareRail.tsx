@@ -3,7 +3,7 @@ import Link from "next/link";
 import { GitCompareArrows } from "lucide-react";
 import { ProductVisual } from "@/components/illustrations/ProductVisual";
 import { buttonClass } from "@/components/atoms/Button";
-import { getProduct } from "@/demo/engine/catalog";
+import { getProduct, isGear } from "@/demo/engine/catalog";
 import { compareHref, compareSuggestions } from "@/demo/engine/compare";
 import { compareAlternatives } from "@/demo/engine/sheet";
 import type { Product } from "@/demo/types";
@@ -26,7 +26,9 @@ function CompareInvite({ product, similar }: { product: Product; similar: Produc
       <p className="min-w-0 flex-1">
         <span className="eyebrow block text-volt-ink">Lado a lado</span>
         <span className="font-display mt-1 block text-xl leading-tight sm:text-2xl">{all.map((p) => p.name).join(" vs. ")}</span>
-        <span className="mt-1 block text-sm text-muted">Precio, precio por servicio, proteína, cuánto te dura y vencimiento, con el mejor marcado.</span>
+        <span className="mt-1 block text-sm text-muted">{isGear(product)
+          ? "Precio, sellos y marca, con el mejor marcado."
+          : "Precio, precio por servicio, proteína, cuánto te dura y vencimiento, con el mejor marcado."}</span>
       </p>
       <Link href={compareHref(all.map((p) => p.slug))} className={buttonClass("primary", "md", "shrink-0")}>
         <GitCompareArrows size={16} aria-hidden="true" />Comparar {all.length === 2 ? "los 2" : `los ${all.length}`}

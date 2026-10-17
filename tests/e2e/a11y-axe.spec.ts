@@ -124,6 +124,31 @@ for (const mode of ["dark", "light"] as const) {
       found = await audit(page);
       expect(found, describe(found)).toEqual([]);
     });
+    test("regalo (R3b): locker con combinación (con error) y la tarjeta de atleta", async ({ page }) => {
+      const gift = { code: "REGALO-10CK-000H", from: "Ro", to: "Nacho", message: "Para el lunes: pierna y después batido.", occasion: "dia-del-padre", opening: "locker",
+        item: { slug: "ionic-whey", name: "Ionic Whey 100%", variant: "Chocolate · 2 lb (907 g)" }, createdAt: "2026-10-02T15:30:00.000Z" };
+      await page.addInitScript((g) => localStorage.setItem("volta-demo:gifts", JSON.stringify({ state: { sent: [g], saved: [], opened: [] }, version: 0 })), gift);
+      await page.goto(`regalo/?c=${gift.code}`);
+      const stage = page.getByRole("dialog", { name: "Regalo de Ro para Nacho" });
+      const code = stage.getByLabel("Combinación del locker");
+      await expect(code).toBeVisible();
+      await page.waitForTimeout(400);
+      let found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+      await expect(async () => {
+        await code.fill("1234");
+        await stage.getByRole("button", { name: "Abrir", exact: true }).click();
+        await expect(stage.getByRole("alert")).toBeVisible({ timeout: 1000 });
+      }).toPass({ timeout: 15_000 });
+      found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+      await code.fill("0210");
+      await stage.getByRole("button", { name: "Abrir", exact: true }).click();
+      await expect(stage.getByRole("heading", { name: gift.item.name })).toBeVisible();
+      await page.waitForTimeout(800);
+      found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+    });
     test("inicio con campaña: drop de Black Friday (R3a) y modo vitrina", async ({ page }) => {
       await page.addInitScript(() => localStorage.setItem("volta-demo:theme-preview", JSON.stringify({ state: { previewId: "black-friday" }, version: 0 })));
       await page.goto("");

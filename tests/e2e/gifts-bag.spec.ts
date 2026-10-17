@@ -47,10 +47,10 @@ test("con movimiento, en el celular: cinco golpes con tiza y costuras, sale el p
 });
 
 test("con \"reducir movimiento\": los mismos cinco golpes, sin tiza ni balanceo, y el producto", async ({ page }) => {
-  const g = sample("dia-del-padre");
+  const g = sample("volta");
   await page.goto(`regalo/?c=${g.code}`);
   const stage = stageOf(page, g);
-  await expect(stage.locator("[data-variant]")).toHaveAttribute("data-variant", "dia-del-padre");
+  await expect(stage.locator("[data-variant]")).toHaveAttribute("data-variant", "volta");
   // Con menos movimiento, "Abrirlo de una vez" aparece enseguida; igual se puede abrir a golpes.
   await expect(stage.getByRole("button", { name: "Abrirlo de una vez" })).toBeVisible();
   await punchFive(stage, { chalk: false });
@@ -80,7 +80,7 @@ test("quien recibe nunca ve el precio: Mis regalos, la apertura y lo que hay ade
   await expect(stage.getByRole("link", { name: "Conocer Volta" })).toBeVisible();
 });
 
-test("regalo desde el checkout para Navidad: el link abre la bolsa navideña en otro celular, sin precio", async ({ page }) => {
+test("regalo desde el checkout para Navidad: el link abre el árbol de discos (su apertura de Navidad) en otro celular, sin precio", async ({ page }) => {
   const assertNoExternal = guardNetwork(page);
   await page.addInitScript(() => {
     if (sessionStorage.getItem("seeded")) return;
@@ -123,8 +123,14 @@ test("regalo desde el checkout para Navidad: el link abre la bolsa navideña en 
   await friend.goto(new URL(link, page.url()).toString());
   const stage = stageOf(friend, { from: "Lucía", to: "Mateo" });
   await expect(stage.getByText("Mateo, te llegó un regalo de Lucía")).toBeVisible();
-  await expect(stage.locator("[data-variant]")).toHaveAttribute("data-variant", "navidad");
-  await punchFive(stage, { chalk: false });
+  const scene = stage.locator("[data-variant]");
+  await expect(scene).toHaveAttribute("data-variant", "navidad");
+  // R3b: Navidad tiene su propia apertura (el árbol de discos), no la bolsa.
+  await expect(scene).toHaveAttribute("data-scene", "navidad");
+  const tree = stage.getByRole("button", { name: /Sacá un disco del árbol para abrir el regalo/ });
+  await expect(tree).toHaveAccessibleName("Sacá un disco del árbol para abrir el regalo. Faltan 5 discos.");
+  for (let i = 1; i <= 5; i++) { await tree.click(); await expect(scene).toHaveAttribute("data-hits", String(i)); }
+  await expect(scene).toHaveAttribute("data-open", "true");
   await expect(stage.getByRole("heading", { name: "Overvolt pre-entreno" })).toBeVisible();
   await expect(stage.getByText("¡Feliz Navidad! Para que el 2027 arranque con todo.")).toBeVisible();
   await expect(stage.getByText(PRICE)).toHaveCount(0);

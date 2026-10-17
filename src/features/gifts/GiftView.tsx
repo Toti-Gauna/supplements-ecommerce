@@ -82,7 +82,7 @@ function GiftExperience({ gift, preview }: { gift: Gift; preview: boolean }) {
         ) : (
           <>
             <p className="font-display mb-4 max-w-sm text-center text-[clamp(1.5rem,6vw,2.1rem)] leading-tight">{gift.to}, te llegó un regalo de {gift.from}</p>
-            <GiftOpener key={String(open)} occasion={gift.occasion} accent={colors.accent} onOpened={done} autoFocus={open === false} />
+            <GiftOpener key={String(open)} occasion={gift.occasion} accent={colors.accent} gift={gift} onOpened={done} autoFocus={open === false} />
           </>
         )}
       </ImmersiveStage>

@@ -58,8 +58,22 @@ y distinta de las que hay hoy (negro + rojo agresivo, o blanco clínico). Todo s
   vacíos son siluetas punteadas y con el descuento se prende el filo de neón con el sello "Stack −10 %". Debajo de cada
   lugar, un marcador LED con "te dura N días" (lo que se termina primero, en ámbar) y una chapa "×2" en el envase si
   lleva más de una unidad (R2c).
-- **Bolsa de boxeo del regalo** (`src/features/gifts/scenes/`): cuelga de su cadena con la marca VOLTA; cada golpe
-  la balancea, suelta tiza y abre una costura con luz; en el último sale el pote "Edición regalo". Una variante por fecha.
+- **Aperturas del regalo (R3b, `src/features/gifts/scenes/`)**: un escenario común (`stage/`: gimnasio 4:5 con pared
+  de paneles, reflector, piso de goma, tiza y bandas de cine) con una **cámara** que se acerca un poco más a cada
+  gesto y entra en **cámara lenta** en el último; sonido con el botón de sonido de la tienda y vibración donde la hay.
+  Sin fecha, la **bolsa de boxeo** de siempre colgada en un box (bolsas lejanas, cuerdas del ring). **Cada fecha tiene
+  su propia apertura** (`dates/`, un archivo por fecha, elegida por `selectOpening` del motor): Día del Amigo, el spot
+  del compañero en la banca; Navidad, el árbol de discos; Black Friday, la persiana del locker; CyberMonday, la polea
+  que carga al 100 %; Hot Sale, sogas de batalla; Día de la Madre, la colchoneta que se desenrolla; Halloween, las
+  palancas del tablero que prenden el box; Año Nuevo, el cronómetro que llega a 20:27; San Valentín, dos pulsos que
+  se sincronizan; Vuelta al gym, la lona del verano; Día del Padre, la cubierta de tractor; Operación verano, la bolsa
+  de arena en la playa; y los días del deporte con su gesto (wall ball, soga, penal, cinta de llegada y manoplas en
+  primera persona). Nada de cotillón: todo sale del gimnasio. El **locker** (la otra mecánica) se abre con 4 números
+  (por defecto el día y el mes del regalo): corre el pestillo, gira la puerta y se prende la luz de adentro. Con
+  "reducir movimiento" no hay cámara, partículas ni recorridos: "Abrirlo de una vez" aparece enseguida.
+- **Revelación "tarjeta de atleta"** (`scenes/reveal/`): siempre sobre un **estudio neutro** de grafito (nunca el color
+  de una fecha), con corte en diagonal y filo voltio; el producto como héroe, "Para …" en itálica de póster, "Cómo
+  tomarlo", la nota manuscrita y quién la manda. "Compartí en tu historia" dibuja una pieza 9:16 en canvas.
 - **Temáticas fitness** (`src/features/themes/`): desde R1 la fecha **no repinta la tienda**: solo `--season-accent` y
   `--season-glow` para filos, halos y la cinta del ticker (test `season-rule`). Sin guirnaldas, sin adorno en el logo y
   sin escena en la pantalla de carga. El arte de cada fecha llega como campaña en R3 (lenguaje "Arena").

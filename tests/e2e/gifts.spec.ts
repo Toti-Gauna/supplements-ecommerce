@@ -48,21 +48,21 @@ test("regalar: ficha → carrito → checkout → link que se abre a golpes, sin
   const href = await ready.getByRole("link", { name: "Ver cómo lo recibe" }).getAttribute("href");
   const link = href!.replace("&vista=previa", "");
 
-  // Quien lo recibe (otro navegador): todo oscuro y la bolsa de boxeo navideña para abrir a golpes
+  // Quien lo recibe (otro navegador): todo oscuro y la apertura de Navidad (el árbol de discos, R3b) para abrir de a un disco
   const other = await page.context().browser()!.newContext({ viewport: page.viewportSize()!, isMobile: true, hasTouch: true, locale: "es-AR", reducedMotion: "no-preference" });
   const friend = await other.newPage();
   await friend.goto(new URL(link, page.url()).toString());
   await friend.keyboard.press("Escape");
   const stage = friend.getByRole("dialog", { name: "Regalo de Lucía para Sofía" });
-  await expect(stage.getByText("¡Pegale a la bolsa!")).toBeVisible();
+  await expect(stage.getByText("Sacá el primer disco")).toBeVisible();
   await expect(stage.locator("[data-variant]")).toHaveAttribute("data-variant", "navidad");
-  const gift = stage.getByRole("button", { name: /Golpeá la bolsa para abrir el regalo/ });
+  const gift = stage.getByRole("button", { name: /Sacá un disco del árbol para abrir el regalo/ });
   for (let i = 0; i < 5; i++) await gift.click();
   await expect(stage.getByText("Regalo de Lucía")).toBeVisible({ timeout: 6000 });
   await expect(stage.getByRole("heading", { name: "BCAA 2:1:1" })).toBeVisible();
   await expect(stage.getByText("¡Feliz Navidad! Para que arranques el 2027 con todo 🎄")).toBeVisible();
   await expect(stage.getByText(/\$\s?\d/)).toHaveCount(0);
-  await stage.getByRole("button", { name: "Guardar en mis regalos" }).click();
+  await stage.getByRole("button", { name: "Guardá tu regalo" }).click();
   await expect(stage.getByRole("link", { name: "Está en mis regalos" })).toBeVisible();
   expect(await horizontalOverflow(friend)).toBeLessThanOrEqual(0);
   await other.close();

@@ -35,6 +35,17 @@ export interface Gift {
   /** Fecha estimada de entrega (AAAA-MM-DD). */
   eta?: string;
   orderCode?: string;
+  /** Cómo se abre: la apertura física de su fecha ("bolsa") o el locker con combinación. Sin esto, "bolsa". */
+  opening?: "bolsa" | "locker";
+  lockerCode?: string;                     // 4 dígitos; por defecto el día y mes del regalo (DDMM)
+  /** Diseño de la tarjeta que eligió quien regala. */
+  cardDesign?: string;
+  /** Lo que quedó abierto para que elija quien recibe. */
+  openChoice?: { flavor?: boolean; size?: boolean };
+  /** Variante que eligió quien recibe (si quedó abierto). */
+  chosenVariantId?: string;
+  /** Gift card con monto en pesos enteros, código, vencimiento (AAAA-MM-DD) y saldo. */
+  giftCard?: { amount: number; code: string; expires: string; balance: number };
 }
 
 const OCCASIONS = new Set<string>(["volta", ...seasonalThemes.map((t) => t.id)]);

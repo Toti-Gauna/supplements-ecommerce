@@ -4,7 +4,7 @@ import { LedPrice } from "@/components/atoms/Led";
 import { GIFT_CARD_STATUS_LABEL, giftCardStatus, type GiftCardRecord } from "@/demo/engine/gift-cards";
 import { DEMO_TODAY } from "@/demo/fixtures/admin-orders";
 import { cn } from "@/lib/cn";
-import { formatDay } from "@/lib/date";
+import { formatDate } from "@/lib/date";
 import { formatARS } from "@/lib/money";
 import { useToasts } from "@/stores/toast";
 
@@ -36,7 +36,7 @@ export function GiftCardWallet({ cards }: { cards: { card: GiftCardRecord; from:
               {card.code} <Copy size={15} aria-hidden="true" />
             </button>
             <p className="mt-2 text-xs text-night-muted">
-              {status === "vencida" ? `Venció el ${formatDay(card.expires, "long")}.` : status === "agotada" ? "Ya la usaste completa." : `Vale hasta el ${formatDay(card.expires, "long")}. Usala en el paso “Pago” del checkout.`}
+              {status === "vencida" ? `Venció el ${formatDate(card.expires)}.` : status === "agotada" ? "Ya la usaste completa." : `Vale hasta el ${formatDate(card.expires)}. Usala en el paso “Pago” del checkout.`}
             </p>
           </li>
         );

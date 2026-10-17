@@ -84,7 +84,7 @@ export function GiftModal({ open, onClose, subject, allowGiftCard, choices, choi
               <CardSection onEdit={edit} />
               <OpeningSection error={errorOf("locker")} onEdit={edit} />
             </div>
-            <div className="min-w-0 max-lg:order-first lg:sticky lg:top-0 lg:self-start">
+            <div className="min-w-0 max-lg:order-first max-lg:pr-12 lg:sticky lg:top-0 lg:self-start lg:pt-12">
               <BuilderPreview draft={draft} what={what} />
             </div>
           </div>

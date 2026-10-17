@@ -55,7 +55,7 @@ export function AccountGifts({ email }: { email: string }) {
                     <span className="min-w-0">
                       <span className="block text-xs font-bold uppercase tracking-wider opacity-80">{state} · de {g.from}</span>
                       <span className="block font-bold leading-snug">{isNew ? (g.opening === "locker" ? "Un locker con combinación" : bagName(g.occasion)) : g.item.name}</span>
-                      <span className="mt-0.5 block text-sm opacity-85">{isNew ? "Tocá y abrilo" : record?.chosenLabel ?? "Ver el regalo y el mensaje"}</span>
+                      <span className="mt-0.5 block text-sm opacity-85">{isNew ? (g.opening === "locker" ? "Tocá y abrilo con la combinación" : "Tocá y abrilo a golpes") : record?.chosenLabel ?? "Ver el regalo y el mensaje"}</span>
                     </span>
                   </Link>
                 </li>

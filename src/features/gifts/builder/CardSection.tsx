@@ -37,7 +37,9 @@ export function CardSection({ onEdit }: { onEdit: (p: Partial<LineGift>) => void
                   <span className="absolute bottom-2 left-2 h-1.5 w-10 bg-(--c)" />
                   {on && <span className="absolute left-2 top-2 grid h-5 w-5 place-items-center rounded-xs bg-(--c) text-night"><Check size={13} strokeWidth={3} /></span>}
                 </span>
-                <span className="bg-surface px-2.5 py-2 text-xs font-bold leading-tight">{d.name}</span>
+                <span className="bg-surface px-2.5 py-2 text-xs font-bold leading-tight">{d.name}
+                  {d.id === "fecha" && draft.occasion === "volta" && <span className="block font-normal text-muted">Elegí una fecha</span>}
+                </span>
               </label>
             );
           })}

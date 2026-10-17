@@ -20,7 +20,7 @@ test("regalar: ficha → carrito → checkout → link que se abre a golpes, sin
   const assertNoExternal = guardNetwork(page);
   await page.goto("p/bcaa-211/");
   await page.getByRole("button", { name: "Regalar ahora" }).click();
-  const sheet = page.getByRole("dialog", { name: "Es para regalar" });
+  const sheet = page.getByRole("dialog", { name: "Regalá energía" });
   // Sin "para quién" no se puede seguir y el foco vuelve al campo
   await sheet.getByRole("button", { name: "Agregar regalo al carrito" }).click();
   await expect(sheet.getByText("Escribí para quién es el regalo.").first()).toBeVisible();

@@ -3,7 +3,7 @@ import { Field, Input, describedBy } from "@/components/atoms/Field";
 import { GIFT_CARD_RULES, addMonths, giftCardAmountProblem } from "@/demo/engine/gift-cards";
 import { DEMO_TODAY } from "@/demo/fixtures/admin-orders";
 import { cn } from "@/lib/cn";
-import { formatDay } from "@/lib/date";
+import { formatDate } from "@/lib/date";
 import { formatARS } from "@/lib/money";
 import { useGiftDraft } from "@/stores/giftDraft";
 
@@ -34,7 +34,7 @@ export function AmountPicker({ error }: { error?: string }) {
         </div>
       </fieldset>
       <Field id="gift-amount-other" label="Otro monto" error={shown}
-        hint={`Entre ${formatARS(GIFT_CARD_RULES.min)} y ${formatARS(GIFT_CARD_RULES.max)}, sin centavos. Vence el ${formatDay(addMonths(DEMO_TODAY, GIFT_CARD_RULES.months), "long")} (12 meses).`}>
+        hint={`Entre ${formatARS(GIFT_CARD_RULES.min)} y ${formatARS(GIFT_CARD_RULES.max)}, sin centavos. Vence el ${formatDate(addMonths(DEMO_TODAY, GIFT_CARD_RULES.months))} (12 meses).`}>
         <Input id="gift-amount-other" inputMode="numeric" autoComplete="off" placeholder="Ej. 30000" value={amountText}
           onChange={(e) => { const text = e.target.value.replace(/\D/g, "").slice(0, 7); setAmount(text ? Number(text) : GIFT_CARD_RULES.presets[1], text); }}
           aria-invalid={Boolean(shown)} aria-describedby={describedBy("gift-amount-other", shown, true)} className="font-mono tabular-nums" />

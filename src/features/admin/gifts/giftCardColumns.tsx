@@ -2,7 +2,7 @@ import { Badge } from "@/components/atoms/Badge";
 import type { Column, RowCardProps } from "@/components/organisms/data-table/types";
 import { EXPIRING_DAYS, type GiftCardRow } from "@/demo/admin/gift-views";
 import { GIFT_CARD_STATUS_LABEL, type GiftCardStatus } from "@/demo/engine/gift-cards";
-import { formatDay } from "@/lib/date";
+import { formatDate } from "@/lib/date";
 import { formatARS } from "@/lib/money";
 
 const TONE: Record<GiftCardStatus, "success" | "warning" | "neutral" | "danger"> = { activa: "success", "en-uso": "warning", agotada: "neutral", vencida: "danger" };
@@ -27,7 +27,7 @@ function Expiry({ row }: { row: GiftCardRow }) {
   const note = row.daysLeft < 0 ? `venció hace ${-row.daysLeft} días` : live && row.daysLeft <= EXPIRING_DAYS ? `vence en ${row.daysLeft} días` : null;
   return (
     <span className="flex flex-col">
-      <span>{formatDay(row.card.expires)}</span>
+      <span>{formatDate(row.card.expires)}</span>
       {note && <span className={row.daysLeft < 0 ? "text-xs text-danger" : "text-xs font-bold text-warning"}>{note}</span>}
     </span>
   );
@@ -42,7 +42,7 @@ export function giftCardColumns(): Column<GiftCardRow>[] {
     { id: "amount", header: "Monto", align: "right", money: true, cell: (r) => <span className="font-mono tabular-nums">{formatARS(r.card.amount)}</span>, sortValue: (r) => r.card.amount, exportValue: (r) => r.card.amount },
     { id: "balance", header: "Saldo", align: "right", money: true, cell: (r) => <Balance row={r} />, sortValue: (r) => r.card.balance, exportValue: (r) => r.card.balance },
     { id: "status", header: "Estado", cell: (r) => <CardStatus row={r} />, sortValue: (r) => GIFT_CARD_STATUS_LABEL[r.status], exportValue: (r) => GIFT_CARD_STATUS_LABEL[r.status] },
-    { id: "issued", header: "Emitida", cell: (r) => formatDay(r.card.issuedAt), sortValue: (r) => r.card.issuedAt, exportValue: (r) => r.card.issuedAt },
+    { id: "issued", header: "Emitida", cell: (r) => formatDate(r.card.issuedAt), sortValue: (r) => r.card.issuedAt, exportValue: (r) => r.card.issuedAt },
     { id: "expires", header: "Vence", cell: (r) => <Expiry row={r} />, sortValue: (r) => r.card.expires, exportValue: (r) => r.card.expires },
     { id: "uses", header: "Canjes", cell: (r) => <span className="text-sm">{usesText(r)}</span>, sortValue: (r) => r.used, exportValue: usesText },
   ];

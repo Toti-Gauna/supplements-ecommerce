@@ -128,11 +128,17 @@ function drawTicket(ctx: CanvasRenderingContext2D, W: number, H: number, p: Retu
   ctx.fillText(fitLine(ctx, d.code ?? "REGALO-····-····", cut - 70), x + 40, y + 128);
   ctx.font = `800 24px ${c.mono}`;
   ctx.fillText("ABRILO EN", x + cut + 40, y + 56);
+  // El sitio en dos renglones: el dominio y el camino ("/tienda/regalo").
+  const slash = d.where.indexOf("/");
+  const [host, path] = slash > 0 ? [d.where.slice(0, slash), d.where.slice(slash)] : [d.where, ""];
   ctx.font = `800 34px ${c.display}`;
-  ctx.fillText(fitLine(ctx, d.where, w - cut - 70), x + cut + 40, y + 104);
-  ctx.font = `500 22px ${c.mono}`;
-  ctx.globalAlpha = 0.7;
-  ctx.fillText(fitLine(ctx, `${brand.name} · ${brand.city}`, w - cut - 70), x + cut + 40, y + 142);
+  ctx.fillText(fitLine(ctx, host || brand.name, w - cut - 70), x + cut + 40, y + 102);
+  ctx.font = `700 22px ${c.mono}`;
+  ctx.globalAlpha = 0.75;
+  // Si el camino no entra, se recorta del principio: lo que importa es el final ("…/regalo").
+  let tail = path || brand.city;
+  while (tail.length > 4 && ctx.measureText(tail).width > w - cut - 70) tail = `…${tail.slice(2)}`;
+  ctx.fillText(tail, x + cut + 40, y + 140);
   ctx.restore();
 }
 

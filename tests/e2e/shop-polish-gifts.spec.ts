@@ -3,7 +3,7 @@ import { guardNetwork, horizontalOverflow } from "./helpers";
 
 /** Polish 8.2 · Lote 7: el regalo en un modal compartido (8.2.16). La bolsa de boxeo se prueba en gifts-bag.spec.ts. */
 
-const giftDialog = (page: Page) => page.getByRole("dialog", { name: "Es para regalar" });
+const giftDialog = (page: Page) => page.getByRole("dialog", { name: "Regalá energía" });
 
 test("8.2.16 modal centrado con vista previa: Escape y Cerrar, foco, fondo quieto y lo escrito sigue al reabrir", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 860 });
@@ -22,8 +22,8 @@ test("8.2.16 modal centrado con vista previa: Escape y Cerrar, foco, fondo quiet
   await modal.getByLabel("Para", { exact: true }).fill("Sofía");
   await modal.getByLabel("Mensaje").fill("Para tus salidas a correr");
   await modal.getByLabel("Ocasión").selectOption("san-valentin");
-  await expect(modal.getByText("Para Sofía")).toBeVisible();
-  await expect(modal.getByText("“Para tus salidas a correr”")).toBeVisible();
+  // La vista previa es la tarjeta que se manda por WhatsApp (un canvas con su lectura completa).
+  await expect(modal.getByRole("img", { name: /^Tarjeta para Sofía, .*“Para tus salidas a correr”/ })).toBeVisible();
   await expect(modal.getByText("Bolsa con corazones bordados", { exact: true })).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(modal).toBeHidden();
@@ -137,7 +137,8 @@ test("8.2.16 con varios productos en el checkout se elige cuál es el regalo", a
   await page.getByRole("button", { name: "Sí, es para regalar" }).click();
   const modal = giftDialog(page);
   await modal.getByLabel("¿Cuál es el regalo?").selectOption("b");
-  await expect(modal.getByRole("heading", { name: "Ionic Whey 100%" })).toBeVisible();
+  // La vista previa dice qué va adentro.
+  await expect(modal.getByRole("definition").filter({ hasText: "Ionic Whey 100%" })).toBeVisible();
   await modal.getByLabel("Para", { exact: true }).fill("Juli");
   await modal.getByLabel("De parte de").fill("Caro");
   await modal.getByRole("button", { name: "Agregar regalo al carrito" }).click();

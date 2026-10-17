@@ -5,7 +5,7 @@ import { Button } from "@/components/atoms/Button";
 import { Field, Input, describedBy } from "@/components/atoms/Field";
 import { checkGiftCard } from "@/demo/engine/gift-cards";
 import { DEMO_TODAY } from "@/demo/fixtures/admin-orders";
-import { formatDay } from "@/lib/date";
+import { formatDate } from "@/lib/date";
 import { formatARS } from "@/lib/money";
 import { useDemoData } from "@/stores/admin";
 import { useCheckout } from "@/stores/checkout";
@@ -38,7 +38,7 @@ export function GiftCardRedeem() {
         <CreditCard size={20} aria-hidden="true" className="mt-0.5 shrink-0 text-volt-ink" />
         <div className="min-w-0 flex-1 text-sm">
           <p className="font-bold">Gift card {card.code}</p>
-          <p className="text-muted">Se descuentan <strong className="text-ink">{formatARS(quote.giftCardUsed)}</strong> de esta compra{left > 0 ? ` y te quedan ${formatARS(left)} hasta el ${formatDay(card.expires, "long")}` : ""}.</p>
+          <p className="text-muted">Se descuentan <strong className="text-ink">{formatARS(quote.giftCardUsed)}</strong> de esta compra{left > 0 ? ` y te quedan ${formatARS(left)} hasta el ${formatDate(card.expires)}` : ""}.</p>
           {quote.total === 0 && <p className="mt-1 font-semibold text-success">La gift card cubre todo el pedido.</p>}
         </div>
         <button type="button" onClick={() => patch({ giftCardCode: null })} aria-label="Quitar la gift card" className="grid h-10 w-10 shrink-0 place-items-center rounded-sm text-muted hover:bg-accent hover:text-ink">

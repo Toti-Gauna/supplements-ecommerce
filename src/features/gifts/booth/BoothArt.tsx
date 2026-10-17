@@ -48,8 +48,8 @@ export function BoothArt({ state = "idle", className }: { state?: "idle" | "vali
       <rect x="192" y="152" width="256" height="140" fill="none" stroke={volt} strokeOpacity="0.5" strokeWidth="2" />
       {/* Mostrador con la ranura y la entrada que asoma. */}
       <rect x="176" y="292" width="288" height="22" fill="#0d1015" />
-      <rect x="276" y="298" width="88" height="6" rx="3" fill="#000" />
-      <g transform="rotate(-9 320 330)">
+      <rect x="340" y="298" width="88" height="6" rx="3" fill="#000" />
+      <g transform="translate(64 0) rotate(-9 320 330)">
         <rect x="262" y="300" width="116" height="70" fill="#f2f0ea" />
         <path d="M296 304v62" stroke="#0b0d10" strokeOpacity="0.4" strokeDasharray="4 4" strokeWidth="2" />
         <text x="279" y="352" fontFamily="JetBrains Mono Variable, ui-monospace, monospace" fontWeight="800" fontSize="10" fill="#0b0d10" transform="rotate(-90 279 352)">ENTRADA</text>
@@ -57,8 +57,8 @@ export function BoothArt({ state = "idle", className }: { state?: "idle" | "vali
         {Array.from({ length: 16 }, (_, i) => <rect key={i} x={306 + i * 4} y="332" width={i % 3 ? 2 : 3} height="26" fill="#0b0d10" />)}
       </g>
       {/* Chapa de la marca. */}
-      <rect x="236" y="330" width="168" height="28" fill="#0a0c10" />
-      <text x="320" y="350" textAnchor="middle" fontFamily="JetBrains Mono Variable, ui-monospace, monospace" fontWeight="800" fontSize="13" letterSpacing="3" fill="#f2f0ea">{`${brand.mark} · REGALOS`}</text>
+      <rect x="170" y="334" width="150" height="26" fill="#0a0c10" />
+      <text x="245" y="352" textAnchor="middle" fontFamily="JetBrains Mono Variable, ui-monospace, monospace" fontWeight="800" fontSize="11" letterSpacing="2" fill="#f2f0ea">{`${brand.mark} · REGALOS`}</text>
       {/* Molinete. */}
       <rect x="530" y="250" width="16" height="122" fill="#3b4350" />
       <rect x="590" y="250" width="16" height="122" fill="#3b4350" />

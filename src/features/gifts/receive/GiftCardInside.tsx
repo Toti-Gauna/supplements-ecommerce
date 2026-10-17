@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { LedPrice } from "@/components/atoms/Led";
 import type { Gift } from "@/demo/engine/gifts";
-import { formatDay } from "@/lib/date";
+import { formatDate } from "@/lib/date";
 import { formatARS } from "@/lib/money";
 import { useDemoData } from "@/stores/admin";
 import { useToasts } from "@/stores/toast";
@@ -33,7 +33,7 @@ export function GiftCardInside({ gift, onBack }: { gift: Gift; onBack: () => voi
         <p className="font-mono text-xs font-bold uppercase tracking-[0.3em] text-night-muted">Saldo para usar</p>
         <div className="mt-3"><LedPrice amount={balance} motion="power" className="h-12 sm:h-14" signClassName="text-volt" /></div>
         <p className="mt-5 font-mono text-lg font-extrabold tracking-[0.14em]">{card.code}</p>
-        <p className="mt-1 text-xs text-night-muted">Vale hasta el {formatDay(card.expires, "long")}{balance < card.amount ? ` · se mandó por ${formatARS(card.amount)}` : ""}</p>
+        <p className="mt-1 text-xs text-night-muted">Vale hasta el {formatDate(card.expires)}{balance < card.amount ? ` · se mandó por ${formatARS(card.amount)}` : ""}</p>
       </div>
       <p className="max-w-sm text-sm text-night-muted">Elegí lo que quieras en la tienda y escribí el código en el paso “Pago”: el saldo se descuenta del total.</p>
       <div className="grid w-full gap-2">

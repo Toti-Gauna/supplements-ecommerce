@@ -68,7 +68,9 @@ test("quien recibe nunca ve el precio: Mis regalos, la apertura y lo que hay ade
   await expect(tile).toContainText("Bolsa con flores bordadas");
   await expect(tile).toContainText("Tocá y abrilo a golpes");
   const section = page.getByRole("region", { name: "Mis regalos" });
-  await expect(section.getByText(PRICE)).toHaveCount(0);
+  // Ningún regalo muestra su precio (una gift card sí muestra su monto y su saldo: es el regalo).
+  await expect(section.getByRole("link", { name: /de Lucía/ }).getByText(PRICE)).toHaveCount(0);
+  await expect(section.getByRole("region", { name: "Regalos que hice" }).getByText(PRICE)).toHaveCount(0);
   await tile.click();
   const stage = stageOf(page, g);
   await expect(stage.getByText(PRICE)).toHaveCount(0);
@@ -97,13 +99,14 @@ test("regalo desde el checkout para Navidad: el link abre la bolsa navideña en 
   await page.getByText("Transferencia bancaria").click();
   await page.getByRole("button", { name: "Revisar pedido" }).click();
   await page.getByRole("region", { name: "¿Es para regalo?" }).getByRole("button", { name: "Sí, es para regalar" }).click();
-  const modal = page.getByRole("dialog", { name: "Es para regalar" });
+  const modal = page.getByRole("dialog", { name: "Regalá energía" });
   await modal.getByLabel("Para", { exact: true }).fill("Mateo");
   await modal.getByLabel("De parte de").fill("Lucía");
   await modal.getByLabel("Mensaje").fill("¡Feliz Navidad! Para que el 2027 arranque con todo.");
   await modal.getByLabel("Ocasión").selectOption("navidad");
   await expect(modal.getByText("Lo abre a golpes contra una bolsa navideña con moño y gorrito.")).toBeVisible();
-  await expect(modal.locator("[data-variant]")).toHaveAttribute("data-variant", "navidad");
+  // La vista previa es la tarjeta de WhatsApp; debajo dice con qué bolsa se abre.
+  await expect(modal.getByRole("img", { name: /^Tarjeta para Mateo, de Lucía.*Se abre a golpes/ })).toBeVisible();
   await expect(modal.getByText("Bolsa navideña con moño y gorrito", { exact: true })).toBeVisible();
   await modal.getByRole("button", { name: "Agregar regalo al carrito" }).click();
   await page.getByRole("checkbox", { name: /Acepto los/ }).check();

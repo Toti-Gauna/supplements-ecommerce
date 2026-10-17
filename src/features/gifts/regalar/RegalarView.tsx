@@ -12,6 +12,7 @@ import type { GiftResult, GiftSubject } from "../builder/types";
 import { useGiftCardPurchase } from "../useGiftCardPurchase";
 import { useCurrentTheme } from "../../themes/useCurrentTheme";
 import { CardPick } from "./CardPick";
+import { HeroCard } from "./HeroCard";
 import { ProductPicks } from "./ProductPicks";
 import { StackPicks } from "./StackPicks";
 
@@ -48,11 +49,14 @@ export function RegalarView() {
   };
   return (
     <div className="flex flex-col gap-8">
-      <header className="floor relative -mx-4 overflow-hidden px-4 py-10 text-on-night sm:mx-0 sm:rounded-sm sm:px-10 sm:py-14">
-        <span aria-hidden="true" className="absolute -right-16 top-0 h-full w-72 -skew-x-[24deg] bg-[linear-gradient(180deg,color-mix(in_srgb,var(--color-volt)_22%,transparent),transparent)]" />
-        <p className="eyebrow relative text-volt">Para quien entrena</p>
-        <h1 className="relative mt-2 font-display text-[clamp(3rem,10vw,6.5rem)] uppercase italic leading-[0.85]">Regalá energía</h1>
-        <p className="relative mt-4 max-w-xl text-night-muted">Un producto (con el sabor o el tamaño para que elija quien lo recibe), un stack armado o una gift card con monto. Le mandás una tarjeta por WhatsApp y lo abre a golpes o con una combinación.</p>
+      <header className="floor relative -mx-4 grid grid-cols-[minmax(0,1fr)] items-center gap-8 overflow-hidden px-4 py-10 text-on-night sm:mx-0 sm:rounded-sm sm:px-10 sm:py-12 lg:grid-cols-[minmax(0,1fr)_17rem]">
+        <span aria-hidden="true" className="absolute -right-16 top-0 h-full w-96 -skew-x-[24deg] bg-[linear-gradient(180deg,color-mix(in_srgb,var(--color-volt)_22%,transparent),transparent)]" />
+        <div className="relative">
+          <p className="eyebrow text-volt">Para quien entrena</p>
+          <h1 className="mt-2 font-display text-[clamp(3rem,10vw,6.5rem)] uppercase italic leading-[0.85]">Regalá energía</h1>
+          <p className="mt-4 max-w-xl text-night-muted">Un producto (con el sabor o el tamaño para que elija quien lo recibe), un stack armado o una gift card con monto. Le mandás una tarjeta por WhatsApp y lo abre a golpes o con una combinación.</p>
+        </div>
+        <HeroCard />
       </header>
       <SegmentedTabs idBase="regalar" label="Qué querés regalar" tabs={TABS} value={tab} onChange={setTab} className="w-full sm:w-fit" />
       <div role="tabpanel" id={panelId("regalar", tab)} aria-labelledby={tabId("regalar", tab)}>

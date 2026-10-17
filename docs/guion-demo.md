@@ -100,10 +100,13 @@ Cerrá con: **"Bueno, te muestro cómo se ve todo eso resuelto. Primero lo que v
 - "Con tres categorías tiene 10 % de descuento: el ticket pasa de un pote a tres." Total **$ 109.530** y abajo el
   costo por día (**$ 3.202**).
 - Tocá **Cambiar** en la creatina o el tamaño de la proteína: el precio se recalcula al toque.
-- Tocá **Agregar el stack al carrito** y cerrá el carrito.
+- Cada pote tiene su tablero **te dura N días**. Tocá **Igualar duración**: ajusta tamaños y cantidades para que todo
+  se termine más o menos junto. "Así no te pide la creatina sola a mitad de mes."
+- Tocá **Agregar el stack al carrito** (en el celular está en la barra fija de abajo, con el total) y cerrá el carrito.
 
-Si pregunta "¿y el que no sabe qué tomar?": **Hacé el quiz** (`/crear/quiz/`, "¿Qué necesitás?"): 4 preguntas y le
-arma el stack con el porqué de cada producto. Si entrena **A la noche**, el pre sale sin cafeína. "Es lo que hoy le
+Si pregunta "¿y el que no sabe qué tomar?": **Hacé el quiz** (`/crear/quiz/`, "¿Qué necesitás?"): pantalla completa, una
+pregunta por placa y avanza solo al elegir. Le arma el stack con el porqué de cada producto y **El protocolo del día**:
+qué tomar a la mañana, antes y después de entrenar y a la noche. Si entrena **A la noche**, el pre sale sin cafeína. "Es lo que hoy le
 explicás vos por WhatsApp, pero a las 11 de la noche."
 
 ## 3:00 · Ruleta y Shaker Rush (1 minuto 30, celular, en la mano del dueño)
@@ -111,7 +114,8 @@ explicás vos por WhatsApp, pero a las 11 de la noche."
 **Tocá**: abrí el carrito (el "bolso"). Arriba de los productos está la placa **Tenés un giro del Disco olímpico** →
 **Girar**. La ruleta ya no corta el pago: si no gira, va directo al checkout.
 
-- Pasale el celular: **Girar la ruleta** (o que la arrastre con fuerza). Es un disco de pesas con luces.
+- Pasale el celular: **Cargá la barra** (mantener apretado y soltar; con el teclado, Espacio). Es un disco de pesas
+  con luces. También está en el Club.
 - Sale el premio (envío gratis, muestra, shaker, descuento): **Aplicar ahora**. "Todos ganan algo y el cupón es de un
   solo uso: no regalás plata, regalás ganas de volver."
 
@@ -119,8 +123,19 @@ explicás vos por WhatsApp, pero a las 11 de la noche."
 rayos, esquiva hamburguesas.
 - "Con 300 puntos gana 5 %, con 800 un 10 %, con 1.500 envío gratis. Juega todas las veces que quiera, pero el cupón
   es uno por día." (Los premios los cambiás vos en el panel.)
-- Si llegó a un premio: **Aplicar cupón … al carrito**. Si no: **Jugar de nuevo** o seguí.
+- Si llegó a un premio: **Usar cupón ahora** (lo aplica y lo lleva al carrito). Si no: **Jugar de nuevo** o seguí.
+- Mostrale el **ranking de la semana** y **Compartir puntaje**: arma una tarjeta 9:16 para historias.
 - "¿Sabés cuánto tiempo se queda un pibe de 20 años jugando esto en tu tienda? Y cada vez que entra, ve tus ofertas."
+
+## Si pide más · Club, liga y Mi rack (1 minuto, celular)
+
+- `/club/`: niveles con medallas, misiones de entrenamiento ("Entrená 3 veces esta semana") con **Reclamar premio**,
+  que se cobra una sola vez. Al invitado lo invita a crear la cuenta demo, no le promete nada.
+- `/club/liga/`: elige su gimnasio y ve el ranking del mes de los boxes de Mar del Plata, con su aporte marcado.
+  "Los gimnasios compiten y te traen a sus alumnos."
+- Tocá el corazón en dos productos y abrí **Mi rack**: total, **Agregar todo al carrito**, **Armar stack con esto** y
+  **Avisame si baja o si vuelve** (simulado: bajale el precio en el panel y el aviso salta).
+- **Ayuda del box** (pie de página): preguntas por tema con buscador; "devolucion" sin tilde también encuentra.
 
 ## Si pide más · La compra de punta a punta (2 minutos, celular)
 

@@ -409,7 +409,12 @@ gajos. Cada gajo tiene un **Premio** y un **Peso**: cuanto más peso, más sale 
 El cupón del juego se gana **una vez por día**; se juega todas las veces que quieran.
 
 **Misiones** (**Misiones y premios**): retos para el Club ("Comprá 2 productos" → shaker de regalo). **Nueva misión**,
-título, premio y **Guardar misión**. Recomendado: hasta 3 activas.
+título, premio y **Guardar misión**. Recomendado: hasta 3 activas. Además, el Club trae tres misiones de entrenamiento
+fijas (entrenos de la semana, día del deporte y Shaker Rush): el cliente reclama el premio una sola vez por semana o
+por fecha; un segundo reclamo no da otro cupón ni más puntos.
+
+**Liga de gimnasios** (Misiones y premios → **Liga de gimnasios**): el ranking del mes de los gimnasios de Mar del
+Plata que eligen tus clientes en `/club/liga/`. Es de solo lectura; los gimnasios y los puntos son de muestra.
 
 **Descuento stack**: el porcentaje (0 a 30 %) y cuántas categorías distintas hacen falta (2 a 5). Con la vista previa
 ves cuánto ahorra un stack de ejemplo. Tocá **Guardar descuento stack**.

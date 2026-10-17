@@ -28,7 +28,8 @@ test("Fase 3 · armador: objetivo, cambiar un lugar y el tamaño, descuento y co
   await expect(page.getByRole("link", { name: /Hacé el quiz/ })).toHaveAttribute("href", `${base}/crear/quiz/`);
 
   // Fuerza: proteína + creatina + pre → tres categorías, 10 % sobre $ 121.700.
-  await page.getByRole("radio", { name: "Fuerza" }).check();
+  await page.getByRole("checkbox", { name: "Fuerza" }).check();
+  await expect(page.locator("[data-stack-headline]")).toHaveText("Tu stack para fuerza");
   await expect(shelf(page)).toHaveAttribute("aria-label", "Estante de tu stack: Ionic Whey 100%, Creatina monohidrato micronizada y Overvolt pre-entreno. 1 lugar libre");
   await expect(page.getByText("Stack −10 %")).toBeVisible();
   await expect(discountRow(page)).toHaveText("−$ 12.170");
@@ -67,7 +68,7 @@ test("Fase 3 · armador: objetivo, cambiar un lugar y el tamaño, descuento y co
 
 test("Fase 3 · armador: vaciar un lugar saca el descuento y el link copiado arma el mismo estante", async ({ page }) => {
   await openBuilder(page, "?objetivo=fuerza");
-  await expect(page.getByRole("radio", { name: "Fuerza" })).toBeChecked();
+  await expect(page.getByRole("checkbox", { name: "Fuerza" })).toBeChecked();
   await page.getByRole("button", { name: "Vaciar pre-entreno" }).click();
   await expect(shelf(page)).toHaveAttribute("aria-label", /2 lugares libres$/);
   await expect(page.getByRole("button", { name: "Elegir pre-entreno" })).toBeVisible();
@@ -82,7 +83,7 @@ test("Fase 3 · armador: vaciar un lugar saca el descuento y el link copiado arm
 
   await page.goto(link);
   await expect(page.locator("[data-stack-ready]")).toBeAttached();
-  await expect(page.getByRole("radio", { name: "Fuerza" })).toBeChecked();
+  await expect(page.getByRole("checkbox", { name: "Fuerza" })).toBeChecked();
   await expect(shelf(page)).toHaveAttribute("aria-label", "Estante de tu stack: Ionic Whey 100% y Creatina monohidrato micronizada. 2 lugares libres");
   await expect(summary(page).locator("dd").last()).toHaveText("$ 84.800");
 });
@@ -92,12 +93,13 @@ test("Fase 3 · armador: un link con ?stack= carga el estante con su sabor y tam
   await expect(shelf(page)).toHaveAttribute("aria-label", "Estante de tu stack: Ionic Whey 100% y Omega 3 1000 mg. 2 lugares libres");
   await expect(page.getByLabel("Sabor de Ionic Whey 100%")).toHaveValue("Vainilla");
   await expect(page.getByLabel("Tamaño de Ionic Whey 100%")).toHaveValue("5 lb (2,27 kg)");
-  await expect(page.getByRole("radio", { checked: true })).toHaveCount(0);
+  await expect(page.getByRole("checkbox", { checked: true })).toHaveCount(0);
+  await expect(page.getByRole("radio", { name: "Solo gimnasio" })).toBeChecked();
   await expect(summary(page).locator("dd").last()).toHaveText("$ 135.800");
   await expect(page.locator("[data-per-day]")).toHaveText("$ 1.874");
 });
 
-test("Fase 3 · inicio: el bloque en vivo muestra el stack del objetivo y lleva al armador", async ({ page }) => {
+test("Fase 3 · inicio: el bloque en vivo muestra el stack de los objetivos y lleva al armador", async ({ page }) => {
   const assertNoExternal = guardNetwork(page);
   await page.goto("");
   const block = page.getByRole("region", { name: "Tu estante, según tu objetivo" });
@@ -105,8 +107,10 @@ test("Fase 3 · inicio: el bloque en vivo muestra el stack del objetivo y lleva 
   await blockShelf.scrollIntoViewIfNeeded();
   await expect(blockShelf).toHaveAttribute("aria-label", /Ionic Whey 100%, Creatina monohidrato micronizada y Overvolt pre-entreno/);
   await expect(block.locator("[data-home-stack-total]")).toHaveText("$ 109.530");
+  // L4: se combinan; con solo salud, su stack.
   await expect(async () => {
-    await block.getByRole("radio", { name: "Salud" }).check();
+    await block.getByRole("checkbox", { name: "Fuerza" }).uncheck();
+    await block.getByRole("checkbox", { name: "Salud" }).check();
     await expect(block.locator("[data-home-stack-total]")).toHaveText("$ 87.930", { timeout: 1000 });
   }).toPass();
   await expect(blockShelf).toHaveAttribute("aria-label", /Omega 3 1000 mg/);
@@ -114,7 +118,7 @@ test("Fase 3 · inicio: el bloque en vivo muestra el stack del objetivo y lleva 
   await block.getByRole("link", { name: /Armalo a tu medida/ }).click();
   await expect(page).toHaveURL(/\/crear\/\?objetivo=salud$/);
   await expect(page.locator("[data-stack-ready]")).toBeAttached();
-  await expect(page.getByRole("radio", { name: "Salud" })).toBeChecked();
+  await expect(page.getByRole("checkbox", { name: "Salud" })).toBeChecked();
   await expect(summary(page).locator("dd").last()).toHaveText("$ 87.930");
   assertNoExternal();
 });

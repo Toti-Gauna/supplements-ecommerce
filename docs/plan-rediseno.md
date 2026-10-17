@@ -178,16 +178,32 @@ Son cosas que hoy restan en cualquier demo y no conviene esperar al rediseño. E
 | Qué | Detalle | Esfuerzo |
 |---|---|---|
 | **Sistema de diseño** | Tokens de forma, sombras de estudio, grilla, tipografías y escala de marcador. Componentes base rehechos con variante tienda y panel: botón, chip, tarjeta, `DataTable`, input, `Sheet`, toasts, estados vacíos, `StepIndicator`, `OrderSummary`, `CouponTicket` y `ProgressRing`. `KpiTile` pasa a **marcador LED**, que se reutiliza en la tienda. Íconos propios de gimnasio para lo de marca | L |
-| **Estructura** | Header de una línea con **ticker ocultable** (aviso de demo, cupón de la fecha y "cadete hoy hasta las 18 h"). Sin flotantes: "Probar temáticas" va al menú y el WhatsApp al dock o al pie. Dock del celular con Buscar al centro y margen real para el contenido. Pie como "ficha técnica del local". Pantalla de carga de ~1,2 s, solo la primera vez de la sesión | M |
-| **Temáticas, regla de marca** | Se borran guirnaldas y adornos del logo. La fecha solo tiñe acentos con `--season-accent` (el arte de cada fecha llega en R3). La campaña vigente no rota | M |
-| **Inicio** | Hero del "drop" vigente o del producto estrella **en el rack** con tira de datos LED (precio por servicio, stock, cadete). Objetivos con siluetas y su producto asignado. Categorías como estantes (también en `/categorias/`). "El más elegido del box" en tabla. El stack en vivo más arriba. Reseñas por atributo (sabor, mezcla, efecto). Fuera "Valores" y la "Ciencia simple" redonda | L |
+| **Estructura** | Header de una línea con **ticker ocultable** (aviso de demo, cupón de la fecha y "cadete hoy hasta las 18 h"). Su fondo cubre hasta el borde superior y el área segura del celular. Sin flotantes: "Probar temáticas" va al menú y el WhatsApp al dock o al pie. Dock opaco del celular con Buscar al centro, siempre por encima del contenido y margen real hasta el área segura inferior. Pie como "ficha técnica del local". Pantalla de carga de ~1,2 s, solo la primera vez de la sesión | M |
+| **Temáticas, regla de marca** | Se borran guirnaldas y adornos del logo. La fecha solo tiñe acentos con `--season-accent` y `--season-glow` (el arte de cada fecha llega en R3), nunca el fondo ni los botones de compra. Si hay campaña vigente, su diapositiva va primera y también rota, con cupón "Usar CÓDIGO" | M |
+| **Inicio** | **Carrusel de imágenes BOX** con producto en el rack y tira de datos LED (precio por servicio, stock, cadete). Debajo: **Comprá por categoría**, con categorías como estantes (también en `/categorias/`); después **Entrená por objetivo**, con siluetas y su producto asignado. Las ofertas de campaña van después de objetivos. El resto conserva su orden: stack en vivo, "El más elegido del box", recomendados, reseñas por atributo (sabor, mezcla, efecto) y club. Fuera "Valores" y la "Ciencia simple" redonda | L |
 | **Tarjeta "ficha de rack"** | Precio por servicio grande, servicios, sellos, luces de stock y hoja de sabor al agregar. Un solo aviso de "imagen ilustrativa" | M |
 | **Búsqueda protagonista** | Barra en el header y buscador superpuesto con chips de objetivo, sello y sabor. Motor que entiende el rubro: sellos, sinónimos, palabras vacías y coincidencia parcial | M |
-| **Panel, la parte que hereda** | Las 30 rutas con el sistema nuevo y capturas antes/después. Contenido → "Carrusel" pasa a editar el hero nuevo | M |
+| **Panel, la parte que hereda** | Las 30 rutas con el sistema nuevo y capturas antes/después. Contenido → **Carrusel del inicio** edita los destacados existentes: vista previa con la misma diapositiva de la tienda, imagen propia, encuadre, texto alternativo, lista, orden, visibilidad y borrador recuperable | M |
 | **Copia** | Fuera los textos de Velmar (club, cuenta, "Detalles y medidas", "Hecho a pedido") y "demo" repetido en todos lados: queda la franja y un pie legal | S |
 
 **"Wow" esperado:** parece la tienda de una marca deportiva grande, y el precio por servicio, el stock y cuándo llega
 se ven en la tarjeta y en el hero.
+
+### Carrusel con imágenes (pedido del 13/10/2026)
+
+- Conserva `content.hero` y extiende `HeroFeature` con imagen opcional `{ src, alt, frame }`; sin imagen usa el
+  envase SVG de `HeroStage`. Reutiliza la escena, `rackFacts` y el flujo para agregar al carrito.
+- Avanza cada 4–5 segundos; se pausa al pasar el mouse, enfocar o tocar, y tiene botón de pausa. Con
+  "reducir movimiento" no avanza solo. Flechas como placas cuadradas, indicadores como marcas de carril y deslizamiento
+  con el dedo mediante scroll-snap; controles nativos, foco visible y anuncio accesible del carrusel y las diapositivas.
+- Titulares en Big Shoulders Display, bajada, datos del rack, **Agregar · $precio** y **Ver ficha**. La campaña vigente
+  va primera con `data-theme-banner` y su cupón. Un `h1` oculto mantiene la marca mientras cambia el titular.
+- El dueño puede subir JPG, PNG o WebP de hasta 10 MB y al menos 400 px en el lado más chico. Se optimiza a 900 px
+  en el lado más largo y queda en el navegador; el encuadre admite posición 0–100 % y zoom 1–2. Texto alternativo:
+  hasta 120 caracteres; titular: 40; bajada: 120; hasta 4 destacados. Se avisa si no queda espacio para guardar.
+- Migración del panel sin perder lo editado; validación y encuadre puros y testeados en `src/demo/admin`. A 375 px el
+  carrusel ocupa todo el ancho, sin desborde ni saltos de layout. Se actualizan los e2e y se mide LCP en celular con
+  CPU ×4 antes y después, sin empeorar. Capturas de inicio y editor en ambos modos: [evidencia](img/rediseno/carrusel/README.md).
 
 ---
 
@@ -284,6 +300,23 @@ mañana.
 
 ---
 
+## 7 bis. Lotes pedidos por Ignacio el 16/10/2026 (antes de seguir con R2)
+Orden acordado: **L1 → L2 → L3 → L4 → L5**, después R2a, R2b, R2c, R3a, R3b, R4a, R4b y R4c.
+
+| Lote | Qué | Estado |
+|---|---|---|
+| **L1** · Inicio y navegación | Carrusel de **imágenes** automático (al estilo Velmar, con identidad BOX); inicio: carrusel → categorías → recomendados → "¿Para qué lo querés?" y el stack; **precio total primero** y el precio por servicio chico; el dock del celular siempre arriba al cambiar de página; la pantalla de carga **en cada recarga** hasta terminar su animación | Hecho (PR #11) |
+| **L2** · Tienda deportiva multimarca | Textos de comercio que vende marcas de terceros; accesorios (straps, shakers, vendas, cinturones, guantes, rodilleras, sogas, bandas, magnesio, bolsos) con talle y color | Hecho (PR #12) |
+| **L3** · Packs mensuales | Packs por objetivo y deporte, "Quiero este pack todos los meses" (simulado) y panel de packs y suscriptores | Hecho (PR #13) |
+| **L4** · Objetivos, deportes, stack y quiz | SVG por deporte (fútbol, tenis, pádel, running, etc.), stack con varios objetivos, invitación al quiz al entrar y quiz con opción mensual | Hecho (PR #14) |
+| **L5** · Cierre de L4 | Deportes editables en el panel (nombre, bajada, color y pack sugerido); el tope de 3 objetivos cuenta solo los elegidos, igual en el quiz y el armador (el deporte siempre suma); las tarjetas de objetivo del inicio muestran el total de su stack, como las de deporte | Hecho (PR de L5) |
+
+Cambian decisiones anteriores: el precio por servicio deja de ser el número grande, la pantalla de carga sale en cada
+recarga y el inicio vuelve a tener un carrusel que avanza solo. Los puntos 9 (días del deporte) y 11 (un regalo único
+por fecha) entran en R3a y R3b.
+
+---
+
 ## 8. Cómo se trabaja cada fase
 1. **Dirección:** prototipos de las pantallas clave en celular y escritorio, con capturas para que Ignacio elija o
    corrija antes de construir todo.
@@ -311,6 +344,7 @@ mañana.
 - **Orden:** R0 → R1 → R2 → R3 → R4.
 - **Fecha de la demo:** pasa del domingo 4/10 al **lunes 5/10** (R0).
 - **Las 14 funcionalidades nuevas de la sección 10:** aprobadas.
+- 13/10/2026: vuelve el carrusel con imágenes, pedido de Ignacio
 
 ## 10. Funcionalidades nuevas que salieron del análisis: **todas aprobadas** (12/10/2026)
 Entran en la fase indicada, además de lo de cada tabla. Con esto R2 y R4 crecen bastante. Si una fase se pasa de

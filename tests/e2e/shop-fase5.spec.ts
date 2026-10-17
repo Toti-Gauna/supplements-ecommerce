@@ -22,14 +22,14 @@ test.describe("temáticas fitness de la Fase 5", () => {
     });
   }
 
-  test("el banner luce sus cinco decoraciones fitness", async ({ page }) => {
+  test("el hero de la campaña: titular, oferta y producto en el rack (el arte de cada fecha llega en R3)", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "no-preference" });
     await preview(page, "dia-del-amigo");
     await page.goto("");
     await page.keyboard.press("Escape");
     const banner = page.locator("[data-theme-banner='dia-del-amigo']");
     await expect(banner.getByRole("heading", { name: "Tu compañero de gym" })).toBeVisible();
-    await expect(banner.locator("span.absolute > svg")).toHaveCount(5);
+    await expect(banner.getByRole("img", { name: /imagen ilustrativa/ }).first()).toBeVisible();
     await expect(banner).toContainText("$5.000 OFF");
     // Nada de Velmar: sin personajes ni decoraciones de mascotas.
     await expect(page.locator("svg.pup")).toHaveCount(0);
@@ -70,6 +70,27 @@ test("navegar entre páginas usa View Transitions y la imagen del producto vuela
   const calls = await page.evaluate(() => (window as unknown as { __vt: string[] }).__vt);
   expect(calls.length).toBeGreaterThan(0);
   expect(calls).toContain("product-hero");
+  expect(errors).toEqual([]);
+});
+
+test("con movimiento reducido navegar y elegir sabor no inicia capturas nativas ni errores", async ({ page }) => {
+  await page.addInitScript(() => {
+    const start = document.startViewTransition.bind(document);
+    const state = window as unknown as { __vtCalls: number };
+    state.__vtCalls = 0;
+    document.startViewTransition = ((arg: Parameters<typeof start>[0]) => {
+      state.__vtCalls++;
+      return start(arg);
+    }) as typeof document.startViewTransition;
+  });
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.goto("c/pre-entrenos/");
+  await page.getByRole("link", { name: "Overvolt pre-entreno", exact: true }).click();
+  const card = page.getByRole("region", { name: "Elegí sabor, tamaño y cantidad" });
+  await card.getByTitle("Limón").click();
+  await expect(card.getByRole("radio", { name: "Limón" })).toBeChecked();
+  expect(await page.evaluate(() => (window as unknown as { __vtCalls: number }).__vtCalls)).toBe(0);
   expect(errors).toEqual([]);
 });
 

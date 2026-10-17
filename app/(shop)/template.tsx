@@ -1,4 +1,5 @@
-import { ViewTransition, type ReactNode } from "react";
+import type { ReactNode } from "react";
+import { PageTransition } from "@/components/motion/PageTransition";
 
 /**
  * Se remonta en cada navegación. Con View Transitions (Chrome, Safari 18+) la página vieja se desvanece y la nueva
@@ -6,8 +7,8 @@ import { ViewTransition, type ReactNode } from "react";
  */
 export default function ShopTemplate({ children }: { children: ReactNode }) {
   return (
-    <ViewTransition enter="page-in" exit="page-out" default="none">
+    <PageTransition>
       <div className="page-enter">{children}</div>
-    </ViewTransition>
+    </PageTransition>
   );
 }

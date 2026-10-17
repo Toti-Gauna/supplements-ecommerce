@@ -3,12 +3,13 @@ import { horizontalOverflow } from "./helpers";
 
 // Rutas relativas (sin "/" inicial) para respetar el basePath del baseURL.
 const ROUTES = [
-  ["", "Destacados de Volta"],
+  ["", "Cargá tu mejor versión"],
   ["buscar/?q=creatna", "Buscar"],
   ["buscar/?objetivo=masa-muscular", "Buscar"],
   ["categorias/", "Todas las categorías"],
   ["c/proteinas/", "Proteínas"],
   ["p/ionic-whey/", "Ionic Whey 100%"],
+  ["packs/", "Packs"],
   ["crear/", "Armá tu stack"],
   ["crear/quiz/", "¿Qué necesitás?"],
   ["cupones/", "Mis cupones"],
@@ -30,7 +31,7 @@ test.describe("rutas directas y refresh bajo el subpath", () => {
     test(`/${path}`, async ({ page }) => {
       const res = await page.goto(path);
       expect(res?.status()).toBe(200);
-      const target = path === "" ? page.getByRole("region", { name: heading }) : page.getByRole("heading", { level: 1, name: heading });
+      const target = page.getByRole("heading", { level: path ? 1 : 2, name: heading });
       await expect(target).toBeVisible();
       await page.reload();
       await expect(target).toBeVisible();

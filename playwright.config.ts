@@ -24,8 +24,10 @@ export default defineConfig({
     // Los tests de splash y de animaciones lo cambian a "no-preference" explícitamente.
     contextOptions: { reducedMotion: "reduce" },
     // La temática queda en "Original" para que los tests no dependan de la fecha del día (themes.spec.ts las prueba a propósito).
+    // La invitación al quiz de la primera visita ya figura vista (quiz-l4.spec.ts la prueba con el almacenamiento vacío).
     storageState: { cookies: [], origins: [{ origin: `http://localhost:${port}`, localStorage: [
       { name: "volta-demo:theme-preview", value: JSON.stringify({ state: { previewId: "original" }, version: 0 }) },
+      { name: "volta-quiz-invite", value: "seen" },
     ] }] },
   },
   projects: [{ name: "mobile", use: { ...devices["Pixel 7"], viewport: { width: 375, height: 812 } } }],

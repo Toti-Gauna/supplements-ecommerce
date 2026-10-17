@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "./box.css";
+@import "./rack.css";
 @import "./keyframes.css";
 
 /*
@@ -165,7 +166,7 @@ html[data-theme="light"] {
 
 /* Titulares de póster de competencia: condensada, muy pesada, en mayúsculas y apretada en altura. */
 @utility font-display {
-  font-family: var(--font-display);
+  font-family: var(--font-box-display), var(--font-display);
   font-weight: 800;
   letter-spacing: 0.01em;
   line-height: 0.92;

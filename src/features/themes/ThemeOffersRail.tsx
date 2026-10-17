@@ -10,7 +10,7 @@ export function ThemeOffersRail({ theme, offer }: { theme: SeasonalTheme; offer:
   const skin = skinOf(theme.id);
   const cards = themeProducts(theme).map((p) => {
     const card = toCard(p);
-    return offer ? { ...card, deal: { ...cardDeal(card.fromPrice, offer), bg: skin.accent, ink: skin.accentInk } } : card;
+    return offer ? { ...card, deal: { ...cardDeal(card.price, offer), bg: skin.accent, ink: skin.accentInk } } : card;
   });
   return <ProductRail id="ofertas-tematicas" eyebrow={`Temática ${theme.name}`} title="Ofertas" accent={`de ${theme.name}`} products={cards} />;
 }

@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { StockMeter } from "@/components/molecules/StockMeter";
-import { availability, getCategory, isPurchasable, maxQuantity, type Availability } from "@/demo/engine/catalog";
+import { availability, getCategory, isGear, isPurchasable, maxQuantity, type Availability } from "@/demo/engine/catalog";
 import { firstOutLot, variantClearance } from "@/demo/engine/lots";
 import { priceOptions, reviewsFor, sheetScore } from "@/demo/engine/sheet";
 import type { Product } from "@/demo/types";
@@ -23,7 +23,7 @@ import { ServingCalculator } from "./ServingCalculator";
 import { SheetHeader } from "./SheetHeader";
 import { SheetScore } from "./SheetScore";
 import { SpecGallery } from "./SpecGallery";
-import { StackOffer } from "./StackOffer";
+import { ProductOffers } from "./ProductOffers";
 import { TwoPrices } from "./TwoPrices";
 import { UsageTimeline } from "./UsageTimeline";
 import { useProductPurchase } from "./useProductPurchase";
@@ -63,6 +63,8 @@ export function ProductDetail({ product: initial, preview = false }: { product: 
     setGiftOpen(true);
   };
   const reviews = reviewsFor(product.slug);
+  // Equipamiento (L2): no vence ni tiene lote; la ficha muestra lo que aplica.
+  const gear = isGear(product);
   const buy = { canBuy, preview, onAdd: () => purchase("cart"), onBuy: () => purchase("buy"), onGift: openGift };
   const stock = inactive && !preview
     ? <p role="status" className="rounded-sm bg-warning-soft p-3 text-sm font-bold text-warning">Este producto está pausado desde el panel demo y no se puede comprar.</p>
@@ -91,12 +93,12 @@ export function ProductDetail({ product: initial, preview = false }: { product: 
         <div className="max-lg:contents lg:flex lg:flex-col lg:gap-6">
           {product.usage && <div className="max-lg:order-1"><UsageTimeline usage={product.usage} /></div>}
           {product.nutrition && <div id="rotulo" className="scroll-mt-28 max-lg:order-4"><NutritionFacts nutrition={product.nutrition} /></div>}
-          <div className="max-lg:order-5"><LotVerifier slug={product.slug} example={firstOutLot(sel.variant)?.code ?? product.lot?.code} /></div>
+          {!gear && <div className="max-lg:order-5"><LotVerifier slug={product.slug} example={firstOutLot(sel.variant)?.code ?? product.lot?.code} /></div>}
           <div className="max-lg:order-8"><ProductAccordions product={product} /></div>
         </div>
         <div className="max-lg:contents lg:flex lg:flex-col lg:gap-6">
           <div className="max-lg:order-2"><ServingCalculator product={product} variant={sel.variant} perDay={perDay} onPerDay={setPerDay} /></div>
-          {!preview && <div className="max-lg:order-3"><StackOffer product={product} variant={sel.variant} /></div>}
+          {!preview && <div className="max-lg:order-3"><ProductOffers product={product} variant={sel.variant} /></div>}
           <div className="flex flex-col gap-6 max-lg:order-6">
             <DeliveryEstimate product={product} variant={sel.variant} />
             <MissionChip units={quantity} />

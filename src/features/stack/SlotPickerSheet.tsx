@@ -15,7 +15,7 @@ interface SlotPickerSheetProps {
   open: boolean;
   slot: StackSlot;
   index: number;
-  goal: Goal | null;
+  goals: Goal[];
   /** Opciones del motor (`slotOptions`): primero las del objetivo. */
   options: Product[];
   current?: string;
@@ -24,11 +24,11 @@ interface SlotPickerSheetProps {
 }
 
 /** Opción como tarjeta: envase, nombre, precio de la presentación con stock y su precio por servicio. */
-function OptionTile({ product, goal, selected, onPick }: { product: Product; goal: Goal | null; selected: boolean; onPick: () => void }) {
+function OptionTile({ product, goals, selected, onPick }: { product: Product; goals: Goal[]; selected: boolean; onPick: () => void }) {
   const variant = firstInStock(product)!;
   const price = unitPrice(product, variant);
   const perServing = pricePerServing(price, variant.servings);
-  const forGoal = goal !== null && (product.goals ?? []).includes(goal);
+  const forGoal = goals.some((g) => (product.goals ?? []).includes(g));
   return (
     <button type="button" onClick={onPick} aria-pressed={selected}
       className={cn("relative flex h-full w-full flex-col gap-2 rounded-sm border bg-surface p-2 text-left transition-[border-color,box-shadow]", selected ? "border-primary shadow-[0_0_0_1px_var(--color-primary)]" : "border-line hover:border-ink/35")}>
@@ -51,18 +51,18 @@ function OptionTile({ product, goal, selected, onPick }: { product: Product; goa
 }
 
 /** Hoja para elegir qué va en un lugar: en el celular sube desde abajo, en escritorio es un modal ancho. */
-export function SlotPickerSheet({ open, slot, index, goal, options, current, onPick, onClose }: SlotPickerSheetProps) {
+export function SlotPickerSheet({ open, slot, index, goals, options, current, onPick, onClose }: SlotPickerSheetProps) {
   const title = `Elegí ${slot.name.toLowerCase()}`;
   return (
     <Sheet open={open} onClose={onClose} title={title} side="dialog">
       <div className="px-5 pb-3 pr-16 pt-6 sm:px-7">
         <p className="eyebrow text-volt-ink">Lugar {slotNumber(index)} del estante</p>
         <h2 className="font-display mt-1 text-2xl sm:text-3xl">{title}</h2>
-        <p className="mt-1 text-sm text-muted">{slot.hint} {options.length} opciones con stock{goal ? ", primero las de tu objetivo" : ""}.</p>
+        <p className="mt-1 text-sm text-muted">{slot.hint} {options.length} opciones con stock{goals.length ? `, primero las de ${goals.length > 1 ? "tus objetivos" : "tu objetivo"}` : ""}.</p>
       </div>
       <ul className="grid min-h-0 flex-1 grid-cols-2 gap-3 overflow-y-auto overscroll-contain px-5 pb-[calc(1.5rem+env(safe-area-inset-bottom))] pt-1 sm:grid-cols-3 sm:px-7 md:grid-cols-4">
         {options.map((p) => (
-          <li key={p.slug}><OptionTile product={p} goal={goal} selected={p.slug === current} onPick={() => onPick(p.slug)} /></li>
+          <li key={p.slug}><OptionTile product={p} goals={goals} selected={p.slug === current} onPick={() => onPick(p.slug)} /></li>
         ))}
       </ul>
     </Sheet>

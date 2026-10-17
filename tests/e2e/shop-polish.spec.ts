@@ -1,50 +1,46 @@
 import { expect, test, type Page } from "@playwright/test";
 
-/** Polish 8.2 · Lote 1: flechas del carrusel principal, categorías en una fila y riel de Recomendados sin huecos. */
+/** Carrusel BOX: campaña primera, autoplay y controles en una franja que no pisa la escena. */
 const preview = (page: Page, id: string) =>
   page.addInitScript((v) => localStorage.setItem("volta-demo:theme-preview", JSON.stringify({ state: { previewId: v }, version: 0 })), id);
 
-/** Cuántas cajas de texto o de imagen de la diapositiva a la vista pisa alguna flecha. */
-const arrowHits = (page: Page) => page.evaluate(() => {
-  const track = document.querySelector<HTMLElement>("section[aria-roledescription=carrusel] div.no-scrollbar")!;
-  const left = track.getBoundingClientRect().left;
-  const slide = [...track.children].find((s) => Math.abs(s.getBoundingClientRect().left - left) < 2)!;
-  const arrows = [...document.querySelectorAll("button[aria-label^='Diapositiva ']")].map((b) => b.getBoundingClientRect());
-  const boxes: DOMRect[] = [];
-  const walker = document.createTreeWalker(slide, NodeFilter.SHOW_TEXT);
-  while (walker.nextNode()) {
-    if (!walker.currentNode.textContent?.trim()) continue;
-    const range = document.createRange();
-    range.selectNodeContents(walker.currentNode);
-    boxes.push(...range.getClientRects());
-  }
-  // La imagen del producto (no el brillo de fondo, que es decorativo y se desvanece hacia los bordes).
-  slide.querySelectorAll("svg[role=img]").forEach((e) => boxes.push(e.closest("div")!.getBoundingClientRect()));
-  const hit = (a: DOMRect, b: DOMRect) => a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
-  return { hits: boxes.filter((b) => arrows.some((a) => hit(a, b))).length, label: slide.getAttribute("aria-label") };
-});
-
-for (const [width, height] of [[640, 900], [820, 1180], [1080, 810], [1180, 820], [1440, 900]] as const) {
-  test(`8.2.1 carrusel principal a ${width}×${height}: las flechas no pisan el texto ni la imagen de ninguna diapositiva`, async ({ page }) => {
+for (const [width, height] of [[375, 812], [820, 1180], [1440, 900]] as const) {
+  test(`carrusel a ${width}×${height}: campaña primera, autoplay y altura estable`, async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "no-preference" });
     await preview(page, "dia-de-la-madre");
     await page.setViewportSize({ width, height });
     await page.goto("");
-    // El carrusel se vuelve a montar cuando la temática de prueba reemplaza a la del día: se mide después.
-    await expect(page.locator("[data-theme-banner='dia-de-la-madre']")).toBeVisible();
-    const hero = page.locator("section[aria-roledescription=carrusel]");
-    const total = await hero.locator("[aria-roledescription=diapositiva]").count();
-    expect(total).toBeGreaterThan(1);
-    const next = hero.getByRole("button", { name: "Diapositiva siguiente" });
-    await expect(next).toBeVisible();
-    const box = (await next.boundingBox())!;
-    expect(Math.min(box.width, box.height)).toBeGreaterThanOrEqual(44);
-    for (let i = 0; i < total; i++) {
-      await expect(hero.getByRole("button", { name: `Ir a la diapositiva ${i + 1}` })).toHaveAttribute("aria-current", "true");
-      const { hits, label } = await arrowHits(page);
-      expect(hits, `diapositiva ${label}`).toBe(0);
-      await next.click();
-    }
-    await expect(hero.getByRole("button", { name: "Ir a la diapositiva 1" })).toHaveAttribute("aria-current", "true");
+    await page.keyboard.press("Escape");
+    const hero = page.locator("section[aria-roledescription='carrusel']");
+    const campaign = hero.locator("[data-theme-banner='dia-de-la-madre']");
+    const markers = hero.getByRole("group", { name: "Destacados" }).getByRole("button");
+    await expect(campaign).toHaveAttribute("aria-hidden", "false");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
+    await expect(markers.first()).toHaveAttribute("aria-current", "true");
+    const before = (await hero.boundingBox())!.height;
+    await page.mouse.move(0, 0);
+    await expect(markers.nth(1)).toHaveAttribute("aria-current", "true", { timeout: 8000 });
+    await expect(campaign).toHaveAttribute("aria-hidden", "true");
+    expect((await hero.boundingBox())!.height).toBeCloseTo(before, 0);
+    await markers.first().click();
+    await expect(markers.first()).toHaveAttribute("aria-current", "true");
+    await expect(hero.getByRole("button", { name: "Reproducir carrusel" })).toBeVisible();
+    const title = await hero.getByRole("heading", { level: 2 }).innerText();
+    await markers.nth(1).click();
+    await expect(markers.nth(1)).toHaveAttribute("aria-current", "true");
+    await expect(hero.getByRole("heading", { level: 2 })).not.toHaveText(title);
+    await expect(hero.getByRole("button", { name: "Diapositiva anterior" })).toBeVisible();
+    await expect(hero.getByRole("button", { name: "Diapositiva siguiente" })).toBeVisible();
+    // Los controles van en la franja de carriles, debajo de la imagen: no pisan la escena ni el titular.
+    const arrow = (await hero.getByRole("button", { name: "Diapositiva siguiente" }).boundingBox())!;
+    const heading = (await hero.getByRole("heading", { level: 2 }).boundingBox())!;
+    const track = (await hero.locator("[data-hero-track]").boundingBox())!;
+    expect(arrow.y).toBeGreaterThanOrEqual(track.y + track.height - 1);
+    expect(heading.y + heading.height).toBeLessThanOrEqual(track.y + track.height);
+    const sections = await page.locator("section[aria-roledescription='carrusel'], section[aria-labelledby='cats-title'], section[aria-labelledby='objetivos-title'], #ofertas-tematicas").evaluateAll((els) => els.map((el) => el.id || el.getAttribute("aria-labelledby") || "carrusel"));
+    // L1: las ofertas de la fecha van junto a lo recomendado, antes de "¿Para qué lo querés?".
+    expect(sections).toEqual(["carrusel", "cats-title", "ofertas-tematicas", "objetivos-title"]);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBeLessThanOrEqual(0);
   });
 }
 
@@ -56,7 +52,7 @@ const rows = (page: Page, list: string) => page.locator(list).evaluate((ul) => {
 });
 
 for (const width of [375, 640, 820, 1080, 1180, 1440]) {
-  test(`8.2.2 categorías a ${width}px: una sola fila en el inicio y ninguna sola en /categorias/`, async ({ page }) => {
+  test(`8.2.2 categorías a ${width}px: estantes en una sola fila en el inicio y ninguno solo en /categorias/`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("");
     const rail = page.locator("#cats-rail");
@@ -64,34 +60,30 @@ for (const width of [375, 640, 820, 1080, 1180, 1440]) {
     expect(await rows(page, "#cats-rail")).toHaveLength(1);
     const overflow = await rail.evaluate((ul) => ul.scrollWidth - ul.clientWidth);
     const more = page.getByRole("button", { name: "Más categorías" });
-    if (overflow > 2) {
-      // Con el teclado: Tab hasta la última la trae a la vista.
-      await rail.locator("a").last().focus();
-      await expect.poll(() => rail.evaluate((ul) => ul.scrollLeft)).toBeGreaterThan(0);
-      if (width >= 640) {
-        await rail.evaluate((ul) => ul.scrollTo({ left: 0 }));
-        await expect(more).toBeVisible();
-        await expect(page.getByRole("button", { name: "Categorías anteriores" })).toBeHidden();
-        // Se avanza según la posición del riel: el control se desvanece en 300 ms y mientras tanto todavía se ve.
-        const atEnd = () => rail.evaluate((ul) => ul.scrollLeft >= ul.scrollWidth - ul.clientWidth - 2);
-        for (let k = 0; k < 6 && !(await atEnd()); k++) await more.click();
-        expect(await atEnd()).toBe(true);
-        await expect(more).toBeHidden();
-        await expect(page.getByRole("button", { name: "Categorías anteriores" })).toBeVisible();
-      }
-    } else {
-      await expect(more).toBeHidden();
+    const less = page.getByRole("button", { name: "Categorías anteriores" });
+    expect(overflow).toBeGreaterThan(2);
+    // Con el teclado: Tab hasta la última la trae a la vista.
+    await rail.locator("a").last().focus();
+    await expect.poll(() => rail.evaluate((ul) => ul.scrollLeft)).toBeGreaterThan(0);
+    if (width >= 640) {
+      await rail.evaluate((ul) => ul.scrollTo({ left: 0 }));
+      await expect(less).toHaveAttribute("aria-disabled", "true");
+      const atEnd = () => rail.evaluate((ul) => ul.scrollLeft >= ul.scrollWidth - ul.clientWidth - 2);
+      for (let k = 0; k < 8 && !(await atEnd()); k++) { await more.click(); await page.waitForTimeout(400); }
+      expect(await atEnd()).toBe(true);
+      await expect(more).toHaveAttribute("aria-disabled", "true");
+      await expect(less).not.toHaveAttribute("aria-disabled", "true");
     }
     await page.goto("categorias/");
-    const counts = await rows(page, "ul[aria-label='Todas las categorías']");
+    const counts = await rows(page, "ul[aria-label='Categorías']");
     expect(counts.slice(0, -1).every((c) => c === counts[0]), `filas ${counts}`).toBe(true);
-    expect(counts.at(-1)!, `filas ${counts}`).toBeGreaterThan(1);
-    if (width >= 1024) expect(counts).toHaveLength(1);
+    // En una sola columna (celular) cada estante va en su fila; con más columnas, ninguno queda solo al final.
+    if (counts[0]! > 1) expect(counts.at(-1)!, `filas ${counts}`).toBeGreaterThan(1);
   });
 }
 
 /** Estado del riel de Recomendados: posición, si coincide con el borde de una tarjeta y si hay alguna en blanco a la vista. */
-const railState = (page: Page) => page.locator("#recomendados").locator("xpath=ancestor::section[1]").locator("ul").evaluate((ul) => {
+const railState = (page: Page) => page.locator("#recomendados").locator("xpath=ancestor::section[1]").locator("ul").first().evaluate((ul) => {
   const r = ul.getBoundingClientRect();
   const pad = parseFloat(getComputedStyle(ul).scrollPaddingLeft) || 0;
   const origin = r.left + ul.clientLeft - ul.scrollLeft;
@@ -139,7 +131,7 @@ for (const [width, height] of [[1080, 810], [820, 1180]] as const) {
       await expect(prev).toHaveAttribute("aria-disabled", "true");
     }
     // Un deslizón rápido hasta el final (de un cuadro al otro) y vuelta: las tarjetas por las que pasó están.
-    await section.locator("ul").evaluate((ul) => ul.scrollTo({ left: ul.scrollWidth, behavior: "instant" }));
+    await section.locator("ul").first().evaluate((ul) => ul.scrollTo({ left: ul.scrollWidth, behavior: "instant" }));
     await settle();
     await press(prev);
   });

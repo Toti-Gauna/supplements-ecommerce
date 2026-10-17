@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { isGear } from "@/demo/engine/catalog";
 import { expiryState, normalizeLotCode, verifyLot } from "@/demo/engine/lots";
 import { DEMO_TODAY } from "@/demo/fixtures/admin-orders";
 import { productRnpa } from "@/demo/fixtures/lots";
@@ -43,10 +44,10 @@ describe("Verificá tu lote", () => {
     expect(verifyLot("  ", products, DEMO_TODAY)).toEqual({ kind: "empty" });
   });
 
-  it("todos los lotes del catálogo tienen día de ingreso y es anterior a la fecha de la demo; cada suplemento, su RNPA", () => {
+  it("todos los lotes del catálogo tienen día de ingreso y es anterior a la fecha de la demo; cada suplemento (no el equipamiento), su RNPA", () => {
     for (const p of products) {
       for (const l of p.variants.flatMap((v) => v.lots ?? [])) expect(l.receivedOn! <= DEMO_TODAY, `${p.slug} ${l.code}`).toBe(true);
-      if (p.categorySlug !== "accesorios") expect(p.rnpa, p.slug).toMatch(/^00-\d{6}$/);
+      if (!isGear(p)) expect(p.rnpa, p.slug).toMatch(/^00-\d{6}$/);
     }
   });
 });

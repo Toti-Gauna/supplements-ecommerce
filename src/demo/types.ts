@@ -17,6 +17,8 @@ export interface Category {
   art: ArtKey;
   featured: boolean;
   sortOrder: number;
+  /** "gear": equipamiento (straps, guantes, shakers…): sin servicios, lote ni vencimiento; se elige por color y talle. */
+  kind?: "gear";
 }
 
 export interface Variant {
@@ -58,6 +60,11 @@ export interface Faq {
 
 /** Objetivos de entrenamiento: filtran el catálogo y arman stacks. */
 export type Goal = "masa-muscular" | "fuerza" | "energia" | "recuperacion" | "definicion" | "salud" | "resistencia";
+
+/** Deportes (L4): el quiz, el armador y "Entrená por objetivo" también arman por deporte. */
+export type SportId =
+  | "futbol" | "tenis" | "padel" | "running" | "ciclismo" | "natacion"
+  | "boxeo" | "crossfit" | "basquet" | "rugby" | "hockey" | "voley";
 
 /** Sellos del rótulo. */
 export type ProductBadge = "sin-tacc" | "vegano" | "sin-azucar" | "keto" | "marca-propia" | "sin-cafeina";
@@ -134,6 +141,35 @@ export interface Product {
   optionNames?: { color?: string; size?: string };
 }
 
+/** Un producto del pack: variante fija o, sin ella, la primera con stock. */
+export interface PackItem {
+  productSlug: string;
+  variantId?: string;
+  qty: number;
+}
+
+/**
+ * Pack (L3): productos pensados para un objetivo o un deporte, con descuento por llevar todo junto y un extra por
+ * recibirlo todos los meses. Los suplementos se repiten cada mes; el equipamiento (no se consume) viaja solo en la primera entrega.
+ */
+export interface Pack {
+  id: string;
+  name: string;
+  tagline: string;
+  description: string;
+  /** Para qué es: un objetivo ("Masa muscular") o un deporte ("Fútbol"). */
+  focus: string;
+  items: PackItem[];
+  /** % por llevar todo junto. */
+  discountPct: number;
+  /** % extra por recibirlo todos los meses. */
+  monthlyPct: number;
+  featured: boolean;
+  active?: boolean;
+  /** Pack armado a medida por el quiz ("Tu programa", L4): no está en el catálogo, viaja con el carrito y la suscripción. */
+  custom?: boolean;
+}
+
 export interface Coupon {
   code: string;
   type: "PERCENT" | "FIXED" | "FREE_SHIPPING";
@@ -174,27 +210,20 @@ export interface ShippingZone {
   active?: boolean;
 }
 
-/** Imagen propia de una diapositiva (8.3.28): optimizada en el navegador, con su descripción y encuadre. */
-export interface SlideImage {
-  src: string;
-  alt: string;
-  /** Punto que queda a la vista, en % del ancho y del alto. */
-  x: number;
-  y: number;
-  /** Acercamiento, de 1 a 2. */
-  zoom: number;
-}
+/**
+ * Diapositiva del carrusel del inicio: producto en el rack, titular y bajada. La campaña vigente va primera.
+ */
+export interface HeroImageFrame { x: number; y: number; zoom: number }
+export interface HeroImage { src: string; alt: string; frame: HeroImageFrame }
 
-export interface CarouselSlide {
+export interface HeroFeature {
   id: string;
-  title: string;
-  subtitle: string;
-  ctaLabel: string;
-  ctaHref: string;
-  /** Ilustración de la demo; se usa si no hay imagen propia. */
-  art: ArtKey;
-  image?: SlideImage;
+  productSlug: string;
+  headline: string;
+  pitch: string;
   active?: boolean;
+  /** Imagen propia optimizada: data URL local que nunca sale del navegador. */
+  image?: HeroImage;
 }
 
 /** Fechas comerciales con temática fitness propia (Fase 5, docs/plan-por-fases.md). */

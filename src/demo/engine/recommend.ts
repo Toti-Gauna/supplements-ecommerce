@@ -41,11 +41,11 @@ export function recommendForCart(lines: CartLine[], n = 4): Product[] {
 }
 
 /**
- * "Recomendados" del inicio: con carrito, lo mismo que "Completá tu pedido"; vacío, lo destacado que no está en el riel
- * "Más vendidos" (sus `bestCount` primeros), para que los dos rieles no muestren los mismos productos.
+ * "Recomendados" del inicio: con carrito, lo mismo que "Completá tu pedido"; vacío, lo destacado que no está en "Más
+ * vendidos" (sus `best` primeros, o los productos de la tabla del box si se pasa la lista), para no repetir productos.
  */
-export function recommendForHome(lines: CartLine[], n = 4, bestCount = n): Product[] {
+export function recommendForHome(lines: CartLine[], n = 4, best: number | readonly string[] = n): Product[] {
   if (lines.some((l) => getProduct(l.productSlug))) return recommendForCart(lines, n);
-  const best = new Set(bestSellers(bestCount).map((p) => p.slug));
-  return rank(activeProducts().filter((p) => !best.has(p.slug) && inStock(p)), () => 0, n);
+  const skip = new Set(typeof best === "number" ? bestSellers(best).map((p) => p.slug) : best);
+  return rank(activeProducts().filter((p) => !skip.has(p.slug) && inStock(p)), () => 0, n);
 }

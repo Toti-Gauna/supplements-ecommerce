@@ -11,25 +11,32 @@ test.describe("movimiento reducido", () => {
   });
 });
 
-test("la pantalla de carga sale solo la primera vez de la sesión, dura ~1,2 s y se cierra con Escape", async ({ page }) => {
+test("la pantalla de carga sale en cada carga completa, termina su animación y se cierra con Escape", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
-  await page.goto("");
+  await page.goto("", { waitUntil: "domcontentloaded" });
   const splash = page.locator("#volta-splash");
   await expect(splash).toBeVisible();
   await expect(splash.locator(".splash-bar span")).toHaveCount(12);
   await page.keyboard.press("Escape");
   await expect(splash).toBeHidden();
-  await page.getByRole("link", { name: "Ver todas" }).click();
+  // Navegar dentro de la tienda no la vuelve a mostrar.
+  await page.getByRole("link", { name: "Ver todas" }).first().click();
   await expect(page).toHaveURL(/categorias\/$/);
-  // En la misma sesión no vuelve, ni al recargar.
-  await page.reload();
-  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   await expect(splash).toBeHidden();
-  // En una sesión nueva vuelve y se va sola en ~1,2 s.
-  await page.evaluate(() => sessionStorage.clear());
-  await page.reload();
+  // Al recargar vuelve, y se va sola recién cuando el telón terminó de subir (no a un tiempo fijo).
+  await page.addInitScript(() => {
+    const w = window as unknown as { curtainEnd?: number; splashDone?: number };
+    document.addEventListener("animationend", (e) => { if (e.animationName === "splash-curtain") w.curtainEnd ??= performance.now(); });
+    // El script corre antes de que exista <html>: se observa el documento entero.
+    new MutationObserver(() => { if (document.documentElement?.classList.contains("splash-done")) w.splashDone ??= performance.now(); })
+      .observe(document, { attributes: true, attributeFilter: ["class"], subtree: true });
+  });
+  await page.reload({ waitUntil: "domcontentloaded" });
   await expect(splash).toBeVisible();
-  await expect(splash).toBeHidden({ timeout: 2500 });
+  await expect(splash).toBeHidden({ timeout: 5000 });
+  const t = await page.evaluate(() => { const w = window as unknown as { curtainEnd?: number; splashDone?: number }; return { curtainEnd: w.curtainEnd, splashDone: w.splashDone }; });
+  expect(t.curtainEnd).toBeDefined();
+  expect(t.splashDone!).toBeGreaterThanOrEqual(t.curtainEnd!);
 });
 
 for (const width of [375, 768, 1440]) {

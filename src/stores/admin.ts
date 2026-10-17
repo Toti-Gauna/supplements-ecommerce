@@ -4,10 +4,12 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { createCatalogActions, type CatalogActions } from "@/demo/admin/catalog-slice";
 import { createCustomerActions, type CustomerActions } from "@/demo/admin/customers-slice";
-import { normalizeSlides } from "@/demo/admin/content-slides";
+import { normalizeHeroList } from "@/demo/admin/content-hero";
+import { migrateAdminData } from "@/demo/admin/migrate";
 import { createDataActions, type DataActions } from "@/demo/admin/data-slice";
 import { auditEntry, defaultAdminData, type AdminData } from "@/demo/admin/defaults";
 import { createOrdersActions, type OrdersActions } from "@/demo/admin/orders-slice";
+import { createPackActions, type PacksActions } from "@/demo/admin/packs-slice";
 import { createPurchasingActions, type PurchasingActions } from "@/demo/admin/purchasing-slice";
 import { withPrizeCatalog } from "@/demo/admin/wheel-prizes";
 import type { AdminClaim } from "@/demo/admin/types";
@@ -16,7 +18,7 @@ import { createEmailActions, type EmailActions } from "@/demo/admin/emails-slice
 import { setDemoData, type DemoData } from "@/demo/engine/source";
 import { ADMIN_STORE_VERSION, demoStorage, STORAGE_PREFIX } from "./storage";
 
-export type AdminState = AdminData & OrdersActions & DataActions & CatalogActions & WorkshopActions & PurchasingActions & EmailActions & CustomerActions & {
+export type AdminState = AdminData & OrdersActions & DataActions & CatalogActions & WorkshopActions & PurchasingActions & EmailActions & CustomerActions & PacksActions & {
   addClaim: (claim: Omit<AdminClaim, "id" | "status" | "createdAt">) => void;
   resetAdmin: () => void;
 };
@@ -36,6 +38,7 @@ export const useAdmin = create<AdminState>()(
       ...createPurchasingActions(set),
       ...createEmailActions(set, get),
       ...createCustomerActions(set, get),
+      ...createPackActions(set, get),
       addClaim: (claim) =>
         set((s) => ({
           claims: [{ ...claim, id: `c-${Date.now().toString(36)}`, status: "OPEN", createdAt: demoNow(), fromShop: true }, ...s.claims],
@@ -52,12 +55,11 @@ export const useAdmin = create<AdminState>()(
       // v10: panel de las Fases 6 y 7 (fichas sin mascotas, con objetivo y avisos de recompra; lotes y vencimientos por
       // variante, último aumento de precios, objetivos editables; emails de suplementos y premios del juego editables;
       // preparación con control de lote, cupo del cadete, costos sin horas de taller, proveedores y compras).
-      // Al cambiar de versión la demo vuelve a los datos de muestra.
+      // v13: imágenes del carrusel. Las versiones de suplementos conservan datos y ediciones del dueño.
       version: ADMIN_STORE_VERSION,
       storage: demoStorage,
       skipHydration: true,
-      // Versiones viejas de la demo: se descartan y vuelven a los fixtures.
-      migrate: () => defaultAdminData(),
+      migrate: migrateAdminData,
       // Campos nuevos de `data` toman el valor por defecto si el estado guardado no los tiene.
       merge: (persisted, current) => {
         const p = (persisted ?? {}) as Partial<AdminData>;
@@ -67,8 +69,10 @@ export const useAdmin = create<AdminState>()(
         const data = { ...current.data, ...(p.data ?? {}) };
         // La ruleta guardada antes de 8.3.25 no tenía catálogo de premios: se completa con sus gajos, sin cambiar IDs.
         data.wheel = withPrizeCatalog(data.wheel);
-        // Diapositivas (8.3.28): una imagen propia rota se descarta y queda la ilustración; una lista rota vuelve a la de muestra.
-        data.content = { ...current.data.content, ...data.content, slides: Array.isArray(data.content?.slides) ? normalizeSlides(data.content.slides) : current.data.content.slides };
+        // El carrusel vive en content.hero. Una imagen rota vuelve al envase sin perder los textos del dueño.
+        const content = { ...current.data.content, ...data.content } as DemoData["content"] & { slides?: unknown };
+        delete content.slides;
+        data.content = { ...content, hero: normalizeHeroList(content.hero) ?? current.data.content.hero };
         return { ...current, ...p, data, workshop, emails: { ...current.emails, ...(p.emails ?? {}) } };
       },
       partialize: (s) => ({ data: s.data, orders: s.orders, users: s.users, claims: s.claims, audit: s.audit, lastImport: s.lastImport, lastPriceChange: s.lastPriceChange, workshop: s.workshop, emails: s.emails }),

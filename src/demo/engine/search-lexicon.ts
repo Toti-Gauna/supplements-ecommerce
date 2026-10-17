@@ -67,6 +67,17 @@ export const SYNONYMS: Synonym[] = [
   { term: "mantequilla", phrases: ["mantequilla", "pasta de mani", "peanut butter"], alts: [] },
   { term: "tiza", phrases: ["tiza", "chalk", "magnesio para agarre"], alts: ["agarre"] },
   { term: "shaker", phrases: ["shaker", "vaso mezclador", "coctelera", "mezclador"], alts: ["vaso"] },
+  // Equipamiento (L2: tienda deportiva multimarca).
+  { term: "straps", phrases: ["straps", "strap", "correas", "correa de agarre", "cintas de agarre", "lifting straps"], alts: ["agarre"] },
+  { term: "cinturon", phrases: ["cinturon", "faja", "cinto", "belt", "cinturon de levantamiento"], alts: ["faja"] },
+  { term: "rodilleras", phrases: ["rodillera", "rodilleras", "knee sleeves", "rodilla"], alts: ["neoprene"] },
+  { term: "munequeras", phrases: ["munequera", "munequeras", "wrist wraps", "muneca"], alts: [] },
+  { term: "guantes", phrases: ["guante", "guantes", "guantes de boxeo", "gloves", "guantines"], alts: ["boxeo"] },
+  { term: "vendas", phrases: ["venda", "vendas", "vendas de boxeo", "hand wraps", "vendaje"], alts: ["boxeo"] },
+  { term: "soga", phrases: ["soga", "cuerda", "jump rope", "soga de saltar", "comba"], alts: ["saltar"] },
+  { term: "bandas", phrases: ["banda", "bandas", "elastico", "elasticos", "ligas", "theraband", "mini bands"], alts: ["elasticas"] },
+  { term: "botella", phrases: ["botella", "botellita", "bidon", "caramanola", "termo de agua"], alts: ["agua"] },
+  { term: "bolso", phrases: ["bolso", "mochila", "bolsa de gym", "gym bag", "duffle"], alts: ["mochila"] },
 ];
 
 /** Otras formas de escribir un sabor del catálogo (el sabor se escribe como en la variante, normalizado). */

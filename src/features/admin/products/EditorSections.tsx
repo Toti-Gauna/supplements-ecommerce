@@ -14,6 +14,7 @@ import { ProductMediaFields } from "../ProductMediaFields";
 import { VariantsEditor } from "../VariantsEditor";
 import { Chips } from "./Chips";
 import { LabelFields } from "./LabelFields";
+import { OptionNamesField } from "./OptionNamesField";
 
 interface StepProps { id: StepId; check: StepCheck; tried: boolean; children: ReactNode }
 
@@ -69,7 +70,12 @@ export function EditorSections({ d, set, checks, tried, categories, products, on
           </div>
         </>
       ))}
-      {step("variantes", <VariantsEditor product={d} onChange={set} />)}
+      {step("variantes", (
+        <>
+          <div className="max-w-md"><OptionNamesField value={d.optionNames} onChange={(optionNames) => set({ optionNames })} /></div>
+          <VariantsEditor product={d} onChange={set} gear={categories.find((c) => c.slug === d.categorySlug)?.kind === "gear"} />
+        </>
+      ))}
       {step("rotulo", <LabelFields d={d} set={set} />)}
       {step("suplemento", (
         <>

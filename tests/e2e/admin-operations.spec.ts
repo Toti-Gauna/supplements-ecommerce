@@ -59,7 +59,7 @@ test.describe("proveedores y compras", () => {
     await sur.getByRole("button", { name: /Copiar pedido para WhatsApp/ }).click();
     await expect(toast(page, "Pedido copiado")).toBeVisible();
     const text = await page.evaluate(() => navigator.clipboard.readText());
-    expect(text).toContain("Hola Germán, ¿cómo va? Te paso el pedido de Volta Suplementos:");
+    expect(text).toContain("Hola Germán, ¿cómo va? Te paso el pedido de Volta Suplementos y deporte:");
     expect(text).toContain("• 10 × Mass Gainer 3 kg · Banana");
     expect(text).toContain("¿Lo podemos recibir el 7/10?");
     await sur.getByRole("button", { name: /Marcar como pedido/ }).click();

@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { CalendarClock } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/atoms/Button";
 import { useDemoData } from "@/stores/admin";
@@ -19,7 +20,9 @@ export function ConfirmStep({ onBack, onConfirm, onEdit }: { onBack: () => void;
     onConfirm();
   };
   const zone = useDemoData((d) => d.zones.find((z) => z.type === fulfillment));
-  const promise = useOrderPromise(useCart((s) => s.lines));
+  const lines = useCart((s) => s.lines);
+  const promise = useOrderPromise(lines);
+  const monthly = lines.some((l) => l.monthlyDay !== undefined);
   const rows = [
     { step: 0, label: "Datos", value: `${contact.name} · ${contact.email} · ${contact.phone}` },
     { step: 1, label: "Entrega", value: `${zone?.name ?? "—"}${fulfillment ? ` · ${promise(fulfillment).text}` : ""}${fulfillment !== "PICKUP" ? ` · ${address.street} ${address.number}, ${address.city} (${address.postalCode})` : ""}` },
@@ -35,13 +38,19 @@ export function ConfirmStep({ onBack, onConfirm, onEdit }: { onBack: () => void;
           </div>
         ))}
       </dl>
+      {monthly && (
+        <p role="note" className="edge-volt flex items-start gap-3 p-4 text-sm font-semibold">
+          <CalendarClock size={18} aria-hidden="true" className="mt-0.5 shrink-0 text-volt-ink" />
+          <span>Se crea una suscripción simulada: la vas a ver en Mi cuenta. No se cobra ni se debita nada.</span>
+        </p>
+      )}
       <CheckoutGift onPayNow={payNow} />
       <label className="flex cursor-pointer items-start gap-3 rounded-sm border border-line bg-surface p-4 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary/50">
         <input id="terms" type="checkbox" checked={acceptedTerms} onChange={(e) => { patch({ acceptedTerms: e.target.checked }); setError(false); }} className="mt-1 h-5 w-5 accent-[var(--color-primary)]" aria-describedby={error ? "terms-error" : undefined} />
         <span className="text-sm">
           Acepto los <Link href="/terminos/" target="_blank" className="font-bold text-primary underline">términos y condiciones</Link> y la{" "}
           <Link href="/privacidad/" target="_blank" className="font-bold text-primary underline">política de privacidad</Link> (textos de muestra).
-          Entiendo que los suplementos abiertos o sin precinto no tienen cambio por razones de higiene.
+          Entiendo que los suplementos abiertos o sin precinto y el equipamiento usado o sin etiqueta no tienen cambio por razones de higiene.
         </span>
       </label>
       {error && <p id="terms-error" role="alert" className="-mt-3 text-sm font-semibold text-danger">Para continuar, aceptá los términos.</p>}

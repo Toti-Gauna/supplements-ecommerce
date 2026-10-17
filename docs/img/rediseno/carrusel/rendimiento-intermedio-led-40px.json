@@ -1,0 +1,132 @@
+{
+  "measuredAt": "2026-10-13T18:36:59.055Z",
+  "browser": "154.0.8037.57",
+  "baselineCommit": "ae0b07c",
+  "viewport": "390×844",
+  "cpu": 4,
+  "cache": "disabled in every context",
+  "network": "local static exports; no network throttle",
+  "splash": "already seen",
+  "method": "7 alternating pairs after one warmup visit per version; fresh context per visit; 2500ms after load",
+  "urls": {
+    "antes": "http://localhost:4174/supplements-ecommerce/",
+    "despues": "http://localhost:4173/supplements-ecommerce/"
+  },
+  "warmup": {
+    "antes": {
+      "lcp": 1760,
+      "cls": 0.004398769573736162,
+      "fcp": 648
+    },
+    "despues": {
+      "lcp": 1744,
+      "cls": 0.004398769573736162,
+      "fcp": 592
+    }
+  },
+  "samples": [
+    {
+      "iteration": 1,
+      "antes": {
+        "lcp": 5948,
+        "cls": 0.008355607466139576,
+        "fcp": 2004
+      },
+      "despues": {
+        "lcp": 2124,
+        "cls": 0.004398769573736162,
+        "fcp": 1184
+      }
+    },
+    {
+      "iteration": 2,
+      "despues": {
+        "lcp": 1872,
+        "cls": 0.004398769573736162,
+        "fcp": 700
+      },
+      "antes": {
+        "lcp": 2064,
+        "cls": 0.004398769573736162,
+        "fcp": 728
+      }
+    },
+    {
+      "iteration": 3,
+      "antes": {
+        "lcp": 2008,
+        "cls": 0.004398769573736162,
+        "fcp": 676
+      },
+      "despues": {
+        "lcp": 2124,
+        "cls": 0.004398769573736162,
+        "fcp": 656
+      }
+    },
+    {
+      "iteration": 4,
+      "despues": {
+        "lcp": 1888,
+        "cls": 0.004398769573736162,
+        "fcp": 520
+      },
+      "antes": {
+        "lcp": 1868,
+        "cls": 0.004398769573736162,
+        "fcp": 580
+      }
+    },
+    {
+      "iteration": 5,
+      "antes": {
+        "lcp": 1896,
+        "cls": 0.004398769573736162,
+        "fcp": 616
+      },
+      "despues": {
+        "lcp": 1904,
+        "cls": 0.004398769573736162,
+        "fcp": 780
+      }
+    },
+    {
+      "iteration": 6,
+      "despues": {
+        "lcp": 2020,
+        "cls": 0.004398769573736162,
+        "fcp": 600
+      },
+      "antes": {
+        "lcp": 1892,
+        "cls": 0.004398769573736162,
+        "fcp": 740
+      }
+    },
+    {
+      "iteration": 7,
+      "antes": {
+        "lcp": 1980,
+        "cls": 0.004398769573736162,
+        "fcp": 596
+      },
+      "despues": {
+        "lcp": 1892,
+        "cls": 0.004398769573736162,
+        "fcp": 688
+      }
+    }
+  ],
+  "median": {
+    "antes": {
+      "lcp": 1980,
+      "fcp": 676,
+      "cls": 0.004398769573736162
+    },
+    "despues": {
+      "lcp": 1904,
+      "fcp": 688,
+      "cls": 0.004398769573736162
+    }
+  }
+}

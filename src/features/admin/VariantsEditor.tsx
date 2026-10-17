@@ -10,12 +10,15 @@ import { LotsEditor } from "./lots/LotsEditor";
 import { NumberField } from "./NumberField";
 
 /**
- * Presentaciones (R2): sabor/tamaño, **precio final propio**, servicios con el precio por servicio calculado, costo,
- * stock y lotes. El precio se guarda como base + diferencia (variant-prices.ts) sin que el dueño lo vea. Stock -1 = a
- * pedido; con lotes, el stock es su suma.
+ * Presentaciones (R2): sabor/tamaño (o color/talle en equipamiento, L2), **precio final propio**, servicios con el
+ * precio por servicio calculado, costo, stock y lotes. El precio se guarda como base + diferencia (variant-prices.ts)
+ * sin que el dueño lo vea. Stock -1 = a pedido; con lotes, el stock es su suma. El equipamiento no vence ni rinde
+ * servicios: sin lotes ni servicios.
  */
-export function VariantsEditor({ product: p, onChange }: { product: Product; onChange: (patch: Partial<Product>) => void }) {
+export function VariantsEditor({ product: p, onChange, gear = false }: { product: Product; onChange: (patch: Partial<Product>) => void; gear?: boolean }) {
   const { variants } = p;
+  const colorLabel = p.optionNames?.color ?? (gear ? "Color" : "Sabor");
+  const sizeLabel = p.optionNames?.size ?? (gear ? "Talle o medida" : "Tamaño");
   const setVariants = (next: Variant[]) => onChange({ variants: next });
   const patch = (i: number, x: Partial<Variant>) => setVariants(variants.map((v, k) => (k === i ? { ...v, ...x } : v)));
   // Volver de "a pedido" con lotes cargados: el stock vuelve a ser la suma de los lotes.
@@ -39,16 +42,18 @@ export function VariantsEditor({ product: p, onChange }: { product: Product; onC
             <fieldset className="grid gap-3 border-t border-line p-3 sm:grid-cols-2 lg:grid-cols-3">
               <legend className="sr-only">{name}</legend>
               <label className="flex flex-col gap-1 text-sm font-bold">Nombre visible<Input value={v.label} onChange={(e) => patch(i, { label: e.target.value })} /></label>
-              <label className="flex flex-col gap-1 text-sm font-bold">Sabor o color<Input value={v.color ?? ""} onChange={(e) => patch(i, { color: e.target.value || undefined })} placeholder="Chocolate" /></label>
+              <label className="flex flex-col gap-1 text-sm font-bold">{colorLabel}<Input value={v.color ?? ""} onChange={(e) => patch(i, { color: e.target.value || undefined })} placeholder={gear ? "Negro" : "Chocolate"} /></label>
               <label className="flex flex-col gap-1 text-sm font-bold">Muestra de color
                 <input type="color" value={v.colorHex ?? "#8b72ff"} onChange={(e) => patch(i, { colorHex: e.target.value })} className="h-11 w-full rounded-sm border border-line bg-surface" />
               </label>
-              <label className="flex flex-col gap-1 text-sm font-bold">Tamaño<Input value={v.size ?? ""} onChange={(e) => patch(i, { size: e.target.value || undefined })} placeholder="2 lb (907 g)" /></label>
+              <label className="flex flex-col gap-1 text-sm font-bold">{sizeLabel}<Input value={v.size ?? ""} onChange={(e) => patch(i, { size: e.target.value || undefined })} placeholder={gear ? "M" : "2 lb (907 g)"} /></label>
               <NumberField id={`${id}-price`} label="Precio final" suffix="ARS" value={price} onChange={(n) => setPrice(i, n)} hint="El precio de lista de esta presentación, como se ve en la tienda" />
-              <div className="flex flex-col gap-1">
-                <NumberField id={`${id}-serv`} label="Servicios" suffix="por envase" value={v.servings} onChange={(n) => patch(i, { servings: n || undefined })} />
-                <p className="font-lab text-xs font-bold" aria-live="polite">{pps ? `${formatARS(pps)} por servicio` : "Sin servicios: no muestra precio por servicio"}</p>
-              </div>
+              {!gear && (
+                <div className="flex flex-col gap-1">
+                  <NumberField id={`${id}-serv`} label="Servicios" suffix="por envase" value={v.servings} onChange={(n) => patch(i, { servings: n || undefined })} />
+                  <p className="font-lab text-xs font-bold" aria-live="polite">{pps ? `${formatARS(pps)} por servicio` : "Sin servicios: no muestra precio por servicio"}</p>
+                </div>
+              )}
               <NumberField id={`${id}-cost`} label="Costo del proveedor" suffix="ARS" value={v.cost} onChange={(n) => patch(i, { cost: n || undefined })} hint="Lo actualiza la lista de precios del proveedor (Importar Excel)" />
               <NumberField id={`${id}-lead`} label="Plazo propio" suffix="días hábiles" value={v.leadDays} onChange={(n) => patch(i, { leadDays: n || undefined })} hint="Vacío o 0 = el del producto (o 1 día si está en stock)" />
               <div className="flex flex-col gap-2">
@@ -60,7 +65,7 @@ export function VariantsEditor({ product: p, onChange }: { product: Product; onC
                   ? <p className="text-sm"><strong className="tabular-nums">{v.stock}</strong> unidades <span className="text-muted">(suma de los lotes)</span></p>
                   : <NumberField id={`${id}-stock`} label="Stock" suffix="unidades" value={v.stock} onChange={(n) => patch(i, { stock: n })} hint="0 = sin stock: la tienda no deja agregarla" />)}
               </div>
-              <div className="sm:col-span-full"><LotsEditor lots={v.lots ?? []} idPrefix={id} name={name} onChange={(lots) => setVariants(variants.map((x, k) => (k === i ? setVariantLots(x, lots) : x)))} /></div>
+              {!gear && <div className="sm:col-span-full"><LotsEditor lots={v.lots ?? []} idPrefix={id} name={name} onChange={(lots) => setVariants(variants.map((x, k) => (k === i ? setVariantLots(x, lots) : x)))} /></div>}
               {variants.length > 1 && (
                 <Button variant="danger" size="sm" className="self-end sm:col-span-full sm:justify-self-end" onClick={() => setVariants(variants.filter((_, k) => k !== i))}>
                   <Trash2 size={16} aria-hidden="true" /> Quitar presentación

@@ -5,8 +5,8 @@ export const FIXED_NOW = new Date("2026-10-17T15:42:10-03:00");
 
 /** Las 17 fechas en orden de calendario (de octubre a septiembre), como las recorre la vitrina. */
 export const CALENDAR = [
-  "dia-de-la-madre", "halloween", "cyber-monday", "black-friday", "navidad", "ano-nuevo", "san-valentin", "vuelta-al-gym",
-  "crossfit-open", "dia-actividad-fisica", "hot-sale", "dia-del-futbolista", "dia-del-running", "dia-del-padre",
+  "dia-de-la-madre", "halloween", "cyber-monday", "black-friday", "navidad", "ano-nuevo", "san-valentin", "crossfit-open",
+  "vuelta-al-gym", "dia-actividad-fisica", "hot-sale", "dia-del-running", "dia-del-padre", "dia-del-futbolista",
   "dia-del-amigo", "dia-del-boxeador", "operacion-verano",
 ] as const;
 

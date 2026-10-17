@@ -86,7 +86,9 @@ describe("ventana de campaña (R3a)", () => {
     expect(order).toHaveLength(17);
     expect(order[0]).toBe("dia-de-la-madre");
     expect(order.at(-1)).toBe("operacion-verano");
-    expect(order.indexOf("crossfit-open")).toBeGreaterThan(order.indexOf("vuelta-al-gym"));
+    // El Open (18/2) arranca después de San Valentín y antes de Vuelta al gym (marzo).
+    expect(order.indexOf("crossfit-open")).toBeGreaterThan(order.indexOf("san-valentin"));
+    expect(order.indexOf("crossfit-open")).toBeLessThan(order.indexOf("vuelta-al-gym"));
   });
 });
 

@@ -91,7 +91,8 @@ test("por defecto sale la original; en modo automático la tienda sale sola con 
   for (const [day, id, heading] of [
     ["2026-10-12", "dia-de-la-madre", "Para la que nunca para"],
     ["2026-11-03", "cyber-monday", "Overclock de precios"],
-    ["2027-02-20", "vuelta-al-gym", "Volvió la rutina"],
+    ["2027-03-12", "vuelta-al-gym", "Volvió la rutina"],
+    ["2027-06-22", "dia-del-futbolista", "Los 90 minutos se entrenan"],
   ] as const) {
     await page.clock.setFixedTime(new Date(`${day}T12:00:00-03:00`));
     await page.goto("");

@@ -6,7 +6,7 @@ import { Led } from "@/components/atoms/Led";
 import { AthleteSilhouette } from "@/components/illustrations/AthleteSilhouette";
 import { SportArt } from "@/components/illustrations/SportArt";
 import { Sheet } from "@/components/motion/Sheet";
-import { sportById } from "@/demo/fixtures/sports";
+import { sportInfo } from "@/demo/engine/sports";
 import type { SportId } from "@/demo/types";
 import { cn } from "@/lib/cn";
 import { useGoal } from "../catalog/useGoals";
@@ -44,10 +44,10 @@ export function QuizInviteDialog({ open, onAccept, onDecline }: Props) {
       <div data-quiz-invite className="relative isolate flex h-48 items-end justify-center gap-1 overflow-hidden bg-night px-6 text-on-night sm:h-52">
         <span aria-hidden="true" className="absolute inset-0 -z-10 bg-[radial-gradient(60%_80%_at_50%_110%,color-mix(in_srgb,var(--brand-volt)_22%,transparent),transparent_70%),radial-gradient(40%_60%_at_0%_0%,color-mix(in_srgb,var(--brand-glow)_25%,transparent),transparent_70%)]" />
         <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-px bg-volt/40" />
-        <Figure hue={sportById(CAST[0])?.hue}><SportArt sport={CAST[0]} className={ART} /></Figure>
+        <Figure hue={sportInfo(CAST[0])?.hue}><SportArt sport={CAST[0]} className={ART} /></Figure>
         <Figure hue={gym?.hue}><AthleteSilhouette goal="fuerza" className="h-32 w-[4.8rem] sm:h-36 sm:w-[5.4rem]" /></Figure>
-        <Figure hue={sportById(CAST[1])?.hue}><SportArt sport={CAST[1]} className={ART} /></Figure>
-        <Figure hue={sportById(CAST[2])?.hue} className="max-[359px]:hidden"><SportArt sport={CAST[2]} className={ART} /></Figure>
+        <Figure hue={sportInfo(CAST[1])?.hue}><SportArt sport={CAST[1]} className={ART} /></Figure>
+        <Figure hue={sportInfo(CAST[2])?.hue} className="max-[359px]:hidden"><SportArt sport={CAST[2]} className={ART} /></Figure>
         <span aria-hidden="true" className="absolute left-4 top-4 flex items-center gap-2 sm:left-5 sm:top-5">
           <Led value="05" label="5 preguntas" motion="none" className="h-6 w-auto" />
           <span className="eyebrow text-[10px] text-night-muted">preguntas · 1 min</span>

@@ -40,7 +40,7 @@ export function GoalsEditor() {
   return (
     <section aria-labelledby="objetivos" className="mt-10">
       <h2 id="objetivos" className="text-lg font-extrabold">Objetivos</h2>
-      <p className="mb-3 max-w-2xl text-sm text-muted">Los paneles de “Entrená por objetivo”, el filtro por objetivo, el quiz y Armá tu stack usan estos nombres, bajadas y colores. Qué productos van en cada objetivo se elige en la ficha del producto; acá, cuál representa al objetivo en el inicio.</p>
+      <p className="mb-3 max-w-2xl text-sm text-muted">Los paneles de “Entrená por objetivo”, el filtro por objetivo, el quiz y Armá tu stack usan estos nombres, bajadas y colores. Qué productos van en cada objetivo se elige en la ficha del producto; acá, cuál se destaca: va en el stack del objetivo en el inicio, con un link a su ficha.</p>
       {errors.length > 0 && (
         <div role="alert" className="mb-3 flex gap-2 rounded-sm bg-danger-soft p-3 text-sm font-semibold text-danger">
           <AlertCircle size={18} aria-hidden="true" className="mt-0.5 shrink-0" /><ul>{errors.map((e) => <li key={e}>{e}</li>)}</ul>
@@ -64,7 +64,7 @@ export function GoalsEditor() {
                 </label>
               </div>
               <CountedField label="Bajada" value={g.pitch} max={70} onChange={(pitch) => set(g.id, { pitch })} />
-              <label className="flex flex-col gap-1 text-sm font-bold">Producto en el inicio
+              <label className="flex flex-col gap-1 text-sm font-bold">Producto destacado
                 <Select value={goalProduct(g.id, g.productSlug)?.slug ?? ""} onChange={(e) => set(g.id, { productSlug: e.target.value })}>
                   {products.filter((p) => p.active !== false && p.goals?.includes(g.id)).map((p) => <option key={p.slug} value={p.slug}>{p.name}</option>)}
                 </Select>

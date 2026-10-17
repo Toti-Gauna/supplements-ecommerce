@@ -2,7 +2,7 @@
 import { useId, type CSSProperties, type ReactNode } from "react";
 import { Dumbbell } from "lucide-react";
 import { SportArt } from "@/components/illustrations/SportArt";
-import { sports } from "@/demo/fixtures/sports";
+import { useSports } from "../catalog/useSports";
 import type { SportId } from "@/demo/types";
 import { cn } from "@/lib/cn";
 
@@ -26,6 +26,7 @@ const ICON = "grid h-9 w-9 place-items-center overflow-hidden rounded-sm bg-nigh
  * Elegir uno suma sus objetivos detrás de los tuyos y su equipamiento sugerido.
  */
 export function SportChips({ value, onChange, legend = "Tu deporte (opcional)", note, className }: SportChipsProps) {
+  const sports = useSports();
   const name = useId();
   return (
     <fieldset className={cn("min-w-0", className)}>

@@ -4,6 +4,7 @@ import { storeFaqs } from "../fixtures/content";
 import { goals, type GoalInfo } from "../fixtures/goals";
 import { gamePrizes, type GamePrizeConfig } from "../fixtures/game";
 import { packs } from "../fixtures/packs";
+import { sports, type SportInfo } from "../fixtures/sports";
 import { products } from "../fixtures/products";
 import { seasonalThemes, themeCoupons, themeSettings } from "../fixtures/themes";
 import { defaultWheel, type WheelConfig } from "../fixtures/wheel";
@@ -30,6 +31,8 @@ export interface DemoData {
   goals: GoalInfo[];
   /** Packs mensuales (L3; Packs en el panel). */
   packs: Pack[];
+  /** Deportes (L4): nombre, bajada, color y pack sugerido se editan en el panel → Categorías. */
+  sports: SportInfo[];
 }
 
 export function defaultDemoData(): DemoData {
@@ -47,6 +50,7 @@ export function defaultDemoData(): DemoData {
     themeSettings,
     goals,
     packs: packs.map((p) => ({ ...p, active: true })),
+    sports,
   });
 }
 

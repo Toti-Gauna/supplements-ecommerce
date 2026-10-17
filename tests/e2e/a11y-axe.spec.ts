@@ -32,6 +32,7 @@ const PAGES: [string, string, string][] = [
   ["panel packs", "admin-demo/packs/", "h1"],
   ["panel editor de pack", "admin-demo/packs/editar/?id=hipertrofia", "h1"],
   ["panel suscripciones", "admin-demo/packs/?ver=suscripciones", "h1"],
+  ["panel categorías, objetivos y deportes", "admin-demo/categorias/", "h1"],
 ];
 
 interface Violation { id: string; impact: string | null; help: string; nodes: { target: string[]; failureSummary?: string }[] }

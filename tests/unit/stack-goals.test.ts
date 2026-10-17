@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { isGear } from "@/demo/engine/catalog";
 import { defaultStack } from "@/demo/engine/stack-builder";
+import { quizGoals } from "@/demo/engine/quiz";
 import { builderHref, chooseSport, EMPTY_SELECTION, selectionFromUrl, sportCards, sportGear, stackHeadline, toggleGoal } from "@/demo/engine/stack-goals";
 import { products } from "@/demo/fixtures/products";
 import { sports } from "@/demo/fixtures/sports";
@@ -33,9 +34,18 @@ describe("objetivos del armador", () => {
     expect(chooseSport(boxeo, null).goals).toEqual(["fuerza"]);
   });
 
-  it("con 3 objetivos el deporte no desplaza a ninguno", () => {
-    const three = { goals: ["fuerza", "salud", "definicion"] as const, added: [], sport: null };
-    expect(chooseSport({ ...three, goals: [...three.goals] }, "futbol").goals).toEqual(["fuerza", "salud", "definicion"]);
+  it("el tope es de los elegidos: con 3 objetivos el deporte igual suma los suyos (como en el quiz)", () => {
+    let sel = EMPTY_SELECTION;
+    for (const g of ["fuerza", "salud", "definicion"] as const) sel = toggleGoal(sel, g).selection;
+    const futbol = chooseSport(sel, "futbol");
+    expect(futbol.goals).toEqual(["fuerza", "salud", "definicion", "resistencia", "recuperacion"]);
+    expect(futbol.goals).toEqual(quizGoals({ goals: ["fuerza", "salud", "definicion"], sport: "futbol" }));
+    expect(toggleGoal(futbol, "energia").capped).toBe(true);
+    // Con un deporte que sumó dos, todavía se pueden elegir tres propios.
+    let one = chooseSport(toggleGoal(EMPTY_SELECTION, "fuerza").selection, "futbol");
+    one = toggleGoal(one, "salud").selection;
+    expect(one.goals).toEqual(["fuerza", "salud", "resistencia", "recuperacion"]);
+    expect(toggleGoal(one, "energia").selection.goals).toEqual(["fuerza", "salud", "energia", "resistencia", "recuperacion"]);
   });
 
   it("lee la URL: el link del inicio por deporte y un link viejo con un solo objetivo", () => {

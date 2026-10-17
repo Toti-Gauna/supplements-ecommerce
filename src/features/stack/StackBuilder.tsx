@@ -1,7 +1,7 @@
 "use client";
 import { Suspense, useState, type ReactNode } from "react";
 import { slotOptions } from "@/demo/engine/stack-builder";
-import { sportById } from "@/demo/fixtures/sports";
+import { sportInfo } from "@/demo/engine/sports";
 import { STACK_SLOTS, type StackSlotId } from "@/demo/fixtures/stack-builder";
 import { SlotCard } from "./SlotCard";
 import { SlotPickerSheet } from "./SlotPickerSheet";
@@ -27,7 +27,7 @@ export function StackBuilder({ intro }: { intro: ReactNode }) {
   const closeSheet = () => setSheet((s) => ({ ...s, open: false }));
   const pick = (slug: string) => { b.pickProduct(sheet.slot, slug); closeSheet(); };
   const discountPct = b.summary.stack.discount > 0 ? b.summary.stack.pct : 0;
-  const sport = b.sport ? sportById(b.sport) : undefined;
+  const sport = b.sport ? sportInfo(b.sport) : undefined;
   return (
     <div data-stack-ready={b.ready || undefined} className="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,25rem)] lg:grid-rows-[auto_auto_1fr] lg:gap-x-10 xl:grid-cols-[minmax(0,1fr)_minmax(0,27rem)] xl:gap-x-14">
       <Suspense fallback={null}><StackUrlLoader onLoad={b.load} /></Suspense>

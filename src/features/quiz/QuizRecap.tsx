@@ -3,7 +3,7 @@ import type { CSSProperties, ReactNode } from "react";
 import { AthleteSilhouette } from "@/components/illustrations/AthleteSilhouette";
 import { GoalGlyph } from "@/components/illustrations/GoalGlyph";
 import { SportArt } from "@/components/illustrations/SportArt";
-import { sportById } from "@/demo/fixtures/sports";
+import { sportInfo } from "@/demo/engine/sports";
 import type { QuizAnswers } from "@/demo/fixtures/stack-builder";
 import { cn } from "@/lib/cn";
 import { useGoals } from "../catalog/useGoals";
@@ -30,7 +30,7 @@ function AnswerValue({ id, answers }: { id: QuizStepId; answers: QuizAnswers }) 
   }
   let art: ReactNode = null;
   if (id === "sport") {
-    const sport = answers.sport ? sportById(answers.sport) : undefined;
+    const sport = answers.sport ? sportInfo(answers.sport) : undefined;
     art = (
       <span aria-hidden="true" style={hued(sport?.hue)} className="text-[color:var(--hue)]">
         {sport ? <SportArt sport={sport.id} className="h-6 w-5" /> : <AthleteSilhouette goal="fuerza" className="h-6 w-4" />}

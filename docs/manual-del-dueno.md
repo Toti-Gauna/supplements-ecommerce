@@ -215,8 +215,13 @@ En la tienda ese sabor sale con el precio tachado y "Liquidación · vence 11/20
 ### Categorías y objetivos
 
 En **Categorías y objetivos** ordenás las categorías (**Subir**/**Bajar**), elegís las destacadas y editás los
-**objetivos** (Masa muscular, Fuerza, Energía…): nombre, color y bajada. Tocá **Guardar objetivos**. La tienda, el
-quiz y Armá tu stack usan esos nombres.
+**objetivos** (Masa muscular, Fuerza, Energía…): nombre, color, bajada y el **Producto destacado**, que va en el stack
+de ese objetivo en el inicio, con un link a su ficha. Tocá **Guardar objetivos**. La tienda, el quiz y Armá tu stack usan
+esos nombres.
+
+Más abajo están los **Deportes** (Fútbol, Tenis, Pádel, Running…): nombre, color, bajada y el **Pack sugerido**, que
+aparece como "Ver Pack X" en la tarjeta del deporte del inicio. Qué objetivos suma cada deporte (por ejemplo, Fútbol
+suma resistencia y recuperación) y su equipamiento vienen armados. Tocá **Guardar deportes**.
 
 ---
 

@@ -12,6 +12,7 @@ import { useCart } from "@/stores/cart";
 import { useUi } from "@/stores/ui";
 import { BagLoad } from "./BagLoad";
 import { CadeteCountdown } from "./CadeteCountdown";
+import { GiftCardLines } from "./GiftCardLines";
 import { QuotedGroups } from "./QuotedGroups";
 import { CartMissionNudge } from "./CartMissionNudge";
 import { MiniRecommendations } from "./MiniRecommendations";
@@ -29,6 +30,8 @@ export function CartDrawer() {
   const { quote } = useCartQuote();
   const goToCheckout = useGoToCheckout();
   const lines = useCart((s) => s.lines);
+  const cards = useCart((s) => s.giftCards ?? []);
+  const filled = lines.length + cards.length > 0;
   const { setQuantity, remove } = useCart();
   const added = lastAdded ? getProduct(lastAdded) : undefined;
   return (
@@ -45,7 +48,7 @@ export function CartDrawer() {
         </AnimatePresence>
       </div>
       <div className="flex flex-1 flex-col gap-4 overflow-y-auto px-5 sm:px-6">
-        {lines.length === 0 ? (
+        {!filled ? (
           <p className="rounded-sm border border-dashed border-line p-6 text-center text-muted">Tu bolso está vacío.</p>
         ) : (
           <>
@@ -55,6 +58,7 @@ export function CartDrawer() {
                 const view = toLineView(q);
                 return view && <CartLineItem key={view.id} line={view} size="compact" inPack={inPack} onNavigate={closeCart} onQuantity={(n) => setQuantity(view.id, n)} onRemove={() => remove(view.id)} />;
               }} />
+              <GiftCardLines compact />
             </ul>
             <CartMissionNudge units={quote.units} total={quote.total} compact />
             <WheelOffer when="cart" />
@@ -62,12 +66,12 @@ export function CartDrawer() {
         )}
         <div className="mb-6"><MiniRecommendations title={lines.length ? "Completá tu pedido" : "Lo más elegido"} products={recommendForCart(lines, 5)} onNavigate={closeCart} /></div>
       </div>
-      {lines.length > 0 && (
+      {filled && (
         <div className="border-t border-line bg-surface px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 sm:px-6">
           <CadeteCountdown lines={lines} className="mb-2" />
           {packDiscountRows(quote.pack.entries).map((r) => <p key={r.label} className="flex justify-between text-sm font-semibold text-success"><span>{r.label}</span><span className="font-mono tabular-nums">−{formatARS(r.amount)}</span></p>)}
           {quote.stack.discount > 0 && <p className="flex justify-between text-sm font-semibold text-success"><span>Descuento stack ({quote.stack.pct} %)</span><span className="font-mono tabular-nums">−{formatARS(quote.stack.discount)}</span></p>}
-          <div className="mb-3 flex items-end justify-between"><span className="eyebrow text-muted">Subtotal</span><span className="font-display text-3xl tabular-nums">{formatARS(quote.subtotal - quote.stack.discount - quote.pack.discount)}</span></div>
+          <div className="mb-3 flex items-end justify-between"><span className="eyebrow text-muted">Subtotal</span><span className="font-display text-3xl tabular-nums">{formatARS(quote.subtotal - quote.stack.discount - quote.pack.discount + quote.giftCardSales)}</span></div>
           <div className="grid gap-1">
             <Button onClick={goToCheckout} size="lg" className="w-full">Ir al checkout</Button>
             <ButtonLink href="/carrito/" onClick={closeCart} variant="ghost" className="w-full">Ver carrito completo</ButtonLink>

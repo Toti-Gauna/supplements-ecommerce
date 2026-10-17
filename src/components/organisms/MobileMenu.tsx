@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { ArrowUpRight, Gift, Heart, PackageOpen, TicketPercent, UserRound } from "lucide-react";
+import { ArrowUpRight, Gift, Heart, PackageOpen, TicketPercent, UserRound, Zap } from "lucide-react";
 import { IconBarbell, IconKettlebell, IconShaker } from "@/components/illustrations/GymIcons";
 import { Logo } from "@/components/atoms/Logo";
 import { Sheet } from "@/components/motion/Sheet";
@@ -21,6 +21,7 @@ const LINKS = [
   { href: "/club/juego/", label: "Shaker Rush", icon: IconShaker },
   { href: "/favoritos/", label: "Mi rack", icon: Heart },
   { href: "/cupones/", label: "Mis cupones", icon: TicketPercent },
+  { href: "/regalar/", label: "Regalá energía", icon: Zap },
   { href: "/regalo/", label: "Tengo un regalo", icon: Gift },
   { href: "/cuenta/", label: "Mi cuenta", icon: UserRound },
 ];

@@ -1,4 +1,5 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
+import { OPENINGS } from "../../src/demo/engine/gift-openings";
 import { demoGifts, sampleGifts } from "../../src/demo/fixtures/gifts";
 import { guardNetwork, horizontalOverflow } from "./helpers";
 
@@ -47,10 +48,10 @@ test("con movimiento, en el celular: cinco golpes con tiza y costuras, sale el p
 });
 
 test("con \"reducir movimiento\": los mismos cinco golpes, sin tiza ni balanceo, y el producto", async ({ page }) => {
-  const g = sample("dia-del-padre");
+  const g = sample("volta");
   await page.goto(`regalo/?c=${g.code}`);
   const stage = stageOf(page, g);
-  await expect(stage.locator("[data-variant]")).toHaveAttribute("data-variant", "dia-del-padre");
+  await expect(stage.locator("[data-variant]")).toHaveAttribute("data-variant", "volta");
   // Con menos movimiento, "Abrirlo de una vez" aparece enseguida; igual se puede abrir a golpes.
   await expect(stage.getByRole("button", { name: "Abrirlo de una vez" })).toBeVisible();
   await punchFive(stage, { chalk: false });
@@ -65,10 +66,13 @@ test("quien recibe nunca ve el precio: Mis regalos, la apertura y lo que hay ade
   await page.getByRole("button", { name: "Entrar a la cuenta demo" }).click();
   await page.getByRole("link", { name: "Mis regalos" }).click();
   const tile = page.getByRole("link", { name: /Sin abrir · de Lucía/ });
-  await expect(tile).toContainText("Bolsa con flores bordadas");
-  await expect(tile).toContainText("Tocá y abrilo a golpes");
+  // R3b: la apertura de su fecha (Día de la Madre), por su nombre.
+  await expect(tile).toContainText(OPENINGS["dia-de-la-madre"].name);
+  await expect(tile).toContainText("Tocá y abrilo");
   const section = page.getByRole("region", { name: "Mis regalos" });
-  await expect(section.getByText(PRICE)).toHaveCount(0);
+  // Ningún regalo muestra su precio (una gift card sí muestra su monto y su saldo: es el regalo).
+  await expect(section.getByRole("link", { name: /de Lucía/ }).getByText(PRICE)).toHaveCount(0);
+  await expect(section.getByRole("region", { name: "Regalos que hice" }).getByText(PRICE)).toHaveCount(0);
   await tile.click();
   const stage = stageOf(page, g);
   await expect(stage.getByText(PRICE)).toHaveCount(0);
@@ -80,7 +84,7 @@ test("quien recibe nunca ve el precio: Mis regalos, la apertura y lo que hay ade
   await expect(stage.getByRole("link", { name: "Conocer Volta" })).toBeVisible();
 });
 
-test("regalo desde el checkout para Navidad: el link abre la bolsa navideña en otro celular, sin precio", async ({ page }) => {
+test("regalo desde el checkout para Navidad: el link abre el árbol de discos (su apertura de Navidad) en otro celular, sin precio", async ({ page }) => {
   const assertNoExternal = guardNetwork(page);
   await page.addInitScript(() => {
     if (sessionStorage.getItem("seeded")) return;
@@ -97,24 +101,25 @@ test("regalo desde el checkout para Navidad: el link abre la bolsa navideña en 
   await page.getByText("Transferencia bancaria").click();
   await page.getByRole("button", { name: "Revisar pedido" }).click();
   await page.getByRole("region", { name: "¿Es para regalo?" }).getByRole("button", { name: "Sí, es para regalar" }).click();
-  const modal = page.getByRole("dialog", { name: "Es para regalar" });
+  const modal = page.getByRole("dialog", { name: "Regalá energía" });
   await modal.getByLabel("Para", { exact: true }).fill("Mateo");
   await modal.getByLabel("De parte de").fill("Lucía");
   await modal.getByLabel("Mensaje").fill("¡Feliz Navidad! Para que el 2027 arranque con todo.");
   await modal.getByLabel("Ocasión").selectOption("navidad");
-  await expect(modal.getByText("Lo abre a golpes contra una bolsa navideña con moño y gorrito.")).toBeVisible();
-  await expect(modal.locator("[data-variant]")).toHaveAttribute("data-variant", "navidad");
-  await expect(modal.getByText("Bolsa navideña con moño y gorrito", { exact: true })).toBeVisible();
+  await expect(modal.getByText("Lo abre sacando los discos del árbol.")).toBeVisible();
+  // La vista previa es la tarjeta de WhatsApp; debajo dice con qué apertura se abre (la de Navidad).
+  await expect(modal.getByRole("img", { name: /^Tarjeta para Mateo, de Lucía.*Lo abre sacando los discos del árbol/ })).toBeVisible();
+  await expect(modal.getByText("Árbol de discos", { exact: true })).toBeVisible();
   await modal.getByRole("button", { name: "Agregar regalo al carrito" }).click();
   await page.getByRole("checkbox", { name: /Acepto los/ }).check();
   await page.getByRole("button", { name: "Confirmar pedido" }).click();
 
   const ready = page.getByRole("region", { name: "Tu regalo, listo para mandar" });
-  await expect(ready.getByText("Lo abre a golpes contra una bolsa navideña con moño y gorrito.", { exact: false })).toBeVisible();
+  await expect(ready.getByText("Lo abre sacando los discos del árbol.", { exact: false })).toBeVisible();
   const code = (await ready.getByRole("button", { name: /Copiar código REGALO-/ }).textContent())!.trim();
   const whatsapp = decodeURIComponent((await ready.getByRole("link", { name: "WhatsApp", exact: true }).getAttribute("href"))!);
   expect(whatsapp).toContain(code);
-  expect(whatsapp).toContain("Se abre a golpes");
+  expect(whatsapp).toContain("Abrilo acá");
   expect(whatsapp).not.toMatch(PRICE);
   const link = (await ready.getByRole("link", { name: "Ver cómo lo recibe" }).getAttribute("href"))!.replace("&vista=previa", "");
 
@@ -123,8 +128,14 @@ test("regalo desde el checkout para Navidad: el link abre la bolsa navideña en 
   await friend.goto(new URL(link, page.url()).toString());
   const stage = stageOf(friend, { from: "Lucía", to: "Mateo" });
   await expect(stage.getByText("Mateo, te llegó un regalo de Lucía")).toBeVisible();
-  await expect(stage.locator("[data-variant]")).toHaveAttribute("data-variant", "navidad");
-  await punchFive(stage, { chalk: false });
+  const scene = stage.locator("[data-variant]");
+  await expect(scene).toHaveAttribute("data-variant", "navidad");
+  // R3b: Navidad tiene su propia apertura (el árbol de discos), no la bolsa.
+  await expect(scene).toHaveAttribute("data-scene", "navidad");
+  const tree = stage.getByRole("button", { name: /Sacá un disco del árbol para abrir el regalo/ });
+  await expect(tree).toHaveAccessibleName("Sacá un disco del árbol para abrir el regalo. Faltan 5 discos.");
+  for (let i = 1; i <= 5; i++) { await tree.click(); await expect(scene).toHaveAttribute("data-hits", String(i)); }
+  await expect(scene).toHaveAttribute("data-open", "true");
   await expect(stage.getByRole("heading", { name: "Overvolt pre-entreno" })).toBeVisible();
   await expect(stage.getByText("¡Feliz Navidad! Para que el 2027 arranque con todo.")).toBeVisible();
   await expect(stage.getByText(PRICE)).toHaveCount(0);

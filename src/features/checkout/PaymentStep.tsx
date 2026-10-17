@@ -8,6 +8,7 @@ import type { PaymentMethod } from "@/demo/types";
 import { formatARS } from "@/lib/money";
 import { useCheckout } from "@/stores/checkout";
 import { brand } from "@/config/brand";
+import { GiftCardRedeem } from "./GiftCardRedeem";
 
 const METHODS: { value: PaymentMethod; title: string; description: string; icon: typeof CreditCard; aside?: "discount" | "provider" }[] = [
   // Las tarjetas se cobran con Mercado Pago (Checkout Pro, simulado en la demo): mismo medio de pago, nombrado como lo busca el cliente.
@@ -16,7 +17,10 @@ const METHODS: { value: PaymentMethod; title: string; description: string; icon:
   { value: "QR_MANUAL", title: "QR", description: `Escaneás el QR de ${brand.name} con tu billetera, subís el comprobante y ${brand.name} confirma el ingreso.`, icon: QrCode, aside: "discount" },
 ];
 
-/** Paso 2 de 3, "Pago": el descuento por transferencia o QR se lee como cifra (cuánto ahorrás con este carrito). */
+/**
+ * Paso 2 de 3, "Pago": el descuento por transferencia o QR se lee como cifra (cuánto ahorrás con este carrito) y, antes,
+ * la gift card (R3b) cuyo saldo se descuenta del total.
+ */
 export function PaymentStep({ onNext, onBack, transferSavings }: { onNext: () => void; onBack: () => void; transferSavings: number }) {
   const method = useCheckout((s) => s.paymentMethod);
   const patch = useCheckout((s) => s.patch);
@@ -29,23 +33,27 @@ export function PaymentStep({ onNext, onBack, transferSavings }: { onNext: () =>
     </span>
   );
   return (
-    <form noValidate onSubmit={(e) => { e.preventDefault(); if (!method) return setMissing(true); onNext(); }} className="flex flex-col gap-5">
-      <fieldset className="flex flex-col gap-3">
-        <legend className="eyebrow mb-3 text-muted">¿Cómo querés pagar?</legend>
-        {METHODS.filter((m) => enabledMethods.includes(m.value)).map((m) => (
-          <OptionCard key={m.value} name="payment" value={m.value} checked={method === m.value} onChange={(v) => { patch({ paymentMethod: v as PaymentMethod }); setMissing(false); }}
-            title={m.title} description={m.description} icon={<m.icon size={20} aria-hidden="true" />}
-            aside={m.aside === "provider" ? <span className="text-xs font-bold text-muted">vía Mercado Pago</span> : m.aside && transferDiscountPct > 0 && discount} />
-        ))}
-        {missing && <p role="alert" className="text-sm font-semibold text-danger">Elegí un medio de pago.</p>}
-      </fieldset>
-      <p className="border-l-2 border-warning pl-3 text-sm text-muted">
-        <strong className="text-ink">Demo:</strong> ningún medio cobra de verdad. Vas a ver pantallas de muestra; no se piden datos de tarjeta ni se redirige a Mercado Pago.
-      </p>
-      <div className="flex gap-3">
-        <Button variant="secondary" onClick={onBack}>Atrás</Button>
-        <Button type="submit">Revisar pedido</Button>
-      </div>
-    </form>
+    <div className="flex flex-col gap-5">
+      {/* La gift card va antes y fuera del formulario del pago: tiene su propio "Aplicar". */}
+      <GiftCardRedeem />
+      <form noValidate onSubmit={(e) => { e.preventDefault(); if (!method) return setMissing(true); onNext(); }} className="flex flex-col gap-5">
+        <fieldset className="flex flex-col gap-3">
+          <legend className="eyebrow mb-3 text-muted">¿Cómo querés pagar?</legend>
+          {METHODS.filter((m) => enabledMethods.includes(m.value)).map((m) => (
+            <OptionCard key={m.value} name="payment" value={m.value} checked={method === m.value} onChange={(v) => { patch({ paymentMethod: v as PaymentMethod }); setMissing(false); }}
+              title={m.title} description={m.description} icon={<m.icon size={20} aria-hidden="true" />}
+              aside={m.aside === "provider" ? <span className="text-xs font-bold text-muted">vía Mercado Pago</span> : m.aside && transferDiscountPct > 0 && discount} />
+          ))}
+          {missing && <p role="alert" className="text-sm font-semibold text-danger">Elegí un medio de pago.</p>}
+        </fieldset>
+        <p className="border-l-2 border-warning pl-3 text-sm text-muted">
+          <strong className="text-ink">Demo:</strong> ningún medio cobra de verdad. Vas a ver pantallas de muestra; no se piden datos de tarjeta ni se redirige a Mercado Pago.
+        </p>
+        <div className="flex gap-3">
+          <Button variant="secondary" onClick={onBack}>Atrás</Button>
+          <Button type="submit">Revisar pedido</Button>
+        </div>
+      </form>
+    </div>
   );
 }

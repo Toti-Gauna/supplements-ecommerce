@@ -5,7 +5,7 @@ import { ButtonLink } from "@/components/atoms/Button";
 import { Skeleton } from "@/components/atoms/Skeleton";
 import { EmptyState } from "@/components/molecules/EmptyState";
 import { StepIndicator } from "@/components/molecules/StepIndicator";
-import { giftsFromLines } from "@/demo/engine/gifts";
+import { giftCardsFromCart, giftsFromLines } from "@/demo/engine/gift-build";
 import { subscriptionsFromLines } from "@/demo/engine/subscriptions";
 import { demoData } from "@/demo/engine/source";
 import { toDayKey } from "@/lib/date";
@@ -34,8 +34,9 @@ export function CheckoutView() {
   const router = useRouter();
   const [step, setStep] = useState(0);
   const heading = useRef<HTMLHeadingElement>(null);
-  const { quote, couponCheck, isRegistered } = useCartQuote();
+  const { quote, couponCheck, giftCardCheck, isRegistered } = useCartQuote();
   const lines = useCart((s) => s.lines);
+  const cards = useCart((s) => s.giftCards ?? []);
   const clearCart = useCart((s) => s.clear);
   const isAccount = useAccount((s) => s.user !== null);
   const checkout = useCheckout();
@@ -52,10 +53,11 @@ export function CheckoutView() {
       <Skeleton className="h-[32rem] w-full rounded-sm" /><Skeleton className="h-80 w-full rounded-sm max-lg:hidden" />
     </div>
   );
-  if (lines.length === 0 && !checkout.lastOrder?.code) {
+  // Una gift card sola también es una compra (R3b).
+  if (lines.length === 0 && cards.length === 0 && !checkout.lastOrder?.code) {
     return <EmptyState title="No hay nada para pagar" action={<ButtonLink href="/">Ver productos</ButtonLink>}>Tu carrito está vacío. Agregá productos para empezar.</EmptyState>;
   }
-  if (lines.length === 0) {
+  if (lines.length === 0 && cards.length === 0) {
     return <EmptyState title="El carrito está vacío" action={<ButtonLink href="/checkout/confirmacion/">Ver mi pedido</ButtonLink>}>Ya confirmaste tu pedido de demostración.</EmptyState>;
   }
 
@@ -66,12 +68,19 @@ export function CheckoutView() {
     const lines = useCart.getState().lines;
     // Una sola fecha del calendario de despachos: la del pedido, la de sus regalos y la que se vio en Entrega.
     const promisedDate = promise(checkout.fulfillment!, lines).day;
-    const gifts = giftsFromLines(lines, { orderCode: DEMO_ORDER_CODE, now: new Date(createdAt), eta: promisedDate, random: Math.random });
+    const build = { orderCode: DEMO_ORDER_CODE, now: new Date(createdAt), eta: promisedDate, random: Math.random, packs: [...(demoData().packs ?? []), ...(useCart.getState().customPacks ?? [])] };
+    const issued = giftCardsFromCart(useCart.getState().giftCards ?? [], build);
+    const gifts = [...giftsFromLines(lines, build), ...issued.gifts];
     if (gifts.length) useGifts.getState().addSent(gifts);
+    useAdmin.getState().registerGifts(gifts, issued.records);
+    // El saldo de la gift card se descuenta una sola vez por compra (la clave es la hora del pedido).
+    const spent = giftCardCheck?.ok && quote.giftCardUsed > 0 ? useAdmin.getState().spendGiftCard(giftCardCheck.card.code, DEMO_ORDER_CODE, quote.giftCardUsed, createdAt) : null;
     const order = {
       code: DEMO_ORDER_CODE, token: DEMO_TRACKING_TOKEN, createdAt, contact: checkout.contact, promisedDate,
       fulfillment: checkout.fulfillment!, paymentMethod: checkout.paymentMethod!, lines, quote: totalsOf(quote), asAccount: isAccount,
       ...(gifts.length ? { gifts: gifts.map((g) => g.code) } : {}),
+      ...(cards.length ? { giftCardAmounts: cards.map((c) => c.amount) } : {}),
+      ...(spent?.ok && giftCardCheck?.ok ? { giftCardPayment: { code: giftCardCheck.card.code, amount: spent.used } } : {}),
     };
     checkout.placeOrder(order);
     // "Todos los meses" (L3): cada pack suscripto queda en Mi cuenta → Mis suscripciones (simulado, sin cobro).

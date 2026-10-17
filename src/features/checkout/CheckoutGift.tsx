@@ -9,9 +9,17 @@ import { useCart } from "@/stores/cart";
 import { useGiftDraft } from "@/stores/giftDraft";
 import { useToasts } from "@/stores/toast";
 import { GiftModal } from "../gifts/GiftModal";
+import type { GiftSubject } from "../gifts/builder/types";
 import { useCurrentTheme } from "../themes/useCurrentTheme";
 
 const nameOf = (l: CartLine) => getProduct(l.productSlug)?.name ?? "Producto";
+
+/** El producto de la línea, para dejar sabor o tamaño abiertos (R3b). */
+function subjectOf(l: CartLine): GiftSubject | undefined {
+  const product = getProduct(l.productSlug);
+  const variant = product?.variants.find((v) => v.id === l.variantId);
+  return product && variant ? { kind: "producto", product, variant, quantity: l.quantity } : undefined;
+}
 
 /**
  * "¿Es para regalo?" en el último paso del checkout (8.2.16): abre el mismo modal que "Regalar ahora" en la ficha,
@@ -60,13 +68,14 @@ export function CheckoutGift({ onPayNow }: { onPayNow: () => void }) {
       {/* El botón va debajo: en el celular no le quita ancho al texto. */}
       {free && <Button size="sm" variant="secondary" className="mt-3 w-full sm:ml-[3.25rem] sm:w-auto" onClick={() => openFor(free)}>{gifts.length ? "Regalar otro" : "Sí, es para regalar"}</Button>}
       {selected && (
-        <GiftModal open={open} onClose={() => setOpen(false)} productName={nameOf(selected)}
+        <GiftModal open={open} onClose={() => setOpen(false)} subject={subjectOf(selected)}
           choices={lines.map((l) => ({ id: l.id, label: `${l.quantity} × ${nameOf(l)}${l.gift ? ` (regalo para ${l.gift.to})` : ""}` }))}
           choice={selected.id} onChoice={setLineId}
-          onSubmit={(gift, mode) => {
-            setGift(selected.id, gift);
+          onSubmit={(result, mode) => {
+            if (result.kind !== "item") return;
+            setGift(selected.id, result.gift, result.variantId);
             setOpen(false);
-            toast({ tone: "success", title: "Va como regalo", description: `Para ${gift.to} · ${nameOf(selected)}` });
+            toast({ tone: "success", title: "Va como regalo", description: `Para ${result.gift.to} · ${nameOf(selected)}` });
             if (mode === "buy") onPayNow();
           }} />
       )}

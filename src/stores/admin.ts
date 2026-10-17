@@ -15,10 +15,11 @@ import { withPrizeCatalog } from "@/demo/admin/wheel-prizes";
 import type { AdminClaim } from "@/demo/admin/types";
 import { createWorkshopActions, type WorkshopActions } from "@/demo/admin/workshop-slice";
 import { createEmailActions, type EmailActions } from "@/demo/admin/emails-slice";
+import { createGiftsActions, type GiftsActions } from "@/demo/admin/gifts-slice";
 import { setDemoData, type DemoData } from "@/demo/engine/source";
 import { ADMIN_STORE_VERSION, demoStorage, STORAGE_PREFIX } from "./storage";
 
-export type AdminState = AdminData & OrdersActions & DataActions & CatalogActions & WorkshopActions & PurchasingActions & EmailActions & CustomerActions & PacksActions & {
+export type AdminState = AdminData & OrdersActions & DataActions & CatalogActions & WorkshopActions & PurchasingActions & EmailActions & CustomerActions & PacksActions & GiftsActions & {
   addClaim: (claim: Omit<AdminClaim, "id" | "status" | "createdAt">) => void;
   resetAdmin: () => void;
 };
@@ -39,6 +40,7 @@ export const useAdmin = create<AdminState>()(
       ...createEmailActions(set, get),
       ...createCustomerActions(set, get),
       ...createPackActions(set, get),
+      ...createGiftsActions(set, get),
       addClaim: (claim) =>
         set((s) => ({
           claims: [{ ...claim, id: `c-${Date.now().toString(36)}`, status: "OPEN", createdAt: demoNow(), fromShop: true }, ...s.claims],

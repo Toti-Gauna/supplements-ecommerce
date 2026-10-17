@@ -16,9 +16,10 @@ export function useProductPurchase(product: Product, variant: Variant, quantity:
 
   const ready = (): boolean => canBuy;
 
-  const purchase = (mode: "cart" | "buy", gift?: LineGift): boolean => {
+  /** `variantId`: con sabor o tamaño abiertos (R3b), la variante que fija el precio del regalo. */
+  const purchase = (mode: "cart" | "buy", gift?: LineGift, variantId = variant.id): boolean => {
     if (!ready()) return false;
-    add({ productSlug: product.slug, variantId: variant.id, quantity, ...(gift ? { gift } : {}) });
+    add({ productSlug: product.slug, variantId, quantity, ...(gift ? { gift } : {}) });
     if (mode === "buy") router.push("/checkout/");
     else openCart(product.slug);
     return true;

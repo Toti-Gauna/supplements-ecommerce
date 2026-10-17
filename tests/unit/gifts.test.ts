@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { decodeGift, encodeGift } from "@/demo/engine/gift-link";
-import { cleanGift, giftProblem, giftsFor, giftsFromLines, makeGiftCode, normalizeGiftCode, withKnownOccasion, type Gift } from "@/demo/engine/gifts";
+import { giftsFromLines } from "@/demo/engine/gift-build";
+import { cleanGift, giftProblem, giftsFor, makeGiftCode, normalizeGiftCode, withKnownOccasion, type Gift } from "@/demo/engine/gifts";
 import { getProduct } from "@/demo/engine/catalog";
 import { defaultDemoData, setDemoData } from "@/demo/engine/source";
 import { demoGifts, sampleGifts } from "@/demo/fixtures/gifts";

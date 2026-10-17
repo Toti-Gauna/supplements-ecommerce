@@ -49,7 +49,7 @@ export default function BoxingBag({ occasion, hits, total, opened, reduce }: Gif
     <SeamSlit key={i} seam={s} open={seamOpening(i, seams, opened)} fresh={!opened && !reduce && i === seams - 1} uid={uid} c={c} />
   ));
   return (
-    <div className="gift-scene relative h-full w-full select-none" data-variant={variant.detail} data-hits={hits} data-open={opened ? "true" : "false"}>
+    <div className="gift-scene relative h-full w-full select-none" data-bag={variant.detail}>
       <SceneStyle id="bag" css={KIT_CSS + BAG_CSS} />
       <svg viewBox={`${VIEW.x} ${VIEW.y} ${VIEW.w} ${VIEW.h}`} className="absolute inset-0 h-full w-full overflow-visible" aria-hidden="true">
         <BagDefs uid={uid} c={c} />

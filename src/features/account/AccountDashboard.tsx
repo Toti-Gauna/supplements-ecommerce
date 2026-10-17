@@ -3,9 +3,7 @@ import { BatteryCharging, CalendarClock, Gift, LogOut, MapPin, Package, Sparkles
 import type { MouseEvent, ReactNode } from "react";
 import { LevelGlyph } from "@/components/illustrations/LevelGlyph";
 import { levelFor } from "@/demo/engine/club-levels";
-import { giftsFor } from "@/demo/engine/gifts";
 import { demoAccountProgress } from "@/demo/fixtures/commerce";
-import { demoGifts } from "@/demo/fixtures/gifts";
 import { cn } from "@/lib/cn";
 import { scrollBehavior } from "@/lib/scroll";
 import { useAccount } from "@/stores/account";
@@ -13,7 +11,7 @@ import { useDemoData } from "@/stores/admin";
 import { useGameCodes } from "@/stores/game";
 import { useGifts } from "@/stores/gifts";
 import { useWheelPrize } from "../club/useWheelPrize";
-import { AccountGifts } from "../gifts/AccountGifts";
+import { AccountGifts, receivedGifts } from "../gifts/AccountGifts";
 import { AddressesSection, MissionsSection, RewardsSection, availableRewards } from "./AccountSections";
 import { MyBoxSection } from "./MyBoxSection";
 import { OrdersSection } from "./OrdersSection";
@@ -38,8 +36,9 @@ export function AccountDashboard({ user }: { user: { name: string; email: string
   const pots = potsInUse(orders, useDemoData((d) => d.products), DEMO_TODAY).length;
   const missions = useDemoData((d) => d.missions).filter((m) => m.active !== false);
   const { sent, saved, opened } = useGifts();
-  const received = giftsFor(user.email, { addressed: [...demoGifts, ...sent], saved });
-  const unopened = received.filter((g) => !opened.includes(g.code)).length;
+  const received = receivedGifts(user.email, sent, saved);
+  const records = useDemoData((d) => d.giftRecords ?? []);
+  const unopened = received.filter((g) => !opened.includes(g.code) && (records.find((r) => r.code === g.code)?.status ?? "enviado") === "enviado").length;
   const { status: prizeStatus } = useWheelPrize();
   // Cupones de Shaker Rush que todavía se pueden usar (no agotados).
   const gameCodes = useGameCodes();
@@ -52,7 +51,7 @@ export function AccountDashboard({ user }: { user: { name: string; email: string
     { id: "mi-box", title: "Mi box", icon: BatteryCharging, summary: pots ? plural(pots, "pote en uso", "potes en uso") : "Sin potes en uso", intro: "Lo que te queda de cada pote, tu nivel y recomprar en un toque.", body: <MyBoxSection /> },
     { id: "pedidos", title: "Mis pedidos", icon: Package, summary: plural(orders.length, "pedido", "pedidos"), intro: "Seguí cada pedido paso a paso o repetilo.", body: <OrdersSection /> },
     { id: "suscripciones", title: "Suscripciones", icon: CalendarClock, summary: subscriptions ? plural(subscriptions, "activa", "activas") : "Sin suscripciones", intro: "Los packs que recibís todos los meses (simulado: no se cobra nada).", body: <SubscriptionsSection /> },
-    { id: "regalos", title: "Mis regalos", icon: Gift, summary: unopened ? plural(unopened, "sin abrir", "sin abrir") : plural(received.length, "regalo", "regalos"), intro: "Los que te mandaron se abren sin el link; los que hiciste, para volver a mandarlos.", body: <AccountGifts email={user.email} /> },
+    { id: "regalos", title: "Mis regalos", icon: Gift, summary: unopened ? plural(unopened, "sin abrir", "sin abrir") : plural(received.length, "regalo", "regalos"), intro: "Tus gift cards con su saldo, los regalos que te mandaron y los que hiciste, con su estado.", body: <AccountGifts email={user.email} /> },
     { id: "misiones", title: "Misiones", icon: Sparkles, summary: plural(missions.length, "activa", "activas"), intro: "Tus compras suman a cada misión (progreso de ejemplo).", body: <MissionsSection /> },
     { id: "premios", title: "Premios", icon: Trophy, summary: rewards ? plural(rewards, "disponible", "disponibles") : "Sin premios para usar", intro: "Los cupones de la ruleta y de Shaker Rush y los premios de las misiones, de un solo uso.", body: <RewardsSection used={usedRewards} onUse={markRewardUsed} /> },
     { id: "direcciones", title: "Direcciones", icon: MapPin, summary: "1 guardada", intro: "Donde te llegan los pedidos.", body: <AddressesSection /> },

@@ -73,3 +73,19 @@ const samples: SampleGift[] = [
  * ficticios. Solo quedan los de ocasiones que existen: si una temática se agrega o se quita, la lista la sigue.
  */
 export const sampleGifts: Gift[] = samples.flatMap(({ occasion, ...g }) => (isOccasion(occasion) ? [{ ...g, occasion }] : []));
+
+/**
+ * Regalos de prueba de R3b: uno con el sabor abierto y el locker, y dos gift cards (la de Sofía, la cuenta demo, ya
+ * tiene un uso y le queda saldo). Su estado y el saldo están en el panel (fixtures/gift-cards.ts). Ficticios.
+ */
+export const moreSampleGifts: Gift[] = [
+  { code: "REGALO-SAB0-R01D", from: "Mili", to: "Fran", message: "Elegí el que más te guste y a romperla en la banca.", occasion: "volta", createdAt: "2026-10-03T11:00:00.000Z",
+    item: { slug: "overvolt-pre", name: "Overvolt pre-entreno", variant: "300 g · sabor a elección", variantId: "ov-frutos-rojos-300" }, openChoice: { flavor: true },
+    opening: "locker", lockerCode: "0310", cardDesign: "ring", eta: "2026-10-07" },
+  { code: "REGALO-GC0S-0F1D", from: "Gaby", to: "Agus", message: "Para que te armes el stack que quieras.", occasion: "volta", createdAt: "2026-10-03T12:00:00.000Z", kind: "gift-card",
+    item: { slug: "gift-card", name: "Gift card de $ 60.000", variant: "Vence el 03/10/2027" }, cardDesign: "podio",
+    giftCard: { amount: 60_000, code: "GIFT-EQV1-P0ZR", expires: "2027-10-03", balance: 60_000 } },
+  { code: "REGALO-GC0M-4RCG", from: "Marcos", to: "Sofía", toEmail: "sofia.demo@ejemplo.com", message: "Para tu próxima recompra. ¡Fuerza!", occasion: "volta", createdAt: "2026-09-14T12:00:00.000Z", kind: "gift-card",
+    item: { slug: "gift-card", name: "Gift card de $ 25.000", variant: "Vence el 14/09/2027" }, cardDesign: "box",
+    giftCard: { amount: 25_000, code: "GIFT-M4RC-0SAG", expires: "2027-09-14", balance: 6_600 } },
+];

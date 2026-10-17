@@ -98,7 +98,7 @@ for (const d of DEVICES) {
       await page.getByRole("group", { name: /^Sabor/ }).getByTitle("Limón").click();
       await expect(page.getByRole("group", { name: /^Sabor/ }).getByRole("radio", { name: "Limón" })).toBeChecked();
       await card.getByRole("button", { name: "Regalar ahora" }).click();
-      const modal = page.getByRole("dialog", { name: "Es para regalar" });
+      const modal = page.getByRole("dialog", { name: "Regalá energía" });
       await modal.getByLabel("Para", { exact: true }).fill("Sofía");
       await modal.getByLabel("De parte de").fill("Lucía");
       await modal.getByLabel("Mensaje").fill("¡Para que entrenes con todo!");
@@ -132,7 +132,7 @@ for (const d of DEVICES) {
       await contactToConfirm(page, "Transferencia bancaria");
       const section = page.getByRole("region", { name: "¿Es para regalo?" });
       await section.getByRole("button", { name: "Sí, es para regalar" }).click();
-      const modal = page.getByRole("dialog", { name: "Es para regalar" });
+      const modal = page.getByRole("dialog", { name: "Regalá energía" });
       await modal.getByLabel("Para", { exact: true }).fill("Juli");
       await modal.getByLabel("De parte de").fill("Caro");
       await w.check("modal desde el checkout");

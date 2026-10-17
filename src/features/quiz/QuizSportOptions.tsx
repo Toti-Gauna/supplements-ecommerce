@@ -2,7 +2,8 @@
 import type { CSSProperties } from "react";
 import { AthleteSilhouette } from "@/components/illustrations/AthleteSilhouette";
 import { SportArt } from "@/components/illustrations/SportArt";
-import { sports, type SportInfo } from "@/demo/fixtures/sports";
+import type { SportInfo } from "@/demo/fixtures/sports";
+import { useSports } from "../catalog/useSports";
 import type { SportId } from "@/demo/types";
 import { cn } from "@/lib/cn";
 import { CHOICE_CARD, CHOICE_INPUT, CHOICE_ON, ChoiceMark, QuizChoice } from "./QuizChoice";
@@ -37,6 +38,7 @@ function SportTile({ sport, checked, onPick }: { sport: SportInfo; checked: bool
  * grupo de radios: flechas para moverse, como siempre.
  */
 export function QuizSportOptions({ value, onChange }: Props) {
+  const sports = useSports();
   return (
     <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
       <QuizChoice type="radio" name="sport" value="gimnasio" checked={value === null} onChange={() => onChange(null)} className="col-span-full"

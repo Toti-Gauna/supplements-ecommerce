@@ -85,7 +85,7 @@ test("L4 · inicio: pestaña Deportes con flechas, Fútbol abre el armador con e
   const goalsTab = section.getByRole("tab", { name: /Objetivos/ });
   await expect(goalsTab).toHaveAttribute("aria-selected", "true");
   await expect(section.getByRole("tabpanel")).toHaveCount(1);
-  await expect(section.getByRole("link", { name: "Fuerza" })).toHaveAttribute("href", /\/crear\/\?objetivo=fuerza$/);
+  await expect(section.getByRole("link", { name: "Fuerza", exact: true })).toHaveAttribute("href", /\/crear\/\?objetivo=fuerza&stack=/);
 
   // Teclado: la flecha a la derecha pasa a Deportes.
   await goalsTab.focus();

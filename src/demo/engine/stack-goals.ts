@@ -1,14 +1,15 @@
-import { MAX_GOALS } from "../fixtures/stack-builder";
-import { sportById, sports } from "../fixtures/sports";
+import type { GoalInfo } from "../fixtures/goals";
+import { MAX_GOALS, STACK_SLOTS } from "../fixtures/stack-builder";
+import { sportInfo, sportList } from "./sports";
 import type { Goal, Product, SportId, Variant } from "../types";
 import { quizGoals } from "./quiz";
-import { defaultStack, encodeStack, firstInStock, goalList, stackSummary, type StackSummary } from "./stack-builder";
+import { defaultStack, encodeStack, firstInStock, goalList, stackSummary, type StackPick, type StackSummary } from "./stack-builder";
 import { DEFAULT_STACK_RULE, type StackRule } from "./stack";
 
 /**
- * Objetivos y deporte del armador (L4): hasta tres objetivos a la vez y un deporte opcional que suma los suyos después
- * de los elegidos (la misma regla que el quiz, `quizGoals`). `added` son los que sumó el deporte: al cambiarlo o
- * sacarlo, se van con él.
+ * Objetivos y deporte del armador (L4): hasta tres objetivos elegidos y un deporte opcional que suma los suyos después
+ * (la misma regla que el quiz, `quizGoals`: el tope es de los elegidos, el deporte siempre suma). `added` son los que
+ * sumó el deporte: al cambiarlo o sacarlo, se van con él.
  */
 export interface GoalSelection {
   goals: Goal[];
@@ -18,22 +19,23 @@ export interface GoalSelection {
 
 export const EMPTY_SELECTION: GoalSelection = { goals: [], added: [], sport: null };
 
-/** Prende o apaga un objetivo. Con el máximo ya elegido no suma otro y avisa (`capped`). */
+/** Los objetivos que eligió la persona (sin los que sumó el deporte). */
+export const chosenGoals = (sel: GoalSelection): Goal[] => sel.goals.filter((g) => !sel.added.includes(g));
+
+/** Prende o apaga un objetivo. Con el máximo de elegidos no suma otro y avisa (`capped`). */
 export function toggleGoal(sel: GoalSelection, goal: Goal, max = MAX_GOALS): { selection: GoalSelection; capped: boolean } {
   if (sel.goals.includes(goal)) {
     return { selection: { ...sel, goals: sel.goals.filter((g) => g !== goal), added: sel.added.filter((g) => g !== goal) }, capped: false };
   }
-  if (sel.goals.length >= max) return { selection: sel, capped: true };
-  return { selection: { ...sel, goals: [...sel.goals, goal] }, capped: false };
+  const chosen = chosenGoals(sel);
+  if (chosen.length >= max) return { selection: sel, capped: true };
+  return { selection: { ...sel, goals: [...chosen, goal, ...sel.added] }, capped: false };
 }
 
-/**
- * Elige (o saca, con null) el deporte: primero salen los objetivos que había sumado el anterior; después se suman los
- * del nuevo detrás de los elegidos, hasta el máximo.
- */
-export function chooseSport(sel: GoalSelection, sport: SportId | null, max = MAX_GOALS): GoalSelection {
-  const chosen = sel.goals.filter((g) => !sel.added.includes(g));
-  const goals = quizGoals({ goals: chosen, sport }).slice(0, max);
+/** Elige (o saca, con null) el deporte: salen los objetivos que había sumado el anterior y entran los del nuevo. */
+export function chooseSport(sel: GoalSelection, sport: SportId | null): GoalSelection {
+  const chosen = chosenGoals(sel);
+  const goals = quizGoals({ goals: chosen, sport });
   return { goals, added: goals.filter((g) => !chosen.includes(g)), sport };
 }
 
@@ -42,14 +44,15 @@ export function chooseSport(sel: GoalSelection, sport: SportId | null, max = MAX
  * sumados por él; si el link trae solo el deporte, se suman sus objetivos.
  */
 export function selectionFromUrl(goals: Goal[], sport: SportId | null, max = MAX_GOALS): GoalSelection {
-  const list = quizGoals({ goals: goalList(goals), sport }).slice(0, max);
-  const sportGoals = sport ? sportById(sport)?.goals ?? [] : [];
-  return { goals: list, added: list.filter((g) => sportGoals.includes(g)), sport };
+  const sportGoals = sport ? sportInfo(sport)?.goals ?? [] : [];
+  const chosen = goalList(goals).filter((g) => !sportGoals.includes(g)).slice(0, max);
+  const list = quizGoals({ goals: chosen, sport });
+  return { goals: list, added: list.filter((g) => !chosen.includes(g)), sport };
 }
 
 /** Equipamiento sugerido del deporte que está activo y tiene stock, con su primera variante disponible. */
 export function sportGear(sport: SportId | null, catalog: Product[]): { product: Product; variant: Variant }[] {
-  const info = sport ? sportById(sport) : undefined;
+  const info = sport ? sportInfo(sport) : undefined;
   return (info?.gear ?? []).flatMap((slug) => {
     const product = catalog.find((p) => p.slug === slug && p.active !== false);
     const variant = product && firstInStock(product);
@@ -85,9 +88,43 @@ export interface SportCard {
 
 /** Tarjetas "Entrená por deporte": el stack sugerido de cada deporte, con el total y el link al armador. */
 export function sportCards(catalog: Product[], rule: StackRule = DEFAULT_STACK_RULE): SportCard[] {
-  return sports.map((s) => ({
+  return sportList().map((s) => ({
     id: s.id, name: s.name, pitch: s.pitch, hue: s.hue, goals: s.goals, packId: s.packId,
     href: builderHref(s.goals, s.id),
     summary: stackSummary(defaultStack(s.goals, catalog), catalog, rule),
   }));
+}
+
+/**
+ * El stack de un objetivo en el inicio: el sugerido, con el producto que el dueño destacó para ese objetivo en su lugar
+ * del estante (o sumado, si el objetivo no usa ese lugar). Es el mismo que abre el armador desde la tarjeta.
+ */
+export function goalStack(goal: Goal, featured: string | undefined, catalog: Product[]): StackPick[] {
+  const picks = defaultStack(goal, catalog);
+  const product = featured ? catalog.find((p) => p.slug === featured && p.active !== false) : undefined;
+  const variant = product && firstInStock(product);
+  const slot = product && STACK_SLOTS.find((s) => s.categories.includes(product.categorySlug))?.id;
+  if (!product || !variant || !slot) return picks;
+  const pick = { slot, slug: product.slug, variantId: variant.id };
+  return picks.some((p) => p.slot === slot) ? picks.map((p) => (p.slot === slot ? pick : p)) : [...picks, pick];
+}
+
+export interface GoalCard {
+  id: Goal;
+  name: string;
+  pitch: string;
+  hue: string;
+  /** El producto destacado por el dueño, si está en el estante. */
+  featured?: Product;
+  href: string;
+  summary: StackSummary;
+}
+
+/** Tarjetas "Entrená por objetivo": mismo criterio que las de deporte (el total del stack y el link al armador). */
+export function goalCards(goals: GoalInfo[], catalog: Product[], rule: StackRule = DEFAULT_STACK_RULE): GoalCard[] {
+  return goals.map((g) => {
+    const picks = goalStack(g.id, g.productSlug, catalog);
+    const featured = catalog.find((p) => p.slug === g.productSlug && picks.some((x) => x.slug === p.slug));
+    return { id: g.id, name: g.name, pitch: g.pitch, hue: g.hue, featured, href: `/crear/?${encodeStack(g.id, picks)}`, summary: stackSummary(picks, catalog, rule) };
+  });
 }

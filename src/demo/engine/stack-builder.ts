@@ -136,10 +136,11 @@ export function decodeStack(raw: string | null, catalog: Product[]): StackPick[]
   });
 }
 
-/** Los objetivos de la URL (`objetivo=fuerza,salud`), sin los que no existen ni repetidos, hasta el máximo. */
+/** Los objetivos de la URL (`objetivo=fuerza,salud`), sin los que no existen ni repetidos. */
 export function decodeGoals(raw: string | null): Goal[] {
   if (!raw) return [];
-  return [...new Set(raw.split(","))].filter((g): g is Goal => goalFixtures.some((x) => x.id === g)).slice(0, MAX_GOALS);
+  // Hasta 3 elegidos más los que suma un deporte (dos como mucho).
+  return [...new Set(raw.split(","))].filter((g): g is Goal => goalFixtures.some((x) => x.id === g)).slice(0, MAX_GOALS + 2);
 }
 
 export const decodeSport = (raw: string | null): SportId | null => (isSportId(raw) ? raw : null);

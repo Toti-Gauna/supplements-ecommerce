@@ -54,7 +54,8 @@ describe("stack con varios objetivos", () => {
     expect(q.get("objetivo")).toBe("fuerza,salud");
     expect(q.get("deporte")).toBe("futbol");
     expect(decodeGoals("fuerza,volar,salud,fuerza")).toEqual(["fuerza", "salud"]);
-    expect(decodeGoals("fuerza,salud,energia,definicion")).toHaveLength(3);
+    // 3 elegidos más los 2 que puede sumar un deporte.
+    expect(decodeGoals("fuerza,salud,energia,definicion,resistencia,recuperacion")).toHaveLength(5);
     expect(decodeSport("ajedrez")).toBeNull();
     expect(decodeSport("tenis")).toBe("tenis");
   });

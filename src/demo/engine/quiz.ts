@@ -1,5 +1,6 @@
 import { QUIZ_RESTRICTIONS, type QuizAnswers, type Restriction, type StackSlotId } from "../fixtures/stack-builder";
-import { sportById, type SportInfo } from "../fixtures/sports";
+import type { SportInfo } from "../fixtures/sports";
+import { sportInfo } from "./sports";
 import { goalInfo } from "./goals";
 import type { Goal, Product, Variant } from "../types";
 import { defaultStack, firstInStock, goalSlots, type StackPick } from "./stack-builder";
@@ -41,7 +42,7 @@ const list = (items: string[]) => new Intl.ListFormat("es", { type: "conjunction
 
 /** Los objetivos del quiz: los elegidos, en su orden, y después los del deporte que falten. */
 export function quizGoals(answers: Pick<QuizAnswers, "goals" | "sport">): Goal[] {
-  const sport = answers.sport ? sportById(answers.sport) : undefined;
+  const sport = answers.sport ? sportInfo(answers.sport) : undefined;
   return [...new Set([...answers.goals, ...(sport?.goals ?? [])])];
 }
 
@@ -53,7 +54,7 @@ export function quizGoals(answers: Pick<QuizAnswers, "goals" | "sport">): Goal[]
 export function recommendStack(answers: QuizAnswers, catalog: Product[]): QuizResult {
   const notes: string[] = [];
   const goals = quizGoals(answers);
-  const sport = answers.sport ? sportById(answers.sport) ?? null : null;
+  const sport = answers.sport ? sportInfo(answers.sport) ?? null : null;
   const added = goals.filter((g) => !answers.goals.includes(g));
   if (sport && added.length) notes.push(`Para ${sport.name.toLowerCase()} sumamos ${list(added.map((g) => (goalInfo(g)?.name ?? g).toLowerCase()))}.`);
   const slots = goals.length ? goalSlots(goals) : [];

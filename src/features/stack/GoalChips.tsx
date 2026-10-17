@@ -9,6 +9,8 @@ import { cn } from "@/lib/cn";
 
 interface GoalChipsProps {
   value: Goal[];
+  /** Cuántos eligió la persona (sin los que sumó el deporte); por defecto, todos los marcados. */
+  chosen?: number;
   onToggle: (goal: Goal) => void;
   /** Intentó sumar uno más del máximo: se muestra el aviso. */
   capped?: boolean;
@@ -23,7 +25,7 @@ interface GoalChipsProps {
  * noche. En el celular se desliza de costado; en pantallas anchas se acomoda en varias filas. Intentar un cuarto deja
  * el aviso en una región viva.
  */
-export function GoalChips({ value, onToggle, capped = false, legend = "Tus objetivos", tone = "surface", className }: GoalChipsProps) {
+export function GoalChips({ value, chosen = value.length, onToggle, capped = false, legend = "Tus objetivos", tone = "surface", className }: GoalChipsProps) {
   const hintId = useId();
   const goals = useGoals();
   const night = tone === "night";
@@ -54,7 +56,7 @@ export function GoalChips({ value, onToggle, capped = false, legend = "Tus objet
         })}
       </div>
       <p id={hintId} aria-live="polite" className={cn("mt-2 min-h-5 text-[13px] leading-snug", capped ? (night ? "font-bold text-volt" : "font-bold text-danger") : night ? "text-night-muted" : "text-muted")}>
-        {capped ? `Ya tenés ${MAX_GOALS} objetivos: sacá uno para sumar otro.` : `Combinalos: ${value.length} de ${MAX_GOALS} elegidos.`}
+        {capped ? `Ya tenés ${MAX_GOALS} objetivos: sacá uno para sumar otro.` : `Combinalos: ${chosen} de ${MAX_GOALS} elegidos.`}
       </p>
     </fieldset>
   );

@@ -52,6 +52,11 @@ export const AMBIENT: Record<SeasonId, AmbientLayer[]> = {
     { particles: [{ paper: "#e3ff8f" }, { paper: "#5ee8da" }, { paper: "#ffffff" }], motion: "fall", count: 16, size: [6, 10], duration: [11, 18], opacity: 0.7 },
     { particles: [{ decor: "spark" }], motion: "twinkle", count: 5, size: [10, 16], duration: [3, 5], opacity: 0.6 },
   ],
+  "crossfit-open": [{ particles: [{ dot: "#ff7a1a" }, { dot: "#ffffff" }], motion: "rise", count: 18, size: [2, 5], duration: [8, 14], opacity: 0.7 }],
+  "dia-actividad-fisica": [{ particles: [{ dot: VOLT }, { dot: "#5ee8da" }], motion: "rise", count: 16, size: [3, 6], duration: [9, 15], opacity: 0.7 }],
+  "dia-del-futbolista": [{ particles: [{ paper: "#ffffff" }, { paper: "#7be08f" }], motion: "fall", count: 14, size: [6, 10], duration: [11, 18], opacity: 0.6 }],
+  "dia-del-running": [{ particles: [{ dot: "#ffd34d" }, { dot: "#9cc2ff" }], motion: "rise", count: 16, size: [3, 6], duration: [7, 12], opacity: 0.7 }],
+  "dia-del-boxeador": [{ particles: [{ dot: "#ffd34d" }, { dot: "#ffffff" }], motion: "twinkle", count: 12, size: [3, 7], duration: [3, 6], opacity: 0.6 }],
   "operacion-verano": [
     { particles: [{ dot: "#ffffff" }, { dot: "#bfefff" }], motion: "rise", count: 16, size: [3, 8], duration: [12, 20], opacity: 0.6 },
     { particles: [{ dot: "#ffd34d" }], motion: "twinkle", count: 8, size: [3, 6], duration: [3, 5], opacity: 0.75 },

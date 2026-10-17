@@ -8,6 +8,7 @@ import { CompareTray } from "@/features/compare/CompareTray";
 import { QuizInvite } from "@/features/quiz/QuizInvite";
 import { ShopTicker } from "@/features/shell/ShopTicker";
 import { ThemeStage } from "@/features/themes/ThemeStage";
+import { VitrinaHost } from "@/features/themes/vitrina/VitrinaHost";
 
 /**
  * Estructura de la tienda (R1): cinta de avisos ocultable, header de una línea, contenido, pie como ficha técnica del
@@ -27,6 +28,7 @@ export default function ShopLayout({ children }: { children: ReactNode }) {
       <WheelStage />
       <LazyOverlays />
       <QuizInvite />
+      <VitrinaHost />
     </>
   );
 }

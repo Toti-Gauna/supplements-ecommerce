@@ -8,6 +8,7 @@ import { sports, type SportInfo } from "../fixtures/sports";
 import { products } from "../fixtures/products";
 import { seasonalThemes, themeCoupons, themeSettings } from "../fixtures/themes";
 import { defaultWheel, type WheelConfig } from "../fixtures/wheel";
+import type { PriceChange } from "./price-history";
 import type { Category, Coupon, Faq, HeroFeature, Mission, Pack, Product, SeasonalTheme, ShippingZone, ThemeSettings } from "../types";
 
 /**
@@ -33,6 +34,8 @@ export interface DemoData {
   packs: Pack[];
   /** Deportes (L4): nombre, bajada, color y pack sugerido se editan en el panel → Categorías. */
   sports: SportInfo[];
+  /** Cambios de precio hechos en el panel (R3, "Descuento real"): con la historia simulada dan el más bajo de 30 días. */
+  priceChanges: PriceChange[];
 }
 
 export function defaultDemoData(): DemoData {
@@ -51,6 +54,7 @@ export function defaultDemoData(): DemoData {
     goals,
     packs: packs.map((p) => ({ ...p, active: true })),
     sports,
+    priceChanges: [],
   });
 }
 

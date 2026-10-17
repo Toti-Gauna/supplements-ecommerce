@@ -11,30 +11,30 @@ test.describe("escritorio con mouse", () => {
   test.use({ viewport: { width: 1280, height: 900 }, isMobile: false, hasTouch: false });
   test.beforeEach(async ({ page }) => { await page.mouse.move(1240, 400); });
 
-  test("8.3.26 Temáticas: la temática fija aparece solo en modo fijo y las tarjetas siguen al modo", async ({ page }) => {
+  test("8.3.26 Campañas: la campaña fija aparece solo en modo fijo y las tarjetas siguen al modo", async ({ page }) => {
     // La fecha de la demo: octubre de 2026 (sale el Día de la Madre y la próxima es Halloween).
     await page.clock.setFixedTime(new Date("2026-10-12T12:00:00-03:00"));
-    await page.goto("admin-demo/tematicas/");
+    await page.goto("admin-demo/campanas/");
     await expect(page.getByRole("link", { name: "Volver a Marketing" })).toBeVisible();
-    await expect(page.getByRole("heading", { level: 1, name: /Temáticas/ })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1, name: /Campañas/ })).toBeVisible();
     const mode = page.getByLabel("Modo", { exact: true });
     await expect(mode).toHaveValue("off");
-    await expect(page.locator("p").filter({ hasText: "Hoy ve el cliente" })).toContainText("Sin temática");
+    await expect(page.locator("p").filter({ hasText: "Hoy ve el cliente" })).toContainText("Sin campaña");
     await mode.selectOption("auto");
-    await expect(page.getByRole("list", { name: "Temáticas por fecha" }).getByRole("listitem")).toHaveCount(12);
-    await expect(page.getByLabel("Temática fija")).toHaveCount(0);
-    await expect(page.getByText(/usa sola la temática cuyas fechas incluyen hoy/)).toBeVisible();
+    await expect(page.locator("[data-campaign-chip]")).toHaveCount(17);
+    await expect(page.getByLabel("Campaña fija")).toHaveCount(0);
+    await expect(page.getByText(/usa sola la campaña cuyas fechas incluyen hoy/)).toBeVisible();
     const today = page.locator("p").filter({ hasText: "Hoy ve el cliente" });
     await expect(today).toContainText("Día de la Madre");
     await expect(page.locator("p").filter({ hasText: "Próxima por fecha" })).toContainText("Halloween");
     await mode.selectOption("fixed");
-    await page.getByLabel("Temática fija").selectOption("navidad");
+    await page.getByLabel("Campaña fija").selectOption("navidad");
     await expect(today).toContainText("Navidad");
-    await expect(today).toContainText("Temática fija, sin importar la fecha");
+    await expect(today).toContainText("Campaña fija, sin importar la fecha");
     await expect(page.locator("p").filter({ hasText: "Próxima por fecha" })).toContainText("En modo fijo no cambia sola: sigue Navidad.");
     await mode.selectOption("off");
-    await expect(today).toContainText("Sin temática");
-    await expect(page.getByLabel("Temática fija")).toHaveCount(0);
+    await expect(today).toContainText("Sin campaña");
+    await expect(page.getByLabel("Campaña fija")).toHaveCount(0);
     await expect(page.getByRole("switch", { name: /Probar temáticas/ })).toBeVisible();
   });
 
@@ -130,7 +130,7 @@ test.describe("escritorio con mouse", () => {
 for (const [width, height] of [[1180, 820], [820, 1180], [375, 812]] as const) {
   test(`8.3.26/8.3.28 a ${width}×${height}: sin desbordes, controles legibles y vista previa entera`, async ({ page }) => {
     await page.setViewportSize({ width, height });
-    await page.goto("admin-demo/tematicas/");
+    await page.goto("admin-demo/campanas/");
     expect(await horizontalOverflow(page)).toBe(0);
     expect((await page.getByLabel("Modo", { exact: true }).boundingBox())!.width).toBeGreaterThanOrEqual(260);
     const a = (await page.locator("p").filter({ hasText: "Hoy ve el cliente" }).boundingBox())!;

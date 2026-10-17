@@ -14,6 +14,7 @@ import { StatusPipeline } from "./StatusPipeline";
 import { WorkshopStrip } from "./WorkshopStrip";
 import { RepurchaseWeek } from "./customers/RepurchaseWeek";
 import { ExpiringSoon } from "./lots/ExpiringSoon";
+import { NextCampaignCard } from "./campaigns/NextCampaignCard";
 import { brand } from "@/config/brand";
 
 export function Dashboard() {
@@ -49,6 +50,7 @@ export function Dashboard() {
         <StatusPipeline counts={counts} />
       </section>
       <WorkshopStrip />
+      <NextCampaignCard />
       {/* Lo que pide acción esta semana: recompras para avisar y lotes que vencen pronto para liquidar. */}
       <div data-dashboard-actions className="grid grid-cols-[minmax(0,1fr)] gap-4 xl:grid-cols-2">
         <RepurchaseWeek />

@@ -28,12 +28,18 @@ const PAGES: [string, string, string][] = [
   ["club", "club/", "h1"],
   ["juego", "club/juego/", "h1"],
   ["cuenta", "cuenta/", "h1"],
+  ["campañas (calendario)", "campana/", "h1"],
+  ["campaña en sala de espera", "campana/?id=black-friday&fase=espera", "h1"],
+  ["campaña en vivo (drop)", "campana/?id=black-friday&fase=vivo", "h1"],
   ["panel inicio", "admin-demo/", "h1"],
   ["panel productos", "admin-demo/productos/", "h1"],
   ["panel editor", "admin-demo/productos/editar/?id=overvolt-pre", "h1"],
   ["panel pedidos", "admin-demo/pedidos/", "h1"],
   ["panel clientes", "admin-demo/usuarios/", "h1"],
   ["panel marketing", "admin-demo/marketing/", "h1"],
+  ["panel campañas", "admin-demo/campanas/", "[data-campaign-chip]"],
+  ["panel editor de campaña", "admin-demo/campanas/editar/?id=black-friday", "[data-preview='desktop']"],
+  ["panel piezas de campaña", "admin-demo/campanas/piezas/?id=black-friday", "[data-piece='story']"],
   ["panel carrusel", "admin-demo/contenido/carrusel/", "h1"],
   ["panel packs", "admin-demo/packs/", "h1"],
   ["panel editor de pack", "admin-demo/packs/editar/?id=hipertrofia", "h1"],
@@ -80,6 +86,20 @@ for (const mode of ["dark", "light"] as const) {
       await expect(section.getByRole("tabpanel", { name: /Deportes/ })).toBeVisible();
       await page.waitForTimeout(400);
       const found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+    });
+    test("inicio con campaña: drop de Black Friday (R3a) y modo vitrina", async ({ page }) => {
+      await page.addInitScript(() => localStorage.setItem("volta-demo:theme-preview", JSON.stringify({ state: { previewId: "black-friday" }, version: 0 })));
+      await page.goto("");
+      await expect(page.locator("[data-theme-banner='black-friday']")).toBeVisible();
+      await page.waitForTimeout(400);
+      let found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+      await page.getByRole("button", { name: "Probar temáticas" }).first().click();
+      await page.getByRole("dialog", { name: "Probar temáticas" }).getByRole("button", { name: /Modo vitrina/ }).click();
+      await expect(page.getByRole("region", { name: "Modo vitrina" })).toBeVisible();
+      await page.waitForTimeout(400);
+      found = await audit(page);
       expect(found, describe(found)).toEqual([]);
     });
     test("catálogo: panel de filtros del celular y selector del comparador", async ({ page }) => {

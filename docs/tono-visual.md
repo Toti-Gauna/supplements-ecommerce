@@ -46,7 +46,9 @@ y distinta de las que hay hoy (negro + rojo agresivo, o blanco clínico). Todo s
 - **Pantalla de carga** (`Splash.tsx` + `app/splash.css`, rediseño R1): el símbolo se enciende como un marcador, sube el
   nombre y se carga una barra de 12 placas. ~1,2 s, **en cada carga completa de la página** (L1; al navegar dentro de la tienda no sale) y se
   retira cuando termina la animación del telón; Escape la cierra y con
-  "reducir movimiento" no aparece. Con temática solo cambia el filo de la barra (`--season-accent`).
+  "reducir movimiento" no aparece. Con una campaña puesta (R3a) sale su variante de ~1,8 s: discos del color de la
+  fecha en la barra y, debajo del logo (nunca encima), un marcador con el nombre de la campaña y el descuento que
+  cuenta hasta su número (`html[data-splash-campaign]`, solo `--season-*` sobre la noche).
 - **Ruleta "Disco olímpico"** (`src/features/club/Wheel*.tsx`): disco de pesas con los gajos en los colores
   reglamentarios (rojo 25 kg, azul 20, amarillo 15, verde 10) con goma moteada y relieve, aro con 24 LED voltio que
   corren en cadena al girar y titilan al ganar, maza de acero moleteada con "VOLTA · 20 KG" y "Girar" en el agujero
@@ -59,6 +61,11 @@ y distinta de las que hay hoy (negro + rojo agresivo, o blanco clínico). Todo s
 - **Temáticas fitness** (`src/features/themes/`): desde R1 la fecha **no repinta la tienda**: solo `--season-accent` y
   `--season-glow` para filos, halos y la cinta del ticker (test `season-rule`). Sin guirnaldas, sin adorno en el logo y
   sin escena en la pantalla de carga. El arte de cada fecha llega como campaña en R3 (lenguaje "Arena").
+- **Campañas (R3a, `src/features/campaigns/`):** el "Drop" abre el carrusel del inicio con el key visual
+  (`CampaignArt`), el rack con los productos reales, el descuento en marcador LED, la cuenta regresiva y el cupón como
+  ticket de acceso; la sala de espera (Black Friday, CyberMonday, Hot Sale) y `/campana/?id=`. En la ficha, el
+  carrito, el seguimiento y el club la fecha suma solo un ticket con su filo (`SeasonTicket`), nunca la compra. El
+  "Modo vitrina" de "Probar temáticas" recorre las 17 fechas sin recargar. Ventanas y descuentos: `src/demo/engine/campaign-*.ts`.
 - **Niveles del club** (`LevelGlyph`): un disco visto de frente con una batería que se carga una celda por nivel
   (Novato, Atleta, Élite, Bestia; Bestia suma el rayo).
 - Fondo con grano fino y grilla de puntos; bandas oscuras con filo voltio muy sutil; botón primario con destello.

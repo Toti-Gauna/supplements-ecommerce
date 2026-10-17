@@ -13,6 +13,7 @@ import { MissionPath } from "./MissionPath";
 import { RewardsWallet } from "./RewardsWallet";
 import { WheelTeaser } from "./WheelTeaser";
 import { GameTeaser } from "../game/GameTeaser";
+import { SeasonTicket } from "../campaigns/SeasonTicket";
 
 const RULES = [
   { icon: Receipt, text: "Solo suman pedidos pagados." },
@@ -40,6 +41,7 @@ export function ClubView() {
   return (
     <div className="flex flex-col gap-14 sm:gap-20">
       <ClubHero missions={missions} done={done} />
+      <SeasonTicket where="club" className="-mt-6 sm:-mt-12" />
       <section aria-labelledby="niveles" className="rounded-sm bg-night p-6 text-on-night sm:rounded-sm sm:p-10 lg:p-14">
         <p className="eyebrow text-volt">Niveles</p>
         <h2 id="niveles" className="font-display mb-8 mt-2 scroll-mt-28 text-4xl leading-tight sm:text-5xl">Cargá tu batería</h2>

@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
-import { ThemesAdmin } from "@/features/admin/themes/ThemesAdmin";
+import { Suspense } from "react";
+import { ModuleMoved } from "@/features/admin/ModuleMoved";
 
-export const metadata: Metadata = { title: "Temáticas" };
+export const metadata: Metadata = { title: "Campañas" };
 
+/** Temáticas pasó a ser Campañas (R3): el enlace viejo lleva al calendario nuevo. */
 export default function AdminThemesPage() {
-  return <ThemesAdmin />;
+  return <Suspense><ModuleMoved to="/admin-demo/campanas/" label="Campañas" /></Suspense>;
 }

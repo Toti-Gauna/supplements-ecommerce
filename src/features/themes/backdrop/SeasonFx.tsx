@@ -17,6 +17,11 @@ const FX: Record<SeasonId, () => ReactNode> = {
   "dia-del-padre": () => <Constellation color="#ffcf5c" />,
   "dia-del-amigo": () => <Rings colors={["#5ee8da", "#c8ff2e", "#ffffff"]} />,
   "operacion-verano": () => <><SunRays color="rgb(255 211 77 / 0.14)" /><Waves colors={["rgb(94 232 218 / 0.10)", "rgb(20 163 199 / 0.12)"]} /></>,
+  "crossfit-open": () => <><HeatGlow color="rgb(255 122 26 / 0.22)" /><PulseLine color="#ff7a1a" /></>,
+  "dia-actividad-fisica": () => <><PulseLine color="#c8ff2e" /><Bokeh colors={["#5ee8da", "#c8ff2e"]} count={6} size={[8, 18]} /></>,
+  "dia-del-futbolista": () => <LightSweeps color="rgb(255 255 255 / 0.07)" />,
+  "dia-del-running": () => <><LightSweeps color="rgb(255 211 77 / 0.07)" /><PulseLine color="#ffd34d" /></>,
+  "dia-del-boxeador": () => <><Fog color="rgb(110 18 24 / 0.25)" /><LightSweeps color="rgb(255 211 77 / 0.06)" /></>,
 };
 
 export function SeasonFx({ id }: { id: SeasonId }) {

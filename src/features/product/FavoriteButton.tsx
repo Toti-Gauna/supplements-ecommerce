@@ -7,7 +7,7 @@ import { useFavorites } from "@/stores/favorites";
 import { useHydrated } from "@/stores/hydration";
 import { useToasts } from "@/stores/toast";
 
-/** Corazón de favoritos (se guardan en este navegador; se ven en la pantalla Favoritos). */
+/** Corazón de favoritos (se guardan en este navegador; se ven en Mi rack, /favoritos/). */
 export function FavoriteButton({ slug, name, className }: { slug: string; name: string; className?: string }) {
   const hydrated = useHydrated();
   const on = useFavorites((s) => hydrated && s.slugs.includes(slug));
@@ -16,8 +16,8 @@ export function FavoriteButton({ slug, name, className }: { slug: string; name: 
   // Destello de corazoncitos solo al guardar con un toque (no al cargar la página con el favorito ya guardado).
   const [burst, setBurst] = useState(0);
   return (
-    <button type="button" aria-pressed={on} aria-label={on ? `Quitar ${name} de favoritos` : `Guardar ${name} en favoritos`}
-      onClick={() => { const added = toggle(slug); if (added) setBurst((b) => b + 1); toast({ tone: "success", title: added ? "Guardado en favoritos" : "Quitado de favoritos", description: name, ...(added && { action: { label: "Ver favoritos", href: "/favoritos/" } }) }); }}
+    <button type="button" aria-pressed={on} aria-label={on ? `Quitar ${name} de Mi rack` : `Guardar ${name} en Mi rack`}
+      onClick={() => { const added = toggle(slug); if (added) setBurst((b) => b + 1); toast({ tone: "success", title: added ? "Guardado en Mi rack" : "Quitado de Mi rack", description: name, ...(added && { action: { label: "Ver Mi rack", href: "/favoritos/" } }) }); }}
       className={cn("relative grid shrink-0 place-items-center rounded-sm border transition-colors", on ? "border-ember/30 bg-[#fbe9e3] text-ember" : "border-ink/15 bg-surface text-ink hover:border-ink/30", className)}>
       <motion.span key={String(on)} initial={{ scale: on ? 0.6 : 1 }} animate={{ scale: 1 }} transition={{ type: "spring", stiffness: 500, damping: 15 }}>
         <Heart size={20} aria-hidden="true" fill={on ? "currentColor" : "none"} />

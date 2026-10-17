@@ -506,7 +506,7 @@ En **Contenido** cambiás lo que se lee en el inicio y en la ayuda, sin pedirle 
 
 - **Carrusel del inicio**: las diapositivas grandes con producto, imagen, titular, bajada y datos de compra.
 - **Textos de inicio**: el bloque del stack en vivo. **Guardar textos**.
-- **Preguntas frecuentes**: las de la página de ayuda. **Guardar preguntas**.
+- **Preguntas frecuentes**: las de la "Ayuda del box". Cada una lleva su **Tema de la ayuda** (compras, envíos y cadete, pagos, cambios y devoluciones, suplementos y lotes, equipamiento y talles, club y regalos), que decide en qué grupo aparece. **Guardar preguntas**.
 
 ### Cambiar el carrusel del inicio
 

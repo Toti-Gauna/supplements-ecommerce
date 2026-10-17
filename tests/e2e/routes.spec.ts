@@ -18,10 +18,11 @@ const ROUTES = [
   ["checkout/confirmacion/", "Confirmación"],
   ["pedido/demo-volta/", "Seguimiento de tu pedido"],
   ["cuenta/", "Mi cuenta"],
-  ["preguntas/", "Preguntas frecuentes"],
+  ["preguntas/", "Ayuda del box"],
   ["terminos/", "Términos y condiciones"],
   ["privacidad/", "Política de privacidad"],
   ["arrepentimiento/", "Botón de arrepentimiento"],
+  ["favoritos/", "Mi rack"],
   ["club/", "Sumá carga. Subí de nivel."],
   ["regalo/", "¿Te hicieron un regalo?"],
 ] as const;

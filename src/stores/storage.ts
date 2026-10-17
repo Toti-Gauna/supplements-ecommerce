@@ -13,7 +13,8 @@ export const STORAGE_PREFIX = `${brand.storageKey}-demo:`;
 // v13: imágenes propias del carrusel, preservando las ediciones compatibles de v10–v12.
 // v14: tienda deportiva multimarca (L2): se suman las categorías y los productos de equipamiento sin tocar lo editado.
 // v15: campañas de R3a: días del deporte con sus cupones y rangos nuevos solo donde el dueño no cambió las fechas.
-export const ADMIN_STORE_VERSION = 15;
+// v16: ayuda del box (R2c): cada pregunta frecuente lleva su tema y se suman las preguntas nuevas.
+export const ADMIN_STORE_VERSION = 16;
 
 /** localStorage tolerante a modo privado / cuota llena: la demo sigue funcionando en memoria. */
 const memory = new Map<string, string>();

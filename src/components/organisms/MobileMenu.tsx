@@ -19,7 +19,7 @@ const LINKS = [
   { href: "/crear/", label: "Armá tu stack", icon: IconBarbell },
   { href: "/club/", label: brand.club, icon: IconKettlebell },
   { href: "/club/juego/", label: "Shaker Rush", icon: IconShaker },
-  { href: "/favoritos/", label: "Favoritos", icon: Heart },
+  { href: "/favoritos/", label: "Mi rack", icon: Heart },
   { href: "/cupones/", label: "Mis cupones", icon: TicketPercent },
   { href: "/regalo/", label: "Tengo un regalo", icon: Gift },
   { href: "/cuenta/", label: "Mi cuenta", icon: UserRound },

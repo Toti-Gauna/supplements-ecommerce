@@ -16,9 +16,9 @@ const DEVICES = [
 const SHOP = [
   ["", "Cargá tu mejor versión"], ["buscar/?q=creatna", "Buscar"], ["categorias/", "Todas las categorías"], ["c/proteinas/", "Proteínas"],
   ["p/ionic-whey/", "Ionic Whey 100%"], ["p/creatina-monohidrato/", "Creatina monohidrato"], ["crear/", "Armá tu stack"],
-  ["cupones/", "Mis cupones"], ["favoritos/", "Favoritos"], ["carrito/", "Tu carrito"], ["checkout/", "Finalizar compra"],
+  ["cupones/", "Mis cupones"], ["favoritos/", "Mi rack"], ["carrito/", "Tu carrito"], ["checkout/", "Finalizar compra"],
   ["checkout/confirmacion/", "Confirmación"], ["pedido/demo-volta/", "Seguimiento de tu pedido"], ["cuenta/", "Mi cuenta"],
-  ["club/", "Sumá carga. Subí de nivel."], ["regalo/", "¿Te hicieron un regalo?"], ["preguntas/", "Preguntas frecuentes"], ["terminos/", "Términos y condiciones"],
+  ["club/", "Sumá carga. Subí de nivel."], ["regalo/", "¿Te hicieron un regalo?"], ["preguntas/", "Ayuda del box"], ["terminos/", "Términos y condiciones"],
   ["privacidad/", "Política de privacidad"], ["arrepentimiento/", "Botón de arrepentimiento"],
 ] as const;
 

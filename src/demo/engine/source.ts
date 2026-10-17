@@ -9,7 +9,7 @@ import { products } from "../fixtures/products";
 import { seasonalThemes, themeCoupons, themeSettings } from "../fixtures/themes";
 import { defaultWheel, type WheelConfig } from "../fixtures/wheel";
 import type { PriceChange } from "./price-history";
-import type { Category, Coupon, Faq, HeroFeature, Mission, Pack, Product, SeasonalTheme, ShippingZone, ThemeSettings } from "../types";
+import type { Category, Coupon, HeroFeature, Mission, Pack, Product, SeasonalTheme, ShippingZone, StoreFaq, ThemeSettings } from "../types";
 
 /**
  * Datos editables de la demo. La tienda los lee de acá; el panel demo los modifica
@@ -25,7 +25,7 @@ export interface DemoData {
   wheel: WheelConfig;
   /** Premios por puntaje de Shaker Rush (Marketing → Cupones y ruleta → Premios del juego). */
   game: GamePrizeConfig;
-  content: { hero: HeroFeature[]; homeCta: { title: string; text: string }; faqs: Faq[] };
+  content: { hero: HeroFeature[]; homeCta: { title: string; text: string }; faqs: StoreFaq[] };
   themes: SeasonalTheme[];
   themeSettings: ThemeSettings;
   /** Objetivos de entrenamiento (nombre, bajada y color se editan en el panel → Categorías). */

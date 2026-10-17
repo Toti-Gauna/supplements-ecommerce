@@ -49,11 +49,11 @@ test("sonidos: suenan al agregar y en favoritos; el silencio se recuerda", async
   await expect(toggle).toHaveAttribute("aria-pressed", "false");
   await page.reload();
   await expect(toggle).toHaveAttribute("aria-pressed", "false");
-  await page.getByRole("button", { name: /favoritos/i }).first().click();
+  await page.getByRole("button", { name: /Mi rack/i }).first().click();
   expect(await sounds(page)).toEqual([]);
   await toggle.click();
   await page.evaluate(() => { window.__voltaSounds = []; });
-  await page.getByRole("button", { name: /favoritos/i }).first().click();
+  await page.getByRole("button", { name: /Mi rack/i }).first().click();
   expect(await sounds(page)).toContain("unfavorite");
   assertNoExternal();
 });

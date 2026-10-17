@@ -4,6 +4,7 @@ import { StockMeter } from "@/components/molecules/StockMeter";
 import { availability, getCategory, isGear, isPurchasable, maxQuantity, type Availability } from "@/demo/engine/catalog";
 import { firstOutLot, variantClearance } from "@/demo/engine/lots";
 import { priceOptions, reviewsFor, sheetScore } from "@/demo/engine/sheet";
+import { gearReadouts, scoreReadouts } from "@/demo/engine/sheet-readouts";
 import type { Product } from "@/demo/types";
 import { useAccount } from "@/stores/account";
 import { useDemoData } from "@/stores/admin";
@@ -14,6 +15,7 @@ import { AttributeScores } from "./AttributeScores";
 import { BuyActions, MobileBuyBar } from "./BuyBar";
 import { ConfigureCard } from "./ConfigureCard";
 import { DeliveryEstimate } from "./DeliveryEstimate";
+import { GearLabel } from "./GearLabel";
 import { LotLabel } from "./LotLabel";
 import { LotVerifier } from "./LotVerifier";
 import { MissionChip } from "./MissionChip";
@@ -21,10 +23,9 @@ import { NutritionFacts } from "./NutritionFacts";
 import { ProductAccordions } from "./ProductAccordions";
 import { ServingCalculator } from "./ServingCalculator";
 import { SheetHeader } from "./SheetHeader";
-import { SheetScore } from "./SheetScore";
+import { SheetPrice } from "./SheetPrice";
 import { SpecGallery } from "./SpecGallery";
 import { ProductOffers } from "./ProductOffers";
-import { TwoPrices } from "./TwoPrices";
 import { UsageTimeline } from "./UsageTimeline";
 import { useProductPurchase } from "./useProductPurchase";
 import { useVariantSelection } from "./useVariantSelection";
@@ -34,9 +35,10 @@ function stockNote(a: Availability): string {
 }
 
 /**
- * Ficha "hoja técnica" (R2). Arriba, el nombre, el marcador por servicio, los dos precios, sabor y tamaño como placas,
- * la compra y la etiqueta del lote; la galería (banco con cotas, rótulo y escenas) a la izquierda en escritorio y debajo
- * en el celular. Abajo: cómo tomarlo, calculadora, un solo stack, rótulo completo, "Verificá tu lote", entrega y reseñas.
+ * Ficha "hoja técnica" (R2a). Arriba, el nombre, el precio total en el marcador con la tira chica de cuánto rinde (L1),
+ * los dos precios, sabor y tamaño como placas, la compra y la etiqueta del lote (en el equipamiento, la de garantía);
+ * la galería (foto del panel, banco con cotas, rótulo y escenas) a la izquierda en escritorio y debajo en el celular.
+ * Abajo: cómo tomarlo, calculadora, stack y packs, rótulo completo, "Verificá tu lote", entrega y reseñas.
  * `preview` (8.3.21): muestra el borrador del panel tal cual, sin comprar ni favoritos.
  */
 export function ProductDetail({ product: initial, preview = false }: { product: Product; preview?: boolean }) {
@@ -79,10 +81,10 @@ export function ProductDetail({ product: initial, preview = false }: { product: 
         </div>
         <div className="order-1 flex min-w-0 flex-col gap-4 lg:order-2 lg:gap-5">
           <SheetHeader product={product} category={getCategory(product.categorySlug)?.name} tint={sel.variant.colorHex} preview={preview} />
-          {(score.servings || score.active) && <SheetScore score={score} perDay={perDay} flipKey={sel.variant.id} />}
-          <TwoPrices price={score.price} options={priceOptions(score.price, settings.transferDiscountPct)} clearance={variantClearance(product, sel.variant)} taxRate={settings.nationalTaxRate} />
+          <SheetPrice price={score.price} presentation={sel.variant.label} readouts={gear ? gearReadouts(product) : scoreReadouts(score, perDay)} flipKey={sel.variant.id}
+            options={priceOptions(score.price, settings.transferDiscountPct)} clearance={variantClearance(product, sel.variant)} taxRate={settings.nationalTaxRate} />
           <ConfigureCard product={product} sel={sel} quantity={quantity} max={max} stockNote={stockNote(avail)} onQuantity={setQty} stock={stock} actions={<BuyActions {...buy} />} />
-          <LotLabel product={product} variant={sel.variant} />
+          {gear ? <GearLabel product={product} /> : <LotLabel product={product} variant={sel.variant} />}
           <GiftModal open={giftOpen} onClose={() => setGiftOpen(false)} productName={product.name}
             onSubmit={(gift, mode) => { setGiftOpen(false); purchase(mode, gift); }} />
         </div>

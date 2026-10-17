@@ -10,9 +10,12 @@ export function useVariantSelection(product: Product, initialVariantId?: string 
   const options = variantOptions(product);
   const variant: Variant = findVariant(product, color, size) ?? findVariant(product, color) ?? initial;
 
+  // Otro sabor o color: se queda con el tamaño si existe y tiene stock; si no, pasa al primero con stock de ese sabor.
   const chooseColor = (c: string) => {
     setColor(c);
-    if (!findVariant(product, c, size)) setSize(findVariant(product, c)?.size);
+    const same = findVariant(product, c, size);
+    if (same && same.stock !== 0) return;
+    setSize((product.variants.find((v) => v.color === c && v.stock !== 0) ?? same ?? findVariant(product, c))?.size);
   };
 
   const colorOptions = options.colors.map((c) => ({

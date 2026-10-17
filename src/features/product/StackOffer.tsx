@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Button } from "@/components/atoms/Button";
 import { ProductArt } from "@/components/illustrations/ProductArt";
 import { productHref } from "@/demo/engine/catalog";
-import { DEFAULT_STACK_RULE, stackDiscount, stackSuggestions } from "@/demo/engine/stack";
+import { DEFAULT_STACK_RULE, isStackCategory, stackDiscount, stackSuggestions } from "@/demo/engine/stack";
 import { variantPrice } from "@/demo/engine/servings";
 import type { Product, Variant } from "@/demo/types";
 import { cn } from "@/lib/cn";
@@ -28,7 +28,8 @@ export function StackOffer({ product, variant }: { product: Product; variant: Va
   const openCart = useUi((s) => s.openCart);
   const suggestions = stackSuggestions(product, catalog, Math.max(2, rule.minCategories - 1));
   const [off, setOff] = useState<string[]>([]);
-  if (suggestions.length === 0 || !product.categorySlug) return null;
+  // El equipamiento no suma categorías al stack: ofrecerlo acá prometería un descuento que no se aplica.
+  if (suggestions.length === 0 || !isStackCategory(product.categorySlug)) return null;
   const picks: Pick[] = [{ product, variant }, ...suggestions.map((p) => ({ product: p, variant: p.variants.find((v) => v.stock !== 0)! }))];
   const chosen = picks.filter((p, i) => i === 0 || !off.includes(p.product.slug));
   const lines = chosen.map((p) => ({ product: p.product, lineTotal: variantPrice(p.product, p.variant) }));

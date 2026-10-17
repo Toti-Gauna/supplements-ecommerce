@@ -41,7 +41,8 @@ export function WithdrawalForm() {
       const claimCode = demoClaimCode();
       addClaim({ code: claimCode, type: "WITHDRAWAL", orderCode: data.orderCode || undefined, name: data.name, email: data.email, message: data.message });
       setCode(claimCode);
-    })} className="flex flex-col gap-4 rounded-sm border border-line bg-surface p-5">
+    })} className="plate relative flex flex-col gap-4 border border-line p-5 sm:p-6">
+      <span aria-hidden="true" className="lane absolute inset-x-0 top-0 h-1" />
       <Field id="w-order" label="Código de pedido (si lo tenés)" hint={`Ej.: ${ORDER_PREFIX}-000123`}>
         <Input id="w-order" aria-describedby="w-order-hint" {...form.register("orderCode")} />
       </Field>

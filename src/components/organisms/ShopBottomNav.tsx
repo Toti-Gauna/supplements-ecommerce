@@ -15,7 +15,7 @@ const LEFT: Tab[] = [
   { href: "/categorias/", label: "Tienda", icon: LayoutGrid, match: (p) => p.startsWith("/categorias") || p.startsWith("/c/") },
 ];
 const RIGHT: Tab[] = [
-  { href: "/favoritos/", label: "Favoritos", icon: Heart, match: (p) => p.startsWith("/favoritos") },
+  { href: "/favoritos/", label: "Mi rack", icon: Heart, match: (p) => p.startsWith("/favoritos") },
   { href: "/cuenta/", label: "Mi cuenta", icon: UserRound, match: (p) => p.startsWith("/cuenta") },
 ];
 const SLOTS = [...LEFT, null, ...RIGHT];

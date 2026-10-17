@@ -2,6 +2,7 @@
 import { useCallback, useState } from "react";
 import { DEFAULT_STACK_RULE } from "@/demo/engine/stack";
 import { decodeGoals, decodeSport, decodeStack, defaultStack, encodeStack, firstInStock, stackSummary, type StackPick } from "@/demo/engine/stack-builder";
+import { equalizeDuration } from "@/demo/engine/stack-duration";
 import { chooseSport, EMPTY_SELECTION, selectionFromUrl, sportGear, toggleGoal, type GoalSelection } from "@/demo/engine/stack-goals";
 import { STACK_SLOTS, type StackSlotId } from "@/demo/fixtures/stack-builder";
 import type { Goal, SportId } from "@/demo/types";
@@ -72,7 +73,21 @@ export function useStackBuilder() {
 
   const pickVariant = (slot: StackSlotId, variantId: string) => {
     const current = picks.find((p) => p.slot === slot);
-    if (current) commit(sel, withPick(picks, { ...current, variantId }));
+    const stock = catalog.find((p) => p.slug === current?.slug)?.variants.find((v) => v.id === variantId)?.stock ?? 0;
+    // La cantidad sigue, salvo que la presentación nueva no tenga tantas.
+    if (current) commit(sel, withPick(picks, { ...current, variantId, ...(current.qty && stock >= 0 ? { qty: Math.min(current.qty, stock) } : {}) }));
+  };
+
+  const setQty = (slot: StackSlotId, qty: number) => {
+    const current = picks.find((p) => p.slot === slot);
+    if (current) commit(sel, withPick(picks, qty > 1 ? { ...current, qty } : { slot, slug: current.slug, variantId: current.variantId }));
+  };
+
+  /** "Igualar duración": tamaños y cantidades para que todo se termine junto. Devuelve qué cambió (para avisarlo). */
+  const equalize = () => {
+    const result = equalizeDuration(picks, catalog);
+    if (result.changed.length) commit(sel, result.picks);
+    return result;
   };
 
   return {
@@ -90,6 +105,10 @@ export function useStackBuilder() {
     pickSport,
     pickProduct,
     pickVariant,
+    setQty,
+    equalize,
+    /** Lo que haría "Igualar duración" con el estante de ahora (sin aplicarlo). */
+    equalized: equalizeDuration(picks, catalog),
     clearSlot: (slot: StackSlotId) => commit(sel, picks.filter((p) => p.slot !== slot)),
     /** Link absoluto (con el dominio y el basePath de Pages) para compartir este estante. */
     shareUrl: () => `${window.location.origin}${withBase("/crear/")}?${encodeStack(sel.goals, picks, sel.sport)}`,

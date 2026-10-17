@@ -1,19 +1,18 @@
 import type { Metadata } from "next";
-import { ButtonLink } from "@/components/atoms/Button";
-import { FaqView } from "@/features/catalog/FaqView";
 import { PageHeader } from "@/components/templates/PageHeader";
+import { HelpView } from "@/features/help/HelpView";
 
-export const metadata: Metadata = { title: "Preguntas frecuentes" };
+export const metadata: Metadata = {
+  title: "Ayuda del box",
+  description: "Preguntas frecuentes por tema (compras, envíos y cadete, pagos, cambios, suplementos y lotes, equipamiento y talles, club y regalos) con buscador, y el WhatsApp del local.",
+};
 
-export default function FaqPage() {
+/** Ayuda del box (R2c): preguntas frecuentes agrupadas por tema, con buscador y contacto con el local. */
+export default function HelpPage() {
   return (
-    <div className="max-w-3xl">
-      <PageHeader title="Preguntas frecuentes">Lo que más nos preguntan antes de comprar.</PageHeader>
-      <FaqView />
-      <div className="mt-8 flex flex-wrap gap-3">
-        <ButtonLink href="/categorias/">Ver productos</ButtonLink>
-        <ButtonLink href="/arrepentimiento/" variant="secondary">Botón de arrepentimiento</ButtonLink>
-      </div>
-    </div>
+    <>
+      <PageHeader title="Ayuda del box">Preguntas frecuentes por tema. Buscá con tus palabras (sin tildes también) y, si no está, preguntale al local.</PageHeader>
+      <HelpView />
+    </>
   );
 }

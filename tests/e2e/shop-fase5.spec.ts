@@ -88,9 +88,8 @@ test("con movimiento reducido navegar y elegir sabor no inicia capturas nativas 
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("c/pre-entrenos/");
   await page.getByRole("link", { name: "Overvolt pre-entreno", exact: true }).click();
-  const card = page.getByRole("region", { name: "Elegí sabor, tamaño y cantidad" });
-  await card.getByTitle("Limón").click();
-  await expect(card.getByRole("radio", { name: "Limón" })).toBeChecked();
+  await page.getByRole("group", { name: /^Sabor/ }).getByTitle("Limón").click();
+  await expect(page.getByRole("group", { name: /^Sabor/ }).getByRole("radio", { name: "Limón" })).toBeChecked();
   expect(await page.evaluate(() => (window as unknown as { __vtCalls: number }).__vtCalls)).toBe(0);
   expect(errors).toEqual([]);
 });
@@ -99,7 +98,7 @@ test("microinteracciones: la cantidad rueda sin duplicar el número y el corazó
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("p/ionic-whey/");
   await page.keyboard.press("Escape");
-  await page.getByRole("button", { name: /Guardar .* en favoritos/ }).first().click();
+  await page.getByRole("button", { name: /Guardar .* en Mi rack/ }).first().click();
   await expect(page.locator("button[aria-pressed='true'] .bg-ember").first()).toBeAttached();
   await page.getByRole("button", { name: "Agregar al carrito" }).last().click();
   await page.goto("carrito/");

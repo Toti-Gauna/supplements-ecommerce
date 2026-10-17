@@ -123,6 +123,6 @@ test("la foto cargada en el panel se ve en la galería, junto al rótulo; la vis
   await views.getByRole("button", { name: /Rótulo/ }).click();
   await expect(page.locator("[data-vt-hero]").getByText("Información nutricional")).toBeVisible();
   await expect(page.getByRole("button", { name: "Comprar ahora" })).toBeDisabled();
-  await expect(page.getByRole("button", { name: /favoritos/ })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: /Mi rack/ })).toHaveCount(0);
   await expect(page.locator("[data-buy-bar]")).toBeHidden();
 });

@@ -16,13 +16,14 @@ interface SlotCardProps {
   onOpen: () => void;
   onClear: () => void;
   onVariant: (variantId: string) => void;
+  onQty: (qty: number) => void;
   className?: string;
 }
 
 const slotLower = (slot: StackSlot) => slot.name.toLowerCase();
 
-/** Un lugar del estante: lo elegido (envase, precio y precio por servicio, sabor y tamaño) o el botón para sumar algo. */
-export function SlotCard({ slot, index, line, onOpen, onClear, onVariant, className }: SlotCardProps) {
+/** Un lugar del estante: lo elegido (envase, precio, precio por servicio, cuánto dura, sabor, tamaño y cantidad) o el botón para sumar algo. */
+export function SlotCard({ slot, index, line, onOpen, onClear, onVariant, onQty, className }: SlotCardProps) {
   const titleId = useId();
   return (
     <li aria-labelledby={titleId} className={cn("rounded-sm border border-line bg-surface p-4 shadow-[var(--shadow-card)] sm:p-5", className)}>
@@ -52,11 +53,13 @@ export function SlotCard({ slot, index, line, onOpen, onClear, onVariant, classN
               <p className="mt-0.5 truncate text-xs text-muted">{line.product.brand}{line.variant.servings ? ` · ${line.variant.servings} servicios` : ""}</p>
               <p className="mt-1.5 flex flex-wrap items-baseline gap-x-2">
                 <span className="font-lab text-base font-bold">{formatARS(line.price)}</span>
+                {line.qty > 1 && <span className="font-lab text-xs text-muted">{line.qty} × {formatARS(line.unitPrice)}</span>}
                 {line.perServing !== null && <span className="font-lab text-xs font-semibold text-volt-ink">{formatARS(line.perServing)} por servicio</span>}
               </p>
+              {line.days !== null && <p data-slot-days className="font-lab mt-0.5 text-xs font-semibold text-ink">Te dura {line.days} días</p>}
             </div>
           </div>
-          <SlotVariantSelects product={line.product} variant={line.variant} onChange={onVariant} />
+          <SlotVariantSelects product={line.product} variant={line.variant} qty={line.qty} onChange={onVariant} onQty={onQty} />
           <button type="button" onClick={onOpen} aria-label={`Cambiar ${slotLower(slot)}`}
             className="flex min-h-11 items-center justify-center gap-2 rounded-sm border border-ink/15 text-sm font-bold transition-colors hover:border-primary hover:text-primary">
             <RefreshCw size={15} aria-hidden="true" />Cambiar

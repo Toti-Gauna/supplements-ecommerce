@@ -6,7 +6,7 @@ import type { SportInfo } from "@/demo/fixtures/sports";
 import { useSports } from "../catalog/useSports";
 import type { SportId } from "@/demo/types";
 import { cn } from "@/lib/cn";
-import { CHOICE_CARD, CHOICE_INPUT, CHOICE_ON, ChoiceMark, QuizChoice } from "./QuizChoice";
+import { CHOICE_CARD, CHOICE_INPUT, CHOICE_ON, ChoiceMark, QuizChoice, reselect } from "./QuizChoice";
 
 interface Props {
   /** undefined: sin contestar; null: "Solo gimnasio". */
@@ -19,7 +19,7 @@ function SportTile({ sport, checked, onPick }: { sport: SportInfo; checked: bool
   return (
     <label style={{ "--hue": sport.hue } as CSSProperties} data-sport-option={sport.id}
       className={cn(CHOICE_CARD, "flex min-w-0 flex-col gap-2 p-2.5 sm:p-3", checked && CHOICE_ON)}>
-      <input type="radio" name="sport" value={sport.id} checked={checked} onChange={onPick} className={CHOICE_INPUT} />
+      <input type="radio" name="sport" value={sport.id} checked={checked} onChange={onPick} {...reselect(checked, onPick)} className={CHOICE_INPUT} />
       <span aria-hidden="true"
         className="relative grid h-24 place-items-center overflow-hidden rounded-sm bg-[radial-gradient(70%_70%_at_50%_100%,color-mix(in_oklab,var(--hue)_22%,transparent),transparent_75%)] text-[color:var(--hue)] ring-1 ring-white/[0.06] sm:h-28">
         <SportArt sport={sport.id} className="h-full w-auto py-1.5 drop-shadow-[0_0_10px_color-mix(in_srgb,var(--hue)_40%,transparent)]" />

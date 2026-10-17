@@ -49,17 +49,37 @@ export function ShelfDefs({ ids }: { ids: ShelfIds }) {
   );
 }
 
-/** Fondo de la vitrina: pared con grilla de puntos, halo plasma, parantes y la tira de LED de arriba. */
+/** Parante del rack de sentadillas: acero con agujeros cada 22 unidades y un gancho J a la altura de la repisa. */
+function RackUpright({ x, flip }: { x: number; flip?: boolean }) {
+  const hook = flip ? `M${x} 290h-16v-14h-6v24h22Z` : `M${x + 22} 290h16v-14h6v24h-22Z`;
+  return (
+    <g>
+      <rect x={x} y="6" width="22" height="394" fill="url(#rk-steel)" />
+      <rect x={x} y="6" width="1.5" height="394" fill="#fff" opacity=".14" />
+      <path d={`M${x + 11} 40V392`} stroke="#07080a" strokeWidth="7" strokeDasharray="9 13" />
+      <path d={hook} fill="#3a4047" />
+    </g>
+  );
+}
+
+/**
+ * Fondo del rack: pared con grilla de puntos y halo plasma, dos parantes con agujeros y ganchos, el travesaño de
+ * arriba (barra de dominadas) y la tira de LED que ilumina los cuatro lugares.
+ */
 export function ShelfBackdrop({ ids }: { ids: ShelfIds }) {
   return (
     <g aria-hidden="true">
       <rect width={SHELF_W} height="400" fill={`url(#${ids.wall})`} />
       <rect width={SHELF_W} height={FLOOR} fill={`url(#${ids.dots})`} />
       <rect width={SHELF_W} height="400" fill={`url(#${ids.plasma})`} />
-      <g stroke="#fff" strokeOpacity=".05">{[200, 400, 600].map((x) => <path key={x} d={`M${x} 34V302`} />)}</g>
-      <rect x="24" y="26" width="752" height="80" fill={`url(#${ids.led})`} opacity=".5" />
-      <rect x="24" y="22" width="752" height="4" rx="2" fill={brand.signature.volt} opacity=".85" />
-      <rect x="24" y="22" width="752" height="1.4" fill="#f6ffd6" opacity=".9" />
+      <g stroke="#fff" strokeOpacity=".05">{[200, 400, 600].map((x) => <path key={x} d={`M${x} 40V302`} />)}</g>
+      <rect x="24" y="30" width="752" height="80" fill={`url(#${ids.led})`} opacity=".5" />
+      <RackUpright x={2} />
+      <RackUpright x={776} flip />
+      <rect x="2" y="8" width="796" height="16" fill="url(#rk-steel)" />
+      <path d="M2 12H798" stroke="#fff" strokeOpacity=".16" strokeWidth="1.2" strokeDasharray="2 3" />
+      <rect x="24" y="24" width="752" height="4" fill={brand.signature.volt} opacity=".85" />
+      <rect x="24" y="24" width="752" height="1.4" fill="#f6ffd6" opacity=".9" />
     </g>
   );
 }

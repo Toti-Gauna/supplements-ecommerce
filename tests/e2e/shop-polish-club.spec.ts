@@ -5,21 +5,24 @@ import { horizontalOverflow } from "./helpers";
 const preview = (page: Page, id: string) =>
   page.addInitScript((v) => localStorage.setItem("volta-demo:theme-preview", JSON.stringify({ state: { previewId: v }, version: 0 })), id);
 
-test("8.2.13 portada del Club: métricas, próximo premio y accesos; las funciones siguen igual", async ({ page }) => {
+test("8.2.13 portada del Club: marcador, próximo premio y accesos (R2c: sin cuenta invita, con cuenta muestra lo tuyo)", async ({ page }) => {
   await page.goto("club/");
   const hero = page.getByRole("region", { name: "Sumá carga. Subí de nivel." });
   await expect(hero.getByRole("heading", { level: 1 })).toBeVisible();
-  for (const label of ["Misiones activas", "Completadas", "Premios en producto"]) await expect(hero.getByText(label, { exact: true })).toBeVisible();
+  for (const label of ["Misiones", "Giro del disco", "Niveles"]) await expect(hero.getByText(label, { exact: true })).toBeVisible();
   await expect(hero.getByText("Tu próximo premio")).toBeVisible();
-  await expect(hero.getByRole("progressbar", { name: /Progreso hacia/ })).toHaveAttribute("aria-valuenow", "0");
-  // Con la cuenta demo, el próximo premio toma el progreso de ejemplo (motor de misiones, sin cambios).
-  await hero.getByRole("button", { name: "Ver mi progreso con la cuenta demo" }).click();
-  await expect(hero.getByText("Progreso de Sofía")).toBeVisible();
+  await expect(hero.getByRole("progressbar", { name: "Tu carga: sin cuenta no suma" })).toHaveAttribute("aria-valuenow", "0");
+  // Con la cuenta demo, el marcador y el próximo premio toman el progreso de ejemplo (motor de misiones).
+  await expect(async () => {
+    await hero.getByRole("button", { name: "Crear la cuenta demo" }).first().click({ timeout: 1000 });
+    await expect(hero.getByText(/Progreso de Sofía/)).toBeVisible({ timeout: 1000 });
+  }).toPass();
+  for (const label of ["Tus puntos del mes", "Misiones completas", "Entrenos del mes"]) await expect(hero.getByText(label, { exact: true })).toBeVisible();
   await expect(hero.getByRole("progressbar", { name: /Progreso hacia/ })).not.toHaveAttribute("aria-valuenow", "0");
   // La ruleta sigue con su único botón y el acceso de la portada lleva hasta ella.
   await expect(page.getByRole("button", { name: "Girar la ruleta" })).toHaveCount(1);
   await hero.getByRole("link", { name: "Ir a la ruleta" }).click();
-  await expect(page.getByRole("heading", { name: "Girá y llevate un premio" })).toBeInViewport();
+  await expect(page.getByRole("heading", { name: "Cargá la barra y girá" })).toBeInViewport();
 });
 
 test("8.2.13 la portada toma solo el acento de la temática vigente", async ({ page }) => {

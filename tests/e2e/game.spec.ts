@@ -54,7 +54,7 @@ test("inicio: instrucciones, premios, teclado, pausa y salida sin mover la pági
   expect(await page.evaluate(() => document.documentElement.style.overflow)).toBe("");
 });
 
-test("partida hasta el premio, cupón aplicado en el carrito y uno solo por día", async ({ page }) => {
+test("partida hasta el premio, uno solo por día y «Usar cupón ahora» lo aplica en el carrito", async ({ page }) => {
   test.setTimeout(150_000);
   const assertNoExternal = guardNetwork(page);
   await deterministic(page);
@@ -80,22 +80,22 @@ test("partida hasta el premio, cupón aplicado en el carrito y uno solo por día
   const sounds = await page.evaluate(() => (window as unknown as { __voltaSounds: string[] }).__voltaSounds);
   expect(sounds).toEqual(expect.arrayContaining(["catch", "gameover"]));
   expect(await page.evaluate(() => (window as unknown as { __vibes: unknown[] }).__vibes)).toContainEqual([30, 50, 70]);
-  await stage.getByRole("button", { name: `Aplicar cupón ${code} al carrito` }).click();
-  await expect(stage.getByText("Aplicado", { exact: true })).toBeVisible();
+  await expect(stage.getByRole("button", { name: "Usar cupón ahora" })).toBeVisible();
 
-  // Segunda partida el mismo día: se juega igual, pero no hay otro cupón.
+  // Segunda partida el mismo día: se juega igual, pero no hay otro cupón (el de hoy se puede usar desde acá).
   await stage.getByRole("button", { name: "Jugar de nuevo" }).click();
   await page.clock.runFor(50_000);
   await expect(stage.getByText("Hoy ya ganaste tu cupón", { exact: true })).toBeVisible();
   await expect(stage.getByText(code, { exact: true })).toBeVisible();
-  await expect(stage.getByRole("button", { name: /Aplicar cupón/ })).toHaveCount(0);
-  await stage.getByRole("button", { name: "Volver" }).click();
-  await expect(stage).toBeHidden();
+  await expect(stage.getByText(CODE)).toHaveCount(1);
   await page.clock.resume();
+  // "Usar cupón ahora" lo aplica al carrito y lleva al carrito.
+  await stage.getByRole("button", { name: "Usar cupón ahora" }).click();
+  await expect(page).toHaveURL(/carrito\/$/);
+  await expect(page.getByText(new RegExp(`${code}: Shaker Rush`))).toBeVisible();
+  await page.goto("club/juego/");
   await expect(page.getByText(/^Ganado:/)).toBeVisible();
 
-  await page.goto("carrito/");
-  await expect(page.getByText(new RegExp(`${code}: Shaker Rush`))).toBeVisible();
   await page.goto("cupones/");
   await expect(page.getByText(CODE)).toHaveCount(1);
   await expect(page.getByText("Ganado en Shaker Rush")).toBeVisible();

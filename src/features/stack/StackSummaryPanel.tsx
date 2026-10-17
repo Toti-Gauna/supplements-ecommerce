@@ -1,5 +1,6 @@
 "use client";
 import { Link2, ShoppingBag } from "lucide-react";
+import type { Ref } from "react";
 import { Button } from "@/components/atoms/Button";
 import { OrderSummary, type SummaryRow } from "@/components/molecules/OrderSummary";
 import type { StackSummary } from "@/demo/engine/stack-builder";
@@ -13,6 +14,8 @@ interface StackSummaryPanelProps {
   onAdd: () => void;
   onCopy: () => void;
   className?: string;
+  /** La placa fija del celular se va cuando este resumen aparece. */
+  ref?: Ref<HTMLDivElement>;
 }
 
 /** Costo por día (un servicio de cada producto, con el descuento) y el precio por servicio de cada uno. */
@@ -39,15 +42,15 @@ function PerDay({ summary }: { summary: StackSummary }) {
  * Resumen del estante con el mismo cálculo y las mismas filas que el carrito: batería de categorías hacia el descuento
  * stack, subtotal, descuento, total, costo por día y las acciones (agregar todo y copiar el link).
  */
-export function StackSummaryPanel({ summary, onAdd, onCopy, className }: StackSummaryPanelProps) {
-  const units = summary.lines.length;
+export function StackSummaryPanel({ summary, onAdd, onCopy, className, ref }: StackSummaryPanelProps) {
+  const units = summary.lines.reduce((s, l) => s + l.qty, 0);
   const empty = units === 0;
   const rows: SummaryRow[] = [
     { label: `Subtotal (${units} ${units === 1 ? "producto" : "productos"})`, amount: summary.subtotal },
     ...(summary.stack.discount > 0 ? [{ label: `Descuento stack (${summary.stack.pct} %)`, amount: summary.stack.discount, negative: true }] : []),
   ];
   return (
-    <div className={cn("flex flex-col gap-3", className)}>
+    <div ref={ref} className={cn("flex flex-col gap-3", className)}>
       <StackNudge stack={summary.stack} compact />
       <OrderSummary title="Resumen de tu stack" rows={rows} total={summary.total}
         totalNote={empty ? "Tu estante está vacío: elegí un objetivo o sumá algo en cada lugar." : undefined}>

@@ -58,6 +58,14 @@ export interface Faq {
   a: string;
 }
 
+/** Temas de la ayuda del box (R2c): agrupan las preguntas frecuentes de la tienda. */
+export type FaqTopic = "compras" | "envios" | "pagos" | "cambios" | "suplementos" | "equipamiento" | "club";
+
+/** Pregunta frecuente de la tienda (se edita en el panel → Contenido → Preguntas frecuentes). */
+export interface StoreFaq extends Faq {
+  topic: FaqTopic;
+}
+
 /** Objetivos de entrenamiento: filtran el catálogo y arman stacks. */
 export type Goal = "masa-muscular" | "fuerza" | "energia" | "recuperacion" | "definicion" | "salud" | "resistencia";
 

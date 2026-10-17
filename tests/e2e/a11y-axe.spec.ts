@@ -29,6 +29,12 @@ const PAGES: [string, string, string][] = [
   ["juego", "club/juego/", "h1"],
   ["cuenta", "cuenta/", "h1"],
   ["campañas (calendario)", "campana/", "h1"],
+  ["Mi rack vacío", "favoritos/", "h1"],
+  ["ayuda del box", "preguntas/", "h1"],
+  ["términos", "terminos/", "h1"],
+  ["privacidad", "privacidad/", "h1"],
+  ["arrepentimiento", "arrepentimiento/", "h1"],
+  ["404 dentro de la tienda", "no-existe/", "h1"],
   ["campaña en sala de espera", "campana/?id=black-friday&fase=espera", "h1"],
   ["campaña en vivo (drop)", "campana/?id=black-friday&fase=vivo", "h1"],
   ["panel inicio", "admin-demo/", "h1"],
@@ -88,6 +94,36 @@ for (const mode of ["dark", "light"] as const) {
       const found = await audit(page);
       expect(found, describe(found)).toEqual([]);
     });
+    test("club con la cuenta demo (R2c)", async ({ page }) => {
+      await page.addInitScript(() => {
+        localStorage.setItem("volta-demo:account", JSON.stringify({ state: { user: { name: "Sofía Demo", email: "sofia.demo@ejemplo.com" }, usedRewards: [], wheelPrize: null }, version: 0 }));
+        localStorage.setItem("volta-demo:club", JSON.stringify({ state: { checkins: [], sportTried: "boxeo", claims: [] }, version: 2 }));
+      });
+      await page.goto("club/");
+      await expect(page.getByText("Tus puntos del mes", { exact: true })).toBeVisible();
+      await page.waitForTimeout(400);
+      const found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+    });
+    test("disco olímpico con «Cargá la barra» y Shaker Rush con el resultado arcade (R2c)", async ({ page }) => {
+      await page.addInitScript(() => { (window as unknown as { __voltaGameTest: object }).__voltaGameTest = { seed: 11, autopilot: true }; });
+      await page.clock.install({ time: new Date("2026-10-15T12:00:00-03:00") });
+      await page.goto("club/");
+      await page.getByRole("button", { name: "Girar la ruleta" }).click();
+      await expect(page.getByRole("dialog", { name: "Ruleta de cupones" }).getByRole("button", { name: /Cargá la barra/ })).toBeVisible();
+      let found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+      await page.goto("club/juego/");
+      await expect(page.getByRole("button", { name: "Jugar", exact: true })).toBeEnabled();
+      await page.clock.pauseAt(new Date("2026-10-15T12:05:00-03:00"));
+      await page.getByRole("button", { name: "Jugar", exact: true }).click();
+      await page.clock.runFor(50_000);
+      await expect(page.getByRole("button", { name: "Usar cupón ahora" })).toBeVisible();
+      await page.clock.resume();
+      await page.waitForTimeout(400);
+      found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+    });
     test("inicio con campaña: drop de Black Friday (R3a) y modo vitrina", async ({ page }) => {
       await page.addInitScript(() => localStorage.setItem("volta-demo:theme-preview", JSON.stringify({ state: { previewId: "black-friday" }, version: 0 })));
       await page.goto("");
@@ -124,6 +160,22 @@ for (const mode of ["dark", "light"] as const) {
       await combo.fill("vegano");
       await combo.press("ArrowDown");
       await page.waitForTimeout(500);
+      const found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+    });
+    test("Mi rack con productos y avisos (activo y saltado)", async ({ page }) => {
+      await page.addInitScript(() => {
+        try {
+          localStorage.setItem("volta-demo:favorites", JSON.stringify({ state: { slugs: ["glutamina", "ionic-whey", "guantes-boxeo", "creatina-monohidrato"] }, version: 0 }));
+          localStorage.setItem("volta-demo:rack-alerts", JSON.stringify({ state: { items: [
+            { slug: "glutamina", variantId: "x", price: 99900, wasOut: false },
+            { slug: "ionic-whey", variantId: "x", price: 1, wasOut: false },
+          ] }, version: 0 }));
+        } catch { /* sin almacenamiento */ }
+      });
+      await page.goto("favoritos/");
+      await expect(page.locator("[data-rack-alert='triggered']")).toBeVisible();
+      await page.waitForTimeout(400);
       const found = await audit(page);
       expect(found, describe(found)).toEqual([]);
     });
@@ -194,9 +246,15 @@ for (const mode of ["dark", "light"] as const) {
       await page.goto("crear/quiz/");
       await page.getByRole("checkbox", { name: /^Fuerza/ }).check();
       await page.getByRole("button", { name: "Siguiente" }).click();
-      await page.getByRole("radio", { name: /^Fútbol/ }).check();
+      await expect(page.getByRole("heading", { level: 2, name: "¿Hacés algún deporte?" })).toBeFocused();
       await page.waitForTimeout(400);
       let found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+      // R2c: elegir el deporte pasa sola a la placa de días.
+      await page.getByRole("radio", { name: /^Fútbol/ }).click();
+      await expect(page.getByRole("heading", { level: 2, name: "¿Cuántos días por semana entrenás?" })).toBeFocused();
+      await page.waitForTimeout(400);
+      found = await audit(page);
       expect(found, describe(found)).toEqual([]);
       await page.goto("crear/quiz/");
       await page.getByRole("button", { name: "Ver mi último programa" }).click();

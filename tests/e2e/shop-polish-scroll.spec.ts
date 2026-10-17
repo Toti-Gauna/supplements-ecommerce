@@ -80,7 +80,7 @@ test("header y pie: links internos desde abajo de la página", async ({ page }) 
   await page.locator("[data-shop-header]").getByRole("link", { name: "Club Volta" }).click();
   await opensAtTop(page, /\/club\/$/);
   await page.locator("footer").scrollIntoViewIfNeeded();
-  await page.locator("footer").getByRole("link", { name: "Preguntas frecuentes" }).click();
+  await page.locator("footer").getByRole("link", { name: "Ayuda del box" }).click();
   await opensAtTop(page, /\/preguntas\/$/);
 });
 

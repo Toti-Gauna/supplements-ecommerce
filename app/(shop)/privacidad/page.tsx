@@ -5,5 +5,5 @@ import { privacy } from "@/demo/fixtures/content";
 export const metadata: Metadata = { title: "Política de privacidad" };
 
 export default function PrivacyPage() {
-  return <LegalPage title="Política de privacidad" sections={privacy} />;
+  return <LegalPage title="Política de privacidad" sections={privacy} intro="Qué datos pedimos, para qué los usamos y cómo pedir que los borremos." />;
 }

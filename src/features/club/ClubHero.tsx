@@ -1,84 +1,67 @@
 "use client";
-import { ArrowDown, Gift, Sparkles } from "lucide-react";
-import { Button } from "@/components/atoms/Button";
-import { Counter } from "@/components/motion/Counter";
-import { LoadBar } from "@/components/molecules/LoadBar";
-import { formatMissionValue, previewMission } from "@/demo/engine/missions";
-import { demoAccountProgress } from "@/demo/fixtures/commerce";
-import type { Mission } from "@/demo/types";
-import { useCurrentTheme } from "@/features/themes/useCurrentTheme";
-import { useAccount } from "@/stores/account";
+import { ArrowDown, Sparkles } from "lucide-react";
+import { ClubMedal } from "@/components/illustrations/ClubMedal";
 import { brand } from "@/config/brand";
+import { monthCheckins } from "@/demo/engine/club-training";
+import { TRAINING_MISSIONS } from "@/demo/fixtures/club";
+import { useCurrentTheme } from "@/features/themes/useCurrentTheme";
+import { ClubNextPrize } from "./ClubNextPrize";
+import { DemoAccountButton } from "./DemoAccountButton";
+import { NightStats, type NightStat } from "./NightStats";
+import { NIGHT_BAND } from "./styles";
+import type { ClubState } from "./useClubState";
 
-const DEMO_USER = { name: "Sofía Demo", email: "sofia.demo@ejemplo.com" };
+/** El marcador de la portada: con cuenta, lo tuyo; sin cuenta, lo que ofrece el Club (nunca un "0 %" como dato). */
+function heroStats(s: ClubState): NightStat[] {
+  if (!s.signedIn) {
+    const missions = s.purchase.length + TRAINING_MISSIONS.length;
+    return [
+      { label: "Misiones", value: String(missions), reading: `${missions} misiones activas` },
+      { label: "Giro del disco", value: "1", reading: "1 giro del disco olímpico con premio seguro" },
+      { label: "Niveles", value: "4", reading: "4 niveles: bronce, plata, oro y platino" },
+    ];
+  }
+  const entrenos = monthCheckins(s.ctx);
+  return [
+    { label: "Tus puntos del mes", value: String(s.points.total), reading: `${s.points.total} puntos este mes` },
+    { label: "Misiones completas", value: String(s.completed), reading: `${s.completed} misiones completas` },
+    { label: "Entrenos del mes", value: String(entrenos), reading: `${entrenos} entrenos marcados este mes` },
+  ];
+}
 
 /**
- * Portada del Club (8.2.13): título, métricas, el próximo premio y los accesos. La temática vigente solo tiñe el
- * acento (`--season-accent`, sin fecha el color firma). El progreso sale del motor de misiones, sin cambios.
+ * Portada del Club: título, tu nivel como medalla, el marcador y "Tu próximo premio". La temática vigente solo tiñe el
+ * acento (`--season-accent`). Al invitado lo invita a crear la cuenta demo; nunca le promete un premio.
  */
-export function ClubHero({ missions, done }: { missions: Mission[]; done: number }) {
-  const { user, login } = useAccount();
+export function ClubHero({ state }: { state: ClubState }) {
   const { theme } = useCurrentTheme();
-  // Próximo premio: la misión más avanzada que falta completar (sin cuenta, todas arrancan en cero).
-  const next = missions
-    .map((m) => previewMission(m, user ? (demoAccountProgress[m.id] ?? 0) : 0, { units: 0, total: 0 }))
-    .filter((p) => !p.alreadyComplete)
-    .sort((a, b) => b.pctAfter - a.pctAfter)[0];
-  const metrics = [
-    { label: "Misiones activas", value: missions.length },
-    { label: "Completadas", value: done },
-    { label: "Premios en producto", value: missions.length },
-  ];
+  const { signedIn, user, level } = state;
   return (
-    <section aria-labelledby="club-title" className="relative overflow-hidden rounded-sm bg-night px-6 py-10 text-on-night sm:rounded-sm sm:px-10 sm:py-14 lg:px-14 lg:py-16">
+    <section aria-labelledby="club-title" className={NIGHT_BAND}>
       <div aria-hidden="true" className="pointer-events-none absolute -right-32 -top-40 h-[30rem] w-[30rem] rounded-full bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--brand-glow)_40%,transparent),transparent)]" />
-      <div aria-hidden="true" className="pointer-events-none absolute -bottom-48 -left-24 h-96 w-96 rounded-full bg-[radial-gradient(closest-side,rgb(255_255_255/0.06),transparent)]" />
-      <div className="relative grid gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:items-center lg:gap-14">
-        <div>
+      <div className="relative grid gap-10 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)] lg:items-center lg:gap-14">
+        <div className="min-w-0">
           <p className="eyebrow animate-rise text-(--season-accent)">{brand.club}{theme ? ` · ${theme.name}` : ""}</p>
           <h1 id="club-title" className="font-display animate-rise mt-4 text-[clamp(2.7rem,6.5vw,5.2rem)] leading-[0.98]" style={{ animationDelay: "120ms" }}>
             Sumá carga. <span className="italic text-(--season-accent)">Subí de nivel.</span>
           </h1>
-          <p className="animate-rise mt-5 max-w-lg text-lg text-night-muted" style={{ animationDelay: "220ms" }}>Misiones simples, premios en producto y una ruleta para tu próxima compra.</p>
+          <p className="animate-rise mt-5 max-w-lg text-lg text-night-muted" style={{ animationDelay: "220ms" }}>
+            Misiones de compra y de entrenamiento, el disco olímpico, Shaker Rush y premios en producto.
+          </p>
           <div className="animate-rise mt-8 flex flex-wrap items-center gap-3" style={{ animationDelay: "300ms" }}>
-            {user ? (
-              <span className="inline-flex min-h-12 items-center gap-2 rounded-sm bg-white/10 px-5 text-sm font-bold"><Sparkles size={16} aria-hidden="true" className="text-(--season-accent)" /> Progreso de {user.name.split(" ")[0]}</span>
+            {signedIn && user ? (
+              <span className="inline-flex min-h-12 items-center gap-3 rounded-sm bg-white/10 py-1 pl-2 pr-5 text-sm font-bold">
+                <ClubMedal metal={level.level.metal} className="h-11 w-9" />
+                <span><Sparkles size={14} aria-hidden="true" className="mr-1 inline text-(--season-accent)" />Progreso de {user.name.split(" ")[0]} · Nivel {level.level.name}</span>
+              </span>
             ) : (
-              <Button variant="light" size="lg" onClick={() => login(DEMO_USER)} aria-label="Ver mi progreso con la cuenta demo">
-                <Sparkles size={18} aria-hidden="true" /> Ver mi progreso<span className="max-sm:hidden"> con la cuenta demo</span>
-              </Button>
+              <DemoAccountButton size="lg" />
             )}
             <a href="#ruleta" className="inline-flex min-h-12 items-center gap-2 rounded-sm border border-white/25 px-5 font-bold transition-colors hover:bg-white/10">Ir a la ruleta <ArrowDown size={17} aria-hidden="true" /></a>
           </div>
-          <dl className="mt-10 grid max-w-xl grid-cols-3 gap-2.5 sm:gap-3">
-            {metrics.map((m) => (
-              <div key={m.label} className="flex flex-col-reverse gap-1 rounded-sm border border-white/10 bg-white/[0.05] p-3 sm:p-4">
-                <dt className="text-[11px] leading-tight text-night-muted sm:text-xs">{m.label}</dt>
-                <dd className="font-display text-3xl leading-none sm:text-4xl"><Counter value={m.value} /></dd>
-              </div>
-            ))}
-          </dl>
+          <NightStats stats={heroStats(state)} label={signedIn ? "Tu marcador del Club" : "El Club en números"} className="mt-10 max-w-xl" />
         </div>
-        <div className="relative rounded-sm border border-white/10 bg-white/[0.06] p-6 sm:p-8">
-          <span aria-hidden="true" className="absolute -right-3 -top-5 block h-14 w-14 sm:h-16 sm:w-16">
-            <span className="bevel grid h-full w-full place-items-center rounded-xs bg-(--season-accent) text-(--season-accent-ink)"><Gift size={26} /></span>
-          </span>
-          <p className="eyebrow text-(--season-accent)">Tu próximo premio</p>
-          {next ? (
-            <div className="mt-5 flex flex-col gap-4">
-              <div className="min-w-0">
-                <p className="font-display text-2xl leading-tight sm:text-3xl">{next.mission.reward}</p>
-                <p className="mt-1 text-sm text-night-muted">{next.mission.title} · {formatMissionValue(next.mission, next.after)} de {formatMissionValue(next.mission, next.mission.threshold)}</p>
-              </div>
-              <LoadBar pct={next.pctAfter} label={`Progreso hacia ${next.mission.reward}`} className="[&>span:first-child]:h-4">
-                <span className="font-display text-3xl">{next.pctAfter}%</span>
-              </LoadBar>
-            </div>
-          ) : (
-            <p className="font-display mt-4 text-2xl">¡Completaste todas las misiones!</p>
-          )}
-          <p className="mt-6 border-t border-white/10 pt-4 text-xs text-night-muted">{user ? "Progreso de ejemplo de la cuenta demo." : "Sin cuenta el progreso arranca en cero."}</p>
-        </div>
+        <ClubNextPrize ring={state.ring} />
       </div>
     </section>
   );

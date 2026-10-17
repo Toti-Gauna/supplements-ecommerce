@@ -95,8 +95,8 @@ for (const d of DEVICES) {
       await seed(page, null, true);
       await page.goto("p/overvolt-pre/");
       const card = page.getByRole("region", { name: "Elegí sabor, tamaño y cantidad" });
-      await card.getByTitle("Limón").click();
-      await expect(card.getByRole("radio", { name: "Limón" })).toBeChecked();
+      await page.getByRole("group", { name: /^Sabor/ }).getByTitle("Limón").click();
+      await expect(page.getByRole("group", { name: /^Sabor/ }).getByRole("radio", { name: "Limón" })).toBeChecked();
       await card.getByRole("button", { name: "Regalar ahora" }).click();
       const modal = page.getByRole("dialog", { name: "Es para regalar" });
       await modal.getByLabel("Para", { exact: true }).fill("Sofía");
@@ -104,7 +104,7 @@ for (const d of DEVICES) {
       await modal.getByLabel("Mensaje").fill("¡Para que entrenes con todo!");
       await w.check("modal de regalo");
       await page.keyboard.press("Escape");
-      await expect(card.getByRole("radio", { name: "Limón" })).toBeChecked();
+      await expect(page.getByRole("group", { name: /^Sabor/ }).getByRole("radio", { name: "Limón" })).toBeChecked();
       await card.getByRole("button", { name: "Regalar ahora" }).click();
       await expect(modal.getByLabel("Para", { exact: true })).toHaveValue("Sofía");
       await modal.getByRole("button", { name: "Agregar regalo al carrito" }).click();

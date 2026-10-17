@@ -1,15 +1,16 @@
 import type { Coupon } from "../types";
+import { CLUB_COUPON_PREFIX } from "./club-claims";
 import { validateCoupon } from "./coupons";
 import { GAME_COUPON_PREFIX } from "./game-prize";
 import { demoData } from "./source";
 
-export type WalletOrigin = "ruleta" | "juego" | "tienda";
+export type WalletOrigin = "ruleta" | "juego" | "club" | "tienda";
 
 export type WalletStatus = "available" | "min-subtotal" | "needs-account" | "expired" | "used" | "paused";
 
 export interface WalletCoupon {
   coupon: Coupon;
-  /** "ruleta" y "juego" = ganado por esta persona (ruleta o Shaker Rush); "tienda" = vigente para todos. */
+  /** "ruleta", "juego" y "club" = ganado por esta persona (ruleta, Shaker Rush o una misión); "tienda" = para todos. */
   origin: WalletOrigin;
   status: WalletStatus;
   message: string | null;
@@ -27,18 +28,19 @@ function statusOf(coupon: Coupon, ctx: { subtotal: number; isRegistered: boolean
   return { status: "min-subtotal", message: check.message };
 }
 
-const RANK: Record<WalletOrigin, number> = { ruleta: 0, juego: 1, tienda: 2 };
+const RANK: Record<WalletOrigin, number> = { ruleta: 0, juego: 1, club: 2, tienda: 3 };
+const PRIZE_PREFIXES = ["RULETA", GAME_COUPON_PREFIX, CLUB_COUPON_PREFIX];
 
 /**
- * "Mis cupones": el cupón propio de la ruleta, los ganados en Shaker Rush y los cupones de la tienda. Los RULETA… y
- * SHAKER… de otras personas nunca se listan; los de una temática, solo mientras está puesta, y los de la tienda, solo si
+ * "Mis cupones": el cupón propio de la ruleta, los ganados en Shaker Rush o en misiones del Club y los de la tienda. Los
+ * RULETA…, SHAKER… y CLUB… de otras personas nunca se listan; los de una temática, solo mientras está puesta, y los de la tienda, solo si
  * están vigentes. Ordena primero lo que se puede usar ahora y, a igual estado, los premios propios.
  */
-export function walletCoupons(ctx: { subtotal: number; isRegistered: boolean; now: Date; wheelCode: string | null; gameCodes?: string[]; themeId?: string | null }): WalletCoupon[] {
+export function walletCoupons(ctx: { subtotal: number; isRegistered: boolean; now: Date; wheelCode: string | null; gameCodes?: string[]; clubCodes?: string[]; themeId?: string | null }): WalletCoupon[] {
   const list = demoData().coupons.flatMap((coupon): WalletCoupon[] => {
-    const origin: WalletOrigin = coupon.code === ctx.wheelCode ? "ruleta" : ctx.gameCodes?.includes(coupon.code) ? "juego" : "tienda";
+    const origin: WalletOrigin = coupon.code === ctx.wheelCode ? "ruleta" : ctx.gameCodes?.includes(coupon.code) ? "juego" : ctx.clubCodes?.includes(coupon.code) ? "club" : "tienda";
     const own = origin !== "tienda";
-    if ((coupon.code.startsWith("RULETA") || coupon.code.startsWith(GAME_COUPON_PREFIX)) && !own) return [];
+    if (PRIZE_PREFIXES.some((p) => coupon.code.startsWith(p)) && !own) return [];
     if (!own && coupon.active === false) return [];
     if (coupon.themeId && coupon.themeId !== ctx.themeId) return [];
     const state = statusOf(coupon, ctx);

@@ -16,6 +16,7 @@ import { usePaged } from "../usePaged";
 import { useDemoSave } from "../useDemoSave";
 import { COUPONS_SECTION } from "./CouponsHub";
 import { FakeCouponsSummary, useCouponFakeMap } from "../campaigns/CouponRealCheck";
+import { CLUB_COUPON_PREFIX } from "@/demo/engine/club-claims";
 import { GAME_COUPON_PREFIX } from "@/demo/engine/game-prize";
 
 function valueLabel(c: Coupon): string {
@@ -52,6 +53,7 @@ export function CouponsList() {
                 {c.onlyRegistered && <Badge tone="neutral">Solo con cuenta</Badge>}
                 {c.code.startsWith("RULETA") && <Badge tone="brand">Ruleta</Badge>}
                 {c.code.startsWith(GAME_COUPON_PREFIX) && <Badge tone="brand">Shaker Rush</Badge>}
+                {c.code.startsWith(CLUB_COUPON_PREFIX) && <Badge tone="brand">Club</Badge>}
                 {c.themeId && <Badge tone="brand">Campaña</Badge>}
                 {fake.has(c.code) && <Badge tone="warning">Descuento no real</Badge>}
               </div>

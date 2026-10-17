@@ -409,7 +409,9 @@ gajos. Cada gajo tiene un **Premio** y un **Peso**: cuanto más peso, más sale 
 El cupón del juego se gana **una vez por día**; se juega todas las veces que quieran.
 
 **Misiones** (**Misiones y premios**): retos para el Club ("Comprá 2 productos" → shaker de regalo). **Nueva misión**,
-título, premio y **Guardar misión**. Recomendado: hasta 3 activas.
+título, premio y **Guardar misión**. Recomendado: hasta 3 activas. Además, el Club trae tres misiones de entrenamiento
+fijas (entrenos de la semana, día del deporte y Shaker Rush): el cliente reclama el premio una sola vez por semana o
+por fecha; un segundo reclamo no da otro cupón ni más puntos.
 
 **Descuento stack**: el porcentaje (0 a 30 %) y cuántas categorías distintas hacen falta (2 a 5). Con la vista previa
 ves cuánto ahorra un stack de ejemplo. Tocá **Guardar descuento stack**.
@@ -518,7 +520,7 @@ En **Contenido** cambiás lo que se lee en el inicio y en la ayuda, sin pedirle 
 
 - **Carrusel del inicio**: las diapositivas grandes con producto, imagen, titular, bajada y datos de compra.
 - **Textos de inicio**: el bloque del stack en vivo. **Guardar textos**.
-- **Preguntas frecuentes**: las de la página de ayuda. **Guardar preguntas**.
+- **Preguntas frecuentes**: las de la "Ayuda del box". Cada una lleva su **Tema de la ayuda** (compras, envíos y cadete, pagos, cambios y devoluciones, suplementos y lotes, equipamiento y talles, club y regalos), que decide en qué grupo aparece. **Guardar preguntas**.
 
 ### Cambiar el carrusel del inicio
 

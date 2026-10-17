@@ -1,46 +1,61 @@
 "use client";
 import { Check } from "lucide-react";
-import { LevelGlyph } from "@/components/illustrations/LevelGlyph";
+import { ClubMedal } from "@/components/illustrations/ClubMedal";
 import { BatteryMeter } from "@/components/molecules/BatteryMeter";
-import { levelProgress } from "@/demo/engine/club-levels";
-import { CLUB_LEVELS } from "@/demo/fixtures/club";
+import type { LevelProgress } from "@/demo/engine/club-levels";
+import { CLUB_BASE_PERKS, CLUB_LEVELS } from "@/demo/fixtures/club";
 import { cn } from "@/lib/cn";
 import { formatARS } from "@/lib/money";
+import { DemoAccountButton } from "./DemoAccountButton";
+import { NIGHT_PLATE, NIGHT_PLATE_ON } from "./styles";
+
+const METAL_NAME = { bronce: "bronce", plata: "plata", oro: "oro", platino: "platino" } as const;
 
 /**
- * Los cuatro niveles del club como una batería que se carga: el nivel actual resaltado, los anteriores cumplidos y una
- * barra con lo que falta para el siguiente. `spend` es lo gastado en pedidos pagados (muestra en la demo).
+ * Tabla de niveles con medallas de metal (bronce, plata, oro y platino): desde cuánto se llega y qué suma cada uno. Lo
+ * que es de todos los socios va arriba, una sola vez. Tu nivel queda encendido; con cuenta, la batería hasta el próximo.
  */
-export function ClubLevels({ spend, signedIn }: { spend: number; signedIn: boolean }) {
-  const p = levelProgress(spend);
-  const current = CLUB_LEVELS.indexOf(p.level);
+export function ClubLevels({ progress, signedIn }: { progress: LevelProgress; signedIn: boolean }) {
+  // Sin cuenta no hay "tu nivel": ninguna fila se enciende.
+  const current = signedIn ? CLUB_LEVELS.findIndex((l) => l.id === progress.level.id) : -1;
   return (
     <div className="flex flex-col gap-6">
-      <div className="rounded-sm border border-white/10 bg-white/[0.05] p-5 sm:p-6">
-        <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-          <p className="font-display text-2xl">Nivel {p.level.name}</p>
-          <p className="text-sm text-night-muted">
-            {p.next ? <>Te faltan <strong className="text-on-night">{formatARS(p.missing)}</strong> para {p.next.name}</> : "Llegaste al nivel más alto"}
-          </p>
-        </div>
-        <BatteryMeter pct={p.pct} label={p.next ? `Carga hacia el nivel ${p.next.name}` : "Nivel máximo"} className="mt-3 border-white/15" />
-        <p className="mt-3 text-xs text-night-muted">{signedIn ? "Gasto de ejemplo de la cuenta demo, en pedidos pagados de los últimos 12 meses." : "Sin cuenta arrancás en Novato."}</p>
+      <div className={cn(NIGHT_PLATE, "rounded-sm p-5 sm:p-6")}>
+        {signedIn ? (
+          <>
+            <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+              <p className="font-display text-2xl">Nivel {progress.level.name} · medalla de {METAL_NAME[progress.level.metal]}</p>
+              <p className="text-sm text-night-muted">
+                {progress.next ? <>Te faltan <strong className="text-on-night">{formatARS(progress.missing)}</strong> para {progress.next.name}</> : "Llegaste al nivel más alto"}
+              </p>
+            </div>
+            <BatteryMeter pct={progress.pct} label={progress.next ? `Carga hacia el nivel ${progress.next.name}` : "Nivel máximo"} className="mt-3 border-white/15" />
+            <p className="mt-3 text-xs text-night-muted">Gasto de ejemplo de la cuenta demo, en pedidos pagados de los últimos 12 meses.</p>
+          </>
+        ) : (
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <p className="max-w-md text-sm text-night-muted"><strong className="block font-display text-2xl text-on-night">Arrancás en bronce.</strong>Con la cuenta demo ves tu nivel, lo que te falta para el siguiente y tu medalla.</p>
+            <DemoAccountButton variant="dark" />
+          </div>
+        )}
       </div>
-      <ol className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <p className="text-sm text-night-muted"><strong className="text-on-night">Para todos los socios:</strong> {CLUB_BASE_PERKS.join(" · ")}.</p>
+      <ol aria-label="Tabla de niveles" className="flex flex-col gap-2">
         {CLUB_LEVELS.map((l, i) => {
           const on = i === current;
           const done = i < current;
           return (
             <li key={l.id} aria-current={on ? "step" : undefined}
-              className={cn("relative flex flex-col gap-3 rounded-sm border p-4 sm:p-5", on ? "border-volt bg-volt/10 shadow-[0_0_32px_-12px_var(--color-volt)]" : "border-white/10 bg-white/[0.03]")}>
-              {on && <span className="font-lab absolute right-3 top-3 rounded-sm bg-volt px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-night">Tu nivel</span>}
-              <LevelGlyph level={l.id} className={cn("h-12 w-12 sm:h-14 sm:w-14", on || done ? "text-volt" : "text-night-muted")} />
-              <div>
-                <p className="font-display text-xl leading-tight">{l.name}</p>
-                <p className="font-lab mt-0.5 text-[11px] text-night-muted">{l.minSpend ? `Desde ${formatARS(l.minSpend)}` : "Desde tu primera compra"}</p>
+              className={cn("relative grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-4 gap-y-3 rounded-sm p-4 sm:grid-cols-[auto_minmax(0,14rem)_minmax(0,1fr)] sm:p-5", on ? NIGHT_PLATE_ON : NIGHT_PLATE)}>
+              <ClubMedal metal={l.metal} label={`Medalla de ${METAL_NAME[l.metal]}`} className={cn("h-20 w-16", !on && !done && "opacity-80")} />
+              <div className="min-w-0">
+                <p className="font-mono text-[11px] font-bold uppercase tracking-[0.12em] text-night-muted">Nivel {i + 1} · {METAL_NAME[l.metal]}</p>
+                <p className="font-display text-3xl leading-none">{l.name}</p>
+                <p className="font-lab mt-1 text-[12px] text-night-muted">{l.minSpend ? `Desde ${formatARS(l.minSpend)}` : "Desde tu primera compra"}</p>
+                {on && <span className="font-lab mt-2 inline-block rounded-xs bg-volt px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-night">Tu nivel</span>}
               </div>
-              <ul className="flex flex-col gap-1.5 text-[13px] leading-snug text-night-muted">
-                {l.perks.map((perk) => <li key={perk} className="flex gap-1.5"><Check size={14} aria-hidden="true" className={cn("mt-0.5 shrink-0", on || done ? "text-volt" : "text-night-muted")} />{perk}</li>)}
+              <ul className="col-span-2 flex flex-col gap-1.5 text-[14px] leading-snug sm:col-span-1">
+                {l.perks.map((perk) => <li key={perk} className="flex gap-2"><Check size={15} aria-hidden="true" className={cn("mt-0.5 shrink-0", on || done ? "text-volt" : "text-night-muted")} />{perk}</li>)}
               </ul>
             </li>
           );

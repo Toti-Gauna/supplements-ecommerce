@@ -231,7 +231,16 @@ línea y la cuenta regresiva del cadete; checkout en 3 pasos con ticket fijo (pl
 vez y la fecha real del calendario; confirmación como ficha de entrega que activa los avisos de recompra; seguimiento
 con estados y fechas reales y el lote y vencimiento después del control del panel; "Mi box" con potes como baterías,
 Recomprar, Repetir pedido y el nivel con su barra. Los packs y "Tu programa" siguen agrupados con su descuento y su
-día del mes, y la ruleta se ofrece en el bolso sin cortar el pago. Sigue R2c.
+día del mes, y la ruleta se ofrece en el bolso sin cortar el pago.
+**R2c hecho** (PR de R2c, capturas en [`img/rediseno/r2c/`](img/rediseno/r2c/)). Stack: rack con tableros "te dura N
+días", cantidad por lugar, "Igualar duración" y total fijo con "Agregar el stack" en el celular. Quiz a pantalla
+completa con avance solo y "El protocolo del día" en "Tu programa". Club: tabla de niveles con medallas de metal,
+misiones de entrenamiento (entrenos de la semana, día del deporte, Shaker Rush) con premios que se reclaman una sola
+vez y el anillo que al invitado lo invita a crear la cuenta demo (la liga de gimnasios se armó y se sacó a pedido de
+Ignacio: por ahora no hace falta). Disco con "Cargá la barra" fuera del checkout (placa opcional en el
+carrito). Shaker Rush arcade con ranking semanal, "Usar cupón ahora" y tarjeta 9:16. Favoritos → "Mi rack" con total,
+agregar todo, armar stack y avisos simulados de baja de precio o vuelta de stock. Ayuda del box con temas y buscador
+(el tema se elige en el panel), y legales y 404 con el sistema nuevo. **R2 cerrado.**
 
 **"Wow" esperado:** checkout con la fecha real, seguimiento con lote y "Mi box" con recompras solas. Los tres usan
 datos que el motor ya tiene.
@@ -374,7 +383,7 @@ tamaño, se parte en dos PR (por ejemplo, R2a ficha + catálogo + comparador y R
 | **Despacho:** lista de armado consolidada y hoja de ruta del cadete | Panel | R4 | M |
 | **Costos vivos:** fecha de cada costo, cobertura de stock en días y ganancia al liquidar | Panel | R4 | M |
 | **Clientes:** link de recompra con el carrito cargado y regalo de cumpleaños | Panel | R4 | M |
-| **Liga de gimnasios de Mar del Plata:** el cliente elige su gimnasio y hay ranking mensual por box | Club | R2 | M |
+| ~~**Liga de gimnasios de Mar del Plata:** el cliente elige su gimnasio y hay ranking mensual por box~~ (sacada a pedido de Ignacio; por ahora no hace falta) | Club | — | — |
 | **Shaker Rush social:** ranking semanal y tarjeta 9:16 del puntaje | Juego | R2 | M |
 | **Misiones de entrenamiento** (no solo de compra) | Club | R2 | M |
 | **"Igualar duración" del stack** (que todo te dure lo mismo) | Stack | R2 | M |

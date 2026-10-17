@@ -4,6 +4,7 @@ import { Plus } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/atoms/Button";
 import { Select } from "@/components/atoms/Select";
+import { CLUB_COUPON_PREFIX } from "@/demo/engine/club-claims";
 import { GAME_COUPON_PREFIX } from "@/demo/engine/game-prize";
 import type { SeasonalTheme } from "@/demo/types";
 import { formatARS } from "@/lib/money";
@@ -12,7 +13,7 @@ import { CouponForm } from "../CouponForm";
 
 /** Cupón de la campaña: se elige de la lista o se crea acá mismo (queda elegido y atado a la campaña). */
 export function CampaignCouponField({ theme, onChange }: { theme: SeasonalTheme; onChange: (code: string) => void }) {
-  const coupons = useAdmin((s) => s.data.coupons).filter((c) => !c.code.startsWith("RULETA") && !c.code.startsWith(GAME_COUPON_PREFIX));
+  const coupons = useAdmin((s) => s.data.coupons).filter((c) => !c.code.startsWith("RULETA") && !c.code.startsWith(GAME_COUPON_PREFIX) && !c.code.startsWith(CLUB_COUPON_PREFIX));
   const [creating, setCreating] = useState(false);
   const current = coupons.find((c) => c.code === theme.couponCode);
   const detail = current

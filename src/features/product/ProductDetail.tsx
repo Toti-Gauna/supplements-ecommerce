@@ -14,7 +14,7 @@ import { SeasonTicket } from "../campaigns/SeasonTicket";
 import { useCurrentTheme } from "../themes/useCurrentTheme";
 import { AttributeScores } from "./AttributeScores";
 import { BuyActions, MobileBuyBar } from "./BuyBar";
-import { ConfigureCard } from "./ConfigureCard";
+import { ColorPicker, ConfigureCard } from "./ConfigureCard";
 import { DeliveryEstimate } from "./DeliveryEstimate";
 import { GearLabel } from "./GearLabel";
 import { LotLabel } from "./LotLabel";
@@ -38,8 +38,9 @@ function stockNote(a: Availability): string {
 
 /**
  * Ficha "hoja técnica" (R2a). Arriba, el nombre, el precio total en el marcador con la tira chica de cuánto rinde (L1),
- * los dos precios, sabor y tamaño como placas, la compra y la etiqueta del lote (en el equipamiento, la de garantía);
- * la galería (foto del panel, banco con cotas, rótulo y escenas) a la izquierda en escritorio y debajo en el celular.
+ * los dos precios, sabor y tamaño como placas, la compra y la etiqueta del lote (en el equipamiento, la de garantía).
+ * La galería (foto del panel, banco con cotas, rótulo y escenas) va a la izquierda en escritorio y, en el celular, grande
+ * y a todo el ancho justo debajo del nombre: cambia con el color o el sabor elegido.
  * Abajo: cómo tomarlo, calculadora, stack y packs, rótulo completo, "Verificá tu lote", entrega y reseñas.
  * `preview` (8.3.21): muestra el borrador del panel tal cual, sin comprar ni favoritos.
  */
@@ -77,12 +78,15 @@ export function ProductDetail({ product: initial, preview = false }: { product: 
   return (
     <div className="flex flex-col gap-12 lg:gap-16">
       {/* Compra: en escritorio la galería queda fija mientras se recorren las opciones y se suelta al terminar. */}
-      <div className="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-12">
-        <div className="order-2 lg:sticky lg:top-24 lg:order-1 lg:self-start">
-          <SpecGallery product={product} tint={sel.variant.colorHex} />
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:grid-rows-[auto_1fr] lg:gap-x-12 lg:gap-y-5">
+        <div className="min-w-0 lg:col-start-2 lg:row-start-1">
+          <SheetHeader product={product} category={getCategory(product.categorySlug)?.name} preview={preview} />
         </div>
-        <div className="order-1 flex min-w-0 flex-col gap-4 lg:order-2 lg:gap-5">
-          <SheetHeader product={product} category={getCategory(product.categorySlug)?.name} tint={sel.variant.colorHex} preview={preview} />
+        <div className="min-w-0 lg:sticky lg:top-24 lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:self-start">
+          <SpecGallery product={product} tint={sel.variant.colorHex} />
+          <ColorPicker product={product} sel={sel} className="mt-3 rounded-sm border border-line bg-surface p-4 lg:hidden" />
+        </div>
+        <div className="flex min-w-0 flex-col gap-4 lg:col-start-2 lg:row-start-2 lg:gap-5">
           {!preview && <SeasonTicket where="ficha" productSlug={product.slug} />}
           <SheetPrice price={score.price} presentation={sel.variant.label} readouts={gear ? gearReadouts(product) : scoreReadouts(score, perDay)} flipKey={sel.variant.id}
             options={priceOptions(score.price, settings.transferDiscountPct)} clearance={variantClearance(product, sel.variant)} taxRate={settings.nationalTaxRate}

@@ -9,6 +9,7 @@ import { formatExpiry } from "@/demo/engine/lots";
 import type { Category, Product } from "@/demo/types";
 import { formatARS } from "@/lib/money";
 import { LotCell } from "../lots/LotBadge";
+import { CostText, MarginText } from "./MarginText";
 import { StockChip } from "../table/StockChip";
 import { StockEditor } from "../stock/StockEditor";
 
@@ -56,7 +57,8 @@ interface VariantActions { setStock: (r: StockRow, stock: number) => void; onCle
 
 /**
  * Una fila por variante: el stock se edita acá mismo (− / + / número / a pedido) y el lote que vence se liquida.
- * Categoría y "En la tienda" arrancan ocultas (son filtros); marca, lote, costo y margen están a la vista.
+ * Categoría y "En la tienda" arrancan ocultas (son filtros); marca, precio por servicio, lote, costo y margen están a
+ * la vista (R2: el costo sale de la variante o de Costos; "≈" cuando se estima en proporción al precio).
  */
 export function variantColumns({ setStock, onClear }: VariantActions): Column<StockRow>[] {
   return [
@@ -65,12 +67,13 @@ export function variantColumns({ setStock, onClear }: VariantActions): Column<St
     { id: "category", header: "Categoría", defaultHidden: true, cell: (r) => r.categoryName, sortValue: (r) => r.categoryName, exportValue: (r) => r.categoryName },
     { id: "brand", header: "Marca", cell: (r) => r.brand, sortValue: (r) => r.brand, exportValue: (r) => r.brand },
     { id: "price", header: "Precio", align: "right", money: true, cell: (r) => formatARS(r.price), sortValue: (r) => r.price, exportValue: (r) => r.price },
+    { id: "servingPrice", header: "Precio por servicio", align: "right", money: true, cell: (r) => (r.servingPrice === null ? "—" : formatARS(r.servingPrice)), sortValue: (r) => r.servingPrice, exportValue: (r) => r.servingPrice ?? "" },
     { id: "stock", header: "Unidades", cell: (r) => <StockEditor value={r.stock} label={`${r.productName} · ${r.variantLabel}`} onChange={(s) => setStock(r, s)} />, sortValue: (r) => (r.stock < 0 ? Number.MAX_SAFE_INTEGER : r.stock), exportValue: (r) => (r.stock < 0 ? "a pedido" : r.stock) },
     { id: "lot", header: "Lote y vencimiento", className: "min-w-[12rem]", cell: (r) => <LotCell row={r} onClear={onClear} />, sortValue: (r) => r.lot?.expires ?? null, exportValue: (r) => (r.lot ? `${r.lot.code} · ${formatExpiry(r.lot.expires)}` : "") },
     { id: "state", header: "Estado", cell: (r) => <StockChip state={r.state} />, sortValue: (r) => ["out", "low", "ok", "made-to-order"].indexOf(r.state), exportValue: (r) => STOCK_LABEL[r.state] },
     { id: "active", header: "En la tienda", defaultHidden: true, cell: (r) => (r.active ? "Visible" : <span className="text-muted">Pausado</span>), sortValue: (r) => r.active, exportValue: (r) => (r.active ? "Visible" : "Pausado") },
-    { id: "cost", header: "Costo", align: "right", money: true, cell: (r) => (r.cost ? formatARS(r.cost) : "—"), sortValue: (r) => r.cost ?? null, exportValue: (r) => r.cost ?? "" },
-    { id: "margin", header: "Margen", align: "right", cell: (r) => { const m = stockMargin(r); return m === null ? "—" : `${m} %`; }, sortValue: stockMargin, exportValue: (r) => stockMargin(r) ?? "" },
+    { id: "cost", header: "Costo", align: "right", money: true, cell: (r) => (r.cost ? <CostText row={r} /> : "—"), sortValue: (r) => r.cost ?? null, exportValue: (r) => r.cost ?? "" },
+    { id: "margin", header: "Margen", align: "right", cell: (r) => <MarginText value={stockMargin(r)} />, sortValue: stockMargin, exportValue: (r) => stockMargin(r) ?? "" },
     { id: "value", header: "Valor en stock", align: "right", money: true, cell: (r) => (r.stock > 0 ? formatARS(r.stock * r.price) : "—"), sortValue: (r) => Math.max(0, r.stock) * r.price, exportValue: (r) => Math.max(0, r.stock) * r.price },
   ];
 }

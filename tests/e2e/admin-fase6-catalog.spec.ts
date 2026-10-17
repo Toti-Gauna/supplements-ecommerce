@@ -70,7 +70,7 @@ async function liquidateLot(page: Page) {
   await page.goto("admin-demo/productos/");
   await page.getByRole("button", { name: /6 lotes vencen en menos de 60 días/ }).click();
   await expect(page).toHaveURL(/ver=variantes.*vence=pronto|vence=pronto.*ver=variantes/);
-  await expect(page.getByText("6 variantes de 63")).toBeVisible();
+  await expect(page.getByText("6 variantes de 112")).toBeVisible();
   await page.getByRole("button", { name: "Liquidar del lote VL-2603-W de Ionic Whey 100% · Vainilla · 2 lb (907 g)" }).click();
   const dialog = page.getByRole("dialog", { name: "Liquidar el lote VL-2603-W" });
   await expect(dialog).toContainText("Vence en 56 días");
@@ -85,7 +85,8 @@ async function liquidateLot(page: Page) {
   await expect(buyCard(page).getByRole("radio", { name: "Vainilla" })).toBeChecked();
   await expect(page.getByText("Liquidación · vence 11/2026")).toBeVisible();
   await expect(page.getByText(money("54.900")).first()).toBeVisible();
-  await expect(page.getByText(/Lote VL-2603-W/)).toBeVisible();
+  // R2a: la etiqueta de laboratorio del envase dice el lote que sale primero y su vencimiento.
+  await expect(page.locator("dl[aria-label='Lote del envase']")).toContainText("VL-2603-W · 11/2026");
   await expect(page.getByRole("button", { name: /Agregar al carrito/ }).filter({ visible: true }).first()).toBeEnabled();
   await expect(page.getByText(money("32.900")).first()).toBeVisible();
   // El chocolate no está liquidado.
@@ -131,7 +132,7 @@ test.describe("escritorio con mouse", () => {
     await page.goto("admin-demo/productos/");
     await page.getByRole("combobox", { name: "Marca" }).selectOption("Forja");
     await expect(page).toHaveURL(/marca=Forja/);
-    await expect(page.getByText("4 productos de 25")).toBeVisible();
+    await expect(page.getByText("4 productos de 35")).toBeVisible();
     await expect(page.getByRole("row").filter({ hasText: "Gel energético con cafeína" })).toContainText("Vence pronto");
     await page.getByRole("button", { name: "Ver en formato Excel" }).click();
     const grid = page.getByRole("grid", { name: "Productos y stock en formato Excel" });
@@ -139,7 +140,7 @@ test.describe("escritorio con mouse", () => {
     await expect(grid).toContainText("FJ-2602-G · 11/2026");
     await page.goBack();
     await page.getByRole("button", { name: /^Variantes/ }).click();
-    await expect(page.getByText("9 variantes de 63")).toBeVisible();
+    await expect(page.getByText("9 variantes de 112")).toBeVisible();
   });
 
   test("la tarjeta de la tienda avisa la liquidación", async ({ page }) => {

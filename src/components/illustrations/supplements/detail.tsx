@@ -65,14 +65,15 @@ function ChalkDust() {
   return <g fill="#fff">{([[90, 300, 26, 0.12], [150, 318, 34, 0.1], [230, 300, 22, 0.14], [300, 320, 30, 0.08], [120, 260, 14, 0.16]] as [number, number, number, number][]).map(([x, y, r, o], i) => <circle key={i} cx={x} cy={y} r={r} opacity={o} />)}</g>;
 }
 
-/** Primer plano de la vista de detalle según el envase: scoop colmado, cápsulas, gomitas, gotas, cuchara o polvo. */
+/** Primer plano de la vista de detalle según el envase: scoop colmado, cápsulas, gomitas, gotas, cuchara o polvo (accesorios: tiza). */
 export function DetailProp({ kind, tint }: { kind: ContainerKind; tint: string }) {
   switch (kind) {
     case "caps": return <Capsules tint={tint} />;
     case "gummies": return <GummyPile tint={tint} />;
-    case "bottle": case "gel": case "sachet": case "shaker": return <Drops tint={tint} />;
+    case "bottle": case "gel": case "sachet": case "shaker": case "bottle-sport": return <Drops tint={tint} />;
     case "spread": return <Spoon tint={tint} />;
-    case "chalk": return <ChalkDust />;
+    case "chalk": case "straps": case "wraps": case "gloves": case "belt": case "sleeves": case "rope": case "bands": case "gym-bag":
+      return <ChalkDust />;
     case "bar": case "box": return <Drops tint={tone(tint, -0.2)} />;
     default:
       return (

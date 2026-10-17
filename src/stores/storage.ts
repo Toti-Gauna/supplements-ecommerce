@@ -9,7 +9,10 @@ export const STORAGE_PREFIX = `${brand.storageKey}-demo:`;
 
 /** Versión del estado guardado del panel (la lee también el script del <head> de la tienda). */
 // v11: la demo pasa al lunes 5/10/2026 (pedidos, despachos y avisos con la fecha nueva).
-export const ADMIN_STORE_VERSION = 11;
+// v12: la tienda arranca con la temática original (modo "off") en lugar de la automática por fecha.
+// v13: imágenes propias del carrusel, preservando las ediciones compatibles de v10–v12.
+// v14: tienda deportiva multimarca (L2): se suman las categorías y los productos de equipamiento sin tocar lo editado.
+export const ADMIN_STORE_VERSION = 14;
 
 /** localStorage tolerante a modo privado / cuota llena: la demo sigue funcionando en memoria. */
 const memory = new Map<string, string>();

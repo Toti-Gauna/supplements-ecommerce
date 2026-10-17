@@ -61,10 +61,10 @@ describe("compras sugeridas", () => {
   });
   it("agrupa por proveedor lo que está en el mínimo o debajo, hasta el objetivo, con el total al costo", () => {
     const groups = suggestedPurchases(rows, products, recipes);
-    // Del pedido más grande al más chico.
-    expect(groups.map((g) => g.supplier?.id)).toEqual(["lab-costa", "sur", "atlantica"]);
+    // Del pedido más grande al más chico; desde L2 también el proveedor de equipamiento (talles y colores con poco stock).
+    expect(groups.map((g) => g.supplier?.id).sort()).toEqual(["atlantica", "deportes-costa", "lab-costa", "sur"]);
     expect(groups.map((g) => g.total)).toEqual([...groups.map((g) => g.total)].sort((a, b) => b - a));
-    const lab = groups[0]!;
+    const lab = groups.find((g) => g.supplier?.id === "lab-costa")!;
     expect(lab.lines.map((l) => [l.key, l.qty])).toEqual([
       ["ionic-whey::iw-frutilla-5lb", 6], ["ionic-whey::iw-cookies-cream-5lb", 4], ["creatina-gomitas::cg-naranja-90", 7],
       ["barra-proteica::bp-mani-x12", 7], ["electrolitos::ev-blue-razz-x10", 7],
@@ -94,7 +94,7 @@ describe("compras sugeridas", () => {
     expect(deliveryDaysText([3])).toBe("miércoles");
   });
   it("mensaje para WhatsApp, registro del pedido y mercadería recibida", () => {
-    const [lab] = suggestedPurchases(rows, products, recipes);
+    const lab = suggestedPurchases(rows, products, recipes).find((g) => g.supplier?.id === "lab-costa");
     const text = whatsappText(lab!, "Volta Suplementos", "2026-10-06");
     expect(text.split("\n")[0]).toBe("Hola Paula, ¿cómo va? Te paso el pedido de Volta Suplementos:");
     expect(text).toContain("• 6 × Ionic Whey 100% · Frutilla · 5 lb (2,27 kg)");

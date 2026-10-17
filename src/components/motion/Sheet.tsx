@@ -9,6 +9,8 @@ interface SheetProps {
   open: boolean;
   onClose: () => void;
   title: string;
+  /** Id del título visible del panel: se nombra con él (aria-labelledby) en lugar de con `title`. */
+  labelledBy?: string;
   side?: "right" | "left" | "bottom" | "center" | "top" | "dialog";
   children: ReactNode;
   className?: string;
@@ -39,7 +41,7 @@ function place(side: keyof typeof PLACE, className = ""): string {
  * Panel modal accesible: foco atrapado, Escape cierra, scroll de fondo bloqueado, devuelve el foco.
  * Se monta en <body> por portal: un ancestro con backdrop-filter (el header) recortaría un `fixed`.
  */
-export function Sheet({ open, onClose, title, side = "right", children, className }: SheetProps) {
+export function Sheet({ open, onClose, title, labelledBy, side = "right", children, className }: SheetProps) {
   const panel = useRef<HTMLDivElement>(null);
   const mounted = useSyncExternalStore(noop, () => true, () => false);
   // onClose suele ser una función nueva en cada render: se guarda en un ref para que el efecto
@@ -69,7 +71,7 @@ export function Sheet({ open, onClose, title, side = "right", children, classNam
       {open && (
         <div className="fixed inset-0 z-[70]">
           <motion.div className="absolute inset-0 bg-night/45 backdrop-blur-[3px]" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} onClick={onClose} />
-          <motion.div ref={panel} role="dialog" aria-modal="true" aria-label={title}
+          <motion.div ref={panel} role="dialog" aria-modal="true" aria-label={labelledBy ? undefined : title} aria-labelledby={labelledBy}
             className={cn("absolute flex flex-col bg-bg", place(side, className), className)}
             initial={OFFSET[side]} animate={{ x: 0, y: 0, opacity: 1, scale: 1 }} exit={OFFSET[side]} transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}>
             <button type="button" onClick={onClose} aria-label="Cerrar" className="bevel absolute right-4 top-4 z-10 grid h-11 w-11 place-items-center rounded-xs border border-line bg-surface text-ink hover:bg-accent">

@@ -19,6 +19,11 @@ export function getCategory(slug: string): Category | undefined {
   return demoData().categories.find((c) => c.slug === slug);
 }
 
+/** Equipamiento (accesorios de gym, boxeo, funcional, shakers y bolsos): no se consume, no vence, va por color y talle. */
+export function isGear(product: Pick<Product, "categorySlug">): boolean {
+  return getCategory(product.categorySlug)?.kind === "gear";
+}
+
 export function productsInCategory(slug: string): Product[] {
   return activeProducts().filter((p) => p.categorySlug === slug);
 }

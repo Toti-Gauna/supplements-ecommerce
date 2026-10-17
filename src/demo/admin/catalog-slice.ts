@@ -1,5 +1,7 @@
 import { normalizeGoals } from "../engine/goals";
 import type { GoalInfo } from "../fixtures/goals";
+import type { SportInfo } from "../fixtures/sports";
+import { normalizeSports } from "../engine/sports";
 import type { Category, Product } from "../types";
 import { applyPriceChange, undoPriceChange, type PriceScope, type Rounding } from "./bulk-price";
 import { slugify } from "./import/cells";
@@ -38,6 +40,7 @@ export interface CatalogActions {
   undoBulkPrice: () => void;
   /** Nombre, bajada y color de los objetivos que usa la tienda. */
   saveGoals: (goals: GoalInfo[]) => void;
+  saveSports: (sports: SportInfo[]) => void;
 }
 
 function withoutPhoto(p: Product): Product {
@@ -103,5 +106,6 @@ export function createCatalogActions(set: Set): CatalogActions {
         ? { data: { ...s.data, products: undoPriceChange(s.data.products, s.lastPriceChange) }, lastPriceChange: null, audit: log(s, `Aumento deshecho (${s.lastPriceChange.label})`, `${s.lastPriceChange.count} variantes`) }
         : {})),
     saveGoals: (goals) => set((s) => ({ data: { ...s.data, goals: normalizeGoals(goals) }, audit: log(s, "Objetivos guardados", "Categorías y objetivos") })),
+    saveSports: (sports) => set((s) => ({ data: { ...s.data, sports: normalizeSports(sports, s.data.packs ?? []) }, audit: log(s, "Deportes guardados", "Categorías y objetivos") })),
   };
 }

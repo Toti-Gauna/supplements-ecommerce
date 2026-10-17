@@ -1,57 +1,99 @@
-import { ArrowRight } from "lucide-react";
-import { LOGO_BOLT, LOGO_VIEWBOX } from "@/components/atoms/Logo";
-import { ProductArt } from "@/components/illustrations/ProductArt";
-import { frame } from "@/demo/admin/content-slides";
-import type { CarouselSlide } from "@/demo/types";
-import { cn } from "@/lib/cn";
-import { brand } from "@/config/brand";
+"use client";
+import { ArrowRight, Check, Plus, Ticket } from "lucide-react";
+import { memo } from "react";
+import { Button, ButtonLink } from "@/components/atoms/Button";
+import { LedPrice } from "@/components/atoms/Led";
+import { productHref } from "@/demo/engine/catalog";
+import type { HeroPick } from "@/demo/engine/home";
+import { rackFacts } from "@/demo/engine/rack";
+import { formatARS } from "@/lib/money";
+import { HeroMedia } from "./HeroMedia";
 
-/** Fondos que rotan por diapositiva: grafito con plasma, plasma profundo e ion profundo (oscuros en cualquier temática). */
-const TONES = [
-  { bg: "bg-night", eyebrow: "text-volt", glow: "color-mix(in_srgb,var(--brand-glow)_45%,transparent)", tint: "#5a3220" },
-  { bg: "bg-[#120f2e]", eyebrow: "text-volt-soft", glow: "color-mix(in_srgb,var(--brand-volt)_30%,transparent)", tint: "#e8e4d8" },
-  { bg: "bg-[#06222a]", eyebrow: "text-[#7ff5ea]", glow: "color-mix(in_srgb,var(--brand-spark)_38%,transparent)", tint: "#8b72ff" },
-];
+export interface HeroCampaign {
+  name: string;
+  /** "20% OFF" o "$5.000 OFF", y su condición si pide un mínimo. */
+  offer?: { label: string; code: string; condition: string | null };
+}
 
-const ART = "relative aspect-square w-full max-w-[19rem] transition-transform duration-[1200ms] ease-[var(--ease-out-expo)] group-hover:scale-[1.04] group-hover:-rotate-1 sm:max-w-[24rem]";
-
-/** Clases del contenedor de una diapositiva (enlace en la tienda, caja en la vista previa del panel). */
-export const heroSlideClass = (index: number) => cn("group relative grid min-h-[19rem] w-full shrink-0 snap-center grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] overflow-hidden text-on-night sm:min-h-[26rem] sm:grid-cols-[1.05fr_1fr]", TONES[index % TONES.length]!.bg);
-
-/** Imagen propia (con su encuadre) o la ilustración de la demo. */
-function SlideArt({ slide, tint }: { slide: CarouselSlide; tint: string }) {
-  if (!slide.image) return <ProductArt art={slide.art} tint={tint} bare label="" showBadge={false} className={cn(ART, "drop-shadow-[0_40px_50px_rgb(0_0_0/0.55)]")} />;
-  const f = frame(slide.image);
-  return (
-    <div className={cn(ART, "overflow-hidden rounded-sm shadow-[0_40px_80px_-30px_rgb(0_0_0/0.65)] sm:rounded-sm")}>
-      {/* eslint-disable-next-line @next/next/no-img-element -- data URL local del panel demo */}
-      <img src={slide.image.src} alt={slide.image.alt} className="h-full w-full object-cover" style={{ objectPosition: `${f.x}% ${f.y}%`, transform: `scale(${f.zoom})`, transformOrigin: `${f.x}% ${f.y}%` }} />
-    </div>
-  );
+interface Props {
+  pick: HeroPick;
+  campaign?: HeroCampaign;
+  /** Vista previa del panel: el titular no es un encabezado de la página. */
+  preview?: boolean;
+  deferred?: boolean;
+  /** "mañana" y "mar 6 oct" (calendario y cupo del cadete). */
+  cadete: { when: string; date: string };
+  onAdd?: () => void;
+  onCoupon?: (code: string) => void;
+  applied?: string | null;
 }
 
 /**
- * Interior de una diapositiva del carrusel principal (8.3.28: lo usan la tienda y la vista previa del panel, así lo
- * que se edita se ve igual que en el inicio). `index` elige el fondo y el número.
+ * Banner del carrusel del inicio (lo usan la tienda y la vista previa del panel): la imagen a sangre y, encima, sobre
+ * un degradé de noche, el rótulo, el titular de póster, la bajada, el precio total (el precio por servicio, chico) y
+ * la compra. La imagen es oscura en los dos modos, como una foto de campaña; el texto usa los tokens de banda noche.
  */
-export function HeroSlideBody({ slide, index }: { slide: CarouselSlide; index: number }) {
-  const tone = TONES[index % TONES.length]!;
+export const HeroSlide = memo(function HeroSlide({ pick, campaign, preview = false, deferred = false, cadete, onAdd, onCoupon, applied }: Props) {
+  const p = pick.product;
+  const facts = rackFacts(p);
+  const code = campaign?.offer?.code;
+  const words = pick.headline.trim().split(/\s+/);
+  const Heading = preview ? "p" : "h2";
   return (
-    <>
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[0.06] [background-image:radial-gradient(circle_at_1px_1px,#fff_1px,transparent_1.5px)] [background-size:22px_22px]" />
-      <svg aria-hidden="true" viewBox={LOGO_VIEWBOX} className="pointer-events-none absolute -right-[12%] top-1/2 h-[135%] -translate-y-1/2 opacity-[0.07]"><path d={LOGO_BOLT} fill="none" stroke="var(--color-volt)" strokeWidth="0.6" /></svg>
-      <div className="relative z-10 flex min-w-0 flex-col justify-center py-8 pl-5 pr-1 sm:py-12 sm:pl-[var(--hero-safe)] sm:pr-6 lg:pr-8">
-        <p className={cn("eyebrow", tone.eyebrow)}>{brand.name} · {String(index + 1).padStart(2, "0")}</p>
-        <p className="font-display font-wide mt-2 text-[1.6rem] leading-[1.02] [overflow-wrap:anywhere] sm:mt-3 sm:text-5xl lg:text-6xl">{slide.title}</p>
-        <p className="mt-2 line-clamp-2 max-w-md text-[13px] text-white/80 sm:mt-3 sm:line-clamp-none sm:text-lg">{slide.subtitle}</p>
-        <span className="mt-5 inline-flex w-fit max-w-full items-center gap-2 rounded-sm bg-volt px-4 py-2.5 text-[13px] font-extrabold sm:mt-6 sm:px-6 sm:py-3 sm:text-sm text-night shadow-[0_12px_34px_-12px_color-mix(in_srgb,var(--brand-volt)_70%,transparent)] transition-transform group-hover:translate-x-1">
-          {slide.ctaLabel} <ArrowRight size={16} aria-hidden="true" />
-        </span>
+    <div className="led-dark relative isolate h-[30rem] overflow-hidden bg-night text-on-night sm:h-[32rem] lg:h-[36rem]">
+      <HeroMedia pick={pick} deferred={deferred} />
+      <div aria-hidden="true" className="hero-shade pointer-events-none absolute inset-0" />
+      <div className="absolute right-4 top-3 z-10 flex flex-col items-end gap-1 font-mono text-[10px] uppercase tracking-[0.14em] text-night-muted sm:right-6">
+        <p className="plate-night"><span className="text-on-night">Cadete · Llega {cadete.when}</span> · {cadete.date}</p>
+        {!pick.image && <p className="pr-0.5">Imagen ilustrativa</p>}
       </div>
-      <div className="relative grid place-items-center py-8 pl-1 pr-5 sm:py-8 sm:pl-6 sm:pr-[var(--hero-safe)]">
-        <div aria-hidden="true" className="absolute inset-0 m-auto aspect-square w-[95%]" style={{ background: `radial-gradient(closest-side, ${tone.glow.replace(/_/g, " ")}, transparent)` }} />
-        <SlideArt slide={slide} tint={tone.tint} />
+      <div className="relative mx-auto flex h-full max-w-7xl flex-col justify-end px-4 pb-5 sm:px-6 sm:pb-7 lg:justify-center lg:pb-0">
+        <div className="max-w-xl lg:max-w-[34rem]">
+          <p className="eyebrow flex items-center gap-2 text-night-muted [text-shadow:0_1px_10px_var(--color-night),0_0_2px_var(--color-night)]">
+            <span aria-hidden="true" className="size-2 shrink-0 bg-(--season-accent) shadow-[0_0_10px_var(--season-glow)]" />
+            <span className="truncate">{campaign ? `Campaña · ${campaign.name}` : p.brand}</span>
+          </p>
+          <Heading className="rk-slam font-display mt-2 text-[clamp(2.4rem,9vw,2.9rem)] font-black leading-[0.86] [overflow-wrap:anywhere] sm:text-6xl lg:mt-3 lg:text-[5.4rem]">
+            <span>{words.slice(0, -1).join(" ")}</span>{words.length > 1 ? " " : ""}
+            <span className="text-volt">{words.at(-1)}</span>
+          </Heading>
+          <p className="mt-2 line-clamp-1 max-w-[46ch] text-sm text-night-muted sm:line-clamp-2 sm:text-base lg:mt-3 lg:text-lg">
+            <span className="font-bold text-on-night">{p.name}</span>{pick.pitch ? ` · ${pick.pitch}` : ""}
+          </p>
+          <div className="mt-3 flex items-end gap-x-4 sm:gap-x-6 lg:mt-5">
+            <div className="min-w-0">
+              <LedPrice amount={facts.price} motion="none" tone="volt" className="h-9 sm:h-11 lg:h-12" signClassName="text-3xl lg:text-4xl" />
+              <p className="mt-1.5 font-mono text-[11px] uppercase tracking-[0.1em] text-night-muted">
+                {facts.perServing ? <>{facts.from ? "Desde " : ""}{formatARS(facts.perServing)} por servicio</> : null}
+                <span className={facts.perServing ? "hidden sm:inline" : undefined}>{facts.perServing ? " · " : ""}{facts.lead.size || facts.lead.label}</span>
+              </p>
+            </div>
+            {campaign?.offer && (
+              <p className="min-w-0 border-l-2 border-(--season-accent) pl-3">
+                <strong className="font-display block text-2xl leading-none lg:text-3xl">{campaign.offer.label}</strong>
+                <span className="mt-1 block font-mono text-[11px] uppercase tracking-[0.1em]">con <span className="font-bold text-on-night">{campaign.offer.code}</span></span>
+                {campaign.offer.condition && <span className="block text-xs text-night-muted">{campaign.offer.condition}</span>}
+              </p>
+            )}
+          </div>
+          <div className="mt-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap lg:mt-6">
+            <Button variant="light" onClick={onAdd} disabled={facts.state === "out"} aria-label={`Agregar ${p.name} al carrito`}>
+              <Plus size={18} aria-hidden="true" />Agregar
+            </Button>
+            <ButtonLink variant="dark" href={productHref(p.slug)}>Ver producto <ArrowRight size={18} aria-hidden="true" /></ButtonLink>
+            {code && <Button variant="dark" className="col-span-2" onClick={() => onCoupon?.(code)} disabled={applied === code}>
+              {applied === code ? <><Check size={18} aria-hidden="true" />Cupón en tu carrito</> : <><Ticket size={18} aria-hidden="true" />Usar {code}</>}
+            </Button>}
+          </div>
+        </div>
       </div>
-    </>
+    </div>
   );
-}
+}, (a, b) => {
+  // La rehidratación puede reconstruir la selección sin cambiar los datos de la escena.
+  const x = a.pick, y = b.pick;
+  return x.key === y.key && x.kind === y.kind && x.product === y.product && x.headline === y.headline
+    && x.pitch === y.pitch && x.image === y.image && a.campaign === b.campaign && a.preview === b.preview
+    && a.deferred === b.deferred && a.cadete === b.cadete && a.onAdd === b.onAdd
+    && a.onCoupon === b.onCoupon && a.applied === b.applied;
+});

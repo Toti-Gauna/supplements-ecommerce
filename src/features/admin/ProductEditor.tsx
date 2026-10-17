@@ -6,8 +6,7 @@ import { ArrowLeft } from "lucide-react";
 import { Button, ButtonLink } from "@/components/atoms/Button";
 import { Sheet } from "@/components/motion/Sheet";
 import { EmptyState } from "@/components/molecules/EmptyState";
-import { withoutEmptyLots } from "@/demo/admin/lots";
-import { checkSteps, newProductDraft, PRODUCT_STEPS } from "@/demo/admin/product-steps";
+import { checkSteps, cleanProductDraft, FIRST_STEP, newProductDraft, PRODUCT_STEPS } from "@/demo/admin/product-steps";
 import type { Product } from "@/demo/types";
 import { useAdmin } from "@/stores/admin";
 import { useBackHref } from "./listReturn";
@@ -23,7 +22,7 @@ const LIST = "/admin-demo/productos/";
 interface EditorProps { draftKey: string; origin: "edit" | "new"; saved: Product | null }
 
 /**
- * Editor de producto (8.3.20 y 8.3.21): alta y edición con los mismos bloques, foto primero. Todo es borrador hasta
+ * Editor de producto (8.3.20 y 8.3.21): alta y edición con los mismos bloques (R2: hoja técnica, la foto al final). Todo es borrador hasta
  * "Guardar": ir a la vista previa, a otra sección o recargar la pestaña no lo pierde, y el alta no existe en el
  * catálogo hasta guardarla (ir y volver de la vista previa no crea productos).
  */
@@ -31,6 +30,7 @@ function Editor({ draftKey: key, origin, saved }: EditorProps) {
   const router = useRouter();
   const categories = useAdmin((s) => s.data.categories);
   const products = useAdmin((s) => s.data.products);
+  const recipes = useAdmin((s) => s.workshop.recipes);
   const saveProduct = useAdmin((s) => s.saveProduct);
   const save = useDemoSave();
   const back = useBackHref(LIST);
@@ -44,7 +44,7 @@ function Editor({ draftKey: key, origin, saved }: EditorProps) {
   const [asking, setAsking] = useState(false);
   /** Ya se guardó: el borrador no se vuelve a escribir mientras la página se va. */
   const done = useRef(false);
-  const nav = useEditorNav(start.snap?.step ?? "foto");
+  const nav = useEditorNav(start.snap?.step ?? FIRST_STEP);
   const dirty = JSON.stringify(d) !== JSON.stringify(start.pristine);
   const [restored, setRestored] = useState(() => !start.returning && dirty);
   const checks = checkSteps(d, categories);
@@ -72,7 +72,7 @@ function Editor({ draftKey: key, origin, saved }: EditorProps) {
     const title = origin === "new" ? (d.active === false ? "Producto creado (pausado)" : "Producto creado") : "Producto guardado";
     done.current = true;
     clearSnapshot(key);
-    save(title, () => saveProduct(withoutEmptyLots(d)));
+    save(title, () => saveProduct(cleanProductDraft(d)));
     router.push(back);
   };
   const preview = () => { saveSnapshot(snapshot()); markPreview(key); router.push(previewHref(key)); };
@@ -89,7 +89,7 @@ function Editor({ draftKey: key, origin, saved }: EditorProps) {
       )}
       <div className="grid gap-6 @min-[56rem]:grid-cols-[minmax(0,1fr)_15rem]">
         <form noValidate onSubmit={submit} className="flex min-w-0 flex-col gap-5">
-          <EditorSections d={d} set={set} checks={checks} tried={tried} categories={categories} products={products} onGo={nav.goTo} />
+          <EditorSections d={d} set={set} checks={checks} tried={tried} categories={categories} products={products} recipe={recipes[d.slug]} onGo={nav.goTo} />
           <EditorBar missing={missing.length} dirty={dirty} isNew={origin === "new"} onShowMissing={() => missing[0] && nav.goTo(missing[0])} onDiscard={() => setAsking(true)} onPreview={preview} />
         </form>
         <EditorStepper layout="rail" checks={checks} current={nav.current} tried={tried} onGo={nav.goTo} />

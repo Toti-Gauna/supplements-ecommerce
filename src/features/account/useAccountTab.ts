@@ -1,7 +1,7 @@
 "use client";
 import { useCallback, useSyncExternalStore } from "react";
 
-export const ACCOUNT_TABS = ["mi-box", "pedidos", "regalos", "misiones", "premios", "direcciones"] as const;
+export const ACCOUNT_TABS = ["mi-box", "pedidos", "suscripciones", "regalos", "misiones", "premios", "direcciones"] as const;
 /** Hashes viejos que siguen abriendo su sección (los avisos de la ficha llevan a `#recompras`). */
 const ALIASES: Record<string, AccountTab> = { recompras: "mi-box" };
 export type AccountTab = (typeof ACCOUNT_TABS)[number];

@@ -11,10 +11,19 @@ const TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 const PAGES: [string, string, string][] = [
   ["inicio", "", "main"],
   ["ficha", "p/overvolt-pre/", "h1"],
+  ["ficha hoja técnica (suplemento)", "p/ionic-whey/", "h1"],
+  ["ficha de equipamiento", "p/guantes-boxeo/", "h1"],
   ["categoría", "categorias/", "h1"],
+  ["catálogo con filtros y orden", "categorias/?marca=krono-nutrition&sello=sin-azucar&orden=rendidor", "h1"],
+  ["categoría con filtros", "c/proteinas/?porserv=1000-2000&orden=proteina", "h1"],
+  ["comparador", "comparar/?p=ionic-whey,proteina-vegana,isolate-zero", "[role=table]"],
+  ["comparador con equipamiento", "comparar/?p=ionic-whey,shaker-volta", "[role=table]"],
   ["búsqueda con chips", "buscar/?q=proteina sin lactosa", "h1"],
   ["búsqueda sin resultados", "buscar/?q=creatina vainilla", "h1"],
+  ["packs", "packs/", "h1"],
+  ["pack (detalle)", "packs/?pack=hipertrofia", "h1"],
   ["armador", "crear/", "h1"],
+  ["armador con dos objetivos y deporte", "crear/?objetivo=fuerza,salud&deporte=futbol", "h1"],
   ["carrito", "carrito/", "h1"],
   ["club", "club/", "h1"],
   ["juego", "club/juego/", "h1"],
@@ -25,6 +34,11 @@ const PAGES: [string, string, string][] = [
   ["panel pedidos", "admin-demo/pedidos/", "h1"],
   ["panel clientes", "admin-demo/usuarios/", "h1"],
   ["panel marketing", "admin-demo/marketing/", "h1"],
+  ["panel carrusel", "admin-demo/contenido/carrusel/", "h1"],
+  ["panel packs", "admin-demo/packs/", "h1"],
+  ["panel editor de pack", "admin-demo/packs/editar/?id=hipertrofia", "h1"],
+  ["panel suscripciones", "admin-demo/packs/?ver=suscripciones", "h1"],
+  ["panel categorías, objetivos y deportes", "admin-demo/categorias/", "h1"],
 ];
 
 interface Violation { id: string; impact: string | null; help: string; nodes: { target: string[]; failureSummary?: string }[] }
@@ -58,6 +72,30 @@ for (const mode of ["dark", "light"] as const) {
         expect(found, describe(found)).toEqual([]);
       });
     }
+    test("inicio: pestaña Deportes de \"Entrená por objetivo o por deporte\"", async ({ page }) => {
+      await page.goto("");
+      const section = page.locator("section[aria-labelledby='objetivos-title']");
+      await section.scrollIntoViewIfNeeded();
+      await section.getByRole("tab", { name: /Deportes/ }).click();
+      await expect(section.getByRole("tabpanel", { name: /Deportes/ })).toBeVisible();
+      await page.waitForTimeout(400);
+      const found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+    });
+    test("catálogo: panel de filtros del celular y selector del comparador", async ({ page }) => {
+      await page.goto("categorias/?sello=vegano#catalogo");
+      await page.locator("#catalogo").getByRole("button", { name: /^Filtros/ }).click();
+      await expect(page.getByRole("dialog", { name: "Filtros" })).toBeVisible();
+      await page.waitForTimeout(500);
+      let found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+      await page.goto("comparar/?p=ionic-whey,proteina-vegana");
+      await page.getByRole("button", { name: "Cambiar Ionic Whey 100%" }).click();
+      await expect(page.getByRole("dialog", { name: "Cambiar Ionic Whey 100%" })).toBeVisible();
+      await page.waitForTimeout(500);
+      found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+    });
     test("buscador superpuesto con resultados y una opción activa", async ({ page }) => {
       await page.goto("");
       await page.getByRole("button", { name: "Buscar productos" }).filter({ visible: true }).first().click();
@@ -67,6 +105,31 @@ for (const mode of ["dark", "light"] as const) {
       await combo.press("ArrowDown");
       await page.waitForTimeout(500);
       const found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+    });
+    test("invitación al quiz de la primera visita", async ({ page }) => {
+      await page.addInitScript(() => { try { localStorage.removeItem("volta-quiz-invite"); } catch { /* sin almacenamiento */ } });
+      await page.goto("");
+      await expect(page.getByRole("dialog", { name: "¿Armamos tu rutina en 1 minuto?" })).toBeVisible();
+      await page.waitForTimeout(500);
+      const found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+    });
+    test("quiz: deporte y resultado con Tu programa", async ({ page }) => {
+      const answers = { goals: ["fuerza", "salud"], sport: "futbol", days: "3-4", time: "tarde", restrictions: [] };
+      await page.addInitScript((a) => { try { localStorage.setItem("volta-demo:quiz", a); } catch { /* sin almacenamiento */ } }, JSON.stringify(answers));
+      await page.goto("crear/quiz/");
+      await page.getByRole("checkbox", { name: /^Fuerza/ }).check();
+      await page.getByRole("button", { name: "Siguiente" }).click();
+      await page.getByRole("radio", { name: /^Fútbol/ }).check();
+      await page.waitForTimeout(400);
+      let found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+      await page.goto("crear/quiz/");
+      await page.getByRole("button", { name: "Ver mi último programa" }).click();
+      await expect(page.getByRole("region", { name: "Comprar tu programa" })).toBeVisible();
+      await page.waitForTimeout(800);
+      found = await audit(page);
       expect(found, describe(found)).toEqual([]);
     });
   });

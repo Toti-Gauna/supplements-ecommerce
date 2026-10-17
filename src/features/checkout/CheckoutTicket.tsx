@@ -3,10 +3,13 @@ import { CalendarCheck, ChevronDown, ScanBarcode } from "lucide-react";
 import { useState } from "react";
 import { OrderSummary } from "@/components/molecules/OrderSummary";
 import { getProduct } from "@/demo/engine/catalog";
+import { groupByPack, monthlyDayOf } from "@/demo/engine/pack-cart";
 import type { CouponCheck } from "@/demo/engine/coupons";
 import type { Quote } from "@/demo/engine/pricing";
 import { cn } from "@/lib/cn";
 import { formatARS } from "@/lib/money";
+import { useDemoData } from "@/stores/admin";
+import { useCart } from "@/stores/cart";
 import { useCheckout } from "@/stores/checkout";
 import { CouponForm } from "../cart/CouponForm";
 import { summaryRows } from "./summary-rows";
@@ -28,6 +31,9 @@ export function CheckoutTicket({ quote, couponCheck, isRegistered, className }: 
   const [open, setOpen] = useState(false);
   const fulfillment = useCheckout((s) => s.fulfillment);
   const promise = useOrderPromise(quote.lines.map((q) => q.line));
+  const listed = useDemoData((d) => d.packs);
+  const custom = useCart((s) => s.customPacks);
+  const packs = [...(listed ?? []), ...(custom ?? [])];
   return (
     <div className={cn("flex flex-col gap-3", className)}>
       <button type="button" aria-expanded={open} aria-controls="checkout-ticket" onClick={() => setOpen((v) => !v)}
@@ -38,12 +44,20 @@ export function CheckoutTicket({ quote, couponCheck, isRegistered, className }: 
       <div id="checkout-ticket" className={cn("flex-col gap-3 lg:flex", open ? "flex" : "hidden")}>
         <OrderSummary title="Resumen de tu compra" rows={summaryRows(quote)} total={quote.total} totalNote="En la tienda real el servidor recalcula precios y stock antes de cobrar.">
           <ul className="flex flex-col gap-1.5 border-t border-line pt-3 text-sm" aria-label="Productos del ticket">
-            {quote.lines.map((q) => (
-              <li key={q.line.id} className="flex justify-between gap-2">
-                <span className="min-w-0 truncate">{q.line.quantity} × {getProduct(q.line.productSlug)?.name}{q.line.gift ? ` · regalo para ${q.line.gift.to}` : ""}</span>
-                <span className="shrink-0 whitespace-nowrap font-mono tabular-nums">{formatARS(q.lineTotal)}</span>
-              </li>
-            ))}
+            {groupByPack(quote.lines).flatMap((g) => {
+              // Los packs (L3, y "Tu programa" del quiz) van bajo su nombre, con el día si se reciben todos los meses.
+              const day = monthlyDayOf(g.items.map((q) => q.line));
+              const title = g.packId ? `${packs.find((p) => p.id === g.packId)?.name ?? "Pack"}${day !== undefined ? ` · todos los meses, día ${day}` : ""}` : null;
+              return [
+                ...(title ? [<li key={`pack-${g.packId}`} className="eyebrow pt-1 text-volt-ink">{title}</li>] : []),
+                ...g.items.map((q) => (
+                  <li key={q.line.id} className="flex justify-between gap-2">
+                    <span className="min-w-0 truncate">{q.line.quantity} × {getProduct(q.line.productSlug)?.name}{q.line.gift ? ` · regalo para ${q.line.gift.to}` : ""}</span>
+                    <span className="shrink-0 whitespace-nowrap font-mono tabular-nums">{formatARS(q.lineTotal)}</span>
+                  </li>
+                )),
+              ];
+            })}
           </ul>
           <p className="mt-3 flex items-start gap-2 border-t border-dashed border-line pt-3 text-[13px]">
             <CalendarCheck size={16} aria-hidden="true" className="mt-0.5 shrink-0 text-volt-ink" />

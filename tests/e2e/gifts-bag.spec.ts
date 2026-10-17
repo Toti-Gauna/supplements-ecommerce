@@ -20,10 +20,13 @@ async function punchFive(stage: Locator, { chalk }: { chalk: boolean }) {
     await expect(stage.locator(".bk-chalk").first()).toBeAttached({ attached: chalk });
   }
   await expect(bag).toHaveAccessibleName("Golpeá la bolsa para abrir el regalo. Falta 1 golpe.");
-  await bag.click();
-  await expect(scene).toHaveAttribute("data-open", "true");
-  await expect(scene.locator("[data-reveal='tub']")).toBeVisible();
-  await expect(stage.getByText("¡La rompiste!")).toBeVisible();
+  // Se observan juntos los tres estados transitorios, antes de que aparezca la ficha del regalo.
+  await Promise.all([
+    bag.click(),
+    expect(scene).toHaveAttribute("data-open", "true"),
+    expect(scene.locator("[data-reveal='tub']")).toBeVisible(),
+    expect(stage.getByText("¡La rompiste!")).toBeVisible(),
+  ]);
 }
 
 test("con movimiento, en el celular: cinco golpes con tiza y costuras, sale el pote y después el producto", async ({ page }) => {

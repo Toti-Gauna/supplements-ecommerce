@@ -5,6 +5,7 @@ import { ArrowLeft, Eye } from "lucide-react";
 import { Button, ButtonLink } from "@/components/atoms/Button";
 import { DetailSkeleton } from "@/components/atoms/Skeleton";
 import { EmptyState } from "@/components/molecules/EmptyState";
+import { FIRST_STEP } from "@/demo/admin/product-steps";
 import { cameFromEditor, editedSlug, editorHref, forgetPreview, loadSnapshot, markPreview } from "@/features/admin/products/editorDrafts";
 import { useDemoData } from "@/stores/admin";
 import { useHydrated } from "@/stores/hydration";
@@ -33,7 +34,7 @@ export function ProductPreview() {
   const back = () => {
     if (cameFromEditor(key)) { router.back(); return; }
     markPreview(key);
-    const step = snap?.step && snap.step !== "foto" ? `#paso-${snap.step}` : "";
+    const step = snap?.step && snap.step !== FIRST_STEP ? `#paso-${snap.step}` : "";
     router.push(editorHref(key) + step);
   };
   if (!product) {

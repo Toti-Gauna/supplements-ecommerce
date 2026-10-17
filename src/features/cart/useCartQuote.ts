@@ -15,14 +15,15 @@ export interface CartQuote {
 /** Une carrito + cuenta + selección de checkout con el motor de precios de la demo. */
 export function useCartQuote(): CartQuote {
   const lines = useCart((s) => s.lines);
+  const packs = useCart((s) => s.customPacks);
   const couponCode = useCart((s) => s.couponCode);
   const isRegistered = useAccount((s) => s.user !== null);
   const paymentMethod = useCheckout((s) => s.paymentMethod);
   const fulfillment = useCheckout((s) => s.fulfillment);
   return useMemo(() => {
-    const base = quoteCart(lines);
+    const base = quoteCart(lines, { packs });
     const couponCheck = couponCode ? validateCoupon(couponCode, { subtotal: base.subtotal, isRegistered, now: new Date() }) : null;
-    const quote = quoteCart(lines, { coupon: couponCheck?.ok ? couponCheck.coupon : null, paymentMethod, fulfillment });
+    const quote = quoteCart(lines, { coupon: couponCheck?.ok ? couponCheck.coupon : null, paymentMethod, fulfillment, packs });
     return { quote, couponCheck, isRegistered };
-  }, [lines, couponCode, isRegistered, paymentMethod, fulfillment]);
+  }, [lines, packs, couponCode, isRegistered, paymentMethod, fulfillment]);
 }

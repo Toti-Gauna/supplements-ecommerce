@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type SetStateAction } from "react";
 
 const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b);
 
@@ -17,17 +17,33 @@ export function useSessionDraft<T>(key: string, saved: T, isValid: (x: unknown) 
       return isValid(v) && !same(v, saved) ? v : null;
     } catch { return null; }
   });
-  const [draft, setDraft] = useState<T>(start ?? saved);
+  const [draft, setDraftState] = useState<T>(start ?? saved);
+  const currentDraft = useRef<T>(start ?? saved);
   const [restored, setRestored] = useState(!!start);
+  const [storageError, setStorageError] = useState(false);
   const dirty = !same(draft, saved);
   useEffect(() => {
-    if (!key) return;
-    try { if (dirty) sessionStorage.setItem(key, JSON.stringify(draft)); else sessionStorage.removeItem(key); } catch { /* sin almacenamiento: queda en memoria */ }
-  }, [key, draft, dirty]);
+    if (!key || dirty) return;
+    try { sessionStorage.removeItem(key); } catch { /* sin almacenamiento: queda en memoria */ }
+  }, [key, dirty]);
+  const setDraft = (update: SetStateAction<T>) => {
+    const next = typeof update === "function" ? (update as (previous: T) => T)(currentDraft.current) : update;
+    let failed = false;
+    if (key) {
+      try { if (!same(next, saved)) sessionStorage.setItem(key, JSON.stringify(next)); else sessionStorage.removeItem(key); }
+      catch { failed = true; }
+    }
+    setStorageError(failed);
+    currentDraft.current = next;
+    setDraftState(next);
+  };
   return {
-    draft, dirty, setDraft,
+    draft, dirty, setDraft, storageError,
     restored: restored && dirty,
     /** Vuelve a lo guardado (o a `to`): el borrador de la pestaña se borra solo al quedar sin cambios. */
-    reset: (to: T = saved) => { setDraft(to); setRestored(false); },
+    reset: (to: T = saved) => {
+      currentDraft.current = to; setDraftState(to); setRestored(false); setStorageError(false);
+      try { if (key) sessionStorage.removeItem(key); } catch { /* el borrador sigue en memoria */ }
+    },
   };
 }

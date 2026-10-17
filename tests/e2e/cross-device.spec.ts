@@ -14,7 +14,7 @@ const DEVICES = [
 ] as const;
 
 const SHOP = [
-  ["", "Destacados de Volta"], ["buscar/?q=creatna", "Buscar"], ["categorias/", "Todas las categorías"], ["c/proteinas/", "Proteínas"],
+  ["", "Cargá tu mejor versión"], ["buscar/?q=creatna", "Buscar"], ["categorias/", "Todas las categorías"], ["c/proteinas/", "Proteínas"],
   ["p/ionic-whey/", "Ionic Whey 100%"], ["p/creatina-monohidrato/", "Creatina monohidrato"], ["crear/", "Armá tu stack"],
   ["cupones/", "Mis cupones"], ["favoritos/", "Favoritos"], ["carrito/", "Tu carrito"], ["checkout/", "Finalizar compra"],
   ["checkout/confirmacion/", "Confirmación"], ["pedido/demo-volta/", "Seguimiento de tu pedido"], ["cuenta/", "Mi cuenta"],
@@ -34,9 +34,10 @@ const ADMIN = [
   ["admin-demo/marketing/", "Marketing"], ["admin-demo/cupones/lista/", "Cupones"], ["admin-demo/cupones/ruleta/", "Configuración de ruleta"],
   ["admin-demo/cupones/premios/", "Premios disponibles"], ["admin-demo/misiones/simular/", "Simular progreso y premio"], ["admin-demo/emails/enviados/", "Bandeja de salida"],
   ["admin-demo/cupones/juego/", "Premios del juego"],
-  ["admin-demo/contenido/carrusel/", "Carrusel"], ["admin-demo/contenido/textos/", "Textos de inicio"], ["admin-demo/contenido/preguntas/", "Preguntas frecuentes"],
+  ["admin-demo/contenido/carrusel/", "Carrusel del inicio"], ["admin-demo/contenido/textos/", "Textos de inicio"], ["admin-demo/contenido/preguntas/", "Preguntas frecuentes"],
   ["admin-demo/ajustes/contacto/", "Contacto y WhatsApp"], ["admin-demo/ajustes/pagos/", "Medios de pago"], ["admin-demo/ajustes/cobro/", "Datos de cobro"],
   ["admin-demo/ajustes/envios/", "Envíos y retiro"],
+  ["admin-demo/packs/", "Packs y suscripciones"], ["admin-demo/packs/editar/?id=hipertrofia", "Editar: Pack Hipertrofia"],
 ] as const;
 
 /** Errores que no son de la demo: el navegador de pruebas no tiene GPU ni códecs propietarios. */
@@ -58,7 +59,7 @@ async function sweep(page: Page, routes: readonly (readonly [string, string])[],
     const before = errors.length;
     const res = await page.goto(path);
     if (res?.status() !== 200) problems.push(`/${path}: HTTP ${res?.status()}`);
-    const target = path === "" ? page.getByRole("region", { name: heading }) : page.getByRole("heading", { level: 1, name: heading });
+    const target = page.getByRole("heading", { level: path ? 1 : 2, name: heading });
     if (!(await target.first().waitFor({ state: "visible", timeout: 8000 }).then(() => true, () => false))) problems.push(`/${path}: no se ve «${heading}»`);
     const overflow = await horizontalOverflow(page);
     if (overflow > 0) problems.push(`/${path}: desborda ${overflow}px a lo ancho`);

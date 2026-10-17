@@ -35,13 +35,15 @@ interface CartLineItemProps {
   size?: "compact" | "full";
   /** Al tocar el nombre (el carrito lateral se cierra al ir a la ficha). */
   onNavigate?: () => void;
+  /** La línea es de un pack (L3): va sin tarjeta propia (la tiene el pack) y su cantidad no se edita. */
+  inPack?: boolean;
 }
 
 /** Línea del bolso: el pote, cuánto te dura, la cantidad y el total de la línea. */
-export function CartLineItem({ line, onQuantity, onRemove, size = "full", onNavigate }: CartLineItemProps) {
+export function CartLineItem({ line, onQuantity, onRemove, size = "full", onNavigate, inPack = false }: CartLineItemProps) {
   const compact = size === "compact";
   return (
-    <li className={cn("relative flex gap-3 rounded-sm bg-surface p-3", compact ? "border border-line" : "animate-fade-up shadow-[var(--shadow-card)] sm:gap-5 sm:p-4")}>
+    <li className={cn("relative flex gap-3 p-3", inPack ? "border-t border-line first:border-t-0" : compact ? "rounded-sm border border-line bg-surface" : "animate-fade-up rounded-sm bg-surface shadow-[var(--shadow-card)] sm:gap-5 sm:p-4", inPack && !compact && "sm:gap-5 sm:p-4")}>
       <div className={cn("shrink-0", compact ? "w-16" : "w-20 sm:w-32")}><LineThumb art={line.art} pack={line.pack} tint={line.tint} name={line.name} /></div>
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
         <Link href={`/p/${line.slug}/`} onClick={onNavigate} className={cn("line-clamp-2 pr-8 font-bold leading-snug hover:underline", compact ? "text-sm" : "text-[15px] sm:text-base")}>{line.name}</Link>
@@ -49,7 +51,9 @@ export function CartLineItem({ line, onQuantity, onRemove, size = "full", onNavi
         {line.lastsDays ? <p className="font-mono text-[11px] font-bold uppercase tracking-[0.06em] text-volt-ink">Te dura {line.lastsDays} días</p> : null}
         {line.gift && <GiftTag gift={line.gift} />}
         <div className="mt-auto flex items-center justify-between gap-2 pt-1.5">
-          <QuantityStepper size="sm" label={`Cantidad de ${line.name}`} value={line.quantity} max={line.maxQuantity} onChange={onQuantity} />
+          {inPack
+            ? <span className="font-mono text-sm text-muted">Cantidad: {line.quantity}</span>
+            : <QuantityStepper size="sm" label={`Cantidad de ${line.name}`} value={line.quantity} max={line.maxQuantity} onChange={onQuantity} />}
           <div className="text-right">
             <p className="font-extrabold tabular-nums">{formatARS(line.lineTotal)}</p>
             {!compact && line.quantity > 1 && <p className="text-xs text-muted">{formatARS(line.unitPrice)} c/u</p>}

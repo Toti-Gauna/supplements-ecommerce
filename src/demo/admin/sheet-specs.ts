@@ -4,7 +4,8 @@ import type { Category } from "../types";
 import type { CategoryRow } from "./categories";
 import { parseMoney, parseYesNo, type Parsed } from "./import/cells";
 import { COLUMN_LABEL, expandEdit, parseCellInput, type Draft, type SheetColumn, type SheetSpec, type SheetValue } from "./sheet";
-import type { StockRow } from "./stock";
+import { stockMargin, type StockRow } from "./stock";
+import { formatARS } from "@/lib/money";
 import { MATERIAL_STATE_LABEL, reorderQty, usesDecimals, type MaterialRow } from "./workshop/materials";
 
 /** Vistas Excel de Productos y stock, Insumos y Categorías (8.3.18, 8.3.19, 8.3.22): qué se edita, cómo se valida y cómo se guarda. */
@@ -26,6 +27,9 @@ export function productSheetSpec(categories: Category[]): SheetSpec<StockRow> {
       // Solo lectura: la marca se cambia en la ficha y los lotes en las variantes del producto.
       { id: "brand", label: "Marca", get: (r) => r.brand, width: "min-w-[8rem]" },
       { id: "lot", label: "Lote que sale primero", get: (r) => (r.lot ? `${r.lot.code} · ${formatExpiry(r.lot.expires)}` : ""), width: "min-w-[10rem]" },
+      // R2: lo que rinde y lo que deja cada presentación (se recalculan al guardar el precio).
+      { id: "servingPrice", label: "Precio por servicio", get: (r) => r.servingPrice ?? "", numeric: true, text: (v) => (v === "" ? "—" : formatARS(Number(v))), width: "min-w-[8rem]" },
+      { id: "margin", label: "Margen", get: (r) => stockMargin(r) ?? "", numeric: true, text: (v) => (v === "" ? "—" : `${v} %`), width: "min-w-[6rem]" },
     ],
   };
 }

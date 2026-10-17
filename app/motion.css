@@ -13,6 +13,18 @@
 /* Con View Transitions, la entrada por CSS de la plantilla duplicaría la animación. */
 @supports (view-transition-name: none) { .page-enter { animation: none; } }
 
+/*
+ * El header y el dock del celular quedan quietos y SIEMPRE arriba durante la transición: la página que entra y la que
+ * sale se dibujan en la capa de la transición, por encima de todo lo que quedó en "root", y tapaban el dock un instante.
+ */
+[data-shop-bottomnav] { view-transition-name: shop-dock; }
+[data-shop-header] { view-transition-name: shop-header; }
+::view-transition-group(shop-dock), ::view-transition-group(shop-header) { z-index: 50; animation: none; }
+::view-transition-old(shop-dock), ::view-transition-new(shop-dock),
+::view-transition-old(shop-header), ::view-transition-new(shop-header) { animation: none; }
+/* Si una de las dos páginas no tiene dock (ficha, carrito), el que queda solo no se queda flotando. */
+::view-transition-old(shop-dock):only-child { animation: vt-out 160ms cubic-bezier(0.4, 0, 1, 1) both; }
+
 /* La imagen del producto: de la tarjeta a la galería (relación de aspecto distinta, sin deformar). */
 .vt-hero { view-transition-name: product-hero; }
 ::view-transition-group(product-hero) { animation-duration: 520ms; animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1); z-index: 5; }

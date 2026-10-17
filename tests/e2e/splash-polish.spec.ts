@@ -41,6 +41,7 @@ test("con temática, la pantalla de carga es la misma: solo el filo de la barra 
 });
 
 test("al recargar en una sesión nueva a mitad de página, la pantalla de carga queda por encima de todo (capa superior)", async ({ page }) => {
+  await holdSplash(page);
   await page.goto("p/ionic-whey/");
   await page.keyboard.press("Escape");
   await page.evaluate(() => { sessionStorage.clear(); window.scrollTo({ top: 700, behavior: "instant" }); });

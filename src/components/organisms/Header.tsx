@@ -10,6 +10,7 @@ import { useUi } from "@/stores/ui";
 import { Logo } from "@/components/atoms/Logo";
 import { SoundToggle } from "@/components/atoms/SoundToggle";
 import { ThemeToggle } from "@/components/atoms/ThemeToggle";
+import { CompareNavLink } from "@/features/compare/CompareNavLink";
 import { MobileMenu } from "./MobileMenu";
 import { ShopMenu } from "./ShopMenu";
 import { brand } from "@/config/brand";
@@ -18,6 +19,7 @@ import { useSearchShortcut } from "./useSearchShortcut";
 
 export const NAV = [
   { href: "/categorias/", label: "Tienda" },
+  { href: "/packs/", label: "Packs" },
   { href: "/crear/", label: "Armá tu stack" },
   { href: "/club/", label: brand.club },
   { href: "/club/juego/", label: "Shaker Rush" },
@@ -76,6 +78,7 @@ export function Header() {
           <button type="button" onClick={() => setSearch(true)} aria-label="Buscar productos" className={cn(ICON, "sm:hidden")}><Search size={20} aria-hidden="true" /></button>
           <SoundToggle className={ICON} />
           <ThemeToggle className={cn(ICON, "max-sm:hidden")} />
+          <CompareNavLink variant="icon" className={cn(ICON, "max-sm:hidden")} />
           <Link href="/favoritos/" aria-label="Favoritos" className={cn(ICON, "max-lg:hidden")}><Heart size={20} aria-hidden="true" /></Link>
           <Link href="/cuenta/" aria-label="Mi cuenta" className={cn(ICON, "max-sm:hidden")}><UserRound size={20} aria-hidden="true" /></Link>
           <button type="button" onClick={() => openCart()} aria-label={`Carrito, ${count} ${count === 1 ? "producto" : "productos"}`}

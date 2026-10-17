@@ -4,8 +4,8 @@ import { useEffect, useRef } from "react";
 import { useHydrated } from "@/stores/hydration";
 
 /**
- * Lee `?objetivo=` y `?stack=` una sola vez, con los datos de la demo ya recuperados (el panel puede haber cambiado
- * el catálogo). Va dentro de su propio `<Suspense>`: el resto del armador se exporta completo en el HTML estático.
+ * Lee `?objetivo=` (uno o varios), `?deporte=` y `?stack=` una sola vez, con los datos de la demo ya recuperados (el
+ * panel puede haber cambiado el catálogo). Va dentro de su propio `<Suspense>`: el resto del armador se exporta completo en el HTML estático.
  */
 export function StackUrlLoader({ onLoad }: { onLoad: (params: URLSearchParams) => void }) {
   const params = useSearchParams();

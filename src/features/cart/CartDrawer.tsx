@@ -5,12 +5,14 @@ import { Button, ButtonLink } from "@/components/atoms/Button";
 import { Sheet } from "@/components/motion/Sheet";
 import { CartLineItem } from "@/components/organisms/CartLineItem";
 import { getProduct } from "@/demo/engine/catalog";
+import { packDiscountRows } from "@/demo/engine/pack-cart";
 import { recommendForCart } from "@/demo/engine/recommend";
 import { formatARS } from "@/lib/money";
 import { useCart } from "@/stores/cart";
 import { useUi } from "@/stores/ui";
 import { BagLoad } from "./BagLoad";
 import { CadeteCountdown } from "./CadeteCountdown";
+import { QuotedGroups } from "./QuotedGroups";
 import { CartMissionNudge } from "./CartMissionNudge";
 import { MiniRecommendations } from "./MiniRecommendations";
 import { toLineView } from "./line-view";
@@ -49,10 +51,10 @@ export function CartDrawer() {
           <>
             <BagLoad quote={quote} />
             <ul className="flex flex-col gap-2" aria-label="Productos en el bolso">
-              {quote.lines.map((q) => {
+              <QuotedGroups quote={quote} renderLine={(q, inPack) => {
                 const view = toLineView(q);
-                return view && <CartLineItem key={view.id} line={view} size="compact" onNavigate={closeCart} onQuantity={(n) => setQuantity(view.id, n)} onRemove={() => remove(view.id)} />;
-              })}
+                return view && <CartLineItem key={view.id} line={view} size="compact" inPack={inPack} onNavigate={closeCart} onQuantity={(n) => setQuantity(view.id, n)} onRemove={() => remove(view.id)} />;
+              }} />
             </ul>
             <CartMissionNudge units={quote.units} total={quote.total} compact />
             <WheelOffer when="cart" />
@@ -63,8 +65,9 @@ export function CartDrawer() {
       {lines.length > 0 && (
         <div className="border-t border-line bg-surface px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 sm:px-6">
           <CadeteCountdown lines={lines} className="mb-2" />
+          {packDiscountRows(quote.pack.entries).map((r) => <p key={r.label} className="flex justify-between text-sm font-semibold text-success"><span>{r.label}</span><span className="font-mono tabular-nums">−{formatARS(r.amount)}</span></p>)}
           {quote.stack.discount > 0 && <p className="flex justify-between text-sm font-semibold text-success"><span>Descuento stack ({quote.stack.pct} %)</span><span className="font-mono tabular-nums">−{formatARS(quote.stack.discount)}</span></p>}
-          <div className="mb-3 flex items-end justify-between"><span className="eyebrow text-muted">Subtotal</span><span className="font-display text-3xl tabular-nums">{formatARS(quote.subtotal - quote.stack.discount)}</span></div>
+          <div className="mb-3 flex items-end justify-between"><span className="eyebrow text-muted">Subtotal</span><span className="font-display text-3xl tabular-nums">{formatARS(quote.subtotal - quote.stack.discount - quote.pack.discount)}</span></div>
           <div className="grid gap-1">
             <Button onClick={goToCheckout} size="lg" className="w-full">Ir al checkout</Button>
             <ButtonLink href="/carrito/" onClick={closeCart} variant="ghost" className="w-full">Ver carrito completo</ButtonLink>

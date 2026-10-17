@@ -38,5 +38,5 @@ export const themeCoupons: Coupon[] = [
   { code: "VERANO20", type: "PERCENT", value: 20, description: "20% de Operación verano", active: true, usedCount: 0, themeId: "operacion-verano" },
 ];
 
-/** Fase 5: automática por fecha (en octubre sale el Día de la Madre) y con "Probar temáticas" para mostrar la demo. */
-export const themeSettings: ThemeSettings = { mode: "auto", fixedId: "dia-de-la-madre", showTryButton: true };
+/** Por defecto la tienda abre con la temática original (pedido de Ignacio). Desde el panel se puede pasar a "por fecha" o fijar una; "Probar temáticas" sigue disponible para la demo. */
+export const themeSettings: ThemeSettings = { mode: "off", fixedId: "dia-de-la-madre", showTryButton: true };

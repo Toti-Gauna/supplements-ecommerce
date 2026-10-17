@@ -1,5 +1,5 @@
 "use client";
-import { BatteryCharging, Gift, LogOut, MapPin, Package, Sparkles, Trophy, type LucideIcon } from "lucide-react";
+import { BatteryCharging, CalendarClock, Gift, LogOut, MapPin, Package, Sparkles, Trophy, type LucideIcon } from "lucide-react";
 import type { MouseEvent, ReactNode } from "react";
 import { LevelGlyph } from "@/components/illustrations/LevelGlyph";
 import { levelFor } from "@/demo/engine/club-levels";
@@ -17,6 +17,7 @@ import { AccountGifts } from "../gifts/AccountGifts";
 import { AddressesSection, MissionsSection, RewardsSection, availableRewards } from "./AccountSections";
 import { MyBoxSection } from "./MyBoxSection";
 import { OrdersSection } from "./OrdersSection";
+import { SubscriptionsSection, useOwnSubscriptions } from "./SubscriptionsSection";
 import { useAccountOrders } from "./useAccountOrders";
 import { potsInUse } from "@/demo/engine/repurchase";
 import { DEMO_TODAY } from "@/demo/fixtures/admin-orders";
@@ -45,10 +46,12 @@ export function AccountDashboard({ user }: { user: { name: string; email: string
   const coupons = useDemoData((d) => d.coupons);
   const gameLeft = gameCodes.filter((code) => { const c = coupons.find((x) => x.code === code); return c && !(c.maxUses !== undefined && (c.usedCount ?? 0) >= c.maxUses); }).length;
   const rewards = availableRewards(usedRewards) + (prizeStatus && prizeStatus !== "utilizado" ? 1 : 0) + gameLeft;
+  const subscriptions = useOwnSubscriptions().filter((s) => s.status !== "cancelled").length;
   const [tab, select] = useAccountTab();
   const sections: Section[] = [
     { id: "mi-box", title: "Mi box", icon: BatteryCharging, summary: pots ? plural(pots, "pote en uso", "potes en uso") : "Sin potes en uso", intro: "Lo que te queda de cada pote, tu nivel y recomprar en un toque.", body: <MyBoxSection /> },
     { id: "pedidos", title: "Mis pedidos", icon: Package, summary: plural(orders.length, "pedido", "pedidos"), intro: "Seguí cada pedido paso a paso o repetilo.", body: <OrdersSection /> },
+    { id: "suscripciones", title: "Suscripciones", icon: CalendarClock, summary: subscriptions ? plural(subscriptions, "activa", "activas") : "Sin suscripciones", intro: "Los packs que recibís todos los meses (simulado: no se cobra nada).", body: <SubscriptionsSection /> },
     { id: "regalos", title: "Mis regalos", icon: Gift, summary: unopened ? plural(unopened, "sin abrir", "sin abrir") : plural(received.length, "regalo", "regalos"), intro: "Los que te mandaron se abren sin el link; los que hiciste, para volver a mandarlos.", body: <AccountGifts email={user.email} /> },
     { id: "misiones", title: "Misiones", icon: Sparkles, summary: plural(missions.length, "activa", "activas"), intro: "Tus compras suman a cada misión (progreso de ejemplo).", body: <MissionsSection /> },
     { id: "premios", title: "Premios", icon: Trophy, summary: rewards ? plural(rewards, "disponible", "disponibles") : "Sin premios para usar", intro: "Los cupones de la ruleta y de Shaker Rush y los premios de las misiones, de un solo uso.", body: <RewardsSection used={usedRewards} onUse={markRewardUsed} /> },

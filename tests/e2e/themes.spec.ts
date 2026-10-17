@@ -3,10 +3,10 @@ import { guardNetwork } from "./helpers";
 
 test("probar temáticas: Halloween cambia cinta, acento, carrusel y ofertas (el logo queda limpio); el cupón queda en el carrito", async ({ page }) => {
   const assertNoExternal = guardNetwork(page);
-  // Desde la Fase 5 el botón arranca prendido (para mostrarle la demo al cliente) y la tienda va por fecha.
+  // El botón arranca prendido (para mostrarle la demo al cliente) y la tienda arranca con la temática original.
   await page.goto("admin-demo/tematicas/");
   await expect(page.getByRole("switch", { name: /Probar temáticas/ })).toBeChecked();
-  await expect(page.getByLabel("Modo", { exact: true })).toHaveValue("auto");
+  await expect(page.getByLabel("Modo", { exact: true })).toHaveValue("off");
   // El panel deja puesta una temática (Navidad fija) para ver que "Original" la tapa solo en este navegador.
   await page.getByLabel("Modo", { exact: true }).selectOption("fixed");
   await page.getByLabel("Temática fija").selectOption("navidad");
@@ -77,8 +77,14 @@ test("el panel edita la temática y su modo; la tienda lo refleja", async ({ pag
   await expect(page.getByRole("button", { name: "Probar temáticas" })).toHaveCount(0);
 });
 
-test("modo automático: la tienda sale sola con la temática de la fecha", async ({ page }) => {
+test("por defecto sale la original; en modo automático la tienda sale sola con la temática de la fecha", async ({ page }) => {
   await page.addInitScript(() => localStorage.removeItem("volta-demo:theme-preview"));
+  await page.clock.setFixedTime(new Date("2026-10-12T12:00:00-03:00"));
+  await page.goto("");
+  await expect(page.locator("html")).not.toHaveAttribute("data-season", /.+/);
+  await expect(page.locator("[data-theme-ribbon]")).toHaveCount(0);
+  await page.goto("admin-demo/tematicas/");
+  await page.getByLabel("Modo", { exact: true }).selectOption("auto");
   for (const [day, id, heading] of [
     ["2026-10-12", "dia-de-la-madre", "Para la que nunca para"],
     ["2026-11-03", "cyber-monday", "Overclock de precios"],

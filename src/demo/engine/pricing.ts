@@ -1,8 +1,9 @@
-import type { Coupon, FulfillmentType, PaymentMethod } from "../types";
+import type { Coupon, FulfillmentType, Pack, PaymentMethod } from "../types";
 import type { CartLine } from "./cart-types";
 import { getProduct, unitPrice } from "./catalog";
 import { couponDiscount } from "./coupons";
 import { demoData } from "./source";
+import { NO_PACK_DISCOUNT, packDiscount, type PackDiscount } from "./packs";
 import { DEFAULT_STACK_RULE, stackDiscount, type StackResult } from "./stack";
 
 /**
@@ -21,6 +22,8 @@ export interface Quote {
   subtotal: number;
   /** Descuento "stack" por llevar suplementos de varias categorías (ver engine/stack.ts). */
   stack: StackResult;
+  /** Descuento de los packs completos del carrito (L3) y, si es suscripción, el extra mensual. */
+  pack: PackDiscount;
   couponDiscount: number;
   transferDiscount: number;
   shippingCost: number | null;
@@ -32,6 +35,8 @@ export interface QuoteOptions {
   coupon?: Coupon | null;
   paymentMethod?: PaymentMethod | null;
   fulfillment?: FulfillmentType | null;
+  /** Packs a medida del carrito (el programa del quiz, L4), además de los del catálogo. */
+  packs?: Pack[];
 }
 
 export function quoteLines(lines: CartLine[]): QuotedLine[] {
@@ -53,10 +58,13 @@ export function quoteCart(lines: CartLine[], options: QuoteOptions = {}): Quote 
   const quoted = quoteLines(lines);
   const subtotal = quoted.reduce((sum, q) => sum + q.lineTotal, 0);
   const settings = demoData().settings;
-  const stackLines = quoted.flatMap((q) => { const product = getProduct(q.line.productSlug); return product ? [{ product, lineTotal: q.lineTotal }] : []; });
+  // Lo que está en un pack completo tiene su propio descuento y no suma al stack (no se acumulan los dos).
+  const pack = quoted.some((q) => q.line.packId) ? packDiscount(quoted, [...(demoData().packs ?? []), ...(options.packs ?? [])]) : NO_PACK_DISCOUNT;
+  const covered = new Set(pack.coveredLineIds);
+  const stackLines = quoted.flatMap((q) => { const product = getProduct(q.line.productSlug); return product && !covered.has(q.line.id) ? [{ product, lineTotal: q.lineTotal }] : []; });
   const stack = stackDiscount(stackLines, settings.stack ?? DEFAULT_STACK_RULE);
-  // El cupón se calcula sobre lo que queda después del stack; la transferencia, sobre lo que queda después de los dos.
-  const afterStack = subtotal - stack.discount;
+  // El cupón se calcula sobre lo que queda después del pack y del stack; la transferencia, sobre lo que queda después de todos.
+  const afterStack = subtotal - stack.discount - pack.discount;
   const coupon = options.coupon ?? null;
   const discount = couponDiscount(coupon, afterStack);
   const manual = options.paymentMethod === "BANK_TRANSFER" || options.paymentMethod === "QR_MANUAL";
@@ -71,6 +79,7 @@ export function quoteCart(lines: CartLine[], options: QuoteOptions = {}): Quote 
     units: quoted.reduce((sum, q) => sum + q.line.quantity, 0),
     subtotal,
     stack,
+    pack,
     couponDiscount: discount,
     transferDiscount,
     shippingCost,

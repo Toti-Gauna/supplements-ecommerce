@@ -32,7 +32,9 @@ test("ruleta: gira (sin animación con movimiento reducido), emite un cupón y s
 test("ficha: stock bajo la imagen, cantidad desplegable y favoritos", async ({ page }) => {
   await page.goto("p/overvolt-pre/");
   await expect(page.getByText(/En stock · 12 disponibles/)).toBeVisible();
-  await expect(page.getByRole("heading", { name: /Sumalo a tu stack/ })).toBeVisible();
+  // R2a: debajo de la ficha, el riel "Comparalo con…" (reemplaza a "Sumalo a tu stack"; el stack va en la ficha).
+  await expect(page.getByRole("heading", { name: /Comparalo/ })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Armá tu stack|Sumá \d categorías/ }).first()).toBeAttached();
   // Con la máquina cargada, elegir antes de que la ficha termine de hidratar se pierde (React repone el valor):
   // se reintenta hasta que el selector responde.
   const qty = page.getByLabel("Cantidad:");
@@ -56,7 +58,7 @@ test("ficha: stock bajo la imagen, cantidad desplegable y favoritos", async ({ p
   await expect(page.getByRole("list", { name: "Favoritos guardados" }).getByText("Ionic Whey 100%")).toBeVisible();
 });
 
-test("barra inferior de la tienda y carrusel con pausa", async ({ page }) => {
+test("barra inferior de la tienda y carrusel con controles accesibles", async ({ page }) => {
   await page.goto("");
   const nav = page.getByRole("navigation", { name: "Navegación inferior" });
   await expect(nav.getByRole("link", { name: "Inicio" })).toHaveAttribute("aria-current", "page");
@@ -73,7 +75,8 @@ test("barra inferior de la tienda y carrusel con pausa", async ({ page }) => {
   await expect(page.locator("[data-buy-bar]")).toBeVisible();
   await expect(nav).toHaveCount(0);
   await page.goto("");
-  await expect(page.getByRole("button", { name: /Reproducir carrusel|Pausar carrusel/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Reproducir carrusel|Pausar carrusel/ })).toHaveCount(1);
+  await expect(page.getByRole("group", { name: "Destacados" }).locator("button[aria-current=true]")).toHaveCount(1);
 });
 
 test("carrito: elegir cupón sin escribir el código y ruleta ofrecida antes de pagar", async ({ page }) => {

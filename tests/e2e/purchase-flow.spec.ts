@@ -35,11 +35,14 @@ test("flujo móvil completo hasta la confirmación de demostración", async ({ p
   await code.fill("bienvenida10");
   await code.press("Enter");
   await expect(page.getByText(/BIENVENIDA10: 10%/)).toBeVisible();
-  await expect(page.locator("main").getByRole("progressbar", { name: /Comprá 2 productos/ })).toBeVisible();
-  // Al ir a pagar aparece la ruleta (todavía no se giró); se puede seguir sin girar
+  // Como invitado, la misión no promete premios: dice que no suma y ofrece entrar.
+  await expect(page.locator("main").getByText(/Como invitado este pedido no suma/)).toBeVisible();
+  await expect(page.getByText(/Desbloque/)).toHaveCount(0);
+  // La ruleta se ofrece en el bolso; ir a pagar va directo al checkout, sin cortar el flujo.
+  await expect(page.getByRole("region", { name: "Disco olímpico" })).toBeVisible();
   await page.getByRole("button", { name: "Continuar al checkout" }).click();
-  await page.getByRole("dialog", { name: "Ruleta de cupones" }).getByRole("button", { name: "Continuar sin girar" }).click();
   await expect(page).toHaveURL(/checkout\/$/);
+  await expect(page.getByRole("dialog", { name: "Ruleta de cupones" })).toHaveCount(0);
 
   // Checkout como invitado
   await page.getByRole("button", { name: "Continuar a la entrega" }).click();

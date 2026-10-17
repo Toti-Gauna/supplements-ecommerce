@@ -37,7 +37,6 @@ test("regalar: ficha → carrito → checkout → link que se abre a golpes, sin
   await page.goto("carrito/");
   await expect(page.getByText("Regalo para Sofía · de Lucía")).toBeVisible();
   await page.getByRole("button", { name: "Continuar al checkout" }).click();
-  await page.getByRole("dialog", { name: "Ruleta de cupones" }).getByRole("button", { name: "Continuar sin girar" }).click();
   await checkout(page);
 
   // Confirmación: el regalo listo para mandar con su código y su link

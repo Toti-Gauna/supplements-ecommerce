@@ -226,6 +226,11 @@ herramienta responde las preguntas que hoy le hacen por WhatsApp.
 
 **Estado:** R2a hecho (PR de R2a): ficha "hoja técnica" con el precio total primero (decisión de L1), editor con
 precio por presentación, rótulo y RNPA validados, catálogo con filtros y orden, y comparador. Siguen R2b y R2c.
+R2c parte B (club): tabla de niveles con medallas de metal, misiones de entrenamiento (entrenos de la semana, día del
+deporte, Shaker Rush) con premios que se reclaman una sola vez, el anillo que al invitado lo invita a crear la cuenta
+demo, la liga de gimnasios (`/club/liga/` y, en el panel, Misiones → Liga de gimnasios en solo lectura), el disco con
+"Cargá la barra" fuera del checkout (placa opcional en el carrito) y Shaker Rush arcade con ranking semanal, "Usar
+cupón ahora" y tarjeta 9:16. Capturas en [`img/rediseno/r2c/`](img/rediseno/r2c/).
 
 **"Wow" esperado:** checkout con la fecha real, seguimiento con lote y "Mi box" con recompras solas. Los tres usan
 datos que el motor ya tiene.

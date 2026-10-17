@@ -25,6 +25,7 @@ import { MiniRecommendations } from "./MiniRecommendations";
 import { QuotedGroups } from "./QuotedGroups";
 import { useCartQuote } from "./useCartQuote";
 import { useGoToCheckout } from "./useGoToCheckout";
+import { WheelOffer } from "./WheelOffer";
 
 export function toLineView(q: QuotedLine): CartLineView | null {
   const product = getProduct(q.line.productSlug);
@@ -88,6 +89,7 @@ export function CartView() {
       </div>
       {/* En el celular: cupón y resumen justo debajo de los productos. En escritorio: columna fija a la derecha. */}
       <aside className="flex flex-col gap-4 lg:sticky lg:top-28 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-start">
+        <WheelOffer when="cart" />
         <section aria-label="Cupones" className="rounded-sm bg-surface p-4 shadow-[var(--shadow-card)]"><CouponForm subtotal={quote.subtotal} isRegistered={isRegistered} check={couponCheck} /></section>
         {summary}
       </aside>

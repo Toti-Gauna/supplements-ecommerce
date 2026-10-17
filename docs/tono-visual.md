@@ -69,7 +69,16 @@ y distinta de las que hay hoy (negro + rojo agresivo, o blanco clínico). Todo s
   carrito, el seguimiento y el club la fecha suma solo un ticket con su filo (`SeasonTicket`), nunca la compra. El
   "Modo vitrina" de "Probar temáticas" recorre las 17 fechas sin recargar. Ventanas y descuentos: `src/demo/engine/campaign-*.ts`.
 - **Niveles del club** (`LevelGlyph`): un disco visto de frente con una batería que se carga una celda por nivel
-  (Novato, Atleta, Élite, Bestia; Bestia suma el rayo).
+  (Novato, Atleta, Élite, Bestia; Bestia suma el rayo). En el Club (R2c) cada nivel es una **medalla de metal**
+  (`ClubMedal`: bronce, plata, oro y platino) con cinta de competencia, canto moleteado, agujero de barra y una celda
+  grabada por nivel. "Tu próximo premio" es un **anillo de placas** (`PlateRing`) con la cifra en LED.
+- **Club sobre la noche** (`src/features/club/styles.ts`): placas de acero oscuro con bisel (`NIGHT_PLATE`) y la
+  encendida con filo voltio (`NIGHT_PLATE_ON`) para tu nivel, tu box y tu fila en los rankings; las bandas usan `floor`
+  + `led-dark` para que el LED brille también en modo claro.
+- **"Cargá la barra"** (`WheelChargeBar`): una barra olímpica que se carga de discos (rojo, azul, amarillo y verde)
+  mientras mantenés apretado; al soltar, el disco gira con esa fuerza. Con "reducir movimiento" es un botón que gira
+  directo. **Shaker Rush arcade**: marquesina con scanlines quietas, récord y puesto en LED, rival de la semana y la
+  tarjeta 9:16 dibujada en canvas (`scoreCard.ts`).
 - Fondo con grano fino y grilla de puntos; bandas oscuras con filo voltio muy sutil; botón primario con destello.
 
 ## Detalles técnicos

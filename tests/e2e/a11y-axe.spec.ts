@@ -14,6 +14,10 @@ const PAGES: [string, string, string][] = [
   ["ficha hoja técnica (suplemento)", "p/ionic-whey/", "h1"],
   ["ficha de equipamiento", "p/guantes-boxeo/", "h1"],
   ["categoría", "categorias/", "h1"],
+  ["catálogo con filtros y orden", "categorias/?marca=krono-nutrition&sello=sin-azucar&orden=rendidor", "h1"],
+  ["categoría con filtros", "c/proteinas/?porserv=1000-2000&orden=proteina", "h1"],
+  ["comparador", "comparar/?p=ionic-whey,proteina-vegana,isolate-zero", "[role=table]"],
+  ["comparador con equipamiento", "comparar/?p=ionic-whey,shaker-volta", "[role=table]"],
   ["búsqueda con chips", "buscar/?q=proteina sin lactosa", "h1"],
   ["búsqueda sin resultados", "buscar/?q=creatina vainilla", "h1"],
   ["packs", "packs/", "h1"],
@@ -76,6 +80,20 @@ for (const mode of ["dark", "light"] as const) {
       await expect(section.getByRole("tabpanel", { name: /Deportes/ })).toBeVisible();
       await page.waitForTimeout(400);
       const found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+    });
+    test("catálogo: panel de filtros del celular y selector del comparador", async ({ page }) => {
+      await page.goto("categorias/?sello=vegano#catalogo");
+      await page.locator("#catalogo").getByRole("button", { name: /^Filtros/ }).click();
+      await expect(page.getByRole("dialog", { name: "Filtros" })).toBeVisible();
+      await page.waitForTimeout(500);
+      let found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+      await page.goto("comparar/?p=ionic-whey,proteina-vegana");
+      await page.getByRole("button", { name: "Cambiar Ionic Whey 100%" }).click();
+      await expect(page.getByRole("dialog", { name: "Cambiar Ionic Whey 100%" })).toBeVisible();
+      await page.waitForTimeout(500);
+      found = await audit(page);
       expect(found, describe(found)).toEqual([]);
     });
     test("buscador superpuesto con resultados y una opción activa", async ({ page }) => {

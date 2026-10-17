@@ -7,6 +7,7 @@ import { Sheet } from "@/components/motion/Sheet";
 import { SoundToggle } from "@/components/atoms/SoundToggle";
 import { ThemeToggle } from "@/components/atoms/ThemeToggle";
 import { categoryHref, visibleCategories } from "@/demo/engine/catalog";
+import { CompareNavLink } from "@/features/compare/CompareNavLink";
 import { ThemeTryButton } from "@/features/themes/ThemeTryButton";
 import { useDemoVersion } from "@/stores/admin";
 import { useUi } from "@/stores/ui";
@@ -52,6 +53,7 @@ export function MobileMenu() {
           {LINKS.map(({ href, label, icon: Icon }) => (
             <li key={href}><Link href={href} onClick={close} className={ROW}><Icon size={18} aria-hidden="true" className="text-volt-ink" />{label}</Link></li>
           ))}
+          <li className="empty:hidden"><CompareNavLink variant="row" onClick={close} className={ROW} /></li>
         </ul>
         <p className={RAIL}>Preferencias y demo</p>
         <div className="mt-1 flex flex-col">

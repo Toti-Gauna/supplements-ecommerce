@@ -20,3 +20,22 @@ export function stageDates(log: { at: string; to: OrderStatus }[], status: Order
   const current = TRACKING_STAGES.indexOf(status);
   return TRACKING_STAGES.map((stage, i) => (i <= current ? log.filter((l) => l.to === stage).at(-1)?.at : undefined));
 }
+
+export interface CheckedLot {
+  /** Código impreso en el envase ("VL-2609-W"); null si en el control se anotó sin lote cargado. */
+  code: string | null;
+  /** Vencimiento impreso ("11/2027"), si se anotó. */
+  expires: string | null;
+}
+
+/**
+ * Lote que el panel registró en el control de lote ("VL-2609-W · vence 11/2027", ver `admin/workshop/lots.ts`), listo
+ * para mostrarle al comprador como etiqueta. El cliente lo ve recién cuando el pedido pasó por ese control.
+ */
+export function checkedLot(text: string | undefined): CheckedLot | null {
+  if (!text?.trim()) return null;
+  const [code, rest] = text.split(" · vence ");
+  const clean = code!.trim();
+  if (!/^[A-Z0-9][A-Z0-9-]{2,}$/i.test(clean)) return { code: null, expires: null };
+  return { code: clean, expires: rest?.trim() || null };
+}

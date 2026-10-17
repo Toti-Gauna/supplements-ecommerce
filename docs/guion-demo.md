@@ -108,7 +108,8 @@ explicás vos por WhatsApp, pero a las 11 de la noche."
 
 ## 3:00 · Ruleta y Shaker Rush (1 minuto 30, celular, en la mano del dueño)
 
-**Tocá**: carrito → **Continuar al checkout**. Aparece la ruleta ("Probá tu suerte").
+**Tocá**: abrí el carrito (el "bolso"). Arriba de los productos está la placa **Tenés un giro del Disco olímpico** →
+**Girar**. La ruleta ya no corta el pago: si no gira, va directo al checkout.
 
 - Pasale el celular: **Girar la ruleta** (o que la arrastre con fuerza). Es un disco de pesas con luces.
 - Sale el premio (envío gratis, muestra, shaker, descuento): **Aplicar ahora**. "Todos ganan algo y el cupón es de un
@@ -120,6 +121,25 @@ rayos, esquiva hamburguesas.
   es uno por día." (Los premios los cambiás vos en el panel.)
 - Si llegó a un premio: **Aplicar cupón … al carrito**. Si no: **Jugar de nuevo** o seguí.
 - "¿Sabés cuánto tiempo se queda un pibe de 20 años jugando esto en tu tienda? Y cada vez que entra, ve tus ofertas."
+
+## Si pide más · La compra de punta a punta (2 minutos, celular)
+
+Con el stack en el carrito:
+
+1. **El bolso**: un solo medidor de carga (envío gratis y descuento stack en la misma barra), **Te dura N días** en
+   cada pote y, abajo, **"Cadete en Mar del Plata: llega mañana, mar 6 oct si confirmás en las próximas…"**. "La fecha
+   sale de tu calendario de despachos y del cupo del cadete: si mañana ya no llega, el reloj lo avisa."
+2. **Ir al checkout**: tres pasos (**Datos y entrega**, **Pago**, **Revisar**). Cada forma de entrega dice su fecha
+   real ("Llega mañana, mar 6 oct", "Retiralo desde…", "Llega entre el vie 9 y el vie 16"). El ticket queda fijo al
+   costado (en el celular, **Ver ticket**) y el cupón está una sola vez. Elegí **Transferencia bancaria**: el ahorro
+   aparece como cifra.
+3. **Confirmar pedido** → la **ficha de entrega**: estado real ("Pendiente de pago"), la fecha y el total. Tocá
+   **Activar avisos de recompra**: "Antes de que se le termine la whey, le avisás vos, no la competencia."
+4. **Subir comprobante**: el estado pasa a **Comprobante en revisión**, nunca a pagado. Lo aprobás vos en el panel.
+5. **Seguir mi pedido**: estados con fecha y hora. Si querés el "wow" del lote, en el panel aprobá el comprobante en **Pagos
+   manuales**, pasalo a **En preparación** y a **Listo** con el control de lote, y volvé: cada producto muestra **LOTE · VTO**.
+6. **Mi cuenta** → **Entrar a la cuenta demo** → **Mi box**: la whey de Sofía está en rojo ("Se termina esta
+   semana") con **Recomprar**, y **Repetir mi último pedido** carga todo en un toque.
 
 ## 4:30 · Regalo a golpes (45 segundos, celular)
 

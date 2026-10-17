@@ -7,13 +7,12 @@ async function checkout(page: Page) {
   await page.getByLabel("Nombre y apellido").fill("Lucía Gómez");
   await page.getByLabel("Email").fill("lucia@ejemplo.com");
   await page.getByLabel("Teléfono / WhatsApp").fill("223 555-1234");
-  await page.getByRole("button", { name: "Continuar a la entrega" }).click();
   await page.getByText("Retiro en el local").first().click();
   await page.getByRole("button", { name: "Continuar al pago" }).click();
   await page.getByText("Transferencia bancaria").click();
   await page.getByRole("button", { name: "Revisar pedido" }).click();
   await page.getByRole("checkbox", { name: /Acepto los/ }).check();
-  await page.getByRole("button", { name: "Confirmar pedido de demostración" }).click();
+  await page.getByRole("button", { name: "Confirmar pedido" }).click();
   await expect(page).toHaveURL(/checkout\/confirmacion\/$/);
 }
 

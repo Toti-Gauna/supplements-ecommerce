@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import { guardNetwork, horizontalOverflow } from "./helpers";
+import { guardNetwork, horizontalOverflow, openCheckoutTicket } from "./helpers";
 
 /** Fase 3 · panel: Marketing → Descuento stack. La regla nueva llega a la ficha, el carrito y el checkout. */
 
@@ -59,7 +59,8 @@ test("Fase 3 · editor del descuento stack: valida, muestra un ejemplo real, gua
   await expect(summary.locator("div").filter({ has: page.getByText("Descuento stack (15 %)", { exact: true }) }).locator("dd")).toHaveText("−$ 12.720");
   await expect(summary.locator("dd").last()).toHaveText("$ 72.080");
   await page.goto("checkout/");
-  await expect(page.getByText("Descuento stack (15 %)", { exact: true })).toBeVisible();
+  await openCheckoutTicket(page);
+  await expect(page.getByRole("region", { name: "Resumen de tu compra" }).getByText("Descuento stack (15 %)", { exact: true })).toBeVisible();
 
   // Reiniciar demo: la regla vuelve a la de fábrica.
   await page.goto("admin-demo/descuento-stack/");

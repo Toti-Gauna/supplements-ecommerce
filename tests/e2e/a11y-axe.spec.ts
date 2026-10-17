@@ -191,6 +191,59 @@ for (const mode of ["dark", "light"] as const) {
       const found = await audit(page);
       expect(found, describe(found)).toEqual([]);
     });
+    test("R2b: bolso, checkout en 3 pasos, ficha de entrega, seguimiento con lote y Mi box", async ({ page }) => {
+      test.setTimeout(120_000);
+      await page.addInitScript(() => {
+        if (sessionStorage.getItem("seeded")) return;
+        sessionStorage.setItem("seeded", "1");
+        localStorage.setItem("volta-demo:cart", JSON.stringify({ state: { lines: [{ id: "l1", productSlug: "ionic-whey", variantId: "iw-chocolate-2lb", quantity: 1 }, { id: "l2", productSlug: "overvolt-pre", variantId: "ov-frutos-rojos-300", quantity: 1 }] }, version: 0 }));
+      });
+      const check = async () => {
+        await page.waitForTimeout(400);
+        const found = await audit(page);
+        expect(found, describe(found)).toEqual([]);
+      };
+      await page.goto("");
+      await expect(async () => {
+        if (!(await page.getByRole("dialog", { name: "Carrito" }).isVisible())) await page.getByRole("button", { name: "Carrito, 2 productos" }).click({ timeout: 1000 });
+        await expect(page.getByRole("dialog", { name: "Carrito" })).toBeVisible({ timeout: 1000 });
+      }).toPass();
+      await check();
+      await page.goto("checkout/");
+      await expect(page.locator("#checkout-step")).toBeVisible();
+      const toggle = page.getByRole("button", { name: /Ver ticket/ });
+      if (await toggle.isVisible()) await toggle.click();
+      await page.getByLabel("Nombre y apellido").fill("Juana Pérez");
+      await page.getByLabel("Email").fill("juana@ejemplo.com");
+      await page.getByLabel("Teléfono / WhatsApp").fill("223 555-1234");
+      await page.getByText("Cadete en Mar del Plata").click();
+      await page.getByLabel("Calle").fill("Güemes");
+      await page.getByLabel("Altura").fill("2500");
+      await page.getByLabel("Código postal").fill("7600");
+      await check();
+      await page.getByRole("button", { name: "Continuar al pago" }).click();
+      await page.getByText("Transferencia bancaria").click();
+      await check();
+      await page.getByRole("button", { name: "Revisar pedido" }).click();
+      await expect(page.getByRole("heading", { level: 2, name: "Revisar" })).toBeVisible();
+      await check();
+      await page.getByRole("checkbox", { name: /Acepto los/ }).check();
+      await page.getByRole("button", { name: "Confirmar pedido" }).click();
+      await expect(page.locator("section[aria-labelledby=ficha-entrega]")).toBeVisible();
+      await page.getByRole("button", { name: "Activar avisos de recompra" }).click();
+      await check();
+      await page.goto("pedido/demo-volta-entregado/");
+      await expect(page.getByText("LOTE").first()).toBeVisible();
+      await check();
+      await page.goto("cuenta/");
+      await expect(async () => {
+        if (await page.getByRole("button", { name: "Entrar a la cuenta demo" }).isVisible()) await page.getByRole("button", { name: "Entrar a la cuenta demo" }).click({ timeout: 1000 });
+        await expect(page.getByRole("list", { name: "Potes en uso" })).toBeVisible({ timeout: 1000 });
+      }).toPass();
+      // Se mide como se abre la cuenta: desde arriba (el dock fijo del celular tapa lo que quede debajo al bajar).
+      await page.evaluate(() => window.scrollTo(0, 0));
+      await check();
+    });
     test("quiz: deporte y resultado con Tu programa", async ({ page }) => {
       const answers = { goals: ["fuerza", "salud"], sport: "futbol", days: "3-4", time: "tarde", restrictions: [] };
       await page.addInitScript((a) => { try { localStorage.setItem("volta-demo:quiz", a); } catch { /* sin almacenamiento */ } }, JSON.stringify(answers));

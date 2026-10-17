@@ -225,12 +225,22 @@ herramienta responde las preguntas que hoy le hacen por WhatsApp.
 | **Favoritos y ayuda** | Favoritos → "Mi rack" (total, agregar todo, armar stack). Ayuda del box con FAQ agrupada y buscador, y legales y 404 con el sistema nuevo | S–M |
 
 **Estado:** R2a hecho (PR de R2a): ficha "hoja técnica" con el precio total primero (decisión de L1), editor con
-precio por presentación, rótulo y RNPA validados, catálogo con filtros y orden, y comparador. Siguen R2b y R2c.
-R2c parte B (club): tabla de niveles con medallas de metal, misiones de entrenamiento (entrenos de la semana, día del
-deporte, Shaker Rush) con premios que se reclaman una sola vez, el anillo que al invitado lo invita a crear la cuenta
-demo, la liga de gimnasios (`/club/liga/` y, en el panel, Misiones → Liga de gimnasios en solo lectura), el disco con
-"Cargá la barra" fuera del checkout (placa opcional en el carrito) y Shaker Rush arcade con ranking semanal, "Usar
-cupón ahora" y tarjeta 9:16. Capturas en [`img/rediseno/r2c/`](img/rediseno/r2c/).
+precio por presentación, rótulo y RNPA validados, catálogo con filtros y orden, y comparador. **R2b hecho** (PR de
+R2b, capturas en [`img/rediseno/r2b/`](img/rediseno/r2b/)): bolso con un solo medidor de carga, "te dura N días" por
+línea y la cuenta regresiva del cadete; checkout en 3 pasos con ticket fijo (plegable en el celular), el cupón una
+vez y la fecha real del calendario; confirmación como ficha de entrega que activa los avisos de recompra; seguimiento
+con estados y fechas reales y el lote y vencimiento después del control del panel; "Mi box" con potes como baterías,
+Recomprar, Repetir pedido y el nivel con su barra. Los packs y "Tu programa" siguen agrupados con su descuento y su
+día del mes, y la ruleta se ofrece en el bolso sin cortar el pago.
+**R2c hecho** (PR de R2c, capturas en [`img/rediseno/r2c/`](img/rediseno/r2c/)). Stack: rack con tableros "te dura N
+días", cantidad por lugar, "Igualar duración" y total fijo con "Agregar el stack" en el celular. Quiz a pantalla
+completa con avance solo y "El protocolo del día" en "Tu programa". Club: tabla de niveles con medallas de metal,
+misiones de entrenamiento (entrenos de la semana, día del deporte, Shaker Rush) con premios que se reclaman una sola
+vez, el anillo que al invitado lo invita a crear la cuenta demo y la liga de gimnasios (`/club/liga/` y, en el panel,
+Misiones → Liga de gimnasios en solo lectura). Disco con "Cargá la barra" fuera del checkout (placa opcional en el
+carrito). Shaker Rush arcade con ranking semanal, "Usar cupón ahora" y tarjeta 9:16. Favoritos → "Mi rack" con total,
+agregar todo, armar stack y avisos simulados de baja de precio o vuelta de stock. Ayuda del box con temas y buscador
+(el tema se elige en el panel), y legales y 404 con el sistema nuevo. **R2 cerrado.**
 
 **"Wow" esperado:** checkout con la fecha real, seguimiento con lote y "Mi box" con recompras solas. Los tres usan
 datos que el motor ya tiene.

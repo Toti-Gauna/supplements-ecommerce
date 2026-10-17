@@ -1,42 +1,31 @@
 "use client";
-import { Lock, Truck } from "lucide-react";
+import { Lock } from "lucide-react";
 import { Button, ButtonLink } from "@/components/atoms/Button";
 import { ListSkeleton } from "@/components/atoms/Skeleton";
 import { EmptyState } from "@/components/molecules/EmptyState";
 import { OrderSummary } from "@/components/molecules/OrderSummary";
 import { FLOATING_BAR } from "@/components/organisms/bottomBars";
-import { BatteryMeter } from "@/components/molecules/BatteryMeter";
-import { StackNudge } from "./StackNudge";
-import { CartLineItem, type CartLineView } from "@/components/organisms/CartLineItem";
-import { getProduct, maxQuantity } from "@/demo/engine/catalog";
-import { missingForFreeShipping, type QuotedLine } from "@/demo/engine/pricing";
+import { CartLineItem } from "@/components/organisms/CartLineItem";
 import { packDiscountRows } from "@/demo/engine/pack-cart";
 import { recommendForCart } from "@/demo/engine/recommend";
-import { demoData } from "@/demo/engine/source";
 import { cn } from "@/lib/cn";
 import { formatARS } from "@/lib/money";
 import { useDemoVersion } from "@/stores/admin";
 import { useCart } from "@/stores/cart";
 import { useHydrated } from "@/stores/hydration";
+import { BagLoad } from "./BagLoad";
+import { CadeteCountdown } from "./CadeteCountdown";
 import { SeasonTicket } from "../campaigns/SeasonTicket";
 import { CartMissionNudge } from "./CartMissionNudge";
 import { CouponForm } from "./CouponForm";
 import { MiniRecommendations } from "./MiniRecommendations";
 import { QuotedGroups } from "./QuotedGroups";
+import { toLineView } from "./line-view";
 import { useCartQuote } from "./useCartQuote";
 import { useGoToCheckout } from "./useGoToCheckout";
 import { WheelOffer } from "./WheelOffer";
 
-export function toLineView(q: QuotedLine): CartLineView | null {
-  const product = getProduct(q.line.productSlug);
-  const variant = product?.variants.find((v) => v.id === q.line.variantId);
-  if (!product || !variant) return null;
-  return {
-    id: q.line.id, slug: product.slug, name: product.name, variantLabel: variant.label, art: product.art, pack: product.pack, tint: variant.colorHex, servings: variant.servings,
-    unitPrice: q.unitPrice, lineTotal: q.lineTotal, quantity: q.line.quantity, maxQuantity: maxQuantity(variant), gift: q.line.gift,
-  };
-}
-
+/** Carrito completo: el bolso a la izquierda (carga, potes y misión) y el ticket con cupón y total a la derecha. */
 export function CartView() {
   const hydrated = useHydrated();
   useDemoVersion();
@@ -53,8 +42,6 @@ export function CartView() {
       </div>
     );
   }
-  const missing = missingForFreeShipping(quote.subtotal);
-  const threshold = demoData().settings.freeShippingFrom;
   const summary = (
     <OrderSummary
       rows={[
@@ -65,8 +52,9 @@ export function CartView() {
         { label: "Envío", amount: null, pendingLabel: "Se calcula en el checkout" },
       ]}
       total={quote.total}
-      totalNote="Precios de muestra. En la tienda real el total se recalcula en el servidor al confirmar."
+      totalNote="En la tienda real el total se recalcula en el servidor al confirmar."
     >
+      <CadeteCountdown lines={lines} className="mb-3" />
       <Button size="lg" className="w-full" onClick={goToCheckout}><Lock size={16} aria-hidden="true" /> Continuar al checkout</Button>
       <ButtonLink href="/categorias/" variant="ghost" className="mt-2 w-full">Seguir comprando</ButtonLink>
     </OrderSummary>
@@ -74,12 +62,8 @@ export function CartView() {
   return (
     <div className="grid grid-cols-[minmax(0,1fr)] gap-6 pb-28 lg:grid-cols-[minmax(0,1fr)_400px] lg:gap-x-12 lg:pb-0">
       <div className="flex flex-col gap-4 lg:col-start-1">
-        <div className="rounded-sm bg-surface px-4 py-3 shadow-[var(--shadow-card)]">
-          <p className="flex items-center gap-2 text-sm font-semibold"><Truck size={18} aria-hidden="true" className="text-primary" />{missing > 0 ? <>Te faltan <strong>{formatARS(missing)}</strong> para envío gratis</> : "¡Tenés envío gratis!"}</p>
-          <BatteryMeter pct={Math.min(100, (quote.subtotal / threshold) * 100)} label="Avance hacia el envío gratis" className="mt-2" tone={missing > 0 ? "volt" : "success"} />
-        </div>
+        <BagLoad quote={quote} />
         <SeasonTicket where="carrito" subtotal={quote.subtotal} />
-        <StackNudge stack={quote.stack} />
         <ul className="flex flex-col gap-3" aria-label="Productos en el carrito">
           <QuotedGroups quote={quote} renderLine={(q, inPack) => {
             const view = toLineView(q);
@@ -90,7 +74,7 @@ export function CartView() {
       {/* En el celular: cupón y resumen justo debajo de los productos. En escritorio: columna fija a la derecha. */}
       <aside className="flex flex-col gap-4 lg:sticky lg:top-28 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-start">
         <WheelOffer when="cart" />
-        <section aria-label="Cupones" className="rounded-sm bg-surface p-4 shadow-[var(--shadow-card)]"><CouponForm subtotal={quote.subtotal} isRegistered={isRegistered} check={couponCheck} /></section>
+        <section aria-label="Cupones" className="rounded-sm border border-line bg-surface p-4"><CouponForm subtotal={quote.subtotal} isRegistered={isRegistered} check={couponCheck} /></section>
         {summary}
       </aside>
       <div className="flex flex-col gap-6 lg:col-start-1">
@@ -100,7 +84,7 @@ export function CartView() {
       <div data-buy-bar className={cn(FLOATING_BAR, "z-30 pl-5 lg:hidden")}>
         <div className="min-w-0 flex-1">
           <p className="text-xs text-muted">Total{quote.couponDiscount > 0 || quote.stack.discount > 0 || quote.pack.discount > 0 ? " con descuentos" : ""} · sin envío</p>
-          <p className="text-xl font-extrabold tabular-nums">{formatARS(quote.total)}</p>
+          <p className="font-display text-2xl leading-none tabular-nums">{formatARS(quote.total)}</p>
         </div>
         <Button size="lg" onClick={goToCheckout} className="px-6"><Lock size={16} aria-hidden="true" /> Ir a pagar</Button>
       </div>

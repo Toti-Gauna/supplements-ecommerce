@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import { checkoutAsGuest, guardNetwork, horizontalOverflow } from "./helpers";
+import { checkoutAsGuest, guardNetwork, horizontalOverflow, openCheckoutTicket } from "./helpers";
 
 /** L3 · Packs mensuales: lista, detalle, carrito, suscripción simulada de punta a punta y Mi cuenta → Suscripciones. */
 const base = new URL(process.env.PAGES_BASE_PATH ?? "", "http://x").pathname.replace(/\/$/, "");
@@ -86,10 +86,14 @@ test("suscribirse (día 12) pasa por el checkout, crea la suscripción simulada 
   await expect(cart(page).getByText("Todos los meses · día 12")).toBeVisible();
   await expect(cart(page).getByText("Descuento pack mensual (15 %)")).toBeVisible();
   await checkoutAsGuest(page);
-  await expect(page.getByText("Descuento pack mensual (15 %)")).toBeVisible();
+  // Revisar: el ticket agrupa el pack bajo su nombre con el día del mes y su descuento.
+  await openCheckoutTicket(page);
+  const ticket = page.getByRole("region", { name: "Resumen de tu compra" });
+  await expect(ticket.getByText("Pack Fútbol · todos los meses, día 12")).toBeVisible();
+  await expect(ticket.getByText("Descuento pack mensual (15 %)")).toBeVisible();
   await expect(page.getByText("Se crea una suscripción simulada: la vas a ver en Mi cuenta.")).toBeVisible();
   await page.getByRole("checkbox", { name: /Acepto los/ }).check();
-  await page.getByRole("button", { name: "Confirmar pedido de demostración" }).click();
+  await page.getByRole("button", { name: "Confirmar pedido" }).click();
   await expect(page).toHaveURL(/checkout\/confirmacion\/$/);
   await page.getByRole("link", { name: "Mi cuenta → Suscripciones" }).click();
   await page.getByRole("button", { name: "Entrar a la cuenta demo" }).click();

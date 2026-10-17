@@ -14,7 +14,7 @@ const STATES = [
 
 test("8.2.11 Original: los cinco estados se prueban, cambian la vista y la entrega se ve clara", async ({ page }) => {
   await page.goto("pedido/demo-volta/");
-  const zone = page.getByRole("region", { name: "Probá los estados del pedido — Demostración" });
+  const zone = page.getByRole("region", { name: "Modo demostración: mirá otro estado" });
   await expect(zone).toBeVisible();
   await expect(zone.getByText("Solo cambia esta vista")).toBeVisible();
   const map = page.getByRole("img", { name: /del camino entre el local y tu casa|llegó a tu casa/ });
@@ -54,7 +54,7 @@ test("8.2.11 con movimiento: el viajero avanza por el recorrido y al entregar es
   await page.keyboard.press("Escape");
   const traveler = page.locator("[data-trk-traveler]");
   const x = async () => (await traveler.boundingBox())!.x;
-  const zone = page.getByRole("region", { name: /Probá los estados/ });
+  const zone = page.getByRole("region", { name: /Modo demostración: mirá otro estado/ });
   await zone.getByText("Esperando comprobante", { exact: true }).click();
   await page.waitForTimeout(1900);
   const start = await x();
@@ -67,7 +67,7 @@ test("8.2.11 con movimiento: el viajero avanza por el recorrido y al entregar es
 test("8.2.11 con movimiento reducido: todo queda en su lugar y no hay estallido", async ({ page }) => {
   await preview(page, "navidad");
   await page.goto("pedido/demo-volta/");
-  await page.getByRole("region", { name: /Probá los estados/ }).getByText("Entregado", { exact: true }).click();
+  await page.getByRole("region", { name: /Modo demostración: mirá otro estado/ }).getByText("Entregado", { exact: true }).click();
   await expect(page.getByText("Llegó a tu casa", { exact: true })).toBeVisible();
   await expect(page.locator("[data-trk-burst]")).toHaveCount(0);
 });

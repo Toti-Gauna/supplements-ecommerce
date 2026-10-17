@@ -9,7 +9,7 @@ import { giftsFromLines } from "@/demo/engine/gifts";
 import { subscriptionsFromLines } from "@/demo/engine/subscriptions";
 import { demoData } from "@/demo/engine/source";
 import { toDayKey } from "@/lib/date";
-import { missingForFreeShipping, totalsOf } from "@/demo/engine/pricing";
+import { missingForFreeShipping, quoteCart, totalsOf } from "@/demo/engine/pricing";
 import { demoNow } from "@/demo/clock";
 import { DEMO_ORDER_CODE, DEMO_TRACKING_TOKEN } from "@/demo/fixtures/commerce";
 import { useAccount } from "@/stores/account";
@@ -19,17 +19,16 @@ import { useCheckout } from "@/stores/checkout";
 import { useGifts } from "@/stores/gifts";
 import { useSubscriptions } from "@/stores/subscriptions";
 import { useHydrated } from "@/stores/hydration";
-import { CouponForm } from "../cart/CouponForm";
 import { useCartQuote } from "../cart/useCartQuote";
-import { CheckoutSummary } from "./CheckoutSummary";
+import { CheckoutTicket } from "./CheckoutTicket";
 import { ConfirmStep } from "./ConfirmStep";
-import { ContactStep } from "./ContactStep";
-import { DeliveryStep } from "./DeliveryStep";
+import { DetailsStep } from "./DetailsStep";
 import { PaymentStep } from "./PaymentStep";
 import { useOrderPromise } from "./useOrderPromise";
 
-const STEPS = ["Datos", "Entrega", "Pago", "Confirmar"];
+const STEPS = ["Datos y entrega", "Pago", "Revisar"];
 
+/** Checkout en 3 pasos (R2): el paso a la izquierda y el ticket fijo a la derecha (plegable arriba en el celular). */
 export function CheckoutView() {
   const hydrated = useHydrated();
   const router = useRouter();
@@ -49,15 +48,15 @@ export function CheckoutView() {
   }, [step]);
 
   if (!hydrated) return (
-    <div role="status" aria-label="Cargando checkout" className="mx-auto flex w-full max-w-3xl flex-col gap-4">
-      <Skeleton className="h-10 w-full rounded-sm" /><Skeleton className="h-72 w-full rounded-sm" /><Skeleton className="h-48 w-full rounded-sm" />
+    <div role="status" aria-label="Cargando checkout" className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_400px]">
+      <Skeleton className="h-[32rem] w-full rounded-sm" /><Skeleton className="h-80 w-full rounded-sm max-lg:hidden" />
     </div>
   );
   if (lines.length === 0 && !checkout.lastOrder?.code) {
-    return <EmptyState title="No hay nada para pagar" action={<ButtonLink href="/">Ver productos</ButtonLink>}>Tu carrito está vacío. Agregá productos para iniciar el checkout de demostración.</EmptyState>;
+    return <EmptyState title="No hay nada para pagar" action={<ButtonLink href="/">Ver productos</ButtonLink>}>Tu carrito está vacío. Agregá productos para empezar.</EmptyState>;
   }
   if (lines.length === 0) {
-    return <EmptyState title="El carrito está vacío" action={<ButtonLink href="/checkout/confirmacion/">Ver mi pedido de demostración</ButtonLink>}>Ya confirmaste un pedido de demostración.</EmptyState>;
+    return <EmptyState title="El carrito está vacío" action={<ButtonLink href="/checkout/confirmacion/">Ver mi pedido</ButtonLink>}>Ya confirmaste tu pedido de demostración.</EmptyState>;
   }
 
   const confirm = () => {
@@ -84,24 +83,26 @@ export function CheckoutView() {
     clearCart();
     router.push("/checkout/confirmacion/");
   };
+  // Lo que ahorra este carrito pagando por transferencia o QR (se muestra en el paso Pago).
+  const transferSavings = quoteCart(lines, { coupon: couponCheck?.ok ? couponCheck.coupon : null, paymentMethod: "BANK_TRANSFER", fulfillment: checkout.fulfillment, packs: useCart.getState().customPacks }).transferDiscount;
 
   return (
-    // Una columna: las opciones del paso, sus botones Atrás/Siguiente (en el lugar y orden de siempre) y debajo el
-    // resumen con el total, que se actualiza al cambiar entrega, cupón o medio de pago (8.2.9).
-    <div className="mx-auto flex w-full max-w-3xl flex-col gap-5">
-      <StepIndicator steps={STEPS} current={step} />
-      <h2 ref={heading} tabIndex={-1} className="text-xl font-extrabold focus:outline-none">{STEPS[step]}</h2>
-      <div key={step} className="animate-fade-up">
-        {step === 0 && <ContactStep onNext={() => setStep(1)} />}
-        {step === 1 && <DeliveryStep onNext={() => setStep(2)} onBack={() => setStep(0)} freeShipping={missingForFreeShipping(quote.subtotal) === 0} />}
-        {step === 2 && <PaymentStep onNext={() => setStep(3)} onBack={() => setStep(1)} />}
-        {step === 3 && <ConfirmStep onBack={() => setStep(2)} onConfirm={confirm} onEdit={setStep} />}
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-5 lg:grid-cols-[minmax(0,1fr)_400px] lg:gap-x-12">
+      <div className="flex flex-col gap-5 lg:col-start-1 lg:row-start-1">
+        <StepIndicator steps={STEPS} current={step} />
       </div>
-      {/* El cupón se puede quitar o cambiar hasta confirmar; quitar el de la ruleta lo deja guardado (8.2.14). */}
-      <section aria-label="Cupón del pedido" className="rounded-sm bg-surface p-4 shadow-[var(--shadow-card)] sm:p-5">
-        <CouponForm subtotal={quote.subtotal} isRegistered={isRegistered} check={couponCheck} where="checkout" />
+      <CheckoutTicket quote={quote} couponCheck={couponCheck} isRegistered={isRegistered}
+        className="lg:sticky lg:top-24 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-start" />
+      <section aria-labelledby="checkout-step" className="flex min-w-0 flex-col gap-5 lg:col-start-1 lg:row-start-2">
+        <h2 id="checkout-step" ref={heading} tabIndex={-1} className="font-display text-3xl leading-none focus:outline-none sm:text-4xl">
+          <span aria-hidden="true" className="mr-2 font-mono text-base text-muted">{String(step + 1).padStart(2, "0")}/03</span>{STEPS[step]}
+        </h2>
+        <div key={step} className="animate-fade-up">
+          {step === 0 && <DetailsStep onNext={() => setStep(1)} freeShipping={missingForFreeShipping(quote.subtotal) === 0} />}
+          {step === 1 && <PaymentStep onNext={() => setStep(2)} onBack={() => setStep(0)} transferSavings={transferSavings} />}
+          {step === 2 && <ConfirmStep onBack={() => setStep(1)} onConfirm={confirm} onEdit={setStep} total={quote.total} />}
+        </div>
       </section>
-      <CheckoutSummary quote={quote} />
     </div>
   );
 }

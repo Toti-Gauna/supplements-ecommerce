@@ -4,6 +4,7 @@ import { rivalOf, visibleRows, weekBest, weeklyRanking } from "@/demo/engine/gam
 import { leagueTable, overtakeGap, validGym } from "@/demo/engine/gym-league";
 import { WEEKLY_RANKING } from "@/demo/fixtures/game-ranking";
 import { GYMS } from "@/demo/fixtures/gyms";
+import { useGame } from "@/stores/game";
 
 const TODAY = "2026-10-15";
 
@@ -72,5 +73,18 @@ describe("ranking semanal de Shaker Rush", () => {
     expect(shown).toHaveLength(6);
     expect(shown.at(-1)).toMatchObject({ mine: true, position: 13 });
     expect(rivalOf(weeklyRanking(WEEKLY_RANKING, { alias: "VOS", score: 9999 }))).toBeNull();
+  });
+});
+
+describe("Shaker Rush guardado (v1 → v2)", () => {
+  it("conserva récord y premios y suma las partidas con fecha vacías", () => {
+    const migrate = useGame.persist.getOptions().migrate!;
+    expect(migrate({ best: 900, plays: 3, lastScore: 900, prizes: [] }, 1)).toEqual({ scores: [], best: 900, plays: 3, lastScore: 900, prizes: [] });
+  });
+
+  it("cada partida queda con su fecha para el ranking", () => {
+    useGame.getState().clear();
+    useGame.getState().recordGame(1200, "2026-10-15T15:00:00.000Z");
+    expect(useGame.getState()).toMatchObject({ best: 1200, plays: 1, scores: [{ score: 1200, at: "2026-10-15T15:00:00.000Z" }] });
   });
 });

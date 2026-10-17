@@ -5,6 +5,7 @@ import { clubRing } from "@/demo/engine/club-ring";
 import { checkIn, monthCheckins, trainingProgress, weekCheckins } from "@/demo/engine/club-training";
 import { TRAINING_MISSIONS } from "@/demo/fixtures/club";
 import { missions } from "@/demo/fixtures/commerce";
+import { useClub } from "@/stores/club";
 
 const [entrenos, deporte, shaker] = TRAINING_MISSIONS as [typeof TRAINING_MISSIONS[0], typeof TRAINING_MISSIONS[0], typeof TRAINING_MISSIONS[0]];
 // Jueves 15/10/2026 al mediodía en Mar del Plata.
@@ -107,5 +108,19 @@ describe("anillo del próximo premio", () => {
     const claims: ClubClaim[] = [{ key: "t-entrenos@sem-2026-10-12", missionId: "t-entrenos", period: "sem-2026-10-12", points: 150, code: "CLUBX", at: NOW.toISOString() }];
     const after = clubRing({ signedIn: true, today: TODAY, purchase: [{ mission: missions[2]!, progress: 58000 }], training: ready, claims });
     expect(after).toMatchObject({ kind: "progress", missionId: "m-gasto", pct: 58 });
+  });
+});
+
+describe("club guardado en el navegador", () => {
+  it("un reclamo con la misma clave no se guarda dos veces y el entreno es uno por día", () => {
+    const club = useClub.getState();
+    club.clear();
+    const claim: ClubClaim = { key: "t-entrenos@sem-2026-10-12", missionId: "t-entrenos", period: "sem-2026-10-12", points: 150, code: "CLUBX", at: NOW.toISOString() };
+    club.addClaim(claim);
+    club.addClaim({ ...claim, points: 999 });
+    expect(useClub.getState().claims).toEqual([claim]);
+    expect(club.markCheckin(TODAY)).toBe(true);
+    expect(club.markCheckin(TODAY)).toBe(false);
+    expect(useClub.getState().checkins).toEqual([TODAY]);
   });
 });

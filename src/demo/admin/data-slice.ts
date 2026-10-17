@@ -2,7 +2,7 @@ import type { DemoData } from "../engine/source";
 import type { DemoSettings } from "../fixtures/commerce";
 import type { GamePrizeConfig } from "../fixtures/game";
 import type { WheelConfig, WheelPrize } from "../fixtures/wheel";
-import type { Coupon, HeroFeature, Faq, Mission, Product, SeasonalTheme, ShippingZone, ThemeSettings } from "../types";
+import type { Coupon, HeroFeature, StoreFaq, Mission, Product, SeasonalTheme, ShippingZone, ThemeSettings } from "../types";
 import { auditEntry, type AdminData } from "./defaults";
 import { withPriceLog } from "./price-log";
 import { withShopOrderCoupon } from "./campaign-results";
@@ -32,7 +32,7 @@ export interface DataActions {
   saveZone: (zone: ShippingZone) => void;
   saveHero: (hero: HeroFeature[]) => void;
   saveHomeCta: (cta: DemoData["content"]["homeCta"]) => void;
-  saveFaqs: (faqs: Faq[]) => void;
+  saveFaqs: (faqs: StoreFaq[]) => void;
   saveTheme: (theme: SeasonalTheme) => void;
   saveThemeSettings: (patch: Partial<ThemeSettings>) => void;
   toggleUserBlocked: (id: string) => void;

@@ -79,7 +79,7 @@ export function Header() {
           <SoundToggle className={ICON} />
           <ThemeToggle className={cn(ICON, "max-sm:hidden")} />
           <CompareNavLink variant="icon" className={cn(ICON, "max-sm:hidden")} />
-          <Link href="/favoritos/" aria-label="Favoritos" className={cn(ICON, "max-lg:hidden")}><Heart size={20} aria-hidden="true" /></Link>
+          <Link href="/favoritos/" aria-label="Mi rack" className={cn(ICON, "max-lg:hidden")}><Heart size={20} aria-hidden="true" /></Link>
           <Link href="/cuenta/" aria-label="Mi cuenta" className={cn(ICON, "max-sm:hidden")}><UserRound size={20} aria-hidden="true" /></Link>
           <button type="button" onClick={() => openCart()} aria-label={`Carrito, ${count} ${count === 1 ? "producto" : "productos"}`}
             className="bevel ml-1 flex h-10 items-center gap-2 rounded-sm bg-accent px-2.5 text-ink transition-colors hover:bg-accent/70">

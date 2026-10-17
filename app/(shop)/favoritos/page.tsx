@@ -1,14 +1,18 @@
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/templates/PageHeader";
-import { FavoritesView } from "@/features/favorites/FavoritesView";
+import { RackView } from "@/features/favorites/RackView";
 
-export const metadata: Metadata = { title: "Favoritos", description: "Los productos que guardaste con el corazón, listos para volver a verlos." };
+export const metadata: Metadata = {
+  title: "Mi rack",
+  description: "Tus favoritos en un estante: el total para llevarte todo, armar tu stack con ellos y el aviso si baja el precio o vuelve el stock.",
+};
 
-export default function FavoritesPage() {
+/** Mi rack (R2c): los favoritos de este navegador como el estante propio. La ruta sigue siendo /favoritos/. */
+export default function MyRackPage() {
   return (
     <>
-      <PageHeader title="Favoritos">Lo que guardaste con el corazón. En la demo se guarda solo en este navegador.</PageHeader>
-      <FavoritesView />
+      <PageHeader title="Mi rack">Lo que guardaste con el corazón, en tu estante: cuánto sale llevarte todo, tu stack con estos potes y el aviso si algo baja o vuelve. Se guarda en este navegador.</PageHeader>
+      <RackView />
     </>
   );
 }

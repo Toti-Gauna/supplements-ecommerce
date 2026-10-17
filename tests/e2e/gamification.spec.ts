@@ -53,17 +53,17 @@ test("ficha: stock bajo la imagen, cantidad desplegable y favoritos", async ({ p
   await expect(main.getByText(/\$\s?73\.800/).first()).toBeVisible();
   // Favoritos: el corazón guarda el producto y aparece en su pantalla (pestaña de la barra inferior)
   await page.goto("p/ionic-whey/");
-  await page.getByRole("button", { name: "Guardar Ionic Whey 100% en favoritos" }).filter({ visible: true }).click();
+  await page.getByRole("button", { name: "Guardar Ionic Whey 100% en Mi rack" }).filter({ visible: true }).click();
   await page.goto("favoritos/");
-  await expect(page.getByRole("list", { name: "Favoritos guardados" }).getByText("Ionic Whey 100%")).toBeVisible();
+  await expect(page.getByRole("list", { name: "Productos de Mi rack" }).getByText("Ionic Whey 100%")).toBeVisible();
 });
 
 test("barra inferior de la tienda y carrusel con controles accesibles", async ({ page }) => {
   await page.goto("");
   const nav = page.getByRole("navigation", { name: "Navegación inferior" });
   await expect(nav.getByRole("link", { name: "Inicio" })).toHaveAttribute("aria-current", "page");
-  await nav.getByRole("link", { name: "Favoritos" }).click();
-  await expect(page.getByRole("heading", { level: 1, name: "Favoritos" })).toBeVisible();
+  await nav.getByRole("link", { name: "Mi rack" }).click();
+  await expect(page.getByRole("heading", { level: 1, name: "Mi rack" })).toBeVisible();
   await nav.getByRole("link", { name: "Tienda" }).click();
   await expect(page).toHaveURL(/categorias\/$/);
   // Buscar va al centro del dock y abre el buscador superpuesto.

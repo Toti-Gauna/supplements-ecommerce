@@ -20,7 +20,7 @@ test("al agregar, la bolsa del header se sacude recién al cerrar el carrito (an
 test("la barra inferior marca la pestaña actual y la marca la acompaña al navegar", async ({ page }) => {
   const nav = page.getByRole("navigation", { name: "Navegación inferior" });
   const marker = nav.locator("[aria-hidden='true'] > span").first();
-  for (const [path, tab] of [["categorias/", "Tienda"], ["favoritos/", "Favoritos"]] as const) {
+  for (const [path, tab] of [["categorias/", "Tienda"], ["favoritos/", "Mi rack"]] as const) {
     await page.goto(path);
     const link = nav.getByRole("link", { name: tab });
     await expect(link).toHaveAttribute("aria-current", "page");

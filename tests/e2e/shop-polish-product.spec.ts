@@ -57,9 +57,9 @@ test("8.2.7 botones en columna, del mismo ancho y en orden; favoritos aparte; Re
     expect(Math.abs(boxes[i]!.width - boxes[0]!.width)).toBeLessThan(1);
     expect(boxes[i]!.y).toBeGreaterThan(boxes[i - 1]!.y + boxes[i - 1]!.height - 1);
   }
-  await expect(card.getByRole("button", { name: /favoritos/ })).toHaveCount(0);
-  await page.getByRole("button", { name: /Guardar Overvolt pre-entreno en favoritos/ }).first().click();
-  await expect(page.getByText("Guardado en favoritos")).toBeVisible();
+  await expect(card.getByRole("button", { name: /Mi rack/ })).toHaveCount(0);
+  await page.getByRole("button", { name: /Guardar Overvolt pre-entreno en Mi rack/ }).first().click();
+  await expect(page.getByText("Guardado en Mi rack")).toBeVisible();
   await card.getByRole("button", { name: "Regalar ahora" }).click();
   await expect(page.getByRole("dialog")).toBeVisible();
 });

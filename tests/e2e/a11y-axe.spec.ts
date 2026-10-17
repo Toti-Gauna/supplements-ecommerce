@@ -29,6 +29,12 @@ const PAGES: [string, string, string][] = [
   ["juego", "club/juego/", "h1"],
   ["cuenta", "cuenta/", "h1"],
   ["campañas (calendario)", "campana/", "h1"],
+  ["Mi rack vacío", "favoritos/", "h1"],
+  ["ayuda del box", "preguntas/", "h1"],
+  ["términos", "terminos/", "h1"],
+  ["privacidad", "privacidad/", "h1"],
+  ["arrepentimiento", "arrepentimiento/", "h1"],
+  ["404 dentro de la tienda", "no-existe/", "h1"],
   ["campaña en sala de espera", "campana/?id=black-friday&fase=espera", "h1"],
   ["campaña en vivo (drop)", "campana/?id=black-friday&fase=vivo", "h1"],
   ["panel inicio", "admin-demo/", "h1"],
@@ -124,6 +130,22 @@ for (const mode of ["dark", "light"] as const) {
       await combo.fill("vegano");
       await combo.press("ArrowDown");
       await page.waitForTimeout(500);
+      const found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+    });
+    test("Mi rack con productos y avisos (activo y saltado)", async ({ page }) => {
+      await page.addInitScript(() => {
+        try {
+          localStorage.setItem("volta-demo:favorites", JSON.stringify({ state: { slugs: ["glutamina", "ionic-whey", "guantes-boxeo", "creatina-monohidrato"] }, version: 0 }));
+          localStorage.setItem("volta-demo:rack-alerts", JSON.stringify({ state: { items: [
+            { slug: "glutamina", variantId: "x", price: 99900, wasOut: false },
+            { slug: "ionic-whey", variantId: "x", price: 1, wasOut: false },
+          ] }, version: 0 }));
+        } catch { /* sin almacenamiento */ }
+      });
+      await page.goto("favoritos/");
+      await expect(page.locator("[data-rack-alert='triggered']")).toBeVisible();
+      await page.waitForTimeout(400);
       const found = await audit(page);
       expect(found, describe(found)).toEqual([]);
     });

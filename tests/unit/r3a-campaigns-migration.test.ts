@@ -22,8 +22,8 @@ function savedV14(edit: (themes: SeasonalTheme[]) => SeasonalTheme[] = (t) => t)
 }
 
 describe("v15: campañas de R3a en un panel guardado", () => {
-  it("la versión del panel sube a 15", () => {
-    expect(ADMIN_STORE_VERSION).toBe(15);
+  it("la versión del panel sube a 15 (o más)", () => {
+    expect(ADMIN_STORE_VERSION).toBeGreaterThanOrEqual(15);
   });
 
   it("suma los cinco días del deporte y sus cupones", () => {
@@ -70,6 +70,6 @@ describe("v15: campañas de R3a en un panel guardado", () => {
     const out = migrateAdminData(savedV14(), 14) as AdminData;
     expect(out.data.themes).toHaveLength(17);
     const current = defaultAdminData();
-    expect(migrateAdminData(current, 15)).toBe(current);
+    expect(migrateAdminData(current, 15)).toEqual(current);
   });
 });

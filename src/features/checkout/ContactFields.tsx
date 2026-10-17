@@ -27,8 +27,8 @@ export function ContactFields({ register, errors, onDemoAccount }: Props) {
           {user ? <><strong>Comprás con la cuenta demo de {user.name}.</strong> Este pedido suma al club.</> : <><strong>Comprás como invitado.</strong> Con cuenta sumás al club y ves tus pedidos en Mi box.</>}
         </p>
         {user
-          ? <Button variant="ghost" size="sm" onClick={logout}>Seguir como invitado</Button>
-          : <Button variant="secondary" size="sm" onClick={onDemoAccount}><UserRound size={16} aria-hidden="true" /> Ingresar con cuenta demo</Button>}
+          ? <Button variant="ghost" size="sm" className="shrink-0" onClick={logout}>Seguir como invitado</Button>
+          : <Button variant="secondary" size="sm" className="shrink-0" onClick={onDemoAccount}><UserRound size={16} aria-hidden="true" /> Ingresar con cuenta demo</Button>}
       </div>
       <Field id="c-name" label="Nombre y apellido" error={errors.name?.message}>
         <Input id="c-name" autoComplete="name" aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? "c-name-error" : undefined} {...register("name")} />

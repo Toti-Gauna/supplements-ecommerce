@@ -35,13 +35,23 @@ export async function makePng(page: Page, color = "#c9a77a"): Promise<Buffer> {
   return Buffer.from(dataUrl.split(",")[1]!, "base64");
 }
 
-/** Del carrito al pedido listo para confirmar: invitado, cadete en Mar del Plata, transferencia. */
+/**
+ * El ticket del checkout va plegado debajo de 1024 px: se abre para leerlo. Espera el paso (el checkout ya hidrató)
+ * antes de decidir, porque antes de React solo hay un esqueleto.
+ */
+export async function openCheckoutTicket(page: Page) {
+  await expect(page.locator("#checkout-step")).toBeVisible();
+  const toggle = page.getByRole("button", { name: /Ver ticket/ });
+  if (await toggle.isVisible()) await toggle.click();
+  await expect(page.getByRole("region", { name: "Resumen de tu compra" })).toBeVisible();
+}
+
+/** Del carrito al pedido listo para confirmar (checkout en 3 pasos): invitado, cadete en Mar del Plata, transferencia. */
 export async function checkoutAsGuest(page: Page) {
   await page.goto("checkout/");
   await page.getByLabel("Nombre y apellido").fill("Juana Pérez");
   await page.getByLabel("Email").fill("juana@ejemplo.com");
   await page.getByLabel("Teléfono / WhatsApp").fill("223 555-1234");
-  await page.getByRole("button", { name: "Continuar a la entrega" }).click();
   await page.getByText("Cadete en Mar del Plata").click();
   await page.getByLabel("Calle").fill("Güemes");
   await page.getByLabel("Altura").fill("2500");

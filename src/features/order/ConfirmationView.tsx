@@ -89,8 +89,8 @@ export function ConfirmationView() {
           <h2 id="pago" className="font-display text-3xl">{PAY_TITLE[order.paymentMethod]}</h2>
           <PaymentInstructions method={order.paymentMethod} total={order.quote.total} code={order.code} />
         </section>
-        <HowToTake lines={order.lines} />
         <RepurchaseActivate lines={order.lines} startsOn={promised ?? DEMO_TODAY} />
+        <HowToTake lines={order.lines} />
         {order.asAccount && (
           <MissionProgress title={mission.title} reward={mission.reward} pctFrom={preview.pctBefore} pctTo={preview.pctAfter}
             valueLabel={`${Math.min(preview.after, mission.threshold)} / ${mission.threshold}`}

@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { checkoutAsGuest, guardNetwork, horizontalOverflow } from "./helpers";
+import { checkoutAsGuest, guardNetwork, horizontalOverflow, openCheckoutTicket } from "./helpers";
 
 /**
  * L4 · el quiz con varios objetivos y deporte hasta "Tu programa" mensual, el checkout y la suscripción en Mi cuenta
@@ -53,9 +53,13 @@ test("quiz con 2 objetivos y fútbol → Tu programa todos los meses → checkou
   await expect(drawer.getByText("Descuento pack mensual (15 %)")).toBeVisible();
 
   await checkoutAsGuest(page);
-  await expect(page.getByText("Descuento pack mensual (15 %)")).toBeVisible();
+  // Revisar: el ticket agrupa el pack bajo su nombre con el día del mes y su descuento.
+  await openCheckoutTicket(page);
+  const ticket = page.getByRole("region", { name: "Resumen de tu compra" });
+  await expect(ticket.getByText("Tu programa · todos los meses, día 12")).toBeVisible();
+  await expect(ticket.getByText("Descuento pack mensual (15 %)")).toBeVisible();
   await page.getByRole("checkbox", { name: /Acepto los/ }).check();
-  await page.getByRole("button", { name: "Confirmar pedido de demostración" }).click();
+  await page.getByRole("button", { name: "Confirmar pedido" }).click();
   await expect(page).toHaveURL(/checkout\/confirmacion\/$/);
   await page.getByRole("link", { name: "Mi cuenta → Suscripciones" }).click();
   await page.getByRole("button", { name: "Entrar a la cuenta demo" }).click();

@@ -56,10 +56,6 @@ export function TrackingView({ token }: { token: string }) {
         </div>
         <RouteMap progress={copy.progress} traveler={traveler} accent={accent} delivered={stateId === "delivered"} />
       </section>
-      <section aria-label="Etapas del pedido">
-        <StageLanes key={stateId} steps={timelineFor(state.current, order.dates)} />
-      </section>
-      <SeasonTicket where="seguimiento" />
       {stateId === "pending" && (
         <section aria-labelledby="comprobante" className="flex flex-col gap-3 rounded-sm border-2 border-dashed border-volt-ink/40 bg-surface p-5 sm:p-6">
           <h2 id="comprobante" className="font-display text-2xl">Falta el comprobante</h2>
@@ -72,7 +68,11 @@ export function TrackingView({ token }: { token: string }) {
           <span><strong>Comprobante recibido.</strong> El pago queda <strong>en revisión</strong> hasta que {brand.name} confirme el ingreso: subir el comprobante no lo da por pagado.</span>
         </p>
       )}
-      <OrderItemsCard code={code} lines={order.lines} sample={order.sample}
+      <section aria-label="Etapas del pedido">
+        <StageLanes key={stateId} steps={timelineFor(state.current, order.dates)} />
+      </section>
+      <SeasonTicket where="seguimiento" />
+      <OrderItemsCard code={code} lines={order.lines} sample={order.sample} total={order.total}
         note={lotsDone ? "Lote y vencimiento de cada producto, controlados al armar tu pedido." : "El lote y el vencimiento de cada producto aparecen acá después del control de lote."}
         extra={(line) => <LotTag lot={lotsDone ? checkedLot(lotCheck?.[line.id]) : null} />} />
       <SampleStates current={stateId} onPick={setPicked} />

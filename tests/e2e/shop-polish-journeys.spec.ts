@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import { horizontalOverflow } from "./helpers";
+import { horizontalOverflow, openCheckoutTicket } from "./helpers";
 
 /**
  * QA global de Polish 8.2: los recorridos A–E de la spec en seis tamaños de pantalla. Chromium emula el tamaño y el
@@ -51,11 +51,6 @@ async function contactToConfirm(page: Page, pay: "Transferencia bancaria" | "Tar
 }
 
 
-/** El ticket del checkout va plegado debajo de 1024 px: se abre para leerlo. */
-async function openTicket(page: Page) {
-  const toggle = page.getByRole("button", { name: /Ver ticket/ });
-  if (await toggle.isVisible()) await toggle.click();
-}
 
 const confirmOrder = async (page: Page) => {
   await page.getByRole("checkbox", { name: /Acepto los/ }).check();
@@ -114,12 +109,15 @@ for (const d of DEVICES) {
       await expect(modal.getByLabel("Para", { exact: true })).toHaveValue("Sofía");
       await modal.getByRole("button", { name: "Agregar regalo al carrito" }).click();
       await page.getByRole("dialog", { name: "Carrito" }).getByRole("link", { name: "Ver carrito completo" }).click();
-      await expect(page.getByText("Regalo para Sofía · de Lucía")).toBeVisible();
-      await expect(page.getByRole("list", { name: "Productos en el carrito" }).getByText("Limón")).toBeVisible();
+      // El bolso se cierra al ir al carrito completo; la línea de regalo queda en el carrito.
+      await expect(page.getByRole("dialog", { name: "Carrito" })).toBeHidden();
+      const lines = page.getByRole("list", { name: "Productos en el carrito" });
+      await expect(lines.getByText("Regalo para Sofía · de Lucía")).toBeVisible();
+      await expect(lines.getByText("Limón")).toBeVisible();
       await page.getByRole("button", { name: "Continuar al checkout" }).click();
       await contactToConfirm(page, "Transferencia bancaria");
       await expect(page.getByRole("region", { name: "¿Es para regalo?" }).getByText("Regalo para Sofía")).toBeVisible();
-      await openTicket(page);
+      await openCheckoutTicket(page);
       await expect(page.getByRole("region", { name: "Resumen de tu compra" }).getByText(/regalo para Sofía/)).toBeVisible();
       await w.check("checkout con regalo");
       await confirmOrder(page);
@@ -161,7 +159,7 @@ for (const d of DEVICES) {
       await w.check("ruleta");
       await stage.getByRole("button", { name: "Aplicar ahora" }).click();
       await page.goto("checkout/");
-      await openTicket(page);
+      await openCheckoutTicket(page);
       const summary = page.getByRole("region", { name: "Resumen de tu compra" });
       await expect(summary.getByText("Cupón", { exact: true })).toBeVisible();
       const withCoupon = await summary.locator("dd").last().textContent();
@@ -221,7 +219,7 @@ for (const d of DEVICES) {
       const w = watch(page);
       await page.goto("pedido/demo-volta/");
       const run = async () => {
-        const zone = page.getByRole("region", { name: "Probá los estados del pedido — Demostración" });
+        const zone = page.getByRole("region", { name: "Modo demostración: mirá otro estado" });
         for (const [label, title] of [["Armando tu pedido", "Armando tu pedido"], ["En camino", "En camino"], ["Entregado", "Entregado"]] as const) {
           await zone.getByText(label, { exact: true }).click();
           await expect(page.getByRole("heading", { level: 2, name: title, exact: true })).toBeVisible();

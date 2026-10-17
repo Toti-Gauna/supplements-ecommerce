@@ -24,6 +24,8 @@ export interface TrackedOrder {
   dates: (string | undefined)[];
   /** Lote que confirmó el control de lote del panel, por línea (solo después de ese control). */
   lotCheck?: Record<string, string>;
+  /** Total que se pagó (con descuentos y envío), si es un pedido hecho en este navegador. */
+  total?: number;
 }
 
 /**
@@ -45,7 +47,7 @@ export function useTrackedOrder(token: string): TrackedOrder {
     const status = trackedStatus(inPanel?.status ?? "PENDING_PAYMENT", inPanel?.prevStatus);
     const log = inPanel?.log ?? [{ at: last.createdAt, to: "PENDING_PAYMENT" as const }];
     const promisedDate = inPanel?.promisedDate ?? last.promisedDate ?? promise(last.lines, last.fulfillment);
-    return { code: last.code, lines: last.lines, sample: false, status, fulfillment: last.fulfillment, promisedDate, dates: stageDates(log, status), lotCheck: inPanel?.lotCheck };
+    return { code: last.code, lines: last.lines, sample: false, status, fulfillment: last.fulfillment, promisedDate, dates: stageDates(log, status), lotCheck: inPanel?.lotCheck, total: last.quote.total };
   }
   const { lines, fulfillment, log } = sampleTrackedOrder;
   const status = log.at(-1)!.to;

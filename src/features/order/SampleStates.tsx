@@ -7,7 +7,7 @@ export function SampleStates({ current, onPick }: { current: SampleStateId; onPi
   return (
     <section aria-labelledby="estados-demo" className="flex flex-col gap-3 rounded-sm border border-dashed border-line p-4 sm:p-5">
       <div>
-        <h2 id="estados-demo" className="font-display text-2xl">Probá los estados del pedido — Demostración</h2>
+        <h2 id="estados-demo" className="font-display text-2xl">Modo demostración: mirá otro estado</h2>
         <p className="text-sm text-muted">Solo cambia esta vista: no modifica pedidos ni simula pagos de ningún proveedor.</p>
       </div>
       <fieldset>

@@ -18,14 +18,17 @@ interface OrderItemsCardProps {
   note?: string;
   /** Lo que va debajo de cada producto (la etiqueta de lote). */
   extra?: (line: CartLine) => ReactNode;
+  /** Total del pedido con descuentos y envío; sin él, la suma de los productos. */
+  total?: number;
 }
 
 /** Lo que trae el pedido. En el celular muestra 3 productos y el resto en un modal. */
-export function OrderItemsCard({ code, lines, sample, note, extra }: OrderItemsCardProps) {
+export function OrderItemsCard({ code, lines, sample, note, extra, total: orderTotal }: OrderItemsCardProps) {
   const [open, setOpen] = useState(false);
   const quoted = quoteLines(lines);
   const units = quoted.reduce((n, q) => n + q.line.quantity, 0);
-  const total = quoted.reduce((n, q) => n + q.lineTotal, 0);
+  const linesTotal = quoted.reduce((n, q) => n + q.lineTotal, 0);
+  const total = orderTotal ?? linesTotal;
   const more = lines.length - VISIBLE;
   return (
     <section aria-labelledby="items" className="rounded-sm border border-line bg-surface p-4 sm:p-6">
@@ -51,7 +54,7 @@ export function OrderItemsCard({ code, lines, sample, note, extra }: OrderItemsC
           <p className="eyebrow text-volt-ink">{code}</p>
           <h2 className="font-display mt-1 text-3xl">{plural(units, "producto", "productos")}</h2>
           <div className="mt-5"><OrderLines lines={lines} extra={extra} /></div>
-          <p className="mt-4 flex justify-between border-t border-line pt-4 font-bold"><span>Total de productos</span><span className="tabular-nums">{formatARS(total)}</span></p>
+          <p className="mt-4 flex justify-between border-t border-line pt-4 font-bold"><span>Total de productos</span><span className="tabular-nums">{formatARS(linesTotal)}</span></p>
         </div>
       </Sheet>
     </section>

@@ -32,11 +32,11 @@ export function CadeteCountdown({ lines, className }: { lines: CartLine[]; class
   if (!zone || lines.length === 0) return null;
   const clock = cadeteClock(lines, now, DEMO_TODAY, orders, settings, DEMO_ORDER_CODE);
   return (
-    <p role="note" aria-label="Cadete" className={cn("flex items-start gap-2 text-[13px]", className)}>
-      <Bike size={16} aria-hidden="true" className="mt-0.5 shrink-0 text-volt-ink" />
-      <span>
+    <p role="note" aria-label="Cadete" className={cn("flex items-center gap-2.5 rounded-sm border border-line p-2 text-[13px] leading-snug", className)}>
+      <span className="grid size-8 shrink-0 place-items-center rounded-xs bg-night text-volt"><Bike size={16} aria-hidden="true" /></span>
+      <span className="min-w-0">
         <strong>{zone.name}:</strong> llega {whenDay(clock.day, DEMO_TODAY)}
-        {clock.minutesLeft !== null && <> si confirmás en las próximas <strong className="font-mono tabular-nums">{countdownText(clock.minutesLeft)}</strong></>}
+        {clock.minutesLeft !== null && <> si confirmás en las próximas <strong className="whitespace-nowrap rounded-xs bg-accent px-1 font-mono tabular-nums">{countdownText(clock.minutesLeft)}</strong></>}
       </span>
     </p>
   );

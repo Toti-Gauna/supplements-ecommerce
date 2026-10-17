@@ -39,10 +39,12 @@ function TransferData({ total, code }: { total: number; code: string }) {
     ["Monto", formatARS(total)], ["Referencia", code],
   ];
   return (
-    <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 rounded-sm border border-dashed border-warning bg-surface p-4 text-sm">
-      {rows.map(([k, v]) => (<div key={k} className="contents"><dt className="text-muted">{k}</dt><dd className="break-all font-bold tabular-nums">{v}</dd></div>))}
-      <dd className="col-span-2 mt-1 text-xs font-bold text-warning">Datos de muestra: no transfieras a esta cuenta.</dd>
-    </dl>
+    <div className="rounded-sm border border-dashed border-warning bg-surface p-4 text-sm">
+      <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5">
+        {rows.map(([k, v]) => (<div key={k} className="contents"><dt className="text-muted">{k}</dt><dd className="break-all font-bold tabular-nums">{v}</dd></div>))}
+      </dl>
+      <p className="mt-2.5 text-xs font-bold text-warning">Datos de muestra: no transfieras a esta cuenta.</p>
+    </div>
   );
 }
 

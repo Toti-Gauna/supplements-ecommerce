@@ -38,8 +38,8 @@ export function CheckoutTicket({ quote, couponCheck, isRegistered, className }: 
     <div className={cn("flex flex-col gap-3", className)}>
       <button type="button" aria-expanded={open} aria-controls="checkout-ticket" onClick={() => setOpen((v) => !v)}
         className="plate flex min-h-14 items-center justify-between gap-3 rounded-sm border border-line px-4 text-left lg:hidden">
-        <span className="eyebrow text-muted">{open ? "Ocultar ticket" : "Ver ticket"} · {quote.units} {quote.units === 1 ? "producto" : "productos"}</span>
-        <span className="flex items-center gap-2 font-display text-2xl tabular-nums">{formatARS(quote.total)}<ChevronDown size={18} aria-hidden="true" className={cn("transition-transform", open && "rotate-180")} /></span>
+        <span className="eyebrow min-w-0 text-muted">{open ? "Ocultar ticket" : "Ver ticket"}<span className="block font-medium normal-case tracking-normal">{quote.units} {quote.units === 1 ? "producto" : "productos"}</span></span>
+        <span className="flex shrink-0 items-center gap-2 whitespace-nowrap font-display text-2xl tabular-nums">{formatARS(quote.total)}<ChevronDown size={18} aria-hidden="true" className={cn("transition-transform", open && "rotate-180")} /></span>
       </button>
       <div id="checkout-ticket" className={cn("flex-col gap-3 lg:flex", open ? "flex" : "hidden")}>
         <OrderSummary title="Resumen de tu compra" rows={summaryRows(quote)} total={quote.total} totalNote="En la tienda real el servidor recalcula precios y stock antes de cobrar.">

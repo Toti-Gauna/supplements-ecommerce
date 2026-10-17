@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import { horizontalOverflow } from "./helpers";
+import { horizontalOverflow, openCheckoutTicket } from "./helpers";
 
 /**
  * R2 · checkout en 3 pasos (Datos y entrega · Pago · Revisar): el ticket fijo a la derecha en escritorio y plegable en
@@ -19,11 +19,6 @@ async function toCheckout(page: Page) {
   await page.getByLabel("Teléfono / WhatsApp").fill("223 555-1234");
 }
 
-/** Abre el ticket si está plegado (celular). */
-async function openTicket(page: Page) {
-  const toggle = page.getByRole("button", { name: /Ver ticket/ });
-  if (await toggle.isVisible()) await toggle.click();
-}
 
 for (const width of [1180, 390]) {
   test(`R2 a ${width}px: 3 pasos con la fecha del calendario, ticket con el cupón una vez y el total arriba de confirmar`, async ({ page }) => {
@@ -41,12 +36,12 @@ for (const width of [1180, 390]) {
     const summary = page.getByRole("region", { name: "Resumen de tu compra" });
     if (width < 1024) {
       await expect(summary).toBeHidden();
-      await openTicket(page);
+      await openCheckoutTicket(page);
     }
     await expect(summary).toBeVisible();
     await expect(summary.getByText("2 × Overvolt pre-entreno")).toBeVisible();
     if (width >= 1024) {
-      const [form, ticket] = await Promise.all([page.locator("main form").first().boundingBox(), summary.boundingBox()]);
+      const [form, ticket] = await Promise.all([page.locator("section[aria-labelledby=checkout-step] form").boundingBox(), summary.boundingBox()]);
       expect(ticket!.x).toBeGreaterThan(form!.x + form!.width - 1);
     }
     // El cupón aparece una sola vez en todo el checkout.

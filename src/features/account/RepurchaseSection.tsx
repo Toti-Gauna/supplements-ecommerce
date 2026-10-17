@@ -44,7 +44,7 @@ export function RepurchaseSection() {
               <BatteryMeter pct={pct} label={`Queda cerca del ${Math.round(pct)} % de ${r.name}`} tone={pct <= 20 ? "danger" : "volt"} className="mt-1 max-w-56" />
               <p className="text-[13px]">Te avisamos el <strong>{formatDay(r.remindOn, "dayMonth")}</strong> · se termina el {formatDay(r.runsOutOn, "dayMonth")}</p>
               <div className="mt-2 flex flex-wrap gap-2">
-                <Button size="sm" disabled={!variant || variant.stock === 0} onClick={() => { add({ productSlug: r.slug, variantId: r.variantId, quantity: 1 }); openCart(r.slug); }}>
+                <Button size="sm" variant={pct <= 20 ? "primary" : "secondary"} disabled={!variant || variant.stock === 0} onClick={() => { add({ productSlug: r.slug, variantId: r.variantId, quantity: 1 }); openCart(r.slug); }}>
                   <RotateCcw size={16} aria-hidden="true" />Recomprar
                 </Button>
                 <Button size="sm" variant="ghost" onClick={() => remove(r.id)}><BellOff size={16} aria-hidden="true" />Quitar aviso</Button>

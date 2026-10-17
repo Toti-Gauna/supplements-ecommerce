@@ -34,18 +34,18 @@ export function ConfirmStep({ onBack, onConfirm, onEdit, total }: Props) {
   ];
   return (
     <form noValidate onSubmit={(e) => { e.preventDefault(); if (!acceptedTerms) return setError(true); onConfirm(); }} className="flex flex-col gap-5">
-      <dl className="divide-y divide-line rounded-sm border border-line bg-surface">
+      <div className="divide-y divide-line rounded-sm border border-line bg-surface">
         {rows.map((r) => (
           <div key={r.label} className="flex items-start justify-between gap-3 p-4">
-            <div className="min-w-0">
+            <dl className="min-w-0">
               <dt className="eyebrow text-muted">{r.label}</dt>
               {r.strong && <dd className="mt-1 font-bold">{r.strong}</dd>}
               <dd className="mt-0.5 break-words text-sm text-muted">{r.value}</dd>
-            </div>
+            </dl>
             <button type="button" onClick={() => onEdit(r.step)} aria-label={`Cambiar ${r.label.toLowerCase()}`} className="min-h-10 shrink-0 text-sm font-bold text-volt-ink underline underline-offset-4">Cambiar</button>
           </div>
         ))}
-      </dl>
+      </div>
       {monthly && (
         <p role="note" className="edge-volt flex items-start gap-3 p-4 text-sm font-semibold">
           <CalendarClock size={18} aria-hidden="true" className="mt-0.5 shrink-0 text-volt-ink" />

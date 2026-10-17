@@ -37,21 +37,29 @@ test("transferencia: la fecha del checkout queda en la confirmación y, con el c
   await page.getByRole("button", { name: "Continuar al pago" }).click();
   await page.getByText("Transferencia bancaria").click();
   await page.getByRole("button", { name: "Revisar pedido" }).click();
-  await expect(page.getByText(/Cadete en Mar del Plata · Llega mañana, mar 6 oct/)).toBeVisible();
+  // Revisar: la entrega con la fecha del calendario arriba y la forma de entrega debajo.
+  const entrega = page.locator("dl").filter({ has: page.locator("dt", { hasText: "Entrega" }) });
+  await expect(entrega).toContainText("Llega mañana, mar 6 oct");
+  await expect(entrega).toContainText("Cadete en Mar del Plata");
   await page.getByRole("checkbox", { name: /Acepto los/ }).check();
   await page.getByRole("button", { name: "Confirmar pedido" }).click();
 
   await expect(page).toHaveURL(/checkout\/confirmacion\/$/);
-  await expect(page.getByText(/Entrega: Llega mañana, mar 6 oct/)).toBeVisible();
+  // La ficha de entrega guarda la misma fecha; subir el comprobante la deja en revisión, nunca pagada.
+  const ficha = page.locator("section[aria-labelledby=ficha-entrega]");
+  const field = (name: string) => ficha.locator("dl > div").filter({ has: page.locator("dt", { hasText: name }) });
+  await expect(field("Entrega")).toContainText("Llega mañana, mar 6 oct");
+  await expect(field("Estado")).toContainText("Pendiente de pago");
   await page.getByLabel("Subir comprobante").setInputFiles({ name: "comprobante.pdf", mimeType: "application/pdf", buffer: Buffer.from("%PDF-1.4 demo") });
-  await expect(page.getByText(/Estado de muestra: comprobante en revisión/)).toBeVisible();
+  await expect(field("Estado")).toContainText("Comprobante en revisión");
+  await expect(page.getByText(/acreditad/i)).toHaveCount(0);
 
   await page.getByRole("link", { name: "Seguir mi pedido", exact: true }).click();
   await expect(page.getByRole("heading", { level: 2, name: "Revisando tu pago", exact: true })).toBeVisible();
   await expect(page.getByRole("status").filter({ hasText: "Comprobante recibido" })).toBeVisible();
   const stages = page.getByRole("region", { name: "Etapas del pedido" });
   await expect(stages.locator("[aria-current=step]")).toContainText("Pago en revisión");
-  await expect(stages.getByRole("listitem").filter({ hasText: /^Pagado/ })).not.toContainText("5 oct");
+  await expect(stages.getByRole("listitem").filter({ hasText: /Pagado/ })).not.toContainText("5 oct");
   await expect(stages.getByRole("listitem").first()).toContainText("5 oct");
   await expect(page.getByText("Llega mañana, mar 6 oct, si el pago se confirma a tiempo")).toBeVisible();
 });

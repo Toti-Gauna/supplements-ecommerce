@@ -34,7 +34,7 @@ export function SpecGallery({ product: p, tint }: { product: Product; tint?: str
   const alt = p.imageAlt || p.name;
   return (
     <div className="flex flex-col gap-px overflow-hidden rounded-sm border border-line bg-line">
-      <div data-vt-hero className={cn("relative aspect-[5/4] bg-surface lg:aspect-auto lg:h-[calc(100dvh-16rem)] lg:max-h-[38rem] lg:min-h-[22rem]", view === "bench" && "lab-grid", hero && "vt-hero")}>
+      <div data-vt-hero className={cn("relative aspect-square bg-surface sm:aspect-[5/4] lg:aspect-auto lg:h-[calc(100dvh-16rem)] lg:max-h-[38rem] lg:min-h-[22rem]", view === "bench" && "lab-grid", hero && "vt-hero")}>
         {view === "photo" && <ProductVisual art={p.art} pack={p.pack} photoUrl={p.photoDataUrl} label={alt} className="h-full w-full" />}
         {view === "bench" && <TestBench art={p.art} pack={p.pack} tint={tint} label={alt} dims={p.dims} className="p-2" />}
         {view === "label" && p.nutrition && <LabelPlate nutrition={p.nutrition} />}

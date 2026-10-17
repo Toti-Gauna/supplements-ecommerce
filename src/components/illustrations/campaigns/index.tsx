@@ -1,5 +1,6 @@
 import type { ComponentType } from "react";
 import { AnoNuevo } from "./ano-nuevo";
+import { CAMPAIGN_ART_B } from "./b-index";
 import { BlackFriday } from "./black-friday";
 import { CyberMonday } from "./cyber-monday";
 import { DiaDeLaMadre } from "./dia-de-la-madre";
@@ -16,9 +17,10 @@ import { cn } from "@/lib/cn";
  * Key visual de cada campaña (R3a): una escena 4:5 (lienzo 800 × 1000) con luz de estudio, siluetas sin cara y los
  * productos de la fecha, que funciona recortada como post sin texto de la interfaz encima. Cada escena vive en su
  * archivo y dibuja adentro del `<svg>` común (`stage.tsx` trae el escenario; `props.tsx`, la utilería).
- * Las fechas con `Fallback` esperan el arte de la parte B del lote.
+ * Las escenas de la parte B (Día del Padre, del Amigo, Operación verano y los días del deporte) traen su propio
+ * `<svg>` con el mismo lienzo: se dibujan tal cual, con su `className`.
  */
-export const CAMPAIGN_ART: Record<SeasonId, ComponentType> = {
+export const CAMPAIGN_ART: Partial<Record<SeasonId, ComponentType>> = {
   "black-friday": BlackFriday,
   "hot-sale": HotSale,
   "vuelta-al-gym": VueltaAlGym,
@@ -28,17 +30,11 @@ export const CAMPAIGN_ART: Record<SeasonId, ComponentType> = {
   "san-valentin": SanValentin,
   "dia-de-la-madre": DiaDeLaMadre,
   halloween: Halloween,
-  "dia-del-padre": Fallback,
-  "dia-del-amigo": Fallback,
-  "operacion-verano": Fallback,
-  "crossfit-open": Fallback,
-  "dia-actividad-fisica": Fallback,
-  "dia-del-futbolista": Fallback,
-  "dia-del-running": Fallback,
-  "dia-del-boxeador": Fallback,
 };
 
 export function CampaignArt({ id, className }: { id: SeasonId; className?: string }) {
+  const Full = CAMPAIGN_ART_B[id];
+  if (Full) return <Full className={className} />;
   const Scene = CAMPAIGN_ART[id] ?? Fallback;
   return (
     <svg viewBox="0 0 800 1000" aria-hidden="true" focusable="false" data-campaign={id} className={cn("block", className)}>

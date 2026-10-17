@@ -2,6 +2,7 @@ import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { CAMPAIGN_ART, CampaignArt } from "@/components/illustrations/campaigns";
+import { CAMPAIGN_ART_B } from "@/components/illustrations/campaigns/b-index";
 import type { SeasonId } from "@/demo/types";
 
 /** Key visuals de campaña (R3a): escenas 4:5 sin texto, una por fecha. */
@@ -18,8 +19,10 @@ const inner = (html: string) => html.slice(html.indexOf(">") + 1);
 
 describe("key visuals de campaña", () => {
   it("cada fecha resuelve a una escena, sin sobrantes", () => {
-    expect(Object.keys(CAMPAIGN_ART).sort()).toEqual([...SEASONS].sort());
-    for (const id of SEASONS) expect(typeof CAMPAIGN_ART[id]).toBe("function");
+    // Parte A dibuja dentro del svg común; parte B trae su propio svg. Entre las dos, cada fecha una vez.
+    const all = [...Object.keys(CAMPAIGN_ART), ...Object.keys(CAMPAIGN_ART_B)];
+    expect(all.sort()).toEqual([...SEASONS].sort());
+    for (const id of SEASONS) expect(typeof (CAMPAIGN_ART[id] ?? CAMPAIGN_ART_B[id])).toBe("function");
   });
 
   it("dibuja un svg 4:5 decorativo con la fecha y pasa la clase", () => {

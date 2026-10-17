@@ -29,7 +29,7 @@ const ADMIN = [
   ["admin-demo/misiones/", "Misiones y premios"], ["admin-demo/cupones/", "Cupones"], ["admin-demo/emails/", "Emails automáticos"],
   ["admin-demo/calendario/", "Calendario de despachos"], ["admin-demo/preparacion/", "Preparación de pedidos"], ["admin-demo/costos/", "Costos y margen"], ["admin-demo/proveedores/", "Proveedores y compras"],
   ["admin-demo/insumos/", "Insumos"], ["admin-demo/usuarios/", "Clientes"], ["admin-demo/reclamos/", "Reclamos"],
-  ["admin-demo/contenido/", "Contenido"], ["admin-demo/tematicas/", "Temáticas"], ["admin-demo/estudio/", "Estudio de contenido"], ["admin-demo/ajustes/", "Ajustes"],
+  ["admin-demo/contenido/", "Contenido"], ["admin-demo/campanas/", "Campañas"], ["admin-demo/estudio/", "Estudio de contenido"], ["admin-demo/ajustes/", "Ajustes"],
   // Subpáginas de Polish 8.3 (tarjetas de Marketing, Contenido y Ajustes).
   ["admin-demo/marketing/", "Marketing"], ["admin-demo/cupones/lista/", "Cupones"], ["admin-demo/cupones/ruleta/", "Configuración de ruleta"],
   ["admin-demo/cupones/premios/", "Premios disponibles"], ["admin-demo/misiones/simular/", "Simular progreso y premio"], ["admin-demo/emails/enviados/", "Bandeja de salida"],

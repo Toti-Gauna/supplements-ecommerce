@@ -15,6 +15,7 @@ import { MARKETING, SubpageHeader } from "../marketing/SubpageHeader";
 import { usePaged } from "../usePaged";
 import { useDemoSave } from "../useDemoSave";
 import { COUPONS_SECTION } from "./CouponsHub";
+import { FakeCouponsSummary, useCouponFakeMap } from "../campaigns/CouponRealCheck";
 import { GAME_COUPON_PREFIX } from "@/demo/engine/game-prize";
 
 function valueLabel(c: Coupon): string {
@@ -29,10 +30,12 @@ export function CouponsList() {
   const paged = usePaged([...coupons].reverse(), 6);
   const save = useDemoSave();
   const [creating, setCreating] = useState(false);
+  const fake = useCouponFakeMap(coupons);
   return (
     <>
       <SubpageHeader trail={[MARKETING, COUPONS_SECTION]} back={COUPONS_SECTION} title="Cupones" actions={<Button onClick={() => setCreating(true)}><Plus size={18} aria-hidden="true" /> Nuevo cupón</Button>}
         intro="Los cupones creados acá funcionan en el carrito de la tienda demo de este navegador. Usos simulados." />
+      <FakeCouponsSummary map={fake} />
       {creating && <div className="mb-4"><CouponForm onDone={() => setCreating(false)} /></div>}
       <ul className="grid gap-3 md:grid-cols-2">
         {paged.items.map((c) => {
@@ -49,7 +52,8 @@ export function CouponsList() {
                 {c.onlyRegistered && <Badge tone="neutral">Solo con cuenta</Badge>}
                 {c.code.startsWith("RULETA") && <Badge tone="brand">Ruleta</Badge>}
                 {c.code.startsWith(GAME_COUPON_PREFIX) && <Badge tone="brand">Shaker Rush</Badge>}
-                {c.themeId && <Badge tone="brand">Temática</Badge>}
+                {c.themeId && <Badge tone="brand">Campaña</Badge>}
+                {fake.has(c.code) && <Badge tone="warning">Descuento no real</Badge>}
               </div>
               <p className="text-sm text-muted">{c.description}{c.minSubtotal ? ` · mínimo ${formatARS(c.minSubtotal)}` : ""}{c.endsAt ? ` · vence ${formatDate(c.endsAt)}` : ""}</p>
               <p className="text-sm"><strong className="tabular-nums">{used}</strong>{c.maxUses ? ` de ${c.maxUses}` : ""} usos <span className="text-muted">(simulados)</span></p>

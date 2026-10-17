@@ -12,7 +12,8 @@ export const STORAGE_PREFIX = `${brand.storageKey}-demo:`;
 // v12: la tienda arranca con la temática original (modo "off") en lugar de la automática por fecha.
 // v13: imágenes propias del carrusel, preservando las ediciones compatibles de v10–v12.
 // v14: tienda deportiva multimarca (L2): se suman las categorías y los productos de equipamiento sin tocar lo editado.
-export const ADMIN_STORE_VERSION = 14;
+// v15: campañas de R3a: días del deporte con sus cupones y rangos nuevos solo donde el dueño no cambió las fechas.
+export const ADMIN_STORE_VERSION = 15;
 
 /** localStorage tolerante a modo privado / cuota llena: la demo sigue funcionando en memoria. */
 const memory = new Map<string, string>();

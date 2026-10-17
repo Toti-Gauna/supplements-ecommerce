@@ -38,6 +38,8 @@ export interface AdminOrder {
   lotCheck?: Record<string, string>;
   notes: string[];
   log: StatusLogEntry[];
+  /** Cupón usado y pesos que descontó (resultados de cada campaña en el panel). */
+  coupon?: { code: string; discount: number };
   /** Pedido que llegó desde el checkout de demostración de este navegador. */
   fromShop?: boolean;
 }

@@ -79,10 +79,11 @@ function seedLog(o: (typeof orderSeeds)[number]): StatusLogEntry[] {
 
 export function defaultAdminData(): AdminData {
   const data = defaultDemoData();
-  const orders: AdminOrder[] = orderSeeds.map((o) => ({
-    ...o, notes: o.notes ?? [], log: o.log ?? seedLog(o),
-    total: quoteCart(o.lines, { fulfillment: o.fulfillment, paymentMethod: o.paymentMethod }).total,
-  }));
+  const orders: AdminOrder[] = orderSeeds.map(({ couponCode, ...o }) => {
+    const coupon = couponCode ? data.coupons.find((c) => c.code === couponCode) : undefined;
+    const quote = quoteCart(o.lines, { fulfillment: o.fulfillment, paymentMethod: o.paymentMethod, coupon });
+    return { ...o, notes: o.notes ?? [], log: o.log ?? seedLog(o), total: quote.total, ...(coupon ? { coupon: { code: coupon.code, discount: quote.couponDiscount } } : {}) };
+  });
   const templates = structuredClone(emailTemplates);
   return {
     data,

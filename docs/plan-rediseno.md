@@ -301,14 +301,15 @@ mañana.
 ---
 
 ## 7 bis. Lotes pedidos por Ignacio el 16/10/2026 (antes de seguir con R2)
-Orden acordado: **L1 → L2 → L3 → L4**, después R2a, R2b, R2c, R3a, R3b, R4a, R4b y R4c.
+Orden acordado: **L1 → L2 → L3 → L4 → L5**, después R2a, R2b, R2c, R3a, R3b, R4a, R4b y R4c.
 
 | Lote | Qué | Estado |
 |---|---|---|
 | **L1** · Inicio y navegación | Carrusel de **imágenes** automático (al estilo Velmar, con identidad BOX); inicio: carrusel → categorías → recomendados → "¿Para qué lo querés?" y el stack; **precio total primero** y el precio por servicio chico; el dock del celular siempre arriba al cambiar de página; la pantalla de carga **en cada recarga** hasta terminar su animación | Hecho (PR #11) |
 | **L2** · Tienda deportiva multimarca | Textos de comercio que vende marcas de terceros; accesorios (straps, shakers, vendas, cinturones, guantes, rodilleras, sogas, bandas, magnesio, bolsos) con talle y color | Hecho (PR #12) |
-| **L3** · Packs mensuales | Packs por objetivo y deporte, "Quiero este pack todos los meses" (simulado) y panel de packs y suscriptores | Hecho (PR de L3) |
-| **L4** · Objetivos, deportes, stack y quiz | SVG por deporte (fútbol, tenis, pádel, running, etc.), stack con varios objetivos, invitación al quiz al entrar y quiz con opción mensual | Hecho (PR de L4) |
+| **L3** · Packs mensuales | Packs por objetivo y deporte, "Quiero este pack todos los meses" (simulado) y panel de packs y suscriptores | Hecho (PR #13) |
+| **L4** · Objetivos, deportes, stack y quiz | SVG por deporte (fútbol, tenis, pádel, running, etc.), stack con varios objetivos, invitación al quiz al entrar y quiz con opción mensual | Hecho (PR #14) |
+| **L5** · Cierre de L4 | Deportes editables en el panel (nombre, bajada, color y pack sugerido); el tope de 3 objetivos cuenta solo los elegidos, igual en el quiz y el armador (el deporte siempre suma); las tarjetas de objetivo del inicio muestran el total de su stack, como las de deporte | Hecho (PR de L5) |
 
 Cambian decisiones anteriores: el precio por servicio deja de ser el número grande, la pantalla de carga sale en cada
 recarga y el inicio vuelve a tener un carrusel que avanza solo. Los puntos 9 (días del deporte) y 11 (un regalo único

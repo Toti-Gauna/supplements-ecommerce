@@ -31,6 +31,12 @@ export const SKINS: Record<SeasonId, ThemeSkin> = {
   "dia-del-padre": { from: "#13202e", to: "#2e4c6e", accent: "#ffcf5c", accentInk: "#13202e", topper: "medal", decor: ["trophy", "dumbbell", "medal", "shaker", "spark"] },
   "dia-del-amigo": { from: "#06302c", to: "#0f766e", accent: "#e3ff8f", accentInk: "#06302c", topper: "shaker", decor: ["gloves", "shaker", "medal", "dumbbell", "spark"] },
   "operacion-verano": { from: "#053246", to: "#0b6f96", accent: "#ffd34d", accentInk: "#053246", topper: "sun", decor: ["sun", "bottle", "wave", "sunglasses", "spark"] },
+  // Días del deporte (R3a).
+  "crossfit-open": { from: "#1a0f0a", to: "#5a2a12", accent: "#ff7a1a", accentInk: "#1a0f0a", topper: "kettlebell", decor: ["kettlebell", "stopwatch", "plate", "bolt", "spark"] },
+  "dia-actividad-fisica": { from: "#062a1f", to: "#0f6b4a", accent: "#c8ff2e", accentInk: "#062a1f", topper: "sneaker", decor: ["sneaker", "pulse-heart", "bottle", "stopwatch", "spark"] },
+  "dia-del-futbolista": { from: "#0a2a14", to: "#16703a", accent: "#ffffff", accentInk: "#0a2a14", topper: "medal", decor: ["trophy", "sneaker", "medal", "bottle", "spark"] },
+  "dia-del-running": { from: "#0b1d3a", to: "#1f4fa8", accent: "#ffd34d", accentInk: "#0b1d3a", topper: "sneaker", decor: ["sneaker", "stopwatch", "bottle", "pulse-heart", "spark"] },
+  "dia-del-boxeador": { from: "#1a0608", to: "#6e1218", accent: "#ffd34d", accentInk: "#1a0608", topper: "gloves", decor: ["gloves", "medal", "stopwatch", "bolt", "spark"] },
 };
 
 export function skinOf(id: SeasonId): ThemeSkin {

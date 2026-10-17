@@ -6,7 +6,6 @@ import type { LineGift } from "@/demo/engine/cart-types";
 import { defaultLockerCode, lockerDigits } from "@/demo/engine/gift-options";
 import { DEMO_TODAY } from "@/demo/fixtures/admin-orders";
 import { useGiftDraft } from "@/stores/giftDraft";
-import { openingLine } from "@/demo/engine/gift-opening";
 import { openingName } from "../scenes";
 import { StepTitle } from "./StepTitle";
 
@@ -27,7 +26,7 @@ export function OpeningSection({ error, onEdit }: { error?: string; onEdit: (p: 
       <fieldset className="grid gap-2 sm:grid-cols-2">
         <legend className="sr-only">Cómo lo abre</legend>
         <OptionCard name="gift-opening" value="bolsa" checked={draft.opening !== "locker"} onChange={() => onEdit({ opening: "bolsa" })}
-          title="La apertura de la fecha" description={`${openingName(draft.occasion)}: ${openingLine({ occasion: draft.occasion }).replace(/^Lo abre /, "lo abre ")}`} icon={<BagGlyph />} />
+          title="La apertura de la fecha" description={`${openingName(draft.occasion)}: cambia según la fecha.`} icon={<BagGlyph />} />
         <OptionCard name="gift-opening" value="locker" checked={draft.opening === "locker"} onChange={() => onEdit({ opening: "locker", lockerCode: code })}
           title="Locker con combinación" description="Lo abre marcando 4 números." icon={<Lock size={20} aria-hidden="true" />} />
       </fieldset>

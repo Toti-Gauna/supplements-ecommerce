@@ -282,7 +282,7 @@ for (const mode of ["dark", "light"] as const) {
         await expect(modal).toBeVisible({ timeout: 1000 });
       }).toPass();
       await modal.getByText("Que elija el sabor").click();
-      await modal.getByText("Locker", { exact: true }).click();
+      await modal.getByText("Locker con combinación", { exact: true }).click();
       await check();
       await modal.getByText("Gift card con monto").click();
       await check();

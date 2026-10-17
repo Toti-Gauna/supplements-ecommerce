@@ -52,7 +52,7 @@ for (const [width, height] of [[1440, 900], [390, 844]]) {
     await dialog.getByText("Ring", { exact: true }).click();
     await dialog.getByRole("heading", { name: /Qué regalás/ }).evaluate((el) => el.closest(".overflow-y-auto")?.scrollTo(0, 0));
     await shot(page, `armador-${tag}`);
-    await dialog.getByText("Locker", { exact: true }).click();
+    await dialog.getByText("Locker con combinación", { exact: true }).click();
     await dialog.locator("#regalo-apertura").scrollIntoViewIfNeeded();
     await shot(page, `armador-locker-${tag}`);
     await page.keyboard.press("Escape");

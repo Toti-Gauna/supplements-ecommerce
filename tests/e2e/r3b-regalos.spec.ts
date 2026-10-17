@@ -104,7 +104,7 @@ test("sabor abierto: quien regala lo deja abierto, quien recibe lo elige despué
   await modal.getByText("Que elija el tamaño").click();
   // Regla del precio: se cobra la opción más cara de las que puede elegir (el tamaño grande).
   await expect(modal.getByText(/Se cobra .*5 lb \(2,27 kg\), la más cara de las que puede elegir/)).toBeVisible();
-  await modal.getByText("Locker", { exact: true }).click();
+  await modal.getByText("Locker con combinación", { exact: true }).click();
   await expect(modal.getByRole("textbox", { name: "Combinación" })).toHaveValue("0510");
   await modal.getByRole("button", { name: "Agregar regalo al carrito" }).click();
   await page.goto("checkout/");

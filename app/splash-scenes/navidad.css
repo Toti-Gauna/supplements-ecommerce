@@ -1,0 +1,26 @@
+/*
+ * Navidad (R3c): se carga el árbol de discos. Caen de a uno por el parante, del más grande al más chico, golpean y
+ * rebotan apenas; arriba, el disco dorado de cambio. Cuando el árbol está armado se prende el marcador.
+ * Capas (public/splash/navidad/): 1 pared, parante, marcador y el pote de regalo · 2 a 7 los seis discos.
+ * Mecánica 0,26–1,16 s; número 1,06–1,6 s.
+ */
+.splash-stage[data-scene="navidad"] {
+  --score-x: 5.75%; --score-y: 8.33%; --score-w: 25%; --score-h: 14%; --score-size: 6.8cqw;
+  --lit-at: 1100ms; --roll-at: 1060ms; --caption-at: 1000ms;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .splash-stage[data-scene="navidad"] :is(.s2, .s3, .s4, .s5, .s6, .s7)::before { animation: nv-drop 300ms linear both; }
+  .splash-stage[data-scene="navidad"] .s2::before { animation-delay: 260ms; }
+  .splash-stage[data-scene="navidad"] .s3::before { animation-delay: 380ms; }
+  .splash-stage[data-scene="navidad"] .s4::before { animation-delay: 500ms; }
+  .splash-stage[data-scene="navidad"] .s5::before { animation-delay: 620ms; }
+  .splash-stage[data-scene="navidad"] .s6::before { animation-delay: 740ms; }
+  .splash-stage[data-scene="navidad"] .s7::before { animation-delay: 860ms; }
+}
+/* Caída libre por el parante, golpe y un rebote corto (el disco es de goma). */
+@keyframes nv-drop {
+  0% { transform: translateY(-100%); animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45); }
+  72% { transform: translateY(0); animation-timing-function: ease-out; }
+  84% { transform: translateY(-1.6%); animation-timing-function: ease-in; }
+  100% { transform: translateY(0); }
+}

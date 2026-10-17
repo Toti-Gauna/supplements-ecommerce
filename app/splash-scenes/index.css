@@ -1,0 +1,5 @@
+/* Una hoja por escena de la pantalla de carga (R3c, src/demo/engine/splash-scenes.ts). La fase 2 suma las 13 fechas que faltan. */
+@import "./black-friday.css";
+@import "./hot-sale.css";
+@import "./vuelta-al-gym.css";
+@import "./navidad.css";

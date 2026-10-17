@@ -1,4 +1,4 @@
-import type { Page } from "@playwright/test";
+import { expect, type Page } from "@playwright/test";
 
 /** Vista previa de una temática antes de cargar (como "Probar temáticas"). */
 export const previewTheme = (page: Page, id: string) =>
@@ -10,3 +10,27 @@ export const holdSplash = (page: Page) => page.addInitScript(() => {
   window.setTimeout = ((fn: TimerHandler, ms?: number, ...a: unknown[]) => (ms === 4000 ? 0 : st(fn, ms, ...a))) as typeof window.setTimeout;
   document.addEventListener("DOMContentLoaded", () => document.getAnimations().forEach((a) => { if ((a as CSSAnimation).animationName === "splash-curtain") a.pause(); }));
 });
+
+/** Anota qué animaciones terminan y cuándo, y cuándo se retira el splash. */
+export const recordEnds = (page: Page) => page.addInitScript(() => {
+  const w = window as unknown as { ends: [string, number][]; splashDone?: number };
+  w.ends = [];
+  document.addEventListener("animationend", (e) => w.ends.push([e.animationName, performance.now()]), true);
+  new MutationObserver(() => { if (document.documentElement?.classList.contains("splash-done")) w.splashDone ??= performance.now(); })
+    .observe(document, { attributes: true, attributeFilter: ["class"], subtree: true });
+});
+
+/** El logo (símbolo y nombre) queda entero arriba del escenario: nada de la escena lo tapa. */
+export async function logoClear(page: Page) {
+  const splash = page.locator("#volta-splash");
+  const mark = (await splash.locator(".splash-mark").boundingBox())!;
+  const word = (await splash.locator(".splash-word").boundingBox())!;
+  const stage = (await splash.locator(".splash-art").boundingBox())!;
+  const view = page.viewportSize()!;
+  expect(mark.y).toBeGreaterThanOrEqual(0);
+  expect(stage.y).toBeGreaterThanOrEqual(word.y + word.height - 1);
+  expect(stage.y).toBeGreaterThan(mark.y + mark.height);
+  expect(stage.x).toBeGreaterThanOrEqual(0);
+  expect(stage.x + stage.width).toBeLessThanOrEqual(view.width);
+  expect(stage.y + stage.height).toBeLessThanOrEqual(view.height);
+}

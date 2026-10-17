@@ -1,0 +1,96 @@
+/*
+ * Escenario de la pantalla de carga por fecha (R3c) y variante de campaña (R3a). HTML compartido en
+ * src/components/organisms/splash/SplashStage.tsx; cada escena mueve sus capas en splash-scenes/<id>.css.
+ *
+ * - `html[data-splash-scene]`: la fecha tiene escena propia. Logo arriba, más chico (nunca tapado), y debajo el
+ *   escenario 4:3 con su mecánica y el nombre de la campaña al pie. El telón cae a los 1,6 s (termina a los 1,85 s).
+ * - `html[data-splash-campaign]` sin escena: la barra con los discos del color de la fecha y el marcador debajo; el
+ *   telón cae a los 1,55 s (termina a los 1,8 s).
+ * El arte es SVG con colores propios (va siempre sobre la noche, igual en claro y oscuro); el marcador usa
+ * `--season-accent` sobre negro y el rótulo `--brand-night-muted` sobre la noche (AA).
+ * Lo quieto es el ÚLTIMO cuadro de cada escena: las animaciones arrancan desde su `from` (fill both), así con
+ * "reducir movimiento" (vista previa del panel) se ve la escena terminada.
+ */
+.splash-stage { display: none; }
+.splash-stage[data-scene] { display: flex; flex-direction: column; align-items: center; }
+.splash-stage[data-scene] .splash-art {
+  display: block; position: relative; width: 100%; aspect-ratio: 4 / 3; overflow: hidden; isolation: isolate; container-type: inline-size;
+  /* El escenario sale de la oscuridad: los bordes se funden con la noche. */
+  mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent), linear-gradient(transparent, #000 7%, #000 90%, transparent);
+  mask-composite: intersect;
+}
+.splash-stage .sl { position: absolute; inset: 0; }
+.splash-stage .sl::before { content: ""; position: absolute; inset: 0; background: var(--art) center / 100% 100% no-repeat; }
+.splash-stage .s1 { --art: var(--sl1); }
+.splash-stage .s2 { --art: var(--sl2); }
+.splash-stage .s3 { --art: var(--sl3); }
+.splash-stage .s4 { --art: var(--sl4); }
+.splash-stage .s5 { --art: var(--sl5); }
+.splash-stage .s6 { --art: var(--sl6); }
+.splash-stage .s7 { --art: var(--sl7); }
+.splash-caption { display: none; }
+.splash-stage[data-scene] .splash-caption { display: flex; align-items: center; gap: 0.6rem; margin-top: 0.35rem; }
+.splash-caption::before { content: ""; width: 1.5rem; height: 2px; background: var(--season-accent); }
+.splash-caption::after {
+  content: var(--splash-name, ""); font-family: var(--font-mono), ui-monospace, monospace; font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.24em; text-transform: uppercase; color: var(--brand-night-muted); white-space: nowrap;
+}
+
+/* Marcador: nombre de la campaña y descuento en un cuentakilómetros (ruedas de 0 a 9 que giran hasta su número). */
+.splash-stage .splash-score { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.15em; color: var(--season-accent); }
+.splash-score-name::before {
+  content: var(--splash-name, ""); font-family: var(--font-mono), ui-monospace, monospace; font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--brand-night-muted); white-space: nowrap;
+}
+.splash-score-off {
+  display: flex; align-items: center; font-family: var(--font-mono), ui-monospace, monospace; font-size: 2.6rem; font-weight: 800;
+  line-height: 1.1; font-variant-numeric: tabular-nums; white-space: pre; text-shadow: 0 0 18px var(--season-glow);
+}
+.splash-score-off::before { content: var(--splash-pre, ""); }
+.splash-score-off::after { content: var(--splash-suf, ""); }
+.splash-stage:not([data-dn]) .splash-score-off { display: none; }
+.splash-odo { display: flex; height: 1.1em; overflow: hidden; }
+.splash-odo b { display: block; width: 1ch; font-weight: inherit; white-space: normal; word-break: break-all; transform: translateY(calc(var(--d, 0) * -1.1em)); }
+.splash-odo b:nth-child(1) { --d: var(--sd0, 0); }
+.splash-odo b:nth-child(2) { --d: var(--sd1, 0); }
+.splash-odo b:nth-child(3) { --d: var(--sd2, 0); }
+.splash-stage[data-dn="1"] .splash-odo b:nth-child(-n + 2), .splash-stage[data-dn="2"] .splash-odo b:nth-child(1) { display: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .splash-stage .splash-score { animation: splash-lit 320ms steps(1, end) var(--lit-at, 750ms) both; }
+  .splash-odo b { animation: splash-roll 440ms cubic-bezier(0.25, 0.8, 0.25, 1) var(--roll-at, 800ms) both; }
+  .splash-odo b:nth-child(3) { animation-duration: 540ms; }
+  .splash-stage[data-scene] .splash-caption { animation: splash-word 360ms var(--ease-out-expo) var(--caption-at, 300ms) both; }
+}
+
+/* Variante de campaña (R3a) para las fechas cuya escena llega en la fase 2: discos de la fecha y el marcador abajo. */
+html[data-splash-campaign] #volta-splash { animation-delay: 1550ms; }
+html[data-splash-campaign] #volta-splash .splash-barbell { --bp-plate: var(--season-accent); --bp-band: var(--c-night); filter: drop-shadow(0 0 8px var(--season-glow)); }
+html[data-splash-campaign]:not([data-splash-scene]) #volta-splash .splash-stage {
+  display: flex; margin-top: 1.1rem; padding: 0.45rem 1.1rem 0.35rem;
+  border: 1px solid rgb(242 240 234 / 0.18); border-top: 2px solid var(--season-accent); background: rgb(0 0 0 / 0.45);
+}
+html[data-splash-campaign]:not([data-splash-scene]) #volta-splash .splash-art { display: contents; }
+html[data-splash-campaign]:not([data-splash-scene]) #volta-splash .sl { display: none; }
+@media (min-width: 640px) { html[data-splash-campaign]:not([data-splash-scene]) .splash-score-off { font-size: 3.4rem; } }
+
+/* Escena por fecha: el logo arriba y el escenario abajo, que entra en el alto de la pantalla. */
+html[data-splash-scene] #volta-splash { animation-delay: 1600ms; }
+html[data-splash-scene] #volta-splash .splash-barbell { display: none; }
+html[data-splash-scene] #volta-splash .splash-mark { width: 3rem; height: 3rem; }
+html[data-splash-scene] #volta-splash .word { font-size: 2.6rem; }
+html[data-splash-scene] #volta-splash .splash-word { margin-top: 0.4rem; }
+#volta-splash .splash-stage[data-scene] { width: min(94vw, 44rem, calc((100dvh - 15rem) * 4 / 3)); margin-top: 0.5rem; }
+@media (min-width: 640px) {
+  html[data-splash-scene] #volta-splash .splash-mark { width: 3.75rem; height: 3.75rem; }
+  html[data-splash-scene] #volta-splash .word { font-size: 3.6rem; }
+}
+/* El número de una escena va adentro del arte, sobre su caja de LED (`--score-*` en el CSS de la escena). */
+.splash-stage[data-scene] .splash-score {
+  position: absolute; z-index: 3; left: var(--score-x); top: var(--score-y); width: var(--score-w); height: var(--score-h);
+  font-size: var(--score-size, 6cqw);
+}
+.splash-stage[data-scene] .splash-score-name { display: none; }
+.splash-stage[data-scene] .splash-score-off { font-size: 1em; text-shadow: 0 0 0.35em var(--season-glow); }
+
+@keyframes splash-lit { 0% { opacity: 0.2; } 30% { opacity: 1; } 45% { opacity: 0.35; } 60%, 100% { opacity: 1; } }
+@keyframes splash-roll { from { transform: translateY(0); } }

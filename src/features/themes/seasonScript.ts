@@ -1,4 +1,7 @@
 import { seasonalThemes, themeCoupons, themeSettings } from "@/demo/fixtures/themes";
+import { splashOff } from "@/demo/engine/splash-off";
+import { splashLayerMap, SPLASH_ART_VERSION } from "@/demo/engine/splash-scenes";
+import { BASE_PATH } from "@/lib/base-path";
 import { ADMIN_STORE_VERSION, STORAGE_PREFIX } from "@/stores/storage";
 import { SKINS } from "./skins";
 
@@ -6,8 +9,11 @@ import { SKINS } from "./skins";
  * Script del <head>: decide la temática ANTES de pintar (vista previa de "Probar temáticas", modo del panel y
  * fechas, guardados en localStorage) y marca `data-season`: el acento de temporada sale sin parpadeo. Repite la regla de `currentTheme` (src/demo/engine/themes.ts);
  * después de hidratar, ThemeStage la vuelve a aplicar con el engine. El panel queda sin temática.
- * Con una campaña, deja también lo que muestra la pantalla de carga de campaña (R3a, app/splash.css, `data-splash-campaign`): el nombre
- * (`--splash-name`) y el descuento de su cupón (`--splash-n` con `--splash-pre`/`--splash-suf`, y `data-splash-off`).
+ * Con una campaña deja también lo que muestra su pantalla de carga (app/splash.css): el nombre (`--splash-name`), el
+ * descuento del cupón para el cuentakilómetros (`splashOff`: `--splash-pre/suf`, `--sd0…2`, `data-splash-dn`) y,
+ * si la fecha ya tiene escena propia (R3c, `splash-scenes.ts`), `data-splash-scene` con sus capas en `--sl1…N`,
+ * que además se piden ya (preload) para que lleguen antes que la hoja de estilos. Sin escena queda la variante de
+ * campaña de R3a (`data-splash-campaign`).
  */
 const defaults = seasonalThemes.map(({ id, name, active, startsOn, endsOn, couponCode }) => ({ id, name, active, startsOn, endsOn, couponCode }));
 const coupons = themeCoupons.map(({ code, type, value, active }) => ({ code, type, value, active }));
@@ -17,7 +23,7 @@ export const seasonScript = `(function(){try{
 var d=document.documentElement,ls=window.localStorage;
 if(ls.getItem("volta-ambient")==="paused")d.classList.add("amb-paused");
 if(location.pathname.indexOf("/admin-demo")>-1)return;
-var T=${JSON.stringify(defaults)},S=${JSON.stringify(themeSettings)},K=${JSON.stringify(skins)},C=${JSON.stringify(coupons)};
+var T=${JSON.stringify(defaults)},S=${JSON.stringify(themeSettings)},K=${JSON.stringify(skins)},C=${JSON.stringify(coupons)},L=${JSON.stringify(splashLayerMap())};
 function j(k){try{return JSON.parse(ls.getItem(k)||"null")}catch(e){return null}}
 var pv=j("${STORAGE_PREFIX}theme-preview"),pid=pv&&pv.state?pv.state.previewId:null;
 var ad=j("${STORAGE_PREFIX}admin"),dd=ad&&ad.version===${ADMIN_STORE_VERSION}&&ad.state&&ad.state.data;
@@ -31,8 +37,11 @@ if(!id||!K[id])return;
 d.setAttribute("data-season",id);
 var th=null,c=null,st=d.style,q=JSON.stringify;for(i=0;i<T.length;i++)if(T[i].id===id)th=T[i];
 if(!th)return;st.setProperty("--splash-name",q(th.name));d.setAttribute("data-splash-campaign","");
+if(L[id]){d.setAttribute("data-splash-scene",id);var rm=matchMedia("(prefers-reduced-motion: reduce)").matches;
+for(i=1;i<=L[id];i++){var u="${BASE_PATH}/splash/"+id+"/"+i+".svg?v=${SPLASH_ART_VERSION}";st.setProperty("--sl"+i,'url("'+u+'")');
+if(!rm){var l=document.createElement("link");l.rel="preload";l.as="image";l.href=u;document.head.appendChild(l)}}}
 for(i=0;i<C.length;i++)if(C[i].code===th.couponCode)c=C[i];
-if(!c||c.active===false||c.type==="FREE_SHIPPING")return;
-var v=c.value,pre="\\u2212",suf=" %";if(c.type==="FIXED"){pre="\\u2212$ ";suf="";if(v%1000===0){v=v/1000;suf=".000"}}
-st.setProperty("--splash-n",String(v));st.setProperty("--splash-pre",q(pre));st.setProperty("--splash-suf",q(suf));d.setAttribute("data-splash-off","");
+var o=(${splashOff.toString()})(c);if(!o)return;
+st.setProperty("--splash-pre",q(o.pre));st.setProperty("--splash-suf",q(o.suf));for(i=0;i<3;i++)st.setProperty("--sd"+i,String(o.cols[i]));
+d.setAttribute("data-splash-dn",String(o.dn));d.setAttribute("data-splash-off","");
 }catch(e){}})();`;

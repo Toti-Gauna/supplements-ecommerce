@@ -1,0 +1,133 @@
+import { expect, test } from "@playwright/test";
+import { holdSplash, logoClear, previewTheme, recordEnds } from "./splash-helpers";
+
+/**
+ * R3c · Pantallas de carga por fecha: una escena mecánica propia por fecha (fase 1: Black Friday, Hot Sale, Vuelta al
+ * gym y Navidad, más la original). Las animaciones necesitan "no-preference" (la config usa "reduce").
+ */
+const REFERENCES = { "black-friday": 4, "hot-sale": 5, "vuelta-al-gym": 4, navidad: 7 } as const;
+
+test.beforeEach(async ({ page }) => { await page.emulateMedia({ reducedMotion: "no-preference" }); });
+
+test("Black Friday: sale su escena y se retira cuando termina su animación, con solo el arte de su fecha", async ({ page }) => {
+  await recordEnds(page);
+  const art: string[] = [];
+  page.on("response", (r) => { if (r.url().includes("/splash/")) art.push(`${r.status()} ${new URL(r.url()).pathname}`); });
+  await previewTheme(page, "black-friday");
+  await page.goto("", { waitUntil: "domcontentloaded" });
+  const splash = page.locator("#volta-splash");
+  await expect(splash).toBeVisible();
+  await expect(page.locator("html")).toHaveAttribute("data-splash-scene", "black-friday");
+  await expect(splash.locator(".splash-stage[data-scene='black-friday']")).toBeVisible();
+  await expect(splash).toBeHidden({ timeout: 5000 });
+  await expect(page.locator("html")).toHaveClass(/splash-done/);
+  const t = await page.evaluate(() => { const w = window as unknown as { ends: [string, number][]; splashDone: number }; return { ends: w.ends, splashDone: w.splashDone }; });
+  const at = (name: string) => t.ends.find(([n]) => n === name)?.[1];
+  expect(at("bf-shutter")).toBeDefined();
+  expect(at("splash-curtain")).toBeGreaterThan(at("bf-shutter")!);
+  expect(t.splashDone).toBeGreaterThanOrEqual(at("splash-curtain")!);
+  // Solo bajó el arte de su fecha, entero y sin errores.
+  expect(art.sort()).toEqual([1, 2, 3, 4].map((n) => `200 /supplements-ecommerce/splash/black-friday/${n}.svg`));
+});
+
+test("Black Friday quieta: la persiana es su propia capa (arte y animación), sin barra, y el logo libre", async ({ page }) => {
+  await holdSplash(page);
+  await previewTheme(page, "black-friday");
+  await page.goto("");
+  const splash = page.locator("#volta-splash");
+  const stage = splash.locator(".splash-stage[data-scene='black-friday']");
+  await expect(stage).toBeVisible();
+  const shutter = await stage.locator(".s3").evaluate((el) => {
+    const cs = getComputedStyle(el, "::before");
+    return { image: cs.backgroundImage, animation: cs.animationName };
+  });
+  expect(shutter.image).toContain("/splash/black-friday/3.svg");
+  expect(shutter.animation).toBe("bf-shutter");
+  await expect(splash.locator(".splash-barbell")).toBeHidden();
+  await logoClear(page);
+});
+
+test("dura entre 1,5 y 2 s: el telón cae a los 1,6 s y la mecánica termina antes", async ({ page }) => {
+  await holdSplash(page);
+  await previewTheme(page, "black-friday");
+  await page.goto("");
+  const timing = await page.locator("#volta-splash").evaluate((s) => {
+    const all = s.getAnimations({ subtree: true }).map((a) => a.effect!.getComputedTiming());
+    const curtain = getComputedStyle(s);
+    return { delay: curtain.animationDelay, duration: curtain.animationDuration, last: Math.max(...all.map((c) => Number(c.endTime))) };
+  });
+  expect(timing).toMatchObject({ delay: "1.6s", duration: "0.25s" });
+  expect(timing.last).toBeLessThanOrEqual(1850);
+  expect(timing.last).toBeGreaterThanOrEqual(1500);
+});
+
+test("Escape la cierra en medio de la escena", async ({ page }) => {
+  await holdSplash(page);
+  await previewTheme(page, "black-friday");
+  await page.goto("");
+  const splash = page.locator("#volta-splash");
+  await expect(splash.locator(".splash-stage[data-scene='black-friday']")).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(splash).toBeHidden();
+  await expect(page.locator("html")).toHaveClass(/splash-done/);
+});
+
+test("con reducir movimiento no hay pantalla de carga ni se baja el arte de la fecha", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  const art: string[] = [];
+  page.on("request", (r) => { if (r.url().includes("/splash/")) art.push(r.url()); });
+  await previewTheme(page, "black-friday");
+  await page.goto("");
+  await expect(page.locator("#volta-splash")).toBeHidden();
+  await expect(page.locator("html")).toHaveAttribute("data-splash-scene", "black-friday");
+  await page.waitForLoadState("networkidle");
+  expect(art).toEqual([]);
+});
+
+test("la original sigue: barra olímpica que se carga, sin escenario ni arte para bajar, y se retira sola", async ({ page }) => {
+  await recordEnds(page);
+  const art: string[] = [];
+  page.on("request", (r) => { if (r.url().includes("/splash/")) art.push(r.url()); });
+  await page.goto("", { waitUntil: "domcontentloaded" });
+  const splash = page.locator("#volta-splash");
+  await expect(splash).toBeVisible();
+  await expect(page.locator("html")).not.toHaveAttribute("data-splash-scene", /.*/);
+  await expect(splash).toBeHidden({ timeout: 5000 });
+  const ends = await page.evaluate(() => (window as unknown as { ends: [string, number][] }).ends.map(([n]) => n));
+  expect(ends).toContain("splash-load");
+  expect(ends).toContain("splash-curtain");
+  expect(art).toEqual([]);
+});
+
+test("la original quieta: la barra con sus ocho discos, sin escenario, centrada debajo del logo", async ({ page }) => {
+  await holdSplash(page);
+  await page.goto("");
+  const splash = page.locator("#volta-splash");
+  await expect(splash.locator(".splash-barbell .bp")).toHaveCount(8);
+  await expect(splash.locator(".splash-barbell")).toBeVisible();
+  await expect(splash.locator(".splash-stage")).toBeHidden();
+  const word = (await splash.locator(".splash-word").boundingBox())!;
+  const bar = (await splash.locator(".splash-barbell").boundingBox())!;
+  expect(bar.y).toBeGreaterThanOrEqual(word.y + word.height - 1);
+  expect(Math.abs(bar.x + bar.width / 2 - page.viewportSize()!.width / 2)).toBeLessThan(2);
+  expect(await splash.evaluate((s) => getComputedStyle(s).animationDelay)).toBe("1.15s");
+});
+
+for (const [id, layers] of Object.entries(REFERENCES)) {
+  for (const width of [375, 1440]) {
+    test(`${id} a ${width}px: escena propia con sus ${layers} capas, sin tapar el logo ni desbordar`, async ({ page }) => {
+      await page.setViewportSize({ width, height: width < 600 ? 812 : 900 });
+      await holdSplash(page);
+      await previewTheme(page, id);
+      await page.goto("");
+      const stage = page.locator(`#volta-splash .splash-stage[data-scene='${id}']`);
+      await expect(stage).toBeVisible();
+      const images = await stage.locator(".sl").evaluateAll((els) => els.map((el) => getComputedStyle(el, "::before").backgroundImage));
+      expect(images.filter((i) => i.includes(`/splash/${id}/`))).toHaveLength(layers);
+      expect(images.filter((i) => i !== "none" && !i.includes(`/splash/${id}/`))).toEqual([]);
+      await logoClear(page);
+      await expect(stage.locator(".splash-caption")).toBeVisible();
+      await page.keyboard.press("Escape");
+    });
+  }
+}

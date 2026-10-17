@@ -1,9 +1,12 @@
 "use client";
-import { ChevronLeft, ChevronRight, Pause, Play, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Clapperboard, Pause, Play, X } from "lucide-react";
+import { useReducedMotion } from "motion/react";
 import type { CSSProperties } from "react";
 import { Led } from "@/components/atoms/Led";
 import { cn } from "@/lib/cn";
 import { formatDayRange } from "@/lib/date";
+import { themeOffer } from "@/demo/engine/themes";
+import { playSplash } from "@/features/splash/playSplash";
 import { VITRINA_INTERVAL, useVitrina } from "./useVitrina";
 
 const SQUARE = "grid size-11 shrink-0 place-items-center border border-white/20 text-on-night hover:border-(--season-accent) hover:text-(--season-accent)";
@@ -16,7 +19,10 @@ const pad = (n: number) => String(n).padStart(2, "0");
  */
 export function VitrinaBar() {
   const { theme, index, total, playing, running, setPlaying, step, exit } = useVitrina();
+  const reduce = useReducedMotion() === true;
   if (!theme) return null;
+  // La pantalla de carga de la fecha, sin recargar (R3c): pausa la reproducción para que se vea entera.
+  const splash = () => { setPlaying(false); playSplash({ id: theme.id, name: theme.name, coupon: themeOffer(theme)?.coupon ?? null }); };
   return (
     <section aria-label="Modo vitrina" data-vitrina={theme.id}
       className="fixed inset-x-0 bottom-0 z-[70] border-t-2 border-(--season-accent) bg-night/95 pb-[env(safe-area-inset-bottom)] text-on-night shadow-[0_-18px_40px_-20px_rgb(0_0_0/0.9)] backdrop-blur">
@@ -40,6 +46,7 @@ export function VitrinaBar() {
             {playing ? <Pause size={16} aria-hidden="true" /> : <Play size={16} aria-hidden="true" />}
           </button>
           <button type="button" onClick={() => step(1)} aria-label="Fecha siguiente" className={SQUARE}><ChevronRight size={20} aria-hidden="true" /></button>
+          {!reduce && <button type="button" onClick={splash} aria-label="Ver la pantalla de carga de esta fecha" title="Pantalla de carga" className={SQUARE}><Clapperboard size={18} aria-hidden="true" /></button>}
           <button type="button" onClick={exit} className={cn(SQUARE, "w-auto gap-1.5 px-3 font-mono text-[12px] font-bold uppercase tracking-[0.08em]", "flex")}>
             <X size={16} aria-hidden="true" />Salir <span className="text-night-muted max-sm:hidden">(Esc)</span>
           </button>

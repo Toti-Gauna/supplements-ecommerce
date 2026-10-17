@@ -102,27 +102,32 @@ test("franja 'Próxima campaña': entre fechas en modo automático; nunca con un
   await expect(band).toHaveCount(0);
 });
 
-test("pantalla de carga de campaña: discos de la fecha y marcador con el descuento debajo del logo, ~1,8 s", async ({ page }) => {
+test("pantalla de carga de campaña (fechas sin escena propia hasta R3c fase 2): discos de la fecha y marcador con el descuento debajo del logo, ~1,8 s", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await holdSplash(page);
-  await previewTheme(page, "black-friday");
+  await previewTheme(page, "halloween");
   await page.goto("");
   const splash = page.locator("#volta-splash");
   await expect(splash).toBeVisible();
+  await expect(page.locator("html")).not.toHaveAttribute("data-splash-scene", /.*/);
   const score = splash.locator(".splash-score");
   await expect(score).toBeVisible();
-  expect(await score.locator(".splash-score-name").evaluate((el) => getComputedStyle(el, "::before").content)).toBe('"Black Friday"');
-  // El marcador cuenta hasta el descuento del cupón.
-  await expect.poll(() => score.locator(".splash-score-off").evaluate((el) => getComputedStyle(el).getPropertyValue("--splash-count").trim())).toBe("30");
+  expect(await score.locator(".splash-score-name").evaluate((el) => getComputedStyle(el, "::before").content)).toBe('"Halloween"');
+  // El marcador gira sus ruedas hasta el descuento del cupón (MONSTER20): se ven dos, la decena en 2 y la unidad en 0.
+  const wheels = score.locator(".splash-odo b");
+  await expect(wheels.nth(0)).toBeHidden();
+  await expect(wheels.nth(1)).toBeVisible();
+  expect(await wheels.nth(1).evaluate((el) => getComputedStyle(el).getPropertyValue("--d").trim())).toBe("2");
+  expect(await wheels.nth(2).evaluate((el) => getComputedStyle(el).getPropertyValue("--d").trim())).toBe("0");
   // Nunca tapa el logo: va debajo de la barra.
   const mark = (await splash.locator(".splash-mark").boundingBox())!;
-  const bar = (await splash.locator(".splash-bar").boundingBox())!;
+  const bar = (await splash.locator(".splash-barbell").boundingBox())!;
   const box = (await score.boundingBox())!;
   expect(box.y).toBeGreaterThanOrEqual(bar.y + bar.height);
   expect(box.y).toBeGreaterThan(mark.y + mark.height);
   // Los discos toman el color de la fecha y el telón cae a los 1,55 s (termina a los 1,8 s).
   const accent = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--season-accent").trim());
-  expect(await splash.locator(".splash-bar span").first().evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await resolveColor(page, accent));
+  expect(await splash.locator(".splash-barbell .bp").first().evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await resolveColor(page, accent));
   expect(await splash.evaluate((el) => getComputedStyle(el).animationDelay)).toBe("1.55s");
   await page.keyboard.press("Escape");
   await expect(splash).toBeHidden();

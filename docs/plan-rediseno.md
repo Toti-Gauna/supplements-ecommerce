@@ -278,6 +278,13 @@ deporte: CrossFit Open, Actividad Física, Futbolista, Running y Boxeador, punto
 sala de espera, pantalla de carga por fecha, modo vitrina, franja "Próxima campaña", panel Campañas con calendario,
 editor con vista previa doble, resultados del cupón, "Sacar las piezas" y "Descuento real". Sigue R3b (regalos).
 
+**R3c · pantallas de carga por fecha (pedido de Ignacio: "rehacer cada pantalla de carga y que sea única por cada
+una"), fase 1:** arquitectura para las 17 fechas (registro, HTML compartido chico, arte por capas que se baja solo para
+la fecha puesta), la original nueva (barra olímpica) y las 4 de referencia para aprobar: Black Friday, Hot Sale, Vuelta
+al gym y Navidad, más la vista previa en el editor de Campañas y "Pantalla de carga" en el modo vitrina. Cuadros en
+[`img/rediseno/r3c/`](img/rediseno/r3c/). **Fase 2:** las otras 13 escenas con el mismo nivel (la mecánica de cada una
+está en `src/demo/engine/splash-scenes.ts`); hasta entonces usan la variante de campaña de R3a.
+
 ### Regalos: de formulario a momento
 - **"Regalá energía", quien regala:**
   - elige el producto, el stack o una **gift card con monto** *(aprobada)*;

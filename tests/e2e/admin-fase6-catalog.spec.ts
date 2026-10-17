@@ -85,7 +85,8 @@ async function liquidateLot(page: Page) {
   await expect(buyCard(page).getByRole("radio", { name: "Vainilla" })).toBeChecked();
   await expect(page.getByText("Liquidación · vence 11/2026")).toBeVisible();
   await expect(page.getByText(money("54.900")).first()).toBeVisible();
-  await expect(page.getByText(/Lote VL-2603-W/)).toBeVisible();
+  // R2a: la etiqueta de laboratorio del envase dice el lote que sale primero y su vencimiento.
+  await expect(page.locator("dl[aria-label='Lote del envase']")).toContainText("VL-2603-W · 11/2026");
   await expect(page.getByRole("button", { name: /Agregar al carrito/ }).filter({ visible: true }).first()).toBeEnabled();
   await expect(page.getByText(money("32.900")).first()).toBeVisible();
   // El chocolate no está liquidado.

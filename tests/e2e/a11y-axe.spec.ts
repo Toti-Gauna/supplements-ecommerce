@@ -11,6 +11,8 @@ const TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 const PAGES: [string, string, string][] = [
   ["inicio", "", "main"],
   ["ficha", "p/overvolt-pre/", "h1"],
+  ["ficha hoja técnica (suplemento)", "p/ionic-whey/", "h1"],
+  ["ficha de equipamiento", "p/guantes-boxeo/", "h1"],
   ["categoría", "categorias/", "h1"],
   ["búsqueda con chips", "buscar/?q=proteina sin lactosa", "h1"],
   ["búsqueda sin resultados", "buscar/?q=creatina vainilla", "h1"],

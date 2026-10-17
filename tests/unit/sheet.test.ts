@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { finalPrice, unpricedVariants, withFinalPrices, withVariantPrice, editorServingPrice } from "@/demo/admin/variant-prices";
 import { fromPrice, listPrice } from "@/demo/engine/catalog";
 import { compareAlternatives, priceOptions, servingActive, sheetScore, sizePlates } from "@/demo/engine/sheet";
+import { gearReadouts, scoreReadouts } from "@/demo/engine/sheet-readouts";
 import { products } from "@/demo/fixtures/products";
 
 /** R2 · ficha "hoja técnica" y precio propio por presentación en el editor. */
@@ -28,6 +29,24 @@ describe("marcador de la ficha", () => {
     expect(sheetScore(whey, choco2, 2).days).toBe(15);
     const shaker = products.find((p) => p.categorySlug === "accesorios")!;
     expect(sheetScore(shaker, shaker.variants[0]!)).toMatchObject({ perServing: null, servings: null, days: null });
+  });
+
+  it("L1: debajo del total, la tira chica de cuánto rinde; el equipamiento no tiene tira", () => {
+    const choco2 = whey.variants.find((v) => v.id === "iw-chocolate-2lb")!;
+    const r = scoreReadouts(sheetScore(whey, choco2, 2), 2);
+    expect(r.map((x) => [x.key, x.value, x.unit])).toEqual([["per-serving", "1830", undefined], ["active", "24", "g"], ["servings", "30", undefined], ["days", "15", "días"]]);
+    expect(r[0]).toMatchObject({ amount: 1830, reading: "$ 1.830 por servicio" });
+    expect(r[3]!.reading).toBe("Te dura 15 días con 2 servicios por día");
+    const gloves = get("guantes-boxeo");
+    expect(scoreReadouts(sheetScore(gloves, gloves.variants[0]!))).toEqual([]);
+    // El equipamiento tiene su propia tira: colores, de qué peso a cuál, medidas y peso neto.
+    expect(gearReadouts(gloves).map((x) => [x.label, x.value])).toEqual([["Colores", "3"], ["Peso", "10–16 oz"], ["Medidas", "30×20×15 cm"], ["Peso neto", "680 g"]]);
+    expect(gearReadouts({ ...gloves, dims: undefined, variants: gloves.variants.filter((v) => v.color === gloves.variants[0]!.color) }).map((x) => x.key)).toEqual([]);
+    const talles = { ...gloves, optionNames: { size: "Talle" }, variants: ["S", "M", "XL"].map((size, i) => ({ ...gloves.variants[i]!, size })) };
+    expect(gearReadouts(talles).find((x) => x.key === "sizes")!.value).toBe("S a XL");
+    // Un suplemento de una sola toma: solo el activo, sin precio por servicio ni días.
+    const gel = get("gel-energetico");
+    expect(scoreReadouts(sheetScore(gel, { ...gel.variants[0]!, servings: 1 })).map((x) => x.key)).toEqual(["active"]);
   });
 
   it("dos precios explicados: transferencia con el descuento y tarjeta en cuotas redondeadas hacia arriba", () => {

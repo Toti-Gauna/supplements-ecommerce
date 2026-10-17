@@ -46,10 +46,10 @@ export function SpecGallery({ product: p, tint }: { product: Product; tint?: str
       <div role="group" aria-label="Vistas del producto" className="grid gap-px" style={{ gridTemplateColumns: `repeat(${views.length}, minmax(0, 1fr))` }}>
         {views.map((v, i) => (
           <button key={v} type="button" aria-pressed={view === v} onClick={() => setActive(v)}
-            className="plate relative flex h-14 min-w-0 flex-col items-start justify-center gap-0.5 px-3 text-left">
+            className="plate relative flex h-14 min-w-0 flex-col items-start justify-center gap-0.5 px-2.5 text-left sm:px-3">
             {view === v && <span aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[3px] bg-volt-ink" />}
             <span className={cn("font-lab text-[10px] font-bold", view === v ? "text-volt-ink" : "text-muted")} aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
-            <span className="font-lab text-[11px] font-bold uppercase tracking-[0.08em]">{NAME[v]}</span>
+            <span className="w-full truncate font-lab text-[10.5px] font-bold uppercase tracking-[0.04em] sm:text-[11px] sm:tracking-[0.08em]">{NAME[v]}</span>
           </button>
         ))}
       </div>

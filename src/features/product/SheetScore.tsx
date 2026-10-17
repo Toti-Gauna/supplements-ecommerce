@@ -1,51 +1,38 @@
-import type { ReactNode } from "react";
+import type { CSSProperties } from "react";
 import { Led, LedPrice } from "@/components/atoms/Led";
-import type { SheetScore as Score } from "@/demo/engine/sheet";
-import { formatARS } from "@/lib/money";
+import type { Readout } from "@/demo/engine/sheet-readouts";
+import { cn } from "@/lib/cn";
 
-function Cell({ label, children, note, signal = false }: { label: string; children: ReactNode; note?: ReactNode; signal?: boolean }) {
-  return (
-    <div className="plate relative flex min-w-0 flex-col gap-1.5 p-3 sm:p-3.5">
-      {signal && <span aria-hidden="true" className="absolute inset-x-0 top-0 h-[3px] bg-volt" />}
-      <dt className="font-lab text-[10.5px] font-bold uppercase tracking-[0.12em] text-muted">{label}</dt>
-      <dd className="flex min-h-8 items-end gap-1.5">{children}</dd>
-      {note && <dd className="font-lab text-[11px] text-muted">{note}</dd>}
-    </div>
-  );
-}
+/** En el celular la celda es angosta: el rótulo largo se abrevia (la lectura completa la tiene el marcador). */
+const SHORT: Partial<Record<Readout["key"], string>> = { "per-serving": "Por serv." };
 
 /**
- * Marcador de la hoja técnica, arriba del pliegue en el celular: precio por servicio, el activo por servicio
- * (proteína, creatina, cafeína…), servicios y "te dura N días" (con los servicios por día de la calculadora). Cambia
- * con un flip de marcador al elegir otra presentación.
+ * La tira chica del marcador, debajo del precio total (L1: primero el total, abajo cuánto rinde): precio por servicio,
+ * el activo por servicio, servicios y "te dura N días" con los servicios por día de la calculadora. Cambia con un flip
+ * al elegir otra presentación. Sin lecturas (equipamiento) no se dibuja.
  */
-export function SheetScore({ score, perDay, flipKey }: { score: Score; perDay: number; flipKey: string }) {
-  const { perServing, servings, active, days, price } = score;
-  const led = "h-7 sm:h-8";
+export function SheetScore({ readouts, flipKey }: { readouts: Readout[]; flipKey: string }) {
+  if (readouts.length === 0) return null;
+  const led = "h-[15px] max-w-full sm:h-5";
+  // Los datos en texto (medidas, talles) no entran en cuatro columnas de celular: van de a dos.
+  const text = readouts.some((r) => r.text);
   return (
-    <dl aria-label="Datos por servicio" className="grid grid-cols-2 gap-px overflow-hidden rounded-sm border border-line bg-line">
-      <Cell label={perServing === null ? "Precio" : "Por servicio"} signal>
-        <LedPrice key={flipKey} amount={perServing ?? price} suffix={perServing === null ? "" : " por servicio"} motion="flip" className={led} signClassName="text-2xl" />
-      </Cell>
-      {active ? (
-        <Cell label={`${active.label} / serv.`}>
-          <Led key={flipKey} value={active.amount} label={`${active.amount} ${active.unit} de ${active.label.toLowerCase()} por servicio`} tone="chalk" motion="flip" className={led} />
-          <span className="pb-0.5 font-lab text-sm font-bold text-muted" aria-hidden="true">{active.unit}</span>
-        </Cell>
-      ) : (
-        <Cell label="Envase"><span className="font-lab text-lg font-bold">{formatARS(price)}</span></Cell>
-      )}
-      <Cell label="Servicios">
-        {servings ? <Led key={flipKey} value={String(servings)} label={`${servings} servicios`} tone="chalk" motion="flip" className={led} /> : <span className="font-lab text-lg font-bold">1</span>}
-      </Cell>
-      <Cell label="Te dura" note={days ? `con ${perDay} por día` : undefined}>
-        {days ? (
-          <>
-            <Led key={`${flipKey}-${perDay}`} value={String(days)} label={`Te dura ${days} días con ${perDay} servicio${perDay === 1 ? "" : "s"} por día`} motion="flip" className={led} />
-            <span aria-hidden="true" className="pb-0.5 font-lab text-sm font-bold text-muted">días</span>
-          </>
-        ) : <span className="font-lab text-sm font-bold text-muted">Un uso</span>}
-      </Cell>
+    <dl aria-label={text ? "Datos de ficha" : "Cuánto rinde"} style={{ "--cols": readouts.length } as CSSProperties}
+      className={cn("grid gap-px overflow-hidden rounded-sm border border-line bg-line", text ? "grid-cols-2 sm:grid-cols-[repeat(var(--cols),minmax(0,1fr))]" : "grid-cols-[repeat(var(--cols),minmax(0,1fr))]")}>
+      {readouts.map((r) => (
+        <div key={r.key} className="flex min-w-0 flex-col gap-1.5 bg-surface px-2 py-2 sm:px-3 sm:py-2.5">
+          <dt className="truncate font-lab text-[9.5px] font-bold uppercase tracking-[0.08em] text-muted sm:text-[10px] sm:tracking-[0.12em]">
+            {SHORT[r.key] ? <><span className="sm:hidden">{SHORT[r.key]}</span><span className="max-sm:hidden">{r.label}</span></> : r.label}
+          </dt>
+          <dd className="flex min-w-0 items-end gap-1">
+            {r.text ? <span className="truncate font-lab text-[13px] font-bold leading-none sm:text-sm">{r.value}</span>
+              : r.amount !== undefined
+              ? <LedPrice key={flipKey} amount={r.amount} suffix=" por servicio" tone="chalk" motion="flip" className={led} signClassName="text-[13px] sm:text-base" />
+              : <Led key={`${flipKey}-${r.value}`} value={r.value} label={r.reading} tone={r.key === "days" ? "volt" : "chalk"} motion="flip" className={led} />}
+            {r.unit && <span aria-hidden="true" className="font-lab text-[10.5px] font-bold leading-none text-muted sm:text-xs">{r.unit}</span>}
+          </dd>
+        </div>
+      ))}
     </dl>
   );
 }

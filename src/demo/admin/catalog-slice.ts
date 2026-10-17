@@ -5,6 +5,7 @@ import { normalizeSports } from "../engine/sports";
 import type { Category, Product } from "../types";
 import { applyPriceChange, undoPriceChange, type PriceScope, type Rounding } from "./bulk-price";
 import { slugify } from "./import/cells";
+import { withPriceLog } from "./price-log";
 import { setClearance, withStock } from "./lots";
 import { applyStockOp, type StockOp } from "./stock";
 import type { ImportPlan } from "./import/plan";
@@ -99,11 +100,11 @@ export function createCatalogActions(set: Set): CatalogActions {
     applyBulkPrice: (scope, pct, step, label) =>
       set((s) => {
         const { products: next, undo } = applyPriceChange(s.data.products, scope, pct, step, label);
-        return { data: { ...s.data, products: next }, lastPriceChange: undo, audit: log(s, `Precios ${label}`, `${undo.count} variantes`) };
+        return { data: { ...s.data, ...withPriceLog(s.data, next) }, lastPriceChange: undo, audit: log(s, `Precios ${label}`, `${undo.count} variantes`) };
       }),
     undoBulkPrice: () =>
       set((s) => (s.lastPriceChange
-        ? { data: { ...s.data, products: undoPriceChange(s.data.products, s.lastPriceChange) }, lastPriceChange: null, audit: log(s, `Aumento deshecho (${s.lastPriceChange.label})`, `${s.lastPriceChange.count} variantes`) }
+        ? { data: { ...s.data, ...withPriceLog(s.data, undoPriceChange(s.data.products, s.lastPriceChange)) }, lastPriceChange: null, audit: log(s, `Aumento deshecho (${s.lastPriceChange.label})`, `${s.lastPriceChange.count} variantes`) }
         : {})),
     saveGoals: (goals) => set((s) => ({ data: { ...s.data, goals: normalizeGoals(goals) }, audit: log(s, "Objetivos guardados", "Categorías y objetivos") })),
     saveSports: (sports) => set((s) => ({ data: { ...s.data, sports: normalizeSports(sports, s.data.packs ?? []) }, audit: log(s, "Deportes guardados", "Categorías y objetivos") })),

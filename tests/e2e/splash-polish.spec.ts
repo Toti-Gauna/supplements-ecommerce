@@ -23,7 +23,7 @@ test("símbolo, nombre y barra de carga centrados; lienzo oscuro hasta que se va
   expect(await page.evaluate(() => getComputedStyle(document.documentElement).backgroundColor)).toBe("rgba(0, 0, 0, 0)");
 });
 
-test("con temática, la pantalla de carga es la misma: solo el filo de la barra toma el acento de temporada", async ({ page }) => {
+test("con temática, la pantalla de carga sigue sobre la noche de la marca: la fecha solo pone su acento (variante de campaña en r3a-campanas)", async ({ page }) => {
   await holdSplash(page);
   await previewTheme(page, "black-friday");
   await page.goto("");

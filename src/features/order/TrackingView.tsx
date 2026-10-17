@@ -6,6 +6,7 @@ import { checkedLot } from "@/demo/engine/tracking";
 import { DEMO_TODAY } from "@/demo/fixtures/admin-orders";
 import { whatsappLink } from "@/lib/whatsapp";
 import { skinOf } from "@/features/themes/skins";
+import { SeasonTicket } from "@/features/campaigns/SeasonTicket";
 import { useCurrentTheme } from "@/features/themes/useCurrentTheme";
 import { useAdmin } from "@/stores/admin";
 import { useHydrated } from "@/stores/hydration";
@@ -58,6 +59,7 @@ export function TrackingView({ token }: { token: string }) {
       <section aria-label="Etapas del pedido">
         <StageLanes key={stateId} steps={timelineFor(state.current, order.dates)} />
       </section>
+      <SeasonTicket where="seguimiento" />
       {stateId === "pending" && (
         <section aria-labelledby="comprobante" className="flex flex-col gap-3 rounded-sm border-2 border-dashed border-volt-ink/40 bg-surface p-5 sm:p-6">
           <h2 id="comprobante" className="font-display text-2xl">Falta el comprobante</h2>

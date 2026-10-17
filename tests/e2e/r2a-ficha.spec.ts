@@ -88,8 +88,11 @@ test("barra fija del celular: total que sigue a la cantidad, Agregar y Regalar",
   await expect(bar).toBeVisible();
   const first = (await bar.locator("[data-bar-total]").textContent())!;
   const amount = Number(first.match(/\$\s?([\d.]+)/)![1]!.replace(/\./g, ""));
-  await page.getByLabel("Cantidad:").selectOption("2");
-  await expect(bar.locator("[data-bar-total]")).toContainText((amount * 2).toLocaleString("es-AR"));
+  // La ficha es HTML estático: hasta que React toma la página, elegir la cantidad no cambia nada (se reintenta).
+  await expect(async () => {
+    await page.getByLabel("Cantidad:").selectOption("2");
+    await expect(bar.locator("[data-bar-total]")).toContainText((amount * 2).toLocaleString("es-AR"), { timeout: 1000 });
+  }).toPass();
   await bar.getByRole("button", { name: "Regalar" }).click();
   await expect(page.getByRole("dialog")).toBeVisible();
   await page.keyboard.press("Escape");

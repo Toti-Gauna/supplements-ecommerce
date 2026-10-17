@@ -4,6 +4,8 @@ import type { GamePrizeConfig } from "../fixtures/game";
 import type { WheelConfig, WheelPrize } from "../fixtures/wheel";
 import type { Coupon, HeroFeature, Faq, Mission, Product, SeasonalTheme, ShippingZone, ThemeSettings } from "../types";
 import { auditEntry, type AdminData } from "./defaults";
+import { withPriceLog } from "./price-log";
+import { withShopOrderCoupon } from "./campaign-results";
 import type { ClaimStatus } from "./types";
 
 type Set = (fn: (s: AdminData) => Partial<AdminData>) => void;
@@ -47,7 +49,7 @@ export function createDataActions(set: Set): DataActions {
     set((s) => ({ data: { ...s.data, ...fn(s.data) }, audit: [auditEntry(action, entity), ...s.audit].slice(0, 80) }));
 
   return {
-    saveProduct: (p) => edit("Producto guardado", p.name, (d) => ({ products: upsert(d.products, p, (x) => x.slug === p.slug) })),
+    saveProduct: (p) => edit("Producto guardado", p.name, (d) => withPriceLog(d, upsert(d.products, p, (x) => x.slug === p.slug))),
     toggleProductActive: (slug) => edit("Producto activado/desactivado", slug, (d) => ({ products: d.products.map((p) => (p.slug === slug ? { ...p, active: p.active === false } : p)) })),
     moveCategory: (slug, dir) => edit("Orden de categorías", slug, (d) => {
       const sorted = [...d.categories].sort((a, b) => a.sortOrder - b.sortOrder);
@@ -65,14 +67,17 @@ export function createDataActions(set: Set): DataActions {
     saveGamePrizes: (game) => edit("Premios de Shaker Rush actualizados", "Juego", () => ({ game })),
     addWheelPrize: (prize) => edit(`Premio de la ruleta creado: ${prize.name}`, prize.id, (d) => ({ wheel: { ...d.wheel, prizes: [...(d.wheel.prizes ?? []), prize] } })),
     addPrizeCoupon: (c, action = "Premio de ruleta emitido") => edit(action, c.code, (d) => ({ coupons: [...d.coupons.filter((x) => x.code !== c.code), c] })),
-    redeemCoupon: (code) => edit("Cupón usado en un pedido", code, (d) => ({ coupons: d.coupons.map((c) => (c.code === code ? { ...c, usedCount: (c.usedCount ?? 0) + 1 } : c)) })),
+    redeemCoupon: (code) => {
+      set((s) => ({ orders: withShopOrderCoupon(s.orders, s.data.coupons.find((c) => c.code === code)) }));
+      edit("Cupón usado en un pedido", code, (d) => ({ coupons: d.coupons.map((c) => (c.code === code ? { ...c, usedCount: (c.usedCount ?? 0) + 1 } : c)) }));
+    },
     saveSettings: (patch) => edit("Ajustes guardados", Object.keys(patch).join(", "), (d) => ({ settings: { ...d.settings, ...patch } })),
     saveZone: (z) => edit("Zona de envío", z.name, (d) => ({ zones: upsert(d.zones, z, (x) => x.id === z.id) })),
     saveHero: (hero) => edit("Carrusel del inicio actualizado", "Inicio", (d) => ({ content: { ...d.content, hero } })),
     saveHomeCta: (homeCta) => edit("Textos de inicio", "Inicio", (d) => ({ content: { ...d.content, homeCta } })),
     saveFaqs: (faqs) => edit("Preguntas frecuentes", "Ayuda", (d) => ({ content: { ...d.content, faqs } })),
-    saveTheme: (t) => edit("Temática guardada", t.name, (d) => ({ themes: upsert(d.themes, t, (x) => x.id === t.id) })),
-    saveThemeSettings: (patch) => edit("Modo de temáticas", "Temáticas", (d) => ({ themeSettings: { ...d.themeSettings, ...patch } })),
+    saveTheme: (t) => edit("Campaña guardada", t.name, (d) => ({ themes: upsert(d.themes, t, (x) => x.id === t.id) })),
+    saveThemeSettings: (patch) => edit("Modo de campañas", "Campañas", (d) => ({ themeSettings: { ...d.themeSettings, ...patch } })),
     toggleUserBlocked: (id) =>
       set((s) => ({ users: s.users.map((u) => (u.id === id ? { ...u, blocked: !u.blocked } : u)), audit: [auditEntry("Bloqueo de usuario (visual)", id), ...s.audit] })),
     resolveClaim: (id, status, resolution) =>

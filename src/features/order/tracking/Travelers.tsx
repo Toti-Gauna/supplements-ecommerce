@@ -20,6 +20,8 @@ const OUTFIT: Record<SeasonId, string> = {
   "black-friday": "con la etiqueta del Black Friday", navidad: "con gorro de Papá Noel", "ano-nuevo": "con gorro de fiesta",
   "san-valentin": "con un corazón", "vuelta-al-gym": "con su pesa rusa", "hot-sale": "a todo fuego", "dia-del-padre": "con su medalla",
   "dia-del-amigo": "con su shaker", "operacion-verano": "con el sol de la costa",
+  "crossfit-open": "con su pesa rusa", "dia-actividad-fisica": "a paso firme", "dia-del-futbolista": "con la pelota al pie",
+  "dia-del-running": "a ritmo de carrera", "dia-del-boxeador": "con los guantes puestos",
 };
 
 /**

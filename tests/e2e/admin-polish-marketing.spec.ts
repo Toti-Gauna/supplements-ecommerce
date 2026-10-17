@@ -48,7 +48,7 @@ test.describe("escritorio con mouse", () => {
   test("8.3.24 Marketing por tarjetas: cada una abre su subpágina con migas y Volver; links directos y Atrás funcionan", async ({ page }) => {
     await page.goto("admin-demo/marketing/");
     const tools = page.getByRole("list", { name: "Herramientas de marketing" });
-    for (const name of ["Misiones y premios", "Emails automáticos", "Cupones y ruleta", "Temáticas", "Estudio de contenido", "Contenido"]) await expect(tools.getByRole("link", { name: new RegExp(name) })).toBeVisible();
+    for (const name of ["Misiones y premios", "Emails automáticos", "Cupones y ruleta", "Campañas", "Estudio de contenido", "Contenido"]) await expect(tools.getByRole("link", { name: new RegExp(name) })).toBeVisible();
     await tools.getByRole("link", { name: /Cupones y ruleta/ }).click();
     await expect(page).toHaveURL(/cupones\/$/);
     await expect(page.getByRole("heading", { level: 1, name: /Cupones y ruleta/ })).toBeVisible();

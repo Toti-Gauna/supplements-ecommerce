@@ -5,7 +5,7 @@ import { ORDER_PREFIX } from "./house";
 /** Fecha de referencia de la demo: todas las cifras "de hoy/semana/mes" se calculan contra esta fecha. */
 export const DEMO_TODAY = "2026-10-05";
 
-type Seed = Omit<AdminOrder, "total" | "notes" | "log"> & { notes?: string[]; log?: AdminOrder["log"] };
+type Seed = Omit<AdminOrder, "total" | "notes" | "log" | "coupon"> & { notes?: string[]; log?: AdminOrder["log"]; /** Cupón de la campaña usado en la compra (el descuento se calcula al cargar). */ couponCode?: string };
 
 /** Pedidos FICTICIOS. Nombres, emails y teléfonos inventados (dominio ejemplo.com). */
 export const orderSeeds: Seed[] = [
@@ -19,7 +19,7 @@ export const orderSeeds: Seed[] = [
   { code: `${ORDER_PREFIX}-000123`, createdAt: "2026-10-02T16:30:00-03:00", customer: { name: "Diego Álvarez", email: "diego.a@ejemplo.com", phone: "223 555-0123" }, userId: "u-diego", status: "PAYMENT_REVIEW", fulfillment: "LOCAL_DELIVERY", paymentMethod: "BANK_TRANSFER", address: "Güemes 2800, Mar del Plata (7600)", promisedDate: "2026-10-14",
     lines: [{ id: "a", productSlug: "mass-gainer", variantId: "mg-chocolate-3kg", quantity: 1 }],
     proof: { fileName: "comprobante-123.pdf", receivedAt: "2026-10-02T17:02:00-03:00", status: "IN_REVIEW" } },
-  { code: `${ORDER_PREFIX}-000122`, createdAt: "2026-10-02T10:15:00-03:00", customer: { name: "Valentina Sosa", email: "vale.s@ejemplo.com", phone: "223 555-0122" }, userId: "u-vale", status: "PAID", fulfillment: "SHIPPING", paymentMethod: "CHECKOUT_PRO", address: "San Martín 450, Necochea (7630)", promisedDate: "2026-10-26",
+  { code: `${ORDER_PREFIX}-000122`, createdAt: "2026-10-02T10:15:00-03:00", customer: { name: "Valentina Sosa", email: "vale.s@ejemplo.com", phone: "223 555-0122" }, couponCode: "MAMA15", userId: "u-vale", status: "PAID", fulfillment: "SHIPPING", paymentMethod: "CHECKOUT_PRO", address: "San Martín 450, Necochea (7630)", promisedDate: "2026-10-26",
     lines: [{ id: "a", productSlug: "isolate-zero", variantId: "iz-chocolate-2lb", quantity: 1 }] },
   { code: `${ORDER_PREFIX}-000121`, createdAt: "2026-10-01T13:00:00-03:00", customer: { name: "Julián Paz", email: "julian.p@ejemplo.com", phone: "223 555-0121" }, userId: "u-julian", status: "IN_PRODUCTION", fulfillment: "LOCAL_DELIVERY", paymentMethod: "QR_MANUAL", address: "Rivadavia 3200, Mar del Plata (7600)", promisedDate: "2026-10-08", stage: "lot-check",
     lines: [{ id: "a", productSlug: "creatina-monohidrato", variantId: "cm-sin-sabor-500", quantity: 1 }],
@@ -43,7 +43,7 @@ export const orderSeeds: Seed[] = [
   { code: `${ORDER_PREFIX}-000113`, createdAt: "2026-10-01T09:20:00-03:00", customer: { name: "Ana López", email: "ana.l@ejemplo.com", phone: "223 555-0113" }, userId: null, status: "PAID", fulfillment: "PICKUP", paymentMethod: "BANK_TRANSFER", promisedDate: "2026-10-08",
     lines: [{ id: "a", productSlug: "barra-proteica", variantId: "bp-mani-x12", quantity: 2 }],
     proof: { fileName: "transferencia-113.pdf", receivedAt: "2026-10-01T10:05:00-03:00", status: "APPROVED" }, notes: ["Pedido para su gimnasio (sábado 10/10). Retira el jueves."] },
-  { code: `${ORDER_PREFIX}-000111`, createdAt: "2026-10-02T08:45:00-03:00", customer: { name: "Julián Paz", email: "julian.p@ejemplo.com", phone: "223 555-0121" }, userId: "u-julian", status: "PAID", fulfillment: "LOCAL_DELIVERY", paymentMethod: "CHECKOUT_PRO", address: "Rivadavia 3200, Mar del Plata (7600)", promisedDate: "2026-10-08",
+  { code: `${ORDER_PREFIX}-000111`, createdAt: "2026-10-02T08:45:00-03:00", customer: { name: "Julián Paz", email: "julian.p@ejemplo.com", phone: "223 555-0121" }, couponCode: "MAMA15", userId: "u-julian", status: "PAID", fulfillment: "LOCAL_DELIVERY", paymentMethod: "CHECKOUT_PRO", address: "Rivadavia 3200, Mar del Plata (7600)", promisedDate: "2026-10-08",
     lines: [{ id: "a", productSlug: "colageno", variantId: "co-limon-300", quantity: 1 }] },
   { code: `${ORDER_PREFIX}-000110`, createdAt: "2026-09-30T15:15:00-03:00", customer: { name: "Rocío Díaz", email: "rocio.d@ejemplo.com", phone: "223 555-0117" }, userId: null, status: "IN_PRODUCTION", fulfillment: "LOCAL_DELIVERY", paymentMethod: "BANK_TRANSFER", address: "Independencia 1900, Mar del Plata (7600)", promisedDate: "2026-10-09", stage: "picking",
     lines: [{ id: "a", productSlug: "bcaa-211", variantId: "bc-uva-300", quantity: 1 }],

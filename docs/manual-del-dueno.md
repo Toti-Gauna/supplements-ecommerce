@@ -20,7 +20,7 @@ escrito con la tienda de ejemplo **VOLTA**; en tu tienda vas a ver tu marca, per
 9. [Proveedores, compras, costos e insumos](#9-proveedores-compras-costos-e-insumos)
 10. [Emails automáticos](#10-emails-automáticos)
 11. [Cupones, ruleta, juego, misiones y descuento stack](#11-cupones-ruleta-juego-misiones-y-descuento-stack)
-12. [Temáticas](#12-temáticas)
+12. [Campañas](#12-campañas)
 13. [Estudio de contenido (Instagram)](#13-estudio-de-contenido-instagram)
 14. [Contenido de la tienda](#14-contenido-de-la-tienda)
 15. [Ajustes](#15-ajustes)
@@ -452,21 +452,30 @@ todo el período: es lo que tenés que tener en stock o pedirle al proveedor (**
 
 ---
 
-## 12. Temáticas
+## 12. Campañas
 
-Doce fechas comerciales con estética de gimnasio (Día de la Madre, Halloween, CyberMonday, Black Friday, Navidad, Año
-Nuevo, San Valentín, Vuelta al gym, Hot Sale, Día del Padre, Día del Amigo y Operación verano). Cada una cambia los
-colores de la tienda y suma su banner, cupón, ofertas y pantalla de carga.
+Doce fechas comerciales (Día de la Madre, Halloween, CyberMonday, Black Friday, Navidad, Año Nuevo, San Valentín,
+Vuelta al gym, Hot Sale, Día del Padre, Día del Amigo y Operación verano) y cinco días del deporte (CrossFit Open, Día
+de la Actividad Física, del Futbolista, del Running y del Boxeador). Cada una cambia los colores de la tienda y suma su
+key visual, cinta, cupón, productos y pantalla de carga. Antes se llamaba **Temáticas** (el enlace viejo te trae acá).
 
-![Temáticas en el panel](img/panel-tematicas.png)
+![Calendario de campañas](img/rediseno/r3a/panel-calendario-1440-light.png)
 
-1. Entrá a **Temáticas**.
-2. En **Modo** elegí **Automática según la fecha** (sale sola cuando llega cada fecha), **Siempre la que elija** (y
-   elegí cuál) o **Sin temática**.
-3. Arriba ves **Hoy ve el cliente** y la **Próxima por fecha**.
-4. Para cambiar una: **Editar** → **Titular**, **Bajada**, **Texto de la cinta superior**, fechas (**Desde** y
-   **Hasta**) y **Productos en oferta** → **Guardar temática**. Con **Habilitada** apagado, esa fecha no sale.
-5. **Ver** te la muestra en la tienda.
+1. Entrá a **Campañas**. Arriba está la **Próxima campaña** con los días que faltan (también la ves en el Inicio).
+2. En **Modo** elegí **Automática según la fecha**, **Siempre la que elija** (y la **Campaña fija**) o **Sin campaña**.
+3. El **Calendario del año** muestra cada campaña como una barra. Los días del deporte van rayados y con una mancuerna;
+   Hot Sale y CyberMonday llevan el sello **CACE** y Black Friday el sello **BF**. Tocá una para editarla.
+4. En el editor cambiás **Titular**, **Bajada**, **Texto de la cinta superior**, **Desde** y **Hasta**, el **Cupón de la
+   campaña** (o **Crear cupón** ahí mismo) y los **Productos en oferta**, mirando la **Vista previa en vivo** en celular y
+   computadora. Tocá **Guardar campaña**. Con **Campaña habilitada** apagado, esa fecha no sale.
+5. Dos campañas no pueden compartir un día: si las fechas se pisan, el editor te dice con cuál y no guarda.
+6. **Descuento real**: si subiste el precio antes de la campaña y con el cupón no queda por debajo del precio más bajo de
+   los últimos 30 días, el editor (y **Cupones**) te avisa en qué productos. Bajá el precio, subí el descuento o sacalos.
+7. Abajo, **Resultados de los cupones**: usos, pedidos, descuento dado y lo vendido con el cupón de cada campaña.
+8. **Sacar las piezas** arma el post 1:1, la historia 9:16 con la cuenta regresiva y la gift card de la fecha con el key
+   visual de la campaña. **Descargar las 3** las baja en PNG (también desde el **Estudio de contenido**).
+
+![Editor de la campaña con la vista previa doble](img/rediseno/r3a/panel-editor-1440-light.png)
 
 El botón **Probar temáticas** de la tienda (lo prendés o apagás acá) sirve para mostrar cualquier fecha sin cambiarle
 nada al resto: cada uno la ve solo en su equipo.
@@ -486,6 +495,8 @@ Placas para Instagram con tus potes animados, sin diseñador.
 5. Elegí el formato: **Post 1:1**, **Historia o reel 9:16** o **Carrusel 4:5**.
 6. Tocá **Descargar imagen (PNG)** o **Grabar video** (con música). El carrusel baja una imagen por diapositiva.
 7. Abajo está el **Texto para el posteo**: **Copiar texto** y pegalo en Instagram. **Otra idea** te propone otro gancho.
+8. **Piezas de la campaña** (arriba) arma el post, la historia con cuenta regresiva y la gift card de la fecha con su
+   key visual (ver [Campañas](#12-campañas)).
 
 ---
 
@@ -558,7 +569,7 @@ activado no avanza solo. Debajo quedan **Comprá por categoría**, **Entrená po
 2. Revisá **Costos y margen** con el filtro **Margen bajo o pérdida**.
 
 **Antes de cada fecha especial**
-1. **Temáticas**: revisá el cupón y los productos en oferta de la fecha.
+1. **Campañas**: revisá el cupón, los productos y el aviso de descuento real de la próxima fecha, y sacá las piezas.
 2. **Estudio**: prepará el post y la historia.
 
 ---

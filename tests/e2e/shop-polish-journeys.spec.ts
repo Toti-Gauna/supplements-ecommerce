@@ -216,7 +216,7 @@ for (const d of DEVICES) {
 
     test("E · seguimiento: en producción → en camino → entregado → cambio de temática → repetir", async ({ page }) => {
       // Desde la Fase 5 "Probar temáticas" viene prendido (se apaga desde el panel).
-      await page.goto("admin-demo/tematicas/");
+      await page.goto("admin-demo/campanas/");
       await expect(page.getByRole("switch", { name: /Probar temáticas/ })).toHaveAttribute("aria-checked", "true");
       const w = watch(page);
       await page.goto("pedido/demo-volta/");

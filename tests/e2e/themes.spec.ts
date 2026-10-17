@@ -4,16 +4,18 @@ import { guardNetwork } from "./helpers";
 test("probar temáticas: Halloween cambia cinta, acento, carrusel y ofertas (el logo queda limpio); el cupón queda en el carrito", async ({ page }) => {
   const assertNoExternal = guardNetwork(page);
   // El botón arranca prendido (para mostrarle la demo al cliente) y la tienda arranca con la temática original.
-  await page.goto("admin-demo/tematicas/");
+  await page.goto("admin-demo/campanas/");
   await expect(page.getByRole("switch", { name: /Probar temáticas/ })).toBeChecked();
   await expect(page.getByLabel("Modo", { exact: true })).toHaveValue("off");
   // El panel deja puesta una temática (Navidad fija) para ver que "Original" la tapa solo en este navegador.
   await page.getByLabel("Modo", { exact: true }).selectOption("fixed");
-  await page.getByLabel("Temática fija").selectOption("navidad");
+  await page.getByLabel("Campaña fija").selectOption("navidad");
   await page.goto("");
   await page.getByRole("button", { name: "Probar temáticas" }).first().click();
   const picker = page.getByRole("dialog", { name: "Probar temáticas" });
-  await expect(picker.getByRole("button", { name: /^Probar / })).toHaveCount(13);
+  // Original y las 17 fechas (12 comerciales y 5 días del deporte), más el modo vitrina (R3a), que no recarga.
+  await expect(picker.getByRole("button", { name: /^Probar / })).toHaveCount(18);
+  await expect(picker.getByRole("button", { name: /Modo vitrina/ })).toBeVisible();
   await picker.getByRole("button", { name: "Probar Halloween" }).click();
   await expect(picker).toBeHidden();
 
@@ -49,25 +51,26 @@ test("probar temáticas: Halloween cambia cinta, acento, carrusel y ofertas (el 
 });
 
 test("el panel edita la temática y su modo; la tienda lo refleja", async ({ page }) => {
-  await page.goto("admin-demo/tematicas/");
+  await page.goto("admin-demo/campanas/");
   // Sin vista previa: manda el modo del panel.
   await page.evaluate(() => localStorage.removeItem("volta-demo:theme-preview"));
-  await expect(page.getByRole("heading", { name: /Temáticas/ })).toBeVisible();
-  await page.getByRole("button", { name: "Editar Navidad" }).click();
-  const editor = page.getByRole("dialog", { name: "Editar Navidad" });
-  await editor.getByLabel("Titular").fill("Feliz Navidad con energía");
-  await editor.getByRole("button", { name: "Guardar temática" }).click();
-  await expect(editor).toBeHidden();
+  await expect(page.getByRole("heading", { level: 1, name: "Campañas" })).toBeVisible();
+  await page.getByRole("link", { name: /^Editar Navidad/ }).click();
+  await expect(page.getByRole("heading", { level: 1, name: "Navidad" })).toBeVisible();
+  await page.getByLabel("Titular").fill("Feliz Navidad con energía");
+  await page.getByRole("button", { name: "Guardar campaña" }).click();
+  await expect(page.getByRole("status").filter({ hasText: "Navidad guardada" })).toBeVisible();
+  await page.getByRole("link", { name: "Volver a Campañas" }).click();
 
   await page.getByLabel("Modo", { exact: true }).selectOption("fixed");
-  await page.getByLabel("Temática fija").selectOption("navidad");
+  await page.getByLabel("Campaña fija").selectOption("navidad");
   await page.goto("");
   await expect(page.getByRole("heading", { name: "Feliz Navidad con energía" })).toBeVisible();
   await expect(page.locator("[data-theme-ribbon='navidad']")).toContainText("NAVIDAD15");
   await expect(page.getByRole("button", { name: "Probar temáticas" }).first()).toBeVisible();
 
   // Sin temática y sin el botón de la demo: la tienda vuelve a VOLTA de siempre.
-  await page.goto("admin-demo/tematicas/");
+  await page.goto("admin-demo/campanas/");
   await page.getByLabel("Modo", { exact: true }).selectOption("off");
   await page.getByRole("switch", { name: /Probar temáticas/ }).click();
   await page.goto("");
@@ -83,7 +86,7 @@ test("por defecto sale la original; en modo automático la tienda sale sola con 
   await page.goto("");
   await expect(page.locator("html")).not.toHaveAttribute("data-season", /.+/);
   await expect(page.locator("[data-theme-ribbon]")).toHaveCount(0);
-  await page.goto("admin-demo/tematicas/");
+  await page.goto("admin-demo/campanas/");
   await page.getByLabel("Modo", { exact: true }).selectOption("auto");
   for (const [day, id, heading] of [
     ["2026-10-12", "dia-de-la-madre", "Para la que nunca para"],

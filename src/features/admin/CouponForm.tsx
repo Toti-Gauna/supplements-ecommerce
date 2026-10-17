@@ -8,16 +8,19 @@ import { Switch } from "@/components/atoms/Switch";
 import { normalizeCode } from "@/demo/engine/coupons";
 import type { Coupon } from "@/demo/types";
 import { useAdmin } from "@/stores/admin";
+import { RealDiscountWarning, useFakeDiscounts } from "./campaigns/RealDiscountWarning";
 import { NumberField } from "./NumberField";
 import { useDemoSave } from "./useDemoSave";
 
 const TYPES: { value: Coupon["type"]; label: string }[] = [{ value: "PERCENT", label: "Porcentaje" }, { value: "FIXED", label: "Monto fijo (ARS)" }, { value: "FREE_SHIPPING", label: "Envío gratis" }];
 
-export function CouponForm({ onDone }: { onDone: () => void }) {
+/** Alta de un cupón. Desde una campaña llega con su fecha (`themeId`) y, al crearlo, queda elegido (`onCreated`). */
+export function CouponForm({ onDone, onCreated, themeId }: { onDone: () => void; onCreated?: (code: string) => void; themeId?: Coupon["themeId"] }) {
   const coupons = useAdmin((s) => s.data.coupons);
   const saveCoupon = useAdmin((s) => s.saveCoupon);
   const save = useDemoSave();
-  const [c, setC] = useState<Coupon>({ code: "", type: "PERCENT", value: 10, description: "", active: true, usedCount: 0 });
+  const [c, setC] = useState<Coupon>({ code: "", type: "PERCENT", value: 10, description: "", active: true, usedCount: 0, ...(themeId ? { themeId } : {}) });
+  const fake = useFakeDiscounts(c, null);
   const [error, setError] = useState<string | null>(null);
   const set = (p: Partial<Coupon>) => setC((x) => ({ ...x, ...p }));
   return (
@@ -28,6 +31,7 @@ export function CouponForm({ onDone }: { onDone: () => void }) {
       if (coupons.some((x) => x.code === code)) return setError(`Ya existe el cupón ${code}.`);
       if (c.type === "PERCENT" && (c.value < 1 || c.value > 100)) return setError("El porcentaje va de 1 a 100.");
       save(`Cupón ${code} creado`, () => saveCoupon({ ...c, code, description: c.description || `Cupón ${code}` }));
+      onCreated?.(code);
       onDone();
     }}>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -40,6 +44,7 @@ export function CouponForm({ onDone }: { onDone: () => void }) {
         <label className="flex flex-col gap-1 text-sm font-bold sm:col-span-2">Descripción<Input value={c.description} onChange={(e) => set({ description: e.target.value })} placeholder="10% para clientes de la feria" /></label>
       </div>
       <Switch checked={c.onlyRegistered ?? false} onChange={(v) => set({ onlyRegistered: v })} label="Solo con cuenta" />
+      <RealDiscountWarning hits={fake} what={`un ${c.value} %`} />
       {error && <p role="alert" className="text-sm font-semibold text-danger">{error}</p>}
       <div className="flex gap-2"><Button type="submit" size="sm">Crear cupón</Button><Button variant="ghost" size="sm" onClick={onDone}>Cancelar</Button></div>
     </form>

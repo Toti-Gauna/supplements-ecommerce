@@ -229,7 +229,9 @@ export interface HeroFeature {
 /** Fechas comerciales con temática fitness propia (Fase 5, docs/plan-por-fases.md). */
 export type SeasonId =
   | "dia-de-la-madre" | "halloween" | "cyber-monday" | "black-friday" | "navidad" | "ano-nuevo"
-  | "san-valentin" | "vuelta-al-gym" | "hot-sale" | "dia-del-padre" | "dia-del-amigo" | "operacion-verano";
+  | "san-valentin" | "vuelta-al-gym" | "hot-sale" | "dia-del-padre" | "dia-del-amigo" | "operacion-verano"
+  // Días del deporte (R3a, punto 9 del pedido de Ignacio).
+  | "crossfit-open" | "dia-actividad-fisica" | "dia-del-futbolista" | "dia-del-running" | "dia-del-boxeador";
 
 /** Ocasión de un regalo: una festividad o Volta sin temática (define la escena con la que se abre). */
 export type GiftOccasion = SeasonId | "volta";
@@ -251,6 +253,10 @@ export interface SeasonalTheme {
   couponCode: string;
   /** Productos en oferta, en orden. */
   productSlugs: string[];
+  /** Día del deporte (R3a) en vez de fecha comercial: la campaña habla de entrenar, no de regalar. */
+  sport?: boolean;
+  /** Fecha de descuento fuerte (Black Friday, CyberMonday, Hot Sale): antes del inicio, la tienda muestra la sala de espera. */
+  waitingRoom?: boolean;
 }
 
 export interface ThemeSettings {

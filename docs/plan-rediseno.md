@@ -258,6 +258,11 @@ que regalar un suplemento traiga clientes nuevos.
   - **"Sacar las piezas"**: el Estudio genera post 1:1, historia 9:16 con la cuenta regresiva y la tarjeta de regalo
     de esa fecha, todo con el key visual de la campaña.
 
+**Estado:** campañas (R3a) hechas (PR de R3a): 17 fechas con key visual propio (las 12 comerciales y 5 días del
+deporte: CrossFit Open, Actividad Física, Futbolista, Running y Boxeador, punto 9 de Ignacio), Drop en el carrusel,
+sala de espera, pantalla de carga por fecha, modo vitrina, franja "Próxima campaña", panel Campañas con calendario,
+editor con vista previa doble, resultados del cupón, "Sacar las piezas" y "Descuento real". Sigue R3b (regalos).
+
 ### Regalos: de formulario a momento
 - **"Regalá energía", quien regala:**
   - elige el producto, el stack o una **gift card con monto** *(aprobada)*;

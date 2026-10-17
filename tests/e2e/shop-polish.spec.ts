@@ -6,6 +6,7 @@ const preview = (page: Page, id: string) =>
 
 for (const [width, height] of [[375, 812], [820, 1180], [1440, 900]] as const) {
   test(`carrusel a ${width}×${height}: campaña primera, autoplay y altura estable`, async ({ page }) => {
+    test.setTimeout(60_000);
     await page.emulateMedia({ reducedMotion: "no-preference" });
     await preview(page, "dia-de-la-madre");
     await page.setViewportSize({ width, height });
@@ -19,7 +20,8 @@ for (const [width, height] of [[375, 812], [820, 1180], [1440, 900]] as const) {
     await expect(markers.first()).toHaveAttribute("aria-current", "true");
     const before = (await hero.boundingBox())!.height;
     await page.mouse.move(0, 0);
-    await expect(markers.nth(1)).toHaveAttribute("aria-current", "true", { timeout: 8000 });
+    // El drop de la campaña (R3a) dura el doble que un destacado (2 × 5,2 s).
+    await expect(markers.nth(1)).toHaveAttribute("aria-current", "true", { timeout: 13_000 });
     await expect(campaign).toHaveAttribute("aria-hidden", "true");
     expect((await hero.boundingBox())!.height).toBeCloseTo(before, 0);
     await markers.first().click();

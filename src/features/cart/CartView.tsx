@@ -15,6 +15,7 @@ import { useCart } from "@/stores/cart";
 import { useHydrated } from "@/stores/hydration";
 import { BagLoad } from "./BagLoad";
 import { CadeteCountdown } from "./CadeteCountdown";
+import { SeasonTicket } from "../campaigns/SeasonTicket";
 import { CartMissionNudge } from "./CartMissionNudge";
 import { CouponForm } from "./CouponForm";
 import { MiniRecommendations } from "./MiniRecommendations";
@@ -62,6 +63,7 @@ export function CartView() {
     <div className="grid grid-cols-[minmax(0,1fr)] gap-6 pb-28 lg:grid-cols-[minmax(0,1fr)_400px] lg:gap-x-12 lg:pb-0">
       <div className="flex flex-col gap-4 lg:col-start-1">
         <BagLoad quote={quote} />
+        <SeasonTicket where="carrito" subtotal={quote.subtotal} />
         <ul className="flex flex-col gap-3" aria-label="Productos en el carrito">
           <QuotedGroups quote={quote} renderLine={(q, inPack) => {
             const view = toLineView(q);

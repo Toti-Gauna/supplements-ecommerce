@@ -13,12 +13,13 @@ const id = (iso: string) => themeForDate(demoData().themes, at(iso))?.id ?? null
 const IDS: SeasonId[] = [
   "dia-de-la-madre", "halloween", "cyber-monday", "black-friday", "navidad", "ano-nuevo",
   "san-valentin", "vuelta-al-gym", "hot-sale", "dia-del-padre", "dia-del-amigo", "operacion-verano",
+  "crossfit-open", "dia-actividad-fisica", "dia-del-futbolista", "dia-del-running", "dia-del-boxeador",
 ];
 
 describe("temáticas fitness (Fase 5)", () => {
   beforeEach(() => setDemoData(defaultDemoData()));
 
-  it("son las doce del plan, cada una con su acento, su piel, su fondo y su cupón propio", () => {
+  it("son las doce del plan y los cinco días del deporte, cada una con su acento, su piel, su fondo y su cupón propio", () => {
     expect(seasonalThemes.map((t) => t.id).sort()).toEqual([...IDS].sort());
     for (const t of seasonalThemes) {
       expect(SKINS[t.id].decor, t.id).toHaveLength(5);
@@ -27,7 +28,7 @@ describe("temáticas fitness (Fase 5)", () => {
       expect(coupon?.themeId, t.id).toBe(t.id);
       expect(Number.isInteger(coupon!.value)).toBe(true);
     }
-    expect(new Set(themeCoupons.map((c) => c.code)).size).toBe(12);
+    expect(new Set(themeCoupons.map((c) => c.code)).size).toBe(17);
   });
 
   it("cada temática ofrece cinco productos activos del catálogo, sin repetir", () => {
@@ -51,7 +52,13 @@ describe("temáticas fitness (Fase 5)", () => {
     expect(id("2027-01-06")).toBe("ano-nuevo");
     expect(id("2027-02-14")).toBe("san-valentin");
     expect(id("2027-02-15")).toBe("vuelta-al-gym");
-    expect(id("2027-03-15")).toBe("vuelta-al-gym");
+    expect(id("2027-02-28")).toBe("vuelta-al-gym");
+    // Días del deporte (R3a).
+    expect(id("2027-03-15")).toBe("crossfit-open");
+    expect(id("2027-04-06")).toBe("dia-actividad-fisica");
+    expect(id("2027-05-14")).toBe("dia-del-futbolista");
+    expect(id("2027-06-02")).toBe("dia-del-running");
+    expect(id("2027-09-14")).toBe("dia-del-boxeador");
     expect(id("2027-05-11")).toBe("hot-sale");
     expect(id("2027-06-20")).toBe("dia-del-padre");
     expect(id("2027-07-20")).toBe("dia-del-amigo");

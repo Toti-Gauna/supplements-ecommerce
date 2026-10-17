@@ -4,8 +4,10 @@ import type { ReactNode } from "react";
 import { Input, Textarea } from "@/components/atoms/Field";
 import { Select } from "@/components/atoms/Select";
 import { Switch } from "@/components/atoms/Switch";
+import { isGearProduct } from "@/demo/admin/label-checks";
 import { PRODUCT_STEPS, type StepCheck, type StepId } from "@/demo/admin/product-steps";
 import { goalList } from "@/demo/engine/goals";
+import type { Recipe } from "@/demo/fixtures/workshop";
 import type { Category, Product, ProductBadge } from "@/demo/types";
 import { cn } from "@/lib/cn";
 import { brand } from "@/config/brand";
@@ -27,6 +29,7 @@ export function Step({ id, check, tried, children }: StepProps) {
       className={cn("flex scroll-mt-48 flex-col gap-4 rounded-sm bg-surface p-5 shadow-[var(--shadow-card)] ring-1 @min-[56rem]:scroll-mt-28", errors.length ? "ring-danger/40" : "ring-ink/[0.04]")}>
       <h2 id={`paso-${id}-t`} tabIndex={-1} className="flex items-center gap-2.5 text-lg font-extrabold focus:outline-none">
         <span aria-hidden="true" className="grid h-7 w-7 place-items-center rounded-sm bg-accent text-xs tabular-nums">{i + 1}</span>{PRODUCT_STEPS[i]!.label}
+        {check.skipped && <span className="ml-auto rounded-sm bg-bg px-2 py-1 text-xs font-bold text-muted ring-1 ring-line">No aplica</span>}
       </h2>
       {errors.length > 0 && <ul role="alert" className="rounded-sm bg-danger-soft p-3 text-sm font-semibold text-danger">{errors.map((e) => <li key={e}>{e}</li>)}</ul>}
       {check.warnings.length > 0 && id !== "revision" && <p className="text-xs font-semibold text-warning">{check.warnings.join(" ")}</p>}
@@ -37,13 +40,15 @@ export function Step({ id, check, tried, children }: StepProps) {
 
 const BADGES: readonly (readonly [ProductBadge, string])[] = [["sin-tacc", "Sin TACC"], ["vegano", "Vegano"], ["sin-azucar", "Sin azúcar"], ["keto", "Keto"], ["marca-propia", "Marca propia"], ["sin-cafeina", "Sin cafeína"]];
 
-interface Props { d: Product; set: (p: Partial<Product>) => void; checks: Record<StepId, StepCheck>; tried: boolean; categories: Category[]; products: Product[]; onGo: (id: StepId) => void }
+interface Props { d: Product; set: (p: Partial<Product>) => void; checks: Record<StepId, StepCheck>; tried: boolean; categories: Category[]; products: Product[]; recipe?: Recipe; onGo: (id: StepId) => void }
 
 /**
  * Los bloques del editor "hoja técnica" (R2): primero lo que vende (datos, presentaciones con su precio, rótulo y
- * sellos); la foto y las medidas de envío (plegadas) al final. Nada se pierde respecto del formulario anterior.
+ * sellos); la foto y las medidas de envío (plegadas) al final. Nada se pierde respecto del formulario anterior. El
+ * equipamiento no lleva rótulo, servicios, lotes ni sellos del rótulo: su paso "Rótulo" dice que no aplica.
  */
-export function EditorSections({ d, set, checks, tried, categories, products, onGo }: Props) {
+export function EditorSections({ d, set, checks, tried, categories, products, recipe, onGo }: Props) {
+  const gear = isGearProduct(d, categories);
   const dims = d.dims ?? { lengthCm: 0, widthCm: 0, heightCm: 0, weightG: 0 };
   const step = (id: StepId, children: ReactNode) => <Step id={id} check={checks[id]} tried={tried}>{children}</Step>;
   return (
@@ -73,10 +78,12 @@ export function EditorSections({ d, set, checks, tried, categories, products, on
       {step("variantes", (
         <>
           <div className="max-w-md"><OptionNamesField value={d.optionNames} onChange={(optionNames) => set({ optionNames })} /></div>
-          <VariantsEditor product={d} onChange={set} gear={categories.find((c) => c.slug === d.categorySlug)?.kind === "gear"} />
+          <VariantsEditor product={d} onChange={set} gear={gear} recipe={recipe} />
         </>
       ))}
-      {step("rotulo", <LabelFields d={d} set={set} />)}
+      {step("rotulo", gear
+        ? <p className="rounded-sm bg-bg px-4 py-3 text-sm text-muted">No aplica al equipamiento: no lleva tabla nutricional, RNPA, modo de uso ni servicios. Si es un suplemento, cambiá la categoría en el paso 2.</p>
+        : <LabelFields d={d} set={set} errors={tried ? checks.rotulo.errors : []} />)}
       {step("suplemento", (
         <>
           <label className="flex flex-col gap-1 text-sm font-bold">Marca
@@ -84,7 +91,7 @@ export function EditorSections({ d, set, checks, tried, categories, products, on
             <datalist id="marcas">{[...new Set(products.map((p) => p.brand).filter(Boolean))].map((b) => <option key={b} value={b} />)}</datalist>
           </label>
           <Chips legend="Objetivos" options={goalList().map((g) => [g.id, g.name] as const)} value={d.goals ?? []} onChange={(v) => set({ goals: v as Product["goals"] })} />
-          <Chips legend="Sellos del rótulo" options={BADGES} value={d.badges ?? []} onChange={(v) => set({ badges: v as ProductBadge[] })} />
+          {!gear && <Chips legend="Sellos del rótulo" options={BADGES} value={d.badges ?? []} onChange={(v) => set({ badges: v as ProductBadge[] })} />}
         </>
       ))}
       {step("foto", <ProductMediaFields draft={d} onChange={set} />)}
@@ -111,7 +118,7 @@ export function EditorSections({ d, set, checks, tried, categories, products, on
               <li key={s.id} className="flex flex-wrap items-center justify-between gap-2 rounded-sm bg-bg px-3 py-2">
                 <span className="font-semibold">{s.label}</span>
                 <span className="flex items-center gap-3">
-                  <span className={cn("text-xs font-bold", c.errors.length ? "text-danger" : c.complete ? "text-success" : "text-warning")}>{c.errors.length ? "Falta completar" : c.complete ? "Listo" : "Opcional pendiente"}</span>
+                  <span className={cn("text-xs font-bold", c.errors.length ? "text-danger" : c.skipped ? "text-muted" : c.complete ? "text-success" : "text-warning")}>{c.errors.length ? "Falta completar" : c.skipped ? "No aplica" : c.complete ? "Listo" : "Opcional pendiente"}</span>
                   <button type="button" onClick={() => onGo(s.id)} className="text-xs font-bold text-primary underline">Ir</button>
                 </span>
               </li>

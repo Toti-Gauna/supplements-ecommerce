@@ -26,7 +26,8 @@ export function unpricedVariants(p: Product): Variant[] {
   return p.variants.filter((v) => finalPrice(p, v) <= 0);
 }
 
-/** Precio por servicio que ve el dueño mientras carga la presentación (null sin servicios). */
+/** Precio por servicio que ve el dueño mientras carga la presentación (null sin precio, sin servicios o con uno solo). */
 export function editorServingPrice(p: Product, v: Variant): number | null {
-  return v.servings && v.servings > 1 ? pricePerServing(finalPrice(p, v), v.servings) : null;
+  const price = finalPrice(p, v);
+  return price > 0 && v.servings && v.servings > 1 ? pricePerServing(price, v.servings) : null;
 }

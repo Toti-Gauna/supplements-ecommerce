@@ -1,5 +1,5 @@
 "use client";
-import { Check, CircleAlert } from "lucide-react";
+import { Check, CircleAlert, Minus } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { PRODUCT_STEPS, type StepCheck, type StepId } from "@/demo/admin/product-steps";
 import { cn } from "@/lib/cn";
@@ -14,16 +14,16 @@ interface Props {
   onGo: (id: StepId) => void;
 }
 
-type Status = "error" | "complete" | "pending";
-const statusOf = (c: StepCheck, tried: boolean): Status => (tried && c.errors.length ? "error" : c.complete ? "complete" : "pending");
-const STATUS_TEXT: Record<Status, string> = { error: "con errores", complete: "completo", pending: "por completar" };
+type Status = "error" | "complete" | "pending" | "skipped";
+const statusOf = (c: StepCheck, tried: boolean): Status => (tried && c.errors.length ? "error" : c.skipped ? "skipped" : c.complete ? "complete" : "pending");
+const STATUS_TEXT: Record<Status, string> = { error: "con errores", complete: "completo", pending: "por completar", skipped: "no aplica" };
 
 function Dot({ n, status, current }: { n: number; status: Status; current: boolean }) {
   return (
     <span aria-hidden="true" className={cn("grid h-7 w-7 shrink-0 place-items-center rounded-sm text-xs font-extrabold tabular-nums ring-2",
-      status === "error" ? "bg-danger text-white ring-danger" : status === "complete" ? "bg-success text-white ring-success" : "bg-surface text-muted ring-ink/15",
+      status === "error" ? "bg-danger text-white ring-danger" : status === "complete" ? "bg-success text-white ring-success" : status === "skipped" ? "bg-bg text-muted ring-ink/10" : "bg-surface text-muted ring-ink/15",
       current && status === "pending" && "ring-primary text-primary")}>
-      {status === "error" ? <CircleAlert size={15} /> : status === "complete" ? <Check size={15} /> : n}
+      {status === "error" ? <CircleAlert size={15} /> : status === "complete" ? <Check size={15} /> : status === "skipped" ? <Minus size={15} /> : n}
     </span>
   );
 }

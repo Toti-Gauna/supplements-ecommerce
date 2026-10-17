@@ -55,6 +55,7 @@ export function cleanNutrition(n: Nutrition | undefined): Nutrition | undefined 
   if (rows.length === 0 && !n.ingredients.trim()) return undefined;
   const out: Nutrition = { ...n, rows };
   if (!out.allergens?.trim()) delete out.allergens;
+  if (!out.note?.trim()) delete out.note;
   return out;
 }
 

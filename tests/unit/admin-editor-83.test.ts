@@ -36,18 +36,22 @@ describe("pasos del editor (8.3.20)", () => {
     expect(checkSteps({ ...whey, basePrice: 0, variants: [{ ...whey.variants[0]!, priceDelta: 0 }] }, categories).variantes.errors)
       .toEqual(["Cada presentación necesita su precio final (mayor a 0)."]);
   });
-  it("el rótulo sin cargar avisa pero no bloquea", () => {
+  it("R2a: un suplemento sin RNPA ni tabla nutricional no se guarda; sin modo de uso, solo avisa", () => {
     const c = checkSteps({ ...whey, nutrition: undefined, usage: undefined, rnpa: undefined }, categories);
-    expect(c.rotulo.errors).toEqual([]);
-    expect(c.rotulo.warnings).toHaveLength(3);
-    expect(c.revision.complete).toBe(true);
+    expect(c.rotulo.errors).toEqual(["Cargá el RNPA como figura en el rótulo (formato 00-000000).", "Cargá la tabla nutricional: como mínimo la porción y las proteínas."]);
+    expect(c.rotulo.warnings).toEqual(["Sumá el modo de uso: se ve en \"Cómo tomarlo\"."]);
+    expect(c.revision.complete).toBe(false);
+    const sinUso = checkSteps({ ...whey, usage: undefined }, categories);
+    expect(sinUso.rotulo.errors).toEqual([]);
+    expect(sinUso.revision.complete).toBe(true);
   });
   it("el alta arranca vacía, pausada, a pedido y fuera del catálogo", () => {
     const d = newProductDraft("producto-nuevo-x", categories);
     expect(d).toMatchObject({ slug: "producto-nuevo-x", name: "", imageAlt: "", basePrice: 0, active: false, isNew: true });
     expect(d.variants).toEqual([{ id: "producto-nuevo-x-v1", label: "Único", priceDelta: 0, stock: -1 }]);
     expect(products.some((p) => p.slug === d.slug)).toBe(false);
-    expect(blockingErrors(d, categories)).toHaveLength(3);
+    // Nombre, precio y servicios, RNPA y tabla nutricional (es un suplemento) y el texto alternativo.
+    expect(blockingErrors(d, categories)).toHaveLength(6);
   });
 });
 

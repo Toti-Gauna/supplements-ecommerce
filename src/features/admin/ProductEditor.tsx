@@ -6,9 +6,7 @@ import { ArrowLeft } from "lucide-react";
 import { Button, ButtonLink } from "@/components/atoms/Button";
 import { Sheet } from "@/components/motion/Sheet";
 import { EmptyState } from "@/components/molecules/EmptyState";
-import { withoutEmptyLots } from "@/demo/admin/lots";
-import { cleanNutrition, cleanUsage } from "@/demo/admin/nutrition-form";
-import { checkSteps, FIRST_STEP, newProductDraft, PRODUCT_STEPS } from "@/demo/admin/product-steps";
+import { checkSteps, cleanProductDraft, FIRST_STEP, newProductDraft, PRODUCT_STEPS } from "@/demo/admin/product-steps";
 import type { Product } from "@/demo/types";
 import { useAdmin } from "@/stores/admin";
 import { useBackHref } from "./listReturn";
@@ -32,6 +30,7 @@ function Editor({ draftKey: key, origin, saved }: EditorProps) {
   const router = useRouter();
   const categories = useAdmin((s) => s.data.categories);
   const products = useAdmin((s) => s.data.products);
+  const recipes = useAdmin((s) => s.workshop.recipes);
   const saveProduct = useAdmin((s) => s.saveProduct);
   const save = useDemoSave();
   const back = useBackHref(LIST);
@@ -73,7 +72,7 @@ function Editor({ draftKey: key, origin, saved }: EditorProps) {
     const title = origin === "new" ? (d.active === false ? "Producto creado (pausado)" : "Producto creado") : "Producto guardado";
     done.current = true;
     clearSnapshot(key);
-    save(title, () => saveProduct(withoutEmptyLots({ ...d, nutrition: cleanNutrition(d.nutrition), usage: cleanUsage(d.usage), rnpa: d.rnpa?.trim() || undefined })));
+    save(title, () => saveProduct(cleanProductDraft(d)));
     router.push(back);
   };
   const preview = () => { saveSnapshot(snapshot()); markPreview(key); router.push(previewHref(key)); };
@@ -90,7 +89,7 @@ function Editor({ draftKey: key, origin, saved }: EditorProps) {
       )}
       <div className="grid gap-6 @min-[56rem]:grid-cols-[minmax(0,1fr)_15rem]">
         <form noValidate onSubmit={submit} className="flex min-w-0 flex-col gap-5">
-          <EditorSections d={d} set={set} checks={checks} tried={tried} categories={categories} products={products} onGo={nav.goTo} />
+          <EditorSections d={d} set={set} checks={checks} tried={tried} categories={categories} products={products} recipe={recipes[d.slug]} onGo={nav.goTo} />
           <EditorBar missing={missing.length} dirty={dirty} isNew={origin === "new"} onShowMissing={() => missing[0] && nav.goTo(missing[0])} onDiscard={() => setAsking(true)} onPreview={preview} />
         </form>
         <EditorStepper layout="rail" checks={checks} current={nav.current} tried={tried} onGo={nav.goTo} />

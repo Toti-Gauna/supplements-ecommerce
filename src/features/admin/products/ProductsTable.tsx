@@ -8,6 +8,7 @@ import { DataTable, toSheet } from "@/components/organisms/data-table/DataTable"
 import { expiringLots, type LotRow } from "@/demo/admin/lots";
 import { applyDraft } from "@/demo/admin/sheet";
 import { productSheetSpec } from "@/demo/admin/sheet-specs";
+import { withSupplierCosts } from "@/demo/admin/product-metrics";
 import { DEFAULT_LOW_STOCK, inventoryValue, lowStockRows, productStockState, stockRows, type StockOp, type StockRow } from "@/demo/admin/stock";
 import { DEMO_TODAY } from "@/demo/fixtures/admin-orders";
 import type { Product } from "@/demo/types";
@@ -44,7 +45,7 @@ const totals = (rows: StockRow[]) => (
 export function ProductsTable() {
   const router = useRouter();
   const params = useSearchParams();
-  const { data, lastPriceChange, toggleProductActive, setProductsActive, setProductsCategory, setVariantStock, bulkStock, updateProducts, undoBulkPrice } = useAdmin();
+  const { data, workshop, lastPriceChange, toggleProductActive, setProductsActive, setProductsCategory, setVariantStock, bulkStock, updateProducts, undoBulkPrice } = useAdmin();
   const save = useDemoSave();
   const exportProducts = useExport("productos");
   const exportStock = useExport("stock");
@@ -57,7 +58,7 @@ export function ProductsTable() {
   const products = useTableState("products", { sort: { id: "name", dir: "asc" }, hidden: ["stockState"], filterIds: CATALOG_FILTER_IDS });
   const variants = useTableState("stock", { sort: { id: "product", dir: "asc" }, hidden: vColumns.filter((c) => c.defaultHidden).map((c) => c.id), filterIds: CATALOG_FILTER_IDS });
   const cats = [...data.categories].sort((a, b) => a.sortOrder - b.sortOrder);
-  const all = stockRows(data.products, data.categories, low, DEMO_TODAY);
+  const all = withSupplierCosts(stockRows(data.products, data.categories, low, DEMO_TODAY), data.products, workshop.recipes);
   const reorder = lowStockRows(data.products, data.categories, low).length;
   const setMode = (m: Mode) => {
     const url = new URLSearchParams(window.location.search);
@@ -95,10 +96,10 @@ export function ProductsTable() {
         onReorder={() => showVariants("stock", "reponer")} onExpiring={() => showVariants("vence", "pronto")}
         onUndoPrice={() => save("Aumento deshecho", undoBulkPrice, "Los precios volvieron a como estaban. Solo en esta demo.")} />
       {mode === "productos" ? (
-        <DataTable caption="Productos" noun="productos" rows={data.products} columns={productColumns(data.categories, low, toggle)} state={products}
+        <DataTable caption="Productos" noun="productos" rows={data.products} columns={productColumns(data.categories, low, toggle, workshop.recipes)} state={products}
           filters={productFilters(cats, low, data.products)} rowKey={(p) => p.slug} rowLabel={(p) => `Seleccionar ${p.name}`} searchText={productSearch}
           searchLabel="Buscar producto" searchPlaceholder="Whey, creatina, Brava…" toolbarEnd={modeSwitch} rowHref={(p) => editor(p.slug)} onExport={exportProducts} onExcel={() => variants.setView("excel")}
-          renderCard={(c) => <ProductCard {...c} categories={data.categories} low={low} onVisible={toggle} />}
+          renderCard={(c) => <ProductCard {...c} categories={data.categories} low={low} onVisible={toggle} recipes={workshop.recipes} />}
           rowTone={(p) => (productStockState(p, low) === "out" && p.active !== false ? "danger" : productStockState(p, low) === "low" ? "warning" : undefined)}
           footer={(list) => <p className="flex flex-wrap justify-end gap-x-6 gap-y-1 border-t border-line px-5 py-3 text-sm">{totals(stockRows(list, data.categories, low))}</p>}
           bulkActions={(list, clear) => (

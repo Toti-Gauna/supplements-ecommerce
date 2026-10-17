@@ -6,12 +6,15 @@ import { ProductVisual } from "@/components/illustrations/ProductVisual";
 import type { Column } from "@/components/organisms/data-table/types";
 import { productMinPrice, productStockState, productStockTotal, STOCK_LABEL } from "@/demo/admin/stock";
 import { productStockBadge } from "@/demo/admin/stock-badge";
+import { formatRange, productMarginRange, productServingRange } from "@/demo/admin/product-metrics";
+import type { Recipe } from "@/demo/fixtures/workshop";
 import { productHref } from "@/demo/engine/catalog";
 import { hasClearance } from "@/demo/admin/lots";
 import type { Category, Product } from "@/demo/types";
 import { formatARS } from "@/lib/money";
 import { StockChip } from "../table/StockChip";
 import { productExpiring } from "./catalogTable";
+import { MarginText } from "./MarginText";
 
 export const minPrice = productMinPrice;
 
@@ -25,7 +28,11 @@ export function ExpiringBadge({ product }: { product: Product }) {
   return productExpiring(product) ? <Badge tone="warning">Vence pronto</Badge> : null;
 }
 
-export function productColumns(categories: Category[], low: number, onToggle: (p: Product) => void): Column<Product>[] {
+/** Precio por servicio y margen de un producto: rango entre sus presentaciones (R2). */
+export const servingRangeText = (p: Product) => formatRange(productServingRange(p), formatARS);
+
+export function productColumns(categories: Category[], low: number, onToggle: (p: Product) => void, recipes: Readonly<Record<string, Recipe>> = {}): Column<Product>[] {
+  const margin = (p: Product) => productMarginRange(p, recipes[p.slug]);
   const cat = (p: Product) => categories.find((c) => c.slug === p.categorySlug)?.name ?? p.categorySlug;
   const stockText = (p: Product) => { const t = productStockTotal(p); return t === null ? "a pedido" : t; };
   return [
@@ -35,6 +42,8 @@ export function productColumns(categories: Category[], low: number, onToggle: (p
     },
     { id: "category", header: "Categoría", cell: cat, sortValue: cat, exportValue: cat },
     { id: "price", header: "Precio desde", align: "right", cell: (p) => formatARS(minPrice(p)), sortValue: minPrice, exportValue: minPrice },
+    { id: "servingPrice", header: "Precio por servicio", align: "right", className: "whitespace-nowrap", cell: servingRangeText, sortValue: (p) => productServingRange(p)?.min ?? null, exportValue: servingRangeText },
+    { id: "margin", header: "Margen", align: "right", className: "whitespace-nowrap", cell: (p) => <MarginText value={margin(p)} />, sortValue: (p) => margin(p)?.min ?? null, exportValue: (p) => formatRange(margin(p), (n) => `${n} %`) },
     { id: "stock", header: "Stock", className: "whitespace-nowrap", cell: (p) => <StockChip {...productStockBadge(p, low)} />, sortValue: (p) => productStockTotal(p) ?? Number.MAX_SAFE_INTEGER, exportValue: stockText },
     { id: "stockState", header: "Estado de stock", defaultHidden: true, cell: (p) => STOCK_LABEL[productStockState(p, low)], exportValue: (p) => STOCK_LABEL[productStockState(p, low)] },
     { id: "sold", header: "Vendidos", align: "right", cell: (p) => p.soldCount, sortValue: (p) => p.soldCount, exportValue: (p) => p.soldCount },

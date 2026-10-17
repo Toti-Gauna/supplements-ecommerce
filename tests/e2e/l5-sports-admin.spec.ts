@@ -20,8 +20,14 @@ test("panel: cambiar nombre y pack de un deporte y verlo en el inicio, el armado
 
   await page.goto("");
   const section = homeSection(page);
-  await section.scrollIntoViewIfNeeded();
-  await section.getByRole("tab", { name: /Deportes/ }).click();
+  // El inicio es HTML estático: hasta que React toma la página (y vuelve a pintar con lo guardado en el panel), el
+  // toque en la pestaña no hace nada o cae en una sección que se reemplaza.
+  const tab = section.getByRole("tab", { name: /Deportes/ });
+  await expect(async () => {
+    await section.scrollIntoViewIfNeeded();
+    await tab.click();
+    await expect(tab).toHaveAttribute("aria-selected", "true", { timeout: 1000 });
+  }).toPass();
   const panel = section.getByRole("tabpanel", { name: /Deportes/ });
   await expect(panel.getByRole("link", { name: "Ver Pack Salud" })).toHaveAttribute("href", /\/packs\/\?pack=salud$/);
   await panel.getByRole("link", { name: "Fútbol 5", exact: true }).click();
@@ -59,7 +65,7 @@ test("armador: con 3 objetivos elegidos el deporte igual suma los suyos, como en
 test("inicio: las tarjetas de objetivo muestran el total de su stack y el producto destacado, y abren ese mismo estante", async ({ page }) => {
   await page.goto("");
   const section = homeSection(page);
-  await section.scrollIntoViewIfNeeded();
+  await expect(async () => section.scrollIntoViewIfNeeded()).toPass();
   const panel = section.getByRole("tabpanel", { name: /Objetivos/ });
   await expect(panel.getByText("Su stack")).toHaveCount(7);
   await expect(panel.getByText("Su producto")).toHaveCount(0);

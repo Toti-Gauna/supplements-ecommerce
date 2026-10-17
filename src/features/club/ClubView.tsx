@@ -8,7 +8,6 @@ import { ClubHeading } from "./ClubHeading";
 import { ClubHero } from "./ClubHero";
 import { ClubLevels } from "./ClubLevels";
 import { ClubMissions } from "./ClubMissions";
-import { LeagueBand } from "./league/LeagueBand";
 import { RewardsWallet } from "./RewardsWallet";
 import { NIGHT_BAND } from "./styles";
 import { useClubState } from "./useClubState";
@@ -21,7 +20,7 @@ const RULES = [
   { icon: ShieldCheck, text: "Ilustrativo: en la tienda real se calcula en el servidor." },
 ];
 
-/** El Club en una página, sin repetir: portada, niveles con medallas, misiones, liga, disco, juego y billetera. */
+/** El Club en una página, sin repetir: portada, niveles con medallas, misiones, disco, juego y billetera. */
 export function ClubView() {
   const state = useClubState();
   return (
@@ -35,7 +34,6 @@ export function ClubView() {
         </div>
       </section>
       <ClubMissions state={state} />
-      <LeagueBand state={state} />
       <section aria-labelledby="ruleta" className="lab-grid grid items-center gap-10 rounded-sm border border-line bg-surface p-6 sm:p-10 lg:grid-cols-2 lg:p-14">
         <ClubHeading id="ruleta" eyebrow="Disco olímpico" title="Cargá la barra y girá">
           Un giro con premio seguro: envío gratis, el shaker, una muestra o un descuento para tu próxima compra. No corta tu compra: lo girás acá o desde el carrito.

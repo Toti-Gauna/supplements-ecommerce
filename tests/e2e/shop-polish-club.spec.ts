@@ -9,7 +9,7 @@ test("8.2.13 portada del Club: marcador, próximo premio y accesos (R2c: sin cue
   await page.goto("club/");
   const hero = page.getByRole("region", { name: "Sumá carga. Subí de nivel." });
   await expect(hero.getByRole("heading", { level: 1 })).toBeVisible();
-  for (const label of ["Misiones", "Gimnasios en la liga", "Niveles"]) await expect(hero.getByText(label, { exact: true })).toBeVisible();
+  for (const label of ["Misiones", "Giro del disco", "Niveles"]) await expect(hero.getByText(label, { exact: true })).toBeVisible();
   await expect(hero.getByText("Tu próximo premio")).toBeVisible();
   await expect(hero.getByRole("progressbar", { name: "Tu carga: sin cuenta no suma" })).toHaveAttribute("aria-valuenow", "0");
   // Con la cuenta demo, el marcador y el próximo premio toman el progreso de ejemplo (motor de misiones).
@@ -17,7 +17,7 @@ test("8.2.13 portada del Club: marcador, próximo premio y accesos (R2c: sin cue
     await hero.getByRole("button", { name: "Crear la cuenta demo" }).first().click({ timeout: 1000 });
     await expect(hero.getByText(/Progreso de Sofía/)).toBeVisible({ timeout: 1000 });
   }).toPass();
-  for (const label of ["Tus puntos del mes", "Misiones completas", "Puesto de tu box"]) await expect(hero.getByText(label, { exact: true })).toBeVisible();
+  for (const label of ["Tus puntos del mes", "Misiones completas", "Entrenos del mes"]) await expect(hero.getByText(label, { exact: true })).toBeVisible();
   await expect(hero.getByRole("progressbar", { name: /Progreso hacia/ })).not.toHaveAttribute("aria-valuenow", "0");
   // La ruleta sigue con su único botón y el acceso de la portada lleva hasta ella.
   await expect(page.getByRole("button", { name: "Girar la ruleta" })).toHaveCount(1);

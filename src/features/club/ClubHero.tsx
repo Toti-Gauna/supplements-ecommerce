@@ -2,8 +2,8 @@
 import { ArrowDown, Sparkles } from "lucide-react";
 import { ClubMedal } from "@/components/illustrations/ClubMedal";
 import { brand } from "@/config/brand";
+import { monthCheckins } from "@/demo/engine/club-training";
 import { TRAINING_MISSIONS } from "@/demo/fixtures/club";
-import { GYMS } from "@/demo/fixtures/gyms";
 import { useCurrentTheme } from "@/features/themes/useCurrentTheme";
 import { ClubNextPrize } from "./ClubNextPrize";
 import { DemoAccountButton } from "./DemoAccountButton";
@@ -17,15 +17,15 @@ function heroStats(s: ClubState): NightStat[] {
     const missions = s.purchase.length + TRAINING_MISSIONS.length;
     return [
       { label: "Misiones", value: String(missions), reading: `${missions} misiones activas` },
-      { label: "Gimnasios en la liga", value: String(GYMS.length), reading: `${GYMS.length} gimnasios en la liga` },
+      { label: "Giro del disco", value: "1", reading: "1 giro del disco olímpico con premio seguro" },
       { label: "Niveles", value: "4", reading: "4 niveles: bronce, plata, oro y platino" },
     ];
   }
-  const mine = s.league.find((r) => r.mine);
+  const entrenos = monthCheckins(s.ctx);
   return [
     { label: "Tus puntos del mes", value: String(s.points.total), reading: `${s.points.total} puntos este mes` },
     { label: "Misiones completas", value: String(s.completed), reading: `${s.completed} misiones completas` },
-    { label: "Puesto de tu box", value: mine ? String(mine.position) : "-", reading: mine ? `Tu gimnasio va ${mine.position}.º` : "Todavía no elegiste gimnasio", hint: mine ? undefined : "Elegilo en la liga" },
+    { label: "Entrenos del mes", value: String(entrenos), reading: `${entrenos} entrenos marcados este mes` },
   ];
 }
 
@@ -46,7 +46,7 @@ export function ClubHero({ state }: { state: ClubState }) {
             Sumá carga. <span className="italic text-(--season-accent)">Subí de nivel.</span>
           </h1>
           <p className="animate-rise mt-5 max-w-lg text-lg text-night-muted" style={{ animationDelay: "220ms" }}>
-            Misiones de compra y de entrenamiento, la liga de gimnasios de {brand.city} y premios en producto.
+            Misiones de compra y de entrenamiento, el disco olímpico, Shaker Rush y premios en producto.
           </p>
           <div className="animate-rise mt-8 flex flex-wrap items-center gap-3" style={{ animationDelay: "300ms" }}>
             {signedIn && user ? (

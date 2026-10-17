@@ -1,9 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { clubPoints } from "@/demo/engine/club-points";
 import { rivalOf, visibleRows, weekBest, weeklyRanking } from "@/demo/engine/game-ranking";
-import { leagueTable, overtakeGap, validGym } from "@/demo/engine/gym-league";
 import { WEEKLY_RANKING } from "@/demo/fixtures/game-ranking";
-import { GYMS } from "@/demo/fixtures/gyms";
+import { useClub } from "@/stores/club";
 import { useGame } from "@/stores/game";
 
 const TODAY = "2026-10-15";
@@ -21,26 +20,11 @@ describe("puntos del club", () => {
   });
 });
 
-describe("liga de gimnasios", () => {
-  it("sin elegir, el orden es el de los puntos de muestra", () => {
-    const rows = leagueTable(GYMS, null);
-    expect(rows.map((r) => r.position)).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
-    expect(rows[0]!.gym.id).toBe("fragua");
-    expect(rows.some((r) => r.mine)).toBe(false);
-    expect(overtakeGap(rows)).toBeNull();
-  });
-
-  it("tu aporte suma a tu box y puede cambiarle el puesto", () => {
-    const rows = leagueTable(GYMS, { gymId: "hierro-norte", points: 400 });
-    const mine = rows.find((r) => r.mine)!;
-    expect(mine).toMatchObject({ contribution: 400, points: 3670, position: 3 });
-    expect(rows.filter((r) => r.contribution > 0)).toHaveLength(1);
-    expect(overtakeGap(rows)).toEqual({ gym: GYMS[1], points: 221 });
-  });
-
-  it("un gimnasio que no existe no cuenta", () => {
-    expect(validGym(GYMS, "no-existe")).toBeNull();
-    expect(leagueTable(GYMS, { gymId: "no-existe", points: 999 }).every((r) => !r.mine)).toBe(true);
+describe("Club guardado (v1 → v2, sin liga de gimnasios)", () => {
+  it("descarta el gimnasio elegido y conserva entrenos, deporte y premios", () => {
+    const migrate = useClub.persist.getOptions().migrate!;
+    const claims = [{ key: "k", missionId: "t-entrenos", period: "p", points: 150, code: null, at: "2026-10-14T15:00:00.000Z" }];
+    expect(migrate({ gymId: "fragua", checkins: ["2026-10-14"], sportTried: "boxeo", claims }, 1)).toEqual({ checkins: ["2026-10-14"], sportTried: "boxeo", claims });
   });
 });
 

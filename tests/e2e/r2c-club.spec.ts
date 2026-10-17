@@ -3,7 +3,7 @@ import { expect, test, type Page } from "@playwright/test";
 import { checkoutAsGuest, guardNetwork, horizontalOverflow } from "./helpers";
 
 /**
- * R2c · Club, liga, disco y Shaker Rush. Lo que depende de la fecha (semana, mes, cupón del día) corre con el reloj de
+ * R2c · Club, disco y Shaker Rush. Lo que depende de la fecha (semana, mes, cupón del día) corre con el reloj de
  * Playwright: jueves 15/10/2026 al mediodía. El disco y la partida avanzan solo cuando la prueba lo pide.
  */
 const NOW = new Date("2026-10-15T12:00:00-03:00");
@@ -52,29 +52,17 @@ test("tabla de niveles: cuatro medallas de metal y tu nivel encendido solo con c
   await expect(current.getByRole("img", { name: "Medalla de plata" })).toBeVisible();
 });
 
-test("liga: elegir gimnasio suma tu aporte resaltado en el ranking y el panel lo ve", async ({ page }) => {
+test("marcador del Club con la cuenta demo: puntos y entrenos del mes, sin liga de gimnasios", async ({ page }) => {
   await page.clock.install({ time: NOW });
   await signedIn(page);
-  await page.goto("club/liga/");
-  const ranking = page.getByRole("list", { name: "Ranking mensual de gimnasios" });
-  await expect(ranking.getByRole("listitem")).toHaveCount(8);
-  await expect(ranking.getByText(/Tu aporte/)).toHaveCount(0);
-  const radio = page.getByRole("radio", { name: /Hierro Norte/ });
-  await expect(async () => {
-    await radio.check({ force: true, timeout: 1000 });
-    await expect(radio).toBeChecked({ timeout: 1000 });
-  }).toPass();
-  // Aporte de la cuenta demo el 15/10: $42.000 del mes (42) + 2 entrenos de la semana (40) = 82 puntos.
-  const mine = ranking.locator("[aria-current=true]");
-  await expect(mine).toContainText("Hierro Norte");
-  await expect(mine).toContainText("Tu aporte: +82 pts");
-  await expect(mine).toContainText("3.352");
-  await expect(page.getByText("Sumás para Hierro Norte.")).toBeVisible();
+  await page.goto("club/");
+  // Puntos de la cuenta demo el 15/10: $42.000 del mes (42) + 2 entrenos de la semana (40) = 82.
+  await expect(page.getByLabel("82 puntos este mes")).toBeVisible();
+  await expect(page.getByLabel("2 entrenos marcados este mes")).toBeVisible();
+  await expect(page.getByText(/[Ll]iga de gimnasios|tu box|tu gimnasio/)).toHaveCount(0);
   expect(await horizontalOverflow(page)).toBeLessThanOrEqual(0);
-  // En el panel, la misma tabla en solo lectura.
-  await page.goto("admin-demo/misiones/liga/");
-  await expect(page.getByRole("heading", { level: 1, name: "Liga de gimnasios" })).toBeVisible();
-  await expect(page.getByRole("row").filter({ hasText: "Hierro Norte" })).toContainText("Cuenta demo +82");
+  await page.goto("admin-demo/misiones/");
+  await expect(page.getByRole("link", { name: /Liga de gimnasios/ })).toHaveCount(0);
 });
 
 test("misión de entrenamiento: el premio se reclama una vez y el segundo reclamo queda bloqueado", async ({ page }) => {

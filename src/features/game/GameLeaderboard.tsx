@@ -2,15 +2,12 @@
 import { useId } from "react";
 import { Led } from "@/components/atoms/Led";
 import { visibleRows } from "@/demo/engine/game-ranking";
-import { GYMS } from "@/demo/fixtures/gyms";
 import { cn } from "@/lib/cn";
 import { NIGHT_PLATE, NIGHT_PLATE_ON } from "../club/styles";
 import { useWeeklyRanking } from "./useWeeklyRanking";
 
-const gymName = (id?: string) => GYMS.find((g) => g.id === id)?.name;
-
 /**
- * Ranking semanal de Shaker Rush como tablero de arcade: puesto y puntaje en LED, alias y su box. Tu mejor partida de
+ * Ranking semanal de Shaker Rush como tablero de arcade: puesto y puntaje en LED, y alias. Tu mejor partida de
  * la semana entra en su puesto y queda encendida; si quedaste abajo del top, tu fila se ve igual al final.
  */
 export function GameLeaderboard({ compact, className }: { compact?: boolean; className?: string }) {
@@ -33,7 +30,6 @@ export function GameLeaderboard({ compact, className }: { compact?: boolean; cla
             <Led value={String(r.position).padStart(2, "0")} label={`Puesto ${r.position}`} tone={r.position === 1 ? "amber" : "volt"} motion="none" className="h-6!" />
             <p className="min-w-0">
               <span className="block truncate font-mono text-sm font-bold tracking-wider">{r.alias}{r.mine && <span className="ml-2 rounded-xs bg-volt px-1.5 py-0.5 text-[10px] text-night">Tu partida</span>}</span>
-              {!compact && gymName(r.gymId) && <span className="block truncate text-[11px] text-night-muted">{gymName(r.gymId)}</span>}
             </p>
             <span className="font-lab text-base font-bold tabular-nums">{r.score.toLocaleString("es-AR")}</span>
           </li>

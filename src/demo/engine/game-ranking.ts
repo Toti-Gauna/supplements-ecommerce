@@ -10,7 +10,6 @@ export interface ScoreRecord { score: number; at: string }
 export interface RankRow {
   alias: string;
   score: number;
-  gymId?: string;
   position: number;
   mine: boolean;
 }
@@ -21,9 +20,9 @@ export const weekScores = (scores: ScoreRecord[], today: string) => scores.filte
 /** Tu mejor puntaje de la semana (0 si no jugaste). */
 export const weekBest = (scores: ScoreRecord[], today: string) => weekScores(scores, today).reduce((m, s) => Math.max(m, s.score), 0);
 
-export function weeklyRanking(seed: RankingSeed[], own: { alias: string; score: number; gymId?: string } | null): RankRow[] {
-  const rows: Omit<RankRow, "position">[] = seed.map((s) => ({ alias: s.alias, score: s.score, gymId: s.gymId, mine: false }));
-  if (own && own.score > 0) rows.push({ alias: own.alias, score: own.score, gymId: own.gymId, mine: true });
+export function weeklyRanking(seed: RankingSeed[], own: { alias: string; score: number } | null): RankRow[] {
+  const rows: Omit<RankRow, "position">[] = seed.map((s) => ({ alias: s.alias, score: s.score, mine: false }));
+  if (own && own.score > 0) rows.push({ alias: own.alias, score: own.score, mine: true });
   return rows
     .map((r, i) => ({ r, i }))
     .sort((a, b) => b.r.score - a.r.score || a.i - b.i)

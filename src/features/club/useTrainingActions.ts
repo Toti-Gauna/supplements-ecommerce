@@ -20,12 +20,12 @@ export function useTrainingActions() {
 
   const checkIn = () => {
     const added = useClub.getState().markCheckin(clubToday(new Date()));
-    toast(added ? { tone: "success", title: "Entreno de hoy marcado", description: "Suma para tu misión y para tu gimnasio." } : { tone: "info", title: "Hoy ya marcaste tu entreno" });
+    toast(added ? { tone: "success", title: "Entreno de hoy marcado", description: "Suma para tu misión y para tus puntos del Club." } : { tone: "info", title: "Hoy ya marcaste tu entreno" });
   };
 
   const trySport = (id: SportId) => {
     useClub.getState().trySport(id);
-    toast({ tone: "success", title: `Te anotaste: ${sportInfo(id)?.name ?? id}`, description: "Clase abierta simulada en un box de la liga." });
+    toast({ tone: "success", title: `Te anotaste: ${sportInfo(id)?.name ?? id}`, description: "Clase abierta simulada." });
   };
 
   const claim = (mission: TrainingMission, progress: number) => {
@@ -38,7 +38,7 @@ export function useTrainingActions() {
     if (coupon && addCouponOnce(useAdmin.getState().data.coupons, coupon).added) addPrizeCoupon(coupon, "Premio del Club emitido");
     toast({
       tone: "success", title: `Premio reclamado: ${mission.reward}`,
-      description: coupon ? `${coupon.code} · quedó en Mis cupones` : `+${mission.points} puntos para tu gimnasio`,
+      description: coupon ? `${coupon.code} · quedó en Mis cupones` : `+${mission.points} puntos del Club`,
       ...(coupon ? { action: { label: "Ver cupones", href: "/cupones/" } } : {}),
     });
   };

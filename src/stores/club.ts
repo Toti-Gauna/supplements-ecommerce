@@ -7,16 +7,14 @@ import { checkIn } from "@/demo/engine/club-training";
 import { demoStorage, STORAGE_PREFIX } from "./storage";
 
 /**
- * Club en este navegador (R2c): el gimnasio elegido para la liga, los entrenos marcados, el deporte probado y los
+ * Club en este navegador (R2c): los entrenos marcados, el deporte probado y los
  * premios reclamados. Las reglas (uno por día, un reclamo por período) son del engine; acá solo se guarda el
  * resultado. Se borra con "Reiniciar demo". En producción vive en la cuenta, en el servidor.
  */
 interface ClubState {
-  gymId: string | null;
   checkins: string[];
   sportTried: string | null;
   claims: ClubClaim[];
-  setGym: (id: string | null) => void;
   /** Marca el entreno de hoy; false si ya estaba marcado. */
   markCheckin: (today: string) => boolean;
   trySport: (id: string) => void;
@@ -28,11 +26,9 @@ interface ClubState {
 export const useClub = create<ClubState>()(
   persist(
     (set, get) => ({
-      gymId: null,
       checkins: [],
       sportTried: null,
       claims: [],
-      setGym: (gymId) => set({ gymId }),
       markCheckin: (today) => {
         const r = checkIn(get().checkins, today);
         if (r.added) set({ checkins: r.checkins });
@@ -40,14 +36,19 @@ export const useClub = create<ClubState>()(
       },
       trySport: (sportTried) => set({ sportTried }),
       addClaim: (claim) => set((s) => (s.claims.some((c) => c.key === claim.key) ? {} : { claims: [...s.claims, claim].slice(-60) })),
-      clear: () => set({ gymId: null, checkins: [], sportTried: null, claims: [] }),
+      clear: () => set({ checkins: [], sportTried: null, claims: [] }),
     }),
     {
       name: `${STORAGE_PREFIX}club`,
-      version: 1,
+      version: 2,
+      // v2: sin la liga de gimnasios (se descarta el gimnasio elegido).
+      migrate: (persisted) => {
+        const rest = Object.fromEntries(Object.entries((persisted ?? {}) as object).filter(([k]) => k !== "gymId"));
+        return rest as Pick<ClubState, "checkins" | "sportTried" | "claims">;
+      },
       storage: demoStorage,
       skipHydration: true,
-      partialize: ({ gymId, checkins, sportTried, claims }) => ({ gymId, checkins, sportTried, claims }),
+      partialize: ({ checkins, sportTried, claims }) => ({ checkins, sportTried, claims }),
     },
   ),
 );

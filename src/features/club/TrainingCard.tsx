@@ -48,7 +48,7 @@ export function TrainingCard({ mission, progress, claim, ctx, signedIn, onCheckI
         <p className="flex items-start gap-3">
           <Gift size={17} aria-hidden="true" className="mt-0.5 shrink-0 text-volt-ink" />
           <span className="min-w-0">
-            <span className="block text-[11px] font-bold uppercase tracking-wider text-muted">Premio · +{mission.points} pts para tu box</span>
+            <span className="block text-[11px] font-bold uppercase tracking-wider text-muted">Premio · +{mission.points} pts del Club</span>
             <span className="block text-sm font-bold">{mission.reward}</span>
           </span>
         </p>

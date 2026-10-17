@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { daysLeftInMonth, monthKey, weekDays, weekKey, weekStart } from "@/demo/engine/club-calendar";
+import { monthKey, weekDays, weekKey, weekStart } from "@/demo/engine/club-calendar";
 import { addCouponOnce, claimTraining, clubCouponCode, findClaim, type ClubClaim } from "@/demo/engine/club-claims";
 import { clubRing } from "@/demo/engine/club-ring";
 import { checkIn, monthCheckins, trainingProgress, weekCheckins } from "@/demo/engine/club-training";
@@ -21,8 +21,6 @@ describe("calendario del club", () => {
     expect(weekDays(TODAY)).toEqual(["2026-10-12", "2026-10-13", "2026-10-14", "2026-10-15", "2026-10-16", "2026-10-17", "2026-10-18"]);
     expect(weekKey(TODAY)).toBe("sem-2026-10-12");
     expect(monthKey(TODAY)).toBe("2026-10");
-    expect(daysLeftInMonth(TODAY)).toBe(17);
-    expect(daysLeftInMonth("2026-02-28")).toBe(1);
   });
 });
 

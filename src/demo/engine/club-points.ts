@@ -2,7 +2,7 @@ import { sameMonth } from "./club-calendar";
 import type { ClubClaim } from "./club-claims";
 
 /**
- * Puntos del Club en el mes (R2c): son tu aporte a la liga de gimnasios. Suman las compras, los entrenos marcados, los
+ * Puntos del Club en el mes (R2c): el marcador del Club. Suman las compras, los entrenos marcados, los
  * premios de misiones reclamados y tu mejor partida de Shaker Rush de la semana. Ilustrativo: en producción solo
  * cuentan pedidos pagados y partidas validadas en el servidor. El nivel Bestia duplica el total.
  */

@@ -3,7 +3,6 @@ import { clubToday } from "@/demo/engine/club-calendar";
 import { rivalOf, weekBest, weeklyRanking } from "@/demo/engine/game-ranking";
 import { WEEKLY_RANKING } from "@/demo/fixtures/game-ranking";
 import { useAccount } from "@/stores/account";
-import { useClub } from "@/stores/club";
 import { useGame } from "@/stores/game";
 import { useHydrated } from "@/stores/hydration";
 
@@ -18,8 +17,7 @@ export function useWeeklyRanking() {
   const hydrated = useHydrated();
   const scores = useGame((s) => s.scores);
   const name = useAccount((s) => s.user?.name);
-  const gymId = useClub((s) => s.gymId);
   const best = hydrated ? weekBest(scores, clubToday(new Date())) : 0;
-  const rows = weeklyRanking(WEEKLY_RANKING, hydrated ? { alias: ownAlias(name), score: best, gymId: gymId ?? undefined } : null);
+  const rows = weeklyRanking(WEEKLY_RANKING, hydrated ? { alias: ownAlias(name), score: best } : null);
   return { rows, best, mine: rows.find((r) => r.mine) ?? null, rival: rivalOf(rows) };
 }

@@ -12,7 +12,7 @@ import { NextCampaignCard } from "../campaigns/NextCampaignCard";
 import { HubCard, HubGrid } from "./HubCard";
 
 const DESCRIPTION: Record<string, string> = {
-  "/admin-demo/misiones/": "Retos de compra con un premio de un uso para el Club, y la liga de gimnasios.",
+  "/admin-demo/misiones/": "Retos de compra con un premio de un uso para el Club.",
   "/admin-demo/emails/": "Qué email sale en cada momento del pedido, el aviso de recompra y la bandeja de salida.",
   "/admin-demo/cupones/": "Cupones del carrito, la ruleta y los premios de Shaker Rush.",
   "/admin-demo/descuento-stack/": "Cuánto se descuenta al sumar suplementos de varias categorías.",

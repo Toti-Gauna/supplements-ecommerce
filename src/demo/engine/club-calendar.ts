@@ -33,9 +33,3 @@ export function weekDays(day: string): string[] {
 /** Si un momento ISO cae en la misma semana (o el mismo mes) que el día de hoy. */
 export const sameWeek = (iso: string, today: string) => weekStart(toDayKey(iso)) === weekStart(today);
 export const sameMonth = (iso: string, today: string) => monthKey(toDayKey(iso)) === monthKey(today);
-
-/** Días que faltan para que cierre el mes (el de hoy cuenta): el cierre de la liga. */
-export function daysLeftInMonth(day: string): number {
-  const [y, m] = day.split("-").map(Number) as [number, number];
-  return new Date(Date.UTC(y, m, 0)).getUTCDate() - Number(day.slice(8, 10)) + 1;
-}

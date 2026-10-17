@@ -27,7 +27,6 @@ const PAGES: [string, string, string][] = [
   ["carrito", "carrito/", "h1"],
   ["club", "club/", "h1"],
   ["juego", "club/juego/", "h1"],
-  ["liga de gimnasios", "club/liga/", "h1"],
   ["cuenta", "cuenta/", "h1"],
   ["campañas (calendario)", "campana/", "h1"],
   ["Mi rack vacío", "favoritos/", "h1"],
@@ -44,7 +43,6 @@ const PAGES: [string, string, string][] = [
   ["panel pedidos", "admin-demo/pedidos/", "h1"],
   ["panel clientes", "admin-demo/usuarios/", "h1"],
   ["panel marketing", "admin-demo/marketing/", "h1"],
-  ["panel liga de gimnasios", "admin-demo/misiones/liga/", "h1"],
   ["panel campañas", "admin-demo/campanas/", "[data-campaign-chip]"],
   ["panel editor de campaña", "admin-demo/campanas/editar/?id=black-friday", "[data-preview='desktop']"],
   ["panel piezas de campaña", "admin-demo/campanas/piezas/?id=black-friday", "[data-piece='story']"],
@@ -96,18 +94,16 @@ for (const mode of ["dark", "light"] as const) {
       const found = await audit(page);
       expect(found, describe(found)).toEqual([]);
     });
-    test("club con la cuenta demo, su box elegido y la liga (R2c)", async ({ page }) => {
+    test("club con la cuenta demo (R2c)", async ({ page }) => {
       await page.addInitScript(() => {
         localStorage.setItem("volta-demo:account", JSON.stringify({ state: { user: { name: "Sofía Demo", email: "sofia.demo@ejemplo.com" }, usedRewards: [], wheelPrize: null }, version: 0 }));
-        localStorage.setItem("volta-demo:club", JSON.stringify({ state: { gymId: "hierro-norte", checkins: [], sportTried: "boxeo", claims: [] }, version: 1 }));
+        localStorage.setItem("volta-demo:club", JSON.stringify({ state: { checkins: [], sportTried: "boxeo", claims: [] }, version: 2 }));
       });
-      for (const path of ["club/", "club/liga/"]) {
-        await page.goto(path);
-        await expect(page.getByText("Tu box", { exact: true }).first()).toBeVisible();
-        await page.waitForTimeout(400);
-        const found = await audit(page);
-        expect(found, describe(found)).toEqual([]);
-      }
+      await page.goto("club/");
+      await expect(page.getByText("Tus puntos del mes", { exact: true })).toBeVisible();
+      await page.waitForTimeout(400);
+      const found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
     });
     test("disco olímpico con «Cargá la barra» y Shaker Rush con el resultado arcade (R2c)", async ({ page }) => {
       await page.addInitScript(() => { (window as unknown as { __voltaGameTest: object }).__voltaGameTest = { seed: 11, autopilot: true }; });

@@ -127,12 +127,10 @@ rayos, esquiva hamburguesas.
 - Mostrale el **ranking de la semana** y **Compartir puntaje**: arma una tarjeta 9:16 para historias.
 - "¿Sabés cuánto tiempo se queda un pibe de 20 años jugando esto en tu tienda? Y cada vez que entra, ve tus ofertas."
 
-## Si pide más · Club, liga y Mi rack (1 minuto, celular)
+## Si pide más · Club y Mi rack (1 minuto, celular)
 
 - `/club/`: niveles con medallas, misiones de entrenamiento ("Entrená 3 veces esta semana") con **Reclamar premio**,
   que se cobra una sola vez. Al invitado lo invita a crear la cuenta demo, no le promete nada.
-- `/club/liga/`: elige su gimnasio y ve el ranking del mes de los boxes de Mar del Plata, con su aporte marcado.
-  "Los gimnasios compiten y te traen a sus alumnos."
 - Tocá el corazón en dos productos y abrí **Mi rack**: total, **Agregar todo al carrito**, **Armar stack con esto** y
   **Avisame si baja o si vuelve** (simulado: bajale el precio en el panel y el aviso salta).
 - **Ayuda del box** (pie de página): preguntas por tema con buscador; "devolucion" sin tilde también encuentra.

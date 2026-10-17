@@ -21,5 +21,10 @@ function Fallback({ hits, total, opened }: GiftSceneProps) {
   );
 }
 
-/** La bolsa de boxeo se descarga recién cuando hace falta (la ficha no la carga hasta abrir el regalo). */
-export const GiftScene = dynamic<GiftSceneProps>(() => import("./BoxingBag").catch(() => ({ default: Fallback })), { ssr: false, loading: Loading });
+/**
+ * La apertura vista desde afuera (la de la fecha, la bolsa original o el locker): se descarga recién cuando hace falta
+ * (la ficha no la carga hasta abrir el formulario del regalo). La apertura interactiva es `GiftOpening`.
+ */
+export const GiftScene = dynamic<GiftSceneProps>(() => import("./ScenePreview").catch(() => ({ default: Fallback })), { ssr: false, loading: Loading });
+
+export { openingName } from "./variants";

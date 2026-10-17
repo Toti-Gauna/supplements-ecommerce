@@ -13,5 +13,8 @@ export function summaryRows(quote: Omit<Quote, "lines">): SummaryRow[] {
     ...(quote.couponDiscount > 0 ? [{ label: "Cupón", amount: quote.couponDiscount, negative: true }] : []),
     ...(quote.transferDiscount > 0 ? [{ label: "Descuento transferencia/QR", amount: quote.transferDiscount, negative: true }] : []),
     { label: quote.freeShippingApplied ? "Envío (gratis)" : "Envío", amount: quote.shippingCost, pendingLabel: "Elegí la entrega" },
+    // R3b: gift cards que se compran (sin descuentos) y el saldo de una gift card usado (descuento, no un pago).
+    ...((quote.giftCardSales ?? 0) > 0 ? [{ label: "Gift cards", amount: quote.giftCardSales }] : []),
+    ...((quote.giftCardUsed ?? 0) > 0 ? [{ label: "Saldo de gift card", amount: quote.giftCardUsed, negative: true }] : []),
   ];
 }

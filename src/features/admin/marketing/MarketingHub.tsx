@@ -3,6 +3,8 @@ import { upcomingCampaign } from "@/demo/admin/campaign-calendar";
 import { packsHubMeta } from "@/demo/admin/pack-rows";
 import { DEMO_TODAY } from "@/demo/fixtures/admin-orders";
 import { stackRuleLabel } from "@/demo/admin/stack-rule";
+import { giftCardStats } from "@/demo/admin/gift-views";
+import { formatARS } from "@/lib/money";
 import { DEFAULT_STACK_RULE } from "@/demo/engine/stack";
 import { ADMIN_NAV } from "../nav";
 import { useAdmin } from "@/stores/admin";
@@ -18,6 +20,7 @@ const DESCRIPTION: Record<string, string> = {
   "/admin-demo/descuento-stack/": "Cuánto se descuenta al sumar suplementos de varias categorías.",
   "/admin-demo/packs/": "Packs por objetivo o deporte, con descuento, y las suscripciones “todos los meses” con lo que hay que preparar.",
   "/admin-demo/campanas/": "Calendario del año con las fechas comerciales y los días del deporte: titular, cupón, productos, resultados y piezas.",
+  "/admin-demo/regalos/": "Gift cards emitidas y canjeadas con su saldo y vencimiento, y el sabor que eligió cada uno al abrir su regalo.",
   "/admin-demo/estudio/": "Piezas para Instagram con los potes animados: oferta, producto, stack o juego.",
   "/admin-demo/contenido/": "Carrusel de la portada, textos y preguntas frecuentes.",
 };
@@ -28,6 +31,7 @@ export function MarketingHub() {
   const next = upcomingCampaign(themes, DEMO_TODAY);
   const { templates } = useAdmin((s) => s.emails);
   const packs = useAdmin((s) => s.data.packs);
+  const giftCards = useAdmin((s) => s.data.giftCards ?? []);
   const subscriptions = useSubscriptions((s) => s.subscriptions);
   const meta: Record<string, string> = {
     "/admin-demo/misiones/": `${missions.filter((m) => m.active !== false).length} de ${missions.length} activas`,
@@ -35,6 +39,7 @@ export function MarketingHub() {
     "/admin-demo/cupones/": `${coupons.filter((c) => c.active !== false).length} cupones activos · ruleta ${wheel.active ? "visible" : "pausada"}`,
     "/admin-demo/descuento-stack/": stackRuleLabel(settings.stack ?? DEFAULT_STACK_RULE),
     "/admin-demo/packs/": packsHubMeta(packs, subscriptions),
+    "/admin-demo/regalos/": `${giftCards.length} gift cards · ${formatARS(giftCardStats(giftCards, DEMO_TODAY).outstanding)} de saldo vivo`,
     "/admin-demo/campanas/": next ? `Próxima: ${next.theme.name} en ${next.daysLeft} ${next.daysLeft === 1 ? "día" : "días"}` : `${themes.length} campañas`,
   };
   return (

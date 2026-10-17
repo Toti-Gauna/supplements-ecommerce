@@ -1,10 +1,12 @@
 import { defaultAdminData, type AdminData } from "./defaults";
 import { withSportCampaigns } from "./migrate-campaigns";
 import { withFaqTopics } from "./migrate-faqs";
+import { withGiftData } from "./migrate-gifts";
 
 /**
  * v10–v12 ya usan el catálogo de suplementos: el carrusel agrega un campo opcional sin borrar ediciones. v14 suma el
- * equipamiento, v15 las campañas de R3a (días del deporte) y v16 los temas de la ayuda; cada paso corre una sola vez
+ * equipamiento, v15 las campañas de R3a (días del deporte), v16 los temas de la ayuda y v17 las gift cards y el estado
+ * de los regalos (R3b); cada paso corre una sola vez
  * y en orden.
  */
 export function migrateAdminData(persisted: unknown, version: number): Partial<AdminData> {
@@ -14,7 +16,8 @@ export function migrateAdminData(persisted: unknown, version: number): Partial<A
   if (!(version >= 10 && saved && compatible)) return defaultAdminData();
   const gear = version < 14 ? withGearCatalog(saved) : saved;
   const campaigns = version < 15 ? withSportCampaigns(gear) : gear;
-  return version < 16 ? withFaqTopics(campaigns) : campaigns;
+  const faqs = version < 16 ? withFaqTopics(campaigns) : campaigns;
+  return version < 17 ? withGiftData(faqs) : faqs;
 }
 
 /**

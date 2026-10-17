@@ -15,6 +15,7 @@ import { useCart } from "@/stores/cart";
 import { useHydrated } from "@/stores/hydration";
 import { BagLoad } from "./BagLoad";
 import { CadeteCountdown } from "./CadeteCountdown";
+import { GiftCardLines } from "./GiftCardLines";
 import { SeasonTicket } from "../campaigns/SeasonTicket";
 import { CartMissionNudge } from "./CartMissionNudge";
 import { CouponForm } from "./CouponForm";
@@ -31,10 +32,11 @@ export function CartView() {
   useDemoVersion();
   const { quote, couponCheck, isRegistered } = useCartQuote();
   const lines = useCart((s) => s.lines);
+  const cards = useCart((s) => s.giftCards ?? []);
   const { setQuantity, remove } = useCart();
   const goToCheckout = useGoToCheckout();
   if (!hydrated) return <ListSkeleton rows={2} label="Cargando carrito" />;
-  if (quote.lines.length === 0) {
+  if (quote.lines.length === 0 && cards.length === 0) {
     return (
       <div className="flex flex-col gap-12">
         <EmptyState title="Tu carrito está vacío" action={<ButtonLink href="/">Ver productos</ButtonLink>}>Sumá tu proteína, tu creatina o lo que necesites para entrenar.</EmptyState>
@@ -49,6 +51,7 @@ export function CartView() {
         ...packDiscountRows(quote.pack.entries),
         ...(quote.stack.discount > 0 ? [{ label: `Descuento stack (${quote.stack.pct} %)`, amount: quote.stack.discount, negative: true }] : []),
         ...(quote.couponDiscount > 0 ? [{ label: "Cupón", amount: quote.couponDiscount, negative: true }] : []),
+        ...(quote.giftCardSales > 0 ? [{ label: "Gift cards", amount: quote.giftCardSales }] : []),
         { label: "Envío", amount: null, pendingLabel: "Se calcula en el checkout" },
       ]}
       total={quote.total}
@@ -69,6 +72,7 @@ export function CartView() {
             const view = toLineView(q);
             return view && <CartLineItem key={view.id} line={view} inPack={inPack} onQuantity={(n) => setQuantity(view.id, n)} onRemove={() => remove(view.id)} />;
           }} />
+          <GiftCardLines />
         </ul>
       </div>
       {/* En el celular: cupón y resumen justo debajo de los productos. En escritorio: columna fija a la derecha. */}

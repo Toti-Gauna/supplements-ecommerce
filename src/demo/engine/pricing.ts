@@ -2,6 +2,7 @@ import type { Coupon, FulfillmentType, Pack, PaymentMethod } from "../types";
 import type { CartLine } from "./cart-types";
 import { getProduct, unitPrice } from "./catalog";
 import { couponDiscount } from "./coupons";
+import { giftCardApplicable } from "./gift-cards";
 import { demoData } from "./source";
 import { NO_PACK_DISCOUNT, packDiscount, type PackDiscount } from "./packs";
 import { DEFAULT_STACK_RULE, stackDiscount, type StackResult } from "./stack";
@@ -28,6 +29,10 @@ export interface Quote {
   transferDiscount: number;
   shippingCost: number | null;
   freeShippingApplied: boolean;
+  /** Gift cards que se compran en este carrito (R3b): sin descuentos ni envío. */
+  giftCardSales: number;
+  /** Saldo de gift card usado en esta compra: un renglón de descuento, nunca un pago acreditado. */
+  giftCardUsed: number;
   total: number;
 }
 
@@ -37,6 +42,10 @@ export interface QuoteOptions {
   fulfillment?: FulfillmentType | null;
   /** Packs a medida del carrito (el programa del quiz, L4), además de los del catálogo. */
   packs?: Pack[];
+  /** Montos de las gift cards que se compran (R3b). */
+  giftCards?: number[];
+  /** Saldo disponible de la gift card aplicada (ya validada con engine/gift-cards.ts). */
+  giftCardBalance?: number;
 }
 
 export function quoteLines(lines: CartLine[]): QuotedLine[] {
@@ -72,8 +81,12 @@ export function quoteCart(lines: CartLine[], options: QuoteOptions = {}): Quote 
   const baseShipping = shippingFor(options.fulfillment);
   const freeShippingApplied =
     baseShipping !== null && baseShipping > 0 && (coupon?.type === "FREE_SHIPPING" || subtotal >= settings.freeShippingFrom);
-  const shippingCost = baseShipping === null ? null : freeShippingApplied ? 0 : baseShipping;
-  const total = Math.max(0, afterStack - discount - transferDiscount + (shippingCost ?? 0));
+  // Solo gift cards (sin productos): no hay nada que enviar.
+  const shippingCost = baseShipping === null ? null : freeShippingApplied || !quoted.length ? 0 : baseShipping;
+  const goods = Math.max(0, afterStack - discount - transferDiscount + (shippingCost ?? 0));
+  // El saldo de una gift card paga productos y envío, no otra gift card.
+  const giftCardUsed = giftCardApplicable(options.giftCardBalance ?? 0, goods);
+  const giftCardSales = (options.giftCards ?? []).reduce((sum, a) => sum + Math.max(0, Math.round(a)), 0);
   return {
     lines: quoted,
     units: quoted.reduce((sum, q) => sum + q.line.quantity, 0),
@@ -84,7 +97,9 @@ export function quoteCart(lines: CartLine[], options: QuoteOptions = {}): Quote 
     transferDiscount,
     shippingCost,
     freeShippingApplied,
-    total,
+    giftCardSales,
+    giftCardUsed,
+    total: goods - giftCardUsed + giftCardSales,
   };
 }
 

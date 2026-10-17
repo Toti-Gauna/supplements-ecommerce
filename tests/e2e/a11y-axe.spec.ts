@@ -51,6 +51,10 @@ const PAGES: [string, string, string][] = [
   ["panel editor de pack", "admin-demo/packs/editar/?id=hipertrofia", "h1"],
   ["panel suscripciones", "admin-demo/packs/?ver=suscripciones", "h1"],
   ["panel categorías, objetivos y deportes", "admin-demo/categorias/", "h1"],
+  ["regalá energía (R3b)", "regalar/", "h1"],
+  ["taquilla de regalos (R3b)", "regalo/", "h1"],
+  ["panel regalos: gift cards (R3b)", "admin-demo/regalos/", "h1"],
+  ["panel regalos: estados y sabor elegido (R3b)", "admin-demo/regalos/?ver=regalos", "h1"],
 ];
 
 interface Violation { id: string; impact: string | null; help: string; nodes: { target: string[]; failureSummary?: string }[] }
@@ -121,6 +125,31 @@ for (const mode of ["dark", "light"] as const) {
       await expect(page.getByRole("button", { name: "Usar cupón ahora" })).toBeVisible();
       await page.clock.resume();
       await page.waitForTimeout(400);
+      found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+    });
+    test("regalo (R3b): locker con combinación (con error) y la tarjeta de atleta", async ({ page }) => {
+      const gift = { code: "REGALO-10CK-000H", from: "Ro", to: "Nacho", message: "Para el lunes: pierna y después batido.", occasion: "dia-del-padre", opening: "locker",
+        item: { slug: "ionic-whey", name: "Ionic Whey 100%", variant: "Chocolate · 2 lb (907 g)" }, createdAt: "2026-10-02T15:30:00.000Z" };
+      await page.addInitScript((g) => localStorage.setItem("volta-demo:gifts", JSON.stringify({ state: { sent: [g], saved: [], opened: [] }, version: 0 })), gift);
+      await page.goto(`regalo/?c=${gift.code}`);
+      const stage = page.getByRole("dialog", { name: "Regalo de Ro para Nacho" });
+      const code = stage.getByLabel("Combinación del locker");
+      await expect(code).toBeVisible();
+      await page.waitForTimeout(400);
+      let found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+      await expect(async () => {
+        await code.fill("1234");
+        await stage.getByRole("button", { name: "Abrir", exact: true }).click();
+        await expect(stage.getByRole("alert")).toBeVisible({ timeout: 1000 });
+      }).toPass({ timeout: 15_000 });
+      found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+      await code.fill("0210");
+      await stage.getByRole("button", { name: "Abrir", exact: true }).click();
+      await expect(stage.getByRole("heading", { name: gift.item.name })).toBeVisible();
+      await page.waitForTimeout(800);
       found = await audit(page);
       expect(found, describe(found)).toEqual([]);
     });
@@ -237,6 +266,37 @@ for (const mode of ["dark", "light"] as const) {
         await expect(page.getByRole("list", { name: "Potes en uso" })).toBeVisible({ timeout: 1000 });
       }).toPass();
       // Se mide como se abre la cuenta: desde arriba (el dock fijo del celular tapa lo que quede debajo al bajar).
+      await page.evaluate(() => window.scrollTo(0, 0));
+      await check();
+    });
+    test("R3b: armador Regalá energía (gift card y locker), sabor abierto para elegir y Mis regalos", async ({ page }) => {
+      const check = async () => {
+        await page.waitForTimeout(400);
+        const found = await audit(page);
+        expect(found, describe(found)).toEqual([]);
+      };
+      await page.goto("p/ionic-whey/");
+      const modal = page.getByRole("dialog", { name: "Regalá energía" });
+      await expect(async () => {
+        if (!(await modal.isVisible())) await page.getByRole("region", { name: "Elegí sabor, tamaño y cantidad" }).getByRole("button", { name: "Regalar ahora" }).click({ timeout: 1000 });
+        await expect(modal).toBeVisible({ timeout: 1000 });
+      }).toPass();
+      await modal.getByText("Que elija el sabor").click();
+      await modal.getByText("Locker con combinación", { exact: true }).click();
+      await check();
+      await modal.getByText("Gift card con monto").click();
+      await check();
+      await page.keyboard.press("Escape");
+      await page.goto("regalo/?c=REGALO-SAB0-R01D");
+      const stage = page.getByRole("dialog", { name: "Regalo de Mili para Fran" });
+      await stage.getByLabel("Combinación del locker").fill("0310");
+      await stage.getByRole("button", { name: "Abrir", exact: true }).click();
+      await stage.getByRole("button", { name: "Elegí tu sabor" }).click();
+      await expect(stage.getByRole("heading", { name: "Elegí tu sabor" })).toBeVisible();
+      await check();
+      await page.addInitScript(() => { try { localStorage.setItem("volta-demo:account", JSON.stringify({ state: { user: { name: "Sofía Demo", email: "sofia.demo@ejemplo.com" } }, version: 0 })); } catch { /* sin almacenamiento */ } });
+      await page.goto("cuenta/#regalos");
+      await expect(page.getByRole("list", { name: "Mis gift cards" })).toBeVisible();
       await page.evaluate(() => window.scrollTo(0, 0));
       await check();
     });

@@ -1,0 +1,126 @@
+"use client";
+import type { GiftOpening } from "@/demo/engine/gift-options";
+import type { GiftOccasion } from "@/demo/types";
+import { canvasPalette, canvasToPng } from "@/lib/share-png";
+import { drawLogo, fitLine, wrap } from "../../admin/studio/render/paint";
+import { drawBackdrop, drawDiagonal } from "./backdrop";
+import { drawTicket } from "./ticket";
+import { cardPalette } from "./designs";
+import { drawBag, drawLocker } from "./motifs";
+import { drawCrate } from "./motif-crate";
+import { selectOpening } from "@/demo/engine/gift-opening";
+
+/**
+ * Tarjeta del regalo para mandar por WhatsApp (R3b): 1080 × 1350 (4:5), dibujada en un canvas del navegador. Lleva para
+ * quién es, de quién, el mensaje escrito a mano, la apertura (bolsa o locker), el código y dónde abrirlo. Lo de
+ * adentro es sorpresa: nunca muestra el producto ni el precio.
+ */
+export const CARD_W = 1080;
+export const CARD_H = 1350;
+const PAD = 72;
+
+export interface GiftCardArtData {
+  to: string;
+  from: string;
+  message: string;
+  occasion: GiftOccasion;
+  /** Nombre de la ocasión ("Navidad"); sin fecha especial, vacío. */
+  occasionName?: string;
+  design?: string;
+  opening: GiftOpening;
+  /** El locker usa la fecha del regalo como combinación (se da la pista) o una propia. */
+  lockerHint?: "fecha" | "propia";
+  /** REGALO-XXXX-XXXX; en la vista previa todavía no existe. */
+  code?: string;
+  /** Dónde se abre ("tienda.com/regalo"). */
+  where: string;
+}
+
+const FALLBACK = { to: "Para vos", from: "…" };
+
+export function drawGiftCard(ctx: CanvasRenderingContext2D, d: GiftCardArtData) {
+  const W = CARD_W, H = CARD_H;
+  const c = canvasPalette();
+  const p = cardPalette(d.design, d.occasion);
+  const motifX = 790;
+  ctx.save();
+  ctx.clearRect(0, 0, W, H);
+  drawBackdrop(ctx, W, H, p, motifX);
+  drawDiagonal(ctx, W, p, d.occasionName ? `EDICIÓN ${d.occasionName.toUpperCase()}` : "EDICIÓN REGALO", c.mono);
+  drawLogo(ctx, PAD, 30, 46, p.ink);
+  // La apertura que va a ver: el locker, la bolsa de boxeo (sin fecha) o la de su fecha (sorpresa: un cajón cerrado).
+  const { kind, scene, meta } = selectOpening({ occasion: d.occasion, opening: d.opening });
+  if (kind === "locker") drawLocker(ctx, motifX, 120, p, c.mono);
+  else if (scene === "original") drawBag(ctx, motifX, 96, p, c.display);
+  else drawCrate(ctx, motifX, 96, p, c.display, c.mono);
+  // Titular en itálica de póster: el nombre en la luz de señal.
+  ctx.textAlign = "left";
+  ctx.textBaseline = "alphabetic";
+  ctx.fillStyle = p.accent;
+  ctx.font = `800 26px ${c.mono}`;
+  ctx.fillText("ENTREGA ESPECIAL", PAD, 214);
+  const head = (text: string, y: number, color: string, max: number) => {
+    let size = 168;
+    ctx.font = `italic 900 ${size}px ${c.display}`;
+    while (size > 70 && ctx.measureText(text).width > max) { size -= 4; ctx.font = `italic 900 ${size}px ${c.display}`; }
+    ctx.fillStyle = color;
+    ctx.fillText(text, PAD - 6, y);
+  };
+  head(`${(d.to.trim() || FALLBACK.to).toUpperCase()},`, 380, p.accent, 600);
+  head("TENÉS UN", 530, p.ink, 560);
+  head("REGALO", 680, p.ink, 560);
+  // Mensaje en papel, escrito a mano y apenas torcido.
+  const message = d.message.trim();
+  ctx.save();
+  ctx.translate(PAD, 740);
+  ctx.rotate((-2 * Math.PI) / 180);
+  ctx.font = `600 46px Caveat, cursive`;
+  const lines = message ? wrap(ctx, `“${message}”`, 470, 4) : [];
+  const boxH = 70 + Math.max(1, lines.length) * 50;
+  ctx.fillStyle = p.paper;
+  ctx.shadowColor = "rgb(0 0 0 / 0.35)";
+  ctx.shadowBlur = 30;
+  ctx.shadowOffsetY = 14;
+  ctx.fillRect(0, 0, 540, boxH);
+  ctx.shadowColor = "transparent";
+  ctx.fillStyle = p.accent;
+  ctx.globalAlpha = 0.7;
+  ctx.fillRect(200, -16, 130, 34);
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = p.paperInk;
+  lines.forEach((l, i) => ctx.fillText(l, 34, 70 + i * 50));
+  if (!lines.length) { ctx.globalAlpha = 0.45; ctx.fillText("Tu mensaje va acá.", 34, 70); ctx.globalAlpha = 1; }
+  ctx.font = `600 40px Caveat, cursive`;
+  ctx.textAlign = "right";
+  ctx.fillText(fitLine(ctx, `— ${d.from.trim() || FALLBACK.from}`, 400), 510, boxH - 20);
+  ctx.restore();
+  // Cómo se abre, debajo del motivo.
+  ctx.textAlign = "center";
+  ctx.fillStyle = p.ink;
+  ctx.font = `800 26px ${c.mono}`;
+  ctx.fillText(fitLine(ctx, kind === "locker" ? "SE ABRE CON COMBINACIÓN" : meta.name.toUpperCase(), 420), motifX, 1032);
+  ctx.fillStyle = p.muted;
+  ctx.font = `500 26px ${c.mono}`;
+  const hint = kind === "locker" ? (d.lockerHint === "propia" ? "Pedime la clave" : "Pista: el día que te lo regalé") : `${meta.steps} ${meta.unit[1]} y es tuyo`;
+  ctx.fillText(hint, motifX, 1070);
+  drawTicket(ctx, W, H, PAD, p, c, d);
+  ctx.restore();
+}
+
+/**
+ * Pide las fuentes de la tarjeta (el navegador baja una fuente recién cuando algo la usa: sin esto, la letra manuscrita
+ * del mensaje puede salir con la de respaldo).
+ */
+export async function loadCardFonts(): Promise<void> {
+  if (!document.fonts) return;
+  const c = canvasPalette();
+  await Promise.all([`600 46px Caveat`, `italic 900 100px ${c.display}`, `800 26px ${c.mono}`].map((f) => document.fonts.load(f).catch(() => [])));
+}
+
+/** La tarjeta como PNG (espera las fuentes para que el titular y el mensaje salgan con su letra). */
+export async function renderGiftCardPng(d: GiftCardArtData): Promise<Blob> {
+  await loadCardFonts();
+  const canvas = Object.assign(document.createElement("canvas"), { width: CARD_W, height: CARD_H });
+  drawGiftCard(canvas.getContext("2d")!, d);
+  return canvasToPng(canvas);
+}

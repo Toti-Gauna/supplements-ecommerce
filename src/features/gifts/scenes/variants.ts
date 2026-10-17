@@ -1,4 +1,5 @@
 import { brand } from "@/config/brand";
+import { LOCKER, selectOpening, type OpeningKind } from "@/demo/engine/gift-opening";
 /**
  * La bolsa de boxeo vestida según la ocasión del regalo. Los colores salen de la temática (`occasionColors`) y cada
  * fecha suma un detalle propio. Mapa abierto a propósito (no exhaustivo sobre `SeasonId`): un id de temática sin
@@ -44,6 +45,17 @@ export function bagVariant(occasion: string): BagVariant {
 /** Nombre de la bolsa como título ("Bolsa con flores bordadas"). */
 export function bagName(occasion: string): string {
   return bagVariant(occasion).name;
+}
+
+/**
+ * Nombre de la apertura que va a ver quien recibe (R3b): la de su fecha ("Árbol de discos"), la bolsa de boxeo de la
+ * marca si no tiene fecha, o el locker si quien regala lo eligió. Para la vista previa y Mis regalos; la frase
+ * completa ("Lo abre sacando los discos del árbol.") es `openingLine` del motor.
+ */
+export function openingName(occasion: string, opening?: OpeningKind): string {
+  const { kind, scene, meta } = selectOpening({ occasion, opening });
+  if (kind === "locker") return LOCKER.name;
+  return scene === "original" ? `${meta.name} ${brand.mark}` : meta.name;
 }
 
 /** La bolsa dentro de una frase ("contra una bolsa con flores bordadas"), sin pasar a minúscula "VOLTA". */

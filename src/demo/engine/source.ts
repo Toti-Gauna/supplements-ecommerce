@@ -3,11 +3,14 @@ import { coupons, demoSettings, heroFeatures, homeCta, missions, shippingZones, 
 import { storeFaqs } from "../fixtures/content";
 import { goals, type GoalInfo } from "../fixtures/goals";
 import { gamePrizes, type GamePrizeConfig } from "../fixtures/game";
+import { sampleGiftCards, sampleGiftRecords } from "../fixtures/gift-cards";
 import { packs } from "../fixtures/packs";
 import { sports, type SportInfo } from "../fixtures/sports";
 import { products } from "../fixtures/products";
 import { seasonalThemes, themeCoupons, themeSettings } from "../fixtures/themes";
 import { defaultWheel, type WheelConfig } from "../fixtures/wheel";
+import type { GiftCardRecord } from "./gift-cards";
+import type { GiftRecord } from "./gift-status";
 import type { PriceChange } from "./price-history";
 import type { Category, Coupon, HeroFeature, Mission, Pack, Product, SeasonalTheme, ShippingZone, StoreFaq, ThemeSettings } from "../types";
 
@@ -36,6 +39,10 @@ export interface DemoData {
   sports: SportInfo[];
   /** Cambios de precio hechos en el panel (R3, "Descuento real"): con la historia simulada dan el más bajo de 30 días. */
   priceChanges: PriceChange[];
+  /** Gift cards emitidas con su saldo y sus usos (R3b; panel → Regalos). La tienda valida el saldo contra esta lista. */
+  giftCards: GiftCardRecord[];
+  /** Estado de cada regalo (enviado, abierto, elegido, canjeado) y lo que eligió quien lo recibió (R3b). */
+  giftRecords: GiftRecord[];
 }
 
 export function defaultDemoData(): DemoData {
@@ -55,6 +62,8 @@ export function defaultDemoData(): DemoData {
     packs: packs.map((p) => ({ ...p, active: true })),
     sports,
     priceChanges: [],
+    giftCards: sampleGiftCards,
+    giftRecords: sampleGiftRecords,
   });
 }
 

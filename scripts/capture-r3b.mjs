@@ -50,6 +50,7 @@ for (const [width, height] of [[1440, 900], [390, 844]]) {
     await dialog.getByLabel("Mensaje").fill("Para que arranques el lunes con todo. Elegí el sabor que más te guste.");
     await dialog.getByText("Que elija el sabor").click();
     await dialog.getByText("Ring", { exact: true }).click();
+    await dialog.getByRole("heading", { name: /Qué regalás/ }).evaluate((el) => el.closest(".overflow-y-auto")?.scrollTo(0, 0));
     await shot(page, `armador-${tag}`);
     await dialog.getByText("Locker", { exact: true }).click();
     await dialog.locator("#regalo-apertura").scrollIntoViewIfNeeded();
@@ -64,7 +65,9 @@ for (const [width, height] of [[1440, 900], [390, 844]]) {
     await page.getByRole("heading", { name: "Mis regalos" }).waitFor();
     if (width < 800) await page.locator("#cuenta-seccion").scrollIntoViewIfNeeded();
     await page.getByRole("heading", { name: "Regalos que hice" }).waitFor();
-    await shot(page, `mis-regalos-${tag}`, true);
+    await shot(page, `mis-regalos-${tag}`);
+    await page.getByRole("heading", { name: "Regalos que hice" }).evaluate((el) => window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - 120));
+    await shot(page, `mis-regalos-enviados-${tag}`);
 
     await page.goto(`${url}admin-demo/regalos/`);
     await page.getByRole("heading", { name: "Regalos y gift cards" }).waitFor();

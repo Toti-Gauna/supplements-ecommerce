@@ -464,6 +464,36 @@ todo el período: es lo que tenés que tener en stock o pedirle al proveedor (**
 
 > En la demo: las suscripciones son simuladas, no se cobra ni se envía nada, y el ingreso mensual es una estimación.
 
+### Regalos y gift cards
+
+En la tienda, **Regalá energía** (desde la ficha con **Regalar ahora**, desde el checkout con **¿Es para regalo?** o en
+`/regalar/`) arma un regalo: un producto, un stack o una **gift card con monto** (de $ 5.000 a $ 300.000, en pesos
+enteros, vence a los 12 meses). Quien regala puede dejar **el sabor o el tamaño para que elija quien lo recibe**, elige
+el diseño de la tarjeta y la apertura (**bolsa de boxeo** o **locker** con combinación) y manda la tarjeta por WhatsApp.
+
+**Cómo se cobra lo que queda abierto.** Se cobra la opción más cara de las que quien recibe puede elegir y hay en stock
+(si deja el tamaño abierto, se paga el más grande). Quien recibe nunca ve el precio ni paga una diferencia, y no puede
+elegir una opción sin stock.
+
+![Regalos y gift cards en el panel](img/rediseno/r3b/panel-gift-cards-1440-claro.png)
+
+1. Entrá a **Marketing → Regalos y gift cards**.
+2. En la pestaña **Gift cards** ves arriba las **emitidas**, el **saldo vivo** (lo que todavía se puede usar), lo
+   **canjeado** y las que **vencen pronto** (30 días). La lista muestra código, para quién, monto, **saldo** con su barra,
+   estado (**Sin usar**, **Con saldo**, **Usada completa**, **Vencida**), cuándo se emitió, **cuándo vence** y en qué
+   pedidos se usó. Filtrá por estado o buscá por código, nombre o pedido.
+3. En la pestaña **Regalos** ves cada regalo con su estado (**Enviado**, **Abierto**, **Sabor elegido**, **Canjeado**)
+   y la columna **Sabor o tamaño elegido**: es lo que tenés que armar. "Falta elegir" quiere decir que lo abrió pero
+   todavía no eligió.
+
+**Cómo se usa una gift card.** El cliente escribe el código (GIFT-XXXX-XXXX) en el paso **Pago** del checkout: el saldo
+se descuenta del total como un renglón "Saldo de gift card" (es un descuento, no un pago). Si no alcanza, el resto lo
+paga con el medio que elija; si sobra, le queda el saldo para la próxima. Una vencida o sin saldo no se acepta.
+
+> En la demo: las gift cards y los regalos de muestra son inventados; las que se compran en este navegador aparecen acá.
+
+![Estados de los regalos y el sabor elegido](img/rediseno/r3b/panel-regalos-1440-claro.png)
+
 ---
 
 ## 12. Campañas
@@ -601,3 +631,4 @@ activado no avanza solo. Debajo quedan **Comprá por categoría**, **Entrená po
 | Las suscripciones a un pack no cobran ni envían nada: solo se cuentan y se listan | El cobro mensual y los avisos de cada entrega se definen con el medio de pago real |
 | Proveedores, clientes, pedidos y códigos de lote son inventados | Son los tuyos |
 | La fecha del panel está fija en el lunes 5 de octubre de 2026 | Es la fecha de hoy |
+| Las gift cards no tienen dinero real: el saldo es un descuento simulado y el regalo viaja dentro del link | El servidor emite la gift card, guarda el saldo y el link es una clave al azar |

@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef } from "react";
 import { cn } from "@/lib/cn";
-import { CARD_H, CARD_W, drawGiftCard, type GiftCardArtData } from "./drawGiftCard";
+import { CARD_H, CARD_W, drawGiftCard, loadCardFonts, type GiftCardArtData } from "./drawGiftCard";
 
 /** Lectura de la tarjeta para lectores de pantalla (y para los tests): lo mismo que dice la imagen. */
 export function cardLabel(d: GiftCardArtData): string {
@@ -21,7 +21,7 @@ export function GiftCardCanvas({ data, className }: { data: GiftCardArtData; cla
     let alive = true;
     const paint = () => { const ctx = canvas.current?.getContext("2d"); if (alive && ctx) drawGiftCard(ctx, JSON.parse(key) as GiftCardArtData); };
     const frame = requestAnimationFrame(paint);
-    void document.fonts?.ready.then(paint);
+    void loadCardFonts().then(paint);
     return () => { alive = false; cancelAnimationFrame(frame); };
   }, [key]);
   return (

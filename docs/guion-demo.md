@@ -20,7 +20,7 @@ cual en la demo.
 | 1:00 | La ficha que vende sola | Celular · `/p/ionic-whey/` | Precio por servicio, lote y vencimiento, cuánto le dura |
 | 2:00 | Armá tu stack (y el quiz) | Celular · `/crear/` | Ticket más alto con el descuento stack |
 | 3:00 | Ruleta y Shaker Rush | Celular · carrito y `/club/juego/` | Que juegue él: engancha y vuelve |
-| 4:30 | Regalo a golpes | Celular · `/regalo/` | Que golpee la bolsa: se ríe y se acuerda |
+| 4:30 | Regalá energía y la taquilla | Celular · `/regalar/` y `/regalo/` | Que arme un regalo con la tarjeta en vivo y que golpee la bolsa |
 | 5:15 | Temática del mes | Celular · "Probar temáticas" | La tienda cambia sola en cada fecha |
 | 5:45 | Instagram desde el Estudio | Compu · `/admin-demo/estudio/` | Contenido listo sin diseñador |
 | 6:30 | El panel: lo que le ahorra horas | Compu · `/admin-demo/` | Lista del proveedor, aumento, vencimientos, recompra, preparación, compras |
@@ -53,7 +53,8 @@ cierre (1 min). Si te pide **más**: quiz completo, compra de punta a punta con 
    tiza de la bolsa). Brillo alto, "no molestar" y cargador.
 6. En la compu dejá abiertas cuatro pestañas: la tienda, `/admin-demo/`, `/admin-demo/importar/` y
    `/admin-demo/estudio/`.
-7. Anotá a mano el código de regalo de la fecha: Día de la Madre `REGALO-MADR-E26B`, VOLTA `REGALO-VE1M-AR7X`
+7. Anotá a mano el código de regalo de la fecha: Día de la Madre `REGALO-MADR-E26B`, VOLTA `REGALO-VE1M-AR7X`; sabor
+   abierto `REGALO-SAB0-R01D` y gift card `REGALO-GC0S-0F1D` (la cuenta demo tiene la gift card `GIFT-M4RC-0SAG` con $ 6.600)
    (el resto está en [estado.md](estado.md), Fase 5).
 
 **Celular o compu**: la tienda siempre en el **celular** (es lo que ve su cliente; dáselo en la mano). El panel en la
@@ -154,16 +155,29 @@ Con el stack en el carrito:
 6. **Mi cuenta** → **Entrar a la cuenta demo** → **Mi box**: la whey de Sofía está en rojo ("Se termina esta
    semana") con **Recomprar**, y **Repetir mi último pedido** carga todo en un toque.
 
-## 4:30 · Regalo a golpes (45 segundos, celular)
+## 4:30 · Regalá energía y la taquilla (1 minuto, celular)
 
-**Tocá**: `/regalo/` → escribí el código de la fecha (`REGALO-MADR-E26B`) → **Abrir regalo**.
+**Tocá**: `/p/ionic-whey/` → **Regalar ahora**.
 
-![La bolsa de boxeo del regalo](img/celular-tienda-regalo.png)
+![Regalá energía con la tarjeta en vivo](img/rediseno/r3b/armador-390-oscuro.png)
 
-- Pasale el celular: "Pegale." Cinco golpes: la bolsa se balancea, suelta tiza y en el quinto sale el pote.
-- "Cualquiera regala un suplemento desde la ficha con **Regalar ahora**. Le llega un link o un código y lo abre así.
-  Quien recibe **nunca ve el precio**."
-- En cada fecha la bolsa cambia (moño de Navidad, guantes del Día del Padre, calabaza en Halloween).
+- "Regalás el producto, un stack o una **gift card con monto**." Escribí para quién y el mensaje: la **tarjeta de WhatsApp
+  se dibuja en vivo**. Marcá **Que elija el sabor**: "se cobra la opción más cara de las que puede elegir; quien recibe no
+  ve el precio ni paga diferencia".
+- Elegí el diseño (**Ring**, **Podio**…) y la apertura: **bolsa de boxeo** o **locker** con combinación (por defecto, el
+  día y el mes del regalo).
+- Después de pagar, **Mandar la tarjeta** la comparte como imagen (en la compu la descarga) junto con el link.
+
+**Tocá**: `/regalo/` → la taquilla → el código de prueba `REGALO-SAB0-R01D` (sabor abierto) o el de la fecha
+(`REGALO-MADR-E26B`).
+
+![La taquilla de regalos](img/rediseno/r3b/taquilla-390-oscuro.png)
+
+- Pasale el celular: "Pegale." Cinco golpes y sale el pote. Con el sabor abierto, **Elegí tu sabor** (los que no tienen
+  stock aparecen apagados) y **Guardar en mis regalos**.
+- Cerrá en **Mi cuenta → Mis regalos**: quien regaló ve si lo abrió, qué sabor eligió y si lo canjeó; las gift cards
+  con su saldo. En el panel, **Marketing → Regalos y gift cards**.
+- Gift card: `REGALO-GC0S-0F1D` → **Ver mi gift card**. El código GIFT se usa en el paso **Pago** del checkout.
 
 ## 5:15 · La temática del mes (30 segundos, celular)
 

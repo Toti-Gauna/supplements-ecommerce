@@ -78,3 +78,5 @@ export const heroFeatures: HeroFeature[] = [
 
 export const DEMO_TRACKING_TOKEN = `demo-${brand.id}`;
 export const DEMO_ORDER_CODE = `${ORDER_PREFIX}-DEMO-0001`;
+/** Seguimiento del pedido entregado de la cuenta demo (`deliveredSampleOrder`). */
+export const DEMO_DELIVERED_TOKEN = `demo-${brand.id}-entregado`;

@@ -1,7 +1,9 @@
 "use client";
 import { useCallback, useSyncExternalStore } from "react";
 
-export const ACCOUNT_TABS = ["pedidos", "suscripciones", "recompras", "regalos", "misiones", "premios", "direcciones"] as const;
+export const ACCOUNT_TABS = ["mi-box", "pedidos", "suscripciones", "regalos", "misiones", "premios", "direcciones"] as const;
+/** Hashes viejos que siguen abriendo su sección (los avisos de la ficha llevan a `#recompras`). */
+const ALIASES: Record<string, AccountTab> = { recompras: "mi-box" };
 export type AccountTab = (typeof ACCOUNT_TABS)[number];
 
 const listeners = new Set<() => void>();
@@ -12,7 +14,8 @@ function subscribe(cb: () => void) {
 }
 function read(): AccountTab {
   const h = decodeURIComponent(window.location.hash.slice(1));
-  return (ACCOUNT_TABS as readonly string[]).includes(h) ? (h as AccountTab) : "pedidos";
+  if (ALIASES[h]) return ALIASES[h];
+  return (ACCOUNT_TABS as readonly string[]).includes(h) ? (h as AccountTab) : "mi-box";
 }
 
 /**
@@ -20,7 +23,7 @@ function read(): AccountTab {
  * directo la que corresponde. Elegir otra reemplaza el hash sin sumar entradas al historial ni mover la página.
  */
 export function useAccountTab() {
-  const tab = useSyncExternalStore(subscribe, read, () => "pedidos" as const);
+  const tab = useSyncExternalStore(subscribe, read, () => "mi-box" as const);
   const select = useCallback((next: AccountTab) => {
     // Se conserva el estado del router de Next en el historial; solo cambia el fragmento.
     window.history.replaceState(window.history.state, "", `#${next}`);

@@ -72,7 +72,6 @@ async function toConfirm(page: Page) {
   await page.getByLabel("Nombre y apellido").fill("Lucía Gómez");
   await page.getByLabel("Email").fill("lucia@ejemplo.com");
   await page.getByLabel("Teléfono / WhatsApp").fill("223 555-1234");
-  await page.getByRole("button", { name: "Continuar a la entrega" }).click();
   await page.getByText("Retiro en el local").first().click();
   await page.getByRole("button", { name: "Continuar al pago" }).click();
   await page.getByText("Transferencia bancaria").click();
@@ -96,7 +95,6 @@ test("8.2.16 mismo modal y mismo borrador desde la ficha y desde \"¿Es para reg
   await page.getByLabel("Nombre y apellido").fill("Lucía Gómez");
   await page.getByLabel("Email").fill("lucia@ejemplo.com");
   await page.getByLabel("Teléfono / WhatsApp").fill("223 555-1234");
-  await page.getByRole("button", { name: "Continuar a la entrega" }).click();
   await page.getByText("Retiro en el local").first().click();
   await page.getByRole("button", { name: "Continuar al pago" }).click();
   await page.getByText("Transferencia bancaria").click();
@@ -109,8 +107,9 @@ test("8.2.16 mismo modal y mismo borrador desde la ficha y desde \"¿Es para reg
   await modal.getByRole("button", { name: "Agregar regalo al carrito" }).click();
   await expect(modal).toBeHidden();
   // Sigue en el último paso (no se confirmó solo) y el regalo figura en el paso y en el resumen.
-  await expect(page.getByRole("button", { name: "Confirmar pedido de demostración" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Confirmar pedido" })).toBeVisible();
   await expect(section.getByText("Regalo para Martina")).toBeVisible();
+  await page.getByRole("button", { name: /Ver ticket/ }).click();
   await expect(page.getByRole("region", { name: "Resumen de tu compra" }).getByText(/regalo para Martina/)).toBeVisible();
   // Se puede quitar y volver a marcar; "Regalar y pagar ahora" pide los términos y después confirma.
   await section.getByRole("button", { name: "Quitar" }).click();

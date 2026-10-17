@@ -169,6 +169,16 @@ Otros segmentos útiles: **Recompra atrasada** (ya se le terminó y no volvió),
 
 Lo mismo podés hacer desde **Recompras de la semana**, en el inicio.
 
+### Lo que ve el cliente: avisos y "Mi box"
+
+El cliente no tiene que pedir nada: la misma cuenta corre de su lado.
+
+- En la **ficha de entrega** (la pantalla que ve al confirmar la compra) toca **Activar avisos de recompra** y queda
+  un aviso por pote, 5 días antes de que se termine, contado desde el día que lo recibe.
+- En **Mi cuenta → Mi box** ve sus potes en uso como **baterías** que se descargan solas a partir de sus pedidos
+  pagados, con **Recomprar** en cada uno, **Repetir mi último pedido** y su **nivel del club** con la barra de lo que
+  le falta. En **Mis pedidos** cada pedido tiene **Seguir** y **Repetir**.
+
 **En la ficha también**: el historial de compras, el **Objetivo** (si no lo cargás, se deduce de lo que compra), el
 cumpleaños y notas internas (**Nota nueva** → **Guardar nota**).
 
@@ -295,7 +305,9 @@ Control de lote → Listo para despachar**.
 ![Control de lote en el celular](img/celular-control-lote.png)
 
 El lote queda anotado en el pedido ("Lote controlado: VL-2604-B · vence 10/2026") y al cliente le llega solo el email
-de "listo para retirar" o "listo para salir", según cómo lo recibe.
+de "listo para retirar" o "listo para salir", según cómo lo recibe. Desde ese momento, en el **seguimiento** de su
+pedido cada producto muestra su etiqueta **LOTE VL-2604-B · VTO 10/2026**: antes del control dice "Lote: se controla
+al armar tu pedido". Es la prueba de que vende originales y con fecha, sin que nadie pregunte por WhatsApp.
 
 En el celular, las columnas se eligen con los botones de **Etapa** de arriba.
 

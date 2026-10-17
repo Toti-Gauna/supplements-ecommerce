@@ -88,9 +88,8 @@ test("con movimiento reducido navegar y elegir sabor no inicia capturas nativas 
   page.on("pageerror", (error) => errors.push(error.message));
   await page.goto("c/pre-entrenos/");
   await page.getByRole("link", { name: "Overvolt pre-entreno", exact: true }).click();
-  const card = page.getByRole("region", { name: "Elegí sabor, tamaño y cantidad" });
-  await card.getByTitle("Limón").click();
-  await expect(card.getByRole("radio", { name: "Limón" })).toBeChecked();
+  await page.getByRole("group", { name: /^Sabor/ }).getByTitle("Limón").click();
+  await expect(page.getByRole("group", { name: /^Sabor/ }).getByRole("radio", { name: "Limón" })).toBeChecked();
   expect(await page.evaluate(() => (window as unknown as { __vtCalls: number }).__vtCalls)).toBe(0);
   expect(errors).toEqual([]);
 });

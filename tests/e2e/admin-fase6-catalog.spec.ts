@@ -8,6 +8,8 @@ import { guardNetwork, horizontalOverflow } from "./helpers";
 const toast = (page: Page, text: string | RegExp) => page.getByRole("status").filter({ hasText: text });
 const money = (n: string) => new RegExp(`\\$\\s?${n.replace(".", "\\.")}`);
 const buyCard = (page: Page) => page.getByRole("region", { name: "Elegí sabor, tamaño y cantidad" });
+/** Sabores de la ficha: en el celular van debajo de la galería, fuera de la placa de compra. */
+const flavors = (page: Page) => page.getByRole("group", { name: /^Sabor/ });
 
 async function supplierList(page: Page) {
   await page.goto("admin-demo/importar/");
@@ -81,8 +83,8 @@ async function liquidateLot(page: Page) {
   await expect(page.getByText("Liquidación −40 %").filter({ visible: true }).first()).toBeVisible();
   // En la tienda: precio tachado, sello con el vencimiento y la compra al precio de liquidación.
   await page.goto("p/ionic-whey/");
-  await buyCard(page).getByTitle("Vainilla").click();
-  await expect(buyCard(page).getByRole("radio", { name: "Vainilla" })).toBeChecked();
+  await flavors(page).getByTitle("Vainilla").click();
+  await expect(flavors(page).getByRole("radio", { name: "Vainilla" })).toBeChecked();
   await expect(page.getByText("Liquidación · vence 11/2026")).toBeVisible();
   await expect(page.getByText(money("54.900")).first()).toBeVisible();
   // R2a: la etiqueta de laboratorio del envase dice el lote que sale primero y su vencimiento.
@@ -90,7 +92,7 @@ async function liquidateLot(page: Page) {
   await expect(page.getByRole("button", { name: /Agregar al carrito/ }).filter({ visible: true }).first()).toBeEnabled();
   await expect(page.getByText(money("32.900")).first()).toBeVisible();
   // El chocolate no está liquidado.
-  await buyCard(page).getByTitle("Chocolate").click();
+  await flavors(page).getByTitle("Chocolate").click();
   await expect(page.getByText("Liquidación · vence 11/2026")).toHaveCount(0);
   // Deshacer: quitar la liquidación vuelve al precio de lista.
   await page.goto("admin-demo/productos/?ver=variantes&vence=liquidacion");
@@ -98,7 +100,7 @@ async function liquidateLot(page: Page) {
   await page.getByRole("dialog", { name: "Liquidar el lote VL-2603-W" }).getByRole("button", { name: "Quitar liquidación" }).click();
   await expect(toast(page, "Liquidación quitada")).toBeVisible();
   await page.goto("p/ionic-whey/");
-  await buyCard(page).getByTitle("Vainilla").click();
+  await flavors(page).getByTitle("Vainilla").click();
   await expect(page.getByText("Liquidación · vence 11/2026")).toHaveCount(0);
 }
 

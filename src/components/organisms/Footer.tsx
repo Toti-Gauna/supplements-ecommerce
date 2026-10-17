@@ -11,7 +11,7 @@ import { ResetDemoButton } from "./ResetDemoButton";
 import { WhatsAppLink } from "./WhatsAppLink";
 
 const COLS = [
-  { title: "Tienda", links: [["/categorias/", "Todas las categorías"], ["/packs/", "Packs"], ["/crear/", "Armá tu stack"], ["/club/", brand.club], ["/club/juego/", "Shaker Rush"], ["/cupones/", "Mis cupones"], ["/regalo/", "Tengo un regalo"]] },
+  { title: "Tienda", links: [["/categorias/", "Todas las categorías"], ["/packs/", "Packs"], ["/crear/", "Armá tu stack"], ["/club/", brand.club], ["/club/juego/", "Shaker Rush"], ["/cupones/", "Mis cupones"], ["/regalar/", "Regalá energía"], ["/regalo/", "Tengo un regalo"]] },
   { title: "Ayuda", links: [["/preguntas/", "Ayuda del box"], [`/pedido/${DEMO_TRACKING_TOKEN}/`, "Seguimiento de pedido"], ["/cuenta/", "Mi cuenta"]] },
   { title: "Legales", links: [["/terminos/", "Términos y condiciones"], ["/privacidad/", "Política de privacidad"], ["/arrepentimiento/", "Botón de arrepentimiento"]] },
 ];

@@ -33,12 +33,13 @@ export function CheckoutTicket({ quote, couponCheck, isRegistered, className }: 
   const promise = useOrderPromise(quote.lines.map((q) => q.line));
   const listed = useDemoData((d) => d.packs);
   const custom = useCart((s) => s.customPacks);
+  const cards = useCart((s) => s.giftCards ?? []);
   const packs = [...(listed ?? []), ...(custom ?? [])];
   return (
     <div className={cn("flex flex-col gap-3", className)}>
       <button type="button" aria-expanded={open} aria-controls="checkout-ticket" onClick={() => setOpen((v) => !v)}
         className="plate flex min-h-14 items-center justify-between gap-3 rounded-sm border border-line px-4 text-left lg:hidden">
-        <span className="eyebrow min-w-0 text-muted">{open ? "Ocultar ticket" : "Ver ticket"}<span className="block font-medium normal-case tracking-normal">{quote.units} {quote.units === 1 ? "producto" : "productos"}</span></span>
+        <span className="eyebrow min-w-0 text-muted">{open ? "Ocultar ticket" : "Ver ticket"}<span className="block font-medium normal-case tracking-normal">{quote.units + cards.length} {quote.units + cards.length === 1 ? "producto" : "productos"}</span></span>
         <span className="flex shrink-0 items-center gap-2 whitespace-nowrap font-display text-2xl tabular-nums">{formatARS(quote.total)}<ChevronDown size={18} aria-hidden="true" className={cn("transition-transform", open && "rotate-180")} /></span>
       </button>
       <div id="checkout-ticket" className={cn("flex-col gap-3 lg:flex", open ? "flex" : "hidden")}>
@@ -58,6 +59,12 @@ export function CheckoutTicket({ quote, couponCheck, isRegistered, className }: 
                 )),
               ];
             })}
+            {cards.map((c) => (
+              <li key={c.id} className="flex justify-between gap-2">
+                <span className="min-w-0 truncate">Gift card · para {c.gift.to}</span>
+                <span className="shrink-0 whitespace-nowrap font-mono tabular-nums">{formatARS(c.amount)}</span>
+              </li>
+            ))}
           </ul>
           <p className="mt-3 flex items-start gap-2 border-t border-dashed border-line pt-3 text-[13px]">
             <CalendarCheck size={16} aria-hidden="true" className="mt-0.5 shrink-0 text-volt-ink" />

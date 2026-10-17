@@ -10,6 +10,7 @@ import { useAccount } from "@/stores/account";
 import { useDemoData } from "@/stores/admin";
 import { useGiftDraft } from "@/stores/giftDraft";
 import { GiftModal } from "../gifts/GiftModal";
+import { useGiftCardPurchase } from "../gifts/useGiftCardPurchase";
 import { SeasonTicket } from "../campaigns/SeasonTicket";
 import { useCurrentTheme } from "../themes/useCurrentTheme";
 import { AttributeScores } from "./AttributeScores";
@@ -59,6 +60,7 @@ export function ProductDetail({ product: initial, preview = false }: { product: 
   const avail = availability(product, sel.variant);
   const { purchase, ready } = useProductPurchase(product, sel.variant, quantity, canBuy);
   const [giftOpen, setGiftOpen] = useState(false);
+  const giftCard = useGiftCardPurchase();
   const user = useAccount((s) => s.user);
   const { theme } = useCurrentTheme();
   // El borrador del regalo es el mismo que usa el checkout: al reabrir sigue lo escrito (8.2.16).
@@ -93,8 +95,8 @@ export function ProductDetail({ product: initial, preview = false }: { product: 
             lowest={<LowestPrice30 product={product} variant={sel.variant} className="border-t border-line px-4 py-2 sm:px-5" />} />
           <ConfigureCard product={product} sel={sel} quantity={quantity} max={max} stockNote={stockNote(avail)} onQuantity={setQty} stock={stock} actions={<BuyActions {...buy} />} />
           {gear ? <GearLabel product={product} /> : <LotLabel product={product} variant={sel.variant} />}
-          <GiftModal open={giftOpen} onClose={() => setGiftOpen(false)} productName={product.name}
-            onSubmit={(gift, mode) => { setGiftOpen(false); purchase(mode, gift); }} />
+          <GiftModal open={giftOpen} onClose={() => setGiftOpen(false)} allowGiftCard subject={{ kind: "producto", product, variant: sel.variant, quantity }}
+            onSubmit={(result, mode) => { setGiftOpen(false); if (result.kind === "gift-card") giftCard(result, mode); else purchase(mode, result.gift, result.variantId); }} />
         </div>
       </div>
       {/* Detalles. En el celular van intercalados (order); en escritorio, lo que se lee a la izquierda y lo que se usa

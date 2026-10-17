@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { BadgePercent, Boxes, Calculator, CalendarDays, Clapperboard, ClipboardList, Layers, LayoutDashboard, Mail, LifeBuoy, Megaphone, PackageCheck, PackageOpen, PackagePlus, Palette, PartyPopper, Settings, Shapes, Target, Users, Wallet, Warehouse } from "lucide-react";
+import { BadgePercent, Boxes, Calculator, CalendarDays, Clapperboard, ClipboardList, Gift, Layers, LayoutDashboard, Mail, LifeBuoy, Megaphone, PackageCheck, PackageOpen, PackagePlus, Palette, PartyPopper, Settings, Shapes, Target, Users, Wallet, Warehouse } from "lucide-react";
 
 export const ADMIN_GROUPS = ["Ventas", "Operaciones", "Catálogo", "Marketing", "Ajustes"] as const;
 
@@ -47,6 +47,8 @@ export const ADMIN_NAV: AdminNavItem[] = [
   { href: "/admin-demo/packs/", label: "Packs", short: "Packs", icon: PackagePlus, group: "Marketing" },
   // R3: Temáticas pasa a Campañas (calendario, editor con vista previa doble, resultados y piezas); la ruta vieja redirige.
   { href: "/admin-demo/campanas/", label: "Campañas", short: "Campañas", icon: PartyPopper, group: "Marketing" },
+  // R3b: gift cards (saldo y vencimiento) y el estado de cada regalo con el sabor elegido.
+  { href: "/admin-demo/regalos/", label: "Regalos y gift cards", short: "Regalos", icon: Gift, group: "Marketing" },
   { href: "/admin-demo/estudio/", label: "Estudio de contenido", short: "Estudio", icon: Clapperboard, group: "Marketing" },
   { href: "/admin-demo/contenido/", label: "Contenido", short: "Contenido", icon: Palette, group: "Marketing" },
   { href: "/admin-demo/ajustes/", label: "Ajustes", short: "Ajustes", icon: Settings, group: "Ajustes" },

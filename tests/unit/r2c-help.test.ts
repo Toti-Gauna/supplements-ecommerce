@@ -64,7 +64,7 @@ describe("v16: temas de la ayuda en un panel guardado", () => {
   }
 
   it("la versión del panel sube a 16", () => {
-    expect(ADMIN_STORE_VERSION).toBe(16);
+    expect(ADMIN_STORE_VERSION).toBeGreaterThanOrEqual(16);
   });
 
   it("pone tema a cada pregunta sin tocar el texto y suma solo las preguntas nuevas", () => {

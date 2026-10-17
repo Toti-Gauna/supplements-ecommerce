@@ -35,6 +35,10 @@ export interface DemoOrder {
   promisedDate?: string;
   /** Códigos de los regalos de este pedido (ver stores/gifts). */
   gifts?: string[];
+  /** Gift cards compradas en este pedido (R3b): monto de cada una. */
+  giftCardAmounts?: number[];
+  /** Saldo de gift card usado en este pedido (renglón de descuento). */
+  giftCardPayment?: { code: string; amount: number };
 }
 
 interface CheckoutState {
@@ -43,6 +47,8 @@ interface CheckoutState {
   fulfillment: FulfillmentType | null;
   paymentMethod: PaymentMethod | null;
   acceptedTerms: boolean;
+  /** Gift card aplicada en el paso Pago (R3b); el saldo se valida en engine/gift-cards.ts. */
+  giftCardCode: string | null;
   lastOrder: DemoOrder | null;
   patch: (data: Partial<Omit<CheckoutState, "patch" | "reset" | "placeOrder">>) => void;
   placeOrder: (order: DemoOrder) => void;
@@ -55,6 +61,7 @@ const empty = {
   fulfillment: null,
   paymentMethod: null,
   acceptedTerms: false,
+  giftCardCode: null as string | null,
 };
 
 export const useCheckout = create<CheckoutState>()(

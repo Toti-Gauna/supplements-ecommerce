@@ -1,6 +1,6 @@
 "use client";
 import { brand } from "@/config/brand";
-import { defaultLockerCode } from "@/demo/engine/gift-options";
+import { defaultLockerCode } from "@/demo/engine/gift-opening";
 import type { Gift } from "@/demo/engine/gifts";
 import { seasonalThemes } from "@/demo/fixtures/themes";
 import { withBase } from "@/lib/base-path";
@@ -34,8 +34,7 @@ export async function sendGiftCard(gift: Gift, url: string): Promise<SendResult>
   const blob = await renderGiftCardPng(artFromGift(gift));
   const name = `regalo-${slug(gift.to)}-${gift.code.toLowerCase()}.png`;
   const file = new File([blob], name, { type: "image/png" });
-  const how = gift.opening === "locker" ? "Se abre con combinación" : "Se abre a golpes";
-  const text = `🥊 ¡${gift.to}, te llegó un regalo de ${gift.from} en ${brand.name}! ${how}: ${url} (código ${gift.code})`;
+  const text = `🥊 ¡${gift.to}, te llegó un regalo de ${gift.from} en ${brand.name}! Abrilo acá: ${url} (código ${gift.code})`;
   if (typeof navigator.canShare === "function" && navigator.canShare({ files: [file], text })) {
     try {
       await navigator.share({ files: [file], text, title: `Un regalo de ${brand.name}` });

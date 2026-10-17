@@ -5,6 +5,7 @@ import type { Gift } from "@/demo/engine/gifts";
 import { formatDate } from "@/lib/date";
 import { formatARS } from "@/lib/money";
 import { GiftShare } from "../GiftShare";
+import { openingName } from "../scenes";
 import { GiftStatusTrack } from "./GiftStatusTrack";
 
 /**
@@ -21,7 +22,7 @@ export function SentGiftRow({ gift, record, balance }: { gift: Gift; record?: Gi
         <div className="min-w-0 flex-1">
           <p className="font-bold leading-tight">Para {gift.to} · {gift.item.name}</p>
           <p className="text-sm text-muted">
-            {formatDate(gift.createdAt)} · {gift.opening === "locker" ? "locker" : "bolsa de boxeo"}
+            {formatDate(gift.createdAt)} · {openingName(gift.occasion, gift.opening).toLowerCase()}
             {record?.chosenLabel ? <> · eligió <strong className="text-ink">{record.chosenLabel}</strong></> : null}
             {gift.giftCard && balance !== undefined ? <> · le quedan <strong className="text-ink">{formatARS(balance)}</strong></> : null}
           </p>

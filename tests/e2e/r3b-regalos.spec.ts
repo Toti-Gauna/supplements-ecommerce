@@ -115,10 +115,12 @@ test("sabor abierto: quien regala lo deja abierto, quien recibe lo elige despué
 
   await page.goto(new URL(href, page.url()).toString());
   const stage = page.getByRole("dialog", { name: "Regalo de Lucía para Mora" });
-  await stage.getByRole("button", { name: "Abrirlo de una vez" }).click();
+  // Locker: la combinación por defecto es el día y el mes del regalo.
+  await stage.getByLabel("Combinación del locker").fill("0510");
+  await stage.getByRole("button", { name: "Abrir", exact: true }).click();
   await expect(stage.getByRole("heading", { name: "Ionic Whey 100%" })).toBeVisible();
   await expect(stage.getByText(/\$\s?\d/)).toHaveCount(0);
-  await stage.getByRole("button", { name: "Guardar en mis regalos" }).click();
+  await stage.getByRole("button", { name: "Guardá tu regalo" }).click();
   // Guardar pide elegir primero; Frutilla de 5 lb no tiene stock.
   await expect(stage.getByRole("heading", { name: "Elegí tu sabor y tamaño" })).toBeVisible();
   await expect(stage.getByRole("radio", { name: /Frutilla · 5 lb/ })).toBeDisabled();
@@ -207,7 +209,6 @@ test("la taquilla: el arte a un lado y la entrada al otro, nunca un formulario c
   await page.getByRole("link", { name: /REGALO-GC0S-0F1D/ }).click();
   const stage = page.getByRole("dialog", { name: "Regalo de Gaby para Agus" });
   await stage.getByRole("button", { name: "Abrirlo de una vez" }).click();
-  await stage.getByRole("button", { name: "Ver mi gift card" }).click();
   await expect(stage.getByRole("img", { name: /60\.000/ })).toBeVisible();
   await expect(stage.getByText("GIFT-EQV1-P0ZR")).toBeVisible();
 });

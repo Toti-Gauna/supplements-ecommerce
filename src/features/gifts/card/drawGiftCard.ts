@@ -7,6 +7,8 @@ import { drawBackdrop, drawDiagonal } from "./backdrop";
 import { drawTicket } from "./ticket";
 import { cardPalette } from "./designs";
 import { drawBag, drawLocker } from "./motifs";
+import { drawCrate } from "./motif-crate";
+import { selectOpening } from "@/demo/engine/gift-opening";
 
 /**
  * Tarjeta del regalo para mandar por WhatsApp (R3b): 1080 × 1350 (4:5), dibujada en un canvas del navegador. Lleva para
@@ -46,8 +48,11 @@ export function drawGiftCard(ctx: CanvasRenderingContext2D, d: GiftCardArtData) 
   drawBackdrop(ctx, W, H, p, motifX);
   drawDiagonal(ctx, W, p, d.occasionName ? `EDICIÓN ${d.occasionName.toUpperCase()}` : "EDICIÓN REGALO", c.mono);
   drawLogo(ctx, PAD, 30, 46, p.ink);
-  if (d.opening === "locker") drawLocker(ctx, motifX, 120, p, c.mono);
-  else drawBag(ctx, motifX, 96, p, c.display);
+  // La apertura que va a ver: el locker, la bolsa de boxeo (sin fecha) o la de su fecha (sorpresa: un cajón cerrado).
+  const { kind, scene, meta } = selectOpening({ occasion: d.occasion, opening: d.opening });
+  if (kind === "locker") drawLocker(ctx, motifX, 120, p, c.mono);
+  else if (scene === "original") drawBag(ctx, motifX, 96, p, c.display);
+  else drawCrate(ctx, motifX, 96, p, c.display, c.mono);
   // Titular en itálica de póster: el nombre en la luz de señal.
   ctx.textAlign = "left";
   ctx.textBaseline = "alphabetic";
@@ -93,10 +98,10 @@ export function drawGiftCard(ctx: CanvasRenderingContext2D, d: GiftCardArtData) 
   ctx.textAlign = "center";
   ctx.fillStyle = p.ink;
   ctx.font = `800 26px ${c.mono}`;
-  ctx.fillText(d.opening === "locker" ? "SE ABRE CON COMBINACIÓN" : "SE ABRE A GOLPES", motifX, 1032);
+  ctx.fillText(fitLine(ctx, kind === "locker" ? "SE ABRE CON COMBINACIÓN" : meta.name.toUpperCase(), 420), motifX, 1032);
   ctx.fillStyle = p.muted;
   ctx.font = `500 26px ${c.mono}`;
-  const hint = d.opening === "locker" ? (d.lockerHint === "propia" ? "Pedime la clave" : "Pista: el día que te lo regalé") : "5 golpes y es tuyo";
+  const hint = kind === "locker" ? (d.lockerHint === "propia" ? "Pedime la clave" : "Pista: el día que te lo regalé") : `${meta.steps} ${meta.unit[1]} y es tuyo`;
   ctx.fillText(hint, motifX, 1070);
   drawTicket(ctx, W, H, PAD, p, c, d);
   ctx.restore();

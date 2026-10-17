@@ -11,7 +11,7 @@ import { cn } from "@/lib/cn";
 import { useGiftDraft } from "@/stores/giftDraft";
 import { brand } from "@/config/brand";
 import { designSwatch } from "../card/designs";
-import { bagPhrase } from "../scenes";
+import { openingLine } from "@/demo/engine/gift-opening";
 import { StepTitle } from "./StepTitle";
 
 /** Paso 3, "La tarjeta": el diseño de la imagen que se manda por WhatsApp y la ocasión (viste la bolsa y la tarjeta). */
@@ -45,7 +45,7 @@ export function CardSection({ onEdit }: { onEdit: (p: Partial<LineGift>) => void
           })}
         </div>
       </fieldset>
-      <Field id="gift-occasion" label="Ocasión" hint={draft.opening === "locker" ? "La tarjeta lleva el nombre de la fecha." : `Lo abre a golpes contra ${bagPhrase(draft.occasion)}.`}>
+      <Field id="gift-occasion" label="Ocasión" hint={draft.opening === "locker" ? "La tarjeta lleva el nombre de la fecha." : openingLine(draft)}>
         <Select id="gift-occasion" value={draft.occasion} onChange={(e) => isOccasion(e.target.value) && onEdit({ occasion: e.target.value })} aria-describedby="gift-occasion-hint">
           <option value="volta">Sin fecha especial ({brand.mark})</option>
           {seasonalThemes.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}

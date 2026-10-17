@@ -164,8 +164,8 @@ Con el stack en el carrito:
 - "Regalás el producto, un stack o una **gift card con monto**." Escribí para quién y el mensaje: la **tarjeta de WhatsApp
   se dibuja en vivo**. Marcá **Que elija el sabor**: "se cobra la opción más cara de las que puede elegir; quien recibe no
   ve el precio ni paga diferencia".
-- Elegí el diseño (**Ring**, **Podio**…) y la apertura: **bolsa de boxeo** o **locker** con combinación (por defecto, el
-  día y el mes del regalo).
+- Elegí el diseño (**Ring**, **Podio**…) y la apertura: **la de la fecha** (en Navidad, el árbol de discos; sin fecha,
+  la bolsa de boxeo) o el **locker con combinación** (por defecto, el día y el mes del regalo).
 - Después de pagar, **Mandar la tarjeta** la comparte como imagen (en la compu la descarga) junto con el link.
 
 **Tocá**: `/regalo/` → la taquilla → el código de prueba `REGALO-SAB0-R01D` (sabor abierto) o el de la fecha
@@ -173,11 +173,11 @@ Con el stack en el carrito:
 
 ![La taquilla de regalos](img/rediseno/r3b/taquilla-390-oscuro.png)
 
-- Pasale el celular: "Pegale." Cinco golpes y sale el pote. Con el sabor abierto, **Elegí tu sabor** (los que no tienen
-  stock aparecen apagados) y **Guardar en mis regalos**.
+- Pasale el celular y que lo abra (el de sabor abierto es un locker: la combinación es `0310`). Con el sabor abierto,
+  **Elegí tu sabor** (los que no tienen stock aparecen apagados) y **Guardá tu regalo**.
 - Cerrá en **Mi cuenta → Mis regalos**: quien regaló ve si lo abrió, qué sabor eligió y si lo canjeó; las gift cards
   con su saldo. En el panel, **Marketing → Regalos y gift cards**.
-- Gift card: `REGALO-GC0S-0F1D` → **Ver mi gift card**. El código GIFT se usa en el paso **Pago** del checkout.
+- Gift card: `REGALO-GC0S-0F1D`: al abrirla muestra el saldo y el código GIFT, que se usa en el paso **Pago** del checkout.
 
 ## 5:15 · La temática del mes (30 segundos, celular)
 

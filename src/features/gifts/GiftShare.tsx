@@ -9,7 +9,7 @@ import { formatDay } from "@/lib/date";
 import { useToasts } from "@/stores/toast";
 import { GiftCardCanvas } from "./card/GiftCardCanvas";
 import { artFromGift, sendGiftCard } from "./card/share";
-import { bagPhrase } from "./scenes";
+import { openingLine } from "@/demo/engine/gift-opening";
 import { brand } from "@/config/brand";
 
 const noop = () => () => {};
@@ -20,8 +20,7 @@ export function giftUrl(gift: GiftData): string {
   return `${window.location.origin}${withBase(giftPath(gift))}`;
 }
 
-const opensWith = (gift: GiftData) => (gift.opening === "locker" ? "Lo abre con la combinación de un locker." : `Lo abre a golpes contra ${bagPhrase(gift.occasion)}.`);
-const opensShort = (gift: GiftData) => (gift.opening === "locker" ? "Se abre con combinación" : "Se abre a golpes");
+
 
 /**
  * El regalo listo para mandar (R3b): la tarjeta como imagen para WhatsApp (con el link), el código, el link para copiar
@@ -31,7 +30,7 @@ export function GiftShare({ gift, compact }: { gift: GiftData; compact?: boolean
   const toast = useToasts((s) => s.push);
   const share = useSyncExternalStore(noop, canShare, () => false);
   const [busy, setBusy] = useState(false);
-  const text = (url: string) => `🥊 ¡${gift.to}, te llegó un regalo de ${gift.from} en ${brand.name}! ${opensShort(gift)}: ${url} (o con el código ${gift.code})`;
+  const text = (url: string) => `🥊 ¡${gift.to}, te llegó un regalo de ${gift.from} en ${brand.name}! Abrilo acá: ${url} (o con el código ${gift.code})`;
   const copy = async (value: string, title: string) => {
     try { await navigator.clipboard.writeText(value); toast({ tone: "success", title, description: value.length > 40 ? undefined : value }); }
     catch { toast({ tone: "error", title: "No se pudo copiar", description: "Copialo a mano: " + value }); }
@@ -55,7 +54,7 @@ export function GiftShare({ gift, compact }: { gift: GiftData; compact?: boolean
             <div>
               <p className="eyebrow text-volt">Regalo listo para mandar</p>
               <p className="mt-1 font-bold">Para {gift.to} · {gift.item.name}</p>
-              <p className="mt-0.5 text-sm text-night-muted">{opensWith(gift)}{gift.eta ? ` Listo para entregar el ${formatDay(gift.eta)}.` : ""}</p>
+              <p className="mt-0.5 text-sm text-night-muted">{openingLine(gift)}{gift.eta ? ` Listo para entregar el ${formatDay(gift.eta)}.` : ""}</p>
             </div>
           )}
           <button type="button" onClick={() => void sendCard()} disabled={busy}

@@ -10,7 +10,7 @@ import { useGifts } from "@/stores/gifts";
 import { GiftCardWallet } from "./account/GiftCardWallet";
 import { SentGiftRow } from "./account/SentGiftRow";
 import { occasionColors } from "./occasion";
-import { bagName } from "./scenes";
+import { openingName } from "./scenes";
 
 /** Regalos que llegan a la cuenta: los de muestra (con email), los comprados en este navegador y los guardados. */
 export function receivedGifts(email: string, sent: Gift[], saved: Gift[]): Gift[] {
@@ -54,8 +54,8 @@ export function AccountGifts({ email }: { email: string }) {
                     <span className={`grid h-14 w-14 shrink-0 place-items-center rounded-sm bg-white/15 ${isNew ? "gift-tile-new" : ""}`}><GiftIcon size={26} aria-hidden="true" style={{ color: c.accent }} /></span>
                     <span className="min-w-0">
                       <span className="block text-xs font-bold uppercase tracking-wider opacity-80">{state} · de {g.from}</span>
-                      <span className="block font-bold leading-snug">{isNew ? (g.opening === "locker" ? "Un locker con combinación" : bagName(g.occasion)) : g.item.name}</span>
-                      <span className="mt-0.5 block text-sm opacity-85">{isNew ? (g.opening === "locker" ? "Tocá y abrilo con la combinación" : "Tocá y abrilo a golpes") : record?.chosenLabel ?? "Ver el regalo y el mensaje"}</span>
+                      <span className="block font-bold leading-snug">{isNew ? openingName(g.occasion, g.opening) : g.item.name}</span>
+                      <span className="mt-0.5 block text-sm opacity-85">{isNew ? "Tocá y abrilo" : record?.chosenLabel ?? "Ver el regalo y el mensaje"}</span>
                     </span>
                   </Link>
                 </li>

@@ -469,7 +469,7 @@ todo el período: es lo que tenés que tener en stock o pedirle al proveedor (**
 En la tienda, **Regalá energía** (desde la ficha con **Regalar ahora**, desde el checkout con **¿Es para regalo?** o en
 `/regalar/`) arma un regalo: un producto, un stack o una **gift card con monto** (de $ 5.000 a $ 300.000, en pesos
 enteros, vence a los 12 meses). Quien regala puede dejar **el sabor o el tamaño para que elija quien lo recibe**, elige
-el diseño de la tarjeta y la apertura (**bolsa de boxeo** o **locker** con combinación) y manda la tarjeta por WhatsApp.
+el diseño de la tarjeta y la apertura (**la de la fecha**, por ejemplo el árbol de discos en Navidad o la bolsa de boxeo sin fecha, o un **locker con combinación**) y manda la tarjeta por WhatsApp.
 
 **Cómo se cobra lo que queda abierto.** Se cobra la opción más cara de las que quien recibe puede elegir y hay en stock
 (si deja el tamaño abierto, se paga el más grande). Quien recibe nunca ve el precio ni paga una diferencia, y no puede

@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { OPENINGS } from "../../src/demo/engine/gift-openings";
 import { guardNetwork, horizontalOverflow } from "./helpers";
 
 /** Polish 8.2 · Lote 7: el regalo en un modal compartido (8.2.16). La bolsa de boxeo se prueba en gifts-bag.spec.ts. */
@@ -24,7 +25,7 @@ test("8.2.16 modal centrado con vista previa: Escape y Cerrar, foco, fondo quiet
   await modal.getByLabel("Ocasión").selectOption("san-valentin");
   // La vista previa es la tarjeta que se manda por WhatsApp (un canvas con su lectura completa).
   await expect(modal.getByRole("img", { name: /^Tarjeta para Sofía, .*“Para tus salidas a correr”/ })).toBeVisible();
-  await expect(modal.getByText("Bolsa con corazones bordados", { exact: true })).toBeVisible();
+  await expect(modal.getByText(OPENINGS["san-valentin"].name, { exact: true })).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(modal).toBeHidden();
   await expect(trigger).toBeFocused();

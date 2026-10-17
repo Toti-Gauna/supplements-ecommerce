@@ -1,12 +1,13 @@
 "use client";
 import { useEffect, useRef } from "react";
+import { openingLine } from "@/demo/engine/gift-opening";
 import { cn } from "@/lib/cn";
 import { CARD_H, CARD_W, drawGiftCard, loadCardFonts, type GiftCardArtData } from "./drawGiftCard";
 
 /** Lectura de la tarjeta para lectores de pantalla (y para los tests): lo mismo que dice la imagen. */
 export function cardLabel(d: GiftCardArtData): string {
   const message = d.message.trim();
-  return [`Tarjeta para ${d.to.trim() || "…"}, de ${d.from.trim() || "…"}`, message ? `“${message}”` : "", d.opening === "locker" ? "Se abre con combinación" : "Se abre a golpes", d.code ?? ""]
+  return [`Tarjeta para ${d.to.trim() || "…"}, de ${d.from.trim() || "…"}`, message ? `“${message}”` : "", openingLine({ occasion: d.occasion, opening: d.opening }).replace(/\.$/, ""), d.code ?? ""]
     .filter(Boolean).join(". ");
 }
 

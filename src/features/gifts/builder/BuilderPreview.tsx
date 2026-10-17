@@ -6,7 +6,8 @@ import { DEMO_TODAY } from "@/demo/fixtures/admin-orders";
 import { seasonalThemes } from "@/demo/fixtures/themes";
 import { GiftCardCanvas } from "../card/GiftCardCanvas";
 import { giftWhere } from "../card/share";
-import { bagName } from "../scenes";
+import { GiftScene, openingName } from "../scenes";
+import { GIFT_HITS } from "../scenes/types";
 
 /**
  * Vista previa grande de "Regalá energía" (R3b): la misma tarjeta que se manda por WhatsApp, en vivo, sobre una placa
@@ -31,7 +32,10 @@ export function BuilderPreview({ draft, what }: { draft: LineGift; what: string 
         </div>
         <div className="rounded-sm bg-white/5 p-3 ring-1 ring-white/10">
           <dt className="eyebrow text-night-muted">Se abre</dt>
-          <dd className="mt-1 font-bold leading-snug">{locker ? "Locker con combinación" : <span>{bagName(draft.occasion)}</span>}</dd>
+          <dd className="mt-1 flex items-center gap-2 font-bold leading-snug">
+            <span aria-hidden="true" className="block h-12 w-10 shrink-0"><GiftScene occasion={draft.occasion} opening={draft.opening} hits={0} total={GIFT_HITS} opened={false} reduce /></span>
+            <span>{openingName(draft.occasion, draft.opening)}</span>
+          </dd>
         </div>
       </dl>
       <p className="flex items-center gap-2 text-xs text-night-muted"><EyeOff size={14} aria-hidden="true" /> Nunca ve el precio. Le llega la tarjeta con el link y el código.</p>

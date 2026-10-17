@@ -276,7 +276,15 @@ que regalar un suplemento traiga clientes nuevos.
 **Estado:** campañas (R3a) hechas (PR de R3a): 17 fechas con key visual propio (las 12 comerciales y 5 días del
 deporte: CrossFit Open, Actividad Física, Futbolista, Running y Boxeador, punto 9 de Ignacio), Drop en el carrusel,
 sala de espera, pantalla de carga por fecha, modo vitrina, franja "Próxima campaña", panel Campañas con calendario,
-editor con vista previa doble, resultados del cupón, "Sacar las piezas" y "Descuento real". Sigue R3b (regalos).
+editor con vista previa doble, resultados del cupón, "Sacar las piezas" y "Descuento real".
+
+**Estado de regalos:** R3b hecho (PR de R3b, capturas en [`img/rediseno/r3b/`](img/rediseno/r3b/)). "Regalá energía"
+con producto, stack o gift card con monto, sabor y tamaño abiertos para quien recibe, diseño de tarjeta, apertura de la
+fecha o locker con combinación, vista previa grande y la tarjeta como imagen para WhatsApp; `/regalar/` para elegir qué
+regalar; `/regalo/` como taquilla; bolsa de boxeo rehecha; locker; una apertura distinta para cada una de las 17 fechas
+(punto 11; Día del Amigo = spotter); revelación "tarjeta de atleta" en estudio neutro con "Compartí en tu historia";
+"Mis regalos" con el estado de cada regalo; gift card como saldo en el checkout (nunca "pago acreditado") y, en el
+panel, Marketing → Regalos y gift cards. Sigue R3c: una pantalla de carga única por fecha (pedido de Ignacio).
 
 ### Regalos: de formulario a momento
 - **"Regalá energía", quien regala:**

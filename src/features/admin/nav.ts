@@ -45,7 +45,8 @@ export const ADMIN_NAV: AdminNavItem[] = [
   { href: "/admin-demo/descuento-stack/", label: "Descuento stack", short: "Stack", icon: Layers, group: "Marketing" },
   // L3: packs por objetivo o deporte, con su descuento y la compra "todos los meses" (suscripciones simuladas).
   { href: "/admin-demo/packs/", label: "Packs", short: "Packs", icon: PackagePlus, group: "Marketing" },
-  { href: "/admin-demo/tematicas/", label: "Temáticas", short: "Temáticas", icon: PartyPopper, group: "Marketing" },
+  // R3: Temáticas pasa a Campañas (calendario, editor con vista previa doble, resultados y piezas); la ruta vieja redirige.
+  { href: "/admin-demo/campanas/", label: "Campañas", short: "Campañas", icon: PartyPopper, group: "Marketing" },
   { href: "/admin-demo/estudio/", label: "Estudio de contenido", short: "Estudio", icon: Clapperboard, group: "Marketing" },
   { href: "/admin-demo/contenido/", label: "Contenido", short: "Contenido", icon: Palette, group: "Marketing" },
   { href: "/admin-demo/ajustes/", label: "Ajustes", short: "Ajustes", icon: Settings, group: "Ajustes" },
@@ -55,7 +56,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
 /** Rutas sin entrada propia en el menú: se marcan como parte de otra sección. */
 const BELONGS_TO: [string, string][] = [
   ["/admin-demo/importar", "/admin-demo/productos/"], ["/admin-demo/stock", "/admin-demo/productos/"], ["/admin-demo/planilla", "/admin-demo/productos/"],
-  ["/admin-demo/produccion", "/admin-demo/preparacion/"],
+  ["/admin-demo/produccion", "/admin-demo/preparacion/"], ["/admin-demo/tematicas", "/admin-demo/campanas/"],
 ];
 
 export function isActive(pathname: string, href: string): boolean {

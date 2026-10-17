@@ -10,7 +10,14 @@ const ADMIN_ROUTES = [
   ["admin-demo/usuarios/ficha/?email=diego.a@ejemplo.com", "Diego Álvarez"],
   ["admin-demo/usuarios/", "Clientes"], ["admin-demo/reclamos/", "Reclamos"], ["admin-demo/contenido/", "Contenido"], ["admin-demo/estudio/", "Estudio de contenido"], ["admin-demo/ajustes/", "Ajustes"],
   ["admin-demo/packs/", "Packs y suscripciones"], ["admin-demo/packs/?ver=suscripciones", "Packs y suscripciones"], ["admin-demo/packs/editar/?id=hipertrofia", "Editar: Pack Hipertrofia"], ["admin-demo/packs/editar/?nuevo=1", "Nuevo pack"],
+  ["admin-demo/campanas/", "Campañas"], ["admin-demo/campanas/editar/?id=black-friday", "Black Friday"], ["admin-demo/campanas/piezas/?id=dia-del-boxeador", "Sacar las piezas"],
 ] as const;
+
+test("la ruta vieja de Temáticas lleva a Campañas (R3)", async ({ page }) => {
+  await page.goto("admin-demo/tematicas/");
+  await expect(page).toHaveURL(/admin-demo\/campanas\/$/);
+  await expect(page.getByRole("heading", { level: 1, name: "Campañas" })).toBeVisible();
+});
 
 test.describe("panel demo: rutas directas y refresh", () => {
   for (const [path, heading] of ADMIN_ROUTES) {

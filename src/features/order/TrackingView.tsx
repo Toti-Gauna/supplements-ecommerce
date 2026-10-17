@@ -6,6 +6,7 @@ import { DEMO_TODAY } from "@/demo/fixtures/admin-orders";
 import { cn } from "@/lib/cn";
 import { whatsappLink } from "@/lib/whatsapp";
 import { skinOf } from "@/features/themes/skins";
+import { SeasonTicket } from "@/features/campaigns/SeasonTicket";
 import { useCurrentTheme } from "@/features/themes/useCurrentTheme";
 import { useAdmin } from "@/stores/admin";
 import { useHydrated } from "@/stores/hydration";
@@ -36,6 +37,7 @@ export function TrackingView() {
   return (
     <div className="flex flex-col gap-6 sm:gap-8">
       <OrderItemsCard code={code} lines={order.lines} sample={order.sample} />
+      <SeasonTicket where="seguimiento" />
       {stateId === "pending" && (
         <section aria-labelledby="comprobante" className="flex flex-col gap-3 rounded-sm border-2 border-dashed border-volt-ink/40 bg-surface p-5 sm:p-6">
           <h2 id="comprobante" className="font-display text-2xl">Falta el comprobante</h2>

@@ -54,5 +54,39 @@
 /* El telón sube entero (transform). */
 @keyframes splash-curtain { to { transform: translate3d(0, calc(-100% - 40px), 0); } }
 
+/*
+ * Variante de campaña (R3a, ~1,8 s): con una fecha puesta, el script del <head> marca `html[data-splash-campaign]`
+ * (aparte de `data-season`: es la pieza de la campaña, no la tienda, y solo usa --season-* y la noche). La barra se
+ * carga con discos del color de la fecha, más altos cada tres como en una barra olímpica, y debajo del logo (nunca encima) se enciende un marcador con el nombre de la campaña y el descuento que cuenta hasta su número
+ * (`--splash-*`, ver seasonScript.ts). Línea de tiempo: logo y discos igual que siempre · marcador (0,75 s) · cuenta
+ * (0,8–1,35 s) · telón (1,55–1,8 s).
+ */
+@property --splash-count { syntax: "<integer>"; inherits: false; initial-value: 0; }
+#volta-splash .splash-score { display: none; }
+html[data-splash-campaign] #volta-splash { animation-delay: 1550ms; }
+html[data-splash-campaign] #volta-splash .splash-bar { gap: 2px; align-items: center; padding: 4px 8px; background: linear-gradient(transparent 45%, rgb(242 240 234 / 0.35) 45% 55%, transparent 55%); }
+html[data-splash-campaign] #volta-splash .splash-bar span { width: 7px; height: 18px; background: var(--season-accent); box-shadow: 0 0 8px var(--season-glow); animation-name: splash-disc; animation-duration: 90ms; }
+html[data-splash-campaign] #volta-splash .splash-bar span:nth-child(3n + 1) { height: 26px; }
+html[data-splash-campaign] #volta-splash .splash-score {
+  display: flex; flex-direction: column; align-items: center; gap: 0.2rem; margin-top: 1.1rem; padding: 0.45rem 1.1rem 0.35rem;
+  border: 1px solid rgb(242 240 234 / 0.18); border-top: 2px solid var(--season-accent); background: rgb(0 0 0 / 0.45);
+  animation: splash-plate 60ms steps(1, end) 750ms both; opacity: 0.001;
+}
+#volta-splash .splash-score-name::before {
+  content: var(--splash-name, ""); font-family: var(--font-mono), ui-monospace, monospace; font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--brand-night-muted);
+}
+html:not([data-splash-off]) #volta-splash .splash-score-off { display: none; }
+#volta-splash .splash-score-off {
+  display: block; min-width: 4.5ch; text-align: center; font-family: var(--font-mono), ui-monospace, monospace; font-size: 2.6rem; font-weight: 800;
+  line-height: 1; font-variant-numeric: tabular-nums; color: var(--season-accent); text-shadow: 0 0 18px var(--season-glow);
+  counter-reset: off var(--splash-count);
+  animation: splash-count 560ms steps(12, end) 800ms both;
+}
+#volta-splash .splash-score-off::after { content: var(--splash-pre, "") counter(off) var(--splash-suf, ""); }
+@media (min-width: 640px) { #volta-splash .splash-score-off { font-size: 3.4rem; } }
+@keyframes splash-disc { from { opacity: 0.12; transform: translateX(-6px); } to { opacity: 1; transform: none; } }
+@keyframes splash-count { from { --splash-count: 0; } to { --splash-count: var(--splash-n, 0); } }
+
 /* Con "reducir movimiento" no hay pantalla de carga. Va al final: pisa el display de la regla de arriba. */
 @media (prefers-reduced-motion: reduce) { #volta-splash { display: none; } }

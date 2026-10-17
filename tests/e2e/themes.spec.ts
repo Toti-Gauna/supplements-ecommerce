@@ -13,7 +13,9 @@ test("probar temáticas: Halloween cambia cinta, acento, carrusel y ofertas (el 
   await page.goto("");
   await page.getByRole("button", { name: "Probar temáticas" }).first().click();
   const picker = page.getByRole("dialog", { name: "Probar temáticas" });
-  await expect(picker.getByRole("button", { name: /^Probar / })).toHaveCount(13);
+  // Original y las 17 fechas (12 comerciales y 5 días del deporte), más el modo vitrina (R3a), que no recarga.
+  await expect(picker.getByRole("button", { name: /^Probar / })).toHaveCount(18);
+  await expect(picker.getByRole("button", { name: /Modo vitrina/ })).toBeVisible();
   await picker.getByRole("button", { name: "Probar Halloween" }).click();
   await expect(picker).toBeHidden();
 

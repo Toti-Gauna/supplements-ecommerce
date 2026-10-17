@@ -1,0 +1,76 @@
+/*
+ * Campañas (R3a) en el lenguaje "Arena" (propuesta C): noche de competencia, luz de escenario del color de la fecha,
+ * titulares gigantes en itálica comprimida, dorsales y cortes en diagonal. El escenario es de noche en los dos modos
+ * (como una foto de campaña); la fecha solo pone la luz (--season-accent / --season-glow). Se mueve una vez y queda
+ * quieto; con "reducir movimiento", nada se mueve.
+ */
+.stage { isolation: isolate; }
+/* El rack de la escena es de acero también de día (en claro el rack del catálogo es mesa de laboratorio). */
+/* Doble clase: le gana a `html[data-theme="light"] .rack-shot .rk-base` (app/rack.css). */
+.stage.stage :global(.rack-shot .rk-base) { fill: #0d0e10; }
+.stage.stage :global(.rack-shot .rk-glow) { filter: drop-shadow(0 0 6px var(--season-glow)); }
+
+.display {
+  font-family: "Archivo Variable", "Arial Black", sans-serif;
+  font-style: italic;
+  font-weight: 900;
+  font-stretch: 72%;
+  text-transform: uppercase;
+  line-height: 0.86;
+  letter-spacing: -0.01em;
+}
+.mono { font-family: "JetBrains Mono Variable", ui-monospace, monospace; }
+
+/* Corte diagonal abajo (página de campaña): placa troquelada. */
+.cut { clip-path: polygon(0 0, 100% 0, 100% calc(100% - 3.2vw), 0 100%); }
+/* Franja en diagonal del color de la fecha, como la cinta de largada. */
+.slash {
+  position: absolute; left: -10%; bottom: 0; width: 46%; height: 6px; transform: skewX(-38deg); transform-origin: left;
+  background: var(--season-accent); box-shadow: 0 0 22px var(--season-glow);
+}
+
+/* Reflectores y humo con la luz de la fecha. Capas quietas. */
+.beam {
+  position: absolute; top: -12%; pointer-events: none; mix-blend-mode: screen; filter: blur(14px);
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--season-accent) 36%, transparent), color-mix(in srgb, var(--season-accent) 8%, transparent) 55%, transparent 85%);
+  clip-path: polygon(44% 0, 56% 0, 100% 100%, 0 100%);
+}
+.haze {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(55% 45% at 72% 30%, var(--season-glow), transparent 70%),
+    radial-gradient(60% 40% at 10% 90%, rgb(139 114 255 / 0.18), transparent 70%);
+  opacity: 0.55;
+}
+.floor {
+  position: absolute; inset: auto -20% 0; height: 38%; pointer-events: none;
+  background-image: repeating-linear-gradient(90deg, rgb(255 255 255 / 0.06) 0 1px, transparent 1px 110px);
+  transform: perspective(500px) rotateX(62deg); transform-origin: bottom;
+  mask-image: linear-gradient(to top, #000, transparent);
+}
+/* El arte de la fecha se funde con la noche: hacia abajo en celular y hacia la izquierda en escritorio. */
+.art { mask-image: linear-gradient(to bottom, #000 55%, transparent 92%); }
+@media (min-width: 1024px) { .art { mask-image: linear-gradient(to right, transparent, #000 30%); } }
+
+/* Ticket de acceso: troquel (dos muescas en la línea de corte) con máscara, sin imágenes. */
+.ticket {
+  --stub: 4.25rem;
+  mask:
+    radial-gradient(circle 8px at var(--stub) 0, #0000 97%, #000) top / 100% 51% no-repeat,
+    radial-gradient(circle 8px at var(--stub) 100%, #0000 97%, #000) bottom / 100% 51% no-repeat;
+}
+.perf { position: absolute; top: 10px; bottom: 10px; left: var(--stub); border-left: 2px dashed color-mix(in srgb, var(--color-night) 28%, transparent); }
+.serial { writing-mode: vertical-rl; transform: rotate(180deg); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .lightsOn { animation: lights-on 1100ms steps(1, end) both; }
+  .squeeze { animation: squeeze 760ms cubic-bezier(0.7, 0, 0.2, 1) 120ms both; }
+  .rise { animation: rise 600ms cubic-bezier(0.16, 1, 0.3, 1) 420ms both; }
+}
+@keyframes lights-on { 0% { opacity: 0; } 18% { opacity: 0.7; } 26% { opacity: 0.1; } 40% { opacity: 0.9; } 48% { opacity: 0.3; } 60%, 100% { opacity: 1; } }
+/* El titular se lee desde el primer cuadro: solo se comprime como un largador. */
+@keyframes squeeze { from { font-stretch: 110%; letter-spacing: 0.03em; } to { font-stretch: 72%; letter-spacing: -0.01em; } }
+@keyframes rise { from { transform: translateY(18px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* El clip-path recorta el contorno de foco: en las piezas troqueladas el foco es un anillo interior. */
+.focusIn:focus-visible { outline: none; box-shadow: inset 0 0 0 2px var(--color-night), inset 0 0 0 4px var(--season-accent); }

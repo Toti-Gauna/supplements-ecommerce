@@ -18,6 +18,7 @@ import { formatARS } from "@/lib/money";
 import { useDemoVersion } from "@/stores/admin";
 import { useCart } from "@/stores/cart";
 import { useHydrated } from "@/stores/hydration";
+import { SeasonTicket } from "../campaigns/SeasonTicket";
 import { CartMissionNudge } from "./CartMissionNudge";
 import { CouponForm } from "./CouponForm";
 import { MiniRecommendations } from "./MiniRecommendations";
@@ -76,6 +77,7 @@ export function CartView() {
           <p className="flex items-center gap-2 text-sm font-semibold"><Truck size={18} aria-hidden="true" className="text-primary" />{missing > 0 ? <>Te faltan <strong>{formatARS(missing)}</strong> para envío gratis</> : "¡Tenés envío gratis!"}</p>
           <BatteryMeter pct={Math.min(100, (quote.subtotal / threshold) * 100)} label="Avance hacia el envío gratis" className="mt-2" tone={missing > 0 ? "volt" : "success"} />
         </div>
+        <SeasonTicket where="carrito" subtotal={quote.subtotal} />
         <StackNudge stack={quote.stack} />
         <ul className="flex flex-col gap-3" aria-label="Productos en el carrito">
           <QuotedGroups quote={quote} renderLine={(q, inPack) => {

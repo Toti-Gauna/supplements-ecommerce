@@ -224,6 +224,9 @@ herramienta responde las preguntas que hoy le hacen por WhatsApp.
 | **Club, ruleta y Shaker Rush** | Club como tabla de niveles con medallas de metal, misiones del rubro y beneficios coherentes. El anillo no dice "¡Desbloqueás!" a un invitado. Disco olímpico "cargá la barra", fuera del medio del checkout. Inicio y resultado del juego estilo arcade con "Usar cupón ahora" | M |
 | **Favoritos y ayuda** | Favoritos → "Mi rack" (total, agregar todo, armar stack). Ayuda del box con FAQ agrupada y buscador, y legales y 404 con el sistema nuevo | S–M |
 
+**Estado:** R2a hecho (PR de R2a): ficha "hoja técnica" con el precio total primero (decisión de L1), editor con
+precio por presentación, rótulo y RNPA validados, catálogo con filtros y orden, y comparador. Siguen R2b y R2c.
+
 **"Wow" esperado:** checkout con la fecha real, seguimiento con lote y "Mi box" con recompras solas. Los tres usan
 datos que el motor ya tiene.
 

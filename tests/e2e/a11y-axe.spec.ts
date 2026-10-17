@@ -141,9 +141,15 @@ for (const mode of ["dark", "light"] as const) {
       await page.goto("crear/quiz/");
       await page.getByRole("checkbox", { name: /^Fuerza/ }).check();
       await page.getByRole("button", { name: "Siguiente" }).click();
-      await page.getByRole("radio", { name: /^Fútbol/ }).check();
+      await expect(page.getByRole("heading", { level: 2, name: "¿Hacés algún deporte?" })).toBeFocused();
       await page.waitForTimeout(400);
       let found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+      // R2c: elegir el deporte pasa sola a la placa de días.
+      await page.getByRole("radio", { name: /^Fútbol/ }).click();
+      await expect(page.getByRole("heading", { level: 2, name: "¿Cuántos días por semana entrenás?" })).toBeFocused();
+      await page.waitForTimeout(400);
+      found = await audit(page);
       expect(found, describe(found)).toEqual([]);
       await page.goto("crear/quiz/");
       await page.getByRole("button", { name: "Ver mi último programa" }).click();

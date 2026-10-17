@@ -20,10 +20,12 @@ export function CompareTray() {
   const { slugs, href } = useCompareTray();
   const clear = useCompare((s) => s.clear);
   const bar = bottomBarFor(pathname);
+  // En el armador, el celular ya tiene la placa del total arriba del dock (StackBuyBar).
+  const builder = pathname.replace(/\/$/, "") === "/crear";
   if (!slugs.length || pathname.startsWith("/comparar") || bar === "cart" || bar === "none" || bar === "preview") return null;
   return (
     <aside aria-label="Comparación" data-compare-tray
-      className="fixed bottom-[calc(5.25rem+env(safe-area-inset-bottom))] right-3 z-30 flex items-stretch border border-line bg-surface shadow-[inset_0_2px_0_var(--season-accent),var(--shadow-lift)] animate-fade-up lg:bottom-6 lg:right-6">
+      className={cn("fixed bottom-[calc(5.25rem+env(safe-area-inset-bottom))] right-3 z-30 flex items-stretch border border-line bg-surface shadow-[inset_0_2px_0_var(--season-accent),var(--shadow-lift)] animate-fade-up lg:bottom-6 lg:right-6", builder && "max-lg:hidden")}>
       <Link href={href} className="flex min-h-12 items-center gap-2 py-1.5 pl-2 pr-3 hover:bg-accent">
         <span aria-hidden="true" className="hidden -space-x-2 sm:flex">
           {Array.from({ length: COMPARE_MAX }, (_, i) => {

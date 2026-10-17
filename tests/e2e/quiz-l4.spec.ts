@@ -20,12 +20,13 @@ test("quiz con 2 objetivos y fútbol → Tu programa todos los meses → checkou
   await expect(page.getByRole("radio")).toHaveCount(13);
   await expect(page.locator("[data-sport-option] svg[data-sport]")).toHaveCount(12);
   expect(await horizontalOverflow(page)).toBeLessThanOrEqual(0);
-  await page.getByRole("radio", { name: /^Fútbol/ }).check();
-  await page.getByRole("button", { name: "Siguiente" }).click();
-  await page.getByRole("radio", { name: /^3 o 4 días/ }).check();
-  await page.getByRole("button", { name: "Siguiente" }).click();
-  await page.getByRole("radio", { name: /^A la tarde/ }).check();
-  await page.getByRole("button", { name: "Siguiente" }).click();
+  // R2c: deporte, días y horario avanzan solos al elegir.
+  await page.getByRole("radio", { name: /^Fútbol/ }).click();
+  await expect(page.getByRole("heading", { level: 2, name: "¿Cuántos días por semana entrenás?" })).toBeFocused();
+  await page.getByRole("radio", { name: /^3 o 4 días/ }).click();
+  await expect(page.getByRole("heading", { level: 2, name: "¿A qué hora entrenás?" })).toBeFocused();
+  await page.getByRole("radio", { name: /^A la tarde/ }).click();
+  await expect(page.getByRole("heading", { level: 2, name: "¿Tenés alguna restricción?" })).toBeFocused();
   await page.getByRole("checkbox", { name: /^Ninguna/ }).check();
   await page.getByRole("button", { name: "Ver mi programa" }).click();
 

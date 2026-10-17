@@ -1,26 +1,29 @@
 "use client";
-import { Suspense, useState, type ReactNode } from "react";
+import { Suspense, useRef, useState, type ReactNode } from "react";
 import { slotOptions } from "@/demo/engine/stack-builder";
 import { sportInfo } from "@/demo/engine/sports";
 import { STACK_SLOTS, type StackSlotId } from "@/demo/fixtures/stack-builder";
+import { EqualizeDuration } from "./EqualizeDuration";
 import { SlotCard } from "./SlotCard";
 import { SlotPickerSheet } from "./SlotPickerSheet";
 import { SportGearRow } from "./SportGearRow";
 import { StackGoalsPanel } from "./StackGoalsPanel";
 import { StackShelf, shelfItems } from "./shelf/StackShelf";
+import { StackBuyBar } from "./StackBuyBar";
 import { StackSummaryPanel } from "./StackSummaryPanel";
 import { StackUrlLoader } from "./StackUrlLoader";
 import { useStackActions } from "./useStackActions";
 import { useStackBuilder } from "./useStackBuilder";
 
 /**
- * Armador "Armá tu stack". Celular: título, objetivos y deporte, estante, lugares (con el equipamiento del deporte) y
- * resumen, en ese orden. Escritorio: título, objetivos y lugares a la izquierda; estante y resumen fijos a la derecha desde arriba (el botón de
+ * Armador "Armá tu stack". Celular: título, objetivos y deporte, rack (con "te dura" e "Igualar duración"), lugares
+ * (con el equipamiento del deporte) y resumen, en ese orden, con el total fijo arriba del dock hasta llegar al resumen. Escritorio: título, objetivos y lugares a la izquierda; estante y resumen fijos a la derecha desde arriba (el botón de
  * agregar entra en la primera pantalla). El estante no tiene nada enfocable: el orden de foco coincide con el visual en los dos tamaños.
  */
 export function StackBuilder({ intro }: { intro: ReactNode }) {
   const b = useStackBuilder();
   const { addToCart, copyLink } = useStackActions(b.summary, b.shareUrl);
+  const summaryRef = useRef<HTMLDivElement>(null);
   const [sheet, setSheet] = useState<{ slot: StackSlotId; open: boolean }>({ slot: "base", open: false });
   const sheetIndex = STACK_SLOTS.findIndex((s) => s.id === sheet.slot);
   const lineFor = (slot: StackSlotId) => b.summary.lines.find((l) => l.slot === slot);
@@ -40,15 +43,17 @@ export function StackBuilder({ intro }: { intro: ReactNode }) {
         <ol className="grid grid-cols-[minmax(0,1fr)] gap-3 sm:grid-cols-2">
           {STACK_SLOTS.map((s, i) => (
             <SlotCard key={s.id} slot={s} index={i} line={lineFor(s.id)} onOpen={() => setSheet({ slot: s.id, open: true })}
-              onClear={() => b.clearSlot(s.id)} onVariant={(variantId) => b.pickVariant(s.id, variantId)} />
+              onClear={() => b.clearSlot(s.id)} onVariant={(variantId) => b.pickVariant(s.id, variantId)} onQty={(qty) => b.setQty(s.id, qty)} />
           ))}
         </ol>
         {sport && <SportGearRow sport={sport} items={b.gear} />}
       </section>
       <div className="contents lg:sticky lg:top-24 lg:col-start-2 lg:row-span-3 lg:row-start-1 lg:flex lg:flex-col lg:gap-3 lg:self-start">
         <StackShelf className="order-2 lg:order-none" items={shelfItems(b.summary.lines)} discountPct={discountPct} />
-        <StackSummaryPanel className="order-4 lg:order-none" summary={b.summary} onAdd={addToCart} onCopy={() => void copyLink()} />
+        <EqualizeDuration className="order-2 lg:order-none" summary={b.summary} preview={b.equalized} onEqualize={b.equalize} />
+        <StackSummaryPanel ref={summaryRef} className="order-4 lg:order-none" summary={b.summary} onAdd={addToCart} onCopy={() => void copyLink()} />
       </div>
+      <StackBuyBar summary={b.summary} summaryRef={summaryRef} onAdd={addToCart} />
       <SlotPickerSheet open={sheet.open} slot={STACK_SLOTS[sheetIndex]!} index={sheetIndex} goals={b.goals}
         options={slotOptions(sheet.slot, b.goals, b.catalog)} current={lineFor(sheet.slot)?.product.slug} onPick={pick} onClose={closeSheet} />
     </div>

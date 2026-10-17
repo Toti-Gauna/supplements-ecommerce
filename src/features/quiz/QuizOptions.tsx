@@ -25,17 +25,19 @@ interface Props {
   step: QuizStepId;
   draft: QuizDraft;
   onAnswer: (patch: QuizDraft) => void;
+  /** Respuesta única (deporte, días, horario): avanza sola. */
+  onPick: (patch: QuizDraft) => void;
 }
 
 /** Las opciones de cada pregunta: objetivos (hasta 3), deporte, días, horario y restricciones (con "Ninguna"). */
-export function QuizOptions({ step, draft, onAnswer }: Props) {
+export function QuizOptions({ step, draft, onAnswer, onPick }: Props) {
   if (step === "goals") return <QuizGoalOptions chosen={draft.goals ?? []} onChange={(goals) => onAnswer({ goals })} />;
-  if (step === "sport") return <QuizSportOptions value={draft.sport} onChange={(sport) => onAnswer({ sport })} />;
+  if (step === "sport") return <QuizSportOptions value={draft.sport} onChange={(sport) => onPick({ sport })} />;
   if (step === "days") {
     return (
       <div className="grid grid-cols-[minmax(0,1fr)] gap-2.5">
         {QUIZ_DAYS.map((d) => (
-          <QuizChoice key={d.value} type="radio" name="days" value={d.value} checked={draft.days === d.value} onChange={() => onAnswer({ days: d.value })}
+          <QuizChoice key={d.value} type="radio" name="days" value={d.value} checked={draft.days === d.value} onChange={() => onPick({ days: d.value })}
             icon={<WeekBars lit={DAYS_LIT[d.value]} />} title={d.label} description={d.hint} />
         ))}
       </div>
@@ -48,7 +50,7 @@ export function QuizOptions({ step, draft, onAnswer }: Props) {
           const Icon = TIME_ICON[t.value];
           return (
             <QuizChoice key={t.value} type="radio" name="time" value={t.value} hue={t.value === "noche" ? "var(--color-plasma)" : undefined} checked={draft.time === t.value}
-              onChange={() => onAnswer({ time: t.value })} icon={<Icon size={22} />} title={t.label} description={TIME_HINT[t.value]} />
+              onChange={() => onPick({ time: t.value })} icon={<Icon size={22} />} title={t.label} description={TIME_HINT[t.value]} />
           );
         })}
       </div>

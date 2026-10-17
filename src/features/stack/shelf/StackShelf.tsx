@@ -5,16 +5,18 @@ import { useId } from "react";
 import type { StackLineView } from "@/demo/engine/stack-builder";
 import { STACK_SLOTS } from "@/demo/fixtures/stack-builder";
 import { cn } from "@/lib/cn";
-import { SLOT_SHORT, slotNumber } from "../slot-labels";
 import { ShelfCone, ShelfPot, ShelfSilhouette, type ShelfItem } from "./ShelfBay";
 import { ShelfBackdrop, ShelfDefs, ShelfPlank, shelfIds } from "./ShelfScene";
+import { ShelfScoreboard } from "./ShelfScoreboard";
 import { useReducedMotionSafe } from "./useReducedMotionSafe";
 
 export type { ShelfItem };
 
 /** Las líneas del resumen del motor, como envases del estante. */
 export function shelfItems(lines: StackLineView[]): ShelfItem[] {
-  return lines.map((l) => ({ slot: l.slot, key: `${l.product.slug}:${l.variant.id}`, art: l.product.art, pack: l.product.pack, tint: l.variant.colorHex, name: l.product.name }));
+  return lines.map((l) => ({
+    slot: l.slot, key: `${l.product.slug}:${l.variant.id}`, art: l.product.art, pack: l.product.pack, tint: l.variant.colorHex, name: l.product.name, qty: l.qty, days: l.days,
+  }));
 }
 
 const list = new Intl.ListFormat("es", { type: "conjunction" });
@@ -71,13 +73,7 @@ export function StackShelf({ items, discountPct = 0, title = "Tu estante", class
           );
         })}
       </svg>
-      <ul aria-hidden="true" className="grid grid-cols-4 px-1 pb-0.5 pt-1.5 text-center">
-        {STACK_SLOTS.map((s, i) => (
-          <li key={s.id} className={cn("eyebrow text-[9.5px] tracking-[0.12em] transition-colors", bySlot.has(s.id) ? "text-volt" : "text-night-muted")}>
-            {slotNumber(i)} {SLOT_SHORT[s.id]}
-          </li>
-        ))}
-      </ul>
+      <ShelfScoreboard items={items} />
     </figure>
   );
 }

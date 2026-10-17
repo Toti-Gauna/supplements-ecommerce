@@ -53,9 +53,11 @@ y distinta de las que hay hoy (negro + rojo agresivo, o blanco clínico). Todo s
   reglamentarios (rojo 25 kg, azul 20, amarillo 15, verde 10) con goma moteada y relieve, aro con 24 LED voltio que
   corren en cadena al girar y titilan al ganar, maza de acero moleteada con "VOLTA · 20 KG" y "Girar" en el agujero
   de la barra, y el puntero como traba de barra. Escenario noche con halo plasma, pulso y polvo de tiza.
-- **Estante del armador** (`src/features/stack/shelf/`): vitrina noche con LED voltio, halo plasma y un cono de luz por
-  lugar; los potes caen con rebote, los lugares vacíos son siluetas punteadas y con el descuento se prende el filo de
-  neón con el sello "Stack −10 %".
+- **Rack del armador** (`src/features/stack/shelf/`): rack de sentadillas de noche (parantes de acero con agujeros,
+  ganchos J y travesaño) con LED voltio, halo plasma y un cono de luz por lugar; los potes caen con rebote, los lugares
+  vacíos son siluetas punteadas y con el descuento se prende el filo de neón con el sello "Stack −10 %". Debajo de cada
+  lugar, un marcador LED con "te dura N días" (lo que se termina primero, en ámbar) y una chapa "×2" en el envase si
+  lleva más de una unidad (R2c).
 - **Bolsa de boxeo del regalo** (`src/features/gifts/scenes/`): cuelga de su cadena con la marca VOLTA; cada golpe
   la balancea, suelta tiza y abre una costura con luz; en el último sale el pote "Edición regalo". Una variante por fecha.
 - **Temáticas fitness** (`src/features/themes/`): desde R1 la fecha **no repinta la tienda**: solo `--season-accent` y

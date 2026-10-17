@@ -11,6 +11,7 @@ import { useGoals } from "../catalog/useGoals";
 import { QuizGearCard } from "./QuizGearCard";
 import { QuizPickCard } from "./QuizPickCard";
 import { QuizProgramPanel } from "./QuizProgramPanel";
+import { QuizProtocol } from "./QuizProtocol";
 import { QuizRecap } from "./QuizRecap";
 import { QuizStage } from "./QuizStage";
 import { programTitle, RESULT_STEP } from "./quiz-steps";
@@ -25,8 +26,8 @@ interface Props {
 
 /**
  * Resultado del quiz, "Tu programa": el stack que arma el motor (`recommendStack`) con el catálogo vigente del panel,
- * cada producto con su porqué; el equipamiento del deporte ("Para tu deporte"); y la compra del programa como un pack a
- * medida (`programPack`), una vez o todos los meses.
+ * cada producto con su porqué; "El protocolo del día" (cuándo tomar cada uno); el equipamiento del deporte ("Para tu
+ * deporte"); y la compra del programa como un pack a medida (`programPack`), una vez o todos los meses.
  */
 export function QuizOutcome({ answers, titleRef, animate, onEdit, onRestart }: Props) {
   const catalog = useDemoData((d) => d.products);
@@ -56,6 +57,7 @@ export function QuizOutcome({ answers, titleRef, animate, onEdit, onRestart }: P
               </ul>
             )}
           </section>
+          <QuizProtocol products={summary.lines.map((l) => l.product)} time={answers.time} />
           {result.sport && result.gear.length > 0 && (
             <section aria-labelledby="quiz-gear-title" style={{ "--hue": result.sport.hue } as CSSProperties}>
               <div className="flex items-center gap-3">

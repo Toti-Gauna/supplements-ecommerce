@@ -23,16 +23,16 @@ test("Fase 3 · quiz completo: una pregunta por pantalla con teclado, porqué de
   await page.keyboard.press("Enter");
   await expect(page.getByRole("heading", { level: 2, name: "¿Hacés algún deporte?" })).toBeFocused();
   await expect(page.getByRole("progressbar", { name: "Pregunta 2 de 5" })).toBeVisible();
-  await page.getByRole("radio", { name: /^Solo gimnasio/ }).check();
-  await page.keyboard.press("Enter");
+  // R2c: las de una sola respuesta avanzan solas al elegir.
+  await page.getByRole("radio", { name: /^Solo gimnasio/ }).click();
   await expect(page.getByRole("heading", { level: 2, name: "¿Cuántos días por semana entrenás?" })).toBeFocused();
   await expect(page.getByRole("progressbar", { name: "Pregunta 3 de 5" })).toBeVisible();
   await page.keyboard.press("Tab");
   await page.keyboard.press("ArrowDown");
   await expect(page.getByRole("radio", { name: /^3 o 4 días/ })).toBeChecked();
   await page.keyboard.press("Enter");
-  await page.getByRole("radio", { name: /^A la tarde/ }).check();
-  await page.getByRole("button", { name: "Siguiente" }).click();
+  await page.getByRole("radio", { name: /^A la tarde/ }).click();
+  await expect(page.getByRole("heading", { level: 2, name: "¿Tenés alguna restricción?" })).toBeFocused();
   // Atrás conserva la respuesta y se puede cambiar.
   await page.getByRole("button", { name: "Atrás" }).click();
   await expect(page.getByRole("radio", { name: /^A la tarde/ })).toBeChecked();
@@ -59,8 +59,8 @@ test("Fase 3 · quiz completo: una pregunta por pantalla con teclado, porqué de
   // Cambiar el horario desde el resultado: de noche el pre sale sin cafeína y lo avisa.
   await page.getByRole("button", { name: "Cambiar horario: A la tarde" }).click();
   await expect(page.getByRole("heading", { level: 2, name: "¿A qué hora entrenás?" })).toBeFocused();
-  await page.getByRole("radio", { name: /^A la noche/ }).check();
-  await page.getByRole("button", { name: "Siguiente" }).click();
+  await page.getByRole("radio", { name: /^A la noche/ }).click();
+  await expect(page.getByRole("heading", { level: 2, name: "¿Tenés alguna restricción?" })).toBeFocused();
   await expect(page.getByRole("checkbox", { name: /^Ninguna/ })).toBeChecked();
   await page.getByRole("button", { name: "Ver mi programa" }).click();
   await expect(page.getByText("Entrenás de noche: el pre va sin cafeína para que duermas bien.")).toBeVisible();

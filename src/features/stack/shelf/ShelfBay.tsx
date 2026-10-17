@@ -2,6 +2,7 @@ import { motion } from "motion/react";
 import { CONTAINERS, FRAME_SCALE, defaultPack, type PackStyle } from "@/components/illustrations/supplements";
 import type { StackSlotId } from "@/demo/fixtures/stack-builder";
 import type { ArtKey } from "@/demo/types";
+import { brand } from "@/config/brand";
 import { BAY_X, FLOOR, type ShelfIds } from "./ShelfScene";
 
 /** Lo que muestra un lugar del estante: el envase del producto con el color del sabor elegido. */
@@ -13,6 +14,10 @@ export interface ShelfItem {
   pack?: PackStyle;
   tint?: string;
   name: string;
+  /** Unidades: con más de una, una chapa "×2" en el envase. */
+  qty: number;
+  /** "Te dura N días" (un servicio por día), o null sin servicios. */
+  days: number | null;
 }
 
 /** Escala de los envases en el estante (sobre la que normaliza la librería para llenar un cuadro de 400). */
@@ -47,8 +52,19 @@ export function ShelfPot({ index, item, ids, reduce }: { index: number; item: Sh
         <g transform={at(cx, (FRAME_SCALE[item.art] ?? 1) * POT_SCALE)}>
           <Container pack={item.pack ?? defaultPack(item.art)} tint={item.tint ?? "#8b72ff"} />
         </g>
+        {item.qty > 1 && <QtyTag cx={cx} qty={item.qty} />}
       </motion.g>
     </motion.g>
+  );
+}
+
+/** Chapa de acero con "×2" al pie del envase: lleva más de una unidad. */
+function QtyTag({ cx, qty }: { cx: number; qty: number }) {
+  return (
+    <g transform={`translate(${cx + 30} ${FLOOR - 38})`}>
+      <rect width="54" height="30" rx="3" fill="#0b0d10" stroke={brand.signature.volt} strokeWidth="2" />
+      <text x="27" y="21" textAnchor="middle" className="font-lab" fontSize="18" fontWeight="700" fill={brand.signature.volt}>×{qty}</text>
+    </g>
   );
 }
 

@@ -1,9 +1,7 @@
-import { EXTRA_PREFERENCE, GOAL_SLOTS, MAX_GOALS, STACK_SLOTS, type Restriction, type StackSlotId } from "../fixtures/stack-builder";
-import type { Goal, Product, SportId, Variant } from "../types";
-import { goals as goalFixtures } from "../fixtures/goals";
-import { isSportId } from "../fixtures/sports";
+import { EXTRA_PREFERENCE, GOAL_SLOTS, STACK_SLOTS, type Restriction, type StackSlotId } from "../fixtures/stack-builder";
+import type { Goal, Product, Variant } from "../types";
 import { unitPrice } from "./catalog";
-import { pricePerServing } from "./servings";
+import { daysLasting, pricePerServing } from "./servings";
 import { DEFAULT_STACK_RULE, stackDiscount, type StackResult, type StackRule } from "./stack";
 
 /** Un producto en un lugar del estante. */
@@ -11,14 +9,22 @@ export interface StackPick {
   slot: StackSlotId;
   slug: string;
   variantId: string;
+  /** Unidades (1 si falta). "Igualar duración" puede subirlas para que todo dure lo mismo. */
+  qty?: number;
 }
 
 export interface StackLineView {
   slot: StackSlotId;
   product: Product;
   variant: Variant;
+  qty: number;
+  /** Precio de una unidad. */
+  unitPrice: number;
+  /** Lo que suma la línea (unidad × cantidad). */
   price: number;
   perServing: number | null;
+  /** Días que dura con un servicio por día, o null si no informa servicios. */
+  days: number | null;
 }
 
 export interface StackSummary {
@@ -100,8 +106,10 @@ export function stackSummary(picks: StackPick[], catalog: Product[], rule: Stack
     const product = catalog.find((p) => p.slug === pick.slug);
     const variant = product?.variants.find((v) => v.id === pick.variantId);
     if (!product || !variant) return [];
-    const price = unitPrice(product, variant);
-    return [{ slot: pick.slot, product, variant, price, perServing: pricePerServing(price, variant.servings) }];
+    const unit = unitPrice(product, variant);
+    const qty = Math.max(1, pick.qty ?? 1);
+    const days = variant.servings ? daysLasting(variant.servings * qty, 1) : null;
+    return [{ slot: pick.slot, product, variant, qty, unitPrice: unit, price: unit * qty, perServing: pricePerServing(unit, variant.servings), days }];
   });
   const subtotal = lines.reduce((s, l) => s + l.price, 0);
   const stack = stackDiscount(lines.map((l) => ({ product: l.product, lineTotal: l.price })), rule);
@@ -111,36 +119,4 @@ export function stackSummary(picks: StackPick[], catalog: Product[], rule: Stack
   return { lines, subtotal, stack, total: subtotal - stack.discount, perDay };
 }
 
-/** El estante en la URL (`?objetivo=fuerza,salud&stack=base.ionic-whey.iw-chocolate-2lb,…`), para compartirlo o venir del quiz. */
-export function encodeStack(goal: Goal | Goal[] | null, picks: StackPick[], sport?: SportId | null): string {
-  const q = new URLSearchParams();
-  const list = goalList(goal);
-  if (list.length) q.set("objetivo", list.join(","));
-  if (sport) q.set("deporte", sport);
-  if (picks.length) q.set("stack", picks.map((p) => `${p.slot}.${p.slug}.${p.variantId}`).join(","));
-  return q.toString();
-}
-
-/** Lee el estante de la URL y descarta lo que no existe, no tiene stock o no va en ese lugar. */
-export function decodeStack(raw: string | null, catalog: Product[]): StackPick[] {
-  if (!raw) return [];
-  const seen = new Set<StackSlotId>();
-  return raw.split(",").flatMap((part): StackPick[] => {
-    const [slot, slug, variantId] = part.split(".") as [StackSlotId, string, string];
-    const slotDef = STACK_SLOTS.find((s) => s.id === slot);
-    const product = catalog.find((p) => p.slug === slug && p.active !== false);
-    const variant = product?.variants.find((v) => v.id === variantId && v.stock !== 0);
-    if (!slotDef || !product || !variant || seen.has(slot) || !slotDef.categories.includes(product.categorySlug)) return [];
-    seen.add(slot);
-    return [{ slot, slug, variantId }];
-  });
-}
-
-/** Los objetivos de la URL (`objetivo=fuerza,salud`), sin los que no existen ni repetidos. */
-export function decodeGoals(raw: string | null): Goal[] {
-  if (!raw) return [];
-  // Hasta 3 elegidos más los que suma un deporte (dos como mucho).
-  return [...new Set(raw.split(","))].filter((g): g is Goal => goalFixtures.some((x) => x.id === g)).slice(0, MAX_GOALS + 2);
-}
-
-export const decodeSport = (raw: string | null): SportId | null => (isSportId(raw) ? raw : null);
+export { decodeGoals, decodeSport, decodeStack, encodeStack } from "./stack-link";

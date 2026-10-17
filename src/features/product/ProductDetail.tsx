@@ -10,6 +10,7 @@ import { useAccount } from "@/stores/account";
 import { useDemoData } from "@/stores/admin";
 import { useGiftDraft } from "@/stores/giftDraft";
 import { GiftModal } from "../gifts/GiftModal";
+import { SeasonTicket } from "../campaigns/SeasonTicket";
 import { useCurrentTheme } from "../themes/useCurrentTheme";
 import { AttributeScores } from "./AttributeScores";
 import { BuyActions, MobileBuyBar } from "./BuyBar";
@@ -82,6 +83,7 @@ export function ProductDetail({ product: initial, preview = false }: { product: 
         </div>
         <div className="order-1 flex min-w-0 flex-col gap-4 lg:order-2 lg:gap-5">
           <SheetHeader product={product} category={getCategory(product.categorySlug)?.name} tint={sel.variant.colorHex} preview={preview} />
+          {!preview && <SeasonTicket where="ficha" productSlug={product.slug} />}
           <SheetPrice price={score.price} presentation={sel.variant.label} readouts={gear ? gearReadouts(product) : scoreReadouts(score, perDay)} flipKey={sel.variant.id}
             options={priceOptions(score.price, settings.transferDiscountPct)} clearance={variantClearance(product, sel.variant)} taxRate={settings.nationalTaxRate}
             lowest={<LowestPrice30 product={product} variant={sel.variant} className="border-t border-line px-4 py-2 sm:px-5" />} />

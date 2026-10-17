@@ -25,6 +25,8 @@ interface HeroLanesProps {
   onToggle: () => void;
   /** La barra terminó de cargarse: pasa a la siguiente. */
   onLap: () => void;
+  /** Diapositiva que dura el doble (el drop de la campaña, R3a). */
+  long?: number;
 }
 
 /**
@@ -32,7 +34,7 @@ interface HeroLanesProps {
  * (botón de 44 px de alto) cuyo relleno se carga con el tiempo del autoplay, el contador LED "01 / 04", la pausa y las
  * flechas en placas cuadradas de acero. Ningún control pisa la imagen.
  */
-export function HeroLanes({ labels, index, running, reduce, paused, ready, onPick, onStep, onToggle, onLap }: HeroLanesProps) {
+export function HeroLanes({ labels, index, running, reduce, paused, ready, onPick, onStep, onToggle, onLap, long }: HeroLanesProps) {
   const total = labels.length;
   return (
     <div className="plate border-t border-line">
@@ -51,7 +53,7 @@ export function HeroLanes({ labels, index, running, reduce, paused, ready, onPic
               <span aria-hidden="true" className="relative block h-1.5 overflow-hidden bg-ink/15">
                 {i === index && ready && !reduce
                   ? <span key={index} onAnimationEnd={onLap} className="hero-fill absolute inset-0 bg-primary"
-                    style={{ animationDuration: `${HERO_INTERVAL}ms`, animationPlayState: running ? "running" : "paused" } as CSSProperties} />
+                    style={{ animationDuration: `${HERO_INTERVAL * (i === long ? 2 : 1)}ms`, animationPlayState: running ? "running" : "paused" } as CSSProperties} />
                   : <span className={cn("absolute inset-0", i === index ? "bg-primary" : "bg-transparent group-hover/lane:bg-ink/25")} />}
               </span>
             </button>

@@ -22,7 +22,7 @@ test.describe("temáticas fitness de la Fase 5", () => {
     });
   }
 
-  test("el hero de la campaña: titular, oferta y producto en el rack (el arte de cada fecha llega en R3)", async ({ page }) => {
+  test("el hero de la campaña (drop, R3a): titular, descuento en marcador, ticket y productos en el rack", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "no-preference" });
     await preview(page, "dia-del-amigo");
     await page.goto("");
@@ -30,7 +30,8 @@ test.describe("temáticas fitness de la Fase 5", () => {
     const banner = page.locator("[data-theme-banner='dia-del-amigo']");
     await expect(banner.getByRole("heading", { name: "Tu compañero de gym" })).toBeVisible();
     await expect(banner.getByRole("img", { name: /imagen ilustrativa/ }).first()).toBeVisible();
-    await expect(banner).toContainText("$5.000 OFF");
+    await expect(banner.getByRole("img", { name: /5\.000 de descuento/ })).toBeVisible();
+    await expect(banner.locator("[data-access-ticket='COMPA5000']")).toContainText("Desde $35.000 de compra");
     // Nada de Velmar: sin personajes ni decoraciones de mascotas.
     await expect(page.locator("svg.pup")).toHaveCount(0);
   });

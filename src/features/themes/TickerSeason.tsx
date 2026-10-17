@@ -15,6 +15,8 @@ const LINK = "inline-flex min-h-6 items-center underline decoration-(--season-ac
 export function TickerSeason() {
   const { theme, offer, previewing } = useCurrentTheme();
   const setPreview = useThemePreview((s) => s.setPreview);
+  const vitrina = useThemePreview((s) => s.vitrinaId !== null);
+  const setVitrina = useThemePreview((s) => s.setVitrina);
   const { copy } = useThemeCoupon();
   const { paused, toggle } = useAmbientPause();
   if (!theme) return null;
@@ -35,7 +37,7 @@ export function TickerSeason() {
       </button>
       {previewing && (
         <span className="flex items-center gap-1.5 text-night-muted">
-          Vista previa <button type="button" onClick={() => setPreview(null)} className={`font-bold text-on-night ${LINK}`}>Salir</button>
+          {vitrina ? "Vitrina" : "Vista previa"} <button type="button" onClick={() => (vitrina ? setVitrina(null) : setPreview(null))} className={`font-bold text-on-night ${LINK}`}>Salir</button>
         </span>
       )}
     </span>

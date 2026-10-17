@@ -11,9 +11,10 @@ export const SPLASH_FALLBACK_MS = 4000;
 /**
  * Pantalla de carga del box (HTML + CSS; se ve aunque no haya JS), en cada carga completa de la página (L1: no solo la
  * primera vez de la sesión; al navegar dentro de la tienda no aparece). En ~1,2 s: el símbolo se enciende como un marcador, sube el nombre, la barra carga
- * sus placas y un telón la retira. Todo es transform/opacity (app/splash.css). Con temática, solo el filo de la barra
- * toma el acento de temporada. Se retira cuando TERMINA la animación del telón, nunca a mitad. Con "reducir movimiento"
- * no se muestra.
+ * sus placas y un telón la retira. Todo es transform/opacity (app/splash.css). Con una campaña puesta (R3a) sale su
+ * variante, mecánica y de ~1,8 s: los discos de la barra en el color de la fecha y, debajo del logo (nunca encima), un
+ * marcador con el nombre de la campaña y el descuento que cuenta hasta su número. Se retira cuando TERMINA la animación
+ * del telón, nunca a mitad. Con "reducir movimiento" no se muestra.
  *
  * Va en la capa superior del navegador (popover, abierto por el script de abajo apenas se lee la etiqueta, antes de
  * pintar): ahí no compite con ningún z-index.
@@ -31,6 +32,8 @@ export function Splash() {
           <span className="splash-bar">
             {PLATES.map((i) => <span key={i} style={{ "--i": i } as CSSProperties} />)}
           </span>
+          {/* Variante de campaña (R3a): marcador con el nombre de la fecha y el descuento contando (CSS, ver seasonScript). */}
+          <span className="splash-score"><span className="splash-score-name" /><span className="splash-score-off" /></span>
         </div>
         <p aria-hidden="true" className="splash-city eyebrow">{brand.descriptor} · {brand.city}</p>
       </div>

@@ -79,7 +79,7 @@ test("barra inferior de la tienda y carrusel con controles accesibles", async ({
   await expect(page.getByRole("group", { name: "Destacados" }).locator("button[aria-current=true]")).toHaveCount(1);
 });
 
-test("carrito: elegir cupón sin escribir el código y ruleta al ir a pagar", async ({ page }) => {
+test("carrito: elegir cupón sin escribir el código y ruleta ofrecida antes de pagar", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("p/ionic-whey/");
   await page.getByRole("button", { name: "Agregar al carrito" }).last().click();
@@ -94,9 +94,10 @@ test("carrito: elegir cupón sin escribir el código y ruleta al ir a pagar", as
   await sheet.getByRole("button", { name: "Aplicar cupón BIENVENIDA10" }).click();
   await expect(sheet).toBeHidden();
   await expect(page.getByText(/BIENVENIDA10: 10%/)).toBeVisible();
-  await page.getByRole("button", { name: "Ir a pagar" }).click();
+  // La ruleta se ofrece en el carrito, antes de empezar a pagar (ya no corta el camino al checkout).
+  await page.getByRole("region", { name: "Disco olímpico" }).getByRole("button", { name: "Girar", exact: true }).click();
   const wheel = page.getByRole("dialog", { name: "Ruleta de cupones" });
-  await expect(wheel.getByText("Probá tu suerte")).toBeVisible();
+  await expect(wheel.getByRole("heading", { name: "Cargá la barra" })).toBeVisible();
   await wheel.getByRole("button", { name: "Girar la ruleta" }).click();
   await expect(wheel.getByText("¡Ganaste!")).toBeVisible();
   await wheel.getByRole("button", { name: "Guardar para después" }).click();
@@ -104,8 +105,9 @@ test("carrito: elegir cupón sin escribir el código y ruleta al ir a pagar", as
   // El premio quedó guardado en "Mis cupones"
   await page.goto("cupones/");
   await expect(page.getByText("Ganado en la ruleta")).toBeVisible();
-  // Ya giró: ir a pagar va directo al checkout
+  // Ya giró: la placa de la ruleta no aparece más e ir a pagar va directo al checkout
   await page.goto("carrito/");
+  await expect(page.getByRole("region", { name: "Disco olímpico" })).toHaveCount(0);
   await page.getByRole("button", { name: "Ir a pagar" }).click();
   await expect(page).toHaveURL(/checkout\/$/);
 });

@@ -81,7 +81,6 @@ for (const d of DEVICES) {
       await expect(page.getByRole("list", { name: "Productos en el carrito" }).getByText("Sin sabor · 500 g")).toBeVisible();
       await w.check("carrito");
       await page.getByRole("button", { name: "Continuar al checkout" }).click();
-      await page.getByRole("dialog", { name: "Ruleta de cupones" }).getByRole("button", { name: "Continuar sin girar" }).click();
       await contactToConfirm(page, "Tarjetas de débito, crédito y prepagas");
       await w.check("checkout");
       await confirmOrder(page);

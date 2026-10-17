@@ -27,6 +27,7 @@ const PAGES: [string, string, string][] = [
   ["carrito", "carrito/", "h1"],
   ["club", "club/", "h1"],
   ["juego", "club/juego/", "h1"],
+  ["liga de gimnasios", "club/liga/", "h1"],
   ["cuenta", "cuenta/", "h1"],
   ["campañas (calendario)", "campana/", "h1"],
   ["campaña en sala de espera", "campana/?id=black-friday&fase=espera", "h1"],
@@ -37,6 +38,7 @@ const PAGES: [string, string, string][] = [
   ["panel pedidos", "admin-demo/pedidos/", "h1"],
   ["panel clientes", "admin-demo/usuarios/", "h1"],
   ["panel marketing", "admin-demo/marketing/", "h1"],
+  ["panel liga de gimnasios", "admin-demo/misiones/liga/", "h1"],
   ["panel campañas", "admin-demo/campanas/", "[data-campaign-chip]"],
   ["panel editor de campaña", "admin-demo/campanas/editar/?id=black-friday", "[data-preview='desktop']"],
   ["panel piezas de campaña", "admin-demo/campanas/piezas/?id=black-friday", "[data-piece='story']"],
@@ -86,6 +88,38 @@ for (const mode of ["dark", "light"] as const) {
       await expect(section.getByRole("tabpanel", { name: /Deportes/ })).toBeVisible();
       await page.waitForTimeout(400);
       const found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+    });
+    test("club con la cuenta demo, su box elegido y la liga (R2c)", async ({ page }) => {
+      await page.addInitScript(() => {
+        localStorage.setItem("volta-demo:account", JSON.stringify({ state: { user: { name: "Sofía Demo", email: "sofia.demo@ejemplo.com" }, usedRewards: [], wheelPrize: null }, version: 0 }));
+        localStorage.setItem("volta-demo:club", JSON.stringify({ state: { gymId: "hierro-norte", checkins: [], sportTried: "boxeo", claims: [] }, version: 1 }));
+      });
+      for (const path of ["club/", "club/liga/"]) {
+        await page.goto(path);
+        await expect(page.getByText("Tu box", { exact: true }).first()).toBeVisible();
+        await page.waitForTimeout(400);
+        const found = await audit(page);
+        expect(found, describe(found)).toEqual([]);
+      }
+    });
+    test("disco olímpico con «Cargá la barra» y Shaker Rush con el resultado arcade (R2c)", async ({ page }) => {
+      await page.addInitScript(() => { (window as unknown as { __voltaGameTest: object }).__voltaGameTest = { seed: 11, autopilot: true }; });
+      await page.clock.install({ time: new Date("2026-10-15T12:00:00-03:00") });
+      await page.goto("club/");
+      await page.getByRole("button", { name: "Girar la ruleta" }).click();
+      await expect(page.getByRole("dialog", { name: "Ruleta de cupones" }).getByRole("button", { name: /Cargá la barra/ })).toBeVisible();
+      let found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+      await page.goto("club/juego/");
+      await expect(page.getByRole("button", { name: "Jugar", exact: true })).toBeEnabled();
+      await page.clock.pauseAt(new Date("2026-10-15T12:05:00-03:00"));
+      await page.getByRole("button", { name: "Jugar", exact: true }).click();
+      await page.clock.runFor(50_000);
+      await expect(page.getByRole("button", { name: "Usar cupón ahora" })).toBeVisible();
+      await page.clock.resume();
+      await page.waitForTimeout(400);
+      found = await audit(page);
       expect(found, describe(found)).toEqual([]);
     });
     test("inicio con campaña: drop de Black Friday (R3a) y modo vitrina", async ({ page }) => {

@@ -3,6 +3,7 @@ import { useMemo } from "react";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { GamePrizeRecord } from "@/demo/engine/game-prize";
+import type { ScoreRecord } from "@/demo/engine/game-ranking";
 import { demoStorage, STORAGE_PREFIX } from "./storage";
 
 /**
@@ -15,7 +16,9 @@ interface GameStoreState {
   lastScore: number | null;
   /** Premios cobrados, el más nuevo primero (se guardan los últimos 30). */
   prizes: GamePrizeRecord[];
-  recordGame: (score: number) => void;
+  /** Partidas con su fecha, para el ranking semanal (las últimas 60). */
+  scores: ScoreRecord[];
+  recordGame: (score: number, at?: string) => void;
   addPrize: (prize: GamePrizeRecord) => void;
   clear: () => void;
 }
@@ -27,16 +30,20 @@ export const useGame = create<GameStoreState>()(
       plays: 0,
       lastScore: null,
       prizes: [],
-      recordGame: (score) => set((s) => ({ best: Math.max(s.best, score), plays: s.plays + 1, lastScore: score })),
+      scores: [],
+      recordGame: (score, at = new Date().toISOString()) =>
+        set((s) => ({ best: Math.max(s.best, score), plays: s.plays + 1, lastScore: score, scores: [...s.scores, { score, at }].slice(-60) })),
       addPrize: (prize) => set((s) => ({ prizes: [prize, ...s.prizes.filter((p) => p.code !== prize.code)].slice(0, 30) })),
-      clear: () => set({ best: 0, plays: 0, lastScore: null, prizes: [] }),
+      clear: () => set({ best: 0, plays: 0, lastScore: null, prizes: [], scores: [] }),
     }),
     {
       name: `${STORAGE_PREFIX}game`,
-      version: 1,
+      // v2 (R2c): las partidas guardan su fecha para el ranking semanal; lo anterior se conserva.
+      version: 2,
+      migrate: (persisted) => ({ scores: [], ...(persisted as object) }),
       storage: demoStorage,
       skipHydration: true,
-      partialize: ({ best, plays, lastScore, prizes }) => ({ best, plays, lastScore, prizes }),
+      partialize: ({ best, plays, lastScore, prizes, scores }) => ({ best, plays, lastScore, prizes, scores }),
     },
   ),
 );

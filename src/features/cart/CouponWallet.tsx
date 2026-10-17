@@ -8,6 +8,7 @@ import { formatDate } from "@/lib/date";
 import { useAccount } from "@/stores/account";
 import { useDemoVersion } from "@/stores/admin";
 import { useCart } from "@/stores/cart";
+import { useClubCodes } from "@/stores/club";
 import { useGameCodes } from "@/stores/game";
 import { useToasts } from "@/stores/toast";
 import { useWheelPrize } from "../club/useWheelPrize";
@@ -19,19 +20,20 @@ const STATUS_LABEL: Record<Exclude<WalletStatus, "available">, string> = {
   "min-subtotal": "Te falta para el mínimo", "needs-account": "Con cuenta demo", expired: "Vencido", used: "Ya usado", paused: "Pausado",
 };
 
-const BADGE = { ruleta: "Ganado en la ruleta", juego: "Ganado en Shaker Rush" } as const;
+const BADGE = { ruleta: "Ganado en la ruleta", juego: "Ganado en Shaker Rush", club: "Premio de misión del Club" } as const;
 
-/** Cupones para elegir sin escribir el código: el de la ruleta, los de Shaker Rush y los vigentes de la tienda. */
+/** Cupones para elegir sin escribir el código: los premios propios (ruleta, Shaker Rush, Club) y los de la tienda. */
 export function CouponWallet({ onApplied, compact, where = "tienda" }: { onApplied?: () => void; compact?: boolean; where?: "checkout" | "tienda" }) {
   useDemoVersion();
   const { quote, isRegistered } = useCartQuote();
   const wheelCode = useAccount((s) => (s.wheelSpinning ? null : s.wheelPrize?.code ?? null));
   const couponCode = useCart((s) => s.couponCode);
   const gameCodes = useGameCodes();
+  const clubCodes = useClubCodes();
   const { status: prizeStatus } = useWheelPrize();
   const toast = useToasts((s) => s.push);
   const { theme } = useCurrentTheme();
-  const items = walletCoupons({ subtotal: quote.subtotal, isRegistered, now: new Date(), wheelCode, gameCodes, themeId: theme?.id });
+  const items = walletCoupons({ subtotal: quote.subtotal, isRegistered, now: new Date(), wheelCode, gameCodes, clubCodes, themeId: theme?.id });
   return (
     <ul className={compact ? "flex flex-col gap-3" : "grid gap-4 md:grid-cols-2"}>
       {items.map(({ coupon, origin, status, message }) => {

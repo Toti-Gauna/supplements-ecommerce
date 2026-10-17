@@ -1,6 +1,7 @@
 "use client";
 import { brand } from "@/config/brand";
 import type { CompareTable } from "@/demo/engine/compare";
+import { sharePng } from "@/lib/share-png";
 
 /**
  * "Compartir la comparación como imagen" (para mandarla por WhatsApp): se dibuja en un canvas del navegador, sin
@@ -112,24 +113,7 @@ export async function renderComparison(table: CompareTable, when: string): Promi
   return new Promise((resolve, reject) => canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("canvas"))), "image/png"));
 }
 
-export type ShareResult = "shared" | "downloaded" | "cancelled";
+export type { ShareResult } from "@/lib/share-png";
 
 /** Hoja de compartir del sistema con el PNG (WhatsApp, Instagram…); si no acepta archivos, descarga. */
-export async function shareComparison(blob: Blob, fileName: string, title: string): Promise<ShareResult> {
-  const file = new File([blob], fileName, { type: "image/png" });
-  if (typeof navigator.canShare === "function" && navigator.canShare({ files: [file] })) {
-    try {
-      await navigator.share({ files: [file], title });
-      return "shared";
-    } catch (e) {
-      if ((e as Error).name === "AbortError") return "cancelled";
-    }
-  }
-  const url = URL.createObjectURL(blob);
-  const a = Object.assign(document.createElement("a"), { href: url, download: fileName });
-  document.body.append(a);
-  a.click();
-  a.remove();
-  window.setTimeout(() => URL.revokeObjectURL(url), 4000);
-  return "downloaded";
-}
+export const shareComparison = sharePng;

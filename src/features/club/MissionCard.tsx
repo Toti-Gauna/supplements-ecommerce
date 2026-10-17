@@ -6,16 +6,16 @@ import type { Mission } from "@/demo/types";
 import { cn } from "@/lib/cn";
 
 /**
- * Misión con su barra de carga, avance, premio y estado (texto + ícono, nunca solo color). El título va a lo
- * ancho de la tarjeta para que no se parta en columnas angostas (tablet con tres por fila).
+ * Misión de compra con su barra de carga, avance, premio y estado (texto + ícono, nunca solo color). Si es parte de
+ * una cadena, dice a qué misión pasa lo que sobra (así no hace falta repetir las misiones en otro bloque).
  */
-export function MissionCard({ mission, progress, dark }: { mission: Mission; progress: number; dark?: boolean }) {
+export function MissionCard({ mission, progress, dark, next }: { mission: Mission; progress: number; dark?: boolean; next?: string }) {
   const p = previewMission(mission, progress, { units: 0, total: 0 });
   const done = p.alreadyComplete;
   return (
     <article className={cn("flex h-full flex-col gap-5 rounded-sm p-5 sm:p-6", dark ? "bg-white/[0.06] text-on-night ring-1 ring-white/10" : "bg-surface shadow-[var(--shadow-card)]")}>
       <div className="flex items-center justify-between gap-3">
-        <span className={cn("eyebrow", dark ? "text-night-muted" : "text-muted")}>Misión</span>
+        <span className={cn("eyebrow", dark ? "text-night-muted" : "text-muted")}>Compras</span>
         <span className={cn("whitespace-nowrap rounded-xs px-2 py-0.5 font-mono text-[11px] font-bold uppercase tracking-[0.06em]", done ? "bg-success/15 text-success" : dark ? "bg-white/10" : "bg-accent")}>
           {done ? "Completada" : p.after > 0 ? "En curso" : "Por empezar"}
         </span>
@@ -33,6 +33,7 @@ export function MissionCard({ mission, progress, dark }: { mission: Mission; pro
         <span className="min-w-0">
           <span className={cn("block text-[11px] font-bold uppercase tracking-wider", dark ? "text-night-muted" : "text-muted")}>Premio</span>
           <span className="block text-sm font-bold">{mission.reward}</span>
+          {next && <span className={cn("mt-1 block text-xs", dark ? "text-night-muted" : "text-muted")}>Lo que sobra pasa a «{next}».</span>}
         </span>
       </div>
     </article>

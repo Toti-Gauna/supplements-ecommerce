@@ -1,5 +1,5 @@
 "use client";
-import { ArrowRight, FlaskConical, Plus } from "lucide-react";
+import { ArrowRight, FlaskConical, Plus, Trophy } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
@@ -48,6 +48,7 @@ export function MissionsAdmin() {
       </ul>
       <HubGrid label="Otras tareas de misiones">
         <HubCard href="/admin-demo/misiones/simular/" icon={FlaskConical} title="Simular progreso y premio" description="Mové a un cliente de ejemplo y mirá cuándo se genera el premio." action="Simular" />
+        <HubCard href="/admin-demo/misiones/liga/" icon={Trophy} title="Liga de gimnasios" description="El ranking del mes por box, con sus clientes y puntos. Solo lectura." action="Ver la liga" />
       </HubGrid>
       <MissionDialog mission={editing?.mission ?? null} draftKey={editing?.key ?? NEW_DRAFT} onClose={() => setEditing(null)} />
     </>

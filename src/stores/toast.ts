@@ -7,7 +7,8 @@ export interface Toast {
   title: string;
   description?: string;
   tone: "success" | "info" | "error";
-  action?: { label: string; href: string };
+  /** Un link (`href`) o un botón (`onClick`, por ejemplo "Empezar una comparación de Creatinas"). */
+  action?: { label: string; href: string } | { label: string; onClick: () => void };
 }
 
 interface ToastState {
@@ -25,7 +26,8 @@ export const useToasts = create<ToastState>()((set, get) => ({
     // El mismo aviso no se apila: si ya está a la vista, se reemplaza (con su tiempo de nuevo).
     const same = (t: Toast) => t.title === toast.title && t.description === toast.description;
     set((s) => ({ toasts: [...s.toasts.filter((t) => !same(t)).slice(-2), { ...toast, id }] }));
-    setTimeout(() => get().dismiss(id), 5000);
+    // Con una acción, un poco más de tiempo para llegar a tocarla.
+    setTimeout(() => get().dismiss(id), toast.action ? 8000 : 5000);
   },
   dismiss: (id) => set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) })),
 }));

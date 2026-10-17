@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { comparabilityNote, compareHref, compareSuggestions, compareTable, parseCompareParam, replaceCompare, toggleCompare } from "@/demo/engine/compare";
+import { comparabilityNote, compareSuggestions, compareTable } from "@/demo/engine/compare";
 import { DEMO_TODAY } from "@/demo/fixtures/admin-orders";
 import { products } from "@/demo/fixtures/products";
 
@@ -34,40 +34,12 @@ describe("tabla del comparador", () => {
     const same = compareTable([get("bcaa-211"), get("pump-flow")], DEMO_TODAY);
     expect(best(same, "servings")).toEqual([false, false]);
   });
-  it("mezcla de equipamiento y suplementos: por servicio compara solo los suplementos y avisa", () => {
-    const mixed = compareTable([get("ionic-whey"), get("shaker-volta"), get("proteina-vegana")], DEMO_TODAY);
-    expect(mixed.comparability).toBe("mixed");
-    expect(row(mixed, "perServing").cells[1]).toMatchObject({ value: null, text: "No aplica", best: false });
-    expect(row(mixed, "expiry").cells[1]!.text).toBe("No vence");
-    expect(best(mixed, "perServing")).toEqual([false, false, true]);
-    expect(comparabilityNote("mixed")).toMatch(/solo los suplementos/);
-  });
   it("solo equipamiento: precio, sellos y marca", () => {
     const gear = compareTable([get("guantes-boxeo"), get("vendas-boxeo")], DEMO_TODAY);
     expect(gear.comparability).toBe("price");
     expect(gear.rows.map((r) => r.key)).toEqual(["price", "badges", "brand"]);
     expect(best(gear, "price")).toEqual([false, true]);
     expect(comparabilityNote("full")).toBeNull();
-  });
-});
-
-describe("bandeja y link", () => {
-  it("máximo 3: el cuarto no entra; tocar de nuevo saca", () => {
-    let s = toggleCompare([], "a");
-    s = toggleCompare(s.slugs, "b");
-    s = toggleCompare(s.slugs, "c");
-    expect(toggleCompare(s.slugs, "d")).toEqual({ slugs: ["a", "b", "c"], result: "full" });
-    expect(toggleCompare(s.slugs, "b")).toEqual({ slugs: ["a", "c"], result: "removed" });
-  });
-  it("cambiar un producto (y si ya estaba, intercambian lugar)", () => {
-    expect(replaceCompare(["a", "b", "c"], 1, "x")).toEqual(["a", "x", "c"]);
-    expect(replaceCompare(["a", "b", "c"], 0, "c")).toEqual(["c", "b", "a"]);
-  });
-  it("?p= solo con productos que existen, sin repetir, hasta 3", () => {
-    const exists = (s: string) => products.some((p) => p.slug === s);
-    expect(parseCompareParam("ionic-whey,nada,ionic-whey,omega-3,glutamina,colageno", exists)).toEqual(["ionic-whey", "omega-3", "glutamina"]);
-    expect(parseCompareParam(null, exists)).toEqual([]);
-    expect(compareHref(["a", "b"])).toBe("/comparar/?p=a,b");
   });
 });
 

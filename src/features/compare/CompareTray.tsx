@@ -5,7 +5,7 @@ import { GitCompareArrows, X } from "lucide-react";
 import { ProductVisual } from "@/components/illustrations/ProductVisual";
 import { bottomBarFor } from "@/components/organisms/bottomBars";
 import { getProduct } from "@/demo/engine/catalog";
-import { COMPARE_MAX } from "@/demo/engine/compare";
+import { COMPARE_MAX } from "@/demo/engine/compare-tray";
 import { cn } from "@/lib/cn";
 import { useCompare } from "@/stores/compare";
 import { useCompareTray } from "./useCompareTray";

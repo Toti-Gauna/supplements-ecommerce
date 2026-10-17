@@ -6,13 +6,13 @@ import { daysToExpiry, firstOutLot, formatExpiry } from "./lots";
 import { rackFacts } from "./rack";
 import { BADGE_LABELS } from "./search-lexicon";
 import { daysLasting } from "./servings";
+import { COMPARE_MAX } from "./compare-tray";
 
 /**
- * Comparador (R2a): 2 o 3 productos lado a lado con lo que decide la compra. Cada renglón marca el mejor valor (el
- * más barato, el que más rinde, el que vence más lejos). Si se mezcla equipamiento con suplementos, los datos por
- * servicio comparan solo los suplementos y se avisa. Puro y testeado; en producción, src/server/services.
+ * Comparador (R2a): 2 o 3 productos **del mismo tipo** lado a lado con lo que decide la compra (la regla del tipo y la
+ * bandeja están en `compare-tray.ts`). Cada renglón marca el mejor valor (el más barato, el que más rinde, el que vence
+ * más lejos). Puro y testeado; en producción, src/server/services.
  */
-export const COMPARE_MAX = 3;
 
 export type CompareRowKey = "price" | "perServing" | "protein" | "servings" | "days" | "expiry" | "badges" | "brand";
 
@@ -40,8 +40,8 @@ export interface CompareColumn {
   gear: boolean;
 }
 
-/** "full": todos suplementos; "mixed": suplementos y equipamiento; "price": solo equipamiento (se compara el precio). */
-export type Comparability = "full" | "mixed" | "price";
+/** "full": suplementos; "price": equipamiento (no tiene servicios ni vencimiento: se compara el precio). */
+export type Comparability = "full" | "price";
 
 export interface CompareTable {
   columns: CompareColumn[];
@@ -90,16 +90,14 @@ export function compareTable(products: Product[], today: string, perDay = 1): Co
     }),
     row("brand", "Marca", null, (d) => ({ value: null, text: d.product.brand || "—" })),
   ];
-  const gears = columns.filter((c) => c.gear).length;
-  const comparability: Comparability = gears === 0 ? "full" : gears === columns.length ? "price" : "mixed";
+  const comparability: Comparability = columns.length > 0 && columns.every((c) => c.gear) ? "price" : "full";
   // Solo equipamiento: los renglones por servicio no dicen nada y se sacan.
   const shown = comparability === "price" ? rows.filter((r) => ["price", "badges", "brand"].includes(r.key)) : rows;
   return { columns, rows: shown, comparability };
 }
 
-/** Lo que dice el aviso de arriba de la tabla (null si se comparan solo suplementos). */
+/** Lo que dice el aviso de arriba de la tabla (null si se comparan suplementos). */
 export function comparabilityNote(c: Comparability): string | null {
-  if (c === "mixed") return "Mezclás equipamiento y suplementos: lo que es por servicio compara solo los suplementos.";
   if (c === "price") return "El equipamiento no tiene servicios ni vencimiento: se compara por precio, sellos y marca.";
   return null;
 }
@@ -115,32 +113,4 @@ export function compareSuggestions(product: Product, n = COMPARE_MAX - 1, catalo
     .filter((p) => p.slug !== product.slug && p.active !== false && p.categorySlug === product.categorySlug)
     .sort((a, b) => Number(out(a)) - Number(out(b)) || score(a) - score(b) || a.slug.localeCompare(b.slug))
     .slice(0, n);
-}
-
-/** `?p=` del comparador → slugs válidos, sin repetir, hasta 3. */
-export function parseCompareParam(param: string | null, exists: (slug: string) => boolean): string[] {
-  const slugs = (param ?? "").split(",").map((s) => s.trim()).filter((s) => s && exists(s));
-  return [...new Set(slugs)].slice(0, COMPARE_MAX);
-}
-
-export function compareHref(slugs: string[]): string {
-  return slugs.length ? `/comparar/?p=${slugs.join(",")}` : "/comparar/";
-}
-
-export type CompareToggle = { slugs: string[]; result: "added" | "removed" | "full" };
-
-/** Suma o saca un producto de la bandeja (máximo 3: el cuarto no entra y se avisa). */
-export function toggleCompare(slugs: string[], slug: string, max = COMPARE_MAX): CompareToggle {
-  if (slugs.includes(slug)) return { slugs: slugs.filter((s) => s !== slug), result: "removed" };
-  if (slugs.length >= max) return { slugs, result: "full" };
-  return { slugs: [...slugs, slug], result: "added" };
-}
-
-/** Cambia el producto de una columna (si el nuevo ya estaba, intercambian lugar). */
-export function replaceCompare(slugs: string[], index: number, slug: string): string[] {
-  const next = [...slugs];
-  const at = next.indexOf(slug);
-  if (at >= 0) next[at] = next[index]!;
-  next[index] = slug;
-  return next;
 }

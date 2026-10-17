@@ -115,7 +115,7 @@ test("el disco no está en los pasos del checkout: se ofrece como placa opcional
   await expect(wheel).toHaveCount(0);
   await checkoutAsGuest(page);
   await expect(wheel).toHaveCount(0);
-  await expect(page.getByRole("button", { name: "Confirmar pedido de demostración" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Confirmar pedido" })).toBeVisible();
 });
 
 test("disco olímpico: «Cargá la barra» se carga mientras apretás y al soltar gira hasta el premio (reloj controlado)", async ({ page }) => {

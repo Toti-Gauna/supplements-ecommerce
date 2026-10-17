@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { horizontalOverflow } from "./helpers";
 import { holdSplash, logoClear, previewTheme, recordEnds } from "./splash-helpers";
 
 /**
@@ -127,6 +128,65 @@ for (const [id, layers] of Object.entries(REFERENCES)) {
       expect(images.filter((i) => i !== "none" && !i.includes(`/splash/${id}/`))).toEqual([]);
       await logoClear(page);
       await expect(stage.locator(".splash-caption")).toBeVisible();
+      await page.keyboard.press("Escape");
+    });
+  }
+}
+
+/**
+ * Fase 2 (madre, Halloween, CyberMonday, Año Nuevo, San Valentín, Padre y Amigo): cada fecha con su escena, su capa
+ * clave con su propia animación (`[hueco, animación]`), solo su arte, el logo libre, sin desbordar y retirándose sola.
+ */
+const PHASE2 = {
+  "dia-de-la-madre": { layers: 6, key: [3, "dm-sweep"] },
+  halloween: { layers: 5, key: [3, "hw-ignite"] },
+  "cyber-monday": { layers: 5, key: [3, "cm-bays"] },
+  "ano-nuevo": { layers: 5, key: [2, "an-fall"] },
+  "san-valentin": { layers: 5, key: [2, "sv-left"] },
+  "dia-del-padre": { layers: 7, key: [4, "dp-bar"] },
+  "dia-del-amigo": { layers: 5, key: [2, "da-left"] },
+} as const;
+
+for (const [id, { layers, key: [slot, anim] }] of Object.entries(PHASE2)) {
+  test(`${id}: su escena termina su mecánica antes del telón y se retira sola, con solo el arte de su fecha`, async ({ page }) => {
+    await recordEnds(page);
+    const art: string[] = [];
+    page.on("response", (r) => { if (r.url().includes("/splash/")) art.push(`${r.status()} ${new URL(r.url()).pathname}`); });
+    await previewTheme(page, id);
+    await page.goto("", { waitUntil: "domcontentloaded" });
+    // Sin mirar la escena en pleno movimiento (dura menos de 2 s; quieta se prueba abajo): se mide lo que terminó.
+    await expect(page.locator("html")).toHaveAttribute("data-splash-scene", id);
+    await expect(page.locator("html")).toHaveClass(/splash-done/, { timeout: 8000 });
+    await expect(page.locator("#volta-splash")).toBeHidden();
+    const ends = await page.evaluate(() => (window as unknown as { ends: [string, number][] }).ends);
+    const at = (name: string) => ends.find(([n]) => n === name)?.[1];
+    expect(at(anim), anim).toBeDefined();
+    expect(at("splash-curtain")).toBeGreaterThan(at(anim)!);
+    expect(art.sort()).toEqual(Array.from({ length: layers }, (_, n) => `200 /supplements-ecommerce/splash/${id}/${n + 1}.svg`).sort());
+  });
+
+  for (const width of [375, 1440]) {
+    test(`${id} a ${width}px: sus ${layers} capas y la capa ${slot} con ${anim}, sin tapar el logo ni desbordar, en menos de 2 s`, async ({ page }) => {
+      await page.setViewportSize({ width, height: width < 600 ? 812 : 900 });
+      await holdSplash(page);
+      await previewTheme(page, id);
+      await page.goto("");
+      const stage = page.locator(`#volta-splash .splash-stage[data-scene='${id}']`);
+      await expect(stage).toBeVisible();
+      const images = await stage.locator(".sl").evaluateAll((els) => els.map((el) => getComputedStyle(el, "::before").backgroundImage));
+      expect(images.filter((i) => i.includes(`/splash/${id}/`))).toHaveLength(layers);
+      expect(images.filter((i) => i !== "none" && !i.includes(`/splash/${id}/`))).toEqual([]);
+      const own = await stage.locator(`.s${slot}`).evaluate((el) => {
+        const cs = getComputedStyle(el, "::before");
+        return { image: cs.backgroundImage, animation: cs.animationName };
+      });
+      expect(own.image).toContain(`/splash/${id}/${slot}.svg`);
+      expect(own.animation).toBe(anim);
+      await logoClear(page);
+      expect(await horizontalOverflow(page)).toBeLessThanOrEqual(0);
+      await expect(stage.locator(".splash-caption")).toBeVisible();
+      const last = await page.locator("#volta-splash").evaluate((s) => Math.max(...s.getAnimations({ subtree: true }).map((a) => Number(a.effect!.getComputedTiming().endTime))));
+      expect(last).toBeLessThanOrEqual(1850);
       await page.keyboard.press("Escape");
     });
   }

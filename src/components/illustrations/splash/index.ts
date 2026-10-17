@@ -1,6 +1,13 @@
 import type { ComponentType } from "react";
 import type { SplashSceneId } from "@/demo/engine/splash-scenes";
 import { blackFridayLayers } from "./black-friday";
+import { diaDeLaMadreLayers } from "./dia-de-la-madre";
+import { halloweenLayers } from "./halloween";
+import { cyberMondayLayers } from "./cyber-monday";
+import { anoNuevoLayers } from "./ano-nuevo";
+import { sanValentinLayers } from "./san-valentin";
+import { diaDelPadreLayers } from "./dia-del-padre";
+import { diaDelAmigoLayers } from "./dia-del-amigo";
 import { hotSaleLayers } from "./hot-sale";
 import { navidadLayers } from "./navidad";
 import { vueltaAlGymLayers } from "./vuelta-al-gym";
@@ -15,4 +22,11 @@ export const SPLASH_ART: Partial<Record<SplashSceneId, ComponentType[]>> = {
   "hot-sale": hotSaleLayers,
   "vuelta-al-gym": vueltaAlGymLayers,
   navidad: navidadLayers,
+  "dia-de-la-madre": diaDeLaMadreLayers,
+  halloween: halloweenLayers,
+  "cyber-monday": cyberMondayLayers,
+  "ano-nuevo": anoNuevoLayers,
+  "san-valentin": sanValentinLayers,
+  "dia-del-padre": diaDelPadreLayers,
+  "dia-del-amigo": diaDelAmigoLayers,
 };

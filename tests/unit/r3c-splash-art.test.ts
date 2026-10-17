@@ -24,8 +24,8 @@ describe("arte de las pantallas de carga por fecha", () => {
   });
 
   it("los SVG publicados coinciden con su dibujo (sin texto, sin animación, livianos)", () => {
-    let total = 0;
     for (const id of withArt) {
+      let total = 0;
       for (let n = 0; n < SPLASH_SCENES[id].layers; n++) {
         const svg = render(id, n);
         const file = join(PUBLIC, id, `${n + 1}.svg`);
@@ -40,8 +40,8 @@ describe("arte de las pantallas de carga por fecha", () => {
         expect(svg.length, `${id}/${n + 1}`).toBeLessThan(14_000);
         total += svg.length;
       }
+      // Lo que baja una fecha (todas sus capas juntas) es chico: el navegador pide solo el arte de la fecha puesta.
+      expect(total, id).toBeLessThan(20_000);
     }
-    // Lo que baja una fecha (todas sus capas) es chico; acá se mide el total de las cuatro de referencia.
-    expect(total).toBeLessThan(80_000);
   });
 });

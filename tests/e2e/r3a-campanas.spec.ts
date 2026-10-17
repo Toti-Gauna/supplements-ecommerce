@@ -1,4 +1,7 @@
 import { expect, test } from "@playwright/test";
+import { splashOff } from "../../src/demo/engine/splash-off";
+import { pendingSplashScenes } from "../../src/demo/engine/splash-scenes";
+import { seasonalThemes, themeCoupons } from "../../src/demo/fixtures/themes";
 import { CALENDAR, FIXED_NOW, paintOf, resolveColor, setThemeMode } from "./campaign-helpers";
 import { guardNetwork, horizontalOverflow } from "./helpers";
 import { holdSplash, previewTheme } from "./splash-helpers";
@@ -102,23 +105,34 @@ test("franja 'Próxima campaña': entre fechas en modo automático; nunca con un
   await expect(band).toHaveCount(0);
 });
 
-test("pantalla de carga de campaña (fechas sin escena propia hasta R3c fase 2): discos de la fecha y marcador con el descuento debajo del logo, ~1,8 s", async ({ page }) => {
+test("pantalla de carga de campaña (fechas sin escena propia todavía): discos de la fecha y marcador con el descuento debajo del logo, ~1,8 s", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await holdSplash(page);
-  await previewTheme(page, "halloween");
+  // La primera fecha que sigue sin escena propia (R3c fase 2: Halloween ya tiene la suya).
+  const id = pendingSplashScenes()[0];
+  await previewTheme(page, id ?? "halloween");
   await page.goto("");
   const splash = page.locator("#volta-splash");
   await expect(splash).toBeVisible();
+  if (!id) {
+    // Con todas las fechas terminadas no queda variante de campaña: cada fecha sale con su escena.
+    await expect(page.locator("html")).toHaveAttribute("data-splash-scene", "halloween");
+    await expect(splash.locator(".splash-barbell")).toBeHidden();
+    return;
+  }
+  const theme = seasonalThemes.find((t) => t.id === id)!;
+  const off = splashOff(themeCoupons.find((c) => c.code === theme.couponCode))!;
   await expect(page.locator("html")).not.toHaveAttribute("data-splash-scene", /.*/);
   const score = splash.locator(".splash-score");
   await expect(score).toBeVisible();
-  expect(await score.locator(".splash-score-name").evaluate((el) => getComputedStyle(el, "::before").content)).toBe('"Halloween"');
-  // El marcador gira sus ruedas hasta el descuento del cupón (MONSTER20): se ven dos, la decena en 2 y la unidad en 0.
+  expect(await score.locator(".splash-score-name").evaluate((el) => getComputedStyle(el, "::before").content)).toBe(JSON.stringify(theme.name));
+  // El marcador gira sus ruedas hasta el descuento del cupón: se ven las de la derecha, cada una en su cifra.
   const wheels = score.locator(".splash-odo b");
-  await expect(wheels.nth(0)).toBeHidden();
-  await expect(wheels.nth(1)).toBeVisible();
-  expect(await wheels.nth(1).evaluate((el) => getComputedStyle(el).getPropertyValue("--d").trim())).toBe("2");
-  expect(await wheels.nth(2).evaluate((el) => getComputedStyle(el).getPropertyValue("--d").trim())).toBe("0");
+  for (let n = 0; n < 3; n++) {
+    if (n < 3 - off.dn) await expect(wheels.nth(n)).toBeHidden();
+    else await expect(wheels.nth(n)).toBeVisible();
+    expect(await wheels.nth(n).evaluate((el) => getComputedStyle(el).getPropertyValue("--d").trim())).toBe(String(off.cols[n]));
+  }
   // Nunca tapa el logo: va debajo de la barra.
   const mark = (await splash.locator(".splash-mark").boundingBox())!;
   const bar = (await splash.locator(".splash-barbell").boundingBox())!;

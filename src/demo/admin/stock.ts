@@ -1,6 +1,7 @@
 import { DEMO_TODAY } from "../fixtures/admin-orders";
 import type { Category, Lot, Product, Variant } from "../types";
 import { firstOutLot } from "../engine/lots";
+import { pricePerServing } from "../engine/servings";
 import { hasClearance, variantLotRows, withStock, type LotRow } from "./lots";
 
 /** Stock por variante para las tablas, la planilla y las alertas del panel. */
@@ -29,6 +30,11 @@ export interface StockRow {
   price: number;
   /** Costo del proveedor, si está cargado. */
   cost?: number;
+  /** El costo se estimó en proporción al precio (no hay uno cargado para esta presentación). */
+  costEstimated?: boolean;
+  /** Servicios del envase y precio por servicio (null sin servicios: equipamiento o sin cargar). */
+  servings?: number;
+  servingPrice: number | null;
   stock: number;
   state: StockState;
   active: boolean;
@@ -58,6 +64,8 @@ export function stockRows(products: Product[], categories: Category[], low = DEF
       brand: p.brand,
       price: variantPrice(p, v),
       cost: v.cost,
+      servings: v.servings,
+      servingPrice: pricePerServing(variantPrice(p, v), v.servings),
       stock: v.stock,
       state: stockState(v.stock, low),
       active: p.active !== false,

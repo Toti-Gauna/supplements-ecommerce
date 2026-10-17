@@ -10,10 +10,14 @@ import { formatARS } from "@/lib/money";
 import { StockChip } from "../table/StockChip";
 import { LotCell } from "../lots/LotBadge";
 import { StockEditor } from "../stock/StockEditor";
-import { ExpiringBadge, minPrice, ProductThumb } from "./productColumns";
+import { formatRange, productMarginRange } from "@/demo/admin/product-metrics";
+import type { Recipe } from "@/demo/fixtures/workshop";
+import { ExpiringBadge, minPrice, ProductThumb, servingRangeText } from "./productColumns";
 
 /** Tarjetas del celular para Productos y stock: tocar la tarjeta abre la ficha; el switch y el stock no navegan. */
-export function ProductCard({ row: p, selected, onToggle, onOpen, categories, low, onVisible }: RowCardProps<Product> & { categories: Category[]; low: number; onVisible: (p: Product) => void }) {
+export function ProductCard({ row: p, selected, onToggle, onOpen, categories, low, onVisible, recipes = {} }: RowCardProps<Product> & { categories: Category[]; low: number; onVisible: (p: Product) => void; recipes?: Readonly<Record<string, Recipe>> }) {
+  const pps = servingRangeText(p);
+  const margin = productMarginRange(p, recipes[p.slug]);
   return (
     <div className={`flex flex-col gap-3 rounded-sm bg-bg p-3 ring-1 ${selected ? "ring-primary" : "ring-ink/[0.06]"}`}>
       <div className="flex items-start gap-3">
@@ -23,6 +27,7 @@ export function ProductCard({ row: p, selected, onToggle, onOpen, categories, lo
           <span className="min-w-0 flex-1">
             <span className="block font-bold leading-tight">{p.name}</span>
             <span className="text-sm text-muted">{categories.find((c) => c.slug === p.categorySlug)?.name} · desde {formatARS(minPrice(p))}</span>
+            {(pps !== "—" || margin) && <span className="block text-xs text-muted">{pps !== "—" && `${pps} por servicio`}{pps !== "—" && margin && " · "}{margin && `margen ${formatRange(margin, (n) => `${n} %`)}`}</span>}
             <span className="mt-1 flex flex-wrap gap-1"><StockChip {...productStockBadge(p, low)} /><ExpiringBadge product={p} /></span>
           </span>
           <ChevronRight size={18} aria-hidden="true" className="mt-1 shrink-0 text-muted" />
@@ -38,7 +43,7 @@ export function VariantCard({ row: r, selected, onToggle, onOpen, setStock, onCl
     <div className={`flex flex-col gap-3 rounded-sm bg-bg p-3 ring-1 ${selected ? "ring-primary" : "ring-ink/[0.06]"}`}>
       <div className="flex items-start gap-3">
         <input type="checkbox" checked={selected} onChange={onToggle} aria-label={`Seleccionar ${r.productName} · ${r.variantLabel}`} className="mt-1 h-5 w-5 accent-primary" />
-        <button type="button" onClick={onOpen} className="min-w-0 flex-1 text-left"><span className="block font-bold">{r.productName}</span><span className="text-sm text-muted">{r.variantLabel} · {formatARS(r.price)}</span>{r.cost ? <span className="block text-xs text-muted">Costo {formatARS(r.cost)} · margen {stockMargin(r)} %</span> : null}</button>
+        <button type="button" onClick={onOpen} className="min-w-0 flex-1 text-left"><span className="block font-bold">{r.productName}</span><span className="text-sm text-muted">{r.variantLabel} · {formatARS(r.price)}</span>{r.servingPrice !== null && <span className="block text-xs text-muted">{formatARS(r.servingPrice)} por servicio</span>}{r.cost ? <span className="block text-xs text-muted">Costo {r.costEstimated ? "≈ " : ""}{formatARS(r.cost)} · margen {stockMargin(r)} %</span> : null}</button>
         <StockChip state={r.state} />
       </div>
       <div className="pl-8"><LotCell row={r} onClear={onClear} /></div>

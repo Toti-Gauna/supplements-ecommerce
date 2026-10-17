@@ -7,6 +7,7 @@ import type { StockState } from "@/demo/admin/stock";
 import { getProduct } from "@/demo/engine/catalog";
 import type { ArtKey, PackStyle, ProductBadge } from "@/demo/types";
 import { useAddFlow } from "@/features/cart/useAddFlow";
+import { CompareToggle } from "@/features/compare/CompareToggle";
 import { formatARS } from "@/lib/money";
 import { plural } from "@/lib/plural";
 import { markProductHero } from "@/lib/viewTransition";
@@ -49,7 +50,7 @@ const TAG = "px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0
 
 /**
  * "Ficha de rack": el envase en su estante y, abajo, lo que vende: el precio del producto en el marcador, el precio
- * por servicio chico (para comparar), sellos, una luz de stock por variante y agregar. La caja de arriba va en su propia capa (z-[1], sin
+ * por servicio chico (para comparar), sellos, una luz de stock por variante, agregar y sumarlo al comparador. La caja de arriba va en su propia capa (z-[1], sin
  * puntero) y el botón en otra (z-[2]) por encima del link estirado del nombre (arreglo de R0, `motion.css`).
  */
 export function ProductCard({ product, priority }: { product: ProductCardData; priority?: boolean }) {
@@ -72,6 +73,8 @@ export function ProductCard({ product, priority }: { product: ProductCardData; p
             // eslint-disable-next-line @next/next/no-img-element -- foto cargada en el panel demo (data URL local)
             ? <img src={product.photoUrl} alt={product.alt} className="h-full w-full object-cover" />
             : <RackShot items={[{ art: product.art, pack: product.pack, tint: product.tint }]} label={product.alt} className="transition-transform duration-300 group-hover:-translate-y-1" />}
+          {/* Comparar va sobre el estante, en la capa de arriba del link estirado (como Agregar). */}
+          {full && <CompareToggle slug={product.slug} name={product.name} className="absolute bottom-2 left-2 z-[2]" />}
         </div>
       </div>
       <div className="flex flex-1 flex-col gap-2.5 p-3 sm:p-4">

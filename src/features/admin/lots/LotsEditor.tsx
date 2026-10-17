@@ -56,7 +56,7 @@ export function LotsEditor({ lots, onChange, idPrefix, name }: Props) {
           </div>
         );
       })}
-      <Button variant="secondary" size="sm" className="self-start" onClick={() => onChange([...lots, { code: "", expires: nextYear(), units: 0 }])}>
+      <Button variant="secondary" size="sm" className="self-start" onClick={() => onChange([...lots, { code: "", expires: nextYear(), units: 0, receivedOn: DEMO_TODAY }])}>
         <Plus size={16} aria-hidden="true" /> Agregar lote
       </Button>
     </fieldset>

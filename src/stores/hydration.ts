@@ -4,6 +4,7 @@ import { useAccount } from "./account";
 import { useAdmin } from "./admin";
 import { useCart } from "./cart";
 import { useCheckout } from "./checkout";
+import { useCompare } from "./compare";
 import { useFavorites } from "./favorites";
 import { useGame } from "./game";
 import { useGifts } from "./gifts";
@@ -20,7 +21,7 @@ const listeners = new Set<() => void>();
 export function useRehydrateStores(): void {
   useEffect(() => {
     if (hydrated) return;
-    Promise.all([useCart.persist.rehydrate(), useCheckout.persist.rehydrate(), useAccount.persist.rehydrate(), useAdmin.persist.rehydrate(), useFavorites.persist.rehydrate(), useGifts.persist.rehydrate(), useReminders.persist.rehydrate(), useThemePreview.persist.rehydrate(), useTablePrefs.persist.rehydrate(), useGame.persist.rehydrate(), useSubscriptions.persist.rehydrate()]).finally(() => {
+    Promise.all([useCart.persist.rehydrate(), useCheckout.persist.rehydrate(), useAccount.persist.rehydrate(), useAdmin.persist.rehydrate(), useFavorites.persist.rehydrate(), useGifts.persist.rehydrate(), useReminders.persist.rehydrate(), useThemePreview.persist.rehydrate(), useTablePrefs.persist.rehydrate(), useGame.persist.rehydrate(), useSubscriptions.persist.rehydrate(), useCompare.persist.rehydrate()]).finally(() => {
       hydrated = true;
       listeners.forEach((l) => l());
     });
@@ -49,6 +50,7 @@ export function resetDemo(): void {
   useReminders.getState().clear();
   useGame.getState().clear();
   useSubscriptions.getState().reset();
+  useCompare.getState().clear();
   useThemePreview.getState().setPreview(null);
   clearDemoStorage();
 }

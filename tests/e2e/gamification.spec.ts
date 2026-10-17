@@ -32,7 +32,9 @@ test("ruleta: gira (sin animación con movimiento reducido), emite un cupón y s
 test("ficha: stock bajo la imagen, cantidad desplegable y favoritos", async ({ page }) => {
   await page.goto("p/overvolt-pre/");
   await expect(page.getByText(/En stock · 12 disponibles/)).toBeVisible();
-  await expect(page.getByRole("heading", { name: /Sumalo a tu stack/ })).toBeVisible();
+  // R2a: debajo de la ficha, el riel "Comparalo con…" (reemplaza a "Sumalo a tu stack"; el stack va en la ficha).
+  await expect(page.getByRole("heading", { name: /Comparalo/ })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Armá tu stack|Sumá \d categorías/ }).first()).toBeAttached();
   // Con la máquina cargada, elegir antes de que la ficha termine de hidratar se pierde (React repone el valor):
   // se reintenta hasta que el selector responde.
   const qty = page.getByLabel("Cantidad:");

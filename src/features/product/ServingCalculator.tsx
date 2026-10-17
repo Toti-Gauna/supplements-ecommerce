@@ -18,11 +18,11 @@ const field = "min-h-11 w-full rounded-sm border border-line bg-bg px-3 font-lab
 
 /**
  * "¿Cuánto te dura?": servicios por día → días y fecha en que se termina, con aviso de recompra. Para proteínas suma
- * la proteína del día según peso y objetivo; para creatinas, la dosis de referencia por peso. Todo ORIENTATIVO.
+ * la proteína del día según peso y objetivo; para creatinas, la dosis de referencia por peso. Todo ORIENTATIVO. Los
+ * servicios por día los comparte con el marcador de la ficha ("te dura N días").
  */
-export function ServingCalculator({ product, variant }: { product: Product; variant: Variant }) {
+export function ServingCalculator({ product, variant, perDay, onPerDay: setPerDay }: { product: Product; variant: Variant; perDay: number; onPerDay: (n: number) => void }) {
   const id = useId();
-  const [perDay, setPerDay] = useState(1);
   const [weight, setWeight] = useState(75);
   const goals = (product.goals ?? []).filter((g) => PROTEIN_PER_KG[g]);
   const [goal, setGoal] = useState<Goal>(goals[0] ?? "masa-muscular");
@@ -81,7 +81,7 @@ export function ServingCalculator({ product, variant }: { product: Product; vari
       {saved ? (
         <p className="mt-4 flex items-center gap-2 text-sm font-bold text-success"><Check size={18} aria-hidden="true" /> Te avisamos el {formatDay(remind, "dayMonth")}. <Link href="/cuenta/#recompras" className="text-primary underline">Ver avisos</Link></p>
       ) : (
-        <Button variant="secondary" onClick={onRemind} className="mt-4 w-full"><BellRing size={18} aria-hidden="true" className="text-volt-ink" />Avisame antes de que se termine</Button>
+        <Button variant="secondary" onClick={onRemind} className="mt-4 w-full max-sm:px-3 max-sm:text-[12px] max-sm:tracking-[0.04em]"><BellRing size={18} aria-hidden="true" className="text-volt-ink" />Avisame antes de que se termine</Button>
       )}
       <p className="mt-3 text-[11px] leading-relaxed text-muted">El aviso llega 5 días antes. Cálculo orientativo para personas sanas que entrenan, con fecha de referencia de la demo. No reemplaza la consulta con un profesional.</p>
     </section>

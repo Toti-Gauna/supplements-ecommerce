@@ -186,8 +186,11 @@ sabor y tamaño, con su stock.
 ### Cargar o editar un producto
 
 1. Tocá **Nuevo producto**, o **Editar** en el renglón de un producto.
-2. Completá los pasos: foto (o el envase dibujado), nombre y descripción, categoría y precio, **variantes** (sabor,
-   tamaño, precio, servicios y costo del proveedor), medidas de envío, marca, objetivos y sellos (sin TACC, vegano…).
+2. Completá los pasos: foto (o el envase dibujado), nombre y descripción, categoría, **presentaciones** (sabor,
+   tamaño, **precio final** de cada una, servicios y costo del proveedor: el precio por servicio y el margen se calculan
+   mientras escribís), **rótulo** (tabla nutricional, modo de uso, leyenda y RNPA), marca, objetivos, sellos (sin TACC,
+   vegano…) y medidas de envío. Un suplemento no se guarda sin RNPA (formato 00-000000: si lo copiás del envase, el
+   panel lo acomoda solo) ni sin porción y proteína en la tabla. El equipamiento no lleva rótulo ni servicios.
    En **Qué elige el cliente** decidís cómo se llaman las opciones en la tienda: **sabor y tamaño** (suplementos),
    **color y talle** (cinturones, rodilleras) o **color y medida** (guantes, sogas, botellas).
 3. En cada variante de un suplemento cargá sus **lotes**: código, mes de vencimiento y unidades. El stock es la suma de
@@ -198,6 +201,14 @@ sabor y tamaño, con su stock.
 **Pausar un producto**: apagá el interruptor **Visible** en su renglón. Deja de verse en la tienda sin borrarlo.
 
 **Ver cómo queda**: **Ver** en el renglón o **Ver en tienda** desde el editor.
+
+**Precio por servicio y margen**: la lista de **Productos y stock** tiene esas dos columnas (por producto, el rango de
+sus presentaciones). El margen usa el costo de la presentación o el de **Costos**; si es una estimación, lo dice.
+
+**En la tienda**: la ficha muestra primero el **precio total** y abajo, chico, cuánto sale cada servicio y cuánto te
+dura. El catálogo se filtra por objetivo, marca, sabor, sellos y precio por servicio, y se ordena por **Más rendidor** o
+**Más proteína por $**. Con **Comparar** en cada tarjeta, el cliente pone 2 o 3 productos lado a lado (y puede mandar la
+comparación como imagen): la respuesta que hoy escribís por WhatsApp.
 
 ### Liquidar un lote que está por vencer
 

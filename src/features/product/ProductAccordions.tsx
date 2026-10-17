@@ -23,12 +23,13 @@ export function ProductAccordions({ product }: { product: Product }) {
   return (
     <div className="border-t border-line">
       <Item title="Descripción" open>{product.description}</Item>
-      <Item title={gear ? "Medidas y disponibilidad" : "Envase y disponibilidad"}>
-        {gear
-          ? (d ? <p>Medidas: {d.lengthCm} × {d.widthCm} × {d.heightCm} cm · {d.weightG} g.</p> : <p>Medidas a confirmar por {brand.name}.</p>)
-          : d?.weightG ? <p>Peso con envase: {d.weightG} g.</p> : <p>Peso del envase a confirmar por {brand.name}.</p>}
-        {product.madeToOrderDays ? <p className="mt-1">Por encargo: llega al local en {product.madeToOrderDays} días hábiles desde la confirmación del pago.</p> : <p className="mt-1">En stock: sale {DISPATCH_PROMISE}.</p>}
-      </Item>
+      {/* El suplemento muestra todo en la hoja técnica; el equipamiento (sin rótulo) sigue con sus medidas. */}
+      {gear && (
+        <Item title="Medidas y disponibilidad">
+          {d ? <p>Medidas: {d.lengthCm} × {d.widthCm} × {d.heightCm} cm · {d.weightG} g.</p> : <p>Medidas a confirmar por {brand.name}.</p>}
+          {product.madeToOrderDays ? <p className="mt-1">Por encargo: llega al local en {product.madeToOrderDays} días hábiles desde la confirmación del pago.</p> : <p className="mt-1">En stock: sale {DISPATCH_PROMISE}.</p>}
+        </Item>
+      )}
       <Item title="Envíos, retiro y cambios">
         <p>Cadete en Mar del Plata {DISPATCH_PROMISE}, envío al resto del país o retiro en el local. {gear
           ? "Cambio dentro de los 10 días, sin uso y con la etiqueta; el cambio de talle en Mar del Plata no tiene costo (ver términos)."

@@ -5,7 +5,7 @@ import { Breadcrumbs } from "@/components/templates/PageHeader";
 import { getCategory, getProduct } from "@/demo/engine/catalog";
 import { products } from "@/demo/fixtures/products";
 import { ProductDetail } from "@/features/product/ProductDetail";
-import { ProductRecommendations } from "@/features/product/ProductRecommendations";
+import { CompareRail } from "@/features/product/CompareRail";
 
 export const dynamicParams = false;
 
@@ -30,7 +30,7 @@ export default async function ProductPage({ params }: Props) {
     <div className="pb-36 sm:pb-0">
       <div className="mb-4"><Breadcrumbs crumbs={category ? [{ href: `/c/${category.slug}/`, label: category.name }] : []} /></div>
       <ProductDetail product={product} />
-      <div className="mt-24"><div className="cv-auto cv-bleed" style={{ containIntrinsicSize: "auto 560px" }}><ProductRecommendations slug={slug} /></div></div>
+      <div className="mt-24"><div className="cv-auto cv-bleed" style={{ containIntrinsicSize: "auto 560px" }}><CompareRail slug={slug} /></div></div>
     </div>
     </PageSwap>
   );

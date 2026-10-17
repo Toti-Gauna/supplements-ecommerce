@@ -17,7 +17,7 @@ for (const [label, width, height, touch] of [["escritorio", 1440, 900, false], [
     const page = await ctx.newPage();
     await page.goto(base() + "admin-demo/productos/editar/?id=overvolt-pre");
     await page.getByLabel("Nombre", { exact: true }).fill("Overvolt con teclado");
-    const variants = steps(page).getByRole("button", { name: /Variantes, precio y stock/ });
+    const variants = steps(page).getByRole("button", { name: /Presentaciones: precio, servicios y stock/ });
     await variants.click();
     await expect(variants).toHaveAttribute("aria-current", "step");
     await expect.poll(() => scrollY(page)).toBeGreaterThan(200);
@@ -35,7 +35,7 @@ for (const [label, width, height, touch] of [["escritorio", 1440, 900, false], [
     await expect(page).toHaveURL(/vista-previa\/\?borrador=/);
     await page.getByRole("button", { name: "Volver al editor" }).click();
     await expect(page.getByLabel("Nombre", { exact: true })).toHaveValue("Overvolt con teclado");
-    await expect(steps(page).getByRole("button", { name: /Variantes, precio y stock/ })).toHaveAttribute("aria-current", "step");
+    await expect(steps(page).getByRole("button", { name: /Presentaciones: precio, servicios y stock/ })).toHaveAttribute("aria-current", "step");
     await expect.poll(() => scrollY(page)).toBeGreaterThan(y - 40);
     expect(Math.abs((await scrollY(page)) - y)).toBeLessThan(40);
     if (touch) {
@@ -43,7 +43,7 @@ for (const [label, width, height, touch] of [["escritorio", 1440, 900, false], [
       await page.evaluate(() => document.querySelector<HTMLElement>("main a[href*='/admin-demo/productos/']")?.focus({ preventScroll: true }));
       const before = await scrollY(page);
       await page.keyboard.press("Tab");
-      expect(await focused(page)).toMatch(/Foto/);
+      expect(await focused(page)).toMatch(/Datos/);
       await page.waitForTimeout(250);
       expect(await scrollY(page)).toBe(before);
     }

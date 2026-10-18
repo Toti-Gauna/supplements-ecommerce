@@ -164,6 +164,9 @@ for (const [id, scene] of Object.entries(SPORTS)) {
       });
       expect(moving.image).toContain(`/splash/${id}/${scene.slot}.svg`);
       expect(moving.animation).toBe(scene.animation);
+      // Toda la mecánica (y el número) termina antes de que caiga el telón, a los 1,6 s.
+      const ends = await stage.evaluate((s) => s.getAnimations({ subtree: true }).map((a) => Number(a.effect!.getComputedTiming().endTime)));
+      expect(Math.max(...ends)).toBeLessThanOrEqual(1600);
       await logoClear(page);
       expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
       await expect(stage.locator(".splash-caption")).toBeVisible();
@@ -185,7 +188,8 @@ for (const [id, scene] of Object.entries(SPORTS)) {
     const ends = await page.evaluate(() => (window as unknown as { ends: [string, number][] }).ends);
     const at = (name: string) => ends.find(([n]) => n === name)?.[1];
     expect(at(scene.animation)).toBeDefined();
-    expect(at("splash-curtain")).toBeGreaterThan(at(scene.animation)!);
+    // Con la máquina cargada los dos `animationend` pueden salir en el mismo cuadro (en cualquier orden).
+    expect(at("splash-curtain")).toBeGreaterThanOrEqual(at(scene.animation)! - 20);
     expect(art.sort()).toEqual(Array.from({ length: scene.layers }, (_, i) => `200 /supplements-ecommerce/splash/${id}/${i + 1}.svg`));
   });
 }

@@ -9,6 +9,19 @@ export const holdSplash = (page: Page) => page.addInitScript(() => {
   const st = window.setTimeout;
   window.setTimeout = ((fn: TimerHandler, ms?: number, ...a: unknown[]) => (ms === 4000 ? 0 : st(fn, ms, ...a))) as typeof window.setTimeout;
   document.addEventListener("DOMContentLoaded", () => document.getAnimations().forEach((a) => { if ((a as CSSAnimation).animationName === "splash-curtain") a.pause(); }));
+  // Con la máquina cargada el primer cuadro puede llegar tarde: el telón queda en pausa desde que existe el <head>.
+  new MutationObserver((_, o) => {
+    if (!document.head) return;
+    o.disconnect();
+    const s = document.createElement("style");
+    s.textContent = "#volta-splash { animation-play-state: paused !important; }";
+    document.head.append(s);
+  }).observe(document, { childList: true, subtree: true });
+  // Y si igual arrancó, se frena apenas empieza.
+  document.addEventListener("animationstart", (e) => {
+    if (e.animationName !== "splash-curtain") return;
+    (e.target as Element).getAnimations().forEach((a) => { if ((a as CSSAnimation).animationName === "splash-curtain") { a.pause(); a.currentTime = Number(a.effect?.getTiming().delay ?? 0); } });
+  }, true);
 });
 
 /** Anota qué animaciones terminan y cuándo, y cuándo se retira el splash. */

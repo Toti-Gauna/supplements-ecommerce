@@ -20,8 +20,9 @@ export async function renderAudio(notes: Note[], duration: number, sampleRate = 
   const glue = c.createDynamicsCompressor();
   glue.threshold.value = -16; glue.knee.value = 8; glue.ratio.value = 2.5; glue.attack.value = 0.01; glue.release.value = 0.2;
   glue.connect(gain(c, limiter, MASTER));
-  const music = gain(c, glue, 0.85);
-  const buses: Buses = { music, pad: gain(c, music, 1), sfx: gain(c, glue, 0.8), reverb: reverb(c, gain(c, glue, 0.32)) };
+  const gate = gain(c, glue); // los silencios reales de la pieza cierran todo lo que va al compresor
+  const music = gain(c, gate, 0.85);
+  const buses: Buses = { music, pad: gain(c, music, 1), sfx: gain(c, gate, 0.8), reverb: reverb(c, gain(c, gate, 0.32)), gate };
   for (const n of notes) {
     if (n.voice === "kick") { buses.pad.gain.setValueAtTime(0.42, n.t); buses.pad.gain.linearRampToValueAtTime(1, n.t + 0.24); }
     VOICES[n.voice](c, buses, n);

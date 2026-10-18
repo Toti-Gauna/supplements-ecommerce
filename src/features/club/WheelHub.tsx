@@ -1,9 +1,9 @@
 import { useId } from "react";
-import { LogoMark } from "@/components/atoms/Logo";
 import { MONO_FONT } from "@/config/brand";
 import { cn } from "@/lib/cn";
 import { polar, VOLT } from "./wheel-art";
-import { brand } from "@/config/brand";
+import { useBrandLogo, useBrandMark } from "@/config/brand-mark";
+import { LOGO_VIEWBOX } from "@/config/logo";
 
 /** Moleteado: dos tandas de líneas cruzadas entre dos radios (caja de 100). */
 const KNURL = Array.from({ length: 64 }, (_, i) => {
@@ -30,6 +30,7 @@ function Engraved({ pathId, text }: { pathId: string; text: string }) {
 /** Arte de la maza de acero: aro moleteado, la marca y "20 KG" grabados y el agujero de la barra. */
 function HubArt({ live }: { live: boolean }) {
   const uid = useId().replace(/:/g, "");
+  const mark = useBrandMark();
   const id = (k: string) => `${uid}${k}`;
   return (
     <svg viewBox="0 0 100 100" aria-hidden="true" className="absolute inset-0 h-full w-full overflow-visible">
@@ -57,7 +58,7 @@ function HubArt({ live }: { live: boolean }) {
       <path d={KNURL} stroke="#20252c" strokeOpacity=".55" strokeWidth=".7" />
       <circle cx="50" cy="50" r="45.6" fill="none" stroke="#1b1f25" strokeOpacity=".6" strokeWidth=".7" />
       <circle cx="50" cy="50" r="37.4" fill="none" stroke="#fff" strokeOpacity=".5" strokeWidth=".7" />
-      <Engraved pathId={id("top")} text={brand.mark} />
+      <Engraved pathId={id("top")} text={mark} />
       <Engraved pathId={id("bottom")} text="20 KG" />
       <circle cx="50" cy="50" r="25.6" fill="none" stroke="#fff" strokeOpacity=".6" strokeWidth="1" />
       <circle cx="50" cy="50" r="24.4" fill={`url(#${id("hole")})`} />
@@ -72,10 +73,21 @@ const HUB = "absolute inset-[35%] z-10 grid place-items-center rounded-full [con
  * Maza central del disco. Con `onSpin` es el botón "Girar" (el agujero de la barra se ilumina y late); sin él, una
  * pieza quieta con el rayo de la marca en el agujero (portada del club y vista previa del panel).
  */
+/** El símbolo del logo en la maza (de la marca del contexto: en el trailer, la de la tienda que se muestra). */
+function HubMark({ className }: { className: string }) {
+  const logo = useBrandLogo();
+  return (
+    <svg viewBox={LOGO_VIEWBOX} aria-hidden="true" className={className}>
+      {logo.stroke && <path d={logo.stroke} fill="currentColor" />}
+      <path d={logo.bolt} fill="var(--logo-bolt, var(--color-volt))" />
+    </svg>
+  );
+}
+
 export function WheelHub({ onSpin }: { onSpin?: () => void }) {
   const inner = (
     <span className="relative flex flex-col items-center leading-none">
-      <LogoMark className={cn("text-on-night", onSpin ? "h-[17cqw] w-[17cqw]" : "h-[26cqw] w-[26cqw]")} />
+      <HubMark className={cn("text-on-night", onSpin ? "h-[17cqw] w-[17cqw]" : "h-[26cqw] w-[26cqw]")} />
       {onSpin && <span className="mt-[1cqw] pl-[0.18em] font-lab text-[clamp(8px,9.5cqw,13px)] font-extrabold tracking-[0.18em] text-volt">GIRAR</span>}
     </span>
   );

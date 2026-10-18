@@ -1,4 +1,4 @@
-import { LOGO_BOLT, LOGO_STROKE_PATH } from "@/components/atoms/Logo";
+import { useBrandLogo } from "@/config/brand-mark";
 import { DISPLAY_SVG, MONO_SVG } from "@/components/illustrations/supplements/defs";
 import type { BagDecor, BagColors } from "./bag-colors";
 
@@ -9,9 +9,10 @@ const display = { fontFamily: DISPLAY_SVG, fontWeight: 850, fontStretch: "125%" 
 
 /** El símbolo del logo de la marca, centrado en (x, y). */
 function Mark({ x, y, s, ink, bolt }: { x: number; y: number; s: number; ink: string; bolt: string }) {
+  const logo = useBrandLogo();
   return (
     <g transform={`translate(${x} ${y}) scale(${s}) translate(-32 -34)`}>
-      {LOGO_STROKE_PATH && <path d={LOGO_STROKE_PATH} fill={ink} />}<path d={LOGO_BOLT} fill={bolt} />
+      {logo.stroke && <path d={logo.stroke} fill={ink} />}<path d={logo.bolt} fill={bolt} />
     </g>
   );
 }

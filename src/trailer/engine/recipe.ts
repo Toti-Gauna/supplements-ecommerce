@@ -13,6 +13,10 @@ export interface SceneCtx<P> {
   dur: number;
   ratio: Ratio;
   stage: StageSize;
+  /** Movimiento reducido: la receta arma una lámina quieta con su estado final y un fundido corto (mismos tiempos, mismo sonido). */
+  reduced: boolean;
+  /** Duración de un tiempo musical en segundos (60 / BPM): las recetas de pieza cuentan en tiempos. */
+  beat: number;
 }
 
 /**

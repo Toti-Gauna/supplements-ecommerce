@@ -2,8 +2,9 @@ import { withBase } from "@/lib/base-path";
 import { renderAudio } from "./render";
 import type { Note } from "./score";
 
-/** Tolerancia entre la duración del archivo y la del trailer: más que eso, el archivo es de otra versión y se descarta. */
-const TOLERANCE = 0.25;
+/** Tolerancia entre la duración del archivo y la del trailer: más que eso, el archivo es de otra versión y se descarta.
+ * El render deja 0,3 s de cola y el AAC suma su relleno: con 0,25 s se descartaba el archivo de la firma (50,0 s contra 49,69 s). */
+const TOLERANCE = 0.4;
 
 /**
  * Pista del trailer: primero el archivo pre-renderizado (`public/trailer/<pieza>.m4a`, lo deja el exportador), que

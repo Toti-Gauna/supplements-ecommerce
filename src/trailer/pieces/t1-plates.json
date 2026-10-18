@@ -1,0 +1,112 @@
+{
+  "ficha-light": {
+    "toggle": {
+      "x": 1468,
+      "y": 53,
+      "width": 48,
+      "height": 48
+    },
+    "hero": {
+      "x": 222,
+      "y": 204,
+      "width": 742,
+      "height": 730
+    }
+  },
+  "ficha-dark": {
+    "hero": {
+      "x": 222,
+      "y": 204,
+      "width": 742,
+      "height": 730
+    }
+  },
+  "cobrar": {
+    "card": {
+      "x": 1336,
+      "y": 357,
+      "width": 273,
+      "height": 77
+    }
+  },
+  "cuotas": {
+    "summary": {
+      "x": 1356,
+      "y": 478,
+      "width": 515,
+      "height": 38
+    }
+  },
+  "proveedor-pegar": {
+    "load": {
+      "x": 302,
+      "y": 892,
+      "width": 355,
+      "height": 58
+    }
+  },
+  "proveedor-resumen": {
+    "summary": {
+      "x": 283,
+      "y": 367,
+      "width": 1440,
+      "height": 48
+    }
+  },
+  "hoy-1440-dark": {},
+  "home-carrusel-390-dark": {},
+  "ficha-light-t": {
+    "toggle": {
+      "x": 785,
+      "y": 74,
+      "width": 68,
+      "height": 68
+    },
+    "hero": {
+      "x": 42,
+      "y": 539,
+      "width": 996,
+      "height": 866
+    }
+  },
+  "ficha-dark-t": {
+    "hero": {
+      "x": 42,
+      "y": 539,
+      "width": 996,
+      "height": 866
+    }
+  },
+  "cobrar-t": {
+    "card": {
+      "x": 58,
+      "y": 824,
+      "width": 472,
+      "height": 177
+    }
+  },
+  "cuotas-t": {
+    "summary": {
+      "x": 105,
+      "y": 1104,
+      "width": 872,
+      "height": 89
+    }
+  },
+  "proveedor-pegar-t": {
+    "load": {
+      "x": 89,
+      "y": 1032,
+      "width": 819,
+      "height": 133
+    }
+  },
+  "proveedor-resumen-t": {
+    "summary": {
+      "x": 44,
+      "y": 838,
+      "width": 991,
+      "height": 199
+    }
+  }
+}

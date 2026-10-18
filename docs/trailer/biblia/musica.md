@@ -32,6 +32,12 @@ misma partitura da siempre las mismas muestras. Código en `src/trailer/audio/`;
 Firma (`/trailer/firma/`): `tension` 0–12 (apertura de Eclipse) → `drop` 12–40 (adelanto) → `calm` 40–96 (Probalo en
 vivo y precios) → `final` 96–106 (el eclipse se cierra).
 
+## Estilos y voces que suma T1 (T1.2)
+`clon` (dron cerrado, sin pulso), `plano` (seno solo), `stutter` (groove con pad picado en semicorcheas), `half` (bombo en 1 y 3,
+estribillo en campana) y las voces `drone`, `stab`, `tone` y `gate`. El plan puede traer `silences` (silencio real de medio tiempo,
+con las colas) y `breaks` (voces que se caen un rato). La pieza declara además un cue sheet (`TrailerSpec.effects`, en tiempos,
+anclado a su escena). Detalle y partitura de la pieza: [`t1/sonido.md`](../t1/sonido.md).
+
 ## Efectos atados a la imagen (`cues` de cada receta)
 | Receta | Efectos |
 |---|---|

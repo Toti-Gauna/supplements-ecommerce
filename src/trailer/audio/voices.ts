@@ -50,3 +50,21 @@ export const keys: VoiceFn = (c, b, n) => {
   const g = gain(c, filter(c, "lowpass", 2600, out)); env(g.gain, n.t, 0.005, 1.4, n.vel * 0.55);
   osc(c, "sine", mtof(n.midi), n.t, 1.4, g); osc(c, "triangle", mtof(n.midi) * 2, n.t, 1.4, gain(c, g, 0.25));
 };
+/** Dron cerrado (pasabajos a 400 Hz, sin bombeo): el sonido de "todas las tiendas suenan igual". */
+export const drone: VoiceFn = (c, b, n) => {
+  const g = gain(c, filter(c, "lowpass", 400, b.music)); g.gain.setValueAtTime(0.0001, n.t);
+  g.gain.linearRampToValueAtTime(n.vel * 0.2, n.t + 0.4); g.gain.setValueAtTime(n.vel * 0.2, n.t + n.dur - 0.2); g.gain.linearRampToValueAtTime(0.0001, n.t + n.dur + 0.1);
+  osc(c, "sawtooth", mtof(n.midi), n.t, n.dur + 0.1, g, -6); osc(c, "sawtooth", mtof(n.midi), n.t, n.dur + 0.1, g, 6);
+};
+/** Acorde picado (compuerta en semicorcheas): saltos de pad por el bus que bombea. */
+export const stab: VoiceFn = (c, b, n) => {
+  const g = gain(c, filter(c, "lowpass", 2200, b.pad)); g.gain.setValueAtTime(0.0001, n.t);
+  g.gain.linearRampToValueAtTime(n.vel * 0.3, n.t + 0.004); g.gain.setValueAtTime(n.vel * 0.3, n.t + n.dur - 0.012); g.gain.linearRampToValueAtTime(0.0001, n.t + n.dur);
+  osc(c, "sawtooth", mtof(n.midi), n.t, n.dur, g, -8); osc(c, "sawtooth", mtof(n.midi), n.t, n.dur, g, 8);
+};
+/** Seno puro y quieto (≈ −24 dBFS con vel 1): la línea plana de la relación que no existe. */
+export const tone: VoiceFn = (c, b, n) => {
+  const g = gain(c, b.music); g.gain.setValueAtTime(0.0001, n.t);
+  g.gain.linearRampToValueAtTime(n.vel * 0.08, n.t + 0.03); g.gain.setValueAtTime(n.vel * 0.08, n.t + n.dur - 0.02); g.gain.linearRampToValueAtTime(0.0001, n.t + n.dur);
+  osc(c, "sine", mtof(n.midi), n.t, n.dur, g);
+};

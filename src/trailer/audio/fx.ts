@@ -31,3 +31,8 @@ export const click: VoiceFn = (c, b, n) => {
   const g = gain(c, b.sfx); env(g.gain, n.t, 0.001, 0.025, n.vel * 0.4); osc(c, "sine", 1200, n.t, 0.03, g);
   const k = gain(c, b.sfx); env(k.gain, n.t, 0.0005, 0.004, n.vel * 0.5); noiseSrc(c, n.t, 0.005, k);
 };
+/** Silencio real: el máster se cierra en 15 ms desde `n.t` hasta `n.t + n.dur` y se abre de golpe (corta también las colas de reverb). */
+export const gate: VoiceFn = (c, b, n) => {
+  const p = b.gate.gain;
+  p.setValueAtTime(1, n.t); p.linearRampToValueAtTime(0, n.t + 0.015); p.setValueAtTime(0, n.t + n.dur); p.setValueAtTime(1, n.t + n.dur + 0.0001);
+};

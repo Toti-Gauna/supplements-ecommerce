@@ -2,8 +2,8 @@
 import { spawn, spawnSync } from "node:child_process";
 import fs from "node:fs";
 
-/** Normalización de volumen para redes y email: −14 LUFS integrado, techo −1,5 dBTP. */
-export const LOUDNORM = "loudnorm=I=-14:TP=-1.5:LRA=11";
+/** Normalización de volumen para redes y email: −14 LUFS integrado, techo −2 dBTP antes del AAC (que suma ≈ 1 dB de pico: queda por debajo de −1). */
+export const LOUDNORM = "loudnorm=I=-14:TP=-2:LRA=11";
 
 export function ffmpegAvailable() {
   return spawnSync("ffmpeg", ["-version"], { stdio: "ignore" }).status === 0;

@@ -51,7 +51,7 @@ try {
   const wav = path.join(tmp, "audio.wav"), m4a = out(`${pieza}.m4a`);
   if (want("audio") || want("video")) {
     fs.writeFileSync(wav, Buffer.from(await page.evaluate(() => window.__trailer.wav()), "base64"));
-    await run(["-i", wav, "-af", LOUDNORM, "-c:a", "aac", "-b:a", "160k", "-ar", "48000", "-movflags", "+faststart", m4a]);
+    await run(["-i", wav, "-af", LOUDNORM, "-t", String(secs), "-c:a", "aac", "-b:a", "160k", "-ar", "48000", "-movflags", "+faststart", m4a]); // sin la cola del render
     console.log(`✓ audio ${path.basename(m4a)} (${(fs.statSync(m4a).size / 1048576).toFixed(2)} MB)`);
   }
   if (want("poster")) { fs.writeFileSync(out(`${pieza}-poster.jpg`), await shot(page, posterAt)); console.log("✓ póster"); }

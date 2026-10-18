@@ -7,6 +7,7 @@ import { parseParams } from "../core/params";
 import { PIECES } from "../pieces";
 import { RECIPES } from "../recipes";
 import { Controls } from "./Controls";
+import { settleLooseAnimations } from "./css-clock";
 import { Gate } from "./Gate";
 import { gsap, type Timeline } from "./gsap";
 import { buildMaster } from "./master";
@@ -40,9 +41,12 @@ export default function TrailerPlayer({ pieza }: { pieza: string }) {
     if (!stage) return;
     let ctx: gsap.Context | undefined;
     let cancelled = false;
-    void document.fonts.ready.then(() => { if (!cancelled) ctx = gsap.context(() => setMaster(buildMaster(spec, stage, params.ratio)), stage); });
+    const reduced = params.reduced || matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Fuentes e imágenes (placas y arte de las escenas) listas antes de armar: el primer cuadro grabado ya está completo.
+    const images = () => Promise.all(Array.from(stage.querySelectorAll("img"), (img) => img.decode().catch(() => undefined)));
+    void document.fonts.ready.then(images).then(() => { if (!cancelled) ctx = gsap.context(() => setMaster(buildMaster(spec, stage, params.ratio, reduced)), stage); });
     return () => { cancelled = true; ctx?.revert(); setMaster(null); };
-  }, [spec, params.ratio]);
+  }, [spec, params.ratio, params.reduced]);
 
   useEffect(() => {
     if (frozen || !spec.music) return;
@@ -61,7 +65,11 @@ export default function TrailerPlayer({ pieza }: { pieza: string }) {
     gsap.ticker.lagSmoothing(0);
     window.__trailer = {
       ready: true, duration: spec.duration,
-      seek: async (t) => { transport.pause(); transport.seek(t); master.seek(transport.time(), false); await paint(); },
+      seek: async (t) => {
+        transport.pause(); transport.seek(t); master.seek(transport.time(), false);
+        if (stageRef.current) settleLooseAnimations(stageRef.current);
+        await paint();
+      },
       wav: async () => { const b = await renderAudio(trackFor(spec), spec.duration); return base64(encodeWav([b.getChannelData(0), b.getChannelData(1)], b.sampleRate)); },
     };
     return () => { gsap.ticker.remove(tick); gsap.ticker.lagSmoothing(500, 33); delete window.__trailer; };
@@ -70,6 +78,7 @@ export default function TrailerPlayer({ pieza }: { pieza: string }) {
   const start = (sound: boolean) => { if (sound) transport.playback.unlock(); else transport.mute(); setGate(false); transport.play(); };
   return (
     <>
+      <p data-trailer-summary className="sr-only">{spec.summary ?? spec.title}</p>
       <Stage ref={stageRef} ratio={params.ratio}>
         {spec.scenes.map((scene) => {
           const { Component } = RECIPES[scene.recipe]!;

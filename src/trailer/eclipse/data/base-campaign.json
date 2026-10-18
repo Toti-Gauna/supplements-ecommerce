@@ -19,5 +19,10 @@
     "source": "Instrucción de Ignacio en esta tarea, 17/10/2026",
     "note": "Esta campaña amplía a la adaptación base la bonificación que el tarifario superior describe para el pack. No modifica tarifario ni contratos anteriores."
   },
-  "includedSource": "Instrucción de Ignacio, 17/10/2026: los USD 500 de la adaptación incluyen una asesoría inicial de growth marketing y retención de clientes."
+  "includedSource": "Instrucción de Ignacio, 17/10/2026: los USD 500 de la adaptación incluyen una asesoría inicial de growth marketing y retención de clientes.",
+  "teaser": {
+    "title": "Arrancá con {months} meses",
+    "italic": "bonificados.",
+    "item": "Adaptación de {product} + asesoría inicial de growth"
+  }
 }

@@ -27,6 +27,8 @@ Cómo está armado y cómo se usa. Las escenas de T1–T4 se escriben sobre esto
   Nada de prefijos responsivos de Tailwind (responden a la ventana, no al escenario).
 - `build({ root, q, props, dur, ratio, stage })` devuelve un timeline **relativo** (0 = inicio de la escena):
   - estado de entrada con `set`/`fromTo`; segundo `to` de la misma propiedad con `immediateRender: false`;
+  - en un `fromTo`, toda propiedad del "desde" va también en el "hasta" (aunque no cambie): si queda solo en el
+    "desde", al volver atrás y avanzar de nuevo no se reaplica y el cuadro depende del camino;
   - nada de `delay`, `repeat: -1`, `delayedCall`, tweens sueltos ni `tl.call()` para sonidos;
   - textos que cuentan o se escriben salen del progreso de un tween (`onUpdate`), así el salto da el número correcto;
   - colores solo de `TR`/`TONES` (`kit.ts`), que salen de la ficha de marca.
@@ -64,7 +66,7 @@ comprueba que el cuadro sea determinista (mismo segundo → mismos píxeles, con
 cuadro (JPEG calidad 96 por stdin a ffmpeg, sin escribir imágenes a disco). Salida en `public/trailer/`:
 | Archivo | Qué es |
 |---|---|
-| `<pieza>.m4a` | Audio AAC 160 kbps, 48 kHz, normalizado a −14 LUFS / −1,5 dBTP. **Es el que reproduce la página** (arranca al instante; si falta o su duración no coincide, se sintetiza con la partitura) |
+| `<pieza>.m4a` | Audio AAC 160 kbps, 48 kHz, normalizado a −14 LUFS / −2 dBTP (≈ −1 tras el AAC). **Es el que reproduce la página** (arranca al instante; si falta o su duración no coincide, se sintetiza con la partitura) |
 | `<pieza>-16x9.mp4` / `-9x16.mp4` | H.264 High, CRF 17, 60 fps, 1920×1080 / 1080×1920, AAC 192 kbps, `faststart` |
 | `<pieza>-email.mp4` | 720p a 30 fps en dos pasadas, calculado para pesar menos de 9,5 MB |
 | `<pieza>-poster.jpg` | Cuadro de portada (`--poster-at`) |
@@ -73,11 +75,79 @@ Ritmo de captura en este entorno: ~6 cuadros por segundo (≈ 9 min por formato 
 la síntesis: 0 ms. El Chromium de Playwright no trae AAC/H.264: en los tests la pista se sintetiza (en Chrome, Edge y Safari
 decodifica el archivo).
 
+## Lo que suma T1.3 · lote 1
+- **Contexto de escena** (`SceneCtx`): `reduced` (movimiento reducido: `?reduced=1` o `prefers-reduced-motion`; la receta arma una lámina quieta
+  con su estado final y un fundido de ¼ de tiempo) y `beat` (segundos por tiempo, para contar en tiempos).
+- **Curva `trl.rampa`** (`M0,0 C0.7,0 0.12,1 1,1`): la cámara arranca lenta y llega al 94 % justo en el golpe.
+- **Grilla suiza** (`core/grid.ts`, pura, con tests): 12 × 6 en 16:9 y 6 × 12 en 9:16; `colX`, `rowY`, el marco 4:3 (`FRAME`) y `lineY`.
+  `recipes/tpl.tsx` trae `Grid`, `Sup` (el super de plantilla), la tienda gris (`StoreDefs`) y el pote liso (`Pote`).
+- **Recetas** (escenas 2 a 6 del storyboard de T1): `clones` (`variant: "tienda"` pega 1 → 4 → 16 → 64 copias con la cámara que retrocede;
+  `"catalogo"` sube una cinta de potes y deja uno en el centro), `ticker` (filas inclinadas que aceleran y se congelan) y `trace`
+  (`part: "plano"`: click, caja y línea plana; `part: "latido"`: el latido y el marco). Las curvas de avance son una sola función del
+  progreso (`tickerEase`, `beltEase`): saltar a cualquier segundo da el mismo cuadro.
+- **Pieza de avance** `t1-avance`: las escenas con receta, publicada mientras se construía. Se sacó en el lote 3, cuando `t1` se publicó entera.
+
+## Lo que suma T1.3 · lote 2
+- **Arte real en vivo, con el reloj del trailer:** `splash-live` monta `SplashStage` (como la vista previa del panel, con `splashMarks`) y sus
+  animaciones CSS se pausan y se posicionan con `engine/css-clock.ts`; `wheel-live` arma la ruleta con sus piezas reales (disco, aro, traba
+  y maza) y la frena en 13 pasos escritos; `gift-live` dibuja la bolsa real en cada estado (0 a 5 golpes y abierta) y el timeline la mueve;
+  `shaker-replay` juega Shaker Rush con el piloto automático (`recipes/shaker-sim.ts`, pura) y lo dibuja con el canvas real del juego.
+- **Placas** (`plate`, modos `tema`, `cuotas` y `proveedor`): pantallas reales capturadas a 1600 × 900 y 2× con `scripts/trailer-plates.mjs`
+  (build con `NEXT_PUBLIC_BRAND=tutienda`), que también mide las cajas de lo que se anima encima (`pieces/t1-plates.json`).
+- **Marca del arte** (`src/config/brand-mark.tsx`): la bolsa y la maza imprimían `brand.mark` y el logo del build (VOLTA en el sitio
+  publicado). Ahora lo leen de un contexto que por defecto es el del build y que el trailer fija en la ficha `tutienda`.
+- **El motor espera las imágenes** (placas y arte de las fechas) decodificadas antes de armar el timeline.
+- **Nada corre con el reloj de la pared:** dentro del escenario no hay transiciones CSS (las de `visibility` que dispara `autoAlpha`
+  cambiaban el cuadro según cuándo se sacaba la captura); `seek` lleva a su final lo que la app anima sola y ninguna receta maneja
+  (`settleLooseAnimations`), y la revelación de la bolsa la maneja `gift-live` con `css-clock`. El contexto de marca suma
+  `houseMark` ("TU TIENDA LAB" en el pote que sale de la bolsa).
+- **Los e2e del trailer corren con movimiento completo** (`test.use({ reducedMotion: "no-preference" })`): el config de la suite fuerza
+  el reducido y dejaba sin probar el determinismo de la versión animada. La reducida se prueba con `?reduced=1`.
+
 ## Estado
-- Recetas portadas: `title`, `slam`, `statpunch`, `typewriter`, `themeflip`. El resto de la biblia (§3) se porta
+- Recetas portadas: `title`, `slam`, `statpunch`, `typewriter`, `themeflip`, `clones`, `ticker`, `trace`, `plate`, `splash-live`,
+  `gift-live`, `wheel-live`, `shaker-replay`. El resto de la biblia (§3) se porta
   cuando un storyboard la pide (Tn.3): `uiflow`, `uinotify`, `uibuild`, `uiexplode`, `globeship`, `databars`, `stack`,
-  `rules`, `ticker`, `corrupt`, `datamosh`, `gate`, `clickopen`, `remixtitle`, y el **dispositivo 3D** (nuevo).
+  `rules`, `corrupt`, `datamosh`, `gate`, `clickopen`, `remixtitle`, y el **dispositivo 3D** (nuevo).
 - Reloj: con sonido manda el audio (`getOutputTimestamp`); sin sonido, `performance.now()`.
 - Movimiento reducido: el trailer no arranca solo; queda en el primer cuadro con "Reproducir".
 - Verificado: el mismo segundo da el mismo cuadro llegando por URL, desde el inicio y desde más adelante, en 16:9 y
   9:16 (`tests/e2e/trailer-engine.spec.ts`, hash de píxeles).
+
+## Lo que suma T1.3 · lote 3
+- **Equipos CSS 3D** (`recipes/device-kit.tsx`): `Phone` (380 × 780) y `Laptop` (pantalla de 1040 × 650) con bisel `#121416`, espesor por capas
+  y contorno volt de 1 px que se dibuja con `strokeDashoffset` (frente y fondo). Las pantallas son placas de la app a su tamaño
+  (`hoy-1440-dark`, `home-carrusel-390-dark`, capturadas con `scripts/trailer-plates.mjs`, que ahora acepta viewport y ancho por placa).
+  `DevicePair` (`recipes/device.tsx`) pone los dos con perspectiva y es lo que comparten `device` (escena 14) y `rules` (escena 15).
+  El celular de Shaker Rush (escena 10) sigue siendo el suyo, hecho en `shaker-replay`.
+- **Recetas:** `device` (contornos, pantallas y giro de −12° a −6°), `rules` (los equipos se achican a 0,6; el "+" se traza, engorda y pasa a
+  corona; sube la luz de Eclipse y los filos pasan a corona) y `stack` (la promesa renglón por renglón, la marca de la tienda y el eje).
+  `DisplayLines` deja el renglón en 1,15 em con margen negativo: con la altura de 0,86 em la máscara de las letras cortaba las tildes.
+- **El eje continúa entre escenas:** `AXIS_Y` (`core/grid.ts`) lo ubica; `stack` lo deja solo en 67,5 y `eclipse-cta` (prop `axis`) lo pasa a corona en
+  ⅛ de tiempo y lo apaga en 1.
+- **Eclipse:** `eclipse-guino` lee el `teaser` de la sección `base-campaign` del libro de precios (titular, renglón, precio y letra chica salen de
+  `base-campaign.json` y del tarifario; si falta una frase se agrega al JSON). El cielo de la cta (`eclipse/sky.tsx`) se comparte: el guiño
+  entra con ese cielo y lo deja subir hasta el día pleno.
+- **`t1` publicada** en `/trailer/t1/` (las 19 escenas, 16:9). El 9:16 de estas escenas es de T1.5: el par de equipos, el eje y la marca ya
+  tienen un encuadre provisorio.
+
+## Lo que suma T1.4 (QA)
+- **Accesibilidad:** el escenario va `aria-hidden` y la pieza puede traer `summary` (texto para lectores de pantalla, armado con los
+  mismos datos que las escenas: `pieces/t1-resumen.ts`). Sin resumen se lee el título.
+- **Destellos:** nada en pantalla puede cambiar de luminancia más de 3 veces por segundo en un área grande (WCAG 2.3.1). La ruleta lleva un
+  velo de desenfoque de movimiento mientras gira rápido. Cualquier giro o parpadeo nuevo se mide a 60 fps antes de cerrarlo.
+- **Perspectiva:** para mover un grupo 3D por el cuadro se mueve un envoltorio 2D que contiene a la perspectiva (`[data-t="shift"]`);
+  mover el grupo dentro de una perspectiva fija lo deja en oblicuo. Informe completo: `docs/trailer/t1/qa.md`.
+
+## Lo que suma T1.5 (9:16)
+- **Un layout por escena sobre la misma línea de tiempo:** cada receta resuelve su `ratio` en el `Component` y en el `build` (que recibe `ratio`). Los
+  tiempos, el sonido y los cortes son los de 16:9; cambia dónde está cada cosa y a qué tamaño.
+- **Placas de celular** (`scripts/trailer-plates.mjs`, ids terminados en `-t`): capturas a 390 × 693 (panel) y 640 × 1138 (ficha: el botón del tema
+  recién aparece en la cabecera desde 640 px; en 390 vive en el menú) que llenan el escenario de 1080 × 1920 sin barras. Las cajas medidas
+  (`t1-plates.json`) salen en px de ese escenario. Las escenas de placas reciben en `props.tall` lo que cambia en vertical (qué placas y sus
+  cajas) y `forRatio` (`plate-kit.tsx`) las mezcla; un test comprueba que cada escena de placas traiga su versión vertical y que existan los archivos.
+- **Composición vertical** (storyboard §8): los supers van en el tercio superior (96 px); las cifras en dos renglones ("3 cuotas de" / "$ 40.892";
+  el número y debajo "SUBEN"); la bolsa, el celular de Shaker Rush y la ruleta se agrandan para llenar el ancho; los equipos de "No es solo
+  software" van a 0,8× con el celular adelante, y en la escena 15 el "+" queda arriba del texto y los equipos abajo. Un e2e recorre las 17
+  escenas en 9:16 y comprueba que ningún texto se salga del escenario (no cortes de texto).
+- **Detrás de la cifra, la placa baja a 0,1** en vertical (0,2 en 16:9): el panel de celular trae el texto más grande y compite con ella.

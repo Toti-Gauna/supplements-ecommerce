@@ -1,10 +1,11 @@
-import { buildScore, type Note } from "../audio/score";
+import { pieceNotes } from "../audio/piece";
+import type { Note } from "../audio/score";
 import type { TrailerSpec } from "../core/types";
 import { RECIPES } from "../recipes";
 
-/** Pista completa del trailer: la partitura del plan musical más los efectos que declara cada escena, en su tiempo. */
+/** Pista completa del trailer: música y cue sheet de la pieza más los efectos que declara cada escena, en su tiempo. */
 export function trackFor(spec: TrailerSpec): Note[] {
-  const notes = spec.music ? buildScore(spec.music) : [];
+  const notes = pieceNotes(spec);
   for (const scene of spec.scenes) {
     for (const cue of RECIPES[scene.recipe]?.cues?.(scene.props ?? {}, scene.dur) ?? []) {
       if (cue.t < 0 || cue.t > scene.dur) continue;

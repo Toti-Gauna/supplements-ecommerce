@@ -17,7 +17,7 @@ export function SectionMark({ n, label, dark = false }: { n: string; label: stri
 export function SerifTitle({ text, italic, size, dark = false }: { text: string; italic: string; size: number; dark?: boolean }) {
   return (
     <h2 data-t="title" className="leading-[0.95]" style={{ fontFamily: FONT.serif, fontSize: size, color: dark ? EC.dawn : EC.ink, letterSpacing: "-0.01em" }}>
-      <span data-t="title-line" className="block">{text}</span>
+      <span data-t="title-line" className="block whitespace-nowrap">{text}</span>
       <span data-t="title-line" className="block italic" style={{ color: dark ? EC.corona : EC.deep }}>{italic}</span>
     </h2>
   );

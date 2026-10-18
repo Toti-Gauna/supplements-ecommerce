@@ -71,6 +71,21 @@ test("la ráfaga: cada plano con su rótulo y lo real con la marca de la tienda"
   await expect(page.locator("[data-trailer-stage]")).not.toContainText(/volta/i);
 });
 
+test("cuando el cursor cae justo en el inicio de una escena se ve su estado inicial", async ({ page }) => {
+  // `?t=0` (la apertura) y `?t=40.313` (el inicio del cierre) quedaban en negro: no se aplicaban los `set` de tiempo 0 de la escena.
+  await page.goto("trailer/t1/?export=1&t=0");
+  await ready(page);
+  await expect(scene(page, "apertura")).toBeVisible();
+  await page.goto(`trailer/t1/?export=1&t=${at(86)}`);
+  await ready(page);
+  await expect(scene(page, "cierre")).toBeVisible();
+  await expect(scene(page, "cierre").locator("[data-t='night']")).toHaveCSS("opacity", "0");
+  // El cuadro 675 del MP4 (11,25 s, inicio de `plano`) sale con el botón "COMPRAR", no con la caja que tapaba el pote.
+  await page.goto("trailer/t1/?export=1&t=11.25");
+  await ready(page);
+  await expect(scene(page, "plano").locator("[data-t='box']").first()).toHaveCSS("opacity", "0");
+});
+
 test("el cierre: equipos, asesoría, promesa y el guiño con los precios del libro", async ({ page }) => {
   await page.goto("trailer/t1/?export=1&t=15");
   await ready(page);

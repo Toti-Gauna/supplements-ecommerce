@@ -57,6 +57,9 @@ export default function TrailerPlayer({ pieza }: { pieza: string }) {
 
   useEffect(() => {
     if (!master) return;
+    // Una pasada por todo el maestro y de vuelta al inicio: GSAP no aplica el estado de tiempo 0 de un hijo si el cursor aterriza justo en
+    // su inicio (el cuadro 675 del MP4, `?t=0`, `?t=40.313`), y lee los estilos de cada tween una sola vez, antes de reproducir.
+    master.progress(1, true).progress(0, true);
     transport.seek(params.t ?? 0);
     master.seek(transport.time(), false);
     if (!frozen && !spec.music && !matchMedia("(prefers-reduced-motion: reduce)").matches) transport.play();

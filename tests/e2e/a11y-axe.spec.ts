@@ -37,7 +37,7 @@ const PAGES: [string, string, string][] = [
   ["404 dentro de la tienda", "no-existe/", "h1"],
   ["campaña en sala de espera", "campana/?id=black-friday&fase=espera", "h1"],
   ["campaña en vivo (drop)", "campana/?id=black-friday&fase=vivo", "h1"],
-  ["panel inicio", "admin-demo/", "h1"],
+  ["panel hoy en tu tienda (R4a)", "admin-demo/", "[data-action]"],
   ["panel productos", "admin-demo/productos/", "h1"],
   ["panel editor", "admin-demo/productos/editar/?id=overvolt-pre", "h1"],
   ["panel pedidos", "admin-demo/pedidos/", "h1"],

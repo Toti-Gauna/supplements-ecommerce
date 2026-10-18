@@ -13,7 +13,7 @@ for (const [width, height] of [[1440, 900], [1280, 800], [1024, 768]] as const) 
 
     test("solo íconos por defecto; se abre con el mouse y con el teclado sin mover la página; se puede fijar", async ({ page }) => {
       await page.goto("admin-demo/");
-      await expect(page.getByRole("heading", { level: 1, name: /Buen día/ })).toBeVisible();
+      await expect(page.getByRole("heading", { level: 1, name: "Hoy en tu tienda" })).toBeVisible();
       // El mouse de Playwright arranca en (0, 0), encima del riel: se lo lleva al contenido.
       await page.mouse.move(width - 40, height / 2);
       // Sin hamburguesa ni pestañas inferiores: la barra lateral es la navegación.
@@ -98,7 +98,7 @@ for (const [label, width, height] of [["tablet horizontal", 1024, 768], ["tablet
     await page.keyboard.press("Escape");
     // La barra de abajo no tapa el final de la página: lo último del contenido queda por encima de ella.
     await page.goto("admin-demo/");
-    await expect(page.getByRole("heading", { name: "Actividad reciente" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Cómo viene la semana" })).toBeVisible();
     await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "instant" }));
     const lastBottom = await page.locator("main#contenido > *").last().evaluate((el) => el.getBoundingClientRect().bottom);
     const barTop = (await bar.boundingBox())!.y;

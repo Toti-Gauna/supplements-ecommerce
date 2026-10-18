@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { Dashboard } from "@/features/admin/Dashboard";
+import { TodayHome } from "@/features/admin/today/TodayHome";
 
-export const metadata: Metadata = { title: "Inicio" };
+export const metadata: Metadata = { title: "Hoy en tu tienda" };
 
-export default function AdminDashboardPage() {
-  return <Dashboard />;
+export default function AdminTodayPage() {
+  return <TodayHome />;
 }

@@ -23,7 +23,7 @@ cual en la demo.
 | 4:30 | Regalá energía y la taquilla | Celular · `/regalar/` y `/regalo/` | Que arme un regalo con la tarjeta en vivo y que golpee la bolsa |
 | 5:15 | Temática del mes | Celular · "Probar temáticas" | La tienda cambia sola en cada fecha |
 | 5:45 | Instagram desde el Estudio | Compu · `/admin-demo/estudio/` | Contenido listo sin diseñador |
-| 6:30 | El panel: lo que le ahorra horas | Compu · `/admin-demo/` | Lista del proveedor, aumento, vencimientos, recompra, preparación, compras |
+| 6:30 | El panel: lo que le ahorra horas | Compu · `/admin-demo/` | "Hoy en tu tienda" (qué hacer hoy en 30 s), lista del proveedor, aumento, vencimientos, preparación, compras |
 | 9:00 | Cierre comercial | Charla | Qué incluye, precio y próximo paso |
 
 Si tenés **5 minutos**: dolor (30 s), ficha (1 min), juego (1 min), aumento de precios y vencimientos (1 min 30 s),
@@ -202,10 +202,24 @@ formato **Historia o reel**.
 
 ## 6:30 · El panel: lo que le ahorra horas (2 minutos 30, compu)
 
+Arranca siempre en **Hoy en tu tienda**: es lo primero que ve el dueño cada mañana. Si vas justo, salteá la recompra
+en Clientes (ya la mostraste desde Hoy).
+
 Abrí `/admin-demo/`. **Decí**: "Ahora lo tuyo. Esto lo abrís a la mañana con el mate."
 
-**Inicio (15 s)**: "Buen día": comprobantes por revisar, pedidos en marcha, ventas de la semana. Abajo,
-**Recompras de la semana** y **Próximos a vencer**.
+**Hoy en tu tienda (40 s)** — el panel abre acá.
+
+![Hoy en tu tienda en la compu](img/rediseno/r4a/hoy-1440-dark.png)
+
+- Señalá el marcador: "Esto es tu día en cinco números: lo vendido hoy, lo que falta cobrar, lo que hay que armar, lo
+  que sale hoy con el cadete y el stock en riesgo. Tocás cualquiera y te lleva."
+- Bajá a **Para hacer**: "Y esto es lo que tenés que hacer, en orden. Arriba lo atrasado (VOL-000115 tenía que salir el
+  viernes), después lo de hoy, después la semana. Cada fila tiene un solo botón."
+- En **Comprobante de Diego Álvarez** tocá **Aprobar**: "¿Ya viste la plata en tu cuenta?" → **Sí, lo verifiqué**. "Se
+  va de la lista y pasa a armar. Nunca se marca pagado sin que vos lo confirmes."
+- **Avisales a 5 clientes que se les termina el pote** → **Avisarles**: "El sistema sabe a quién se le termina el pote
+  y el mensaje ya está escrito." Cerralo con Escape.
+- "Vos la abrís a la mañana con el mate y en 30 segundos sabés qué hacer."
 
 **Lista del proveedor (30 s)** — Productos y stock → **Importar Excel** → **Probar con la lista de un proveedor** →
 **Ver vista previa**.
@@ -225,7 +239,7 @@ Porcentaje **8**.
 Whey Vainilla (lote VL-2603-W) → **−40 %** → **Liquidar a $ 32.900**.
 - "En la tienda sale tachado con 'Liquidación · vence 11/2026'. Lo vendés antes de que se te pudra en el estante."
 
-**Recompra (20 s)** — **Clientes** → **Juan Ibarra**.
+**Recompra (20 s, opcional si ya avisaste desde Hoy)** — **Clientes** → **Juan Ibarra**.
 - "Juan compra un scoop por día. El sistema sabe cuándo se le termina: **el jueves 8 de octubre**." → **Avisarle por
   email** (o el botón de WhatsApp con el mensaje ya escrito). "Le escribís vos antes de que vaya a otro lado."
 

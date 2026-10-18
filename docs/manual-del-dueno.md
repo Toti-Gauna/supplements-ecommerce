@@ -10,7 +10,7 @@ escrito con la tienda de ejemplo **VOLTA**; en tu tienda vas a ver tu marca, per
 ## Índice
 
 1. [Cómo moverte por el panel](#1-cómo-moverte-por-el-panel)
-2. [Inicio: tu día en una pantalla](#2-inicio-tu-día-en-una-pantalla)
+2. [Hoy en tu tienda: tu día en una pantalla](#2-hoy-en-tu-tienda-tu-día-en-una-pantalla)
 3. [Pedidos, pagos y reclamos](#3-pedidos-pagos-y-reclamos)
 4. [Clientes y recompra](#4-clientes-y-recompra)
 5. [Productos, stock y lotes](#5-productos-stock-y-lotes)
@@ -67,19 +67,47 @@ filtrando.
 
 ---
 
-## 2. Inicio: tu día en una pantalla
+## 2. Hoy en tu tienda: tu día en una pantalla
 
-Lo primero que ves a la mañana: "Buen día", cuántos comprobantes tenés para revisar y cuántos pedidos en marcha.
+Es lo primero que ves al abrir el panel. La idea: que a la mañana, en 30 segundos, sepas qué hacer hoy.
 
-- **Tarjetas de arriba**: ventas de los últimos 7 días, ticket promedio, pedidos en marcha y comprobantes a verificar.
-- **Pedidos por estado**: tocá un estado para ver esos pedidos.
-- **Operaciones**: despachos de los próximos 7 días, pedidos atrasados, variantes para comprar y clientes a los que se
-  les termina el pote esta semana. Cada tarjeta lleva a su sección.
-- **Recompras de la semana** y **Próximos a vencer**: a quién escribirle y qué liquidar (ver secciones 4 y 5).
-- Más abajo: ventas por día (tocá una barra para ver los pedidos de ese día), lo más pedido, últimos pedidos, el Club,
-  actividad reciente y reclamos.
+![Hoy en tu tienda en el celular](img/rediseno/r4a/hoy-390-light.png)
 
-![Recompras de la semana y Próximos a vencer en el inicio](img/panel-inicio-recompras.png)
+**El marcador de arriba** (tocá cualquier número y te lleva a donde vive):
+
+| Número | Qué cuenta |
+|---|---|
+| **Vendido hoy** | Pedidos de hoy ya pagados. Debajo, lo vendido en los últimos 7 días. Un comprobante sin aprobar no suma |
+| **Por cobrar** | Lo que todavía no cobraste: pedidos sin pagar y comprobantes que tenés que revisar |
+| **Para armar** | Pedidos pagados o en preparación, y cuántos están atrasados |
+| **Sale hoy** | Pedidos con el cadete de hoy, el cupo que le queda y el próximo día que tiene lugar |
+| **Stock en riesgo** | Variantes sin stock o con 3 unidades o menos |
+
+**Para hacer** es la lista del día, ya ordenada. Va de arriba hacia abajo en cuatro grupos: **Atrasado**, **Para hoy**,
+**Esta semana** y **Más adelante**. Dentro de cada grupo va primero lo que tiene a un cliente esperando (pedidos y
+comprobantes) y después lo que vence antes. Cada fila tiene **un solo botón**:
+
+| Fila | Botón | Qué pasa |
+|---|---|---|
+| Pedido atrasado o que sale hoy | **Terminar de armar** / **Armar** | Te abre el pedido |
+| Comprobante de un cliente | **Aprobar** | Te pregunta si ya viste la plata en tu cuenta. Recién con **Sí, lo verifiqué** el pedido pasa a Pagado y se va de la lista. Si no entró, tocá el nombre del comprobante para verlo y rechazarlo |
+| Pedido listo que sale hoy | **Marcar enviado** (o **Marcar retirado**) | Te pide confirmar y el pedido pasa a Enviado o Entregado |
+| Compras a proveedores | **Armar los pedidos** | Te lleva a **Proveedores y compras**. Si hay variantes sin stock, es para hoy |
+| Clientes a los que se les termina el pote | **Avisarles** | Se abre la lista con el aviso por email o WhatsApp de cada uno. Los que avisás dejan de contar |
+| Pedidos de la semana | **Abrir preparación** | Te lleva al tablero de preparación |
+| Regalo con el sabor ya elegido | **Ver el regalo** | Te lleva al regalo en **Regalos y gift cards**: es lo que tenés que armar |
+| Lote que vence en 30 días o menos | **Liquidar −30 %** | Abre la liquidación con el descuento propuesto (40 % si faltan 15 días o menos). Liquidado, sale de la lista. Un lote vencido aparece arriba de todo para sacarlo de la venta |
+| Próxima campaña | **Preparar** | Te abre el editor. Debajo, el checklist: cupón activo, productos con stock, descuento real y piezas para Instagram |
+| Otros lotes que vencen en 60 días | **Ver los lotes** | Te lleva a Productos y stock con el filtro de vencimientos |
+
+Cuando no queda nada atrasado ni para hoy, arriba de la lista aparece **Todo al día**.
+
+![Hoy en tu tienda en la compu](img/rediseno/r4a/hoy-1440-dark.png)
+
+Al final, **Cómo viene la semana**: las ventas por día. Tocá una barra para ver los pedidos de ese día.
+
+> En la demo: el día está fijo en el lunes 5 de octubre de 2026 y aprobar, despachar o avisar solo cambia los datos de
+> este navegador. Nada se cobra ni se manda.
 
 ---
 
@@ -167,7 +195,7 @@ Otros segmentos útiles: **Recompra atrasada** (ya se le terminó y no volvió),
 
 ![Ficha de Juan Ibarra con la recompra](img/celular-cliente-recompra.png)
 
-Lo mismo podés hacer desde **Recompras de la semana**, en el inicio.
+Lo mismo podés hacer desde **Hoy en tu tienda** → **Avisarles**, sin entrar a cada ficha.
 
 ### Lo que ve el cliente: avisos y "Mi box"
 
@@ -222,8 +250,8 @@ comparación como imagen): la respuesta que hoy escribís por WhatsApp.
 
 ### Liquidar un lote que está por vencer
 
-1. En **Productos y stock** tocá **6 lotes vencen en menos de 60 días** (el número cambia) o **Liquidar** en
-   **Próximos a vencer** del inicio.
+1. En **Productos y stock** tocá **6 lotes vencen en menos de 60 días** (el número cambia) o **Liquidar** en la fila
+   del lote en **Hoy en tu tienda** (ya viene con el descuento propuesto).
 2. Tocá **Liquidar** en el lote (por ejemplo VL-2603-W de Ionic Whey Vainilla, que vence en 56 días).
 3. Elegí el descuento (−10 % a −50 %, u otro porcentaje) y mirá cómo se va a ver en la tienda.
 4. Tocá **Liquidar a $ …**.
@@ -505,7 +533,7 @@ key visual, cinta, cupón, productos y pantalla de carga. Antes se llamaba **Tem
 
 ![Calendario de campañas](img/rediseno/r3a/panel-calendario-1440-light.png)
 
-1. Entrá a **Campañas**. Arriba está la **Próxima campaña** con los días que faltan (también la ves en el Inicio).
+1. Entrá a **Campañas**. Arriba está la **Próxima campaña** con los días que faltan (también la ves en **Hoy en tu tienda**, con su checklist).
 2. En **Modo** elegí **Automática según la fecha**, **Siempre la que elija** (y la **Campaña fija**) o **Sin campaña**.
 3. El **Calendario del año** muestra cada campaña como una barra. Los días del deporte van rayados y con una mancuerna;
    Hot Sale y CyberMonday llevan el sello **CACE** y Black Friday el sello **BF**. Tocá una para editarla.
@@ -599,13 +627,14 @@ activado no avanza solo. Debajo quedan **Comprá por categoría**, **Entrená po
 ## 16. Una rutina que funciona
 
 **Cada mañana (10 minutos)**
-1. **Inicio**: comprobantes por revisar → **Pagos manuales** → aprobá lo que ya entró.
+1. **Hoy en tu tienda**: hacé la lista de arriba hacia abajo. Primero lo atrasado y los comprobantes (aprobá solo lo que
+   ya viste en tu cuenta).
 2. **Preparación**: armá lo de hoy y hacé el control de lote.
-3. **Recompras de la semana**: avisale a quien se le termina el pote.
+3. **Avisarles**: mandá el aviso a quien se le termina el pote.
 
 **Cada semana**
 1. **Proveedores y compras**: copiá los pedidos y mandalos.
-2. **Próximos a vencer**: liquidá lo que no vas a vender a tiempo.
+2. **Lotes que vencen** (en Hoy o en Productos y stock): liquidá lo que no vas a vender a tiempo.
 3. **Estudio de contenido**: bajá la historia de la oferta de la semana.
 
 **Cuando cambia la lista del proveedor**

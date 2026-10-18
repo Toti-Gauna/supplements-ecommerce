@@ -23,7 +23,7 @@ const SHOP = [
 ] as const;
 
 const ADMIN = [
-  ["admin-demo/", "Buen día, Volta"], ["admin-demo/pedidos/", "Pedidos"], ["admin-demo/pedidos/detalle/?codigo=VOL-000123", "VOL-000123"],
+  ["admin-demo/", "Hoy en tu tienda"], ["admin-demo/pedidos/", "Pedidos"], ["admin-demo/pedidos/detalle/?codigo=VOL-000123", "VOL-000123"],
   ["admin-demo/pagos/", "Pagos manuales"], ["admin-demo/productos/", "Productos y stock"], ["admin-demo/categorias/", "Categorías"],
   ["admin-demo/stock/", "Productos y stock"], ["admin-demo/planilla/", "Productos y stock · formato Excel"], ["admin-demo/importar/", "Importar desde Excel"],
   ["admin-demo/misiones/", "Misiones y premios"], ["admin-demo/cupones/", "Cupones"], ["admin-demo/emails/", "Emails automáticos"],

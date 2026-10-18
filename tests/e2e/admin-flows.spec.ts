@@ -143,7 +143,7 @@ test("movimiento reducido en el panel", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("admin-demo/");
   await expect(page.locator("#volta-splash")).toBeHidden();
-  await expect(page.getByRole("heading", { level: 1, name: /Buen día/ })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "Hoy en tu tienda" })).toBeVisible();
 });
 
 test("celular: menú hamburguesa del panel y paginado de pedidos", async ({ page }) => {
@@ -173,7 +173,7 @@ test("8.3.11 sin guía de bienvenida: el panel abre directo, también la primera
   // Aunque el navegador nunca haya visto el panel (sin preferencias guardadas), no aparece ningún recorrido.
   await page.addInitScript(() => localStorage.removeItem("volta-tour:admin"));
   await page.goto("admin-demo/");
-  await expect(page.getByRole("heading", { level: 1, name: /Buen día/ })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "Hoy en tu tienda" })).toBeVisible();
   await page.waitForTimeout(1500);
   await expect(page.getByRole("dialog")).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Ver guía del panel" })).toHaveCount(0);
@@ -181,7 +181,7 @@ test("8.3.11 sin guía de bienvenida: el panel abre directo, también la primera
   await expect(page.getByText("Panel de demostración · datos ficticios")).toBeVisible();
   page.once("dialog", (d) => d.accept());
   await page.getByRole("button", { name: "Reiniciar demo" }).click();
-  await expect(page.getByRole("heading", { level: 1, name: /Buen día/ })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "Hoy en tu tienda" })).toBeVisible();
   await page.waitForTimeout(1500);
   await expect(page.getByRole("dialog")).toHaveCount(0);
 });

@@ -1,7 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 import { horizontalOverflow } from "./helpers";
 
-/** Polish 8.3.1 (ventas por día con detalle) y 8.3.3 (cards del inicio a todo el ancho). */
+/** Polish 8.3.1 (ventas por día con detalle, ahora al final de "Hoy en tu tienda") y 8.3.3 (bloques del inicio a todo el ancho; R4a). */
 
 const chart = (page: Page) => page.getByRole("group", { name: /Ventas por día: elegí un día/ });
 const pesos = (s: string) => Number(s.replace(/[^\d]/g, ""));
@@ -31,9 +31,8 @@ test("8.3.1 cada barra abre su día: fecha, cantidad, total y pedidos; la tabla 
   await page.getByText("Ver como tabla").click();
   const table = page.locator("figure table");
   const total = await table.locator("tfoot td").nth(1).textContent();
-  const kpi = page.locator("section[aria-label='Indicadores'] > *").filter({ hasText: "Ventas últimos 7 días" });
-  // El KPI es un marcador LED: la cifra es la lectura del dibujo (role img), no texto.
-  await expect(kpi.getByRole("img", { name: total!.trim() })).toBeVisible();
+  // El marcador de Hoy dice lo vendido en los mismos 7 días (R4a): el total de la tabla.
+  await expect(page.locator("[data-score='vendido']")).toContainText(`7 días: ${total!.trim()}`);
   await table.locator("tbody tr").nth(i).getByRole("button").click();
   await expect(bars.nth(i)).toHaveAttribute("aria-pressed", "true");
   // Recorrido A: barra → pedido del día → ficha → volver.
@@ -44,30 +43,29 @@ test("8.3.1 cada barra abre su día: fecha, cantidad, total y pedidos; la tabla 
 });
 
 for (const [label, width, height, mobile] of [["escritorio", 1440, 900, false], ["iPad horizontal", 1024, 768, true], ["celular", 390, 844, true]] as const) {
-  test(`8.3.3 a ${label} ${width}px: últimos pedidos, Club y actividad apilados a todo el ancho y legibles`, async ({ browser }) => {
+  test(`8.3.3 a ${label} ${width}px: marcador, lista del día y semana apilados a todo el ancho y legibles`, async ({ browser }) => {
     const ctx = await browser.newContext({ viewport: { width, height }, isMobile: mobile, hasTouch: mobile, reducedMotion: "reduce", locale: "es-AR" });
     const page = await ctx.newPage();
     await page.goto("http://localhost:" + (process.env.E2E_PORT ?? "4173") + (process.env.PAGES_BASE_PATH ?? "") + "/admin-demo/");
-    await expect(page.getByRole("heading", { name: "Actividad reciente" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Cómo viene la semana" })).toBeVisible();
     // Posiciones en la página (no en la pantalla), para comparar sin depender del scroll.
-    const boxes = await page.evaluate(() => ["ultimos", "club", "act"].map((id) => {
+    const boxes = await page.evaluate(() => ["marcador", "para-hoy", "semana"].map((id) => {
       const r = document.getElementById(id)!.closest("section")!.getBoundingClientRect();
       return { y: r.top + scrollY, height: r.height, width: r.width };
     }));
     const main = (await page.locator("main#contenido > *").first().boundingBox())!;
     for (let k = 0; k < boxes.length; k++) {
-      // Cada una ocupa el ancho del contenido y empieza debajo de la anterior.
+      // Cada bloque ocupa el ancho del contenido y empieza debajo del anterior.
       expect(boxes[k]!.width).toBeGreaterThan(main.width - 2);
       if (k > 0) expect(boxes[k]!.y).toBeGreaterThan(boxes[k - 1]!.y + boxes[k - 1]!.height - 1);
     }
-    // Cada pedido: el código en una sola línea, con su estado e importe a la vista.
-    const rows = page.locator("section").filter({ has: page.getByRole("heading", { name: "Últimos pedidos" }) }).getByRole("link", { name: /VOL-/ });
-    await expect(rows).toHaveCount(4);
-    for (const row of await rows.all()) {
-      const code = row.locator("span.font-extrabold").first();
-      expect(await code.evaluate((el) => el.getBoundingClientRect().height)).toBeLessThan(30);
-      await expect(row.getByText(/Pendiente de pago|Comprobante en revisión|Pagado|En preparación|Listo|Enviado|Entregado|Cancelado|En reclamo/).filter({ visible: true })).toHaveCount(1);
-      await expect(row.getByText(/\$\s?[\d.]+/)).toBeVisible();
+    // Cada fila: el título en no más de tres líneas y su botón entero dentro de la fila.
+    for (const row of await page.locator("[data-action]").all()) {
+      const title = row.locator("h4");
+      expect(await title.evaluate((el) => el.getBoundingClientRect().height)).toBeLessThan(70);
+      const r = (await row.boundingBox())!;
+      const b = (await row.locator("a, button").filter({ visible: true }).last().boundingBox())!;
+      expect(b.x + b.width).toBeLessThanOrEqual(r.x + r.width + 1);
     }
     expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(0);
     await ctx.close();

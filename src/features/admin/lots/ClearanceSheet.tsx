@@ -19,21 +19,21 @@ const chip = "inline-flex h-11 min-w-14 cursor-pointer items-center justify-cent
 
 /**
  * "Liquidar con descuento" (Fase 6): elegís el % y ves el precio de liquidación antes de confirmar. La lista no cambia,
- * así que "Quitar liquidación" vuelve exactamente al precio de antes. Se usa desde Productos y stock y desde el inicio.
+ * así que "Quitar liquidación" vuelve exactamente al precio de antes. Se usa desde Productos y stock y desde "Hoy en tu tienda", con el descuento propuesto.
  */
-export function ClearanceSheet({ lot, onClose }: { lot: LotRow | null; onClose: () => void }) {
+export function ClearanceSheet({ lot, suggestedPct, onClose }: { lot: LotRow | null; /** Descuento propuesto (Hoy en tu tienda). */ suggestedPct?: number; onClose: () => void }) {
   return (
     <Sheet open={!!lot} onClose={onClose} title={lot ? `Liquidar el lote ${lot.lot.code}` : "Liquidar lote"} side="dialog" className="bg-bg sm:max-w-xl">
-      {lot && <ClearanceForm key={lot.key} lot={lot} onClose={onClose} />}
+      {lot && <ClearanceForm key={lot.key} lot={lot} suggestedPct={suggestedPct} onClose={onClose} />}
     </Sheet>
   );
 }
 
-function ClearanceForm({ lot, onClose }: { lot: LotRow; onClose: () => void }) {
+function ClearanceForm({ lot, suggestedPct, onClose }: { lot: LotRow; suggestedPct?: number; onClose: () => void }) {
   const setLotClearance = useAdmin((s) => s.setLotClearance);
   const push = useToasts((s) => s.push);
   const current = lot.lot.clearancePct ?? null;
-  const [pct, setPct] = useState(current ?? 30);
+  const [pct, setPct] = useState(current ?? suggestedPct ?? 30);
   const valid = Number.isInteger(pct) && pct >= CLEARANCE_LIMITS.min && pct <= CLEARANCE_LIMITS.max;
   const price = clearancePrice(lot.listPrice, valid ? pct : CLEARANCE_LIMITS.min);
   const margin = stockMargin({ price, cost: lot.cost });

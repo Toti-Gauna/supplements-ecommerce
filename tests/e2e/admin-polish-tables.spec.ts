@@ -139,13 +139,13 @@ test.describe("escritorio con mouse", () => {
   });
 });
 
-test("8.3.19 un solo módulo: menú sin Stock ni Planilla, “Ver stock” filtra la misma pantalla y las rutas viejas llegan", async ({ page }) => {
+test("8.3.19 un solo módulo: menú con Stock y sin Planilla, “Ver stock” filtra la misma pantalla y las rutas viejas llegan", async ({ page }) => {
   await page.goto("admin-demo/");
   await page.getByRole("button", { name: "Abrir menú del panel" }).click();
   const menu = page.getByRole("dialog", { name: "Menú del panel" });
-  await expect(menu.getByRole("link", { name: /^Productos y stock/ })).toBeVisible();
-  for (const gone of ["Stock", "Planilla", "Importar desde Excel"]) await expect(menu.getByRole("link", { name: gone, exact: true })).toHaveCount(0);
-  await menu.getByRole("link", { name: /^Productos y stock/ }).click();
+  await expect(menu.getByRole("link", { name: /^Stock/ })).toBeVisible();
+  for (const gone of ["Planilla", "Importar desde Excel", "Productos y stock"]) await expect(menu.getByRole("link", { name: gone, exact: true })).toHaveCount(0);
+  await menu.getByRole("link", { name: /^Stock/ }).click();
   const alert = page.getByRole("button", { name: /variantes? necesitan? reposición/ });
   const count = Number((await alert.textContent())!.match(/(\d+) variantes?/)![1]);
   await alert.click();

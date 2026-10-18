@@ -4,10 +4,9 @@ import { AlertCircle } from "lucide-react";
 import type { DemoData } from "@/demo/engine/source";
 import { useAdmin } from "@/stores/admin";
 import { useToasts } from "@/stores/toast";
-import { MARKETING, SubpageHeader } from "../marketing/SubpageHeader";
+import { SubpageHeader } from "../marketing/SubpageHeader";
 import { SaveBar } from "../SaveBar";
 import { useSessionDraft } from "../useSessionDraft";
-import { CONTENT_SECTION } from "./ContentHub";
 import { CountedField } from "./CountedField";
 
 type Cta = DemoData["content"]["homeCta"];
@@ -36,7 +35,7 @@ export function HomeTextsEditor() {
   };
   return (
     <div>
-      <SubpageHeader trail={[MARKETING, CONTENT_SECTION]} back={CONTENT_SECTION} title="Textos de inicio" intro="El bloque del inicio con el estante en vivo: el cliente toca un objetivo y ve el stack sugerido. Lo que va después de la coma del título se pinta en voltio." />
+      <SubpageHeader title="Textos de inicio" intro="El bloque del inicio con el estante en vivo: el cliente toca un objetivo y ve el stack sugerido. Lo que va después de la coma del título se pinta en voltio." />
       <section aria-label="Bloque “Armá tu stack”" className="flex max-w-2xl flex-col gap-4 rounded-sm bg-surface p-4 shadow-[var(--shadow-card)] sm:p-5">
         {errors.length > 0 && (
           <div role="alert" className="flex gap-2 rounded-sm bg-danger-soft p-3 text-sm font-semibold text-danger">

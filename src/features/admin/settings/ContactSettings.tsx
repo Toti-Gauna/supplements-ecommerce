@@ -7,7 +7,6 @@ import { useToasts } from "@/stores/toast";
 import { SubpageHeader } from "../marketing/SubpageHeader";
 import { SaveBar } from "../SaveBar";
 import { useSessionDraft } from "../useSessionDraft";
-import { SETTINGS_SECTION } from "./SettingsHub";
 
 const isText = (x: unknown): x is string => typeof x === "string";
 
@@ -29,7 +28,7 @@ export function ContactSettings() {
   };
   return (
     <div>
-      <SubpageHeader trail={[SETTINGS_SECTION]} back={SETTINGS_SECTION} title="Contacto y WhatsApp" intro="El botón de WhatsApp de la tienda abre una conversación con este número." />
+      <SubpageHeader title="Contacto y WhatsApp" intro="El botón de WhatsApp de la tienda abre una conversación con este número." />
       <section aria-label="WhatsApp" className="flex max-w-2xl flex-col gap-3 rounded-sm bg-surface p-4 shadow-[var(--shadow-card)] sm:p-5">
         {session.restored && <p role="status" className="rounded-sm bg-warning-soft px-3 py-2 text-sm font-bold text-warning">Recuperamos el número que quedó sin guardar.</p>}
         <Field id="wa" label="Número para el botón de WhatsApp" error={error ?? undefined} hint="Con código de país y área. Vacío: el botón abre WhatsApp para elegir contacto. Usá un número de prueba en la demo.">

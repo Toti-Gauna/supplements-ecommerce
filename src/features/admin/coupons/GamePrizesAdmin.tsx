@@ -7,10 +7,9 @@ import { checkGamePrizes, GAME_PRIZE_LIMITS, hasGamePrizeErrors, newGameTier, no
 import { gameRules, type GamePrizeConfig, type GamePrizeTier } from "@/demo/fixtures/game";
 import { useAdmin } from "@/stores/admin";
 import { useToasts } from "@/stores/toast";
-import { MARKETING, SubpageHeader } from "../marketing/SubpageHeader";
+import { SubpageHeader } from "../marketing/SubpageHeader";
 import { SaveBar } from "../SaveBar";
 import { useSessionDraft } from "../useSessionDraft";
-import { COUPONS_SECTION } from "./CouponsHub";
 import { GamePrizesPreview } from "./GamePrizesPreview";
 import { GameTierRow } from "./GameTierRow";
 
@@ -51,7 +50,7 @@ function GamePrizesForm({ saved }: { saved: GamePrizeConfig }) {
   };
   return (
     <div>
-      <SubpageHeader trail={[MARKETING, COUPONS_SECTION]} back={COUPONS_SECTION} title="Premios del juego"
+      <SubpageHeader title="Premios del juego"
         intro="Shaker Rush: desde cuántos puntos se gana cada cupón, qué descuento da y en cuántos días vence. Se juega todas las veces que quieran; el cupón se gana una vez por día." />
       {session.restored && <p role="status" className="mb-4 rounded-sm bg-warning-soft px-3 py-2 text-sm font-bold text-warning">Recuperamos los cambios que quedaron sin guardar.</p>}
       <div className="grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:items-start">

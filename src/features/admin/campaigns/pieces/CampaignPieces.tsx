@@ -12,7 +12,7 @@ import { DEMO_TODAY } from "@/demo/fixtures/admin-orders";
 import type { SeasonId } from "@/demo/types";
 import { useAdmin, useDemoVersion } from "@/stores/admin";
 import { skinOf } from "@/features/themes/skins";
-import { MARKETING, SubpageHeader } from "../../marketing/SubpageHeader";
+import { SubpageHeader } from "../../marketing/SubpageHeader";
 import { saveBlob, toPng } from "../../studio/export";
 import { CAMPAIGNS, editorHref, piecesHref } from "../links";
 import { PieceCard } from "./PieceCard";
@@ -57,7 +57,7 @@ export function CampaignPieces() {
 
   return (
     <>
-      <SubpageHeader trail={[MARKETING, CAMPAIGNS]} back={CAMPAIGNS} title="Sacar las piezas"
+      <SubpageHeader back={CAMPAIGNS} title="Sacar las piezas"
         intro="Post para el feed, historia con la cuenta regresiva y la gift card de la fecha, con el key visual de la campaña. Se arman en este navegador: nada sale de tu equipo."
         actions={<ButtonLink href={editorHref(theme.id)} variant="secondary"><Pencil size={16} aria-hidden="true" />Editar {theme.name}</ButtonLink>} />
       <div className="mb-5 flex flex-wrap items-end gap-3">

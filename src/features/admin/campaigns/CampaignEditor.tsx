@@ -9,7 +9,7 @@ import { overlapError } from "@/demo/admin/campaign-calendar";
 import type { SeasonalTheme } from "@/demo/types";
 import { useAdmin } from "@/stores/admin";
 import { reloadWithTheme } from "@/features/themes/reloadWithTheme";
-import { MARKETING, SubpageHeader } from "../marketing/SubpageHeader";
+import { SubpageHeader } from "../marketing/SubpageHeader";
 import { SaveBar } from "../SaveBar";
 import { ThemeProductsField } from "../themes/ThemeProductsField";
 import { useDemoSave } from "../useDemoSave";
@@ -65,7 +65,7 @@ function Editor({ saved }: { saved: SeasonalTheme }) {
 
   return (
     <>
-      <SubpageHeader trail={[MARKETING, CAMPAIGNS]} back={CAMPAIGNS} title={t.name}
+      <SubpageHeader back={CAMPAIGNS} title={t.name}
         intro={t.sport ? "Día del deporte: la campaña habla de entrenar, con su cupón y productos para ese deporte." : "Fecha comercial: el Drop de la tienda, la cinta, el cupón como ticket y los productos en oferta."}
         actions={<div className="flex flex-wrap gap-2">
           <Button variant="ghost" onClick={() => reloadWithTheme(t.id, "/")}><Eye size={16} aria-hidden="true" />Ver en la tienda</Button>

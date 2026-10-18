@@ -186,8 +186,8 @@ test("Mis regalos: gift card con saldo, y los que hice con su estado (enviado, a
 
 test("panel: gift cards emitidas y canjeadas con saldo y vencimiento, y el sabor elegido en cada regalo", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("admin-demo/marketing/");
-  await page.getByRole("list", { name: "Herramientas de marketing" }).getByRole("link", { name: /Regalos y gift cards/ }).click();
+  await page.goto("admin-demo/promos/");
+  await page.getByRole("tab", { name: /Regalos y gift cards/ }).click();
   await expect(page.getByRole("heading", { level: 1, name: "Regalos y gift cards" })).toBeVisible();
   const stats = page.getByRole("group", { name: "Resumen de gift cards" });
   await expect(stats).toContainText(/106\.600/);

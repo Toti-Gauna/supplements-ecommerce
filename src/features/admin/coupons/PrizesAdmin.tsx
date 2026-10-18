@@ -6,8 +6,7 @@ import { Button } from "@/components/atoms/Button";
 import { glyphFor, RewardGlyph } from "@/components/illustrations/RewardGlyph";
 import { prizeCondition, PRIZE_TEMPLATES } from "@/demo/admin/wheel-prizes";
 import { useAdmin } from "@/stores/admin";
-import { MARKETING, SubpageHeader } from "../marketing/SubpageHeader";
-import { COUPONS_SECTION } from "./CouponsHub";
+import { SubpageHeader } from "../marketing/SubpageHeader";
 import { PrizeDialog } from "./PrizeDialog";
 
 /** Premios disponibles (8.3.25): el catálogo que se elige en cada gajo. Los premios no se borran: su ID queda estable. */
@@ -16,7 +15,7 @@ export function PrizesAdmin() {
   const [adding, setAdding] = useState(false);
   return (
     <>
-      <SubpageHeader trail={[MARKETING, COUPONS_SECTION]} back={COUPONS_SECTION} title="Premios disponibles"
+      <SubpageHeader title="Premios disponibles"
         intro="Cada premio se entrega como cupón de un uso con vencimiento. Los gajos de la ruleta eligen de esta lista."
         actions={<Button onClick={() => setAdding(true)}><Plus size={18} aria-hidden="true" /> Agregar premio</Button>} />
       <ul aria-label="Catálogo de premios" className="grid grid-cols-[minmax(0,1fr)] gap-3 md:grid-cols-2 xl:grid-cols-3">

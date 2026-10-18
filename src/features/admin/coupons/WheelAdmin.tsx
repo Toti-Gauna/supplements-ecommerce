@@ -12,10 +12,9 @@ import type { WheelConfig } from "@/demo/fixtures/wheel";
 import { cn } from "@/lib/cn";
 import { useAdmin } from "@/stores/admin";
 import { WheelDial } from "../../club/WheelDial";
-import { MARKETING, SubpageHeader } from "../marketing/SubpageHeader";
+import { SubpageHeader } from "../marketing/SubpageHeader";
 import { useDemoSave } from "../useDemoSave";
 import { useSessionDraft } from "../useSessionDraft";
-import { COUPONS_SECTION } from "./CouponsHub";
 import { PrizeDialog } from "./PrizeDialog";
 
 type Draft = Pick<WheelConfig, "active" | "validDays" | "segments">;
@@ -51,7 +50,7 @@ export function WheelAdmin() {
   };
   return (
     <>
-      <SubpageHeader trail={[MARKETING, COUPONS_SECTION]} back={COUPONS_SECTION} title="Configuración de ruleta"
+      <SubpageHeader title="Configuración de ruleta"
         intro="Cada premio genera un cupón de un uso con vencimiento. En producción el sorteo se hace en el servidor (un giro por cuenta)." />
       {session.restored && (
         <div role="status" className="mb-4 flex flex-wrap items-center gap-3 rounded-sm bg-warning-soft px-4 py-3 text-sm ring-1 ring-warning/30">

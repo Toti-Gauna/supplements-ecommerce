@@ -7,15 +7,14 @@ import { MissionProgress } from "@/components/molecules/MissionProgress";
 import { formatMissionValue } from "@/demo/engine/missions";
 import type { Mission } from "@/demo/types";
 import { useAdmin } from "@/stores/admin";
-import { MARKETING, SubpageHeader } from "../marketing/SubpageHeader";
-import { MISSIONS_SECTION } from "./MissionsAdmin";
+import { SubpageHeader } from "../marketing/SubpageHeader";
 
 /** Simular progreso (8.3.24: subpágina de Misiones y premios). */
 export function MissionSimulatorPage() {
   const missions = useAdmin((s) => s.data.missions);
   return (
     <>
-      <SubpageHeader trail={[MARKETING, MISSIONS_SECTION]} back={MISSIONS_SECTION} title="Simular progreso y premio" intro="Un cliente de ejemplo avanza en la misión elegida. No guarda nada ni genera premios reales." />
+      <SubpageHeader title="Simular progreso y premio" intro="Un cliente de ejemplo avanza en la misión elegida. No guarda nada ni genera premios reales." />
       <MissionSimulator missions={missions} />
     </>
   );

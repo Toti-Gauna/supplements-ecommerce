@@ -20,8 +20,8 @@ test("imagen propia: requiere alt, conserva el encuadre y el borrador, se public
   await page.getByRole("slider", { name: "Acercar", exact: true }).press("End");
   await expect(preview(page).locator("img")).toHaveCSS("object-position", "1% 100%");
   expect(await horizontalOverflow(page)).toBe(0);
-  await page.getByRole("link", { name: "Volver a Contenido" }).click();
-  await page.getByRole("link", { name: /Carrusel del inicio/ }).click();
+  await page.getByRole("tab", { name: "Textos de inicio" }).click();
+  await page.getByRole("tab", { name: "Carrusel", exact: true }).click();
   await expect(page.getByText("Recuperamos los cambios del carrusel que quedaron sin guardar.")).toBeVisible();
   await expect(page.getByRole("textbox", { name: "Texto alternativo", exact: true })).toHaveValue("Pote de prueba sobre el rack");
   await save(page);

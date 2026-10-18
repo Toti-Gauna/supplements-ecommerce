@@ -39,37 +39,38 @@ test.describe("escritorio con mouse", () => {
     await expect(dialog.getByLabel("Título")).toHaveValue("");
     await dialog.getByRole("button", { name: "Cancelar" }).click();
     await expect(dialog).toBeHidden();
-    // El simulador es otra tarea, en su propia página.
-    await page.getByRole("link", { name: /Simular progreso y premio/ }).click();
+    // El simulador es otra tarea: la otra pestaña de Misiones, en su propia página.
+    await page.getByRole("tab", { name: "Simular progreso" }).click();
     await expect(page).toHaveURL(/misiones\/simular\/$/);
-    await expect(page.getByRole("link", { name: "Volver a Misiones y premios" })).toBeVisible();
+    await expect(page.getByRole("tab", { name: "Simular progreso" })).toHaveAttribute("aria-current", "page");
+    await expect(page.getByRole("heading", { level: 1, name: /Simular progreso y premio/ })).toBeVisible();
   });
 
-  test("8.3.24 Marketing por tarjetas: cada una abre su subpágina con migas y Volver; links directos y Atrás funcionan", async ({ page }) => {
-    await page.goto("admin-demo/marketing/");
-    const tools = page.getByRole("list", { name: "Herramientas de marketing" });
-    for (const name of ["Misiones y premios", "Emails automáticos", "Cupones y ruleta", "Campañas", "Estudio de contenido", "Contenido"]) await expect(tools.getByRole("link", { name: new RegExp(name) })).toBeVisible();
-    await tools.getByRole("link", { name: /Cupones y ruleta/ }).click();
-    await expect(page).toHaveURL(/cupones\/$/);
-    await expect(page.getByRole("heading", { level: 1, name: /Cupones y ruleta/ })).toBeVisible();
-    // Solo las tarjetas: ni la lista de cupones ni la ruleta debajo.
+  test("8.3.24 Promos y Campañas por pestañas: cada herramienta tiene su ruta; links directos y Atrás funcionan", async ({ page }) => {
+    await page.goto("admin-demo/promos/");
+    const tabs = page.getByRole("tablist", { name: "Pestañas de la sección" });
+    for (const name of ["Cupones", "Descuento stack", "Ruleta", "Premios del juego", "Misiones", "Regalos y gift cards"]) await expect(tabs.getByRole("tab", { name })).toBeVisible();
+    await expect(tabs.getByRole("tab", { name: "Cupones" })).toHaveAttribute("aria-current", "page");
+    await expect(page.getByRole("heading", { level: 1, name: "Cupones" })).toBeVisible();
+    // Cada pestaña muestra solo lo suyo: ni la ruleta ni su guardado en la lista de cupones.
     await expect(page.getByRole("button", { name: "Guardar ruleta" })).toHaveCount(0);
-    await expect(page.getByRole("button", { name: "Nuevo cupón" })).toHaveCount(0);
-    await page.getByRole("link", { name: /Configuración de ruleta/ }).click();
+    await tabs.getByRole("tab", { name: "Ruleta" }).click();
     await expect(page).toHaveURL(/cupones\/ruleta\/$/);
-    await expect(page.getByRole("navigation", { name: "Migas de pan" })).toContainText("Marketing");
-    await page.getByRole("link", { name: "Volver a Cupones y ruleta" }).click();
-    await expect(page).toHaveURL(/cupones\/$/);
+    await expect(page.getByRole("heading", { level: 1, name: /Configuración de ruleta/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Nuevo cupón" })).toHaveCount(0);
+    await page.getByRole("tab", { name: "Cupones" }).click();
+    await expect(page).toHaveURL(/promos\/$/);
     await page.goBack();
     await expect(page).toHaveURL(/cupones\/ruleta\/$/);
     await expect(page.getByRole("heading", { level: 1, name: /Configuración de ruleta/ })).toBeVisible();
-    await page.goto("admin-demo/cupones/premios/");
+    await page.getByRole("tab", { name: "Premios disponibles" }).click();
+    await expect(page).toHaveURL(/cupones\/premios\/$/);
     await expect(page.getByRole("heading", { level: 1, name: /Premios disponibles/ })).toBeVisible();
-    // Emails: plantillas como tarjetas; la bandeja es su propia página (y el enlace viejo lleva ahí).
+    // Emails: plantillas y bandeja son dos pestañas de Ajustes (y el enlace viejo lleva a la bandeja).
     await page.goto("admin-demo/emails/?vista=enviados");
     await expect(page).toHaveURL(/emails\/enviados\/$/);
     await expect(page.getByRole("region", { name: "Bandeja de salida" })).toBeVisible();
-    await page.getByRole("link", { name: "Volver a Emails automáticos" }).click();
+    await page.getByRole("tab", { name: "Emails automáticos" }).click();
     await expect(page.getByRole("link", { name: "Editar Recibimos tu pedido" })).toBeVisible();
     await expect(page.getByRole("region", { name: "Bandeja de salida" })).toHaveCount(0);
   });
@@ -128,8 +129,8 @@ test.describe("escritorio con mouse", () => {
     await page.getByRole("button", { name: "Guardar ruleta" }).click();
     await expect(page.getByRole("alert").filter({ hasText: "al menos un gajo activo tiene que tener peso mayor a 0" })).toBeVisible();
     // Salir y volver: el borrador sigue y se puede descartar.
-    await page.getByRole("link", { name: "Volver a Cupones y ruleta" }).click();
-    await page.getByRole("link", { name: /Configuración de ruleta/ }).click();
+    await page.getByRole("tab", { name: "Cupones" }).click();
+    await page.getByRole("tab", { name: "Ruleta" }).click();
     await expect(page.getByText("Recuperamos los cambios de la ruleta que quedaron sin guardar.")).toBeVisible();
     await expect(page.getByLabel("Peso del gajo 1")).toHaveValue("0");
     await page.getByRole("button", { name: "Descartar cambios" }).click();
@@ -139,11 +140,11 @@ test.describe("escritorio con mouse", () => {
 });
 
 for (const [label, width, height, touch] of [["escritorio chico", 1024, 768, false], ["iPad vertical", 768, 1024, true], ["celular", 390, 844, true]] as const) {
-  test(`8.3.24/8.3.25 a ${label} ${width}px: tarjetas, ruleta arriba y editor de email sin desborde`, async ({ browser }) => {
+  test(`8.3.24/8.3.25 a ${label} ${width}px: tarjetas, pestañas, ruleta arriba y editor de email sin desborde`, async ({ browser }) => {
     const ctx = await browser.newContext({ viewport: { width, height }, isMobile: touch, hasTouch: touch, reducedMotion: "reduce", locale: "es-AR" });
     const page = await ctx.newPage();
     if (!touch) await page.mouse.move(width - 20, 500);
-    for (const route of ["admin-demo/marketing/", "admin-demo/cupones/", "admin-demo/misiones/", "admin-demo/emails/"]) {
+    for (const route of ["admin-demo/campanas/", "admin-demo/promos/", "admin-demo/misiones/", "admin-demo/emails/"]) {
       await page.goto(base() + route);
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
       expect(await horizontalOverflow(page), route).toBeLessThanOrEqual(0);

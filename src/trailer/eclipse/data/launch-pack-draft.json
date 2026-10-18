@@ -1,0 +1,17 @@
+{
+  "id": "launch-pack-draft",
+  "type": "pack",
+  "priceVersion": "2026-10-16.aprobado",
+  "selectedPlan": "essential",
+  "selectedExtras": [],
+  "includedExtras": [],
+  "recommendedExtras": [],
+  "landingIncluded": true,
+  "promotion": {
+    "enabled": true,
+    "months": 3,
+    "creditPlan": "essential",
+    "source": "Tarifario aprobado 16/10/2026",
+    "note": "Pack sujeto a capacidad confirmada de asesoría económica."
+  }
+}

@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { useSplashSettled } from "../shell/useSplashSettled";
+import { trailerInviteSeen } from "../trailer-invite/trailer-invite";
 import { inviteSeen, rememberInvite, shouldInviteToQuiz, type QuizInviteChoice } from "./quiz-invite";
 
 // El modal (con sus dibujos) se descarga solo si hay que mostrarlo: quien ya lo vio no lo paga en cada carga.
@@ -19,7 +20,8 @@ export function QuizInvite() {
   const splashGone = useSplashSettled();
   const [state, setState] = useState<"waiting" | "open" | "closed">("waiting");
   // Se decide recién en el cliente y con la tienda a la vista (en el HTML estático `splashGone` es false).
-  if (state === "waiting" && splashGone && shouldInviteToQuiz({ path, seen: inviteSeen() })) setState("open");
+  // Mientras la invitación al trailer no se respondió, esta espera (sale en la página siguiente): nunca dos modales juntos.
+  if (state === "waiting" && splashGone && trailerInviteSeen() && shouldInviteToQuiz({ path, seen: inviteSeen() })) setState("open");
   const close = (choice: QuizInviteChoice) => {
     rememberInvite(choice);
     setState("closed");

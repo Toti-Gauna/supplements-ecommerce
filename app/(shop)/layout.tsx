@@ -9,6 +9,7 @@ import { OwnerBar } from "@/features/owner/OwnerBar";
 import { QuizInvite } from "@/features/quiz/QuizInvite";
 import { ShopTicker } from "@/features/shell/ShopTicker";
 import { ThemeStage } from "@/features/themes/ThemeStage";
+import { TrailerInvite } from "@/features/trailer-invite/TrailerInvite";
 import { VitrinaHost } from "@/features/themes/vitrina/VitrinaHost";
 
 /**
@@ -30,6 +31,7 @@ export default function ShopLayout({ children }: { children: ReactNode }) {
       <CompareTray />
       <WheelStage />
       <LazyOverlays />
+      <TrailerInvite />
       <QuizInvite />
       <VitrinaHost />
     </>

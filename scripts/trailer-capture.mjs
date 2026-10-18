@@ -33,6 +33,7 @@ async function newPage(browser, vp, theme) {
     localStorage.setItem("volta-theme", t); // el tema es la única clave fija (no lleva el prefijo de la marca)
     localStorage.setItem(`${k}-sound`, "off");
     localStorage.setItem(`${k}-quiz-invite`, "seen");
+    localStorage.setItem(`${k}-trailer-invite`, "seen");
     localStorage.setItem(`${k}-demo:theme-preview`, JSON.stringify({ state: { previewId: "original" }, version: 0 }));
   }, { t: theme, k: KEY });
   return { context, page: await context.newPage() };

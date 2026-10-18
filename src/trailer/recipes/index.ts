@@ -1,3 +1,7 @@
+import { eclipseCta } from "../eclipse/cta";
+import { eclipseIntro } from "../eclipse/intro";
+import { eclipseOutro } from "../eclipse/outro";
+import { eclipsePrices } from "../eclipse/prices";
 import type { Recipe } from "../engine/recipe";
 import { slam } from "./slam";
 import { statpunch } from "./statpunch";
@@ -10,4 +14,7 @@ import { typewriter } from "./typewriter";
  * las necesita; cada una en su archivo, con su componente y su `build` determinista.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- cada receta tipa sus props; el registro las guarda juntas
-export const RECIPES: Record<string, Recipe<any>> = { title, slam, statpunch, typewriter, themeflip };
+export const RECIPES: Record<string, Recipe<any>> = {
+  title, slam, statpunch, typewriter, themeflip,
+  "eclipse-intro": eclipseIntro, "eclipse-outro": eclipseOutro, "eclipse-cta": eclipseCta, "eclipse-prices": eclipsePrices,
+};

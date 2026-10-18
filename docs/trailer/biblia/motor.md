@@ -37,6 +37,26 @@ Cómo está armado y cómo se usa. Las escenas de T1–T4 se escriben sobre esto
 `validateTrailer` exige escenas sin huecos ni encimadas, ids únicos, cortes en la grilla de medio tiempo y que la
 última termine justo en `duration`.
 
+## Firma de Eclipse (P0.4)
+Carpeta `src/trailer/eclipse/`. Es de quien firma el trailer, no de la tienda: no usa la ficha de marca.
+| Archivo | Qué hace |
+|---|---|
+| `tokens.ts` | Colores de Eclipse (`brand.json` del kit de emails = `globals.css` de eclipse-web), familias y contacto (223-446 7881) |
+| `fonts.ts` + `fonts/` | Geist, Instrument Serif (con itálica) y Geist Mono, copiadas de eclipse-web con su licencia OFL; solo las carga `/trailer/` |
+| `EclipseMark.tsx` | El eclipse en capas (brillo, corona, sol, luna, destello) y un cielo de estrellas fijas |
+| `intro.tsx` (`eclipse-intro`) | "ECLIPSE · Presenta…": la secuencia del loader de eclipse-web en versión cine (~5,6 s) |
+| `cta.tsx` (`eclipse-cta`) | La noche se vuelve amanecer: "Probalo *en vivo*.", el link de la demo, "Contactanos" y el teléfono |
+| `prices.tsx` (`eclipse-prices`) | Una página del libro de precios: `book` + `section` + número de sección |
+| `pricing.ts` + `book.ts` + `data/` | Libro de precios **genérico** (con tests): tarifario aprobado + ofertas del kit, en pesos (dólar a $1.500) con el dólar debajo. Orden: campaña base, pack de lanzamiento, planes, extras. Otro producto = otra entrada en `BOOKS` |
+| `outro.tsx` (`eclipse-outro`) | El eclipse se cierra: la luna termina de tapar el sol, destella, se apagan corona y brillo, queda la noche |
+
+Pieza `firma` (`/trailer/firma/`, ~50 s): apertura → escenas de prueba (donde irá cada trailer) → "Probalo en vivo" →
+4 páginas de precios → cierre. Es lo que comparten T1–T4.
+
+Aviso en la tienda (`src/features/trailer-invite/`): después de la pantalla de carga, "Tenemos algo para ti…" con
+"Ver trailer" (abre la firma) y "No por ahora". Una vez por sesión; la invitación al quiz espera a la página siguiente.
+Los tests y los scripts de capturas lo marcan visto (`volta-trailer-invite`). Se saca cuando el trailer esté terminado.
+
 ## Estado
 - Recetas portadas: `title`, `slam`, `statpunch`, `typewriter`, `themeflip`. El resto de la biblia (§3) se porta
   cuando un storyboard la pide (Tn.3): `uiflow`, `uinotify`, `uibuild`, `uiexplode`, `globeship`, `databars`, `stack`,

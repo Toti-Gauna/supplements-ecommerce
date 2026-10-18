@@ -39,3 +39,17 @@ test("la página del trailer no muestra la pantalla de carga ni los controles al
   await expect(page.locator("[data-escena='pregunta']")).toBeVisible();
   await expect(page.locator("[data-escena='cierre']")).toBeHidden();
 });
+
+test("la firma de Eclipse: apertura, contacto y precios en pesos con el dólar debajo", async ({ page }) => {
+  await page.goto("trailer/firma/?export=1&t=4");
+  await ready(page);
+  await expect(page.locator("[data-escena='apertura']")).toContainText("Presenta…");
+  await seek(page, 23);
+  await expect(page.locator("[data-escena='en-vivo']")).toContainText("223-446 7881");
+  await seek(page, 28.5);
+  const campana = page.locator("[data-escena='precio-campana']");
+  await expect(campana).toBeVisible();
+  await expect(campana).toContainText("$ 750.000");
+  await expect(campana).toContainText("USD 500");
+  await expect(page.locator("[data-trailer-stage]")).not.toContainText(/volta/i);
+});

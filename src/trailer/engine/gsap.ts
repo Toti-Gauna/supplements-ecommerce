@@ -12,6 +12,9 @@ gsap.registerPlugin(CustomEase, SplitText);
 CustomEase.create("trl.expo", "0.16,1,0.3,1");
 /** Latigazo de cámara: acelera y frena seco. */
 CustomEase.create("trl.whip", "0.7,0,0.2,1");
+/** El cruce de la luna y el destello del loader de Eclipse (`components/loader/loader.css`). */
+CustomEase.create("trl.moon", "0.45,0,0.25,1");
+CustomEase.create("trl.glint", "0.2,0.7,0.3,1");
 /** Golpe: pasa de largo un poco y vuelve. */
 CustomEase.create("trl.punch", "0.2,1.4,0.4,1");
 

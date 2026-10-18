@@ -1,0 +1,77 @@
+{
+  "version": "2026-10-16.aprobado",
+  "currency": "USD",
+  "source": "https://app.notion.com/p/3e87be175d3481808c20e6e0ff20ebbb",
+  "precedence": "Sección superior: Tarifario aprobado — actualización del 16/10/2026",
+  "adaptation": 500,
+  "pack": 700,
+  "depositRatio": 0.5,
+  "extras": {
+    "landing": {
+      "name": "Landing premium adicional",
+      "price": 200,
+      "scope": "Una landing compatible para presentar tu propuesta. Solo si no está incluida en el alcance."
+    },
+    "growth": {
+      "name": "Asesoría growth, marketing y marca",
+      "price": 150,
+      "scope": "Revisamos propuesta, mensajes y una acción de captación o retención; acordamos prioridades y una métrica. No incluye identidad completa ni gestión continua."
+    },
+    "economics": {
+      "name": "Asesoría de gestión económica",
+      "price": 150,
+      "scope": "Costos, márgenes y escenarios con tus datos, una vez. Sin asesoramiento contable, tributario ni de inversiones."
+    },
+    "both": {
+      "name": "Las dos asesorías",
+      "price": 250,
+      "scope": "Growth, marketing y marca + gestión económica. Reemplaza a las dos sueltas."
+    },
+    "whatsapp": {
+      "name": "WhatsApp estándar (sin IA)",
+      "price": 100,
+      "scope": "Un flujo de aviso o seguimiento. Sin agente IA ni envíos masivos. Su operación entra en el plan Conectado."
+    },
+    "chatbot": {
+      "name": "Chatbot IA (WhatsApp o web)",
+      "price": 250,
+      "scope": "Un canal, un caso de uso, tus documentos y pase a una persona. Su operación entra en el plan Automatización/IA."
+    },
+    "voice": {
+      "name": "Agente de voz con IA",
+      "price": 250,
+      "scope": "Un caso de uso, guion y pase a una persona. Telefonía a validar. Su operación entra en el plan Automatización/IA."
+    }
+  },
+  "migration": {
+    "min": 100,
+    "max": 300
+  },
+  "operationalModuleFrom": 750,
+  "plans": [
+    {
+      "id": "essential",
+      "name": "Esencial",
+      "monthly": 30,
+      "thirdPartyBudget": 5,
+      "scope": "Mantenimiento de tu producto y configuración priorizada."
+    },
+    {
+      "id": "connected",
+      "name": "Conectado",
+      "monthly": 75,
+      "thirdPartyBudget": 15,
+      "scope": "Una integración estándar, sujeta a factibilidad."
+    },
+    {
+      "id": "ai",
+      "name": "Automatización/IA",
+      "monthly": 150,
+      "thirdPartyBudget": 40,
+      "scope": "Hasta dos flujos estándar totales; uno puede usar IA."
+    }
+  ],
+  "monthlyHours": 2,
+  "noticePercent": 80,
+  "addonsSource": "WhatsApp, chatbot y voz: precio de complemento (addonUsd) de Eclipse-Web content/items.json, oferta aprobada del 16/10/2026, commit e335533"
+}

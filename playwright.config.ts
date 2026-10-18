@@ -28,6 +28,7 @@ export default defineConfig({
     storageState: { cookies: [], origins: [{ origin: `http://localhost:${port}`, localStorage: [
       { name: "volta-demo:theme-preview", value: JSON.stringify({ state: { previewId: "original" }, version: 0 }) },
       { name: "volta-quiz-invite", value: "seen" },
+      { name: "volta-trailer-invite", value: "seen" },
     ] }] },
   },
   projects: [{ name: "mobile", use: { ...devices["Pixel 7"], viewport: { width: 375, height: 812 } } }],

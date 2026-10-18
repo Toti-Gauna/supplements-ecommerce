@@ -12,6 +12,8 @@ test.describe("invitación al quiz (primera visita, sin nada guardado)", () => {
   // Sin la marca de "vista" que el resto de los tests trae de playwright.config.ts (la temática sigue en Original).
   test.use({ storageState: { cookies: [], origins: [{ origin, localStorage: [
     { name: "volta-demo:theme-preview", value: JSON.stringify({ state: { previewId: "original" }, version: 0 }) },
+    // El aviso del trailer va antes que el del quiz (y lo prueba trailer-invite.spec.ts): acá ya figura respondido.
+    { name: "volta-trailer-invite", value: "seen" },
   ] }] } });
 
   test("sale una sola vez: foco adentro, “Ahora no” la cierra y no vuelve ni al recargar ni en otra página", async ({ page }) => {

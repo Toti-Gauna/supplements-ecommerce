@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 import { splashOff } from "@/demo/engine/splash-off";
 import { pendingSplashScenes, readySplashScene, splashLayerMap, splashLayerUrls, SPLASH_ART_VERSION, SPLASH_MAX_LAYERS, SPLASH_SCENES } from "@/demo/engine/splash-scenes";
 import { seasonalThemes } from "@/demo/fixtures/themes";
+import type { SeasonId } from "@/demo/types";
 import { splashMarks } from "@/features/splash/marks";
 import { seasonScript } from "@/features/themes/seasonScript";
 import { SKINS } from "@/features/themes/skins";
@@ -12,7 +13,7 @@ import { SKINS } from "@/features/themes/skins";
 /** Pantallas de carga por fecha (R3c): el registro, el descuento del marcador y lo que marca el script del <head>. */
 const ROOT = join(__dirname, "../..");
 const SEASONS = Object.keys(SKINS).sort();
-/** Escenas terminadas, con sus capas: la original, las cuatro de referencia de la fase 1 y las de la fase 2. */
+/** Escenas terminadas, con sus capas: la original, las cuatro de referencia de la fase 1 y las de la fase 2 (ya no queda ninguna pendiente). */
 const READY_LAYERS: Record<string, number> = {
   original: 0,
   "black-friday": 4,
@@ -25,6 +26,13 @@ const READY_LAYERS: Record<string, number> = {
   "dia-del-futbolista": 5,
   "dia-del-running": 7,
   "dia-del-boxeador": 4,
+  "dia-de-la-madre": 6,
+  halloween: 5,
+  "cyber-monday": 5,
+  "ano-nuevo": 5,
+  "san-valentin": 5,
+  "dia-del-padre": 7,
+  "dia-del-amigo": 5,
 };
 const READY = Object.keys(READY_LAYERS);
 
@@ -61,10 +69,12 @@ describe("registro de pantallas de carga", () => {
   it("elige la escena: terminada, la original sin fecha, null si la fecha sigue con la variante de campaña", () => {
     expect(readySplashScene("black-friday")).toBe("black-friday");
     expect(readySplashScene(null)).toBe("original");
-    expect(readySplashScene("halloween")).toBeNull();
+    for (const id of SEASONS) expect(readySplashScene(id as SeasonId), id).toBe(READY.includes(id) ? id : null);
     expect(splashLayerMap()).toEqual(Object.fromEntries(Object.entries(READY_LAYERS).filter(([, n]) => n > 0)));
     expect(splashLayerUrls("/supplements-ecommerce", "hot-sale")[4]).toBe(`/supplements-ecommerce/splash/hot-sale/5.svg?v=${SPLASH_ART_VERSION}`);
-    expect(splashLayerUrls("", "halloween")).toEqual([]);
+    expect(splashLayerUrls("/supplements-ecommerce", "dia-del-padre")).toHaveLength(7);
+    expect(splashLayerUrls("", "original")).toEqual([]);
+    for (const id of pendingSplashScenes()) expect(splashLayerUrls("", id), id).toEqual([]);
   });
 });
 
@@ -113,10 +123,16 @@ describe("script del <head>", () => {
 
   it("con reducir movimiento no pide el arte; sin escena todavía queda la variante de campaña; sin fecha, nada", () => {
     expect(runSeasonScript("navidad", true).preloads).toEqual([]);
+    expect(runSeasonScript("halloween", true).preloads).toEqual([]);
     const halloween = runSeasonScript("halloween");
-    expect(halloween.attrs["data-splash-campaign"]).toBe("");
-    expect(halloween.attrs["data-splash-scene"]).toBeUndefined();
-    expect(halloween.vars["--sl1"]).toBeUndefined();
+    expect(halloween.attrs["data-splash-scene"]).toBe("halloween");
+    expect(halloween.preloads).toHaveLength(5);
+    for (const id of pendingSplashScenes()) {
+      const pending = runSeasonScript(id);
+      expect(pending.attrs["data-splash-campaign"], id).toBe("");
+      expect(pending.attrs["data-splash-scene"], id).toBeUndefined();
+      expect(pending.vars["--sl1"], id).toBeUndefined();
+    }
     expect(runSeasonScript("original").attrs).toEqual({});
     expect(splashMarks(null, "")).toEqual({ scene: null, campaign: false, digits: null, vars: {} });
   });

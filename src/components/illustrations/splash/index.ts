@@ -6,6 +6,13 @@ import { diaActividadFisicaLayers } from "./dia-actividad-fisica";
 import { diaDelBoxeadorLayers } from "./dia-del-boxeador";
 import { diaDelFutbolistaLayers } from "./dia-del-futbolista";
 import { diaDelRunningLayers } from "./dia-del-running";
+import { diaDeLaMadreLayers } from "./dia-de-la-madre";
+import { halloweenLayers } from "./halloween";
+import { cyberMondayLayers } from "./cyber-monday";
+import { anoNuevoLayers } from "./ano-nuevo";
+import { sanValentinLayers } from "./san-valentin";
+import { diaDelPadreLayers } from "./dia-del-padre";
+import { diaDelAmigoLayers } from "./dia-del-amigo";
 import { hotSaleLayers } from "./hot-sale";
 import { navidadLayers } from "./navidad";
 import { operacionVeranoLayers } from "./operacion-verano";
@@ -27,4 +34,11 @@ export const SPLASH_ART: Partial<Record<SplashSceneId, ComponentType[]>> = {
   "dia-del-futbolista": diaDelFutbolistaLayers,
   "dia-del-running": diaDelRunningLayers,
   "dia-del-boxeador": diaDelBoxeadorLayers,
+  "dia-de-la-madre": diaDeLaMadreLayers,
+  halloween: halloweenLayers,
+  "cyber-monday": cyberMondayLayers,
+  "ano-nuevo": anoNuevoLayers,
+  "san-valentin": sanValentinLayers,
+  "dia-del-padre": diaDelPadreLayers,
+  "dia-del-amigo": diaDelAmigoLayers,
 };

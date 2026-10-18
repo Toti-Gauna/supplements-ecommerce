@@ -1,0 +1,30 @@
+/*
+ * San Valentín (R3c): dos mancuernas entran deslizando desde los costados por el soporte doble, se encuentran en el
+ * medio, chocan las cabezas (un rebote corto) y quedan encastradas en sus cunas; se prende la traba del soporte y el
+ * marcador gira hasta el descuento. Capas (public/splash/san-valentin/): 1 pared, soporte y marcador · 2 la
+ * mancuerna izquierda · 3 la derecha · 4 los labios de las cunas · 5 la luz del encastre (en 400,300 de 800 × 600).
+ * Mecánica 0,22–1,3 s; número 1,05–1,59 s.
+ */
+.splash-stage[data-scene="san-valentin"] {
+  --score-x: 37.5%; --score-y: 12.67%; --score-w: 25%; --score-h: 12.67%; --score-size: 6.6cqw;
+  --lit-at: 1000ms; --roll-at: 1050ms; --caption-at: 900ms;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .splash-stage[data-scene="san-valentin"] .s2::before { animation: sv-left 720ms linear 220ms both; }
+  .splash-stage[data-scene="san-valentin"] .s3::before { animation: sv-right 720ms linear 220ms both; }
+  .splash-stage[data-scene="san-valentin"] .s5::before { animation: sv-click 440ms ease-out 860ms both; }
+}
+/* Deslizan, frenan al encontrarse, chocan (se separan apenas) y se asientan. */
+@keyframes sv-left {
+  0% { transform: translateX(-50%); animation-timing-function: cubic-bezier(0.3, 0, 0.6, 1); }
+  88% { transform: translateX(0); animation-timing-function: ease-out; }
+  94% { transform: translateX(-1.2%); animation-timing-function: ease-in; }
+  100% { transform: translateX(0); }
+}
+@keyframes sv-right {
+  0% { transform: translateX(50%); animation-timing-function: cubic-bezier(0.3, 0, 0.6, 1); }
+  88% { transform: translateX(0); animation-timing-function: ease-out; }
+  94% { transform: translateX(1.2%); animation-timing-function: ease-in; }
+  100% { transform: translateX(0); }
+}
+@keyframes sv-click { 0% { opacity: 0; } 20% { opacity: 1; transform: scale(1.06); } 100% { opacity: 1; } }

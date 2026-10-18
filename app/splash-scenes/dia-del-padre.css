@@ -1,0 +1,29 @@
+/*
+ * Día del Padre (R3c): peso muerto visto de frente. La barra cargada se despega de la plataforma (levanta tiza),
+ * pasa las rodillas cada vez más rápido y se traba en el bloqueo: cadera y hombros arriba. Se prenden las tres luces
+ * blancas de los jueces (levantamiento válido) y el marcador gira hasta el descuento.
+ * Capas (public/splash/dia-del-padre/): 1 plataforma, marcador, luces apagadas, pantorrillas · 2 muslos (se estiran
+ * sobre las rodillas, y = 443 de 600) · 3 torso con el cinturón (sobre la cadera, y = 356) · 4 la barra · 5 cabeza y
+ * brazos (bajan con la barra, 85 de 600) · 6 las luces de los jueces · 7 la tiza. Mecánica 0,34–1,1 s; número 1,05–1,59 s.
+ */
+.splash-stage[data-scene="dia-del-padre"] {
+  --score-x: 5%; --score-y: 10.33%; --score-w: 23%; --score-h: 12.33%; --score-size: 6cqw;
+  --lit-at: 1040ms; --roll-at: 1050ms; --caption-at: 900ms;
+}
+.splash-stage[data-scene="dia-del-padre"] .s2::before { transform-origin: 50% 73.833%; }
+.splash-stage[data-scene="dia-del-padre"] .s3::before { transform-origin: 50% 59.333%; }
+.splash-stage[data-scene="dia-del-padre"] .s7::before { transform-origin: 50% 88%; opacity: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .splash-stage[data-scene="dia-del-padre"] :is(.s2, .s3, .s4, .s5)::before { animation: 700ms cubic-bezier(0.55, 0, 0.25, 1) 340ms both; }
+  .splash-stage[data-scene="dia-del-padre"] .s2::before { animation-name: dp-thighs; }
+  .splash-stage[data-scene="dia-del-padre"] .s3::before { animation-name: dp-torso; }
+  .splash-stage[data-scene="dia-del-padre"] :is(.s4, .s5)::before { animation-name: dp-bar; }
+  .splash-stage[data-scene="dia-del-padre"] .s6::before { animation: dp-judges 300ms steps(1, end) 1060ms both; }
+  .splash-stage[data-scene="dia-del-padre"] .s7::before { animation: dp-chalk 640ms ease-out 400ms both; }
+}
+/* Todas con la misma curva: las manos no se despegan de la barra ni la cadera del torso. */
+@keyframes dp-thighs { from { transform: scale(1.12, 0.38); } }
+@keyframes dp-torso { from { transform: translateY(9%) scaleY(0.68); } }
+@keyframes dp-bar { from { transform: translateY(14.167%); } }
+@keyframes dp-judges { 0% { opacity: 0; } 34% { opacity: 1; } 50% { opacity: 0.4; } 66%, 100% { opacity: 1; } }
+@keyframes dp-chalk { 0% { opacity: 0; transform: scale(0.8); } 25% { opacity: 1; } 100% { opacity: 0; transform: scale(1.2) translateY(-2%); } }

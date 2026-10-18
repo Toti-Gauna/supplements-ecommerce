@@ -53,8 +53,14 @@ y distinta de las que hay hoy (negro + rojo agresivo, o blanco clínico). Todo s
     Fase 1 (referencias para aprobar): **Black Friday** (la persiana del local sube a tirones y se prende la luz),
     **Hot Sale** (la barra se calienta en tres golpes y la aguja del manómetro llega al rojo), **Vuelta al gym** (se
     prende la luz y se tira la lona de playa que tapaba el rack, con tiza) y **Navidad** (el árbol de discos se carga
-    de a uno). Las otras 13 fechas siguen con la **variante de campaña** de R3a (discos del color de la fecha y el
-    marcador) hasta la fase 2; la mecánica de cada una ya está escrita en el registro.
+    de a uno). Fase 2: **Día de la Madre** (el monitor cardíaco dibuja tres latidos y con cada pico se carga el frasco
+    de colágeno), **Halloween** (la pesa rusa se prende desde adentro como una calabaza, con humo de tiza),
+    **CyberMonday** (las bahías del rack de servidores se prenden de a una, cada vez más rápido), **Año Nuevo** (el
+    tablero de cuenta regresiva pasa de 2026 a 2027 con flip de placas), **San Valentín** (dos mancuernas entran
+    deslizando y encastran en el soporte doble), **Día del Padre** (peso muerto de frente hasta el bloqueo y las tres
+    luces blancas de los jueces) y **Día del Amigo** (dos brazos chocan los shakers). Las fechas que todavía no tienen
+    la suya siguen con la **variante de campaña** de R3a (discos del color de la fecha y el marcador); la mecánica de
+    cada una ya está escrita en el registro.
   - **Cómo se arma:** el registro `src/demo/engine/splash-scenes.ts` (estado, capas y mecánica por fecha); el arte en
     `src/components/illustrations/splash/<id>.tsx`, publicado como SVG por capa en `public/splash/<id>/<n>.svg`
     (`SPLASH_ART_WRITE=1 npx vitest run tests/unit/r3c-splash-art.test.ts`); el movimiento en `app/splash-scenes/<id>.css`

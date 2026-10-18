@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { readySplashScene } from "../../src/demo/engine/splash-scenes";
+import { pendingSplashScenes, readySplashScene } from "../../src/demo/engine/splash-scenes";
 import type { SeasonId } from "../../src/demo/types";
 
 /** R3c · La pantalla de carga de cada fecha sin recargar: desde el modo vitrina y desde el editor de Campañas. */
@@ -59,15 +59,24 @@ test("editor de Campañas: vista previa de la pantalla de carga con Repetir y Pa
   await expect(splash).toBeVisible();
   await expect(splash.locator(".splash-stage[data-scene='navidad']")).toBeVisible();
   await expect(splash).toBeHidden({ timeout: 5000 });
-  // Una fecha sin escena propia: lo dice y muestra su variante de campaña a pantalla completa.
+  // Halloween (fase 2) ya tiene la suya: la vista previa la muestra con su mecánica.
   await page.goto("admin-demo/campanas/editar/?id=halloween");
   await page.keyboard.press("Escape");
-  const pending = page.locator("[data-splash-preview='halloween']");
-  await expect(pending).toContainText("Escena propia en preparación");
-  await pending.getByRole("button", { name: "Pantalla completa" }).click();
-  await expect(splash).toBeVisible();
-  await expect(splash.locator(".splash-barbell")).toBeVisible();
-  await expect(splash.locator(".splash-score-name")).toBeVisible();
+  const halloween = page.locator("[data-splash-preview='halloween']");
+  await expect(halloween).toContainText("Escena:");
+  await expect(halloween.locator(".splash-stage[data-scene='halloween']")).toBeVisible();
+  // Una fecha sin escena propia (mientras quede alguna): lo dice y muestra su variante de campaña a pantalla completa.
+  const pendingId = pendingSplashScenes()[0];
+  if (pendingId) {
+    await page.goto(`admin-demo/campanas/editar/?id=${pendingId}`);
+    await page.keyboard.press("Escape");
+    const pending = page.locator(`[data-splash-preview='${pendingId}']`);
+    await expect(pending).toContainText("Escena propia en preparación");
+    await pending.getByRole("button", { name: "Pantalla completa" }).click();
+    await expect(splash).toBeVisible();
+    await expect(splash.locator(".splash-barbell")).toBeVisible();
+    await expect(splash.locator(".splash-score-name")).toBeVisible();
+  }
 });
 
 test("con reducir movimiento el editor muestra el cuadro final y no ofrece la pantalla completa", async ({ page }) => {

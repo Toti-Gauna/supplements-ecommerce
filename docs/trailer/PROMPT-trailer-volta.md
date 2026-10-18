@@ -1,9 +1,37 @@
 # Prompt: trailer comercial de "Tu tienda" (sistema de Eclipse para tiendas de suplementos)
 
-> Pegalo tal cual en una sesión nueva sobre `Toti-Gauna/supplements-ecommerce`.
-> **Modelo:** Opus. **Esfuerzo:** máximo (`max`) para la dirección creativa y el QA; `xhigh` para construir cada escena.
+> Pegalo en una sesión nueva sobre `Toti-Gauna/supplements-ecommerce`, **una fase por vez**: indicá en qué fase arrancar
+> ("Hacé la Pre-fase", "Hacé T1-F2", etc.). Cada fase usa su propio modelo y esfuerzo (tabla de abajo); no uses `max`
+> salvo donde lo dice.
 > Repos de referencia, solo lectura (clonalos en `/home/user/toti-gauna/`): `Toti-Gauna/kinetic-studio`,
 > `Toti-Gauna/Eclipse-Web` y `Toti-Gauna/Eclipse-email-kit`.
+
+## Fases y modelo por fase
+
+### Pre-fase · Auditoría y kit de trailers (una sola vez, antes de cualquier trailer)
+| Paso | Qué | Modelo · esfuerzo |
+|---|---|---|
+| P0.1 | Auditar `kinetic-studio`: los 33 trailers, el kit (`js/` de cada uno, motor, recetas, `SFX`, `trailers/export/tools/capture.mjs`). Tabla: qué receta o escena sirve, para qué pieza y cuánto cuesta adaptarla | Sonnet · medium |
+| P0.2 | Auditar `Eclipse-Web`: hero del eclipse, "iluminar" (`SkyTransition`, `Dawn`), tokens, tipografías, cierre. Auditar `Eclipse-email-kit`: `brand.json`, productos, ofertas y precios (qué es borrador) | Sonnet · medium |
+| P0.3 | Relevamiento de la interfaz de esta app (`ui-inventory`) y capturas por componente con Playwright en claro y oscuro a 2× (`component-crops`, `scripts/trailer-capture.mjs` → `docs/trailer/capturas/`) | Sonnet · medium |
+| P0.4 | **Kit de trailers en esta app**: ruta `/trailer/`, motor GSAP con línea de tiempo como datos, `?t=`, escenas deterministas, reloj de audio, intro y cierre de Eclipse ("Presenta…", iluminar y cerrarse), bloque final común (Probalo en vivo, Contactanos, pricing con estética Eclipse), dispositivo 3D reutilizable, exportador a MP4 (16:9 y 9:16, liviano para email, póster) y botón "Descargar MP4" | Opus · high |
+| P0.5 | **Firma sonora**: el hook de 4 compases a 128–140 BPM, el kit de sonidos y el outro tranquilo para pricing, con mezcla medida (−14 LUFS) | Opus · high |
+| P0.6 | Informe de la pre-fase (`docs/trailer/auditoria.md`) y PR. Ignacio aprueba el hook y la intro de Eclipse | — |
+
+### Cada trailer (T1 teaser, T2 experiencia de compra, T3 panel del dueño, T4 largo)
+| Fase | Qué | Modelo · esfuerzo |
+|---|---|---|
+| F1 · Dirección | Panel de 3 direcciones, juez con rúbrica y storyboard al segundo con supers, cue sheet y partitura. **Lo aprueba Ignacio** | Opus · **max** (solo acá) |
+| F2 · Construcción 16:9 | Escena por escena sobre el kit, verificada cuadro por cuadro con `?t=` | Opus · xhigh |
+| F3 · Música de la pieza | Arreglo del hook para esta pieza: builds, drops y sincronía con los cortes | Sonnet · high |
+| F4 · QA adversarial | `trailer-qa`, las seis lentes, y corrección de lo bloqueante | Opus · high |
+| F5 · Versión 9:16 | Re-encuadre (no recorte) sobre la misma línea de tiempo | Sonnet · high |
+| F6 · Exportación y PR | MP4 16:9 y 9:16, versión para email, póster, capturas y PR | Sonnet · medium |
+
+T4 (el largo) reusa escenas de T1–T3: su F1 es Opus · xhigh (no max) y su F2 Opus · high, porque lo nuevo son las
+transiciones entre bloques y el desarrollo completo de la canción.
+
+**Orden:** Pre-fase → T1 → T2 → T3 → T4. No arranques una fase sin la aprobación de la anterior.
 
 ---
 
@@ -160,7 +188,7 @@ Cierre: "Probalo en vivo", contacto, pricing y el eclipse que se cierra.
 | WhatsApp automático de recompra | | ✓ (protagonista) | ✓ (Clientes) |
 | Envío viajando por el país | | ✓ | (Despachos) |
 
-## 8. Proceso obligatorio
+## 8. Proceso obligatorio (el detalle de cada paso; el orden y el modelo los fija la tabla "Fases y modelo por fase")
 
 1. **Relevamiento de la interfaz** (`ui-inventory`): cada pieza que aparece, con `archivo:línea`, textos exactos y estados, y qué es real y qué es simulado en la demo.
 2. **Capturas por componente** (`component-crops` y un script de Playwright en `scripts/trailer-capture.mjs`): de cada componente y conjunto, en claro y oscuro, 2× y fondo del color de la app. Van en `docs/trailer/capturas/`.

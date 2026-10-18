@@ -15,7 +15,7 @@ import { chip, ScopeFields, toScope, type ScopeState } from "./ScopeFields";
 
 const ROUNDINGS: Rounding[] = [100, 500, 1];
 type Mode = "pct" | "margin";
-const MODES: { id: Mode; label: string }[] = [{ id: "pct", label: "Por porcentaje" }, { id: "margin", label: "Al margen de la marca" }];
+const MODES: { id: Mode; label: string }[] = [{ id: "pct", label: "Un % parejo" }, { id: "margin", label: "Al margen de la marca" }];
 
 /**
  * Aumento masivo de precios por % (Fase 6): marca, categoría o todo; % positivo o negativo; redondeo; vista previa por

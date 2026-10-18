@@ -45,6 +45,11 @@ export function coverage(stock: number, perDay: number): Coverage {
 
 export const COVERAGE_LABEL: Record<CoverageState, string> = { "a-pedido": "A pedido", "sin-stock": "Sin stock", "sin-ventas": "Sin ventas", corta: "Se acaba pronto", ok: "Alcanza", larga: "Stock de sobra" };
 
+/** "30 días", "Sin ventas", "A pedido": lo que se lee en una celda. */
+export function coverageText(c: Coverage): string {
+  return c.days === null ? COVERAGE_LABEL[c.state] : `${c.days} ${c.days === 1 ? "día" : "días"}`;
+}
+
 /** Desde cuándo rige el costo de la variante: el de la lista del proveedor, el de su receta o el de muestra. */
 export function costSince(product: Product, variant: Variant, recipe: Recipe | undefined): string {
   const own = variant.cost !== undefined ? variant.costSince : recipe?.costSince;

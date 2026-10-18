@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { defaultAdminData } from "@/demo/admin/defaults";
-import { coverage, costAge, costSince, dailySales, liquidationProfit, SALES_WINDOW_DAYS } from "@/demo/admin/live-costs";
+import { coverage, coverageText, costAge, costSince, dailySales, liquidationProfit, SALES_WINDOW_DAYS } from "@/demo/admin/live-costs";
 import { liveCostRows } from "@/demo/admin/live-rows";
 import type { CostBook } from "@/demo/admin/supplier-list/costs";
 import { DEMO_TODAY } from "@/demo/fixtures/admin-orders";
@@ -41,6 +41,16 @@ describe("cobertura de stock", () => {
     expect(coverage(-1, 2).state).toBe("a-pedido");
     expect(coverage(0, 2)).toEqual({ days: 0, state: "sin-stock" });
     expect(coverage(12, 0)).toEqual({ days: null, state: "sin-ventas" });
+  });
+});
+
+describe("cobertura en una celda", () => {
+  it("dice los días o, si no hay cuenta, el rótulo", () => {
+    expect(coverageText(coverage(18, 0.6))).toBe("30 días");
+    expect(coverageText(coverage(1, 1))).toBe("1 día");
+    expect(coverageText(coverage(12, 0))).toBe("Sin ventas");
+    expect(coverageText(coverage(-1, 3))).toBe("A pedido");
+    expect(coverageText(coverage(0, 3))).toBe("0 días");
   });
 });
 

@@ -10,6 +10,7 @@ import { applyDraft } from "@/demo/admin/sheet";
 import { productSheetSpec } from "@/demo/admin/sheet-specs";
 import { withSupplierCosts } from "@/demo/admin/product-metrics";
 import { DEFAULT_LOW_STOCK, inventoryValue, lowStockRows, productStockState, stockRows, type StockOp, type StockRow } from "@/demo/admin/stock";
+import { dailySales } from "@/demo/admin/live-costs";
 import { DEMO_TODAY } from "@/demo/fixtures/admin-orders";
 import type { Product } from "@/demo/types";
 import { formatARS } from "@/lib/money";
@@ -45,7 +46,7 @@ const totals = (rows: StockRow[]) => (
 export function ProductsTable() {
   const router = useRouter();
   const params = useSearchParams();
-  const { data, workshop, lastPriceChange, toggleProductActive, setProductsActive, setProductsCategory, setVariantStock, bulkStock, updateProducts, undoBulkPrice } = useAdmin();
+  const { data, workshop, orders, counter, lastPriceChange, toggleProductActive, setProductsActive, setProductsCategory, setVariantStock, bulkStock, updateProducts, undoBulkPrice } = useAdmin();
   const save = useDemoSave();
   const exportProducts = useExport("productos");
   const exportStock = useExport("stock");
@@ -54,7 +55,7 @@ export function ProductsTable() {
   const low = data.settings.lowStockThreshold ?? DEFAULT_LOW_STOCK;
   const mode: Mode = params.get("ver") === "variantes" ? "variantes" : "productos";
   const setStock = (r: StockRow, stock: number) => save(`Stock de ${r.productName} · ${r.variantLabel}: ${stock < 0 ? "a pedido" : stock}`, () => setVariantStock(r.productSlug, r.variantId, stock));
-  const vColumns = variantColumns({ setStock, onClear: setClearing });
+  const vColumns = variantColumns({ setStock, onClear: setClearing, sales: dailySales(orders, counter.sales, DEMO_TODAY) });
   const products = useTableState("products", { sort: { id: "name", dir: "asc" }, hidden: ["stockState"], filterIds: CATALOG_FILTER_IDS });
   const variants = useTableState("stock", { sort: { id: "product", dir: "asc" }, hidden: vColumns.filter((c) => c.defaultHidden).map((c) => c.id), filterIds: CATALOG_FILTER_IDS });
   const cats = [...data.categories].sort((a, b) => a.sortOrder - b.sortOrder);

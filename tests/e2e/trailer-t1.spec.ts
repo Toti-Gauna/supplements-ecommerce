@@ -80,10 +80,10 @@ test("cuando el cursor cae justo en el inicio de una escena se ve su estado inic
   await ready(page);
   await expect(scene(page, "cierre")).toBeVisible();
   await expect(scene(page, "cierre").locator("[data-t='night']")).toHaveCSS("opacity", "0");
-  // El cuadro 675 del MP4 (11,25 s, inicio de `plano`) sale con el botón "COMPRAR", no con la caja que tapaba el pote.
+  // El cuadro 675 del MP4 (11,25 s, inicio de `plano`) sale con la caja todavía abajo del cuadro (y = 760) y no tapando el pote.
   await page.goto("trailer/t1/?export=1&t=11.25");
   await ready(page);
-  await expect(scene(page, "plano").locator("[data-t='box']").first()).toHaveCSS("opacity", "0");
+  await expect(scene(page, "plano").locator("[data-t='box']").first()).toHaveCSS("transform", /, 760\)$/);
 });
 
 test("el cierre: equipos, asesoría, promesa y el guiño con los precios del libro", async ({ page }) => {
@@ -145,6 +145,29 @@ test("9:16: los textos de cada escena entran en el escenario y las placas son la
   await seek(page, at(49.5));
   await expect(scene(page, "w6-mostrador").locator("img[data-t='after']")).toHaveAttribute("src", /cuotas-t\.jpg/);
   await expect(page.locator("[data-trailer-stage]")).not.toContainText(/volta/i);
+});
+
+test("t1 sale con sus MP4, el póster y el audio pre-armado, y se ofrecen para descargar", async ({ page }) => {
+  const size = async (file: string) => Number((await page.request.head(`trailer/${file}`)).headers()["content-length"] ?? 0);
+  for (const [file, min, max] of [["t1-16x9.mp4", 2e6, 40e6], ["t1-9x16.mp4", 2e6, 40e6], ["t1-email.mp4", 3e5, 10e6], ["t1-poster.jpg", 2e4, 5e6], ["t1.m4a", 3e5, 3e6]] as const) {
+    const bytes = await size(file);
+    expect(bytes, file).toBeGreaterThan(min);
+    expect(bytes, file).toBeLessThan(max);
+  }
+  await page.goto("trailer/t1/?t=1");
+  await ready(page);
+  const controls = page.locator("[data-trailer-controls]");
+  await expect(controls.locator("a[data-download='Descargar MP4']")).toHaveAttribute("href", /\/trailer\/t1-16x9\.mp4$/);
+  await expect(controls.locator("a[data-download='Para email']")).toHaveAttribute("href", /\/trailer\/t1-email\.mp4$/);
+  await page.goto("trailer/t1/?t=1&ratio=9x16");
+  await ready(page);
+  await expect(controls.locator("a[data-download='Descargar MP4']")).toHaveAttribute("href", /\/trailer\/t1-9x16\.mp4$/);
+});
+
+test("con el audio pre-armado, la puerta de sonido habilita «Reproducir con sonido» enseguida", async ({ page }) => {
+  await page.goto("trailer/t1/");
+  await ready(page);
+  await expect(page.getByRole("button", { name: "Reproducir con sonido" })).toBeEnabled({ timeout: 10_000 });
 });
 
 test("con movimiento reducido cada escena queda en su lámina final", async ({ page }) => {

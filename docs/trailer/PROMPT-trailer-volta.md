@@ -40,6 +40,9 @@ esperado: alcanza con Sonnet · low"). No sigas hasta que Ignacio diga con qué 
 
 ---
 
+> **El plan vigente es [`PLAN.md`](PLAN.md):** pasos, modelo por paso, arquitectura decidida y verificación. Si algo
+> de este prompt choca con el plan, manda el plan. Este archivo queda como brief creativo (secciones 1 a 7).
+
 ## 0. Rol y forma de trabajo
 
 - Usá el agente **trailer-arquitect** (incluido en el repo) como director.
@@ -193,7 +196,7 @@ Cierre: "Probalo en vivo", contacto, pricing y el eclipse que se cierra.
 | WhatsApp automático de recompra | | ✓ (protagonista) | ✓ (Clientes) |
 | Envío viajando por el país | | ✓ | (Despachos) |
 
-## 8. Proceso obligatorio (el detalle de cada paso; el orden y el modelo los fija la tabla "Fases y modelo por fase")
+## 8. Proceso obligatorio (detalle de referencia; el orden, los pasos y el modelo los fija `PLAN.md`)
 
 1. **Relevamiento de la interfaz** (`ui-inventory`): cada pieza que aparece, con `archivo:línea`, textos exactos y estados, y qué es real y qué es simulado en la demo.
 2. **Capturas por componente** (`component-crops` y un script de Playwright en `scripts/trailer-capture.mjs`): de cada componente y conjunto, en claro y oscuro, 2× y fondo del color de la app. Van en `docs/trailer/capturas/`.

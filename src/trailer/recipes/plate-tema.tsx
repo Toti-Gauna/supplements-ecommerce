@@ -34,7 +34,7 @@ export function buildTema({ q, props, beat: B, reduced }: SceneCtx<TemaProps>) {
   tl.set(q('[data-t="chip-rule"]'), { scaleX: 0 }, 0);
   tl.to(q('[data-t="chip-rule"]'), { scaleX: 1, duration: B / 4, ease: "trl.expo" }, 0);
   // Se traza el anillo del botón (½ tiempo), click en el tiempo 1 y el oscuro cubre todo en el tiempo 2.
-  tl.fromTo(ring, { strokeDashoffset: 100, autoAlpha: 1 }, { strokeDashoffset: 0, duration: B / 2, ease: "power2.inOut" }, B / 2);
+  tl.fromTo(ring, { strokeDashoffset: 100, autoAlpha: 1 }, { strokeDashoffset: 0, autoAlpha: 1, duration: B / 2, ease: "power2.inOut" }, B / 2);
   tl.fromTo(dark, { clipPath: circle(0) }, { clipPath: circle(2300), duration: B, ease: "trl.expo" }, B);
   tl.to(ring, { scale: 1.4, autoAlpha: 0, transformOrigin: "50% 50%", duration: B / 2, ease: "power2.out", immediateRender: false }, B);
   // Empuje de cámara sobre el pote bajo la lámpara.

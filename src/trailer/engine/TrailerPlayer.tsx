@@ -7,6 +7,7 @@ import { parseParams } from "../core/params";
 import { PIECES } from "../pieces";
 import { RECIPES } from "../recipes";
 import { Controls } from "./Controls";
+import { settleLooseAnimations } from "./css-clock";
 import { Gate } from "./Gate";
 import { gsap, type Timeline } from "./gsap";
 import { buildMaster } from "./master";
@@ -64,7 +65,11 @@ export default function TrailerPlayer({ pieza }: { pieza: string }) {
     gsap.ticker.lagSmoothing(0);
     window.__trailer = {
       ready: true, duration: spec.duration,
-      seek: async (t) => { transport.pause(); transport.seek(t); master.seek(transport.time(), false); await paint(); },
+      seek: async (t) => {
+        transport.pause(); transport.seek(t); master.seek(transport.time(), false);
+        if (stageRef.current) settleLooseAnimations(stageRef.current);
+        await paint();
+      },
       wav: async () => { const b = await renderAudio(trackFor(spec), spec.duration); return base64(encodeWav([b.getChannelData(0), b.getChannelData(1)], b.sampleRate)); },
     };
     return () => { gsap.ticker.remove(tick); gsap.ticker.lagSmoothing(500, 33); delete window.__trailer; };

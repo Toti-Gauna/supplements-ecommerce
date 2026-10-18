@@ -2,7 +2,7 @@ import { defaultPack } from "@/components/illustrations/supplements";
 import { Tub } from "@/components/illustrations/supplements/tubs";
 import type { BagColors } from "./bag-colors";
 import { SPARKLE } from "./kit";
-import { useBrandMark } from "@/config/brand-mark";
+import { useBrandMark, useHouseMark } from "@/config/brand-mark";
 
 /** Pote genérico de regalo: el de VOLTA Lab con el rótulo de la marca (el producto real se ve después). */
 const GIFT_PACK = { ...defaultPack("tub"), sub: "EDICIÓN REGALO" };
@@ -28,13 +28,13 @@ export function RevealGlow({ uid }: { uid: string }) {
 }
 
 export function TubReveal({ c }: { c: BagColors }) {
-  const line = useBrandMark();
+  const line = useBrandMark(), mark = useHouseMark();
   return (
     <g data-reveal="tub" className="bk-reveal">
       <circle className="bk-flash" cx="150" cy="168" r="34" fill="#ffffff" />
       <g className="bk-tub">
         <ellipse cx="150" cy="214" rx="40" ry="5" fill="#000" opacity=".35" />
-        <g transform="translate(150 214) scale(.46) translate(-200 -330)"><Tub pack={{ ...GIFT_PACK, line }} tint={c.accent} /></g>
+        <g transform="translate(150 214) scale(.46) translate(-200 -330)"><Tub pack={{ ...GIFT_PACK, line, mark }} tint={c.accent} /></g>
       </g>
       {TWINKLES.map((t) => (
         <g key={t.x} transform={`translate(${t.x} ${t.y}) scale(${t.s})`}>

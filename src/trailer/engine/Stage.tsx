@@ -21,6 +21,9 @@ export const Stage = forwardRef<HTMLDivElement, { ratio: Ratio; children: ReactN
   }, [size]);
   return (
     <div className="fixed inset-0 z-[70] overflow-hidden bg-black" data-trailer-viewport>
+      {/* Todo lo mueve el timeline: una transición CSS de la app (p. ej. la de `visibility` al cambiar `autoAlpha`) correría
+          con el reloj de la pared y el cuadro dependería de cuándo se sacó la captura. */}
+      <style>{"[data-trailer-stage] *, [data-trailer-stage] *::before, [data-trailer-stage] *::after { transition: none !important; }"}</style>
       <div ref={ref} data-trailer-stage={ratio} className="absolute left-0 top-0 overflow-hidden bg-night text-on-night"
         style={{ width: size.w, height: size.h, transformOrigin: "0 0", transform: `translate(${fit.x}px, ${fit.y}px) scale(${fit.scale})` }}>
         <div data-layer="camara" className="absolute inset-0">{children}</div>

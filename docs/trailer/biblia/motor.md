@@ -27,6 +27,8 @@ Cómo está armado y cómo se usa. Las escenas de T1–T4 se escriben sobre esto
   Nada de prefijos responsivos de Tailwind (responden a la ventana, no al escenario).
 - `build({ root, q, props, dur, ratio, stage })` devuelve un timeline **relativo** (0 = inicio de la escena):
   - estado de entrada con `set`/`fromTo`; segundo `to` de la misma propiedad con `immediateRender: false`;
+  - en un `fromTo`, toda propiedad del "desde" va también en el "hasta" (aunque no cambie): si queda solo en el
+    "desde", al volver atrás y avanzar de nuevo no se reaplica y el cuadro depende del camino;
   - nada de `delay`, `repeat: -1`, `delayedCall`, tweens sueltos ni `tl.call()` para sonidos;
   - textos que cuentan o se escriben salen del progreso de un tween (`onUpdate`), así el salto da el número correcto;
   - colores solo de `TR`/`TONES` (`kit.ts`), que salen de la ficha de marca.
@@ -96,6 +98,12 @@ decodifica el archivo).
 - **Marca del arte** (`src/config/brand-mark.tsx`): la bolsa y la maza imprimían `brand.mark` y el logo del build (VOLTA en el sitio
   publicado). Ahora lo leen de un contexto que por defecto es el del build y que el trailer fija en la ficha `tutienda`.
 - **El motor espera las imágenes** (placas y arte de las fechas) decodificadas antes de armar el timeline.
+- **Nada corre con el reloj de la pared:** dentro del escenario no hay transiciones CSS (las de `visibility` que dispara `autoAlpha`
+  cambiaban el cuadro según cuándo se sacaba la captura); `seek` lleva a su final lo que la app anima sola y ninguna receta maneja
+  (`settleLooseAnimations`), y la revelación de la bolsa la maneja `gift-live` con `css-clock`. El contexto de marca suma
+  `houseMark` ("TU TIENDA LAB" en el pote que sale de la bolsa).
+- **Los e2e del trailer corren con movimiento completo** (`test.use({ reducedMotion: "no-preference" })`): el config de la suite fuerza
+  el reducido y dejaba sin probar el determinismo de la versión animada. La reducida se prueba con `?reduced=1`.
 
 ## Estado
 - Recetas portadas: `title`, `slam`, `statpunch`, `typewriter`, `themeflip`, `clones`, `ticker`, `trace`, `plate`, `splash-live`,

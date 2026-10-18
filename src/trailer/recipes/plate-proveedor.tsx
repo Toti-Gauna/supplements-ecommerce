@@ -54,7 +54,7 @@ export function buildProveedor({ q, props, beat: B, reduced }: SceneCtx<Proveedo
     for (let k = 0; k < STEPS; k++) {
       const at = B / 2 + (k * B) / 4;
       tl.set(one("count"), { textContent: String(Math.round((props.count * (k + 1)) / STEPS)) }, at);
-      tl.fromTo(q(`[data-t="bar"][data-g="${k}"]`), { autoAlpha: 1, scaleY: 0 }, { scaleY: 1, duration: B / 8, ease: "power2.out", immediateRender: false }, at);
+      tl.fromTo(q(`[data-t="bar"][data-g="${k}"]`), { autoAlpha: 1, scaleY: 0 }, { autoAlpha: 1, scaleY: 1, duration: B / 8, ease: "power2.out", immediateRender: false }, at);
     }
     tl.fromTo(one("rest"), { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: B / 2, ease: "trl.expo", immediateRender: false }, 1.5 * B);
   }

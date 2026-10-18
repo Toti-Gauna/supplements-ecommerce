@@ -1,6 +1,9 @@
 import { createHash } from "node:crypto";
 import { expect, test, type Page } from "@playwright/test";
 
+// El config fuerza movimiento reducido para toda la suite; acá se prueba la versión animada (la reducida, con `?reduced=1`).
+test.use({ reducedMotion: "no-preference" });
+
 /**
  * T1 · avance (escenas 1 a 13 de docs/trailer/t1/storyboard.md): el mismo segundo da el mismo cuadro por tres caminos en los
  * dos formatos (también con la pantalla de carga real, la bolsa, la ruleta, Shaker Rush y las placas), cada escena muestra su
@@ -15,8 +18,9 @@ const scene = (page: Page, id: string) => page.locator(`[data-escena='${id}']`);
 
 for (const ratio of ["16x9", "9x16"] as const) {
   test(`${ratio}: las escenas del problema dan el mismo cuadro por tres caminos`, async ({ page }) => {
+    test.setTimeout(120_000); // 12 cuadros, cada uno con su carga y tres capturas a 2,6×.
     await page.setViewportSize(ratio === "16x9" ? { width: 960, height: 540 } : { width: 405, height: 720 });
-    for (const t of [at(13.3), at(22.1), at(28.7), at(30.6), at(32.5), at(35.6), at(38.2), at(42.2), at(46.1), at(49.2), at(53.1)]) {
+    for (const t of [at(13.3), at(22.1), at(28.7), at(30.6), at(32.5), at(35.6), at(38.2), at(40.4), at(42.2), at(46.1), at(49.2), at(53.1)]) {
       await page.goto(`trailer/t1-avance/?export=1&ratio=${ratio}&t=${t}`);
       await ready(page);
       await seek(page, t);

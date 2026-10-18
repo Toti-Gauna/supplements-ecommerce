@@ -2,6 +2,7 @@ import { tutienda } from "@/config/brands/tutienda";
 import { BrandMarkProvider } from "@/config/brand-mark";
 import type { GiftOccasion } from "@/demo/types";
 import BoxingBag from "@/features/gifts/scenes/BoxingBag";
+import { cssAnimations, setCssTime } from "../engine/css-clock";
 import { gsap } from "../engine/gsap";
 import { defineRecipe } from "../engine/recipe";
 import { TR } from "./kit";
@@ -11,6 +12,8 @@ export interface GiftLiveProps { occasion: GiftOccasion; title: string; prompts:
 
 /** Golpes en corcheas desde el tiempo 0; en el 2 entra la cámara lenta y en el 3 se abre. Escenario 11:15 como en la tienda. */
 const HITS = [0, 0.5, 1, 1.5, 2], SLOWMO = 2, OPEN = 3;
+/** La revelación de la app (cuero que cae, halo, rayos, pote) dura 1,4 s; acá entra en un tiempo y queda quieta. */
+const REVEAL_MS = 1400, REST_MS = 5000;
 const BOX = { w: 520, h: 709, top: 220 };
 
 /**
@@ -53,6 +56,11 @@ export const giftLive = defineRecipe<GiftLiveProps>({
     const steps = props.prompts.length;
     const states = q('[data-t="state"]'), prompts = q('[data-t="prompt"]'), cells = q('[data-t="cell"]');
     const show = (list: HTMLElement[], i: number, at: number) => list.forEach((el, k) => tl.set(el, { autoAlpha: k === i ? 1 : 0 }, at));
+    // Las animaciones CSS de la bolsa no corren con el reloj de la pared: los golpes quedan en su final y la revelación la
+    // maneja el timeline.
+    setCssTime(cssAnimations(states.slice(0, steps + 1)), REST_MS);
+    const reveal = cssAnimations(states.slice(steps + 1));
+    setCssTime(reveal, reduced ? REST_MS : 0);
     if (reduced) { show(states, steps + 1, 0); show(prompts, steps, 0); tl.set([...q('[data-t="ring"]'), ...q('[data-t="bars"]')], { autoAlpha: 0 }, 0); return tl; }
     show(states, 0, 0); show(prompts, 0, 0);
     tl.set(cells, { opacity: 0.18 }, 0);
@@ -72,6 +80,8 @@ export const giftLive = defineRecipe<GiftLiveProps>({
     tl.fromTo(q('[data-t="cam"]'), { scale: 1 }, { scale: 1.25, duration: B, ease: "trl.rampa" }, SLOWMO * B);
     show(states, steps + 1, OPEN * B);
     show(prompts, steps, OPEN * B);
+    const clock = { ms: 0 };
+    tl.fromTo(clock, { ms: 0 }, { ms: REVEAL_MS, duration: B, ease: "none", onUpdate: () => setCssTime(reveal, clock.ms) }, OPEN * B);
     tl.to(q('[data-t="bars"]'), { autoAlpha: 0, duration: B / 4, immediateRender: false }, OPEN * B);
     tl.to(q('[data-t="cam"]'), { scale: 1, duration: B / 2, ease: "trl.expo", immediateRender: false }, OPEN * B);
     return tl;

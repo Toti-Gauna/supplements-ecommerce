@@ -1,9 +1,7 @@
 /**
  * Mapa del menú del panel (R4a): 9 secciones y, dentro de cada una, pestañas. Módulo puro (sin React ni íconos) para
- * poder probarlo: a qué sección y pestaña pertenece cada ruta y adónde redirigen las rutas viejas.
- *
- * R4b sumó "Mostrador" (venta en el local) en el 2.º lugar de `SECTIONS` y en el centro de `MOBILE_ORDER`, entre
- * "pedidos" y "stock": en el celular es la pestaña central.
+ * poder probarlo: a qué sección y pestaña pertenece cada ruta y adónde redirigen las rutas viejas. R4b sumó "Mostrador"
+ * (venta en el local) en el 2.º lugar de `SECTIONS` y en el centro de `MOBILE_ORDER`: en el celular es la pestaña central.
  */
 const P = "/admin-demo";
 

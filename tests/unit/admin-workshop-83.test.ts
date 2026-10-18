@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { CALENDAR_HELP, PREPARATION_HELP } from "@/demo/admin/help";
-import { PREP_COLUMNS } from "@/demo/admin/workshop/preparation";
 import { byYear, checkEvent, eventDraft, hasImpact, holidayRows, ownClosures, scheduleImpact } from "@/demo/admin/workshop/schedule";
 import { checkDrop, checkReschedule } from "@/demo/engine/reschedule";
 import { DEMO_TODAY } from "@/demo/fixtures/admin-orders";
@@ -114,9 +113,10 @@ describe("preparación de pedidos (8.3.16, Fase 7)", () => {
 });
 
 describe("ayudas de Operaciones (8.3.10, Fase 7)", () => {
-  it("salen de las reglas del engine: qué ocupa lugar del cadete y las cuatro etapas", () => {
+  it("salen de las reglas del engine: qué ocupa lugar del cadete y los dos pasos de Para armar (R4b)", () => {
     expect(CALENDAR_HELP.items.find((i) => i.term === "Ocupa lugar del cadete")?.text).toMatch(/pendiente de pago.*pagado.*en preparación.*listo/i);
-    expect(PREPARATION_HELP.items.map((i) => i.term)).toEqual([...PREP_COLUMNS.map((c) => c.label), "Reglas"]);
+    expect(PREPARATION_HELP.items.map((i) => i.term)).toEqual(["1 · Juntá los potes", "2 · Controlá lote y vencimiento", "Reglas"]);
+    expect(PREPARATION_HELP.items.at(-1)!.text).toMatch(/lote de cada producto confirmado/);
   });
 });
 

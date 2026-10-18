@@ -63,7 +63,7 @@ Cada paso es **un PR o commit propio en la rama `trailer`**. Al terminar cada pa
 | P0.4 | **Firma Eclipse.** Intro, outro y `FinalBlock` con pricing, en 16:9 y 9:16. | Opus · high | Eclipse-Web y precios | Ignacio aprueba la captura de la intro, el cierre y el pricing |
 | P0.5 | **Firma sonora.** El hook de 4 compases (128–136 BPM), el kit de efectos, el "outro" tranquilo y la mezcla a −14 LUFS. Escribirlo como partitura en `docs/trailer/biblia/musica.md` y en código. | Opus · high | `sound-design` | Ignacio aprueba un WAV de 30 s con el hook, un drop y el outro |
 | P0.6 | **Exportador.** Script, botón de descarga y prueba con la intro y el outro. | Sonnet · high | Arquitectura | Sale un MP4 16:9 y uno 9:16 sin cuadros perdidos, con audio sincronizado |
-| P0.7 | **Plantillas.** `docs/trailer/plantillas/storyboard.md` (formato de escena, segundo, plano, componente, receta, super, SFX y compás) y `escena.tsx.tpl`. | Sonnet · low | Lo anterior | Con las plantillas, un storyboard se convierte en código sin decidir nada |
+| P0.7 | **Plantillas.** `docs/trailer/plantillas/storyboard.md` (formato de escena, segundo, plano, componente, receta, super, SFX y compás) y `escena.tsx.tpl`. | Sonnet · low | Lo anterior | Con las plantillas, un storyboard se convierte en código sin decidir nada | **Hecho:** [`plantillas/`](plantillas/README.md).
 
 ### Por trailer (T1, después T2, después T3)
 

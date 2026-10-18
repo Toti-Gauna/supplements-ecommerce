@@ -33,6 +33,11 @@ transiciones entre bloques y el desarrollo completo de la canción.
 
 **Orden:** Pre-fase → T1 → T2 → T3 → T4. No arranques una fase sin la aprobación de la anterior.
 
+**Regla de corte (obligatoria):** al terminar **cada paso** (cada P0.x y cada Fx de cada trailer), **pará**. Entregá
+un resumen corto de lo hecho, lo verificado y lo pendiente, y **recomendá el modelo y el esfuerzo para el paso
+siguiente** (confirmando el de la tabla o proponiendo otro con el motivo, por ejemplo "P0.2 salió más simple de lo
+esperado: alcanza con Sonnet · low"). No sigas hasta que Ignacio diga con qué modelo continuar.
+
 ---
 
 ## 0. Rol y forma de trabajo

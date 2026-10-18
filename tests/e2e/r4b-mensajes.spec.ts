@@ -74,7 +74,16 @@ const VIEWS: [string, (p: Page) => Locator, string][] = [
   ["admin-demo/pedidos/?q=VOL-000117", (p) => p.getByRole("main"), "cancelled"],
   ["admin-demo/pedidos/detalle/?codigo=VOL-000109", (p) => p.getByRole("main"), "payment-approved"],
   ["admin-demo/pagos/detalle/?codigo=VOL-000124", (p) => p.getByRole("main"), "proof-received"],
+  ["admin-demo/reclamos/detalle/?id=c2", (p) => p.getByRole("region", { name: "Pedido" }), "claim"],
 ];
+
+test("calendario de despachos: la ficha del pedido también tiene su WhatsApp", async ({ page }) => {
+  await page.goto("admin-demo/calendario/");
+  await page.getByRole("button", { name: "Agenda", exact: true }).click();
+  await page.getByRole("button", { name: "Reprogramar VOL-000123" }).click();
+  const sheet = page.getByRole("dialog", { name: "Despacho VOL-000123" });
+  await expect(sheet.locator("[data-wa]")).toHaveAttribute("data-wa", "proof-received");
+});
 
 for (const [route, where, id] of VIEWS) {
   test(`/${route}: “Escribirle por WhatsApp” abre el mensaje de su estado (${id}) al teléfono del cliente`, async ({ page }) => {

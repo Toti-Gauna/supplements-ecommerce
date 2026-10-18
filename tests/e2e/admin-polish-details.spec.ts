@@ -99,7 +99,8 @@ test.describe("escritorio con mouse", () => {
     await page.getByRole("link", { name: /ARR-0007/ }).click();
     await expect(page.getByRole("heading", { level: 1, name: /ARR-0007/ })).toBeVisible();
     await expect(page.getByRole("region", { name: "Mensaje del comprador" })).toContainText("Me arrepentí del pre-entreno");
-    await expect(page.getByRole("region", { name: "Pedido" }).getByRole("link", { name: "VOL-000119" })).toBeVisible();
+    // R4b: el pedido también trae su "Escribirle por WhatsApp" (que nombra el código): el link del pedido es el exacto.
+    await expect(page.getByRole("region", { name: "Pedido" }).getByRole("link", { name: "VOL-000119", exact: true })).toBeVisible();
     await page.getByRole("button", { name: "Marcar en curso" }).click();
     await confirm(page, "Marcar en curso");
     await expect(page.getByText(/Estado:\s*En curso/)).toBeVisible();

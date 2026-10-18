@@ -82,9 +82,11 @@ test("despachar, liquidar y avisar se resuelven ahí mismo y salen de la lista",
 });
 
 const LINKS: [string, string, RegExp, (page: Page) => Promise<void>][] = [
-  ["late:VOL-000115", "Terminar de armar", /pedidos\/detalle\/\?codigo=VOL-000115/, async (p) => { await expect(p.getByRole("heading", { level: 1, name: /VOL-000115/ })).toBeVisible(); }],
+  // R4b: "Armar" abre Para armar en ese pedido; el título del comprobante abre Por cobrar en él.
+  ["late:VOL-000115", "Terminar de armar", /preparacion\/\?codigo=VOL-000115/, async (p) => { await expect(p.getByRole("article", { name: "Pedido VOL-000115" })).toBeFocused(); }],
+  ["receipt:VOL-000123", "Comprobante de Diego Álvarez", /pagos\/\?codigo=VOL-000123/, async (p) => { await expect(p.getByRole("article", { name: "Cobro de VOL-000123" })).toBeVisible(); }],
   ["purchase:suggested", "Armar los pedidos", /\/admin-demo\/(proveedores|compras)\//, async (p) => { await expect(p.getByText("Laboratorio Costa (muestra)").first()).toBeVisible(); }],
-  ["pack:rest", "Abrir preparación", /\/admin-demo\/(preparacion|pedidos)\//, async (p) => { await expect(p.getByText("VOL-000114").first()).toBeVisible(); }],
+  ["pack:rest", "Ir a Para armar", /\/admin-demo\/preparacion\/$/, async (p) => { await expect(p.getByRole("article", { name: "Pedido VOL-000114" })).toBeVisible(); }],
   ["gift:REGALO-T4M4-N0X2", "Ver el regalo", /regalos\/\?ver=regalos/, async (p) => { await expect(p.getByText("Juanma").first()).toBeVisible(); }],
   ["campaign:halloween", "Preparar Halloween", /campanas\/editar\/\?id=halloween/, async (p) => { await expect(p.getByRole("heading", { level: 1, name: "Halloween" })).toBeVisible(); }],
   ["lots:rest", "Ver los lotes", /vence=pronto/, async (p) => { await expect(p.getByText("BS-2603-A").first()).toBeVisible(); }],

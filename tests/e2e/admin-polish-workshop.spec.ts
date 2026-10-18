@@ -1,7 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 import { horizontalOverflow } from "./helpers";
 
-/** Polish 8.3.14 (cupo y feriados en modal), 8.3.15 (calendario editable) y 8.3.16 (tablero de preparación, Fase 7). */
+/** Polish 8.3.14 (cupo y feriados en modal), 8.3.15 (calendario editable) y 8.3.16 (preparación, Fase 7; desde R4b, Para armar en dos pasos). */
 
 const toast = (page: Page, text: string | RegExp) => page.getByRole("status").filter({ hasText: text });
 const day = (page: Page, d: string) => page.locator(`td[data-day="${d}"]`);
@@ -163,36 +163,38 @@ test.describe("escritorio con mouse", () => {
     await expect(dialog).toBeHidden();
   });
 
-  test("8.3.16 Mover etapa y arrastrar actualizan estado y contadores; el embalaje se descuenta una sola vez; un destino inválido explica por qué; soltar en Listo abre el control de lote", async ({ page }) => {
+  test("8.3.16 (R4b: Para armar en dos pasos) juntar y controlar actualizan estado y contadores; el embalaje se descuenta una sola vez; volver al paso 1 no descuenta de nuevo; sin el lote no queda listo", async ({ page }) => {
     await page.goto("admin-demo/insumos/");
     // VOL-000113 (2 cajas de barras) usa una bolsa con logo por unidad.
     await page.getByLabel("Buscar insumo").fill("bolsa");
     await expect(page.getByLabel("Stock de Bolsa con logo").first()).toHaveValue("120");
     await page.goto("admin-demo/preparacion/");
-    const lane = (id: string) => page.locator(`section[data-column="${id}"]`);
-    await expect(lane("queue").locator("> header")).toContainText("4");
+    const steps = page.getByRole("group", { name: "Paso" });
+    await expect(steps.getByRole("button", { name: /^1 · Juntar/ })).toContainText("6");
     const card = page.getByRole("article", { name: "Pedido VOL-000113" });
-    await card.getByRole("button", { name: "Mover etapa" }).click();
-    await card.getByRole("button", { name: "Mover VOL-000113 a Control de lote" }).click();
+    await card.getByRole("checkbox").first().check();
+    await card.getByRole("button", { name: /Ya junté todo/ }).click();
     await expect(toast(page, /Se descontó su embalaje/)).toBeVisible();
-    await expect(lane("queue").locator("> header")).toContainText("3");
-    await expect(lane("lot-check").getByRole("article", { name: "Pedido VOL-000113" })).toBeVisible();
-    // Volver a Armando por el menú no vuelve a descontar.
-    await page.getByRole("article", { name: "Pedido VOL-000113" }).getByRole("button", { name: "Mover etapa" }).click();
-    await page.getByRole("button", { name: "Mover VOL-000113 a Armando" }).click();
-    await expect(lane("picking").getByRole("article", { name: "Pedido VOL-000113" })).toBeVisible();
-    // Arrastrar a Por preparar no se puede y lo explica; a la etapa siguiente sí.
-    await page.getByRole("article", { name: "Pedido VOL-000110" }).dragTo(lane("queue"));
-    await expect(toast(page, "Un pedido que se empezó a armar no vuelve a Por preparar.")).toBeVisible();
-    await page.getByRole("article", { name: "Pedido VOL-000110" }).dragTo(lane("lot-check"));
-    await expect(toast(page, "VOL-000110 pasó a “Control de lote”")).toBeVisible();
-    await expect(lane("lot-check").getByRole("article", { name: "Pedido VOL-000110" })).toBeVisible();
-    // Soltarlo en Listo para despachar sin los lotes abre el control de lote.
-    await page.getByRole("article", { name: "Pedido VOL-000110" }).dragTo(lane("ready"));
-    const lots = page.getByRole("dialog", { name: "Control de lote de VOL-000110" });
-    await expect(lots).toContainText("Lote KR-2606-B · vence 12/2027");
-    await page.keyboard.press("Escape");
-    await expect(lane("lot-check").getByRole("article", { name: "Pedido VOL-000110" })).toBeVisible();
+    await expect(steps.getByRole("button", { name: /^1 · Juntar/ })).toContainText("5");
+    await expect(steps.getByRole("button", { name: /^2 · Controlar lote/ })).toContainText("3");
+    await expect(card).toHaveAttribute("data-step", "2");
+    // Volver al paso 1 no vuelve a descontar.
+    await card.getByRole("button", { name: /Volver a juntar/ }).click();
+    await expect(toast(page, "VOL-000113 volvió al paso 1")).toBeVisible();
+    await expect(card).toHaveAttribute("data-step", "1");
+    await card.getByRole("checkbox").first().check();
+    await card.getByRole("button", { name: /Ya junté todo/ }).click();
+    await expect(card).toHaveAttribute("data-step", "2");
+    // Un pedido que ya se estaba armando (VOL-000110) pasa al control de lote sin descontar; sin el lote no queda listo.
+    const other = page.getByRole("article", { name: "Pedido VOL-000110" });
+    await other.getByRole("checkbox").first().check();
+    await other.getByRole("button", { name: /Ya junté todo/ }).click();
+    await expect(toast(page, "VOL-000110: potes juntos")).toContainText("Ahora controlá el lote");
+    await expect(toast(page, "VOL-000110: potes juntos")).not.toContainText("Se descontó");
+    await expect(other).toContainText("Lote KR-2606-B · vence 12/2027");
+    await other.getByRole("button", { name: "Listo para despachar" }).click();
+    await expect(other.getByRole("alert")).toContainText("Marcá el lote de cada producto");
+    await expect(other).toHaveAttribute("data-step", "2");
     await page.goto("admin-demo/insumos/");
     await page.getByLabel("Buscar insumo").fill("bolsa");
     await expect(page.getByLabel("Stock de Bolsa con logo").first()).toHaveValue("118");
@@ -203,22 +205,23 @@ for (const [label, width, height, touch, pinned] of [
   ["escritorio con menú fijo", 1440, 900, false, true], ["escritorio 1280 con menú fijo", 1280, 800, false, true], ["escritorio chico", 1024, 768, false, false],
   ["iPad vertical", 768, 1024, true, false], ["celular", 390, 844, true, false],
 ] as const) {
-  test(`8.3.16/8.3.14 a ${label} ${width}px: carriles legibles con scroll propio, sin desborde de página; modal y día usables`, async ({ browser }) => {
+  test(`8.3.16/8.3.14 a ${label} ${width}px: Para armar con tarjetas legibles y sin desborde de página (R4b); modal y día usables`, async ({ browser }) => {
     const ctx = await browser.newContext({ viewport: { width, height }, isMobile: touch, hasTouch: touch, reducedMotion: "reduce", locale: "es-AR" });
     const page = await ctx.newPage();
     if (pinned) await page.addInitScript(() => localStorage.setItem("volta-ui:admin-sidebar", "pinned"));
     if (!touch) await page.mouse.move(width - 20, 500);
     await page.goto(base() + "admin-demo/preparacion/");
-    await expect(page.getByRole("heading", { level: 1, name: /Preparación de pedidos/ })).toBeVisible();
-    for (const lane of await page.locator("section[data-column]").all()) {
-      const b = (await lane.boundingBox())!;
-      expect(b.width, "cada etapa con ancho legible").toBeGreaterThanOrEqual(250);
-      expect((await lane.locator("h2").boundingBox())!.height, "título de etapa en una línea").toBeLessThan(32);
+    await expect(page.getByRole("heading", { level: 1, name: /Para armar/ })).toBeVisible();
+    for (const card of await page.locator("article[data-step]").all()) {
+      const b = (await card.boundingBox())!;
+      expect(b.width, "cada pedido con ancho legible").toBeGreaterThanOrEqual(300);
+      expect(b.x + b.width, "la tarjeta entra en la pantalla").toBeLessThanOrEqual(width + 1);
     }
     expect(await horizontalOverflow(page)).toBeLessThanOrEqual(0);
     if (width < 1024) {
-      await page.getByRole("group", { name: "Etapa" }).getByRole("button", { name: /^Listo para despachar/ }).click();
-      await expect(page.getByRole("article", { name: "Pedido VOL-000120" })).toBeInViewport();
+      await page.getByRole("group", { name: "Paso" }).getByRole("button", { name: /^2 · Controlar lote/ }).click();
+      await expect(page.locator("article[data-step]")).toHaveCount(2);
+      await expect(page.getByRole("article", { name: "Pedido VOL-000115" })).toBeInViewport();
     }
     await page.goto(base() + "admin-demo/calendario/");
     await page.getByRole("button", { name: "Cupo del cadete y feriados" }).click();

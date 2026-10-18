@@ -1,7 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 import { horizontalOverflow } from "./helpers";
 
-/** Polish 8.3.5–8.3.8 y 8.3.30: fichas completas, comprobantes, reclamos y datos de cobro desde Pagos. */
+/** Polish 8.3.5–8.3.8 y 8.3.30: fichas completas, comprobantes, reclamos y datos de cobro desde Por cobrar (antes Pagos). */
 
 const toast = (page: Page, text: string | RegExp) => page.getByRole("status").filter({ hasText: text });
 const confirm = async (page: Page, button: string) => {
@@ -38,18 +38,19 @@ test.describe("escritorio con mouse", () => {
   test("8.3.7 comprobante a la izquierda y datos a la derecha; aprobar desde la ficha cambia estado y contadores; 8.3.8 sin auditoría", async ({ page }) => {
     await page.goto("admin-demo/pagos/");
     await expect(page.getByText("Auditoría de muestra")).toHaveCount(0);
-    await expect(page.getByRole("button", { name: /Por revisar/ })).toContainText("2");
-    await page.getByRole("article", { name: "Pago de VOL-000124" }).getByRole("link", { name: "VOL-000124", exact: true }).click();
+    await expect(page.getByRole("button", { name: /Comprobantes por revisar/ })).toContainText("2");
+    // R4b: Por cobrar muestra un pedido por vez; el comprobante abre la ficha del pago.
+    await page.getByRole("article", { name: "Cobro de VOL-000124" }).getByRole("link", { name: "Abrir el comprobante de VOL-000124" }).click();
     await expect(page.getByRole("heading", { level: 1, name: /VOL-000124/ })).toBeVisible();
     const proof = (await page.getByRole("figure", { name: "Comprobante" }).boundingBox())!;
     const data = (await page.getByRole("region", { name: "Datos del pago" }).boundingBox())!;
     expect(proof.x + proof.width).toBeLessThanOrEqual(data.x);
     await expect(page.getByRole("region", { name: "Datos del pago" })).toContainText("Sofía Ruiz");
     await page.getByRole("button", { name: "Aprobar" }).click();
-    await confirm(page, "Aprobar");
+    await confirm(page, "Sí, lo verifiqué");
     await expect(page.getByText(/Pago:\s*Pagado · aprobado a mano/)).toBeVisible();
     await page.getByRole("link", { name: "Volver" }).click();
-    await expect(page.getByRole("button", { name: /Por revisar/ })).toContainText("1");
+    await expect(page.getByRole("button", { name: /Comprobantes por revisar/ })).toContainText("1");
     await expect(page.getByRole("button", { name: /Resueltos/ })).toContainText("7");
   });
 
@@ -73,7 +74,7 @@ test.describe("escritorio con mouse", () => {
     await expect(toast(page, "Datos de cobro de muestra guardados")).toBeVisible();
     // El filtro de la cola sigue igual y no se aprobó ningún pago.
     await expect(page.getByRole("button", { name: /Resueltos/ })).toHaveAttribute("aria-pressed", "true");
-    await expect(page.getByRole("button", { name: /Por revisar/ })).toContainText("2");
+    await expect(page.getByRole("button", { name: /Comprobantes por revisar/ })).toContainText("2");
     await page.goto("admin-demo/ajustes/cobro/");
     await expect(page.getByLabel("Alias")).toHaveValue("volta.cobros.demo");
     await expect(page.getByLabel("CBU / CVU")).toHaveValue("0000003100000000000099");

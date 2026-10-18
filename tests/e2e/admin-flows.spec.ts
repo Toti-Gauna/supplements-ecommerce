@@ -41,14 +41,17 @@ test("cambiar stock y pausar en el panel se refleja en la tienda; el reset vuelv
   assertNoExternal();
 });
 
-test("pagos manuales: aprobar y rechazar con motivo sin declararlo pago real", async ({ page }) => {
+test("por cobrar (antes pagos manuales): aprobar y rechazar con motivo sin declararlo pago real", async ({ page }) => {
   await page.goto("admin-demo/pagos/");
+  // R4b: de a uno; se salta al pedido desde la fila.
+  await page.getByRole("button", { name: "Revisar VOL-000123 de Diego Álvarez" }).click();
   const card123 = page.getByRole("article").filter({ hasText: "VOL-000123" });
   await card123.getByRole("button", { name: "Aprobar" }).click();
-  await expect(page.getByRole("dialog")).toContainText("verificaste el ingreso");
-  await confirmDialog(page, "Aprobar");
+  await expect(page.getByRole("dialog")).toContainText("¿Ya viste en tu cuenta el ingreso");
+  await confirmDialog(page, "Sí, lo verifiqué");
   await expect(page.getByRole("article").filter({ hasText: "VOL-000123" })).toHaveCount(0);
 
+  await page.getByRole("button", { name: "Revisar VOL-000124 de Sofía Ruiz" }).click();
   const card124 = page.getByRole("article").filter({ hasText: "VOL-000124" });
   await card124.getByRole("button", { name: "Rechazar" }).click();
   await page.getByRole("dialog").getByRole("button", { name: "Rechazar" }).click();
@@ -80,7 +83,7 @@ test("un comprobante subido en la tienda queda en revisión en el panel, nunca p
   await page.getByRole("checkbox", { name: /Acepto los/ }).check();
   await page.getByRole("button", { name: "Confirmar pedido" }).click();
   await page.getByLabel("Subir comprobante").setInputFiles({ name: "transferencia.pdf", mimeType: "application/pdf", buffer: Buffer.from("%PDF demo") });
-  await page.goto("admin-demo/pagos/");
+  await page.goto("admin-demo/pagos/?codigo=VOL-DEMO-0001");
   const card = page.getByRole("article").filter({ hasText: "VOL-DEMO-0001" });
   await expect(card).toContainText("Comprobante en revisión");
   await expect(card).toContainText("transferencia.pdf");
@@ -153,8 +156,11 @@ test("celular: menú hamburguesa del panel y paginado de pedidos", async ({ page
   await expect(menu.getByText("Datos ficticios · sin login")).toBeVisible();
   await expect(menu.getByRole("link", { name: /^Pedidos \d+ para atender/ })).toBeVisible();
   await menu.getByRole("link", { name: "Pedidos" }).click();
-  await expect(page.getByRole("heading", { level: 1, name: "Pedidos" })).toBeVisible();
+  // R4b: Pedidos abre en Por cobrar; la tabla de todos es la última pestaña.
+  await expect(page.getByRole("heading", { level: 1, name: "Por cobrar" })).toBeVisible();
   await expect(menu).toBeHidden();
+  await page.getByRole("tablist", { name: "Pestañas de la sección" }).getByRole("tab", { name: /^Todos/ }).click();
+  await expect(page.getByRole("heading", { level: 1, name: "Todos los pedidos" })).toBeVisible();
   const pages = page.getByRole("navigation", { name: "Páginas de pedidos" });
   await expect(pages).toContainText("1–10 de");
   await pages.getByRole("button", { name: "Página 2" }).click();

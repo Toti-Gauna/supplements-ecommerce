@@ -130,3 +130,11 @@ decodifica el archivo).
   entra con ese cielo y lo deja subir hasta el día pleno.
 - **`t1` publicada** en `/trailer/t1/` (las 19 escenas, 16:9). El 9:16 de estas escenas es de T1.5: el par de equipos, el eje y la marca ya
   tienen un encuadre provisorio.
+
+## Lo que suma T1.4 (QA)
+- **Accesibilidad:** el escenario va `aria-hidden` y la pieza puede traer `summary` (texto para lectores de pantalla, armado con los
+  mismos datos que las escenas: `pieces/t1-resumen.ts`). Sin resumen se lee el título.
+- **Destellos:** nada en pantalla puede cambiar de luminancia más de 3 veces por segundo en un área grande (WCAG 2.3.1). La ruleta lleva un
+  velo de desenfoque de movimiento mientras gira rápido. Cualquier giro o parpadeo nuevo se mide a 60 fps antes de cerrarlo.
+- **Perspectiva:** para mover un grupo 3D por el cuadro se mueve un envoltorio 2D que contiene a la perspectiva (`[data-t="shift"]`);
+  mover el grupo dentro de una perspectiva fija lo deja en oblicuo. Informe completo: `docs/trailer/t1/qa.md`.

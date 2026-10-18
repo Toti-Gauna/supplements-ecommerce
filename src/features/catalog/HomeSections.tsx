@@ -13,6 +13,7 @@ import { HomeCategories } from "../home/HomeCategories";
 import { HomeHero } from "../home/HomeHero";
 import { HomePacks } from "../home/HomePacks";
 import { ProductRail } from "../home/ProductRail";
+import { OwnerSpot } from "../owner/OwnerSpot";
 import { HomeStackBlock } from "../stack/HomeStackBlock";
 import { ThemeOffersRail } from "../themes/ThemeOffersRail";
 import { useCurrentTheme } from "../themes/useCurrentTheme";
@@ -26,7 +27,7 @@ function Later({ size, children }: { size: number; children: ReactNode }) {
 /**
  * Inicio (L1, pedido de Ignacio): primero lo simple, el carrusel de imágenes, las categorías y lo recomendado (con las
  * ofertas de la fecha, si hay); recién después la experiencia de armar el stack (para qué lo querés y el estante en vivo),
- * la tabla del box, las reseñas y el club.
+ * la tabla del box, las reseñas y el club. Con el modo dueño (R4c), cada bloque editable lleva su placa al panel.
  */
 export function HomeSections() {
   useDemoVersion();
@@ -38,16 +39,20 @@ export function HomeSections() {
   const recommended = recommendForHome(hydrated ? lines : [], 8, ranking.map((r) => r.product.slug));
   return (
     <div className="flex flex-col gap-12 sm:gap-16">
-      <HomeHero />
-      <Later size={420}><HomeCategories n={1} /></Later>
-      {theme && <ThemeOffersRail theme={theme} offer={offer} />}
+      <div>
+        <HomeHero />
+        <OwnerSpot id="carrusel" />
+        {!theme && <OwnerSpot id="campana" />}
+      </div>
+      <Later size={420}><OwnerSpot id="categorias" /><HomeCategories n={1} /></Later>
+      {theme && <div><OwnerSpot id="campana" ctx={{ campaignId: theme.id }} /><ThemeOffersRail theme={theme} offer={offer} /></div>}
       <Later size={620}><ProductRail id="recomendados" eyebrow="Elegidos para vos" title="Recomendados" products={recommended.map(toCard)} href="/categorias/" /></Later>
-      <Later size={620}><HomePacks /></Later>
+      <Later size={620}><OwnerSpot id="packs" /><HomePacks /></Later>
       <Later size={560}><GoalPanels n={2} /></Later>
-      <Later size={560}><HomeStackBlock /></Later>
+      <Later size={560}><OwnerSpot id="textos" /><HomeStackBlock /></Later>
       <Later size={520}><BoxLeaderboard rows={ranking} n={3} /></Later>
       <Later size={520}><AttributeReviews n={4} /></Later>
-      <Later size={420}><ClubBand /></Later>
+      <Later size={420}><OwnerSpot id="club" /><ClubBand /></Later>
     </div>
   );
 }

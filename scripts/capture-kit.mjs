@@ -1,7 +1,7 @@
 // Capturas del kit de venta (docs/kit-de-venta/img/): los momentos del guion de 90 s en 1440 y 390, modo oscuro.
 // Uso: `PAGES_BASE_PATH=/supplements-ecommerce npm run build` y `node scripts/capture-kit.mjs [carpeta]`. Levanta su
-// propio servidor estático (puerto CAPTURE_PORT, 4397 por defecto) y lo cierra al terminar. Los pasos de R4c que todavía
-// no estén en la build se saltean con un aviso (ver scripts/kit-lib.mjs); re-correrlo cuando entren.
+// propio servidor estático (puerto CAPTURE_PORT, 4397 por defecto) y lo cierra al terminar. Un paso que se marque `r4c`
+// en scripts/kit-lib.mjs y no esté en la build se saltea con un aviso.
 import { chromium } from "@playwright/test";
 import fs from "node:fs";
 import path from "node:path";

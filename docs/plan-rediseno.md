@@ -342,19 +342,38 @@ mañana.
 | 9 | **Promos** en una pantalla con pestañas (cupones, descuento stack, ruleta, premios del juego, misiones) | S–M |
 | 10 | **Kit de venta:** el guion arranca en "Hoy" y sigue con "Mostrador" y los "wow" en 90 segundos; contraste con lo que el dueño ya usa ("Tiendanube te sube todo un 8 %; VOLTA lee la lista de tu distribuidor y sube cada marca con su margen"); capturas, video de 60–90 s y QA en celulares reales | M |
 
-**Estado:** R4a hecho (PR de R4a, capturas en [`img/rediseno/r4a/`](img/rediseno/r4a/)): "Hoy en tu tienda" como inicio
-del panel (marcador del día y lista de acciones por urgencia, cada una con su botón; aprobar un comprobante pide
-confirmar que ya entró el pago), el menú de 21 a 8 entradas con pestañas y las rutas viejas redirigiendo, ayuda en "?"
-y Promos en una pantalla con pestañas. Siguen R4b (Mostrador, que entra como 9.ª entrada, y Pedidos unificado) y R4c.
+**Estado: R4 completo** (R4a, R4b y R4c), con todos los ítems de la tabla y los de R4 de la sección 10.
 
-R4c (lote de margen y clientes, ítems 5 a 7 y los dos de la sección 10; capturas en [`img/rediseno/r4c/`](img/rediseno/r4c/)):
-**Compras → Lista del proveedor** (se pega la lista, resumen "48 suben, 3 bajan, 2 sin coincidencia", margen editable por
-marca, precio nuevo propuesto con redondeo comercial hacia arriba y aplicar con deshacer) y el aumento "al margen de la
-marca" en Aumentar precios; **Costos vivos** (fecha de cada costo, cobertura de stock en días y ganancia al liquidar); el
-lote que vence con sus salidas armadas (liquidar con ganancia, combo, cupón real y drop) desde Hoy y desde Lotes;
-**A quién escribirle hoy** en Clientes con el link `/recompra/` que carga el bolso, y el regalo de cumpleaños (ficha y
-Hoy). Sin estado nuevo obligatorio: los campos nuevos son opcionales (`brandMargins`, `costSince`, `birthdayGift`), así
-que `ADMIN_STORE_VERSION` sigue en 19.
+- **R4a** (capturas en [`img/rediseno/r4a/`](img/rediseno/r4a/)): "Hoy en tu tienda" como inicio del panel (marcador del
+  día y lista de acciones por urgencia, cada una con su botón; aprobar un comprobante pide confirmar que ya entró el
+  pago), el menú de 21 entradas pasado a pestañas con las rutas viejas redirigiendo, ayuda en "?" y Promos en una
+  pantalla con pestañas.
+- **R4b** (capturas en [`img/rediseno/r4b/`](img/rediseno/r4b/)): **Mostrador** como 9.ª entrada del menú y pestaña
+  central en el celular (FEFO, descuento stack, vuelto, cuotas con recargo, venta registrada simulada, cierre del día,
+  pedido por chat y consulta rápida), y **Pedidos unificado** (Por cobrar, Para armar en dos pasos con control de
+  lote, Despachos con lista de armado y hoja de ruta del cadete, Postventa) con "Escribirle por WhatsApp" y la versión
+  WhatsApp de cada mensaje por estado.
+- **R4c** (capturas en [`img/rediseno/r4c/`](img/rediseno/r4c/) y [`kit-de-venta/img/`](kit-de-venta/img/)):
+  - **Compras → Lista del proveedor**: se pega la lista (o la de muestra de Mayorista del Puerto), resumen "48 suben, 3
+    bajan, 2 sin coincidencia", margen editable por marca, precio nuevo propuesto con redondeo comercial hacia arriba y
+    aplicar con confirmación y deshacer. Aumentar precios suma el modo "Al margen de la marca".
+  - **Costos vivos** (`/admin-demo/costos/vivos/`): fecha de cada costo, cobertura de stock en días y ganancia al
+    liquidar.
+  - **Lote que vence = acción armada**: "Liquidar −30 %" desde Hoy (y desde los lotes de Stock) abre la hoja con
+    Liquidar, Combo, Cupón (cupón real y WhatsApp a quien lo compró) y Drop.
+  - **Recompra por WhatsApp**: "A quién escribirle hoy" arriba de Clientes, calculado por servicios, con el mensaje
+    armado y el **link de recompra** `/recompra/?bolso=…` que carga el bolso. **Regalo de cumpleaños** en la ficha del
+    cliente y como fila de Hoy.
+  - **Modo dueño en la tienda**: placas editables que llevan a la pantalla exacta del panel (solo si se llegó desde el
+    panel o con `?dueno=1`), "Ver la tienda en modo dueño" en el menú del panel y "Ver este pedido en el panel" en la
+    confirmación.
+  - **Kit de venta** ([`kit-de-venta/`](kit-de-venta/README.md)): guion de 90 segundos que arranca en Hoy, sigue con
+    Mostrador y los "wow" y abre con el contraste con Tiendanube; 30 capturas (390 y 1440); video del recorrido de
+    88 s; checklist de QA en celulares reales; scripts para regenerar capturas y video.
+  - Sin estado nuevo obligatorio: los campos nuevos son opcionales (`brandMargins`, `costSince`, `birthdayGift`) y el
+    modo dueño vive en la pestaña (`volta-demo:owner-mode`), así que `ADMIN_STORE_VERSION` sigue en 19.
+- Pendiente fuera del código: pasar el [checklist de celulares reales](kit-de-venta/qa-celulares.md) en un iPhone y un
+  Android de gama media.
 
 ---
 

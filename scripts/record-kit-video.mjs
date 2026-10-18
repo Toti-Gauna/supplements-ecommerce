@@ -1,8 +1,8 @@
 // Video del kit de venta (docs/kit-de-venta/video/recorrido-kit.webm): el guion de 90 s grabado con Playwright
 // (recordVideo), en la compu y en modo oscuro. Cada bloque dura lo que dice `ms` en scripts/kit-lib.mjs.
 // Uso: `PAGES_BASE_PATH=/supplements-ecommerce npm run build` y `node scripts/record-kit-video.mjs [carpeta]`. Levanta su
-// propio servidor (puerto CAPTURE_PORT, 4398 por defecto) y lo cierra. Primero prueba, sin grabar, qué pasos de R4c ya
-// están en la build; los que falten no entran al video (aviso en consola). Si el archivo pasa de 15 MB, regraba más chico.
+// propio servidor (puerto CAPTURE_PORT, 4398 por defecto) y lo cierra. Los pasos marcados `r4c` se prueban antes sin
+// grabar y, si faltan en la build, no entran al video (aviso en consola). Si el archivo pasa de 15 MB, regraba más chico.
 import { chromium } from "@playwright/test";
 import fs from "node:fs";
 import path from "node:path";

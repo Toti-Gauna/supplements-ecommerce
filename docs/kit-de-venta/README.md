@@ -33,14 +33,14 @@ node scripts/record-kit-video.mjs   # → docs/kit-de-venta/video/recorrido-kit.
 
 - Los dos levantan su propio servidor (puertos 4397 y 4398; se cambian con `CAPTURE_PORT`) y lo cierran al terminar.
 - El recorrido está en `scripts/kit-lib.mjs`, un paso por bloque del guion, con la duración de cada bloque en el video.
-- Los pasos marcados `r4c` (lista del proveedor con diferencias, lote que vence con acción armada y recompra por
-  WhatsApp) dependen de pantallas que entran con el resto de R4c. Si la build todavía no las tiene, el script avisa en
-  la consola y saltea ese paso (la recompra usa mientras tanto el aviso de recompra de **Hoy**). Cuando entren,
-  volver a correr los dos scripts y commitear las salidas.
+- Los dos recorren lo mismo, en el mismo orden del guion: Hoy, Mostrador, Pedidos, Lista del proveedor, el lote que
+  vence, A quién escribirle hoy, Campañas y regalos, y el modo dueño. Si se agrega un bloque nuevo que todavía no está
+  en la build, marcarlo `r4c: true` en `kit-lib.mjs`: se saltea con un aviso en lugar de cortar el recorrido.
 - Si el video pasa de 15 MB, el script lo regraba solo en 960 × 540.
 
 ## Estado de las salidas
 
-Generadas sin las pantallas nuevas de R4c: faltan las capturas `04-proveedor-diferencias` y `05-lote-accion`, y el
-video dura 65 s (6,5 MB). Con esos dos bloques suma unos 20 s más; si se pasa de 90 s, bajar los `ms` de
-`scripts/kit-lib.mjs` (son el piso de cada bloque: con la máquina cargada, cada paso tarda un poco más).
+Con todo R4c en la build: 30 capturas (15 por tamaño, incluidas `04-proveedor-diferencias`,
+`04-proveedor-margen-marca` y `05-lote-accion`) y el video de 88 s (9,0 MB, 1280 × 720). Los `ms` de cada bloque en
+`scripts/kit-lib.mjs` son el piso: con la máquina cargada cada paso tarda un poco más, así que si el video pasa de
+90 s, bajarlos.

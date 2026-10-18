@@ -1,8 +1,7 @@
 // Recorrido del kit de venta (docs/kit-de-venta/guion-90s.md), compartido por scripts/capture-kit.mjs (capturas) y
 // scripts/record-kit-video.mjs (video). Cada bloque del guion es un paso: hace lo que se toca en pantalla y llama a
-// `shot(nombre)` en el momento que va a la captura. Los pasos marcados `r4c` dependen de pantallas del resto de R4c
-// (lista del proveedor con diferencias, lote con acción armada, recompra por WhatsApp): si la pantalla todavía no está
-// en esta build, el paso se saltea con un aviso y el recorrido sigue. Para sumarlos, re-correr los dos scripts.
+// `shot(nombre)` en el momento que va a la captura. Un paso que devuelve `false` (o falla, si está marcado `r4c: true`)
+// se saltea con un aviso; hoy todos los bloques del guion existen y ninguno está marcado.
 import { spawn } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -22,7 +21,7 @@ export async function startServer(port) {
   throw new Error(`No levantó el servidor en ${url}: ¿corriste el build con PAGES_BASE_PATH=${base}?`);
 }
 
-/** Contexto con la fecha de la demo (lunes 5/10/2026), modo oscuro, sin temática de fecha y sin pantalla de carga. */
+/** Contexto en modo oscuro, sin temática de fecha y sin pantalla de carga (la demo ya vive en el lunes 5/10/2026). */
 export async function kitContext(browser, { width, height, ...extra }) {
   const mobile = width < 500;
   const context = await browser.newContext({ viewport: { width, height }, deviceScaleFactor: 1, locale: "es-AR", timezoneId: "America/Argentina/Buenos_Aires", isMobile: mobile, hasTouch: mobile, ...extra });
@@ -33,20 +32,17 @@ export async function kitContext(browser, { width, height, ...extra }) {
     localStorage.setItem("volta-demo:theme-preview", JSON.stringify({ state: { previewId: "original" }, version: 0 }));
     sessionStorage.setItem("volta-demo:splash-seen", "1");
   });
-  await context.clock.setFixedTime(new Date("2026-10-05T09:12:00-03:00"));
+  // Sin reloj falso: la demo ya fecha todo en su día fijo (`demoNow`), y con la hora congelada las hojas del panel abiertas
+  // después de la primera página se quedan transparentes.
   return context;
 }
 
-/** Espera algo de una pantalla nueva de R4c; si no aparece a tiempo, la pantalla todavía no está. */
-async function probe(locator, timeout = 4000) {
-  try { await locator.first().waitFor({ timeout }); return true; } catch { return false; }
-}
 const center = (loc) => loc.first().evaluate((el) => el.scrollIntoView({ block: "center" }));
 const pot = (page, key) => page.locator(`[data-pot='${key}']`);
 
 /** Bloques del guion de 90 s, en orden, con su duración objetivo en el video (ms). */
 export const STEPS = [
-  { id: "hoy", title: "Hoy en tu tienda", ms: 11000, run: async (page, { go, shot, wait }) => {
+  { id: "hoy", title: "Hoy en tu tienda", ms: 10000, run: async (page, { go, shot, wait }) => {
     await go("admin-demo/");
     await page.getByRole("heading", { level: 1, name: "Hoy en tu tienda" }).waitFor();
     await shot("01-hoy");
@@ -59,7 +55,7 @@ export const STEPS = [
     await wait(1800);
     await page.getByRole("button", { name: "Sí, lo verifiqué" }).click();
   } },
-  { id: "mostrador", title: "Mostrador: vender y cobrar en cuotas", ms: 13000, run: async (page, { go, shot, wait }) => {
+  { id: "mostrador", title: "Mostrador: vender y cobrar en cuotas", ms: 12000, run: async (page, { go, shot, wait }) => {
     await go("admin-demo/mostrador/");
     await page.getByRole("heading", { level: 1, name: "Mostrador" }).waitFor();
     for (const [q, key] of [["whey vainilla", "ionic-whey::iw-vainilla-2lb"], ["creatina", "creatina-monohidrato::cm-sin-sabor-300"], ["overvolt", "overvolt-pre::ov-limon-300"]]) {
@@ -88,39 +84,39 @@ export const STEPS = [
     await page.locator("[data-wa]").first().waitFor();
     await shot("03-pedido-whatsapp");
   } },
-  { id: "proveedor", r4c: true, title: "Lista del proveedor con margen por marca", ms: 11000, run: async (page, { go, shot, wait }) => {
-    await go("admin-demo/importar/");
-    await page.getByRole("button", { name: /Probar con la lista de un proveedor/ }).click();
-    const diff = page.getByText(/\d+\s+suben/i);
-    if (!(await probe(diff))) {
-      const next = page.getByRole("button", { name: /Ver vista previa/ });
-      if (await probe(next, 1500)) await next.click();
-      if (!(await probe(diff))) return false;
-    }
-    await center(diff).then(() => shot("04-proveedor-diferencias"));
+  { id: "proveedor", title: "Lista del proveedor con margen por marca", ms: 12000, run: async (page, { go, shot, wait }) => {
+    await go("admin-demo/lista-proveedor/");
+    await page.getByRole("heading", { level: 1, name: "Lista del proveedor" }).waitFor();
+    await page.getByRole("button", { name: "Cargar la lista de muestra" }).click();
+    const summary = page.locator("[data-diff-summary]");
+    await summary.waitFor();
+    await center(summary).then(() => shot("04-proveedor-diferencias"));
     await wait(3000);
+    const brand = page.locator("[data-brand='Krono Nutrition']");
+    await center(brand).then(() => shot("04-proveedor-margen-marca"));
+    await wait(2000);
   } },
-  { id: "lote", r4c: true, title: "Lote que vence: acción armada", ms: 9000, run: async (page, { go, shot, wait }) => {
+  { id: "lote", title: "Lote que vence: acción armada", ms: 10000, run: async (page, { go, shot, wait }) => {
     await go("admin-demo/");
-    const row = page.locator("[data-action^='lot:']").first();
+    const row = page.locator("[data-action='lot:barra-proteica::bp-mani-x12::VL-2604-B']");
     await row.waitFor();
     await center(row).then(() => wait(800));
-    await row.getByRole("button").first().click();
-    if (!(await probe(page.getByRole("dialog").filter({ hasText: /combo/i })))) return false;
+    await row.getByRole("button", { name: /Liquidar −30 %/ }).click();
+    const sheet = page.getByRole("dialog", { name: "Liquidar el lote VL-2604-B" });
+    await sheet.locator("[data-liquidation-profit]").waitFor();
+    await wait(2000);
+    await sheet.getByRole("tab", { name: "Combo" }).click();
+    await sheet.locator("[data-combo]").waitFor();
     await shot("05-lote-accion");
-    await wait(3000);
+    await wait(2000);
+    await sheet.getByRole("tab", { name: "Drop" }).click();
+    await sheet.locator("[data-drop]").waitFor();
   } },
-  { id: "recompra", r4c: true, title: "Recompra por WhatsApp", ms: 7000, run: async (page, { go, shot, wait }) => {
+  { id: "recompra", title: "Recompra por WhatsApp", ms: 8000, run: async (page, { go, shot, wait }) => {
     await go("admin-demo/usuarios/");
-    if (await probe(page.getByText(/escribirle hoy/i))) {
-      await center(page.getByText(/escribirle hoy/i));
-    } else {
-      // Mientras no esté la pantalla nueva: los avisos de recompra de "Hoy" (R4a), con su WhatsApp ya escrito.
-      console.warn("  [R4c] recompra: sin la pantalla nueva todavía; se muestra el aviso de recompra de Hoy (R4a).");
-      await go("admin-demo/");
-      await page.locator("[data-action='repurchase:due']").getByRole("button", { name: /Avisarles/ }).click();
-      if (!(await probe(page.getByRole("dialog", { name: "Avisos de recompra" })))) return false;
-    }
+    const panel = page.getByRole("region", { name: "A quién escribirle hoy" });
+    await panel.locator("[data-write]").first().waitFor();
+    await panel.evaluate((el) => window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - 120));
     await shot("06-recompra-whatsapp");
     await wait(3000);
   } },
@@ -133,7 +129,7 @@ export const STEPS = [
     await page.getByRole("heading", { level: 1 }).waitFor();
     await shot("08-regalos");
   } },
-  { id: "dueno", title: "Modo dueño en la tienda", ms: 10000, run: async (page, { go, shot, wait }) => {
+  { id: "dueno", title: "Modo dueño en la tienda", ms: 9000, run: async (page, { go, shot, wait }) => {
     await go("?dueno=1");
     const spot = page.locator("[data-owner-spot='carrusel']");
     await spot.waitFor();

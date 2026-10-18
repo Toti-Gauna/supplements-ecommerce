@@ -20,7 +20,7 @@ const lotTab = (name) => async (p) => { await openLot(p); await p.getByRole("tab
 export const ADMIN = [
   { id: "hoy", route: "admin-demo/", wait: 1200 },
   { id: "hoy-marcador", route: "admin-demo/", target: (p) => p.locator("ul:has([data-score])") },
-  { id: "hoy-lista", route: "admin-demo/", target: (p) => p.locator("ul:has([data-action])") },
+  { id: "hoy-lista", route: "admin-demo/", target: (p) => p.locator("[data-action]").first().locator("xpath=..") },
   { id: "mostrador-vender", route: "admin-demo/mostrador/", prep: addPots },
   { id: "mostrador-ticket", route: "admin-demo/mostrador/", prep: addPots, target: (p) => p.locator("aside[aria-label='Ticket'], [aria-label='Ticket en curso']").filter({ visible: true }) },
   { id: "mostrador-cuotas", route: "admin-demo/mostrador/", prep: payInstallments, target: dlg(/^Cobrar/) },

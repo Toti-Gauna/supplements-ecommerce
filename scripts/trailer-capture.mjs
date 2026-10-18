@@ -30,9 +30,9 @@ async function newPage(browser, vp, theme) {
   const context = await browser.newContext({ viewport: { width: vp.width, height: vp.height }, deviceScaleFactor: 2, locale: "es-AR", timezoneId: "America/Argentina/Buenos_Aires", isMobile: mobile, hasTouch: mobile, reducedMotion: "reduce" });
   await context.addInitScript(SEEDED_RANDOM);
   await context.addInitScript(({ t, k }) => {
-    localStorage.setItem("volta-theme", t); // estas tres claves son fijas (no llevan el prefijo de la marca)
-    localStorage.setItem("volta-sound", "off");
-    localStorage.setItem("volta-quiz-invite", "seen");
+    localStorage.setItem("volta-theme", t); // el tema es la única clave fija (no lleva el prefijo de la marca)
+    localStorage.setItem(`${k}-sound`, "off");
+    localStorage.setItem(`${k}-quiz-invite`, "seen");
     localStorage.setItem(`${k}-demo:theme-preview`, JSON.stringify({ state: { previewId: "original" }, version: 0 }));
   }, { t: theme, k: KEY });
   return { context, page: await context.newPage() };

@@ -93,7 +93,7 @@ export const OPENINGS: Record<OpeningScene, OpeningMeta> = {
   "dia-del-amigo": {
     name: "El spot del compañero", line: "levantando la barra con la ayuda de su compañero de gym", action: "Empujá la barra", steps: 4, unit: ["repetición", "repeticiones"], meter: "Repes",
     prompts: P("¡Arriba, te cuido!", "Una más, vamos", "Sube, sube…", "¡La última, te ayudo!"), done: "¡Barra al rack!", feel: "impact",
-    focus: [[360, 567], [360, 537], [360, 507], [360, 477]], reveal: [430, 935],
+    focus: [[400, 560], [400, 525], [400, 490], [400, 452]], reveal: [400, 308],
   },
   "operacion-verano": {
     name: "Bolsa de arena", line: "estampando la bolsa de arena contra el piso", action: "Estampá la bolsa de arena", steps: 4, unit: ["golpe", "golpes"], meter: "Golpes",
@@ -118,12 +118,12 @@ export const OPENINGS: Record<OpeningScene, OpeningMeta> = {
   "dia-del-running": {
     name: "Cinta de llegada", line: "corriendo hasta cortar la cinta de llegada", action: "Dá una zancada", steps: 5, unit: ["zancada", "zancadas"], meter: "Metros",
     prompts: P("¡Largaste!", "Buen ritmo", "Mitad de carrera", "Ya se ve la meta", "¡A la cinta!"), done: "¡Llegaste!", feel: "mechanic",
-    focus: [[270, 520], [362, 520], [454, 520], [546, 520], [620, 520]], reveal: [600, 940],
+    focus: [[400, 483], [400, 499], [400, 516], [400, 532], [400, 548]], reveal: [600, 770],
   },
   "dia-del-boxeador": {
     name: "Manoplas del rincón", line: "pegándole a las manoplas del entrenador", action: "Pegale a la manopla", steps: 5, unit: ["golpe", "golpes"], meter: "Golpes",
     prompts: P("¡Jab!", "¡Cross!", "¡Gancho!", "Uno-dos…", "¡El último, con todo!"), done: "¡Ganaste el round!", feel: "impact",
-    focus: [[470, 440], [520, 400], [440, 480], [500, 420], [470, 440]], reveal: [515, 540],
+    focus: [[288, 430], [452, 430], [288, 430], [452, 430], [452, 430]], reveal: [606, 694],
   },
 };
 

@@ -1,65 +1,70 @@
 import type { Pose, Pt } from "@/components/illustrations/figure";
-import { Bench, Plate } from "@/components/illustrations/campaigns/b-gear";
+import { Barbell } from "@/components/illustrations/campaigns/b-gear";
 import { Athlete, Glow } from "@/components/illustrations/campaigns/b-stage";
 import { GymBackdrop } from "../stage/backdrop";
-import { mixPose, reach, toLocal, toScene } from "../stage/pose";
+import { fromScene, mixPose, reach } from "../stage/pose";
 import { lerp, type OpeningArtProps } from "../stage/types";
+import { BenchEnd, RACK, RackBack, RackHooks } from "./amigo-rack";
 
-const LIFT = { x: 218, y: 903, s: 3 };
-const SPOT = { x: -16, y: 760, s: 3 };
-/** Acostado en el banco, con la barra en el pecho (codos abajo). */
-const DOWN: Pose = {
-  head: [22, 98], neck: [40, 99], hip: [96, 102], chest: 11, waist: 8,
-  arm: [[44, 96], [34, 110], [47, 84]], farArm: [[41, 101], [31, 114], [44, 88]],
-  leg: [[96, 102], [126, 108], [132, 138], [143, 139]], farLeg: [[96, 102], [118, 112], [112, 138], [123, 140]],
-};
-/** Bloqueo: brazos extendidos. */
-const UP: Pose = { ...DOWN, arm: [[44, 96], [46, 70], [48, 44]], farArm: [[41, 101], [44, 74], [46, 48]] };
-/** El compañero, parado detrás de la cabecera, con las manos bajo la barra. */
-const SPOTTER: Pose = {
-  head: [86, 36], neck: [77, 50], hip: [50, 104], chest: 10,
-  arm: [[80, 54], [102, 72], [120, 86]], farArm: [[75, 55], [98, 74], [116, 88]],
-  leg: [[50, 104], [58, 146], [52, 180], [64, 184]], farLeg: [[50, 104], [40, 148], [33, 180], [45, 184]],
-};
+/** La barra: en el pecho, en el bloqueo y apoyada en los ganchos del rack. */
+const CHEST = 586, LOCK = 440;
+const LIFT = { x: 400, y: 760, s: 2.4 };
+const SPOT = { x: 400, y: 700, s: 2.2 };
+const PLATES: [number, number, string][] = [[26, 196, "#c1272d"], [20, 168, "#1f4fb8"], [12, 120, "#e3b22a"]];
 
-/** Parante del rack con su gancho J a la altura del bloqueo. */
-function Upright({ x, hook }: { x: number; hook: number }) {
-  return (
-    <g>
-      <rect x={x - 7} y="400" width="14" height="360" fill="#2a3038" />
-      <path d={Array.from({ length: 12 }, (_, i) => `M${x} ${420 + i * 26}h0.1`).join("")} stroke="#07080a" strokeWidth="5" strokeLinecap="round" />
-      <path d={`M${x - 10} ${hook + 18}h26v-26`} fill="none" stroke="#8e98a5" strokeWidth="7" strokeLinejoin="round" />
-    </g>
-  );
+/** El que empuja, visto desde sus pies: rodillas arriba, pies en el piso y los brazos a la barra (en escena). */
+const LIFTER: Pose = {
+  head: [400, 548], neck: [400, 578], hip: [400, 640], chest: 15, waist: 11, headR: 10, flat: true,
+  arm: [], farArm: [],
+  leg: [[414, 644], [452, 652], [466, 748], [470, 758]], farLeg: [[386, 644], [348, 652], [334, 748], [330, 758]],
+};
+/** El compañero, detrás de la cabecera, inclinado hacia la barra (abajo) o erguido con la barra arriba. */
+const SPOT_LOW: Pose = {
+  head: [400, 408], neck: [400, 432], hip: [400, 520], chest: 14, waist: 10, headR: 10, flat: true,
+  arm: [], farArm: [],
+  leg: [[412, 520], [430, 610], [424, 700], [430, 704]], farLeg: [[388, 520], [370, 610], [376, 700], [370, 704]],
+};
+const SPOT_HIGH: Pose = { ...SPOT_LOW, head: [400, 366], neck: [400, 392], hip: [400, 486], leg: [[412, 470], [424, 588], [424, 700], [430, 704]], farLeg: [[388, 470], [376, 588], [376, 700], [370, 704]] };
+
+/** Brazos del compañero (en escena), de los hombros a las manos, con los codos hacia afuera. */
+const spotArms = (pose: Pose, hands: [Pt, Pt]): Pose => ({
+  ...pose,
+  arm: reach([pose.neck[0] + 30, pose.neck[1] + 4], hands[0], 82, -1),
+  farArm: reach([pose.neck[0] - 30, pose.neck[1] + 4], hands[1], 82, 1),
+});
+
+/** Brazos del que empuja: abajo, el antebrazo vertical bajo la barra; arriba, el brazo bloqueado y recto. */
+function liftArms(k: number, bar: number): Pose {
+  const side = (dir: 1 | -1): Pt[] => {
+    const shoulder: Pt = [400 + dir * 34, 584], hand: Pt = [400 + dir * 84, bar + 4];
+    const bent: Pt = [hand[0] + dir * 8, hand[1] + 58];
+    const straight: Pt = [(shoulder[0] + hand[0]) / 2, (shoulder[1] + hand[1]) / 2];
+    return [shoulder, [lerp(bent[0], straight[0], k), lerp(bent[1], straight[1], k)], hand];
+  };
+  return { ...LIFTER, arm: side(1), farArm: side(-1) };
 }
 
 /**
- * Día del Amigo: el spot del compañero. Cada toque es una repetición del press de banca: la barra sube un poco más y
- * el compañero acompaña con las manos abajo; en la última, en cámara lenta, la llevan juntos al rack.
+ * Día del Amigo: el spot del compañero, visto desde los pies del banco. Cada toque es una repetición: la barra sube y
+ * el compañero, detrás de la cabecera, la acompaña con las manos abajo; en la última, en cámara lenta, la llevan juntos
+ * a los ganchos. Al apoyarla, se prende el rack y el regalo aparece arriba, sobre el travesaño.
  */
 export default function DiaDelAmigo({ u, c, t, steps, opened }: OpeningArtProps) {
-  const k = opened ? 1 : t / steps;
-  const lifter = mixPose(DOWN, UP, k);
-  const hand = lifter.arm[2]!;
-  const bar = toScene(hand, LIFT.x, LIFT.y, LIFT.s);
-  // El compañero lleva las manos a la barra (un poco abajo, sin tocarla hasta la última).
-  const grip: Pt = [bar[0] + 6, bar[1] + lerp(26, 10, k)];
-  const near = toLocal(grip, SPOT.x, SPOT.y, SPOT.s);
-  const far = toLocal([grip[0] - 8, grip[1] + 4], SPOT.x, SPOT.y, SPOT.s);
-  const spotter: Pose = { ...SPOTTER, arm: reach([80, 54], near, 24, -1), farArm: reach([75, 55], far, 24, -1) };
+  const k = opened ? 1 : Math.min(1, t / steps);
+  const bar = opened ? RACK.hook - 6 : lerp(CHEST, LOCK, k);
+  const lifter = liftArms(k, bar);
+  const spotter = spotArms(mixPose(SPOT_LOW, SPOT_HIGH, k), [[426, bar + 10], [374, bar + 10]]);
   return (
     <g>
-      <GymBackdrop u={u} c={c} beam={400} spread={260} light="#f6ffe0" seed={5} />
-      <Upright x={352} hook={470} />
-      <Bench u={u} x={252} y={658} w={310} />
-      <Athlete pose={spotter} x={SPOT.x} y={SPOT.y} s={SPOT.s} rim={c.accent} rimDx={1.3} />
-      <Athlete pose={lifter} x={LIFT.x} y={LIFT.y} s={LIFT.s} rim="#f6ffe0" rimDx={1.2} glow={c.accent} />
-      <g>
-        <circle cx={bar[0]} cy={bar[1]} r="13" fill="#9aa3ad" />
-        <circle cx={bar[0]} cy={bar[1]} r="13" fill={`url(#${u}-cyl)`} opacity=".7" />
-        <Plate u={u} cx={bar[0] + 42} cy={bar[1] + 9} r={58} color="#1f4fb8" />
-      </g>
-      {opened && <Glow cx={bar[0] + 30} cy={bar[1]} rx={140} ry={140} color={c.accent} o={0.5} />}
+      <GymBackdrop u={u} c={c} beam={400} spread={250} light="#f6ffe0" seed={5} />
+      <RackBack u={u} on={opened} accent={c.accent} />
+      <Athlete pose={fromScene(spotter, SPOT.x, SPOT.y, SPOT.s)} x={SPOT.x} y={SPOT.y} s={SPOT.s} color="#1a222c" rim={c.accent} rimDx={1.1} />
+      <BenchEnd u={u} />
+      <Athlete pose={fromScene(lifter, LIFT.x, LIFT.y, LIFT.s)} x={LIFT.x} y={LIFT.y} s={LIFT.s} rim="#f6ffe0" rimDx={-1.1} glow={k > 0.7 ? c.accent : undefined} />
+      <Glow cx={400} cy={bar} rx={300} ry={36} color="#f6ffe0" o={0.25} />
+      <Barbell u={u} x={400} y={bar} w={600} plates={PLATES} />
+      <RackHooks on={opened} accent={c.accent} />
+      <ellipse cx={400} cy={RACK.top - 4} rx="190" ry="8" fill="#000" opacity={opened ? 0 : 0.2} />
     </g>
   );
 }

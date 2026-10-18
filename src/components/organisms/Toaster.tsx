@@ -1,10 +1,17 @@
 "use client";
 import Link from "next/link";
 import { CheckCircle2, Info, TriangleAlert, X } from "lucide-react";
-import { useToasts } from "@/stores/toast";
+import { useToasts, type Toast } from "@/stores/toast";
 import { cn } from "@/lib/cn";
 
 const ICONS = { success: CheckCircle2, info: Info, error: TriangleAlert };
+const ACTION = "mt-1 inline-block min-h-6 text-sm font-bold text-primary underline";
+
+function ToastAction({ action, onDone }: { action: NonNullable<Toast["action"]>; onDone: () => void }) {
+  if ("href" in action) return <Link href={action.href} onClick={onDone} className={ACTION}>{action.label}</Link>;
+  const run = () => { action.onClick(); onDone(); };
+  return <button type="button" onClick={run} className={cn(ACTION, "text-left")}>{action.label}</button>;
+}
 
 export function Toaster() {
   const { toasts, dismiss } = useToasts();
@@ -19,7 +26,7 @@ export function Toaster() {
             <div className="min-w-0 flex-1">
               <p className="font-mono text-[13px] font-bold uppercase tracking-[0.04em]">{t.title}</p>
               {t.description && <p className="text-sm text-muted">{t.description}</p>}
-              {t.action && <Link href={t.action.href} onClick={() => dismiss(t.id)} className="mt-1 inline-block text-sm font-bold text-primary underline">{t.action.label}</Link>}
+              {t.action && <ToastAction action={t.action} onDone={() => dismiss(t.id)} />}
             </div>
             <button type="button" aria-label="Cerrar aviso" onClick={() => dismiss(t.id)} className="grid h-8 w-8 place-items-center rounded-sm hover:bg-accent"><X size={16} aria-hidden="true" /></button>
           </div>

@@ -2,8 +2,8 @@ import { readFileSync } from "node:fs";
 import { expect, test, type Page } from "@playwright/test";
 
 /**
- * R2a · Comparador: "Comparar" en las tarjetas (hasta 3) → bandeja → /comparar/ con el mejor de cada renglón marcado,
- * Cambiar con el buscador, el atajo de la ficha y la comparación como imagen (PNG armado en el navegador).
+ * R2a · Comparador: "Comparar" en las tarjetas (hasta 3, todos del mismo tipo) → bandeja → /comparar/ con el mejor de
+ * cada renglón marcado, Cambiar con el buscador, el atajo de la ficha y la comparación como imagen (PNG armado en el navegador).
  */
 const row = (page: Page, label: string) => page.locator("[role=row]").filter({ has: page.getByRole("rowheader", { name: label, exact: true }) });
 const toggle = (page: Page, name: string) => page.getByRole("button", { name: `Comparar ${name}`, exact: true });
@@ -76,10 +76,54 @@ test("la ficha lleva al comparador con el producto y sus parecidos de la misma c
   await expect(page.getByRole("columnheader")).toHaveCount(3);
 });
 
-test("mezcla de equipamiento: lo que es por servicio compara solo los suplementos y se avisa", async ({ page }) => {
+test("solo del mismo tipo: otro tipo no entra, se avisa y se puede empezar una comparación nueva", async ({ page }) => {
+  await page.goto("c/proteinas/");
+  await toggle(page, "Ionic Whey 100%").click();
+  await expect(tray(page)).toContainText("Comparar (1)");
+  await page.goto("c/creatinas/");
+  await toggle(page, "Creatina Brava 100% pura").click();
+  const notice = page.getByRole("status").filter({ hasText: "Solo se comparan productos del mismo tipo" });
+  await expect(notice).toContainText("Estás comparando Proteínas.");
+  await expect(toggle(page, "Creatina Brava 100% pura")).toHaveAttribute("aria-pressed", "false");
+  await expect(tray(page)).toContainText("Comparar (1)");
+  // "Empezar una comparación de Creatinas" reemplaza la bandeja por esta creatina.
+  await notice.getByRole("button", { name: "Empezar una comparación de Creatinas" }).click();
+  await expect(toggle(page, "Creatina Brava 100% pura")).toHaveAttribute("aria-pressed", "true");
+  await toggle(page, "Creatina en gomitas").click();
+  await tray(page).getByRole("link", { name: /Comparar \(2\)/ }).click();
+  await expect(page).toHaveURL(/comparar\/\?p=creatina-brava,creatina-gomitas$/);
+  await expect(page.getByText(/Creatinas · 2 de 3/)).toBeVisible();
+
+  // El selector de /comparar/ solo ofrece creatinas (y lo dice).
+  await page.getByRole("button", { name: "Sumar producto" }).click();
+  const picker = page.getByRole("dialog", { name: "Sumar a la comparación" });
+  await expect(picker).toContainText("estás comparando Creatinas");
+  await expect(picker.getByRole("button", { name: "Elegir Creatina monohidrato micronizada" })).toBeVisible();
+  await expect(picker.getByRole("button", { name: /^Elegir/ })).toHaveCount(1);
+  await picker.getByRole("searchbox", { name: "Buscar productos" }).fill("whey");
+  await expect(picker.getByText("No encontramos “whey” en Creatinas")).toBeVisible();
+});
+
+test("una bandeja vieja que mezclaba tipos se limpia al cargar; un link mezclado se avisa", async ({ page }) => {
+  await page.addInitScript(() => {
+    if (sessionStorage.getItem("seeded")) return;
+    sessionStorage.setItem("seeded", "1");
+    localStorage.setItem("volta-demo:compare", JSON.stringify({ state: { slugs: ["ionic-whey", "shaker-volta", "night-casein"] }, version: 0 }));
+  });
+  await page.goto("c/proteinas/");
+  await expect(tray(page)).toContainText("Comparar (2)");
+  await expect(toggle(page, "Night Casein")).toHaveAttribute("aria-pressed", "true");
+
   await page.goto("comparar/?p=ionic-whey,shaker-volta");
-  await expect(page.getByRole("note")).toContainText("solo los suplementos");
-  await expect(row(page, "Precio por servicio").getByRole("cell").nth(1)).toHaveText("No aplica");
+  await expect(page.getByRole("note")).toContainText("el link mezclaba tipos, así que te mostramos solo Proteínas");
+  await expect(page.getByRole("columnheader").filter({ hasText: "Shaker" })).toHaveCount(0);
+  expect(await noOverflow(page)).toBeLessThanOrEqual(0);
+});
+
+test("equipamiento con equipamiento: se compara por precio, sellos y marca", async ({ page }) => {
+  await page.goto("comparar/?p=guantes-boxeo,vendas-boxeo");
+  await expect(page.getByRole("note")).toContainText("se compara por precio, sellos y marca");
+  await expect(row(page, "Precio por servicio")).toHaveCount(0);
 });
 
 test("compartir la comparación como imagen: sin hoja de compartir, descarga un PNG", async ({ page }) => {

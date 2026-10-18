@@ -51,12 +51,13 @@ describe("temáticas fitness (Fase 5)", () => {
     expect(id("2026-12-31")).toBe("ano-nuevo");
     expect(id("2027-01-06")).toBe("ano-nuevo");
     expect(id("2027-02-14")).toBe("san-valentin");
-    expect(id("2027-02-15")).toBe("vuelta-al-gym");
-    expect(id("2027-02-28")).toBe("vuelta-al-gym");
-    // Días del deporte (R3a).
-    expect(id("2027-03-15")).toBe("crossfit-open");
+    expect(id("2027-03-09")).toBe("vuelta-al-gym");
+    expect(id("2027-03-21")).toBe("vuelta-al-gym");
+    // Días del deporte (R3a), con sus fechas reales.
+    expect(id("2027-02-18")).toBe("crossfit-open");
+    expect(id("2027-03-08")).toBe("crossfit-open");
     expect(id("2027-04-06")).toBe("dia-actividad-fisica");
-    expect(id("2027-05-14")).toBe("dia-del-futbolista");
+    expect(id("2027-06-22")).toBe("dia-del-futbolista");
     expect(id("2027-06-02")).toBe("dia-del-running");
     expect(id("2027-09-14")).toBe("dia-del-boxeador");
     expect(id("2027-05-11")).toBe("hot-sale");
@@ -66,6 +67,7 @@ describe("temáticas fitness (Fase 5)", () => {
     // Entre fechas no hay temática.
     expect(id("2026-11-10")).toBeNull();
     expect(id("2027-04-15")).toBeNull();
+    expect(id("2027-05-14")).toBeNull();
     expect(id("2027-08-10")).toBeNull();
   });
 

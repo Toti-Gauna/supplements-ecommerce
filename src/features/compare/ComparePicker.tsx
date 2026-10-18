@@ -2,7 +2,7 @@
 import { useMemo, useRef, useState } from "react";
 import { RackRow } from "@/components/molecules/RackRow";
 import { Sheet } from "@/components/motion/Sheet";
-import { bestSellers, getProduct } from "@/demo/engine/catalog";
+import { bestSellers, getCategory, getProduct, productsInCategory } from "@/demo/engine/catalog";
 import { compareSuggestions } from "@/demo/engine/compare";
 import type { Product } from "@/demo/types";
 import { plural } from "@/lib/plural";
@@ -18,24 +18,30 @@ interface Props {
   replacing?: string;
   /** Lo que ya está en la comparación (no se ofrece). */
   taken: string[];
+  /** Solo se ofrecen productos de esta categoría (la de la comparación). Sin categoría, cualquiera. */
+  category?: string | null;
   onPick: (slug: string) => void;
   onClose: () => void;
 }
 
-/** Selector del comparador: el buscador del rubro y, sin escribir, los parecidos de la misma categoría y lo más elegido. */
-export function ComparePicker({ open, anchor, replacing, taken, onPick, onClose }: Props) {
+/**
+ * Selector del comparador: el buscador del rubro y, sin escribir, los parecidos de la misma categoría y lo más elegido.
+ * Con algo ya elegido, solo ofrece productos de ese tipo (y lo dice).
+ */
+export function ComparePicker({ open, anchor, replacing, taken, category, onPick, onClose }: Props) {
   const [q, setQ] = useState("");
   const input = useRef<HTMLInputElement>(null);
   const { outcome } = useCatalogSearch(q);
   const typed = q.trim() !== "";
   const list = useMemo(() => {
-    const free = (p: Product) => !taken.includes(p.slug);
+    const free = (p: Product) => !taken.includes(p.slug) && (!category || p.categorySlug === category);
     if (typed) return outcome.results.map((r) => r.product).filter(free).slice(0, ROWS);
     const base = anchor ? getProduct(anchor) : undefined;
     const near = base ? compareSuggestions(base, ROWS).filter(free) : [];
-    const more = bestSellers(ROWS * 2).filter((p) => free(p) && !near.includes(p));
-    return [...near, ...more].slice(0, ROWS);
-  }, [typed, outcome.results, anchor, taken]);
+    const more = [...bestSellers(ROWS * 2), ...(category ? productsInCategory(category) : [])].filter((p) => free(p) && !near.includes(p));
+    return [...new Set([...near, ...more])].slice(0, ROWS);
+  }, [typed, outcome.results, anchor, taken, category]);
+  const kind = category ? getCategory(category)?.name : undefined;
   const close = () => { setQ(""); onClose(); };
   const title = replacing ? `Cambiar ${getProduct(replacing)?.name ?? "producto"}` : "Sumar a la comparación";
   return (
@@ -48,8 +54,9 @@ export function ComparePicker({ open, anchor, replacing, taken, onPick, onClose 
       </div>
       <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pb-8 pt-4 sm:px-6">
         <p role="status" className="mb-3 font-mono text-[12px] uppercase tracking-[0.08em] text-muted">
-          {typed ? (list.length ? plural(list.length, "resultado", "resultados") : `No encontramos “${q.trim()}”`) : "Parecidos y lo más elegido"}
+          {typed ? (list.length ? plural(list.length, "resultado", "resultados") : `No encontramos “${q.trim()}”${kind ? ` en ${kind}` : ""}`) : "Parecidos y lo más elegido"}
         </p>
+        {kind && <p className="-mt-1 mb-3 text-sm text-muted">Solo se comparan productos del mismo tipo: estás comparando <strong className="text-ink">{kind}</strong>.</p>}
         <ul className="flex flex-col gap-2">
           {list.map((p) => (
             <li key={p.slug}>

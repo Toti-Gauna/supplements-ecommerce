@@ -30,3 +30,9 @@ export function reach(shoulder: Pt, hand: Pt, len: number, bend = 1): Pt[] {
   const n = Math.hypot(dx, dy) || 1;
   return [shoulder, [mx - (dy / n) * h * bend, my + (dx / n) * h * bend], hand];
 }
+
+/** Una pose dibujada en coordenadas del escenario, llevada a las de la silueta (`Athlete` en x, y con escala s). */
+export function fromScene(p: Pose, x: number, y: number, s: number): Pose {
+  const m = (q: Pt) => toLocal(q, x, y, s);
+  return { ...p, head: m(p.head), neck: m(p.neck), hip: m(p.hip), arm: p.arm.map(m), farArm: p.farArm.map(m), leg: p.leg.map(m), farLeg: p.farLeg.map(m) };
+}

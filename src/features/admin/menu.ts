@@ -63,6 +63,7 @@ export const SECTIONS: MenuSection[] = [
     tab("proveedores", "Proveedores", "/proveedores/"),
     tab("insumos", "Insumos", "/insumos/", [], "materials"),
     tab("costos", "Costos y margen", "/costos/"),
+    tab("lista", "Lista del proveedor", "/lista-proveedor/"),
   ] },
   { id: "clientes", label: "Clientes", short: "Clientes", href: `${P}/usuarios/`, tabs: [tab("clientes", "Clientes", "/usuarios/")] },
   { id: "promos", label: "Promos", short: "Promos", href: `${P}/promos/`, tabs: [

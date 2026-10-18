@@ -99,12 +99,15 @@ export function undoPriceChange(products: Product[], undo: PriceUndo): Product[]
   });
 }
 
+/** "Brava Sport", "Proteínas" o "todo el catálogo". */
+export function scopeLabel(scope: PriceScope, categories: Category[]): string {
+  return scope.kind === "brand" ? scope.brand : scope.kind === "category" ? categories.find((c) => c.slug === scope.slug)?.name ?? scope.slug : "todo el catálogo";
+}
+
 /** "+8 % a Brava Sport", "−10 % a Proteínas", "+5 % a todo el catálogo". */
 export function priceChangeLabel(scope: PriceScope, pct: number, categories: Category[]): string {
   const sign = pct > 0 ? "+" : "−";
-  const amount = `${sign}${String(Math.abs(pct)).replace(".", ",")} %`;
-  const target = scope.kind === "brand" ? scope.brand : scope.kind === "category" ? categories.find((c) => c.slug === scope.slug)?.name ?? scope.slug : "todo el catálogo";
-  return `${amount} a ${target}`;
+  return `${sign}${String(Math.abs(pct)).replace(".", ",")} % a ${scopeLabel(scope, categories)}`;
 }
 
 export function brandsOf(products: Product[]): string[] {

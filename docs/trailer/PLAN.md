@@ -69,7 +69,7 @@ Cada paso es **un PR o commit propio en la rama `trailer`**. Al terminar cada pa
 
 | # | Paso | Modelo · esfuerzo | Salida | Listo cuando |
 |---|---|---|---|---|
-| Tn.1 | **Dirección.** Panel de 3 direcciones, juez con rúbrica y storyboard al segundo en la plantilla, con cada escena atada a una receta de la biblia y a un compás. | **Opus · max** (el único max) | `docs/trailer/<pieza>/storyboard.md` | Ignacio lo aprueba |
+| Tn.1 | **Dirección.** Panel de 3 direcciones, juez con rúbrica y storyboard al segundo en la plantilla, con cada escena atada a una receta de la biblia y a un compás. | **Opus · max** (el único max) | `docs/trailer/<pieza>/storyboard.md` | Ignacio lo aprueba  **T1:** escrito el 18/10/2026 ([`t1/storyboard.md`](t1/storyboard.md)); espera la aprobación. |
 | Tn.2 | **Música de la pieza.** El arreglo del hook sobre el storyboard (builds, drops en los cortes fuertes) y el WAV. | Sonnet · high | `public/trailer/<pieza>.wav` y el cue sheet | Los drops caen en los cortes del storyboard (±1 cuadro) |
 | Tn.3 | **Construcción 16:9.** Escena por escena según el storyboard, en lotes de 3–4 escenas por sesión. | Opus · high (las escenas "wow"); Sonnet · high (las de interfaz con receta existente) | `src/trailer/scenes/<pieza>/` | Cada escena congelada en 3 tiempos coincide con el storyboard |
 | Tn.4 | **QA adversarial.** `trailer-qa` con las 6 lentes, más el control de honestidad (nada que la app no haga). Se corrige solo lo bloqueante o alto. | Opus · high | `docs/trailer/<pieza>/qa.md` | Sin bloqueantes; 60 fps en un perfil de gama media |

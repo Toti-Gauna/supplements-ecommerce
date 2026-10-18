@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { MOVED, movedTarget } from "./menu";
 
 /**
@@ -13,15 +13,12 @@ import { MOVED, movedTarget } from "./menu";
 export function ModuleMoved({ from }: { from: string }) {
   const router = useRouter();
   const moved = MOVED[from]!;
-  const [href, setHref] = useState(moved.to);
   useEffect(() => {
-    const target = movedTarget(from, window.location.search) ?? moved.to;
-    setHref(target);
-    router.replace(target);
+    router.replace(movedTarget(from, window.location.search) ?? moved.to);
   }, [router, from, moved.to]);
   return (
     <p role="status" className="rounded-sm bg-surface p-5 text-sm shadow-[var(--shadow-card)]">
-      Esta sección ahora está en <Link href={href} className="font-bold text-primary underline">{moved.label}</Link>. Te llevamos…
+      Esta sección ahora está en <Link href={moved.to} className="font-bold text-primary underline">{moved.label}</Link>. Te llevamos…
     </p>
   );
 }

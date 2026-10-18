@@ -45,7 +45,7 @@ escrito con la tienda de ejemplo **VOLTA**; en tu tienda vas a ver tu marca, per
 El panel de la demo está en la dirección de tu tienda + `/admin-demo/`. En la tienda real entrás con tu usuario y
 contraseña.
 
-![Inicio del panel en la compu](img/panel-inicio.png)
+![Hoy en tu tienda y el menú en la compu](img/rediseno/r4a/menu-1440-light.png)
 
 **En la compu**
 - A la izquierda está el menú, con **8 entradas**: **Hoy**, **Pedidos**, **Stock**, **Compras**, **Clientes**,
@@ -59,7 +59,7 @@ contraseña.
 
 **En el celular**
 
-![Inicio del panel en el celular](img/celular-panel-inicio.png)
+![El panel en el celular, con el menú Más abierto](img/rediseno/r4a/menu-390-light.png)
 
 - Abajo tenés las pestañas **Hoy**, **Pedidos**, **Stock**, **Promos** y **Más** (el resto de las secciones). Las
   pestañas de cada sección se deslizan hacia los costados.

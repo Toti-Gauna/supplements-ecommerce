@@ -18,6 +18,7 @@ import { CampaignCouponField } from "./CampaignCouponField";
 import { CampaignFields } from "./CampaignFields";
 import { CampaignPreview } from "./CampaignPreview";
 import { CampaignResultCard } from "./CampaignResultCard";
+import { CampaignSplashPreview } from "./CampaignSplashPreview";
 import { CAMPAIGNS, piecesHref } from "./links";
 import { RealDiscountWarning, useFakeDiscounts } from "./RealDiscountWarning";
 
@@ -80,6 +81,7 @@ function Editor({ saved }: { saved: SeasonalTheme }) {
         </div>
         <div className="order-first flex min-w-0 flex-col gap-4 xl:order-none xl:sticky xl:top-4 xl:self-start">
           <CampaignPreview theme={t} />
+          <CampaignSplashPreview theme={t} />
           <RealDiscountWarning hits={fake} what={`${t.couponCode}`} />
           <CampaignResultCard theme={t} />
         </div>

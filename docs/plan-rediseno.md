@@ -284,7 +284,20 @@ fecha o locker con combinación, vista previa grande y la tarjeta como imagen pa
 regalar; `/regalo/` como taquilla; bolsa de boxeo rehecha; locker; una apertura distinta para cada una de las 17 fechas
 (punto 11; Día del Amigo = spotter); revelación "tarjeta de atleta" en estudio neutro con "Compartí en tu historia";
 "Mis regalos" con el estado de cada regalo; gift card como saldo en el checkout (nunca "pago acreditado") y, en el
-panel, Marketing → Regalos y gift cards. Sigue R3c: una pantalla de carga única por fecha (pedido de Ignacio).
+panel, Marketing → Regalos y gift cards.
+
+**Estado de las pantallas de carga:** R3c hecho (PR de R3c, cuadros en [`img/rediseno/r3c/`](img/rediseno/r3c/)).
+Cada una de las 17 fechas tiene su pantalla de carga propia, más la original (barra olímpica que se carga): una escena
+mecánica de 1,6 a 1,85 s que nunca tapa el logo, con el descuento en un marcador LED; el navegador baja solo el arte
+de la fecha puesta. En el panel, Campañas muestra la de cada fecha (Repetir y Pantalla completa) y el Modo vitrina
+la vuelve a pasar sin recargar. **R3 cerrado.**
+
+**R3c · pantallas de carga por fecha (pedido de Ignacio: "rehacer cada pantalla de carga y que sea única por cada
+una"), fase 1:** arquitectura para las 17 fechas (registro, HTML compartido chico, arte por capas que se baja solo para
+la fecha puesta), la original nueva (barra olímpica) y las 4 de referencia para aprobar: Black Friday, Hot Sale, Vuelta
+al gym y Navidad, más la vista previa en el editor de Campañas y "Pantalla de carga" en el modo vitrina. Cuadros en
+[`img/rediseno/r3c/`](img/rediseno/r3c/). **Fase 2:** las otras 13 escenas con el mismo nivel (la mecánica de cada una
+está en `src/demo/engine/splash-scenes.ts`); hasta entonces usan la variante de campaña de R3a.
 
 ### Regalos: de formulario a momento
 - **"Regalá energía", quien regala:**

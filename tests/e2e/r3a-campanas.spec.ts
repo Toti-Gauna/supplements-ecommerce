@@ -1,4 +1,7 @@
 import { expect, test } from "@playwright/test";
+import { splashOff } from "../../src/demo/engine/splash-off";
+import { pendingSplashScenes } from "../../src/demo/engine/splash-scenes";
+import { seasonalThemes, themeCoupons } from "../../src/demo/fixtures/themes";
 import { CALENDAR, FIXED_NOW, paintOf, resolveColor, setThemeMode } from "./campaign-helpers";
 import { guardNetwork, horizontalOverflow } from "./helpers";
 import { holdSplash, previewTheme } from "./splash-helpers";
@@ -102,27 +105,43 @@ test("franja 'Próxima campaña': entre fechas en modo automático; nunca con un
   await expect(band).toHaveCount(0);
 });
 
-test("pantalla de carga de campaña: discos de la fecha y marcador con el descuento debajo del logo, ~1,8 s", async ({ page }) => {
+test("pantalla de carga de campaña (fechas sin escena propia todavía): discos de la fecha y marcador con el descuento debajo del logo, ~1,8 s", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await holdSplash(page);
-  await previewTheme(page, "black-friday");
+  // La primera fecha que sigue sin escena propia (R3c fase 2: Halloween ya tiene la suya).
+  const id = pendingSplashScenes()[0];
+  await previewTheme(page, id ?? "halloween");
   await page.goto("");
   const splash = page.locator("#volta-splash");
   await expect(splash).toBeVisible();
+  if (!id) {
+    // Con todas las fechas terminadas no queda variante de campaña: cada fecha sale con su escena.
+    await expect(page.locator("html")).toHaveAttribute("data-splash-scene", "halloween");
+    await expect(splash.locator(".splash-barbell")).toBeHidden();
+    return;
+  }
+  const theme = seasonalThemes.find((t) => t.id === id)!;
+  const off = splashOff(themeCoupons.find((c) => c.code === theme.couponCode))!;
+  await expect(page.locator("html")).not.toHaveAttribute("data-splash-scene", /.*/);
   const score = splash.locator(".splash-score");
   await expect(score).toBeVisible();
-  expect(await score.locator(".splash-score-name").evaluate((el) => getComputedStyle(el, "::before").content)).toBe('"Black Friday"');
-  // El marcador cuenta hasta el descuento del cupón.
-  await expect.poll(() => score.locator(".splash-score-off").evaluate((el) => getComputedStyle(el).getPropertyValue("--splash-count").trim())).toBe("30");
+  expect(await score.locator(".splash-score-name").evaluate((el) => getComputedStyle(el, "::before").content)).toBe(JSON.stringify(theme.name));
+  // El marcador gira sus ruedas hasta el descuento del cupón: se ven las de la derecha, cada una en su cifra.
+  const wheels = score.locator(".splash-odo b");
+  for (let n = 0; n < 3; n++) {
+    if (n < 3 - off.dn) await expect(wheels.nth(n)).toBeHidden();
+    else await expect(wheels.nth(n)).toBeVisible();
+    expect(await wheels.nth(n).evaluate((el) => getComputedStyle(el).getPropertyValue("--d").trim())).toBe(String(off.cols[n]));
+  }
   // Nunca tapa el logo: va debajo de la barra.
   const mark = (await splash.locator(".splash-mark").boundingBox())!;
-  const bar = (await splash.locator(".splash-bar").boundingBox())!;
+  const bar = (await splash.locator(".splash-barbell").boundingBox())!;
   const box = (await score.boundingBox())!;
   expect(box.y).toBeGreaterThanOrEqual(bar.y + bar.height);
   expect(box.y).toBeGreaterThan(mark.y + mark.height);
   // Los discos toman el color de la fecha y el telón cae a los 1,55 s (termina a los 1,8 s).
   const accent = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue("--season-accent").trim());
-  expect(await splash.locator(".splash-bar span").first().evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await resolveColor(page, accent));
+  expect(await splash.locator(".splash-barbell .bp").first().evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(await resolveColor(page, accent));
   expect(await splash.evaluate((el) => getComputedStyle(el).animationDelay)).toBe("1.55s");
   await page.keyboard.press("Escape");
   await expect(splash).toBeHidden();

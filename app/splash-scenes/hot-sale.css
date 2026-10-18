@@ -1,0 +1,26 @@
+/*
+ * Hot Sale (R3c): la barra se calienta en tres golpes (los tres días), la aguja del manómetro salta con cada uno
+ * hasta el rojo y el aire tiembla arriba de la barra; el marcador gira hasta el descuento.
+ * Capas (public/splash/hot-sale/): 1 pared, manómetro y marcador · 2 barra fría · 3 barra al rojo · 4 aguja (gira
+ * sobre el centro del dial, 184,156 de 800 × 600) · 5 el aire caliente. Mecánica 0,32–1,22 s; número 1–1,54 s.
+ */
+.splash-stage[data-scene="hot-sale"] {
+  --score-x: 58.75%; --score-y: 17%; --score-w: 28.75%; --score-h: 17.33%; --score-size: 8.4cqw;
+  --lit-at: 300ms; --roll-at: 1000ms; --caption-at: 900ms;
+}
+.splash-stage[data-scene="hot-sale"] .s4::before { transform-origin: 23% 26%; transform: rotate(104deg); }
+.splash-stage[data-scene="hot-sale"] .s5::before { opacity: 0.9; transform: translateY(-3%); }
+@media (prefers-reduced-motion: no-preference) {
+  .splash-stage[data-scene="hot-sale"] .s3::before { animation: hs-heat 900ms steps(1, end) 320ms both; }
+  .splash-stage[data-scene="hot-sale"] .s4::before { animation: hs-needle 900ms linear 320ms both; }
+  .splash-stage[data-scene="hot-sale"] .s5::before { animation: hs-haze 640ms ease-out 900ms both; }
+}
+@keyframes hs-heat { 0% { opacity: 0; } 18% { opacity: 0.4; } 50% { opacity: 0.72; } 82%, 100% { opacity: 1; } }
+/* La aguja salta con cada golpe de calor y rebota antes de quedarse (resorte del manómetro). */
+@keyframes hs-needle {
+  0%, 18% { transform: rotate(-112deg); animation-timing-function: cubic-bezier(0.3, 1.7, 0.5, 1); }
+  32%, 50% { transform: rotate(-38deg); animation-timing-function: cubic-bezier(0.3, 1.7, 0.5, 1); }
+  64%, 82% { transform: rotate(34deg); animation-timing-function: cubic-bezier(0.3, 1.5, 0.5, 1); }
+  100% { transform: rotate(104deg); }
+}
+@keyframes hs-haze { from { opacity: 0; transform: translateY(5%); } }

@@ -16,7 +16,8 @@ test("la pantalla de carga sale en cada carga completa, termina su animación y 
   await page.goto("", { waitUntil: "domcontentloaded" });
   const splash = page.locator("#volta-splash");
   await expect(splash).toBeVisible();
-  await expect(splash.locator(".splash-bar span")).toHaveCount(12);
+  // Original (R3c): la barra olímpica con cuatro discos por lado, dibujada en el HTML.
+  await expect(splash.locator(".splash-barbell .bp")).toHaveCount(8);
   await page.keyboard.press("Escape");
   await expect(splash).toBeHidden();
   // Navegar dentro de la tienda no la vuelve a mostrar.

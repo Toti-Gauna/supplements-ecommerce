@@ -1,0 +1,37 @@
+/*
+ * Año Nuevo (R3c): se prende la luz del box y el tablero de cuenta regresiva colgado del rig pasa de 2026 a 2027:
+ * la hoja de arriba del 6 tiembla, cae sobre la bisagra y su dorso trae la mitad de abajo del 7, que rebota al
+ * asentarse; el tablero se enciende en voltio y el marcador gira hasta el descuento.
+ * Capas (public/splash/ano-nuevo/): 1 el rig, el tablero y la barra · 2 la mitad de arriba del 6 · 3 la mitad de
+ * abajo del 7 (las dos giran sobre la bisagra, y = 235 de 600) · 4 la oscuridad · 5 la luz del 2027.
+ * Mecánica 0,14–1,52 s; número 1,05–1,59 s.
+ */
+.splash-stage[data-scene="ano-nuevo"] {
+  --score-x: 37.5%; --score-y: 63.67%; --score-w: 25%; --score-h: 12.33%; --score-size: 6.6cqw;
+  --lit-at: 1000ms; --roll-at: 1050ms; --caption-at: 900ms;
+}
+.splash-stage[data-scene="ano-nuevo"] :is(.s2, .s3)::before { transform-origin: 50% 39.167%; }
+.splash-stage[data-scene="ano-nuevo"] .s2::before { transform: scaleY(0); }
+.splash-stage[data-scene="ano-nuevo"] .s4::before { opacity: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .splash-stage[data-scene="ano-nuevo"] .s4::before { animation: an-lights 320ms steps(1, end) 140ms both; }
+  .splash-stage[data-scene="ano-nuevo"] .s2::before { animation: an-fall 440ms linear 440ms both; }
+  .splash-stage[data-scene="ano-nuevo"] .s3::before { animation: an-land 380ms linear 880ms both; }
+  .splash-stage[data-scene="ano-nuevo"] .s5::before { animation: an-glow 400ms ease-out 1120ms both; }
+}
+@keyframes an-lights { 0% { opacity: 1; } 30% { opacity: 0.2; } 45% { opacity: 0.8; } 60%, 100% { opacity: 0; } }
+/* La hoja tiembla en su traba, se suelta y cae cada vez más rápido hasta quedar de canto. */
+@keyframes an-fall {
+  0% { transform: scaleY(1); animation-timing-function: ease-out; }
+  14% { transform: scaleY(0.95); animation-timing-function: ease-in-out; }
+  26% { transform: scaleY(1); animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45); }
+  100% { transform: scaleY(0); }
+}
+/* El dorso baja de canto a plano, golpea el tope y rebota una vez. */
+@keyframes an-land {
+  0% { transform: scaleY(0); animation-timing-function: cubic-bezier(0.3, 0, 0.9, 0.6); }
+  58% { transform: scaleY(1); animation-timing-function: ease-out; }
+  74% { transform: scaleY(0.86); animation-timing-function: ease-in; }
+  100% { transform: scaleY(1); }
+}
+@keyframes an-glow { from { opacity: 0; } }

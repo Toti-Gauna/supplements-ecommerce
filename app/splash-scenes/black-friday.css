@@ -1,0 +1,28 @@
+/*
+ * Black Friday (R3c): la persiana del local sube a tirones (empuja para destrabar, sube, se engancha y termina de
+ * subir), se prende la luz adentro y el marcador colgado del rack gira hasta el descuento.
+ * Capas (public/splash/black-friday/): 1 el local con luz · 2 la oscuridad · 3 la persiana, recortada a la boca del
+ * local (140,128 → 660,504 de 800 × 600) · 4 el frente con el enrollador. Mecánica 0,28–1,1 s; número 1,05–1,59 s.
+ */
+.splash-stage[data-scene="black-friday"] {
+  --score-x: 36.5%; --score-y: 32.33%; --score-w: 27%; --score-h: 12.67%; --score-size: 6.4cqw;
+  --lit-at: 1000ms; --roll-at: 1050ms; --caption-at: 1000ms;
+}
+.splash-stage[data-scene="black-friday"] .splash-score { z-index: 1; }
+.splash-stage[data-scene="black-friday"] :is(.s3, .s4) { z-index: 2; }
+.splash-stage[data-scene="black-friday"] .s3 { clip-path: inset(21.333% 17.5% 16% 17.5%); }
+.splash-stage[data-scene="black-friday"] .s3::before { transform: translateY(-62.67%); }
+.splash-stage[data-scene="black-friday"] .s2::before { opacity: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .splash-stage[data-scene="black-friday"] .s3::before { animation: bf-shutter 820ms linear 280ms both; }
+  .splash-stage[data-scene="black-friday"] .s2::before { animation: bf-lights 360ms steps(1, end) 1000ms both; }
+}
+@keyframes bf-shutter {
+  0% { transform: translateY(0); animation-timing-function: ease-out; }
+  10% { transform: translateY(1.2%); animation-timing-function: cubic-bezier(0.3, 0, 0.2, 1.4); }
+  22%, 30% { transform: translateY(-3%); animation-timing-function: cubic-bezier(0.45, 0, 0.6, 1); }
+  60% { transform: translateY(-34%); animation-timing-function: ease-out; }
+  66%, 72% { transform: translateY(-31%); animation-timing-function: cubic-bezier(0.5, 0, 0.2, 1); }
+  100% { transform: translateY(-62.67%); }
+}
+@keyframes bf-lights { 0% { opacity: 1; } 25% { opacity: 0; } 40% { opacity: 0.75; } 55%, 100% { opacity: 0; } }

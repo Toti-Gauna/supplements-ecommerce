@@ -43,12 +43,33 @@ y distinta de las que hay hoy (negro + rojo agresivo, o blanco clínico). Todo s
   sabor). Tres vistas: estudio con pedestal iluminado, detalle (scoop colmado, cápsulas, gomitas, gotas) y gimnasio.
 - **Rótulo por marca**: rayo (VOLTA Lab), franjas (Krono, Forja), pulso (Brava) y grilla (Ozono).
 - **Íconos de objetivos** (`GoalGlyph`): brazo, barra, rayo, luna, llama, pulso y escudo.
-- **Pantalla de carga** (`Splash.tsx` + `app/splash.css`, rediseño R1): el símbolo se enciende como un marcador, sube el
-  nombre y se carga una barra de 12 placas. ~1,2 s, **en cada carga completa de la página** (L1; al navegar dentro de la tienda no sale) y se
-  retira cuando termina la animación del telón; Escape la cierra y con
-  "reducir movimiento" no aparece. Con una campaña puesta (R3a) sale su variante de ~1,8 s: discos del color de la
-  fecha en la barra y, debajo del logo (nunca encima), un marcador con el nombre de la campaña y el descuento que
-  cuenta hasta su número (`html[data-splash-campaign]`, solo `--season-*` sobre la noche).
+- **Pantalla de carga** (`Splash.tsx` + `app/splash*.css`, R3c): **una por fecha**, mecánica, de 1,4 a 1,85 s, **en cada
+  carga completa de la página** (L1; al navegar dentro de la tienda no sale) y se retira cuando termina la animación del
+  telón; Escape la cierra y con "reducir movimiento" no aparece (ni se baja su arte). El logo va siempre arriba, entero.
+  - **Original** (~1,4 s): el símbolo se enciende como un marcador, sube el nombre y se carga una **barra olímpica**
+    (discos de a pares que encastran, trabas en el color firma y un brillo). Es CSS puro sobre un HTML mínimo.
+  - **Escena por fecha** (~1,85 s): debajo del logo, un escenario 4:3 que sale de la oscuridad con su mecánica y el
+    descuento en un **cuentakilómetros** de LED (ruedas que giran, solo transform) y el nombre de la campaña al pie.
+    Fase 1 (referencias para aprobar): **Black Friday** (la persiana del local sube a tirones y se prende la luz),
+    **Hot Sale** (la barra se calienta en tres golpes y la aguja del manómetro llega al rojo), **Vuelta al gym** (se
+    prende la luz y se tira la lona de playa que tapaba el rack, con tiza) y **Navidad** (el árbol de discos se carga
+    de a uno). Fase 2: **Día de la Madre** (el monitor cardíaco dibuja tres latidos y con cada pico se carga el frasco
+    de colágeno), **Halloween** (la pesa rusa se prende desde adentro como una calabaza, con humo de tiza),
+    **CyberMonday** (las bahías del rack de servidores se prenden de a una, cada vez más rápido), **Año Nuevo** (el
+    tablero de cuenta regresiva pasa de 2026 a 2027 con flip de placas), **San Valentín** (dos mancuernas entran
+    deslizando y encastran en el soporte doble), **Día del Padre** (peso muerto de frente hasta el bloqueo y las tres
+    luces blancas de los jueces) y **Día del Amigo** (dos brazos chocan los shakers). Las fechas que todavía no tienen
+    la suya siguen con la **variante de campaña** de R3a (discos del color de la fecha y el marcador); la mecánica de
+    cada una ya está escrita en el registro.
+  - **Cómo se arma:** el registro `src/demo/engine/splash-scenes.ts` (estado, capas y mecánica por fecha); el arte en
+    `src/components/illustrations/splash/<id>.tsx`, publicado como SVG por capa en `public/splash/<id>/<n>.svg`
+    (`SPLASH_ART_WRITE=1 npx vitest run tests/unit/r3c-splash-art.test.ts`); el movimiento en `app/splash-scenes/<id>.css`
+    (`.splash-stage[data-scene="<id>"]`, solo transform/opacity; lo quieto es el último cuadro). El script del `<head>`
+    marca `data-splash-scene` y deja las capas en `--sl1…N` con su preload: cada página lleva el mismo HTML chico y el
+    navegador baja solo el arte de la fecha puesta (13–19 KB, 2,4–3,8 KB con gzip).
+  - **Sin recargar:** el editor de Campañas del panel tiene la vista previa (Repetir y Pantalla completa) y el modo
+    vitrina el botón "Pantalla de carga" (`playSplash`). Cuadros clave en `docs/img/rediseno/r3c/`
+    (`node scripts/capture-splash-frames.mjs`).
 - **Ruleta "Disco olímpico"** (`src/features/club/Wheel*.tsx`): disco de pesas con los gajos en los colores
   reglamentarios (rojo 25 kg, azul 20, amarillo 15, verde 10) con goma moteada y relieve, aro con 24 LED voltio que
   corren en cadena al girar y titilan al ganar, maza de acero moleteada con "VOLTA · 20 KG" y "Girar" en el agujero
@@ -79,7 +100,8 @@ y distinta de las que hay hoy (negro + rojo agresivo, o blanco clínico). Todo s
   tomarlo", la nota manuscrita y quién la manda. "Compartí en tu historia" dibuja una pieza 9:16 en canvas.
 - **Temáticas fitness** (`src/features/themes/`): desde R1 la fecha **no repinta la tienda**: solo `--season-accent` y
   `--season-glow` para filos, halos y la cinta del ticker (test `season-rule`). Sin guirnaldas, sin adorno en el logo y
-  sin escena en la pantalla de carga. El arte de cada fecha llega como campaña en R3 (lenguaje "Arena").
+  sin cotillón. El arte de cada fecha llega como campaña en R3 (lenguaje "Arena") y su pantalla de carga es una escena
+  mecánica del gym (R3c).
 - **Campañas (R3a, `src/features/campaigns/`):** el "Drop" abre el carrusel del inicio con el key visual
   (`CampaignArt`), el rack con los productos reales, el descuento en marcador LED, la cuenta regresiva y el cupón como
   ticket de acceso; la sala de espera (Black Friday, CyberMonday, Hot Sale) y `/campana/?id=`. En la ficha, el

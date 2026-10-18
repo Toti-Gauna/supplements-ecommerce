@@ -1,0 +1,52 @@
+/*
+ * Día del Boxeador (R3c): la mesa del cronometrista al pie del ring. El martillo se carga para atrás y pega dos veces
+ * en la campana de bronce (ding, ding): la campana vibra, el sonido sale en aros y el reloj de rounds se prende y gira
+ * hasta el descuento.
+ * Capas (public/splash/dia-del-boxeador/): 1 estadio, ring, guantes, mesa y reloj · 2 la campana (vibra sobre su
+ * centro, 300,336 de 800 × 600) · 3 el martillo (gira desde su eje, 506,436) · 4 los aros del sonido.
+ * Golpes a los 0,64 y 0,84 s; mecánica 0,26–1,17 s; número 1,05–1,59 s.
+ */
+.splash-stage[data-scene="dia-del-boxeador"] {
+  --score-x: 58.75%; --score-y: 9.67%; --score-w: 25.75%; --score-h: 12.67%; --score-size: 6.2cqw;
+  --lit-at: 640ms; --roll-at: 1050ms; --caption-at: 900ms;
+}
+.splash-stage[data-scene="dia-del-boxeador"] .s2::before { transform-origin: 37.5% 56%; }
+.splash-stage[data-scene="dia-del-boxeador"] .s3::before { transform-origin: 63.25% 72.667%; transform: rotate(8deg); }
+.splash-stage[data-scene="dia-del-boxeador"] .s4::before { transform-origin: 37.5% 56%; opacity: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .splash-stage[data-scene="dia-del-boxeador"] .s3::before { animation: bx-hammer 900ms linear 260ms both; }
+  .splash-stage[data-scene="dia-del-boxeador"] .s2::before { animation: bx-shake 520ms linear 636ms both; }
+  .splash-stage[data-scene="dia-del-boxeador"] .s4::before { animation: bx-ding 540ms ease-out 636ms both; }
+}
+/* Se carga despacio, baja de golpe, rebota y vuelve a pegar; queda apenas separado de la campana. */
+@keyframes bx-hammer {
+  0% { transform: rotate(8deg); animation-timing-function: ease-in-out; }
+  30% { transform: rotate(36deg); animation-timing-function: cubic-bezier(0.6, 0, 1, 0.6); }
+  42% { transform: rotate(0deg); animation-timing-function: ease-out; }
+  53% { transform: rotate(18deg); animation-timing-function: cubic-bezier(0.6, 0, 1, 0.6); }
+  64% { transform: rotate(0deg); animation-timing-function: ease-out; }
+  78% { transform: rotate(12deg); animation-timing-function: ease-in-out; }
+  100% { transform: rotate(8deg); }
+}
+/* La campana tiembla con cada golpe y se calma. */
+@keyframes bx-shake {
+  0% { transform: none; }
+  6% { transform: rotate(1.8deg); }
+  14% { transform: rotate(-1.5deg); }
+  22% { transform: rotate(1deg); }
+  30% { transform: rotate(-0.6deg); }
+  38% { transform: none; }
+  44% { transform: rotate(1.6deg); }
+  54% { transform: rotate(-1.2deg); }
+  66% { transform: rotate(0.8deg); }
+  80% { transform: rotate(-0.4deg); }
+  100% { transform: none; }
+}
+@keyframes bx-ding {
+  0% { opacity: 0; transform: scale(0.7); }
+  6% { opacity: 1; }
+  36% { opacity: 0.25; transform: scale(1.08); }
+  37% { opacity: 0.25; transform: scale(0.72); }
+  42% { opacity: 1; }
+  100% { opacity: 0; transform: scale(1.25); }
+}

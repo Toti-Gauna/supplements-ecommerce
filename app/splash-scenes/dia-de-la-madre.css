@@ -1,0 +1,33 @@
+/*
+ * Día de la Madre (R3c): el monitor cardíaco barre la pantalla y dibuja tres latidos; con cada pico el frasco de
+ * colágeno se carga un tramo desde el fondo y la sala late en rosa. El marcador del monitor gira hasta el descuento.
+ * Capas (public/splash/dia-de-la-madre/): 1 pared, monitor y estante · 2 el electro · 3 el barrido, recortado a la
+ * pantalla (52,104 → 382,304 de 800 × 600) · 4 el colágeno (crece desde 692,508) · 5 vidrio, tapa y grilla · 6 el
+ * latido. Mecánica 0,26–1,16 s; número 1,05–1,59 s.
+ */
+.splash-stage[data-scene="dia-de-la-madre"] {
+  --score-x: 51.5%; --score-y: 22.33%; --score-w: 21.5%; --score-h: 12.67%; --score-size: 5.8cqw;
+  --lit-at: 980ms; --roll-at: 1050ms; --caption-at: 900ms;
+}
+.splash-stage[data-scene="dia-de-la-madre"] .s3 { clip-path: inset(17.333% 52.25% 49.333% 6.5%); }
+.splash-stage[data-scene="dia-de-la-madre"] .s3::before { transform: translateX(44.5%); }
+.splash-stage[data-scene="dia-de-la-madre"] .s4::before { transform-origin: 86.5% 84.67%; }
+.splash-stage[data-scene="dia-de-la-madre"] .s6::before { opacity: 0.75; }
+@media (prefers-reduced-motion: no-preference) {
+  .splash-stage[data-scene="dia-de-la-madre"] .s3::before { animation: dm-sweep 800ms linear 260ms both; }
+  .splash-stage[data-scene="dia-de-la-madre"] .s4::before { animation: dm-fill 900ms linear 260ms both; }
+  .splash-stage[data-scene="dia-de-la-madre"] .s6::before { animation: dm-beat 900ms linear 260ms both; }
+}
+@keyframes dm-sweep { from { transform: translateX(0); } }
+/* Cada latido (19 %, 48 % y 77 %) sube el colágeno un tramo, con un asentamiento corto del polvo. */
+@keyframes dm-fill {
+  0%, 19% { transform: scaleY(0.04); animation-timing-function: cubic-bezier(0.2, 0.8, 0.3, 1.15); }
+  29%, 48% { transform: scaleY(0.38); animation-timing-function: cubic-bezier(0.2, 0.8, 0.3, 1.15); }
+  58%, 77% { transform: scaleY(0.7); animation-timing-function: cubic-bezier(0.2, 0.8, 0.3, 1.15); }
+  89% { transform: scaleY(1.02); animation-timing-function: ease-in-out; }
+  100% { transform: scaleY(1); }
+}
+@keyframes dm-beat {
+  0%, 17% { opacity: 0; } 20% { opacity: 1; } 32%, 46% { opacity: 0.2; } 49% { opacity: 1; } 62%, 75% { opacity: 0.3; }
+  78% { opacity: 1; } 100% { opacity: 0.75; }
+}

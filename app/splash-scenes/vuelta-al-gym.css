@@ -1,0 +1,29 @@
+/*
+ * Vuelta al gym (R3c): se prende la luz del box, alguien agarra la lona del verano que tapaba el rack, la tironea y la
+ * saca de un tirón hacia la derecha; se levanta tiza y el reloj de la pared gira hasta el descuento.
+ * Capas (public/splash/vuelta-al-gym/): 1 el box con luz · 2 la lona · 3 la oscuridad · 4 la nube de tiza.
+ * Mecánica 0,12–1,12 s; número 1,05–1,59 s.
+ */
+.splash-stage[data-scene="vuelta-al-gym"] {
+  --score-x: 5%; --score-y: 4.67%; --score-w: 22.5%; --score-h: 10.67%; --score-size: 5.6cqw;
+  --lit-at: 140ms; --roll-at: 1050ms; --caption-at: 900ms;
+}
+.splash-stage[data-scene="vuelta-al-gym"] .splash-score { z-index: 1; }
+.splash-stage[data-scene="vuelta-al-gym"] :is(.s2, .s3, .s4) { z-index: 2; }
+.splash-stage[data-scene="vuelta-al-gym"] .s2::before { transform-origin: 80% 20%; transform: translate(112%, -10%) rotate(10deg); }
+.splash-stage[data-scene="vuelta-al-gym"] .s3::before { opacity: 0; }
+.splash-stage[data-scene="vuelta-al-gym"] .s4::before { transform-origin: 55% 75%; opacity: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .splash-stage[data-scene="vuelta-al-gym"] .s3::before { animation: vg-lights 320ms steps(1, end) 120ms both; }
+  .splash-stage[data-scene="vuelta-al-gym"] .s2::before { animation: vg-tarp 760ms linear 360ms both; }
+  .splash-stage[data-scene="vuelta-al-gym"] .s4::before { animation: vg-chalk 720ms ease-out 760ms both; }
+}
+@keyframes vg-lights { 0% { opacity: 1; } 30% { opacity: 0.15; } 45% { opacity: 0.8; } 60%, 100% { opacity: 0; } }
+/* Agarra (se tensa hacia la izquierda), tironea y la lona sale volando, cada vez más rápido. */
+@keyframes vg-tarp {
+  0% { transform: none; animation-timing-function: ease-out; }
+  14% { transform: translateX(-1.6%) rotate(-1.2deg); animation-timing-function: ease-in-out; }
+  26% { transform: translateX(1.2%) rotate(0.8deg); animation-timing-function: cubic-bezier(0.55, 0, 0.85, 0.35); }
+  100% { transform: translate(112%, -10%) rotate(10deg); }
+}
+@keyframes vg-chalk { 0% { opacity: 0; transform: scale(0.85); } 30% { opacity: 1; } 100% { opacity: 0; transform: scale(1.15) translateY(-3%); } }

@@ -45,21 +45,29 @@ A 128 BPM, un tiempo dura 0,46875 s. Para pasar de tiempos a segundos: segundos 
 | 22 | 84–88 | Am | `calm` hasta 86 y `final` desde 86 | Boom + Am(add9) en 86 |
 | 23–24 | 88–96 | Am(add9) | `final`: se apaga; las cuatro últimas notas del estribillo en campana | Brillo del outro en 90,2 (86 + 1,95 s) |
 
-## Plan musical de la pieza (`music.parts`)
+## Plan musical de la pieza (`src/trailer/pieces/t1-sonido.ts`)
 ```ts
-music: { bpm: 128, parts: [
-  { from: 0, to: 12, style: "tension" }, { from: 12, to: 28, style: "clon" }, { from: 28, to: 32, style: "tension" },
-  { from: 32, to: 48, style: "drop" }, { from: 48, to: 56, style: "stutter" }, { from: 56, to: 68, style: "half" },
-  { from: 68, to: 86, style: "calm" }, { from: 86, to: 96, style: "final" },
-] }
+parts: [
+  { from: 0, to: 12, style: "tension" }, { from: 12, to: 26, style: "clon" }, { from: 26, to: 28, style: "plano" },
+  { from: 28, to: 32, style: "tension" }, { from: 32, to: 48, style: "drop" }, { from: 48, to: 56, style: "stutter" },
+  { from: 56, to: 68, style: "half" }, { from: 68, to: 86, style: "calm" }, { from: 86, to: 96, style: "final" },
+],
+silences: [[11.5, 12], [27.5, 28], [31.5, 32], [55.5, 56], [67.5, 68]],   // el máster se cierra (también las colas)
+breaks: [{ from: 37, to: 39.5, voices: ["kick", "bass"] }],              // los golpes a la bolsa son la batería
 ```
-Esto lo define T1.2:
-- los silencios internos de cada tramo;
-- el tono plano;
-- el corte del groove de 37 a 39.
+**Estilos nuevos** (`src/trailer/audio/score.ts`): `clon` (dron La1 + Mi2 con pasabajos a 400 Hz, sin pulso), `plano` (un seno puro en
+La5, 1,5 tiempos), `stutter` (el groove con el pad picado en semicorcheas y el bajo al 80 %) y `half` (bombo en 1 y 3, palmas en 3 y el
+estribillo en campana sobre Am – F – G). **Voces nuevas:** `drone`, `stab`, `tone` y `gate` (el silencio real: cierra el máster en 15 ms
+y lo abre de golpe). Las notas que caerían adentro de un silencio se descartan.
+
+**Lo que ya suena por estilo y las recetas no repiten:** el impacto del DROP 1 en 32, el boom del DROP 2 en 56, el latido (sub) y la subida
+de 28 a 31,5 y la línea plana de 26 a 27,5. En 32 y 56 la receta solo agrega lo suyo (el boom de 32; el aire de 56).
+
+**Lo que mide el render** (`node scripts/trailer-music.mjs t1`): −13,8 LUFS integrado, −0,9 dBFS de pico verdadero y un contraste de ≈ 10 dB
+entre el problema (12–28, mezcla cruda ≈ −28 dB RMS) y el drop (≈ −17 dB). Dura 45,00 s exactos.
 
 ## Efectos (cue sheet)
-`t` va en tiempos absolutos (los segundos, entre paréntesis). Los de `eclipse-intro`, `eclipse-cta` y `eclipse-outro` son los de cada receta y no se repiten.
+`t` va en tiempos absolutos (los segundos, entre paréntesis). Los de `eclipse-intro`, `eclipse-cta` y `eclipse-outro` son los de cada receta y no se repiten. Lo que ya suena por estilo (impacto de 32, boom de 56, latido y subida de 28, línea plana) no va en la hoja de código.
 
 | Escena | Efectos (t · voz · nota · ganancia) |
 |---|---|
@@ -80,8 +88,11 @@ Esto lo define T1.2:
 | 16 `promesa` | 64 (30,000), 64,25 (30,117) y 64,5 (30,234) · `impact` · — · 0,7, 0,6 y 0,8<br>65 (30,469) · `shimmer` · 88 · 0,35 |
 | 18 `guino` | 80 (37,500) · `whoosh` · — · 0,25<br>80,5 (37,734) · `tick` · 81 · 0,2<br>81 (37,969) · `bell` · 81 · 0,4<br>82 (38,438) · `tick` · 76 · 0,2 |
 
-## Lo que T1.2 tiene que entregar
-- Los estilos nuevos `clon`, `stutter` y `half`, y el tono plano.
-- El corte del groove de 37 a 39 y las compuertas de silencio.
-- El WAV o M4A de 45,0 s a −14 LUFS.
-- Prueba: cada efecto de esta lista cae a ±1 cuadro de su evento. Los cortes de 32 y 56 coinciden con los golpes.
+## Entregado en T1.2
+- Estilos, voces y silencios de arriba, con 26 pruebas (`tests/unit/trailer-t1-sonido.test.ts`):
+  - cada efecto cae dentro de la escena del storyboard que lo declara;
+  - los cinco silencios son reales y los golpes llegan justo al terminar cada uno (anti-drop en 12, DROP 1 en 32, DROP 2 en 56);
+  - el estribillo cae donde dice la regla 2 (las 12 notas atadas a eventos de la interfaz).
+- Render previo: [`musica-previa.m4a`](musica-previa.m4a) (música + cue sheet de la pieza; sin los efectos de `eclipse-*` ni de las recetas).
+- Para T1.3: las recetas nuevas **no declaran `cues`** para lo que está en esta hoja (la hoja de la pieza es la fuente). `themeflip` trae los
+  suyos (click en 1,05 s y aire en 1,1 s): en la escena 8 hay que apagarlos o mover el interruptor para que coincidan con 35.

@@ -64,7 +64,7 @@ comprueba que el cuadro sea determinista (mismo segundo → mismos píxeles, con
 cuadro (JPEG calidad 96 por stdin a ffmpeg, sin escribir imágenes a disco). Salida en `public/trailer/`:
 | Archivo | Qué es |
 |---|---|
-| `<pieza>.m4a` | Audio AAC 160 kbps, 48 kHz, normalizado a −14 LUFS / −1,5 dBTP. **Es el que reproduce la página** (arranca al instante; si falta o su duración no coincide, se sintetiza con la partitura) |
+| `<pieza>.m4a` | Audio AAC 160 kbps, 48 kHz, normalizado a −14 LUFS / −2 dBTP (≈ −1 tras el AAC). **Es el que reproduce la página** (arranca al instante; si falta o su duración no coincide, se sintetiza con la partitura) |
 | `<pieza>-16x9.mp4` / `-9x16.mp4` | H.264 High, CRF 17, 60 fps, 1920×1080 / 1080×1920, AAC 192 kbps, `faststart` |
 | `<pieza>-email.mp4` | 720p a 30 fps en dos pasadas, calculado para pesar menos de 9,5 MB |
 | `<pieza>-poster.jpg` | Cuadro de portada (`--poster-at`) |

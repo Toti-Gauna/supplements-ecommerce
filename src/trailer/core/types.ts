@@ -19,7 +19,10 @@ export interface SceneSpec<P extends object = object> {
   props?: P;
 }
 
-import type { MusicPlan } from "../audio/score";
+import type { MusicPlan, Voice } from "../audio/score";
+
+/** Efecto de la pieza, atado a algo que pasa en pantalla. `t` y `dur` van en tiempos desde el inicio; `scene` lo ancla al storyboard. */
+export interface PieceEffect { scene: string; t: number; voice: Voice; vel: number; midi?: number; dur?: number }
 
 export interface TrailerSpec {
   id: string;
@@ -30,4 +33,6 @@ export interface TrailerSpec {
   scenes: SceneSpec[];
   /** Música por tramos (en tiempos). Sin plan, el trailer es mudo. */
   music?: MusicPlan;
+  /** Cue sheet de la pieza (se suma a los `cues` de cada receta). */
+  effects?: PieceEffect[];
 }

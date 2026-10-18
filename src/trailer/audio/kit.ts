@@ -1,7 +1,7 @@
 import type { Note } from "./score";
 
-/** Buses de la mezcla: música, pad (con bombeo en cada bombo), efectos y envío a la reverb. */
-export interface Buses { music: AudioNode; pad: GainNode; sfx: AudioNode; reverb: AudioNode }
+/** Buses de la mezcla: música, pad (con bombeo en cada bombo), efectos y envío a la reverb; `gate` es el silencio real del máster. */
+export interface Buses { music: AudioNode; pad: GainNode; sfx: AudioNode; reverb: AudioNode; gate: GainNode }
 export type VoiceFn = (c: BaseAudioContext, b: Buses, n: Note) => void;
 
 export const mtof = (m: number) => 440 * 2 ** ((m - 69) / 12);

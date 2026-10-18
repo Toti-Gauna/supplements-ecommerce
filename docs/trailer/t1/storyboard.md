@@ -187,4 +187,4 @@ Por qué esta división: `veredicto.md` §3.
 - **Modo liviano:** 16 tiendas y sin derrames de luz.
 
 ## 10. Aprobación
-- [ ] Ignacio aprueba el storyboard (fecha y cambios pedidos).
+- [x] Ignacio aprobó el storyboard el 18/10/2026, con los tres puntos de la consulta: los textos de pantalla tal cual, el guiño con el precio ($ 750.000 / USD 500) y "growth marketing" en inglés.

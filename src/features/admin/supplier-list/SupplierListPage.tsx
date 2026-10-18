@@ -79,7 +79,7 @@ export function SupplierListPage() {
           <ul aria-label="Filas de la lista" className="flex flex-col gap-2">
             {shown.map((l) => <DiffLineItem key={l.line} line={l} skipped={skipped} onToggle={toggle} />)}
           </ul>
-          <div className="sticky bottom-0 z-10 -mx-4 flex flex-wrap items-center justify-end gap-3 border-t border-line bg-surface px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:mx-0 sm:rounded-sm sm:border">
+          <div className="sticky bottom-[calc(5.25rem+env(safe-area-inset-bottom))] z-20 flex flex-wrap items-center justify-end gap-3 rounded-sm bg-surface/95 p-3 shadow-[0_18px_40px_-18px_rgb(0_0_0/0.45)] ring-1 ring-ink/[0.08] backdrop-blur desk:bottom-4">
             <p className="mr-auto text-sm"><strong>{diff.variants.length}</strong> costos nuevos y <strong>{withPrice.length}</strong> precios nuevos.</p>
             <ConfirmButton title="Aplicar la lista del proveedor" confirmLabel="Sí, aplicar" disabled={!diff.variants.length}
               description={<>Se actualizan {diff.variants.length} costos (rigen desde hoy) y {withPrice.length} precios de venta. Lo que no coincidió no se toca. Se puede deshacer.</>} onConfirm={apply}>

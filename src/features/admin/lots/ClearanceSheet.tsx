@@ -52,7 +52,7 @@ function LotActions({ lot, suggestedPct, onClose }: { lot: LotRow; suggestedPct?
           {TABS.map((t) => (
             <button key={t.id} type="button" role="tab" id={`${id}-${t.id}`} aria-selected={tab === t.id} aria-controls={`${id}-panel`} tabIndex={tab === t.id ? 0 : -1} onClick={() => setTab(t.id)}
               onKeyDown={(e) => { const i = TABS.findIndex((x) => x.id === tab); const n = e.key === "ArrowRight" ? i + 1 : e.key === "ArrowLeft" ? i - 1 : null; if (n !== null) { e.preventDefault(); const next = TABS[(n + TABS.length) % TABS.length]!; setTab(next.id); document.getElementById(`${id}-${next.id}`)?.focus(); } }}
-              className={cn("inline-flex min-h-11 items-center gap-1.5 rounded-sm border px-4 text-sm font-bold focus-visible:outline-2 focus-visible:outline-primary", tab === t.id ? "border-primary bg-primary text-on-primary" : "border-line bg-surface")}>
+              className={cn("inline-flex min-h-11 items-center gap-1.5 rounded-sm border px-3 text-sm font-bold focus-visible:outline-2 focus-visible:outline-primary", tab === t.id ? "border-primary bg-primary text-on-primary" : "border-line bg-surface")}>
               {t.label}{t.done && done[t.done] && <><Check size={14} aria-hidden="true" /><span className="sr-only"> (armado)</span></>}
             </button>
           ))}

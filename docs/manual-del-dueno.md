@@ -77,7 +77,7 @@ Los enlaces viejos siguen andando: te llevan a la pestaña nueva.
 | **Mostrador** | Vender · Pedido por chat · Cierre del día · Consulta rápida | (nuevo: la venta en el local, ver la [sección 18](#18-mostrador-vender-en-el-local)) |
 | **Pedidos** | Por cobrar · Para armar · Despachos (Lista y hoja de ruta, Calendario) · Postventa (Seguimiento, Reclamos) · Todos | Pagos manuales (ahora **Por cobrar**), Preparación y la vieja Producción (ahora **Para armar**), Calendario de despachos (dentro de **Despachos**), Reclamos (dentro de **Postventa**) y la tabla de Pedidos (ahora **Todos**) |
 | **Stock** | Productos y stock · Categorías · Packs · Importar | Productos y stock (con Stock y Planilla adentro), Categorías y objetivos, Packs, Importar desde Excel |
-| **Compras** | Proveedores · Insumos · Costos y margen | Proveedores y compras, Insumos de embalaje, Costos y margen |
+| **Compras** | Proveedores · Insumos · Costos y margen (Por producto y Costos vivos) · Lista del proveedor | Proveedores y compras, Insumos de embalaje, Costos y margen; la Lista del proveedor es nueva (R4c) |
 | **Clientes** | (una sola pantalla, con la ficha de cada cliente) | Clientes |
 | **Promos** | Cupones · Descuento stack · Ruleta (Configuración y Premios disponibles) · Premios del juego · Misiones (y Simular progreso) · Regalos y gift cards | Cupones y ruleta (una pantalla con tarjetas), Descuento stack, Misiones, Regalos y gift cards |
 | **Campañas** | Campañas · Estudio de contenido | Campañas (antes Temáticas), Estudio de contenido, y el resumen de Marketing |
@@ -243,6 +243,32 @@ En **Clientes** está cada persona que te compró, con o sin cuenta, unida por s
 Otros segmentos útiles: **Recompra atrasada** (ya se le terminó y no volvió), **Nuevos**, **Frecuentes**, **VIP** y
 **Sin compras**. También podés filtrar por **Objetivo** (masa muscular, fuerza, definición…).
 
+### A quién escribirle hoy (con el link del bolso)
+
+Arriba de **Clientes**, **A quién escribirle hoy** junta a las personas a las que ya se les terminó el pote (hace menos
+de un mes) o se les termina esta semana: una tarjeta por persona, con lo que se le termina, el mensaje de WhatsApp ya
+escrito y dos botones.
+
+1. **Escribirle por WhatsApp** abre el chat con el mensaje armado. Queda anotado que le avisaste y la persona sale de
+   la lista (el aviso no se repite).
+2. **Copiar el link del bolso**: el mensaje trae un link a la tienda que, al abrirlo, **carga en el bolso lo mismo que
+   compró** (misma presentación y cantidad, si hoy hay stock) y lo lleva al carrito. Solo confirma y paga; no se genera
+   ningún pedido hasta entonces.
+
+El cálculo sale de los servicios del pote y de cuándo lo recibió, igual que en la ficha y en **Hoy** (la fila
+"Avisales a N clientes que se les termina el pote"). Es orientativo.
+
+![A quién escribirle hoy](img/rediseno/r4c/recompra-whatsapp-1440.png)
+
+### Regalo de cumpleaños
+
+En la ficha del cliente, **Objetivo y cumpleaños**: cargá el día y el mes. Desde 7 días antes aparece **Mandarle el
+regalo de cumpleaños**. Al confirmarlo se emite una **gift card de la casa de $ 10.000** a su nombre (se descuenta en
+su próxima compra y vence a los 12 meses; no es un pago) y queda el mensaje de WhatsApp con el link para abrirla. Hay
+uno por año. El mismo regalo aparece en **Promos → Regalos** y, en el día del cumpleaños, en **Hoy en tu tienda**.
+
+![Regalo de cumpleaños armado en la ficha](img/rediseno/r4c/cumpleanos-390.png)
+
 ### Avisarle que se le está por terminar
 
 1. Abrí la ficha del cliente (por ejemplo **Juan Ibarra**).
@@ -321,6 +347,22 @@ comparación como imagen): la respuesta que hoy escribís por WhatsApp.
 En la tienda ese sabor sale con el precio tachado y "Liquidación · vence 11/2026". Para volver atrás: en el lote,
 **Cambiar la liquidación** → **Quitar liquidación**.
 
+### Otras salidas para un lote que vence
+
+La misma hoja (**Liquidar** en Productos y stock o en la fila de **Hoy**) tiene cuatro pestañas, cada una ya armada:
+
+- **Liquidar**: además del precio, te dice cuánto ganás o perdés si se vende todo el lote ("ganás $ 17.550") y cuánto
+  perdés si vence sin venderse.
+- **Combo**: sugiere el producto que más se lleva junto (por ejemplo un shaker), el descuento (10, 15 o 20 %) y el
+  precio del combo con su margen. **Crear el combo** lo deja como un pack en la tienda.
+- **Cupón**: crea un cupón real en **Promos** (código `LOTE…`, 15 % por defecto, vigente 14 días sin pasar del
+  vencimiento y con tantos usos como unidades) y arma el mensaje de WhatsApp de cada cliente que ya compró ese producto.
+- **Drop**: lo suma a los productos en oferta de la próxima campaña, con su cupón.
+
+La pestaña muestra un tilde cuando ya armaste esa salida y **Hoy** lo anota ("Ya armaste: combo, cupón").
+
+![Qué hacer con un lote que vence](img/rediseno/r4c/lote-acciones-1440.png)
+
 ### Categorías y objetivos
 
 En **Categorías y objetivos** ordenás las categorías (**Subir**/**Bajar**), elegís las destacadas y editás los
@@ -371,6 +413,11 @@ Para subir (o bajar) un porcentaje a una marca, una categoría o todo el catálo
 ![Aumentar precios con vista previa](img/panel-aumento-precios.png)
 
 La tienda ya muestra los precios nuevos. **Deshacer aumento** vuelve exacto al precio anterior (el último aumento).
+
+**Al margen de la marca**: en vez de un porcentaje parejo, elegí **Al margen de la marca** (arriba del formulario).
+Cada variante con costo cargado pasa al precio que deja el margen que fijaste para su marca (ver
+[Lista del proveedor](#lista-del-proveedor-y-margen-por-marca)), redondeado hacia arriba (terminado en 900, a $100 o a
+$500). Las que no tienen costo no se tocan. También se deshace.
 
 ---
 
@@ -459,6 +506,40 @@ mínimo).
 En **Costos y margen** ves cuánto te cuesta cada producto (lo que le pagás al proveedor más el embalaje), cuánto te
 deja al precio actual y el precio sugerido para tu **Margen objetivo (%)**. El filtro **Margen bajo o pérdida** te
 muestra lo que conviene revisar. Tocá un producto para ver el margen de cada presentación.
+
+### Lista del proveedor y margen por marca
+
+En **Compras → Lista del proveedor** pegás la lista de precios de tu distribuidor (copiada de Excel, Sheets o un mail)
+y ves, antes de tocar nada, qué cambió.
+
+1. En **Margen por marca** fijá cuánto querés ganar sobre el precio de venta con cada marca. Debajo de cada campo
+   ves lo que deja hoy en promedio. Sin un margen propio vale el general de **Costos y margen**.
+2. Pegá la lista (o tocá **Cargar la lista de muestra**). La primera fila tiene que tener títulos como "Artículo" y
+   "Costo".
+3. Arriba te resume: **"48 suben, 3 bajan, 2 sin coincidencia"**. Filtrá por **Suben**, **Bajan** o **Sin coincidencia**
+   (lo que tu tienda no vende o una presentación que no existe: no se toca nada).
+4. En cada variante ves el costo de antes y el nuevo, el margen que te deja el precio actual y **el precio de venta
+   nuevo que propone el margen de la marca**, redondeado hacia arriba (por defecto, terminado en 900). Destildá las que
+   no quieras mover: el costo se actualiza igual.
+5. **Aplicar costos y precios** y confirmá. Se puede **Deshacer** (vuelven precios y costos).
+
+![Lista del proveedor con las diferencias](img/rediseno/r4c/lista-proveedor-diferencias-1440.png)
+
+Es distinto de **Stock → Importar**, que actualiza costos y precios fila por fila desde un archivo; acá primero ves las
+diferencias y el margen de cada marca.
+
+### Costos vivos
+
+En **Costos y margen → Costos vivos**, una fila por variante con:
+
+- **Costo** y **Rige desde**: la fecha desde la que vale (la de la lista del proveedor al aplicarla, o el día en que lo
+  cambiaste a mano). Los costos de hace más de 60 días se marcan.
+- **Cobertura**: para cuántos días alcanza el stock al ritmo de venta (stock ÷ venta diaria de las últimas 8 semanas,
+  con pedidos pagados y ventas del mostrador). Es orientativo.
+- **Ganancia al liquidar**: en los lotes por vencer, cuánto ganás o perdés si se liquidan con el descuento propuesto, y
+  cuánto perdés si vencen.
+
+![Costos vivos](img/rediseno/r4c/costos-vivos-1440.png)
 
 ### Insumos de embalaje
 
@@ -763,6 +844,7 @@ Cada parte es una pestaña; el **Contenido** (sección 14) y los **Emails** (sec
 | La fecha del panel está fija en el lunes 5 de octubre de 2026 | Es la fecha de hoy |
 | Las gift cards no tienen dinero real: el saldo es un descuento simulado y el regalo viaja dentro del link | El servidor emite la gift card, guarda el saldo y el link es una clave al azar |
 | Las ventas del mostrador no cobran nada ni emiten factura: bajan el stock de este navegador y quedan en el cierre del día | Se registran en la tienda con su comprobante y el stock baja para todos |
+| El link de recompra y el regalo de cumpleaños viajan con los datos adentro del link y funcionan en este navegador; los mensajes de WhatsApp los mandás vos | El servidor guarda el bolso y el regalo, y el link es una clave al azar |
 
 ---
 

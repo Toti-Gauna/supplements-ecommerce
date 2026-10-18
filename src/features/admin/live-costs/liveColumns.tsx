@@ -9,11 +9,13 @@ import { plural } from "@/lib/plural";
 import { expiryText } from "../lots/LotBadge";
 
 const signed = (n: number) => `${n < 0 ? "−" : "+"}${formatARS(Math.abs(n))}`;
-const coverageText = (r: LiveCostRow) => (r.coverage.days === null ? COVERAGE_LABEL[r.coverage.state] : plural(r.coverage.days, "día", "días"));
 
 export function CoverageCell({ r }: { r: LiveCostRow }) {
   const tone = r.coverage.state === "corta" || r.coverage.state === "sin-stock" ? "danger" : r.coverage.state === "larga" ? "warning" : "neutral";
-  return <span className="flex flex-col items-start gap-0.5"><strong className="tabular-nums">{coverageText(r)}</strong><Badge tone={tone}>{COVERAGE_LABEL[r.coverage.state]}</Badge></span>;
+  const badge = <Badge tone={tone}>{COVERAGE_LABEL[r.coverage.state]}</Badge>;
+  // Sin una cuenta de días (a pedido, sin ventas) alcanza con el rótulo.
+  if (r.coverage.days === null) return badge;
+  return <span className="flex flex-col items-start gap-0.5"><strong className="tabular-nums">{plural(r.coverage.days, "día", "días")}</strong>{badge}</span>;
 }
 
 export function SinceCell({ r }: { r: LiveCostRow }) {

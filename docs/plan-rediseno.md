@@ -347,6 +347,15 @@ del panel (marcador del día y lista de acciones por urgencia, cada una con su b
 confirmar que ya entró el pago), el menú de 21 a 8 entradas con pestañas y las rutas viejas redirigiendo, ayuda en "?"
 y Promos en una pantalla con pestañas. Siguen R4b (Mostrador, que entra como 9.ª entrada, y Pedidos unificado) y R4c.
 
+R4c (lote de margen y clientes, ítems 5 a 7 y los dos de la sección 10; capturas en [`img/rediseno/r4c/`](img/rediseno/r4c/)):
+**Compras → Lista del proveedor** (se pega la lista, resumen "48 suben, 3 bajan, 2 sin coincidencia", margen editable por
+marca, precio nuevo propuesto con redondeo comercial hacia arriba y aplicar con deshacer) y el aumento "al margen de la
+marca" en Aumentar precios; **Costos vivos** (fecha de cada costo, cobertura de stock en días y ganancia al liquidar); el
+lote que vence con sus salidas armadas (liquidar con ganancia, combo, cupón real y drop) desde Hoy y desde Lotes;
+**A quién escribirle hoy** en Clientes con el link `/recompra/` que carga el bolso, y el regalo de cumpleaños (ficha y
+Hoy). Sin estado nuevo obligatorio: los campos nuevos son opcionales (`brandMargins`, `costSince`, `birthdayGift`), así
+que `ADMIN_STORE_VERSION` sigue en 19.
+
 ---
 
 ## 7 bis. Lotes pedidos por Ignacio el 16/10/2026 (antes de seguir con R2)

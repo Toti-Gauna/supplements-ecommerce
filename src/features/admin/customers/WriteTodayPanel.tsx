@@ -32,7 +32,7 @@ function Person({ w }: { w: WriteToday }) {
         <span className="text-xs text-muted">{w.phone ?? "Sin teléfono"}</span>
       </div>
       <ul className="text-sm">{w.items.map((i) => <li key={i.key} className={i.inDays < 0 ? "font-semibold text-danger" : ""}><strong>{i.product}</strong>: {runOutLine(i).toLowerCase()}</li>)}</ul>
-      <p className="rounded-sm bg-bg p-3 text-sm text-muted">{writeMessage(w, brand.name, link)}</p>
+      <p className="rounded-sm bg-bg p-3 text-sm text-muted">{writeMessage(w, brand.name, link && "(link a su bolso)")}<span className="sr-only"> El link completo va en el mensaje.</span></p>
       <div className="flex flex-wrap gap-2">
         {wa ? <a href={wa} target="_blank" rel="noopener noreferrer" onClick={sent} aria-label={`WhatsApp a ${w.name}: ${plural(w.items.length, "pote", "potes")} (se abre en otra pestaña)`} className={buttonClass("primary", "sm", "min-h-10 px-3.5")}><MessageCircle size={15} aria-hidden="true" />Escribirle por WhatsApp</a>
           : <p className="text-sm text-muted">No tiene teléfono cargado: avisale por email desde su ficha.</p>}

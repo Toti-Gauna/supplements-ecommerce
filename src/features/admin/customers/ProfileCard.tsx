@@ -7,6 +7,7 @@ import type { Goal } from "@/demo/types";
 import { useAdmin } from "@/stores/admin";
 import { Panel } from "../detail/Panel";
 import { useDemoSave } from "../useDemoSave";
+import { BirthdayGiftAction } from "./BirthdayGiftAction";
 import { BirthdayPicker, birthdayText } from "./BirthdayPicker";
 
 /**
@@ -37,6 +38,7 @@ export function ProfileCard({ customer }: { customer: CustomerView }) {
           <span className="text-sm font-bold">Cumpleaños</span>
           <BirthdayPicker id="cust-bday" value={profile?.birthday ?? ""} onChange={onBirthday} />
         </div>
+        <BirthdayGiftAction customer={customer} />
       </div>
     </Panel>
   );

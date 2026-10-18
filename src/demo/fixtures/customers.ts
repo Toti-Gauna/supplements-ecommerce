@@ -28,7 +28,7 @@ export interface CustomerProfile {
   goal?: Goal;
   notices?: RepurchaseNotice[];
   /** Regalo de cumpleaños ya armado (R4c): uno por año. */
-  birthdayGift?: { year: number; code: string; at: string };
+  birthdayGift?: { year: number; code: string; at: string; /** Parámetro del link del regalo (`/regalo/?g=`). */ param: string };
 }
 
 /** Fichas FICTICIAS por email (en minúsculas). Notas y fechas inventadas. */
@@ -39,9 +39,9 @@ export const customerProfiles: Record<string, CustomerProfile> = {
   "martin.g@ejemplo.com": { notes: [] },
   "lucia.f@ejemplo.com": { notes: [], birthday: "10-30", goal: "masa-muscular" },
   "juan.i@ejemplo.com": { notes: [{ at: "2026-09-07T10:30:00-03:00", text: "Toma un scoop después de entrenar, todos los días. Siempre chocolate." }], goal: "masa-muscular" },
-  "flor.m@ejemplo.com": { notes: [], goal: "definicion" },
+  "flor.m@ejemplo.com": { notes: [], goal: "definicion", birthday: "10-08" },
   "nico.r@ejemplo.com": { notes: [], goal: "masa-muscular" },
-  "tomas.h@ejemplo.com": { notes: [{ at: "2026-08-12T19:00:00-03:00", text: "Entrena fuerza cuatro veces por semana a la noche." }], goal: "fuerza" },
+  "tomas.h@ejemplo.com": { notes: [{ at: "2026-08-12T19:00:00-03:00", text: "Entrena fuerza cuatro veces por semana a la noche." }], goal: "fuerza", birthday: "10-05" },
   "paula.c@ejemplo.com": { notes: [], goal: "recuperacion" },
 };
 

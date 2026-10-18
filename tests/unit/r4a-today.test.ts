@@ -18,14 +18,16 @@ describe("lista del día por urgencia", () => {
       "dispatch:VOL-000120",
       "purchase:suggested",
       "repurchase:due",
+      "birthday:tomas.h@ejemplo.com",
       "pack:rest",
       "gift:REGALO-T4M4-N0X2",
+      "birthday:flor.m@ejemplo.com",
       "lot:barra-proteica::bp-mani-x12::VL-2604-B",
       "campaign:halloween",
       "lots:rest",
     ]);
     const tiers = groupByTier(todayBoard(snap(), DEMO_TODAY).actions).map((g) => [g.tier, g.actions.length]);
-    expect(tiers).toEqual([["atrasado", 1], ["hoy", 5], ["semana", 3], ["despues", 2]]);
+    expect(tiers).toEqual([["atrasado", 1], ["hoy", 6], ["semana", 4], ["despues", 2]]);
   });
 
   it("aprobar un comprobante lo saca de la lista y suma el pedido a lo que hay que armar", () => {

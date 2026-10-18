@@ -1,7 +1,7 @@
 import { rankActions, type TodayAction, type TodaySnapshot } from "./today";
 import { campaignAction } from "./today-campaign";
 import { dispatchActions, lateAndTodayActions, packAction, receiptActions } from "./today-orders";
-import { giftActions, repurchaseAction } from "./today-people";
+import { birthdayActions, giftActions, repurchaseAction } from "./today-people";
 import { todayScore, type TodayScore } from "./today-score";
 import { lotActions, purchaseActions } from "./today-stock";
 
@@ -22,6 +22,7 @@ export function todayBoard(snap: TodaySnapshot, today: string): TodayBoard {
     ...purchaseActions(snap, today),
     repurchaseAction(snap, today),
     ...giftActions(snap),
+    ...birthdayActions(snap, today),
     ...lotActions(snap, today),
     campaignAction(snap, today),
   ].filter((a): a is TodayAction => a !== null);

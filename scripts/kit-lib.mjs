@@ -29,6 +29,7 @@ export async function kitContext(browser, { width, height, ...extra }) {
     localStorage.setItem("volta-theme", "dark");
     localStorage.setItem("volta-sound", "off");
     localStorage.setItem("volta-quiz-invite", "seen");
+    localStorage.setItem("volta-trailer-invite", "seen");
     localStorage.setItem("volta-demo:theme-preview", JSON.stringify({ state: { previewId: "original" }, version: 0 }));
     sessionStorage.setItem("volta-demo:splash-seen", "1");
   });

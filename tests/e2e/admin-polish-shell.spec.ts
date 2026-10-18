@@ -59,7 +59,7 @@ for (const [width, height] of [[1440, 900], [1280, 800], [1024, 768]] as const) 
       await page.goto("admin-demo/");
       const nav = rail(page).getByRole("navigation", { name: "Secciones del panel demo" });
       const more = rail(page).locator("[data-more-below]");
-      // Con 8 entradas entran en una pantalla normal; en una ventana baja (440 px), Campañas y Ajustes quedan debajo del pliegue: el aviso tiene que verse.
+      // Con 9 entradas entran en una pantalla normal; en una ventana baja (440 px), Campañas y Ajustes quedan debajo del pliegue: el aviso tiene que verse.
       expect(await nav.evaluate((el) => el.scrollHeight > el.clientHeight + 2)).toBe(true);
       await expect(more).toHaveAttribute("data-more-below", "true");
       await expect(rail(page).getByRole("link", { name: "Ajustes" })).not.toBeInViewport();

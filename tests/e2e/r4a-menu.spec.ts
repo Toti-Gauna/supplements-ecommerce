@@ -2,20 +2,25 @@ import { expect, test, type Page } from "@playwright/test";
 import { horizontalOverflow } from "./helpers";
 
 /**
- * R4a · menú del panel de 21 a 8 entradas (Hoy, Pedidos, Stock, Compras, Clientes, Promos, Campañas, Ajustes), cada una con
- * sus pestañas. Las rutas viejas llevan a su lugar nuevo, las pestañas se usan con el teclado y el "?" abre la ayuda.
+ * R4a · menú del panel de 21 a 8 entradas, y 9 desde R4b con Mostrador (Hoy, Mostrador, Pedidos, Stock, Compras, Clientes,
+ * Promos, Campañas, Ajustes), cada una con sus pestañas. Las rutas viejas llevan a su lugar nuevo, las pestañas se usan con
+ * el teclado y el "?" abre la ayuda.
  */
 
-const ORDER = ["Hoy", "Pedidos", "Stock", "Compras", "Clientes", "Promos", "Campañas", "Ajustes"];
+const ORDER = ["Hoy", "Mostrador", "Pedidos", "Stock", "Compras", "Clientes", "Promos", "Campañas", "Ajustes"];
 const rail = (page: Page) => page.locator("aside[data-pinned]").getByRole("navigation", { name: "Secciones del panel demo" });
 const tabs = (page: Page) => page.getByRole("tablist", { name: "Pestañas de la sección" });
 const subtabs = (page: Page) => page.getByRole("tablist", { name: "Subpestañas" });
 /** El nombre de una pestaña puede llevar su contador al final (“Insumos 4 para reponer”). */
 const named = (label: string) => new RegExp(`^${label}( \\d+ [a-zé ]+)?$`);
 
-/** [ruta vieja, adónde llega, sección del menú, pestaña, subpestaña]. Una por cada ruta que existía antes de R4a. */
+/** [ruta vieja, adónde llega, sección del menú, pestaña, subpestaña]. Una por cada ruta que existía antes de R4a, más las del Mostrador (R4b). */
 const ROUTES: [string, RegExp, string, string | null, string?][] = [
   ["admin-demo/", /admin-demo\/$/, "Hoy", null],
+  ["admin-demo/mostrador/", /mostrador\/$/, "Mostrador", "Vender"],
+  ["admin-demo/mostrador/chat/", /mostrador\/chat\/$/, "Mostrador", "Pedido por chat"],
+  ["admin-demo/mostrador/cierre/", /mostrador\/cierre\/$/, "Mostrador", "Cierre del día"],
+  ["admin-demo/mostrador/consulta/", /mostrador\/consulta\/$/, "Mostrador", "Consulta rápida"],
   ["admin-demo/pedidos/", /pedidos\/$/, "Pedidos", "Pedidos"],
   ["admin-demo/pagos/", /pagos\/$/, "Pedidos", "Pagos manuales"],
   ["admin-demo/preparacion/", /preparacion\/$/, "Pedidos", "Preparación"],
@@ -63,13 +68,13 @@ test.describe("escritorio con mouse", () => {
   test.use({ viewport: { width: 1440, height: 900 }, isMobile: false, hasTouch: false });
   test.beforeEach(async ({ page }) => { await page.mouse.move(1300, 500); });
 
-  test("el menú tiene 8 entradas, en este orden", async ({ page }) => {
+  test("el menú tiene 9 entradas, en este orden, con Mostrador en el 2.º lugar", async ({ page }) => {
     await page.goto("admin-demo/");
     const links = rail(page).getByRole("link");
-    await expect(links).toHaveCount(8);
+    await expect(links).toHaveCount(9);
     const names = await links.evaluateAll((els) => els.map((el) => el.textContent ?? ""));
     expect(names.map((n, i) => n.startsWith(ORDER[i]!))).toEqual(ORDER.map(() => true));
-    await expect(page.getByRole("link", { name: "Mostrador" })).toHaveCount(0);
+    await expect(rail(page).getByRole("link", { name: "Mostrador" })).toHaveAttribute("href", /admin-demo\/mostrador\/$/);
   });
 
   for (const [route, url, section, tab, sub] of ROUTES) {
@@ -138,17 +143,18 @@ test.describe("escritorio con mouse", () => {
 test.describe("celular 390 px", () => {
   test.use({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
 
-  test("las pestañas de abajo son Hoy, Pedidos, Stock y Promos más “Más”, y “Más” abre las 8 entradas", async ({ page }) => {
+  test("las pestañas de abajo son Hoy, Pedidos, Mostrador (en el centro), Stock y Promos más “Más”, y “Más” abre las 9 entradas", async ({ page }) => {
     await page.goto("admin-demo/");
     const bar = page.getByRole("navigation", { name: "Accesos rápidos del panel" });
     const items = bar.getByRole("link");
-    await expect(items).toHaveCount(4);
-    expect(await items.evaluateAll((els) => els.map((el) => el.textContent?.replace(/^\d+/, "").replace(/ \(.*\)$/, "").trim()))).toEqual(["Hoy", "Pedidos", "Stock", "Promos"]);
+    await expect(items).toHaveCount(5);
+    expect(await items.evaluateAll((els) => els.map((el) => el.textContent?.replace(/^\d+/, "").replace(/ \(.*\)$/, "").trim()))).toEqual(["Hoy", "Pedidos", "Mostrador", "Stock", "Promos"]);
+    expect(await horizontalOverflow(page)).toBeLessThanOrEqual(0);
     await expect(bar.getByRole("button", { name: "Más secciones del panel" })).toBeVisible();
     await bar.getByRole("button", { name: "Más secciones del panel" }).click();
     const menu = page.getByRole("dialog", { name: "Menú del panel" });
     const links = menu.getByRole("navigation", { name: "Secciones del panel demo" }).getByRole("link");
-    await expect(links).toHaveCount(8);
+    await expect(links).toHaveCount(9);
     const names = await links.evaluateAll((els) => els.map((el) => el.textContent ?? ""));
     expect(names.map((n, i) => n.startsWith(ORDER[i]!))).toEqual(ORDER.map(() => true));
   });

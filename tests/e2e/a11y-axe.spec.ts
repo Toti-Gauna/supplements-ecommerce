@@ -65,6 +65,12 @@ const PAGES: [string, string, string][] = [
   ["panel compras: proveedores (R4a)", "admin-demo/proveedores/", "[role=tablist]"],
   ["panel ajustes: contacto (R4a)", "admin-demo/ajustes/", "[role=tablist]"],
   ["panel ajustes: emails con subpestañas (R4a)", "admin-demo/emails/", "[role=tablist]"],
+  // R4b: el mostrador (vender, pedido por chat, cierre del día y consulta rápida).
+  ["panel mostrador: vender (R4b)", "admin-demo/mostrador/", "[data-pot]"],
+  ["panel mostrador: pedido por chat (R4b)", "admin-demo/mostrador/chat/", "[data-pot]"],
+  ["panel mostrador: cierre del día (R4b)", "admin-demo/mostrador/cierre/", "h1"],
+  ["panel mostrador: consulta rápida (R4b)", "admin-demo/mostrador/consulta/", "[data-whatsapp-text]"],
+  ["panel ajustes: medios de pago con las cuotas del mostrador (R4b)", "admin-demo/ajustes/pagos/", "#cuotas-mostrador"],
 ];
 
 interface Violation { id: string; impact: string | null; help: string; nodes: { target: string[]; failureSummary?: string }[] }
@@ -104,6 +110,34 @@ for (const mode of ["dark", "light"] as const) {
       await expect(page.getByRole("dialog", { name: "Cupones" })).toBeVisible();
       await page.waitForTimeout(500);
       const found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+    });
+    test("panel mostrador: ticket con stack, cobro en cuotas, venta registrada y cierre con tickets (R4b)", async ({ page }) => {
+      await page.goto("admin-demo/mostrador/");
+      for (const [q, key] of [["whey vainilla", "ionic-whey::iw-vainilla-2lb"], ["creatina", "creatina-monohidrato::cm-sin-sabor-300"], ["overvolt", "overvolt-pre::ov-limon-300"]] as const) {
+        await page.getByLabel("Buscar para vender").fill(q);
+        await page.locator(`[data-pot='${key}']`).click();
+      }
+      await page.getByRole("region", { name: "Ticket en curso" }).getByRole("button", { name: /Ver el Ticket/ }).click();
+      await expect(page.getByRole("dialog", { name: "Ticket" })).toContainText("Descuento stack");
+      await page.waitForTimeout(500);
+      let found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+      await page.getByRole("dialog", { name: "Ticket" }).getByRole("button", { name: /^Cobrar/ }).click();
+      const charge = page.getByRole("dialog", { name: /^Cobrar/ });
+      await charge.getByText("3 cuotas", { exact: true }).click();
+      await expect(charge.locator("[data-installments]")).toBeVisible();
+      await page.waitForTimeout(500);
+      found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+      await charge.getByRole("button", { name: /Registrar venta/ }).click();
+      await expect(page.getByRole("dialog", { name: "Venta registrada (simulada)" })).toBeVisible();
+      found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+      await page.goto("admin-demo/mostrador/cierre/");
+      await expect(page.locator("[data-sale]")).toHaveCount(1);
+      await page.waitForTimeout(400);
+      found = await audit(page);
       expect(found, describe(found)).toEqual([]);
     });
     test("inicio: pestaña Deportes de \"Entrená por objetivo o por deporte\"", async ({ page }) => {

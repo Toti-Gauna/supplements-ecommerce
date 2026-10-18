@@ -1,8 +1,6 @@
 // Ayudas del exportador de trailers (scripts/trailer-export.mjs): ffmpeg y medición. Sin dependencias de la app.
 import { spawn, spawnSync } from "node:child_process";
 import fs from "node:fs";
-import os from "node:os";
-import path from "node:path";
 
 /** Normalización de volumen para redes y email: −14 LUFS integrado, techo −1,5 dBTP. */
 export const LOUDNORM = "loudnorm=I=-14:TP=-1.5:LRA=11";
@@ -43,14 +41,13 @@ export function duration(file) {
   return Number(r.stdout.trim());
 }
 
-/** Versión liviana para email: 720p a 30 fps con la tasa de bits justa para pesar menos de `maxMB` (2 pasadas). */
+/** Versión liviana para email: 720p a 30 fps, calidad constante (CRF 23) con la tasa de bits topada para no pasar de `maxMB`. */
 export async function emailVersion({ input, out, maxMB = 9.5 }) {
-  const secs = duration(input);
-  const kbps = Math.floor((maxMB * 8192) / secs) - 112; // presupuesto total menos el audio
-  const common = ["-i", input, "-vf", "scale=1280:-2,fps=30", "-c:v", "libx264", "-preset", "slow", "-b:v", `${kbps}k`, "-maxrate", `${Math.floor(kbps * 1.3)}k`, "-bufsize", `${kbps * 2}k`, "-pix_fmt", "yuv420p"];
-  const log = path.join(os.tmpdir(), `trailer-pass-${process.pid}`);
-  await run([...common, "-pass", "1", "-passlogfile", log, "-an", "-f", "mp4", "/dev/null"]);
-  await run([...common, "-pass", "2", "-passlogfile", log, "-c:a", "aac", "-b:a", "112k", "-movflags", "+faststart", out]);
-  for (const f of fs.readdirSync(os.tmpdir()).filter((x) => x.startsWith(`trailer-pass-${process.pid}`))) fs.rmSync(path.join(os.tmpdir(), f));
+  const kbps = Math.floor((maxMB * 8192) / duration(input)) - 112; // presupuesto total menos el audio
+  await run([
+    "-i", input, "-vf", "scale=1280:-2,fps=30", "-c:v", "libx264", "-preset", "slow", "-crf", "23",
+    "-maxrate", `${kbps}k`, "-bufsize", `${kbps * 2}k`, "-pix_fmt", "yuv420p",
+    "-c:a", "aac", "-b:a", "112k", "-movflags", "+faststart", out,
+  ]);
   return fs.statSync(out).size / 1048576;
 }

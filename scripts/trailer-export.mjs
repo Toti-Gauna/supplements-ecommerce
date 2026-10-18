@@ -49,14 +49,14 @@ try {
   console.log("✓ cuadro determinista");
 
   const wav = path.join(tmp, "audio.wav"), m4a = out(`${pieza}.m4a`);
-  if (want("audio") || want("video") || want("email")) {
+  if (want("audio") || want("video")) {
     fs.writeFileSync(wav, Buffer.from(await page.evaluate(() => window.__trailer.wav()), "base64"));
     await run(["-i", wav, "-af", LOUDNORM, "-c:a", "aac", "-b:a", "160k", "-ar", "48000", "-movflags", "+faststart", m4a]);
     console.log(`✓ audio ${path.basename(m4a)} (${(fs.statSync(m4a).size / 1048576).toFixed(2)} MB)`);
   }
   if (want("poster")) { fs.writeFileSync(out(`${pieza}-poster.jpg`), await shot(page, posterAt)); console.log("✓ póster"); }
 
-  if (want("video") || want("email")) {
+  if (want("video")) {
     for (const ratio of ratios) {
       if (ratio !== "16x9") { await page.context().close(); page = await open(ratio); }
       const file = out(`${pieza}-${ratio}.mp4`), enc = videoEncoder({ fps, audio: m4a, out: file });
@@ -69,10 +69,10 @@ try {
       await enc.end();
       console.log(`✓ ${path.basename(file)} (${(fs.statSync(file).size / 1048576).toFixed(1)} MB, ${((Date.now() - t0) / 1000).toFixed(0)} s)`);
     }
-    if (want("email") && ratios.includes("16x9")) {
-      const mb = await emailVersion({ input: out(`${pieza}-16x9.mp4`), out: out(`${pieza}-email.mp4`) });
-      console.log(`✓ ${pieza}-email.mp4 (${mb.toFixed(1)} MB)`);
-    }
+  }
+  if (want("email")) {
+    const mb = await emailVersion({ input: out(`${pieza}-16x9.mp4`), out: out(`${pieza}-email.mp4`) });
+    console.log(`✓ ${pieza}-email.mp4 (${mb.toFixed(1)} MB)`);
   }
 } finally {
   await browser.close();

@@ -26,6 +26,7 @@ escrito con la tienda de ejemplo **VOLTA**; en tu tienda vas a ver tu marca, per
 15. [Ajustes](#15-ajustes)
 16. [Una rutina que funciona](#16-una-rutina-que-funciona)
 17. [Qué es simulado en la demo](#17-qué-es-simulado-en-la-demo)
+18. [Mostrador: vender en el local](#18-mostrador-vender-en-el-local)
 
 ### Palabras que vas a ver
 
@@ -48,8 +49,8 @@ contraseña.
 ![Hoy en tu tienda y el menú en la compu](img/rediseno/r4a/menu-1440-light.png)
 
 **En la compu**
-- A la izquierda está el menú, con **8 entradas**: **Hoy**, **Pedidos**, **Stock**, **Compras**, **Clientes**,
-  **Promos**, **Campañas** y **Ajustes**. Se abre al pasar el mouse por encima. El número verde avisa cuánto hay para
+- A la izquierda está el menú, con **9 entradas**: **Hoy**, **Mostrador**, **Pedidos**, **Stock**, **Compras**,
+  **Clientes**, **Promos**, **Campañas** y **Ajustes**. Se abre al pasar el mouse por encima. El número verde avisa cuánto hay para
   atender en esa sección (comprobantes, pedidos atrasados, stock bajo).
 - Cada entrada tiene sus **pestañas** arriba de la pantalla (por ejemplo, Promos: Cupones, Descuento stack, Ruleta,
   Premios del juego, Misiones, Regalos y gift cards). Se recorren con el mouse, el dedo o las flechas del teclado.
@@ -61,18 +62,19 @@ contraseña.
 
 ![El panel en el celular, con el menú Más abierto](img/rediseno/r4a/menu-390-light.png)
 
-- Abajo tenés las pestañas **Hoy**, **Pedidos**, **Stock**, **Promos** y **Más** (el resto de las secciones). Las
-  pestañas de cada sección se deslizan hacia los costados.
+- Abajo tenés las pestañas **Hoy**, **Pedidos**, **Mostrador** (en el centro), **Stock**, **Promos** y **Más** (el
+  resto de las secciones). Las pestañas de cada sección se deslizan hacia los costados.
 - Arriba, el menú (☰), el buscador, el modo claro/oscuro y Reiniciar demo (la flecha circular).
 
 ### Dónde quedó cada pantalla
 
-Antes el menú tenía 21 entradas. Ahora son 8 y lo que era una entrada pasó a ser una pestaña dentro de su sección.
+Antes el menú tenía 21 entradas. Ahora son 9 y lo que era una entrada pasó a ser una pestaña dentro de su sección.
 Los enlaces viejos siguen andando: te llevan a la pestaña nueva.
 
 | Sección | Pestañas | Antes era |
 |---|---|---|
 | **Hoy** | (una sola pantalla) | Inicio |
+| **Mostrador** | Vender · Pedido por chat · Cierre del día · Consulta rápida | (nuevo: la venta en el local, ver la [sección 18](#18-mostrador-vender-en-el-local)) |
 | **Pedidos** | Pedidos · Pagos manuales · Preparación · Calendario de despachos · Reclamos | Pedidos, Pagos manuales, Preparación (y la vieja Producción), Calendario de despachos, Reclamos |
 | **Stock** | Productos y stock · Categorías · Packs · Importar | Productos y stock (con Stock y Planilla adentro), Categorías y objetivos, Packs, Importar desde Excel |
 | **Compras** | Proveedores · Insumos · Costos y margen | Proveedores y compras, Insumos de embalaje, Costos y margen |
@@ -87,7 +89,8 @@ Qué cambia en las direcciones: `/admin-demo/cupones/` y `/admin-demo/cupones/li
 `/admin-demo/planilla/` a **Productos y stock** (vista por variante y formato Excel). El resto de las direcciones no
 cambió.
 
-> Mostrador (la venta en el local) se suma como novena entrada, en el centro de las pestañas del celular.
+> **Mostrador** (la venta en el local) es la novena entrada y la pestaña del centro en el celular: ver la
+> [sección 18](#18-mostrador-vender-en-el-local).
 
 **Tablas**: casi todas las listas (pedidos, clientes, productos, costos…) tienen buscador, filtros, **Reiniciar**
 filtros, **Columnas** para elegir qué ver, **Ver en formato Excel** y **Descargar Excel (.xlsx)** con lo que estás
@@ -651,8 +654,9 @@ Cada parte es una pestaña; el **Contenido** (sección 14) y los **Emails** (sec
 
 - **Contacto y WhatsApp**: el número del botón de WhatsApp de la tienda, con código de país y área
   (54 9 223 …). **Guardar contacto**.
-- **Medios de pago**: cuáles se ofrecen (Mercado Pago, transferencia, QR), el descuento por transferencia o QR y
-  cuántas horas se reserva un pedido sin comprobante. **Guardar medios de pago**.
+- **Medios de pago**: cuáles se ofrecen (Mercado Pago, transferencia, QR), el descuento por transferencia o QR,
+  cuántas horas se reserva un pedido sin comprobante y el **recargo de las cuotas del mostrador** (3 y 6 cuotas).
+  **Guardar medios de pago**.
 - **Datos de cobro**: alias, CBU/CVU, titular y QR que ve el comprador para transferir. **Guardar datos de cobro**.
 - **Envíos y retiro**: envío gratis desde cierto monto y cada forma de entrega (retiro en el local, cadete en Mar del
   Plata con sus códigos postales, envío al resto del país) con precio y plazo. **Guardar envíos**.
@@ -698,3 +702,60 @@ Cada parte es una pestaña; el **Contenido** (sección 14) y los **Emails** (sec
 | Proveedores, clientes, pedidos y códigos de lote son inventados | Son los tuyos |
 | La fecha del panel está fija en el lunes 5 de octubre de 2026 | Es la fecha de hoy |
 | Las gift cards no tienen dinero real: el saldo es un descuento simulado y el regalo viaja dentro del link | El servidor emite la gift card, guarda el saldo y el link es una clave al azar |
+| Las ventas del mostrador no cobran nada ni emiten factura: bajan el stock de este navegador y quedan en el cierre del día | Se registran en la tienda con su comprobante y el stock baja para todos |
+
+---
+
+## 18. Mostrador: vender en el local
+
+Para cuando el cliente está adelante tuyo o te escribe por WhatsApp. Está segundo en el menú, es la pestaña del medio en
+el celular y también lo abrís desde **Hoy** con **Vender en el mostrador**. Pensado para la tablet o el celular del
+mostrador: botones grandes y todo a un toque.
+
+![Mostrador en el celular, con el ticket abajo](img/rediseno/r4b/mostrador-390-light.png)
+
+### Vender
+1. Escribí lo que te piden en el buscador: el producto, la marca o el sabor ("whey chocolate", "creatina"). Entiende
+   errores chicos. Sin escribir nada ves lo que más sale.
+2. Tocá el pote para sumarlo al ticket. Cada tarjeta dice el precio, cuánto queda y **el lote que sale: siempre el que
+   vence primero**. Si vence en menos de 60 días se ve en ámbar con los días que faltan; un lote liquidado sale a su
+   precio de liquidación.
+3. El ticket está siempre a la vista: a la derecha en la compu y abajo en el celular (**Ver el ticket** para cambiar
+   cantidades o sacar algo). Con suplementos de 3 categorías distintas aplica solo el **descuento stack**, el mismo de
+   la tienda.
+4. **Cobrar** y elegí cómo paga:
+   - **Efectivo**: anotá con cuánto paga (o tocá un billete) y te dice el vuelto.
+   - **Transferencia**: registrala cuando veas la plata en tu cuenta.
+   - **Débito** o **Crédito 1 pago**: sin recargo.
+   - **3 cuotas** o **6 cuotas**: con el recargo de **Ajustes → Medios de pago** (en la demo, 12 % y 24 %). Ves el valor
+     de cada cuota y el total; las cuotas son iguales y se redondean al peso.
+5. **Registrar venta (simulada)**: queda el comprobante en pantalla (número de ticket, vuelto o cuotas y de qué lote
+   salió cada pote) y el stock baja en el panel y en la tienda. **Nueva venta** deja el ticket listo para el siguiente.
+
+![Cobro en 3 cuotas con el recargo](img/rediseno/r4b/cobro-cuotas.png)
+
+### Pedido por chat (WhatsApp o Instagram)
+Cuando alguien te compra por mensaje, cargalo en **Pedido por chat**: canal, nombre, teléfono o usuario, productos,
+entrega (retiro, cadete o envío) y cómo paga. Entra en **Pedidos** como cualquier otro, con "por WhatsApp" o "por
+Instagram" a la vista, y sigue el mismo camino.
+- Con **transferencia o QR** queda pendiente de pago. Si ya te mandó el comprobante por el chat, marcalo: queda **en
+  revisión** y lo aprobás en Pagos cuando ves la plata. Un comprobante nunca lo marca pagado.
+- Con **link de Mercado Pago** queda esperando la confirmación.
+- **Cobrado en mano** (efectivo o tarjeta en el local) solo si ya lo cobraste: te pide confirmarlo y recién ahí entra
+  pagado.
+
+### Cierre del día
+La **caja esperada** es el fondo con el que abriste más todo lo cobrado en efectivo (el vuelto ya salió de lo que te
+dieron). Debajo, lo cobrado por medio de pago, los recargos de las cuotas y los tickets del día. Contá la plata,
+anotala en **Efectivo contado** (te dice si sobra o falta) y tocá **Cerrar el día**. Queda en **Cierres anteriores**; lo
+que vendas después va al próximo cierre.
+
+![Cierre del día](img/rediseno/r4b/cierre-dia.png)
+
+### Consulta rápida
+"¿Tenés whey de vainilla?": buscá el producto y vas a ver cada presentación con precio, stock y lote, y el **texto para
+WhatsApp** ya armado con el precio y la disponibilidad de hoy. **Copiar texto** y lo pegás en el chat. El mensaje no
+promete resultados ni dosis.
+
+> En la demo: ninguna venta se cobra ni emite factura. Bajan el stock de este navegador y quedan en el cierre del día;
+> **Reiniciar demo** las borra.

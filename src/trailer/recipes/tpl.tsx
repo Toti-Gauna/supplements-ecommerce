@@ -22,13 +22,16 @@ export function Grid({ ratio, color, opacity = 1, tag = "grid" }: { ratio: Ratio
   );
 }
 
-/** Super de plantilla: letra de template (sans gris, minúscula de oración) sobre un degradé al pie, en la columna 1. */
+/**
+ * Super de plantilla: letra de template (sans gris, minúscula de oración) en la columna 1, sobre un degradé. En 16:9 va al pie;
+ * en 9:16 va en el tercio superior, a 96 px (storyboard §8).
+ */
 export function Sup({ text, ratio }: { text: string; ratio: Ratio }) {
   const tall = ratio === "9x16";
-  const style: CSSProperties = { zIndex: 11, left: colX(ratio, 1), bottom: tall ? 140 : 80, fontSize: tall ? 56 : 64, maxWidth: tall ? 960 : 1500, color: TPL.text };
+  const style: CSSProperties = { zIndex: 11, left: colX(ratio, 1), ...(tall ? { top: 150 } : { bottom: 80 }), fontSize: tall ? 96 : 64, lineHeight: tall ? 1.05 : 1, maxWidth: tall ? 960 : 1500, color: TPL.text };
   return (
     <>
-      <div aria-hidden="true" className="absolute inset-x-0 bottom-0" style={{ height: tall ? 420 : 300, background: `linear-gradient(transparent, ${TPL.bg}f0)`, zIndex: 10 }} />
+      <div aria-hidden="true" className={`absolute inset-x-0 ${tall ? "top-0" : "bottom-0"}`} style={{ height: tall ? 560 : 300, background: `linear-gradient(${tall ? "to bottom" : "to top"}, ${TPL.bg}f0, transparent)`, zIndex: 10 }} />
       <p data-t="sup" className="absolute font-sans leading-none" style={style}>{text}</p>
     </>
   );
@@ -69,10 +72,11 @@ export function Pote({ style }: { style: CSSProperties }) {
 }
 
 /** Rótulo de la ráfaga ("01 · Pantallas de carga por fecha"): mono de la tienda en un chip de noche, con su raya de 1 px. */
-export function Chip({ n, text, bottom = false, light = false }: { n: string; text: string; bottom?: boolean; light?: boolean }) {
-  const pos: CSSProperties = bottom ? { left: 96, bottom: 60 } : { left: 96, top: 60 };
+export function Chip({ n, text, bottom = false, light = false, ratio = "16x9" }: { n: string; text: string; bottom?: boolean; light?: boolean; ratio?: Ratio }) {
+  const tall = ratio === "9x16", left = colX(ratio, 1);
+  const pos: CSSProperties = bottom ? { left, bottom: tall ? 110 : 60 } : { left, top: tall ? 90 : 60 };
   return (
-    <div data-t="chip" className="absolute font-mono uppercase" style={{ ...pos, zIndex: 20, padding: "14px 22px 18px", fontSize: 34, letterSpacing: "0.12em", fontWeight: 500,
+    <div data-t="chip" className="absolute font-mono uppercase" style={{ ...pos, zIndex: 20, padding: "14px 22px 18px", fontSize: tall ? 28 : 34, letterSpacing: "0.12em", fontWeight: 500,
       background: light ? TR.paper : TR.night, color: light ? TR.ink : TR.onNight, opacity: 0.94 }}>
       <b style={{ color: light ? TR.ink : TR.volt, fontWeight: 600 }}>{n}</b> · {text}
       <span data-t="chip-rule" className="absolute" style={{ left: 22, right: 22, bottom: 8, height: HAIR, background: light ? TR.ink : TR.volt, transformOrigin: "0 50%" }} />

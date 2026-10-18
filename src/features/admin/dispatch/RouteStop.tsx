@@ -27,7 +27,7 @@ export function RouteStop({ stop: s, n, order }: { stop: Stop; n: number; order:
     <li data-stop={s.code} className="grid grid-cols-[2rem_minmax(0,1fr)] gap-3 bg-surface px-3 py-3 sm:px-4">
       <span aria-hidden="true" className="font-lab grid h-8 w-8 place-items-center rounded-sm bg-night text-sm font-bold text-volt">{n}</span>
       <div className="flex min-w-0 flex-col gap-2">
-        <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-1">
+        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-3">
           <div className="min-w-0">
             <p className="flex items-start gap-1.5 font-bold leading-snug"><MapPin size={15} aria-hidden="true" className="mt-0.5 shrink-0 text-muted" />{s.address}</p>
             <p className="text-sm"><span className="sr-only">Parada {n}: </span>{s.name} · <Link href={`/admin-demo/pedidos/detalle/?codigo=${s.code}`} className="font-bold tabular-nums text-primary underline">{s.code}</Link></p>

@@ -1,0 +1,32 @@
+/*
+ * Día del Futbolista (R3c): de noche en el predio, la pelota sale de al lado de la cámara, entra al arco de
+ * entrenamiento girando y se clava en la red, que se hunde y la devuelve; cae, pica y queda adentro. El marcador de la
+ * pared gira hasta el descuento.
+ * Capas (public/splash/dia-del-futbolista/): 1 predio, césped, conos y marcador · 2 la red quieta · 3 la red hundida ·
+ * 4 la pelota (escala y gira sobre su centro, 420,396 de 800 × 600) · 5 los palos. Golpe a los 0,6 s; mecánica
+ * 0,26–1,02 s; número 1,05–1,59 s.
+ */
+.splash-stage[data-scene="dia-del-futbolista"] {
+  --score-x: 67%; --score-y: 8.67%; --score-w: 22.5%; --score-h: 12%; --score-size: 5.6cqw;
+  --lit-at: 640ms; --roll-at: 1050ms; --caption-at: 900ms;
+}
+.splash-stage[data-scene="dia-del-futbolista"] .s3::before { opacity: 0; }
+.splash-stage[data-scene="dia-del-futbolista"] .s4::before { transform-origin: 52.5% 66%; transform: rotate(140deg); }
+@media (prefers-reduced-motion: no-preference) {
+  .splash-stage[data-scene="dia-del-futbolista"] .s4::before { animation: fu-shot 760ms linear 260ms both; }
+  .splash-stage[data-scene="dia-del-futbolista"] .s2::before { animation: fu-rest 420ms ease-in 600ms both; }
+  .splash-stage[data-scene="dia-del-futbolista"] .s3::before { animation: fu-dent 420ms ease-out 600ms both; }
+}
+/* Viene de cerca (grande, abajo), pega en el fondo de la red, se hunde, la red la devuelve y cae picando. */
+@keyframes fu-shot {
+  0% { transform: translate(-12%, 40%) scale(2.6) rotate(-220deg); animation-timing-function: cubic-bezier(0.25, 0.55, 0.45, 1); }
+  45% { transform: translate(-2.5%, -12.33%) scale(1) rotate(0deg); animation-timing-function: ease-out; }
+  54% { transform: translate(-2.5%, -11.5%) scale(0.9) rotate(30deg); animation-timing-function: ease-in-out; }
+  64% { transform: translate(-1.6%, -9%) scale(0.98) rotate(60deg); animation-timing-function: cubic-bezier(0.5, 0, 1, 0.6); }
+  84% { transform: translate(0, 0) scale(1) rotate(110deg); animation-timing-function: ease-out; }
+  92% { transform: translate(0, -2.2%) scale(1) rotate(130deg); animation-timing-function: ease-in; }
+  100% { transform: translate(0, 0) scale(1) rotate(140deg); }
+}
+/* La red quieta se va en el golpe y vuelve; la hundida aparece y se recupera. */
+@keyframes fu-rest { 0% { opacity: 1; } 8%, 30% { opacity: 0; } 100% { opacity: 1; } }
+@keyframes fu-dent { 0% { opacity: 0; } 8%, 30% { opacity: 1; } 100% { opacity: 0; } }

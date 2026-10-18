@@ -1,0 +1,37 @@
+/*
+ * CrossFit Open (R3c): el reloj de WOD del box hace la cuenta regresiva. 3, 2, 1 en rojo, cada número con su pitido
+ * (un fogonazo que baña la pared y el piso) y, en el "ya", el reloj arranca de cero en voltio; la ventana de las
+ * rondas se prende y gira hasta el descuento.
+ * Capas (public/splash/crossfit-open/): 1 el box, el reloj apagado y el rig · 2, 3 y 4 los números 3, 2 y 1 · 5 el
+ * reloj en marcha · 6 el fogonazo. Los números escalan desde el centro de la ventana (513,130 de 800 × 600).
+ * Mecánica 0,26–1,28 s; número 1,05–1,59 s.
+ */
+.splash-stage[data-scene="crossfit-open"] {
+  --score-x: 16%; --score-y: 14%; --score-w: 24.5%; --score-h: 15.33%; --score-size: 6cqw;
+  --lit-at: 940ms; --roll-at: 1050ms; --caption-at: 940ms;
+}
+.splash-stage[data-scene="crossfit-open"] :is(.s2, .s3, .s4, .s5)::before { transform-origin: 64.125% 21.667%; }
+.splash-stage[data-scene="crossfit-open"] :is(.s2, .s3, .s4, .s6)::before { opacity: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .splash-stage[data-scene="crossfit-open"] :is(.s2, .s3, .s4)::before { animation: cf-count 220ms linear both; }
+  .splash-stage[data-scene="crossfit-open"] .s2::before { animation-delay: 260ms; }
+  .splash-stage[data-scene="crossfit-open"] .s3::before { animation-delay: 480ms; }
+  .splash-stage[data-scene="crossfit-open"] .s4::before { animation-delay: 700ms; }
+  .splash-stage[data-scene="crossfit-open"] .s5::before { animation: cf-go 360ms cubic-bezier(0.2, 0.8, 0.3, 1) 920ms both; }
+  .splash-stage[data-scene="crossfit-open"] .s6::before { animation: cf-beep 820ms linear 260ms both; }
+}
+/* Cada número entra de golpe, apenas grande, se asienta y se apaga justo antes del siguiente. */
+@keyframes cf-count {
+  0% { opacity: 0; transform: scale(1.14); }
+  6% { opacity: 1; transform: scale(1.14); animation-timing-function: cubic-bezier(0.2, 0.8, 0.3, 1); }
+  40%, 94% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1); }
+}
+@keyframes cf-go { 0% { opacity: 0; transform: scale(1.18); } 12% { opacity: 1; } 100% { opacity: 1; transform: scale(1); } }
+/* Tres pitidos cortos y el largo del "ya". */
+@keyframes cf-beep {
+  0%, 26.8%, 53.7%, 80.5% { opacity: 0; }
+  1.5%, 28.3%, 55.2% { opacity: 0.85; }
+  82% { opacity: 1; }
+  18%, 45%, 72%, 100% { opacity: 0; }
+}

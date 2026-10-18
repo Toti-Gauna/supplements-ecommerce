@@ -1,20 +1,19 @@
-import type { CSSProperties } from "react";
 import { LOGO_BOLT, LOGO_STROKE_PATH, LOGO_VIEWBOX } from "@/components/atoms/Logo";
 import { brand } from "@/config/brand";
+import { SplashBarbell } from "./splash/SplashBarbell";
+import { SplashStage } from "./splash/SplashStage";
 
-/** Doce placas de la barra que se cargan de a una (como los discos en la barra). */
-const PLATES = Array.from({ length: 12 }, (_, i) => i);
-
-/** La animación dura ~1,2 s con el telón (app/splash.css). Red de seguridad: si la animación no llega a terminar (pestaña en segundo plano, CSS bloqueado), se retira igual. */
+/** La animación más larga (escena por fecha) dura ~1,85 s con el telón. Red de seguridad: si la animación no llega a terminar (pestaña en segundo plano, CSS bloqueado), se retira igual. */
 export const SPLASH_FALLBACK_MS = 4000;
 
 /**
- * Pantalla de carga del box (HTML + CSS; se ve aunque no haya JS), en cada carga completa de la página (L1: no solo la
- * primera vez de la sesión; al navegar dentro de la tienda no aparece). En ~1,2 s: el símbolo se enciende como un marcador, sube el nombre, la barra carga
- * sus placas y un telón la retira. Todo es transform/opacity (app/splash.css). Con una campaña puesta (R3a) sale su
- * variante, mecánica y de ~1,8 s: los discos de la barra en el color de la fecha y, debajo del logo (nunca encima), un
- * marcador con el nombre de la campaña y el descuento que cuenta hasta su número. Se retira cuando TERMINA la animación
- * del telón, nunca a mitad. Con "reducir movimiento" no se muestra.
+ * Pantalla de carga del box (HTML + CSS; se ve aunque no haya JS de React), en cada carga completa de la página (L1;
+ * al navegar dentro de la tienda no aparece). Una por fecha (R3c, `src/demo/engine/splash-scenes.ts`):
+ * - **original** (~1,4 s): el símbolo se enciende como un marcador, sube el nombre y se carga una barra olímpica;
+ * - **escena de la fecha** (~1,85 s): el logo arriba (nunca tapado) y debajo el escenario con su mecánica (la persiana
+ *   de Black Friday, la barra al rojo del Hot Sale…) y el marcador con el descuento;
+ * - **variante de campaña** (R3a, ~1,8 s) para las fechas cuya escena llega en la fase 2.
+ * Se retira cuando TERMINA la animación del telón, nunca a mitad; Escape la cierra; con "reducir movimiento" no sale.
  *
  * Va en la capa superior del navegador (popover, abierto por el script de abajo apenas se lee la etiqueta, antes de
  * pintar): ahí no compite con ningún z-index.
@@ -29,11 +28,8 @@ export function Splash() {
             <svg viewBox={LOGO_VIEWBOX} className="mark-v"><path d={LOGO_BOLT} fill={brand.signature.volt} /></svg>
           </span>
           <span className="splash-word"><span className="word font-display">{brand.name}</span></span>
-          <span className="splash-bar">
-            {PLATES.map((i) => <span key={i} style={{ "--i": i } as CSSProperties} />)}
-          </span>
-          {/* Variante de campaña (R3a): marcador con el nombre de la fecha y el descuento contando (CSS, ver seasonScript). */}
-          <span className="splash-score"><span className="splash-score-name" /><span className="splash-score-off" /></span>
+          <SplashBarbell />
+          <SplashStage />
         </div>
         <p aria-hidden="true" className="splash-city eyebrow">{brand.descriptor} · {brand.city}</p>
       </div>
@@ -42,8 +38,11 @@ export function Splash() {
   );
 }
 
-/** Abre el splash en la capa superior apenas se lee la etiqueta (con "reducir movimiento" no se abre). */
-const splashOpenScript = `(function(){var s=document.getElementById("volta-splash");if(!s||!s.showPopover||document.documentElement.classList.contains("splash-done"))return;if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;try{s.showPopover()}catch(e){}})();`;
+/**
+ * Pasa la fecha del <html> (la marcó el script de temática del <head>) al escenario y abre el splash en la capa
+ * superior apenas se lee la etiqueta (con "reducir movimiento" no se abre).
+ */
+const splashOpenScript = `(function(){var d=document.documentElement,s=document.getElementById("volta-splash");if(!s)return;var g=s.querySelector(".splash-stage"),a=d.getAttribute("data-splash-scene"),n=d.getAttribute("data-splash-dn");if(g&&a)g.setAttribute("data-scene",a);if(g&&n)g.setAttribute("data-dn",n);if(!s.showPopover||d.classList.contains("splash-done"))return;if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;try{s.showPopover()}catch(e){}})();`;
 
 /**
  * Cierra la pantalla de carga con Escape y la retira sola cuando termina la animación del telón (no a un tiempo fijo:

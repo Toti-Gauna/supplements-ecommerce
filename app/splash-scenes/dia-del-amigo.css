@@ -1,0 +1,40 @@
+/*
+ * Día del Amigo (R3c): dos brazos entran desde abajo con su shaker, giran sobre el codo y chocan las tapas en el
+ * medio (el brindis del gym): rebotan apenas, salta el batido y el marcador gira hasta el descuento.
+ * Capas (public/splash/dia-del-amigo/): 1 el box y el marcador · 2 el brazo izquierdo (gira sobre 150,640 de
+ * 800 × 600) · 3 el derecho (sobre 650,640) · 4 la luz del choque (en 400,198) · 5 las gotas.
+ * Mecánica 0,26–1,4 s; número 1,05–1,59 s.
+ */
+.splash-stage[data-scene="dia-del-amigo"] {
+  --score-x: 67.5%; --score-y: 8.667%; --score-w: 27.75%; --score-h: 12%; --score-size: 5.2cqw;
+  --lit-at: 1000ms; --roll-at: 1050ms; --caption-at: 900ms;
+}
+.splash-stage[data-scene="dia-del-amigo"] .s2::before { transform-origin: 18.75% 106.667%; }
+.splash-stage[data-scene="dia-del-amigo"] .s3::before { transform-origin: 81.25% 106.667%; }
+.splash-stage[data-scene="dia-del-amigo"] :is(.s4, .s5)::before { transform-origin: 50% 33%; }
+.splash-stage[data-scene="dia-del-amigo"] .s4::before { opacity: 0.55; }
+.splash-stage[data-scene="dia-del-amigo"] .s5::before { opacity: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .splash-stage[data-scene="dia-del-amigo"] .s2::before { animation: da-left 640ms linear 260ms both; }
+  .splash-stage[data-scene="dia-del-amigo"] .s3::before { animation: da-right 640ms linear 260ms both; }
+  .splash-stage[data-scene="dia-del-amigo"] .s4::before { animation: da-clink 520ms ease-out 800ms both; }
+  .splash-stage[data-scene="dia-del-amigo"] .s5::before { animation: da-drops 600ms ease-out 800ms both; }
+}
+/* Giran sobre el codo cada vez más rápido, chocan (86 %), rebotan un poco y vuelven a juntarse. */
+@keyframes da-left {
+  0% { transform: rotate(-34deg); animation-timing-function: cubic-bezier(0.35, 0, 0.75, 0.6); }
+  86% { transform: rotate(0deg); animation-timing-function: ease-out; }
+  93% { transform: rotate(-2.4deg); animation-timing-function: ease-in-out; }
+  100% { transform: rotate(0deg); }
+}
+@keyframes da-right {
+  0% { transform: rotate(34deg); animation-timing-function: cubic-bezier(0.35, 0, 0.75, 0.6); }
+  86% { transform: rotate(0deg); animation-timing-function: ease-out; }
+  93% { transform: rotate(2.4deg); animation-timing-function: ease-in-out; }
+  100% { transform: rotate(0deg); }
+}
+@keyframes da-clink { 0% { opacity: 0; transform: scale(0.6); } 16% { opacity: 1; transform: scale(1.06); } 100% { opacity: 0.55; transform: none; } }
+@keyframes da-drops {
+  0% { opacity: 0; transform: translateY(4%) scale(0.7); } 22% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-6%) scale(1.15); }
+}

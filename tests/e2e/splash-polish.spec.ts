@@ -23,13 +23,13 @@ test("símbolo, nombre y barra de carga centrados; lienzo oscuro hasta que se va
   expect(await page.evaluate(() => getComputedStyle(document.documentElement).backgroundColor)).toBe("rgba(0, 0, 0, 0)");
 });
 
-test("con temática, la pantalla de carga sigue sobre la noche de la marca: la fecha solo pone su acento (variante de campaña en r3a-campanas)", async ({ page }) => {
+test("con temática, la pantalla de carga sigue sobre la noche de la marca: la fecha solo pone su acento (su escena en r3c-carga)", async ({ page }) => {
   await holdSplash(page);
   await previewTheme(page, "black-friday");
   await page.goto("");
   await expect(page.locator("html")).toHaveAttribute("data-season", "black-friday");
   const { edge, accent, bg, base } = await page.locator("#volta-splash").evaluate((s) => ({
-    edge: getComputedStyle(s.querySelector(".splash-bar")!).borderBottomColor,
+    edge: getComputedStyle(s.querySelector(".splash-caption")!, "::before").backgroundColor,
     accent: getComputedStyle(document.documentElement).getPropertyValue("--season-accent").trim(),
     bg: getComputedStyle(s).backgroundColor,
     base: getComputedStyle(document.documentElement).getPropertyValue("--c-night").trim(),

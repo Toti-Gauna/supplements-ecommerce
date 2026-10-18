@@ -7,6 +7,7 @@ import { Input } from "@/components/atoms/Field";
 import { EmptyState } from "@/components/molecules/EmptyState";
 import { checkTemplate, previewCode, renderEmail, sampleContext, sampleOrderFor, tokensFor } from "@/demo/admin/emails/render";
 import { TEST_INBOX } from "@/demo/admin/emails-slice";
+import { waForEmail } from "@/demo/admin/whatsapp";
 import type { EmailTemplate } from "@/demo/fixtures/emails";
 import { useAdmin } from "@/stores/admin";
 import { useToasts } from "@/stores/toast";
@@ -18,6 +19,7 @@ import { EditorHeader } from "./EditorHeader";
 import { EditorPreview } from "./EditorPreview";
 import { FulfillmentPicker } from "./FulfillmentPicker";
 import { TokenPalette } from "./TokenPalette";
+import { WhatsappEditor } from "./WhatsappEditor";
 
 const isTemplate = (id: string) => (x: unknown): x is EmailTemplate => {
   const t = x as EmailTemplate | null;
@@ -97,6 +99,13 @@ function Editor({ saved }: { saved: EmailTemplate }) {
               </div>
               {hasOrder && <FulfillmentPicker value={draft.only} onChange={(only) => set({ only })} />}
             </section>
+            {waForEmail(saved.id).map((m) => (
+              <section key={m.id} id="e-whatsapp" aria-labelledby="e-wa-t" className="flex flex-col gap-2 rounded-sm bg-surface p-4 shadow-[var(--shadow-card)]">
+                <h2 id="e-wa-t" className="text-sm font-extrabold">Versión WhatsApp · {m.label}</h2>
+                <p className="text-xs text-muted">Corta, para mandarla a mano desde Pedidos con “Escribirle por WhatsApp”. Se guarda aparte del email.</p>
+                <WhatsappEditor id={m.id} orders={orders} sampleCode={code} palette={false} />
+              </section>
+            ))}
             <div id="e-blocks" tabIndex={-1} className="scroll-mt-48 focus:outline-none"><BlockList blocks={draft.blocks} onChange={(blocks) => set({ blocks })} tokens={tokens} hasOrder={hasOrder} arts={arts} /></div>
           </div>
           <EditorPreview template={draft} orders={orders} sample={code} onSample={setSample} email={rendered} to={`${ctx.customerName} <${ctx.email}>`} />

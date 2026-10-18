@@ -4,18 +4,19 @@ import { usePathname } from "next/navigation";
 import { Ellipsis } from "lucide-react";
 import { TabIndicator } from "@/components/atoms/TabIndicator";
 import { cn } from "@/lib/cn";
-import { ADMIN_NAV, isActive } from "./nav";
+import { MOBILE_NAV, isActive } from "./nav";
 import { useNavCounts } from "./useNavCounts";
 
 /**
- * Pestañas inferiores del panel en celulares y tablets (como una app): las 4 secciones de uso diario + "Más". Cápsula flotante:
+ * Pestañas inferiores del panel en celulares y tablets (como una app): las secciones de uso diario (`MOBILE_ORDER`; en R4b
+ * "Mostrador" entra en el centro) + "Más". Cápsula flotante:
  * Safari 26 de iPhone no dibuja nada fijo detrás de su barra, así que no se intenta llegar al borde.
  */
 export function AdminTabBar({ onMore, moreOpen }: { onMore: () => void; moreOpen: boolean }) {
   const pathname = usePathname();
   const counts = useNavCounts();
-  const tabs = ADMIN_NAV.filter((n) => n.tab);
-  const current = tabs.findIndex((t) => isActive(pathname, t.href));
+  const tabs = MOBILE_NAV;
+  const current = tabs.findIndex((t) => isActive(pathname, t));
   const inTabs = current >= 0;
   const item = "relative flex flex-1 flex-col items-center justify-center gap-1 font-mono text-[10px] font-bold uppercase tracking-[0.06em] transition-colors";
   return (
@@ -26,17 +27,17 @@ export function AdminTabBar({ onMore, moreOpen }: { onMore: () => void; moreOpen
       </TabIndicator>
       <ul className="flex h-16 px-2">
         {tabs.map((t) => {
-          const active = isActive(pathname, t.href);
+          const active = isActive(pathname, t);
           const Icon = t.icon;
-          const count = t.badge ? counts[t.badge] : 0;
+          const count = t.attention.reduce((sum, b) => sum + counts[b], 0);
           return (
-            <li key={t.href} className="flex flex-1">
+            <li key={t.id} className="flex flex-1">
               <Link href={t.href} aria-current={active ? "page" : undefined} className={cn(item, active ? "text-volt" : "text-night-muted")}>
                 <span className="relative">
                   <Icon size={21} aria-hidden="true" />
-                  {count > 0 && t.badge === "payments" && <span className="absolute -right-2 -top-1.5 grid h-4 min-w-4 place-items-center rounded-xs bg-volt px-1 font-mono text-[10px] font-bold text-night">{count}</span>}
+                  {count > 0 && <span className="absolute -right-2 -top-1.5 grid h-4 min-w-4 place-items-center rounded-xs bg-volt px-1 font-mono text-[10px] font-bold text-night">{count}</span>}
                 </span>
-                {t.short}
+                {t.short}{count > 0 && <span className="sr-only"> ({count} para atender)</span>}
               </Link>
             </li>
           );

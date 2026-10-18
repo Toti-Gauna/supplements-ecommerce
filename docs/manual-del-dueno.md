@@ -10,7 +10,7 @@ escrito con la tienda de ejemplo **VOLTA**; en tu tienda vas a ver tu marca, per
 ## Índice
 
 1. [Cómo moverte por el panel](#1-cómo-moverte-por-el-panel)
-2. [Inicio: tu día en una pantalla](#2-inicio-tu-día-en-una-pantalla)
+2. [Hoy en tu tienda: tu día en una pantalla](#2-hoy-en-tu-tienda-tu-día-en-una-pantalla)
 3. [Pedidos, pagos y reclamos](#3-pedidos-pagos-y-reclamos)
 4. [Clientes y recompra](#4-clientes-y-recompra)
 5. [Productos, stock y lotes](#5-productos-stock-y-lotes)
@@ -45,21 +45,49 @@ escrito con la tienda de ejemplo **VOLTA**; en tu tienda vas a ver tu marca, per
 El panel de la demo está en la dirección de tu tienda + `/admin-demo/`. En la tienda real entrás con tu usuario y
 contraseña.
 
-![Inicio del panel en la compu](img/panel-inicio.png)
+![Hoy en tu tienda y el menú en la compu](img/rediseno/r4a/menu-1440-light.png)
 
 **En la compu**
-- A la izquierda está el menú, agrupado en **Ventas**, **Operaciones**, **Catálogo**, **Marketing** y **Ajustes**.
-  Se abre al pasar el mouse por encima. Los puntitos de color avisan que hay algo pendiente (comprobantes, pedidos
-  atrasados, stock bajo).
+- A la izquierda está el menú, con **8 entradas**: **Hoy**, **Pedidos**, **Stock**, **Compras**, **Clientes**,
+  **Promos**, **Campañas** y **Ajustes**. Se abre al pasar el mouse por encima. El número verde avisa cuánto hay para
+  atender en esa sección (comprobantes, pedidos atrasados, stock bajo).
+- Cada entrada tiene sus **pestañas** arriba de la pantalla (por ejemplo, Promos: Cupones, Descuento stack, Ruleta,
+  Premios del juego, Misiones, Regalos y gift cards). Se recorren con el mouse, el dedo o las flechas del teclado.
+- Cada pantalla abre con un título corto. El **?** que está al lado te explica qué hace y qué es simulado.
 - Arriba: **Buscar o ir a…** (también con Ctrl+K) para abrir un pedido, un cliente o una sección escribiendo; **Ver
   tienda**; el sol/luna para el modo claro u oscuro; y **Reiniciar demo**.
 
 **En el celular**
 
-![Inicio del panel en el celular](img/celular-panel-inicio.png)
+![El panel en el celular, con el menú Más abierto](img/rediseno/r4a/menu-390-light.png)
 
-- Abajo tenés las pestañas **Inicio**, **Pedidos**, **Pagos**, **Productos** y **Más** (el resto de las secciones).
+- Abajo tenés las pestañas **Hoy**, **Pedidos**, **Stock**, **Promos** y **Más** (el resto de las secciones). Las
+  pestañas de cada sección se deslizan hacia los costados.
 - Arriba, el menú (☰), el buscador, el modo claro/oscuro y Reiniciar demo (la flecha circular).
+
+### Dónde quedó cada pantalla
+
+Antes el menú tenía 21 entradas. Ahora son 8 y lo que era una entrada pasó a ser una pestaña dentro de su sección.
+Los enlaces viejos siguen andando: te llevan a la pestaña nueva.
+
+| Sección | Pestañas | Antes era |
+|---|---|---|
+| **Hoy** | (una sola pantalla) | Inicio |
+| **Pedidos** | Pedidos · Pagos manuales · Preparación · Calendario de despachos · Reclamos | Pedidos, Pagos manuales, Preparación (y la vieja Producción), Calendario de despachos, Reclamos |
+| **Stock** | Productos y stock · Categorías · Packs · Importar | Productos y stock (con Stock y Planilla adentro), Categorías y objetivos, Packs, Importar desde Excel |
+| **Compras** | Proveedores · Insumos · Costos y margen | Proveedores y compras, Insumos de embalaje, Costos y margen |
+| **Clientes** | (una sola pantalla, con la ficha de cada cliente) | Clientes |
+| **Promos** | Cupones · Descuento stack · Ruleta (Configuración y Premios disponibles) · Premios del juego · Misiones (y Simular progreso) · Regalos y gift cards | Cupones y ruleta (una pantalla con tarjetas), Descuento stack, Misiones, Regalos y gift cards |
+| **Campañas** | Campañas · Estudio de contenido | Campañas (antes Temáticas), Estudio de contenido, y el resumen de Marketing |
+| **Ajustes** | Contacto · Medios de pago · Datos de cobro · Envíos y retiro · Contenido (Carrusel, Textos de inicio, Preguntas frecuentes) · Emails (Emails automáticos, Bandeja de salida) | Ajustes (una pantalla con tarjetas), Contenido, Emails automáticos |
+
+Qué cambia en las direcciones: `/admin-demo/cupones/` y `/admin-demo/cupones/lista/` ahora son `/admin-demo/promos/`;
+`/admin-demo/marketing/` y `/admin-demo/tematicas/` llevan a **Campañas**; `/admin-demo/contenido/` lleva al carrusel y
+`/admin-demo/ajustes/contacto/` a **Ajustes**; `/admin-demo/produccion/` lleva a **Preparación** y `/admin-demo/stock/` y
+`/admin-demo/planilla/` a **Productos y stock** (vista por variante y formato Excel). El resto de las direcciones no
+cambió.
+
+> Mostrador (la venta en el local) se suma como novena entrada, en el centro de las pestañas del celular.
 
 **Tablas**: casi todas las listas (pedidos, clientes, productos, costos…) tienen buscador, filtros, **Reiniciar**
 filtros, **Columnas** para elegir qué ver, **Ver en formato Excel** y **Descargar Excel (.xlsx)** con lo que estás
@@ -67,19 +95,47 @@ filtrando.
 
 ---
 
-## 2. Inicio: tu día en una pantalla
+## 2. Hoy en tu tienda: tu día en una pantalla
 
-Lo primero que ves a la mañana: "Buen día", cuántos comprobantes tenés para revisar y cuántos pedidos en marcha.
+Es lo primero que ves al abrir el panel. La idea: que a la mañana, en 30 segundos, sepas qué hacer hoy.
 
-- **Tarjetas de arriba**: ventas de los últimos 7 días, ticket promedio, pedidos en marcha y comprobantes a verificar.
-- **Pedidos por estado**: tocá un estado para ver esos pedidos.
-- **Operaciones**: despachos de los próximos 7 días, pedidos atrasados, variantes para comprar y clientes a los que se
-  les termina el pote esta semana. Cada tarjeta lleva a su sección.
-- **Recompras de la semana** y **Próximos a vencer**: a quién escribirle y qué liquidar (ver secciones 4 y 5).
-- Más abajo: ventas por día (tocá una barra para ver los pedidos de ese día), lo más pedido, últimos pedidos, el Club,
-  actividad reciente y reclamos.
+![Hoy en tu tienda en el celular](img/rediseno/r4a/hoy-390-light.png)
 
-![Recompras de la semana y Próximos a vencer en el inicio](img/panel-inicio-recompras.png)
+**El marcador de arriba** (tocá cualquier número y te lleva a donde vive):
+
+| Número | Qué cuenta |
+|---|---|
+| **Vendido hoy** | Pedidos de hoy ya pagados. Debajo, lo vendido en los últimos 7 días. Un comprobante sin aprobar no suma |
+| **Por cobrar** | Lo que todavía no cobraste: pedidos sin pagar y comprobantes que tenés que revisar |
+| **Para armar** | Pedidos pagados o en preparación, y cuántos están atrasados |
+| **Sale hoy** | Pedidos con el cadete de hoy, el cupo que le queda y el próximo día que tiene lugar |
+| **Stock en riesgo** | Variantes sin stock o con 3 unidades o menos |
+
+**Para hacer** es la lista del día, ya ordenada. Va de arriba hacia abajo en cuatro grupos: **Atrasado**, **Para hoy**,
+**Esta semana** y **Más adelante**. Dentro de cada grupo va primero lo que tiene a un cliente esperando (pedidos y
+comprobantes) y después lo que vence antes. Cada fila tiene **un solo botón**:
+
+| Fila | Botón | Qué pasa |
+|---|---|---|
+| Pedido atrasado o que sale hoy | **Terminar de armar** / **Armar** | Te abre el pedido |
+| Comprobante de un cliente | **Aprobar** | Te pregunta si ya viste la plata en tu cuenta. Recién con **Sí, lo verifiqué** el pedido pasa a Pagado y se va de la lista. Si no entró, tocá el nombre del comprobante para verlo y rechazarlo |
+| Pedido listo que sale hoy | **Marcar enviado** (o **Marcar retirado**) | Te pide confirmar y el pedido pasa a Enviado o Entregado |
+| Compras a proveedores | **Armar los pedidos** | Te lleva a **Proveedores y compras**. Si hay variantes sin stock, es para hoy |
+| Clientes a los que se les termina el pote | **Avisarles** | Se abre la lista con el aviso por email o WhatsApp de cada uno. Los que avisás dejan de contar |
+| Pedidos de la semana | **Abrir preparación** | Te lleva al tablero de preparación |
+| Regalo con el sabor ya elegido | **Ver el regalo** | Te lleva al regalo en **Regalos y gift cards**: es lo que tenés que armar |
+| Lote que vence en 30 días o menos | **Liquidar −30 %** | Abre la liquidación con el descuento propuesto (40 % si faltan 15 días o menos). Liquidado, sale de la lista. Un lote vencido aparece arriba de todo para sacarlo de la venta |
+| Próxima campaña | **Preparar** | Te abre el editor. Debajo, el checklist: cupón activo, productos con stock, descuento real y piezas para Instagram |
+| Otros lotes que vencen en 60 días | **Ver los lotes** | Te lleva a Productos y stock con el filtro de vencimientos |
+
+Cuando no queda nada atrasado ni para hoy, arriba de la lista aparece **Todo al día**.
+
+![Hoy en tu tienda en la compu](img/rediseno/r4a/hoy-1440-dark.png)
+
+Al final, **Cómo viene la semana**: las ventas por día. Tocá una barra para ver los pedidos de ese día.
+
+> En la demo: el día está fijo en el lunes 5 de octubre de 2026 y aprobar, despachar o avisar solo cambia los datos de
+> este navegador. Nada se cobra ni se manda.
 
 ---
 
@@ -117,7 +173,7 @@ cambiar a chocolate" o "retira el jueves".
 Cuando el cliente paga por transferencia o QR, sube el comprobante y el pedido queda **Comprobante en revisión**.
 Subir un comprobante **nunca** marca el pedido como pagado: lo aprobás vos.
 
-1. Entrá a **Pagos manuales** (o tocá **Revisar comprobantes** en el inicio).
+1. Entrá a **Pedidos → Pagos manuales** (o tocá **Revisar comprobantes** en el inicio).
 2. En **Por revisar**, mirá el comprobante, el monto esperado y el medio.
 3. Fijate en tu banco o billetera que la plata haya entrado.
 4. Si entró: **Aprobar** y confirmá. El pedido pasa a Pagado y al cliente le llega "Pago aprobado".
@@ -167,7 +223,7 @@ Otros segmentos útiles: **Recompra atrasada** (ya se le terminó y no volvió),
 
 ![Ficha de Juan Ibarra con la recompra](img/celular-cliente-recompra.png)
 
-Lo mismo podés hacer desde **Recompras de la semana**, en el inicio.
+Lo mismo podés hacer desde **Hoy en tu tienda** → **Avisarles**, sin entrar a cada ficha.
 
 ### Lo que ve el cliente: avisos y "Mi box"
 
@@ -189,7 +245,7 @@ cumpleaños y notas internas (**Nota nueva** → **Guardar nota**).
 
 ## 5. Productos, stock y lotes
 
-En **Productos y stock** tenés el catálogo entero. Arriba, dos avisos: **lotes que vencen en menos de 60 días** y
+En **Stock → Productos y stock** tenés el catálogo entero. Arriba, dos avisos: **lotes que vencen en menos de 60 días** y
 **variantes que necesitan reposición**. Con **Productos** ves un renglón por producto; con **Variantes**, uno por
 sabor y tamaño, con su stock.
 
@@ -222,8 +278,8 @@ comparación como imagen): la respuesta que hoy escribís por WhatsApp.
 
 ### Liquidar un lote que está por vencer
 
-1. En **Productos y stock** tocá **6 lotes vencen en menos de 60 días** (el número cambia) o **Liquidar** en
-   **Próximos a vencer** del inicio.
+1. En **Productos y stock** tocá **6 lotes vencen en menos de 60 días** (el número cambia) o **Liquidar** en la fila
+   del lote en **Hoy en tu tienda** (ya viene con el descuento propuesto).
 2. Tocá **Liquidar** en el lote (por ejemplo VL-2603-W de Ionic Whey Vainilla, que vence en 56 días).
 3. Elegí el descuento (−10 % a −50 %, u otro porcentaje) y mirá cómo se va a ver en la tienda.
 4. Tocá **Liquidar a $ …**.
@@ -290,7 +346,7 @@ La tienda ya muestra los precios nuevos. **Deshacer aumento** vuelve exacto al p
 
 ### Preparar pedidos con control de lote
 
-En **Preparación** están los pedidos pagados, en orden de despacho, en cuatro columnas: **Por preparar → Armando →
+En **Pedidos → Preparación** están los pedidos pagados, en orden de despacho, en cuatro columnas: **Por preparar → Armando →
 Control de lote → Listo para despachar**.
 
 ![Tablero de preparación](img/panel-preparacion.png)
@@ -313,7 +369,7 @@ En el celular, las columnas se eligen con los botones de **Etapa** de arriba.
 
 ### Calendario de despachos
 
-En **Calendario de despachos** ves cada pedido en el día que sale: con el cadete en Mar del Plata, por correo o para
+En **Pedidos → Calendario de despachos** ves cada pedido en el día que sale: con el cadete en Mar del Plata, por correo o para
 retirar.
 
 ![Calendario de despachos](img/panel-calendario.png)
@@ -330,7 +386,7 @@ retirar.
 
 ### Qué comprar y a quién
 
-En **Proveedores y compras**, la pestaña **Compra sugerida** junta lo que hay que reponer, agrupado por distribuidora,
+En **Compras → Proveedores**, la pestaña **Compra sugerida** junta lo que hay que reponer, agrupado por distribuidora,
 con el total al costo, la próxima entrega y si llegás al pedido mínimo.
 
 ![Compra sugerida por proveedor](img/panel-proveedores.png)
@@ -362,7 +418,7 @@ shakers). Te dice cuánto hay, cuánto piden los pedidos pagados y qué **Repone
 
 ## 10. Emails automáticos
 
-Un email en cada momento del pedido (compra recibida, comprobante recibido, pago aprobado, pago no validado,
+Está en **Ajustes → Emails** (con la **Bandeja de salida** al lado). Un email en cada momento del pedido (compra recibida, comprobante recibido, pago aprobado, pago no validado,
 preparando, listo para retirar, listo para salir, en camino, entregado con "así se toma") y el aviso de **Tu pote se
 está por terminar**. Salen solos cuando cambiás el estado del pedido.
 
@@ -385,19 +441,19 @@ está por terminar**. Salen solos cuando cambiás el estado del pedido.
 
 ## 11. Cupones, ruleta, juego, misiones y descuento stack
 
-Todo está en **Marketing** (el resumen tiene una tarjeta por herramienta).
+Todo está en **Promos**, con una pestaña por herramienta.
 
-**Cupones** (Cupones y ruleta → **Cupones**)
+**Cupones** (Promos → **Cupones**)
 1. Tocá **Nuevo cupón**.
 2. Escribí el **Código** (de 3 a 20 letras o números, por ejemplo FERIA15) y el **Valor**. Si querés: **Compra
    mínima**, **Usos totales** y **Solo con cuenta**.
 3. Tocá **Crear cupón**. Ya funciona en el carrito. Lo pausás con el interruptor **Activo**.
 
-**Ruleta** (Cupones y ruleta → **Configuración de ruleta**): si se ve en la tienda, cuántos días dura el premio y los
+**Ruleta** (Promos → **Ruleta** → **Configuración**): si se ve en la tienda, cuántos días dura el premio y los
 gajos. Cada gajo tiene un **Premio** y un **Peso**: cuanto más peso, más sale (ves el porcentaje al lado). Tocá
-**Guardar ruleta**. Los premios se eligen de **Premios disponibles**.
+**Guardar ruleta**. Los premios se eligen de **Premios disponibles** (la otra subpestaña de Ruleta).
 
-**Premios del juego Shaker Rush** (Cupones y ruleta → **Premios del juego**)
+**Premios del juego Shaker Rush** (Promos → **Premios del juego**)
 
 ![Premios del juego por puntaje](img/panel-premios-juego.png)
 
@@ -408,19 +464,19 @@ gajos. Cada gajo tiene un **Premio** y un **Peso**: cuanto más peso, más sale 
 
 El cupón del juego se gana **una vez por día**; se juega todas las veces que quieran.
 
-**Misiones** (**Misiones y premios**): retos para el Club ("Comprá 2 productos" → shaker de regalo). **Nueva misión**,
+**Misiones** (Promos → **Misiones**; **Simular progreso** es su otra subpestaña): retos para el Club ("Comprá 2 productos" → shaker de regalo). **Nueva misión**,
 título, premio y **Guardar misión**. Recomendado: hasta 3 activas. Además, el Club trae tres misiones de entrenamiento
 fijas (entrenos de la semana, día del deporte y Shaker Rush): el cliente reclama el premio una sola vez por semana o
 por fecha; un segundo reclamo no da otro cupón ni más puntos.
 
-**Descuento stack**: el porcentaje (0 a 30 %) y cuántas categorías distintas hacen falta (2 a 5). Con la vista previa
+**Descuento stack** (Promos → **Descuento stack**): el porcentaje (0 a 30 %) y cuántas categorías distintas hacen falta (2 a 5). Con la vista previa
 ves cuánto ahorra un stack de ejemplo. Tocá **Guardar descuento stack**.
 
 > En la demo: los usos de cupones son simulados y el giro de la ruleta y el cupón del juego valen uno por navegador.
 
 ### Packs y suscripciones
 
-Marketing → **Packs** (la tarjeta del resumen dice cuántos packs hay y cuántas suscripciones están activas). Tiene dos
+Stock → **Packs**. Tiene dos
 pestañas: **Packs** y **Suscripciones**.
 
 **Qué es un pack.** Una selección de productos para un objetivo o un deporte (Hipertrofia, Fútbol, Pádel y tenis…), con un
@@ -460,7 +516,7 @@ oculta para que la revises; **Quitar** pide confirmación y avisa si tiene suscr
 
 **Cómo ver las entregas que vienen.** Debajo de la lista, **Qué preparar** agrupa por fecha las entregas de los próximos 30
 días, con los productos que lleva cada una (solo lo que se repite). A la derecha, el **total de unidades por producto** de
-todo el período: es lo que tenés que tener en stock o pedirle al proveedor (**Ver compras** te lleva a Proveedores y compras).
+todo el período: es lo que tenés que tener en stock o pedirle al proveedor (**Ver compras** te lleva a Compras → Proveedores).
 
 > En la demo: las suscripciones son simuladas, no se cobra ni se envía nada, y el ingreso mensual es una estimación.
 
@@ -477,7 +533,7 @@ elegir una opción sin stock.
 
 ![Regalos y gift cards en el panel](img/rediseno/r3b/panel-gift-cards-1440-claro.png)
 
-1. Entrá a **Marketing → Regalos y gift cards**.
+1. Entrá a **Promos → Regalos y gift cards**.
 2. En la pestaña **Gift cards** ves arriba las **emitidas**, el **saldo vivo** (lo que todavía se puede usar), lo
    **canjeado** y las que **vencen pronto** (30 días). La lista muestra código, para quién, monto, **saldo** con su barra,
    estado (**Sin usar**, **Con saldo**, **Usada completa**, **Vencida**), cuándo se emitió, **cuándo vence** y en qué
@@ -501,7 +557,7 @@ paga con el medio que elija; si sobra, le queda el saldo para la próxima. Una v
 Doce fechas comerciales (Día de la Madre, Halloween, CyberMonday, Black Friday, Navidad, Año Nuevo, San Valentín,
 Vuelta al gym, Hot Sale, Día del Padre, Día del Amigo y Operación verano) y cinco días del deporte (CrossFit Open, Día
 de la Actividad Física, del Futbolista, del Running y del Boxeador). Cada una cambia los colores de la tienda y suma su
-key visual, cinta, cupón, productos y pantalla de carga. Antes se llamaba **Temáticas** (el enlace viejo te trae acá).
+key visual, cinta, cupón, productos y pantalla de carga. Antes se llamaba **Temáticas** (el enlace viejo y el del viejo resumen de Marketing te traen acá).
 
 Los días del deporte vienen con sus **fechas reales de 2027**: CrossFit Open del 18 de febrero al 8 de marzo (tres
 semanas, un WOD por semana), Actividad Física el 6 de abril (Día Mundial, OMS), Running el primer miércoles de junio
@@ -512,7 +568,7 @@ día cada año: revisalos en el editor cuando se confirme el calendario.
 
 ![Calendario de campañas](img/rediseno/r3a/panel-calendario-1440-light.png)
 
-1. Entrá a **Campañas**. Arriba está la **Próxima campaña** con los días que faltan (también la ves en el Inicio).
+1. Entrá a **Campañas**. Arriba está la **Próxima campaña** con los días que faltan (también la ves en **Hoy en tu tienda**, con su checklist).
 2. En **Modo** elegí **Automática según la fecha**, **Siempre la que elija** (y la **Campaña fija**) o **Sin campaña**.
 3. El **Calendario del año** muestra cada campaña como una barra. Los días del deporte van rayados y con una mancuerna;
    Hot Sale y CyberMonday llevan el sello **CACE** y Black Friday el sello **BF**. Tocá una para editarla.
@@ -539,7 +595,7 @@ Placas para Instagram con tus potes animados, sin diseñador.
 
 ![Estudio de contenido](img/panel-estudio.png)
 
-1. Entrá a **Estudio de contenido**.
+1. Entrá a **Campañas → Estudio de contenido**.
 2. Elegí la **Plantilla**: **Oferta de la fecha**, **Producto destacado**, **Stack del mes** o **Cupón del juego**.
 3. Elegí la **Temática** (la fecha) y, si hace falta, los productos.
 4. Ajustá el **Titular**, la **Bajada** y los textos. Podés **Usar una foto propia**.
@@ -553,7 +609,7 @@ Placas para Instagram con tus potes animados, sin diseñador.
 
 ## 14. Contenido de la tienda
 
-En **Contenido** cambiás lo que se lee en el inicio y en la ayuda, sin pedirle nada a nadie:
+En **Ajustes → Contenido** cambiás lo que se lee en el inicio y en la ayuda, sin pedirle nada a nadie:
 
 - **Carrusel del inicio**: las diapositivas grandes con producto, imagen, titular, bajada y datos de compra.
 - **Textos de inicio**: el bloque del stack en vivo. **Guardar textos**.
@@ -561,7 +617,7 @@ En **Contenido** cambiás lo que se lee en el inicio y en la ayuda, sin pedirle 
 
 ### Cambiar el carrusel del inicio
 
-1. Entrá a **Contenido → Carrusel del inicio**. Arriba ves la misma diapositiva que aparece en la tienda.
+1. Entrá a **Ajustes → Contenido → Carrusel**. Arriba ves la misma diapositiva que aparece en la tienda.
 2. Elegí una diapositiva de la lista y su **Producto**. Escribí el **Titular** (hasta 40 caracteres) y la **Bajada**
    (hasta 120); el contador te muestra cuánto queda.
 3. Para poner una foto, elegí **Subir imagen propia**. Acepta JPG, PNG o WebP de hasta **10 MB**, con al menos **400 px
@@ -589,6 +645,8 @@ activado no avanza solo. Debajo quedan **Comprá por categoría**, **Entrená po
 
 ## 15. Ajustes
 
+Cada parte es una pestaña; el **Contenido** (sección 14) y los **Emails** (sección 10) también viven acá.
+
 ![Ajustes](img/panel-ajustes.png)
 
 - **Contacto y WhatsApp**: el número del botón de WhatsApp de la tienda, con código de país y área
@@ -606,13 +664,14 @@ activado no avanza solo. Debajo quedan **Comprá por categoría**, **Entrená po
 ## 16. Una rutina que funciona
 
 **Cada mañana (10 minutos)**
-1. **Inicio**: comprobantes por revisar → **Pagos manuales** → aprobá lo que ya entró.
-2. **Preparación**: armá lo de hoy y hacé el control de lote.
-3. **Recompras de la semana**: avisale a quien se le termina el pote.
+1. **Hoy en tu tienda**: hacé la lista de arriba hacia abajo. Primero lo atrasado y los comprobantes (aprobá solo lo que
+   ya viste en tu cuenta).
+2. **Pedidos → Preparación**: armá lo de hoy y hacé el control de lote.
+3. **Avisarles** (en Hoy): mandá el aviso a quien se le termina el pote.
 
 **Cada semana**
-1. **Proveedores y compras**: copiá los pedidos y mandalos.
-2. **Próximos a vencer**: liquidá lo que no vas a vender a tiempo.
+1. **Compras → Proveedores**: copiá los pedidos y mandalos.
+2. **Lotes que vencen** (en Hoy o en **Stock → Productos y stock**): liquidá lo que no vas a vender a tiempo.
 3. **Estudio de contenido**: bajá la historia de la oferta de la semana.
 
 **Cuando cambia la lista del proveedor**

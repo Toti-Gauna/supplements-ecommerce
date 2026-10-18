@@ -25,7 +25,8 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
   const [q, setQ] = useState("");
   const [active, setActive] = useState(0);
   const all: Item[] = [
-    ...ADMIN_NAV.map((n) => ({ id: n.href, group: "Ir a", label: n.label, icon: <n.icon size={17} aria-hidden="true" />, href: n.href, search: `${n.label} ${n.group}` })),
+    ...ADMIN_NAV.map((n) => ({ id: n.href, group: "Ir a", label: n.label, icon: <n.icon size={17} aria-hidden="true" />, href: n.href, search: n.label })),
+    ...ADMIN_NAV.flatMap((n) => (n.tabs.length > 1 ? n.tabs : []).map((t) => ({ id: `tab-${t.id}`, group: "Pestañas", label: t.label, hint: n.label, icon: <n.icon size={17} aria-hidden="true" />, href: t.href, search: `${t.label} ${n.label}` }))),
     { id: "new-product", group: "Acciones", label: "Nuevo producto", icon: icon(Plus), href: "/admin-demo/productos/editar/?nuevo=1", search: "crear producto nuevo alta" },
     { id: "new-pack", group: "Acciones", label: "Nuevo pack", icon: icon(PackagePlus), href: "/admin-demo/packs/editar/?nuevo=1", search: "crear pack nuevo armar combo mensual" },
     { id: "subscriptions", group: "Acciones", label: "Suscripciones y qué preparar", icon: icon(Repeat), href: "/admin-demo/packs/?ver=suscripciones", search: "suscripciones packs todos los meses entregas preparar mensual" },
@@ -43,7 +44,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
     ...products.map((p) => ({ id: p.slug, group: "Productos", label: p.name, hint: p.active === false ? "Pausado" : undefined, icon: icon(Boxes), href: `/admin-demo/productos/editar/?id=${p.slug}`, search: `${p.name} ${p.tags.join(" ")}` })),
     ...customerRows(users, orders).map((c) => ({ id: c.key, group: "Clientes", label: c.name, hint: c.email, icon: icon(UserRound), href: profileHref(c.email), search: `${c.name} ${c.email}` })),
   ];
-  const results = (q.trim() ? all.filter((i) => matchesQuery(q, i.search, i.label)) : all.filter((i) => !["Productos", "Clientes", "Pedidos", "Packs"].includes(i.group))).slice(0, 12);
+  const results = (q.trim() ? all.filter((i) => matchesQuery(q, i.search, i.label)) : all.filter((i) => !["Productos", "Clientes", "Pedidos", "Packs", "Pestañas"].includes(i.group))).slice(0, 12);
   const current = Math.min(active, Math.max(0, results.length - 1));
   const go = (item?: Item) => {
     if (!item) return;

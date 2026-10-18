@@ -6,11 +6,10 @@ import type { HeroFeature } from "@/demo/types";
 import { useAdmin } from "@/stores/admin";
 import { useToasts } from "@/stores/toast";
 import { moveItem } from "../ListControls";
-import { MARKETING, SubpageHeader } from "../marketing/SubpageHeader";
+import { SubpageHeader } from "../marketing/SubpageHeader";
 import { SaveBar } from "../SaveBar";
 import { savedInBrowser } from "../savedInBrowser";
 import { useSessionDraft } from "../useSessionDraft";
-import { CONTENT_SECTION } from "./ContentHub";
 import { HeroFeatureForm } from "./HeroFeatureForm";
 import { HeroFeatureList } from "./HeroFeatureList";
 import { HeroPreview } from "./HeroPreview";
@@ -64,7 +63,7 @@ export function HeroEditor() {
   const caption = `Destacado ${index + 1} de ${list.length}${index === 0 ? " · el que se ve primero" : ""}${visible ? "" : " · oculto: no sale en la tienda"}${session.dirty ? " · borrador sin publicar hasta guardar" : ""}`;
   return (
     <div>
-      <SubpageHeader trail={[MARKETING, CONTENT_SECTION]} back={CONTENT_SECTION} title="Carrusel del inicio"
+      <SubpageHeader title="Carrusel del inicio"
         intro="El primer pantallazo de la tienda: imágenes propias o envases del catálogo con titular y datos del rack. Hasta cuatro destacados; rotan solos y se pueden pausar. Si hay una campaña puesta, va primera." />
       {session.restored && (
         <div role="status" className="mb-4 flex flex-wrap items-center gap-3 rounded-sm bg-warning-soft px-4 py-3 text-sm ring-1 ring-warning/30">

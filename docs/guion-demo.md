@@ -23,7 +23,7 @@ cual en la demo.
 | 4:30 | Regalá energía y la taquilla | Celular · `/regalar/` y `/regalo/` | Que arme un regalo con la tarjeta en vivo y que golpee la bolsa |
 | 5:15 | Temática del mes | Celular · "Probar temáticas" | La tienda cambia sola en cada fecha |
 | 5:45 | Instagram desde el Estudio | Compu · `/admin-demo/estudio/` | Contenido listo sin diseñador |
-| 6:30 | El panel: lo que le ahorra horas | Compu · `/admin-demo/` | Lista del proveedor, aumento, vencimientos, recompra, preparación, compras |
+| 6:30 | El panel: lo que le ahorra horas | Compu · `/admin-demo/` | "Hoy en tu tienda" (qué hacer hoy en 30 s), lista del proveedor, aumento, vencimientos, preparación, compras |
 | 9:00 | Cierre comercial | Charla | Qué incluye, precio y próximo paso |
 
 Si tenés **5 minutos**: dolor (30 s), ficha (1 min), juego (1 min), aumento de precios y vencimientos (1 min 30 s),
@@ -44,7 +44,7 @@ cierre (1 min). Si te pide **más**: quiz completo, compra de punta a punta con 
    cuenta demo, la ruleta ya girada, el cupón del juego del día y lo que hayas probado en el panel.
 2. **Temática**: la tienda pone sola la de la fecha (1 al 18 de octubre: Día de la Madre; 19 al 31: Halloween). Si
    querés mostrar otra, elegila **después** de reiniciar (reiniciar la saca): botón flotante **Probar temáticas** →
-   por ejemplo **Probar Black Friday**. Para dejarla fija en todos los equipos: panel → **Temáticas** → Modo
+   por ejemplo **Probar Black Friday**. Para dejarla fija en todos los equipos: panel → **Campañas** → Modo
    **Siempre la que elija**.
 3. **Modo**: oscuro es el de la marca y luce más. Si el local tiene mucha luz o el dueño ve poco, el botón sol/luna
    ("Activar modo claro") pone el claro "Tiza".
@@ -176,7 +176,7 @@ Con el stack en el carrito:
 - Pasale el celular y que lo abra (el de sabor abierto es un locker: la combinación es `0310`). Con el sabor abierto,
   **Elegí tu sabor** (los que no tienen stock aparecen apagados) y **Guardá tu regalo**.
 - Cerrá en **Mi cuenta → Mis regalos**: quien regaló ve si lo abrió, qué sabor eligió y si lo canjeó; las gift cards
-  con su saldo. En el panel, **Marketing → Regalos y gift cards**.
+  con su saldo. En el panel, **Promos → Regalos y gift cards**.
 - Gift card: `REGALO-GC0S-0F1D`: al abrirla muestra el saldo y el código GIFT, que se usa en el paso **Pago** del checkout.
 
 ## 5:15 · La temática del mes (30 segundos, celular)
@@ -202,18 +202,32 @@ formato **Historia o reel**.
 
 ## 6:30 · El panel: lo que le ahorra horas (2 minutos 30, compu)
 
+Arranca siempre en **Hoy en tu tienda**: es lo primero que ve el dueño cada mañana. Si vas justo, salteá la recompra
+en Clientes (ya la mostraste desde Hoy).
+
 Abrí `/admin-demo/`. **Decí**: "Ahora lo tuyo. Esto lo abrís a la mañana con el mate."
 
-**Inicio (15 s)**: "Buen día": comprobantes por revisar, pedidos en marcha, ventas de la semana. Abajo,
-**Recompras de la semana** y **Próximos a vencer**.
+**Hoy en tu tienda (40 s)** — el panel abre acá.
 
-**Lista del proveedor (30 s)** — Productos y stock → **Importar Excel** → **Probar con la lista de un proveedor** →
+![Hoy en tu tienda en la compu](img/rediseno/r4a/hoy-1440-dark.png)
+
+- Señalá el marcador: "Esto es tu día en cinco números: lo vendido hoy, lo que falta cobrar, lo que hay que armar, lo
+  que sale hoy con el cadete y el stock en riesgo. Tocás cualquiera y te lleva."
+- Bajá a **Para hacer**: "Y esto es lo que tenés que hacer, en orden. Arriba lo atrasado (VOL-000115 tenía que salir el
+  viernes), después lo de hoy, después la semana. Cada fila tiene un solo botón."
+- En **Comprobante de Diego Álvarez** tocá **Aprobar**: "¿Ya viste la plata en tu cuenta?" → **Sí, lo verifiqué**. "Se
+  va de la lista y pasa a armar. Nunca se marca pagado sin que vos lo confirmes."
+- **Avisales a 5 clientes que se les termina el pote** → **Avisarles**: "El sistema sabe a quién se le termina el pote
+  y el mensaje ya está escrito." Cerralo con Escape.
+- "Vos la abrís a la mañana con el mate y en 30 segundos sabés qué hacer."
+
+**Lista del proveedor (30 s)** — Stock → Productos y stock → **Importar Excel** → **Probar con la lista de un proveedor** →
 **Ver vista previa**.
 - "Te llega el Excel de la distribuidora, lo arrastrás acá y ves qué cambia antes de tocar nada: costo, precio nuevo y
   margen." → **Actualizar 14 filas**. "Listo, la tienda ya tiene los precios nuevos. Y si te equivocaste, **Deshacer
   importación**."
 
-**Aumento masivo (30 s)** — Productos y stock → **Aumentar precios** → **Una marca** → Marca **Brava Sport** →
+**Aumento masivo (30 s)** — Stock → Productos y stock → **Aumentar precios** → **Una marca** → Marca **Brava Sport** →
 Porcentaje **8**.
 
 ![Aumentar precios con vista previa por variante](img/panel-aumento-precios.png)
@@ -221,25 +235,25 @@ Porcentaje **8**.
 - "Aumentó una marca un 8 %: ves cada precio viejo y nuevo, redondeado a $100." → **Aplicar a 9 variantes** →
   **Sí, aplicar**. "Esto antes era una tarde con el Excel." Si querés, **Deshacer aumento** lo deja exacto como estaba.
 
-**Vencimientos (20 s)** — en Productos y stock tocá **6 lotes vencen en menos de 60 días** → **Liquidar** en Ionic
+**Vencimientos (20 s)** — en Stock → Productos y stock tocá **6 lotes vencen en menos de 60 días** → **Liquidar** en Ionic
 Whey Vainilla (lote VL-2603-W) → **−40 %** → **Liquidar a $ 32.900**.
 - "En la tienda sale tachado con 'Liquidación · vence 11/2026'. Lo vendés antes de que se te pudra en el estante."
 
-**Recompra (20 s)** — **Clientes** → **Juan Ibarra**.
+**Recompra (20 s, opcional si ya avisaste desde Hoy)** — **Clientes** → **Juan Ibarra**.
 - "Juan compra un scoop por día. El sistema sabe cuándo se le termina: **el jueves 8 de octubre**." → **Avisarle por
   email** (o el botón de WhatsApp con el mensaje ya escrito). "Le escribís vos antes de que vaya a otro lado."
 
-**Preparación con control de lote (30 s)** — **Preparación** → en VOL-000113 tocá **Armando** → **Control de lote** →
+**Preparación con control de lote (30 s)** — **Pedidos → Preparación** → en VOL-000113 tocá **Armando** → **Control de lote** →
 **Controlar lotes** → tildá la barra → **Listo para despachar**.
 - "Nada sale sin confirmar el lote. Queda anotado en el pedido, por si un día hay un reclamo." Y "al cliente le llega
-  solo el email de que está listo" (Emails automáticos → Bandeja de salida).
+  solo el email de que está listo" (Ajustes → Emails → Bandeja de salida).
 
-**Compras (15 s)** — **Proveedores y compras**.
+**Compras (15 s)** — **Compras → Proveedores**.
 - "Te dice qué reponer, agrupado por distribuidora y con el total al costo." → **Copiar pedido para WhatsApp** en Sur
   Suplementos. "Lo pegás en el chat del proveedor y listo. Cuando llega, **Recibir mercadería** y se suma al stock."
 
 **Cerrá el panel**: "Y todo esto anda en el celular también", y mostrale el panel en el teléfono (pestañas de abajo:
-Inicio, Pedidos, Pagos, Productos, Más).
+Hoy, Pedidos, Stock, Promos, Más).
 
 ## 9:00 · Cierre comercial (1 minuto)
 

@@ -7,7 +7,7 @@ import { ButtonLink } from "@/components/atoms/Button";
 import { Images } from "lucide-react";
 import { useToasts } from "@/stores/toast";
 import { piecesHref } from "../campaigns/links";
-import { MARKETING, SubpageHeader } from "../marketing/SubpageHeader";
+import { SubpageHeader } from "../marketing/SubpageHeader";
 import { useStudioAssets } from "./assets";
 import { playJingle, type StudioMusic } from "./music";
 import { assetRequest, buildScene } from "./scene";
@@ -77,7 +77,7 @@ export function StudioAdmin() {
 
   return (
     <>
-      <SubpageHeader trail={[MARKETING]} back={MARKETING} title="Estudio de contenido"
+      <SubpageHeader title="Estudio de contenido"
         intro="Piezas para Instagram con los potes de la tienda animados: elegí la plantilla y la fecha, ajustá productos y textos, y exportá el post, la historia o el carrusel como imagen o video."
         actions={<ButtonLink href={themeId ? piecesHref(themeId) : "/admin-demo/campanas/piezas/"} variant="secondary"><Images size={16} aria-hidden="true" />Piezas de la campaña</ButtonLink>} />
       <div className="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[minmax(0,360px)_minmax(0,1fr)]">

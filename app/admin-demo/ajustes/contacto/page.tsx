@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { ContactSettings } from "@/features/admin/settings/ContactSettings";
+import { ModuleMoved } from "@/features/admin/ModuleMoved";
 
-export const metadata: Metadata = { title: "Contacto y WhatsApp" };
+export const metadata: Metadata = { title: "Ajustes" };
 
-export default function Page() {
-  return <ContactSettings />;
+/** Contacto es la primera pestaña de Ajustes. */
+export default function AdminAjustesContactoMovedPage() {
+  return <ModuleMoved from="/admin-demo/ajustes/contacto" />;
 }

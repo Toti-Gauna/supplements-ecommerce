@@ -8,7 +8,6 @@ import { SubpageHeader } from "../marketing/SubpageHeader";
 import { NumberField } from "../NumberField";
 import { SaveBar } from "../SaveBar";
 import { useSessionDraft } from "../useSessionDraft";
-import { SETTINGS_SECTION } from "./SettingsHub";
 
 const METHODS: { value: PaymentMethod; label: string; hint: string }[] = [
   { value: "CHECKOUT_PRO", label: "Mercado Pago (Checkout Pro)", hint: "En la demo es una simulación: no se cobra nada." },
@@ -36,7 +35,7 @@ export function PaymentSettings() {
   };
   return (
     <div>
-      <SubpageHeader trail={[SETTINGS_SECTION]} back={SETTINGS_SECTION} title="Medios de pago" intro="Lo que ve el comprador al pagar. Transferencia y QR requieren aprobación manual simulada: subir el comprobante no confirma el pago." />
+      <SubpageHeader title="Medios de pago" intro="Lo que ve el comprador al pagar. Transferencia y QR requieren aprobación manual simulada: subir el comprobante no confirma el pago." />
       <section aria-label="Medios de pago" className="flex max-w-2xl flex-col gap-4 rounded-sm bg-surface p-4 shadow-[var(--shadow-card)] sm:p-5">
         {session.restored && <p role="status" className="rounded-sm bg-warning-soft px-3 py-2 text-sm font-bold text-warning">Recuperamos los cambios que quedaron sin guardar.</p>}
         <fieldset className="flex flex-col gap-1"><legend className="mb-1 text-sm font-bold">Activos en el checkout</legend>

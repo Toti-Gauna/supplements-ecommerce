@@ -11,10 +11,9 @@ import { formatDate } from "@/lib/date";
 import { formatARS } from "@/lib/money";
 import { useAdmin } from "@/stores/admin";
 import { CouponForm } from "../CouponForm";
-import { MARKETING, SubpageHeader } from "../marketing/SubpageHeader";
+import { SubpageHeader } from "../marketing/SubpageHeader";
 import { usePaged } from "../usePaged";
 import { useDemoSave } from "../useDemoSave";
-import { COUPONS_SECTION } from "./CouponsHub";
 import { FakeCouponsSummary, useCouponFakeMap } from "../campaigns/CouponRealCheck";
 import { CLUB_COUPON_PREFIX } from "@/demo/engine/club-claims";
 import { GAME_COUPON_PREFIX } from "@/demo/engine/game-prize";
@@ -34,7 +33,7 @@ export function CouponsList() {
   const fake = useCouponFakeMap(coupons);
   return (
     <>
-      <SubpageHeader trail={[MARKETING, COUPONS_SECTION]} back={COUPONS_SECTION} title="Cupones" actions={<Button onClick={() => setCreating(true)}><Plus size={18} aria-hidden="true" /> Nuevo cupón</Button>}
+      <SubpageHeader title="Cupones" actions={<Button onClick={() => setCreating(true)}><Plus size={18} aria-hidden="true" /> Nuevo cupón</Button>}
         intro="Los cupones creados acá funcionan en el carrito de la tienda demo de este navegador. Usos simulados." />
       <FakeCouponsSummary map={fake} />
       {creating && <div className="mb-4"><CouponForm onDone={() => setCreating(false)} /></div>}

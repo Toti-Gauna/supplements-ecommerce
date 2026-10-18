@@ -8,9 +8,8 @@ import { matchesQuery } from "@/demo/admin/table";
 import { TRIGGER_LABEL, type EmailTrigger } from "@/demo/fixtures/emails";
 import { formatDateTime } from "@/lib/date";
 import { useAdmin } from "@/stores/admin";
-import { MARKETING, SubpageHeader } from "../marketing/SubpageHeader";
+import { SubpageHeader } from "../marketing/SubpageHeader";
 import { useDemoSave } from "../useDemoSave";
-import { EMAILS_SECTION } from "./EmailsAdmin";
 import { OutboxSheet } from "./OutboxSheet";
 
 /** Bandeja de salida (8.3.24: subpágina de Emails automáticos). Todo es simulado: en la demo no sale ningún email. */
@@ -24,7 +23,7 @@ export function EmailOutbox() {
   const list = outbox.filter((m) => (trigger === "all" || m.trigger === trigger) && matchesQuery(q, m.email.subject, m.to, m.name, m.orderCode ?? ""));
   return (
     <>
-      <SubpageHeader trail={[MARKETING, EMAILS_SECTION]} back={EMAILS_SECTION} title="Bandeja de salida" intro="Lo que la demo “envió”: emails de los pedidos y pruebas. Nada sale de este navegador." />
+      <SubpageHeader title="Bandeja de salida" intro="Lo que la demo “envió”: emails de los pedidos y pruebas. Nada sale de este navegador." />
       <section aria-label="Bandeja de salida" className="rounded-sm bg-surface p-4 shadow-[var(--shadow-card)]">
         <div className="mb-3 flex flex-wrap items-end gap-2">
           <label className="flex min-w-[min(100%,16rem)] flex-1 flex-col gap-1 text-sm font-bold">Buscar en la bandeja

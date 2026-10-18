@@ -4,8 +4,8 @@ import { horizontalOverflow } from "./helpers";
 const toast = (page: Page, text: string | RegExp) => page.getByRole("status").filter({ hasText: text });
 
 test("premios del juego: editar un nivel, ver la vista previa y que la tienda use lo guardado", async ({ page }) => {
-  await page.goto("admin-demo/cupones/");
-  await page.getByRole("link", { name: /Premios del juego/ }).click();
+  await page.goto("admin-demo/promos/");
+  await page.getByRole("tab", { name: "Premios del juego" }).click();
   await expect(page).toHaveURL(/cupones\/juego\/$/);
   await expect(page.getByRole("heading", { level: 1, name: /Premios del juego/ })).toBeVisible();
   const preview = page.getByRole("region", { name: /Vista previa · Shaker Rush/ });
@@ -48,8 +48,8 @@ test("premios del juego: agregar un nivel y pausar los premios", async ({ page }
   await expect(page.getByRole("region", { name: /Vista previa/ }).locator("[data-game-preview]")).toHaveText(/pausados/);
   await page.getByRole("button", { name: "Guardar premios" }).click();
   await expect(toast(page, "Premios del juego guardados")).toBeVisible();
-  await page.goto("admin-demo/cupones/");
-  await expect(page.getByRole("link", { name: /Premios del juego/ })).toContainText("Premios pausados");
+  await page.reload();
+  await expect(page.getByText("Premios pausados", { exact: true })).toBeVisible();
   await page.goto("club/juego/");
   await expect(page.getByText(/Ahora los premios están pausados/)).toBeVisible();
 });

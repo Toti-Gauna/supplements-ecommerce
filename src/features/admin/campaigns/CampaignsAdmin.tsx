@@ -1,6 +1,6 @@
 "use client";
 import { useAdmin } from "@/stores/admin";
-import { MARKETING, SubpageHeader } from "../marketing/SubpageHeader";
+import { SubpageHeader } from "../marketing/SubpageHeader";
 import { ThemeMode } from "../themes/ThemeMode";
 import { CampaignCalendar } from "./CampaignCalendar";
 import { CampaignResultsTable } from "./CampaignResultsTable";
@@ -15,7 +15,7 @@ export function CampaignsAdmin() {
   const sport = themes.filter((t) => t.sport).length;
   return (
     <>
-      <SubpageHeader trail={[MARKETING]} back={MARKETING} title="Campañas"
+      <SubpageHeader title="Campañas"
         intro={`${themes.length - sport} fechas comerciales y ${sport} días del deporte, cada una con su key visual, titular, cupón, productos y piezas para Instagram. Tocá una campaña del calendario para editarla.`} />
       <NextCampaignCard className="mb-6" />
       <ThemeMode />

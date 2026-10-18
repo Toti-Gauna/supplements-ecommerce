@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Inbox, MailCheck, PencilLine } from "lucide-react";
+import { MailCheck, PencilLine } from "lucide-react";
 import { useEffect } from "react";
 import { Badge } from "@/components/atoms/Badge";
 import { Switch } from "@/components/atoms/Switch";
@@ -10,8 +10,7 @@ import { EMAIL_TRIGGERS, TRIGGER_HINT, TRIGGER_LABEL, type EmailTemplate } from 
 import type { FulfillmentType } from "@/demo/types";
 import { formatDateTime } from "@/lib/date";
 import { useAdmin } from "@/stores/admin";
-import { HubCard, HubGrid } from "../marketing/HubCard";
-import { MARKETING, SubpageHeader } from "../marketing/SubpageHeader";
+import { SubpageHeader } from "../marketing/SubpageHeader";
 import { useDemoSave } from "../useDemoSave";
 
 export const EMAILS_SECTION = { href: "/admin-demo/emails/", label: "Emails automáticos" };
@@ -37,7 +36,7 @@ export function EmailsAdmin() {
 
   return (
     <>
-      <SubpageHeader trail={[MARKETING]} back={MARKETING} title="Emails automáticos"
+      <SubpageHeader title="Emails automáticos"
         intro="Un email en cada momento del pedido —compra, pago, armado, entrega— y el aviso cuando se le está por terminar el pote. Salen solos al cambiar el estado del pedido. En la demo no se envía nada: queda en la bandeja de salida." />
       <ol aria-label="Plantillas" className="mb-8 grid grid-cols-[minmax(0,1fr)] gap-3 md:grid-cols-2 xl:grid-cols-3">
         {ordered.map((t, i) => {
@@ -66,9 +65,6 @@ export function EmailsAdmin() {
           );
         })}
       </ol>
-      <HubGrid label="Otras tareas de emails">
-        <HubCard href="/admin-demo/emails/enviados/" icon={Inbox} title="Bandeja de salida" description="Los emails simulados que “salieron”, con buscador y filtro por momento." meta={`${outbox.length} ${outbox.length === 1 ? "email" : "emails"}`} action="Ver la bandeja" />
-      </HubGrid>
     </>
   );
 }

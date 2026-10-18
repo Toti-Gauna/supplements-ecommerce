@@ -29,11 +29,11 @@ test("calendario: las 17 campañas, los días del deporte marcados y las fechas 
   await expect(page.locator("[data-campaign-chip='ano-nuevo']")).toHaveCount(1);
   expect(await horizontalOverflow(page)).toBeLessThanOrEqual(0);
 
-  // "Próxima campaña" en el inicio del panel, con los días que faltan y el atajo al editor.
+  // La próxima campaña en "Hoy en tu tienda" (R4a), con los días que faltan, su checklist y el atajo al editor.
   await page.goto("admin-demo/");
-  const next = page.locator("[data-next-campaign]");
+  const next = page.locator("[data-action='campaign:halloween']");
   await expect(next).toContainText("Halloween");
-  await expect(next).toContainText("faltan 14 días");
+  await expect(next).toContainText("empieza en 14 días");
   await next.getByRole("link", { name: "Preparar Halloween" }).click();
   await expect(page).toHaveURL(/campanas\/editar\/\?id=halloween/);
   await expect(page.getByRole("heading", { level: 1, name: "Halloween" })).toBeVisible();

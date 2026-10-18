@@ -6,6 +6,7 @@ import { AdminSidebar, SidebarContent } from "./AdminSidebar";
 import { AdminTabBar } from "./AdminTabBar";
 import { AdminTopbar } from "./AdminTopbar";
 import { CommandPalette } from "./CommandPalette";
+import { SectionTabs } from "./SectionTabs";
 
 /**
  * Estructura del panel: barra lateral colapsable en escritorio con mouse; en tablets y celulares, menú hamburguesa y
@@ -28,7 +29,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
       <div className="flex min-w-0 flex-1 flex-col">
         <AdminTopbar onMenu={() => setMenuOpen(true)} onSearch={() => setSearch(true)} />
         <main id="contenido" className="mx-auto w-full min-w-0 max-w-7xl px-4 pb-28 pt-6 sm:px-6 lg:px-10 lg:pt-8 desk:pb-16">
-          <AdminGate>{children}</AdminGate>
+          <AdminGate><SectionTabs>{children}</SectionTabs></AdminGate>
         </main>
       </div>
       <AdminTabBar onMore={() => setMenuOpen(true)} moreOpen={menuOpen} />

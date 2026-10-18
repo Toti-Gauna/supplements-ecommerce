@@ -13,7 +13,7 @@ for (const [width, height] of [[1440, 900], [1280, 800], [1024, 768]] as const) 
 
     test("solo íconos por defecto; se abre con el mouse y con el teclado sin mover la página; se puede fijar", async ({ page }) => {
       await page.goto("admin-demo/");
-      await expect(page.getByRole("heading", { level: 1, name: /Buen día/ })).toBeVisible();
+      await expect(page.getByRole("heading", { level: 1, name: "Hoy en tu tienda" })).toBeVisible();
       // El mouse de Playwright arranca en (0, 0), encima del riel: se lo lleva al contenido.
       await page.mouse.move(width - 40, height / 2);
       // Sin hamburguesa ni pestañas inferiores: la barra lateral es la navegación.
@@ -39,8 +39,8 @@ for (const [width, height] of [[1440, 900], [1280, 800], [1024, 768]] as const) 
       await page.keyboard.press("Tab");
       await expect.poll(() => panelWidth(page)).toBe(280);
       // Las secciones conservan su nombre accesible y la marca de la actual.
-      await expect(rail(page).getByRole("link", { name: "Inicio" })).toHaveAttribute("aria-current", "page");
-      await expect(rail(page).getByRole("link", { name: /Pagos manuales 2 por revisar/ })).toBeAttached();
+      await expect(rail(page).getByRole("link", { name: "Hoy" })).toHaveAttribute("aria-current", "page");
+      await expect(rail(page).getByRole("link", { name: /Pedidos \d+ para atender/ })).toBeAttached();
       // Fijar: ahora ocupa su lugar (el contenido se corre una vez, porque se pidió) y se recuerda al recargar.
       await rail(page).getByRole("button", { name: "Fijar el menú abierto" }).click();
       await page.mouse.move(width - 40, height / 2);
@@ -55,10 +55,11 @@ for (const [width, height] of [[1440, 900], [1280, 800], [1024, 768]] as const) 
     });
 
     test("si las secciones no entran, una sombra con flecha avisa que hay más abajo y se va al llegar al final", async ({ page }) => {
+      await page.setViewportSize({ width, height: 440 });
       await page.goto("admin-demo/");
       const nav = rail(page).getByRole("navigation", { name: "Secciones del panel demo" });
       const more = rail(page).locator("[data-more-below]");
-      // A 900 px de alto o menos, Marketing y Ajustes quedan debajo del pliegue: el aviso tiene que verse.
+      // Con 8 entradas entran en una pantalla normal; en una ventana baja (440 px), Campañas y Ajustes quedan debajo del pliegue: el aviso tiene que verse.
       expect(await nav.evaluate((el) => el.scrollHeight > el.clientHeight + 2)).toBe(true);
       await expect(more).toHaveAttribute("data-more-below", "true");
       await expect(rail(page).getByRole("link", { name: "Ajustes" })).not.toBeInViewport();
@@ -85,20 +86,20 @@ for (const [label, width, height] of [["tablet horizontal", 1024, 768], ["tablet
     await expect(rail(page)).toBeHidden();
     const bar = page.getByRole("navigation", { name: "Accesos rápidos del panel" });
     await expect(bar).toBeVisible();
-    for (const tab of ["Inicio", "Pedidos", "Pagos", "Productos"]) await expect(bar.getByRole("link", { name: tab })).toBeVisible();
+    for (const tab of ["Hoy", "Pedidos", "Stock", "Promos"]) await expect(bar.getByRole("link", { name: tab })).toBeVisible();
     // "Más" es un "…", no otra grilla casi igual a la de "Inicio".
     await expect(bar.getByRole("button", { name: "Más secciones del panel" }).locator("svg")).toHaveClass(/lucide-ellipsis/);
     await bar.getByRole("button", { name: "Más secciones del panel" }).click();
     const menu = page.getByRole("dialog", { name: "Menú del panel" });
-    await expect(menu.getByText("Marketing", { exact: true })).toBeVisible();
+    await expect(menu.getByText("Campañas", { exact: true })).toBeVisible();
     await menu.getByRole("link", { name: "Ajustes" }).click();
-    await expect(page.getByRole("heading", { level: 1, name: "Ajustes" })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1, name: "Contacto y WhatsApp" })).toBeVisible();
     await page.getByRole("button", { name: "Abrir menú del panel" }).click();
     await expect(menu.getByRole("link", { name: "Ajustes" })).toHaveAttribute("aria-current", "page");
     await page.keyboard.press("Escape");
     // La barra de abajo no tapa el final de la página: lo último del contenido queda por encima de ella.
     await page.goto("admin-demo/");
-    await expect(page.getByRole("heading", { name: "Actividad reciente" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Cómo viene la semana" })).toBeVisible();
     await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "instant" }));
     const lastBottom = await page.locator("main#contenido > *").last().evaluate((el) => el.getBoundingClientRect().bottom);
     const barTop = (await bar.boundingBox())!.y;

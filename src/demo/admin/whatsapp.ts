@@ -43,9 +43,9 @@ export function waTokens(id: WaMessageId): EmailToken[] {
   return id === "proof-rejected" ? [...base, "order.rejectReason"] : base;
 }
 
-/** Texto listo para mandar a este cliente con este pedido. */
+/** Texto listo para mandar a este cliente con este pedido (sin espacios sueltos al principio ni al final). */
 export function waTextFor(order: AdminOrder, overrides: WaOverrides = {}, id: WaMessageId = waMessageIdFor(order)): string {
-  return resolveInline(waInline(id, overrides), contextForOrder(order));
+  return resolveInline(waInline(id, overrides), contextForOrder(order)).trim();
 }
 
 export interface OrderWhatsapp {

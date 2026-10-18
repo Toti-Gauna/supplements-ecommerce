@@ -46,6 +46,7 @@ describe("un WhatsApp por estado", () => {
   it("usa el texto editado si es válido; uno vacío o roto vuelve al de muestra", () => {
     const custom = [{ kind: "text" as const, text: "Hola " }, { kind: "token" as const, token: "customer.firstName" as const }, { kind: "text" as const, text: ", ya lo vimos." }];
     expect(waTextFor(order("124"), { "proof-received": custom })).toBe("Hola Sofía, ya lo vimos.");
+    expect(waTextFor(order("124"), { "proof-received": [...custom, { kind: "text", text: " \n" }] })).toBe("Hola Sofía, ya lo vimos.");
     expect(waInline("proof-received", { "proof-received": [{ kind: "text", text: "   " }] })).toBe(WA_MESSAGES[1]!.text);
     expect(waInline("proof-received", { "proof-received": "roto" as never })).toBe(WA_MESSAGES[1]!.text);
   });

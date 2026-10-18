@@ -40,7 +40,7 @@ export function WhatsappEditor({ id, orders, sampleCode, palette = true }: Props
   const tokens = waTokens(id);
   const chosen = orders.find((o) => o.code === sampleCode && waMessageIdFor(o) === id);
   const sample = chosen ?? waSampleOrder(id, orders);
-  const preview = sample ? resolveInline(draft, contextForOrder(sample)) : "";
+  const preview = sample ? resolveInline(draft, contextForOrder(sample)).trim() : "";
   const label = waMessage(id).label;
   const submit = () => { save(id, draft); push({ tone: "success", title: "Mensaje de WhatsApp guardado", description: `“${label}”. Se usa en Pedidos al tocar “Escribirle por WhatsApp”. Solo en esta demo.` }); };
   const back = () => { restore(id); push({ tone: "info", title: "WhatsApp con el texto de muestra", description: `“${label}” volvió al mensaje original.` }); };

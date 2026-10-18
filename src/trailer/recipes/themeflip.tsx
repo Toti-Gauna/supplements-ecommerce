@@ -29,6 +29,7 @@ export const themeflip = defineRecipe<ThemeFlipProps>({
       </>
     );
   },
+  cues: () => [{ t: 1.05, voice: "click", vel: 0.9 }, { t: 1.1, voice: "whoosh", dur: 0.8, vel: 0.6 }],
   build: ({ q, props, ratio }) => {
     const tl = gsap.timeline();
     const [x, y] = props.origin ?? (ratio === "16x9" ? [1740, 140] : [920, 160]);

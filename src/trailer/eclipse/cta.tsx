@@ -32,6 +32,7 @@ export const eclipseCta = defineRecipe<CtaProps>({
       </div>
     );
   },
+  cues: () => [{ t: 0, voice: "whoosh", dur: 1.6, vel: 0.5 }, { t: 0.75, voice: "shimmer", midi: 84, vel: 0.5 }],
   build: ({ q }) => {
     const tl = gsap.timeline({ defaults: { ease: "trl.expo" } });
     const one = (sel: string) => q(`[data-t="${sel}"]`);

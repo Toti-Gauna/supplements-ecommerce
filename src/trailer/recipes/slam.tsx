@@ -23,6 +23,7 @@ export const slam = defineRecipe<SlamProps>({
       })}
     </>
   ),
+  cues: (props) => props.words.flatMap((_, i) => [{ t: i * props.beat, voice: "impact" as const, vel: 0.55 }, { t: Math.max(i * props.beat - 0.12, 0), voice: "whoosh" as const, dur: 0.28, vel: 0.5 }]),
   build: ({ q, props }) => {
     const tl = gsap.timeline();
     const layers = q('[data-t="layer"]'), words = q('[data-t="word"]'), shapes = q('[data-t="shape"]');

@@ -22,6 +22,7 @@ export const statpunch = defineRecipe<StatProps>({
       </div>
     );
   },
+  cues: () => [{ t: 0, voice: "impact", vel: 0.7 }, ...Array.from({ length: 12 }, (_, i) => ({ t: 0.08 + i * 0.08, voice: "tick" as const, midi: i, vel: 0.5 }))],
   build: ({ q, props }) => {
     const tl = gsap.timeline();
     const value = q('[data-t="value"]')[0]!;

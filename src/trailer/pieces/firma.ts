@@ -13,6 +13,9 @@ export const firma: TrailerSpec = {
   title: "Firma de Eclipse",
   bpm: BPM,
   duration: beats(106),
+  // Apertura en tensión (dron, latido y subida que corta seco), drop con el estribillo bajo el adelanto, y desde
+  // "Probalo en vivo" la parte tranquila en Do mayor (el mismo estribillo, lento) hasta el acorde final del cierre.
+  music: { bpm: BPM, parts: [{ from: 0, to: 12, style: "tension" }, { from: 12, to: 40, style: "drop" }, { from: 40, to: 96, style: "calm" }, { from: 96, to: 106, style: "final" }] },
   scenes: sequence([
     { id: "apertura", recipe: "eclipse-intro", dur: beats(12) },
     { id: "pregunta", recipe: "typewriter", dur: beats(8), props: { text: "¿Tu tienda se parece a todas?" } },

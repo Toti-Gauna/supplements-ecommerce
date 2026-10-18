@@ -27,6 +27,7 @@ export const eclipseIntro = defineRecipe<IntroProps>({
       </div>
     );
   },
+  cues: () => [{ t: 1.95, voice: "shimmer", midi: 88, vel: 0.9 }],
   build: ({ q, dur }) => {
     const tl = gsap.timeline({ defaults: { ease: "trl.expo" } });
     const one = (sel: string) => q(`[data-t="${sel}"]`);

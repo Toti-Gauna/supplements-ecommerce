@@ -1,4 +1,5 @@
 import type { FC } from "react";
+import type { Note } from "../audio/score";
 import type { Ratio, StageSize } from "../core/types";
 import type { Timeline } from "./gsap";
 
@@ -23,6 +24,11 @@ export interface Recipe<P extends object = Record<string, unknown>> {
   id: string;
   Component: FC<{ props: P; ratio: Ratio }>;
   build: (ctx: SceneCtx<P>) => Timeline;
+  /** Sonidos atados a lo que pasa en pantalla, en segundos desde el inicio de la escena (contrato: ningún toque sin sonido). */
+  cues?: (props: P, dur: number) => Cue[];
 }
+
+/** Un efecto de la escena: el motor lo corre al tiempo absoluto y lo suma a la partitura. */
+export type Cue = Pick<Note, "t" | "voice"> & Partial<Pick<Note, "midi" | "dur" | "vel">>;
 
 export const defineRecipe = <P extends object>(recipe: Recipe<P>): Recipe<P> => recipe;

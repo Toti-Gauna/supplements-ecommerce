@@ -19,6 +19,8 @@ export interface SceneSpec<P extends object = object> {
   props?: P;
 }
 
+import type { MusicPlan } from "../audio/score";
+
 export interface TrailerSpec {
   id: string;
   title: string;
@@ -26,4 +28,6 @@ export interface TrailerSpec {
   bpm: number;
   duration: number;
   scenes: SceneSpec[];
+  /** Música por tramos (en tiempos). Sin plan, el trailer es mudo. */
+  music?: MusicPlan;
 }

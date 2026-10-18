@@ -53,3 +53,28 @@ test("la firma de Eclipse: apertura, contacto y precios en pesos con el dólar d
   await expect(campana).toContainText("USD 500");
   await expect(page.locator("[data-trailer-stage]")).not.toContainText(/volta/i);
 });
+
+test("con música: la firma abre con la puerta de sonido y “Ver sin sonido” arranca el trailer", async ({ page }) => {
+  await page.goto("trailer/firma/");
+  await ready(page);
+  const gate = page.locator("[data-trailer-gate]");
+  await expect(gate.getByRole("button", { name: /Reproducir con sonido|Preparando el sonido/ })).toBeVisible();
+  await gate.getByRole("button", { name: "Ver sin sonido" }).click();
+  await expect(gate).toHaveCount(0);
+  await expect(page.locator("[data-trailer-controls]").getByRole("button", { name: "Pausa" })).toBeVisible();
+});
+
+test("los MP4 exportados se ofrecen para descargar (y solo los que existen)", async ({ page }) => {
+  await page.goto("trailer/firma/?t=1");
+  await ready(page);
+  const controls = page.locator("[data-trailer-controls]");
+  await expect(controls.locator("a[data-download='Descargar MP4']")).toHaveAttribute("href", /\/trailer\/firma-16x9\.mp4$/);
+  await expect(controls.locator("a[data-download='Para email']")).toHaveAttribute("href", /\/trailer\/firma-email\.mp4$/);
+  await page.goto("trailer/firma/?t=1&ratio=9x16");
+  await ready(page);
+  await expect(controls.locator("a[data-download='Descargar MP4']")).toHaveAttribute("href", /\/trailer\/firma-9x16\.mp4$/);
+  await expect(controls.locator("a[data-download='Para email']")).toHaveCount(0);
+  await page.goto("trailer/demo/?t=1");
+  await ready(page);
+  await expect(controls.locator("a[download]")).toHaveCount(0);
+});

@@ -8,6 +8,7 @@ import { Button, ButtonLink } from "@/components/atoms/Button";
 import { Textarea } from "@/components/atoms/Field";
 import { EmptyState } from "@/components/molecules/EmptyState";
 import { fulfillmentTrack, nextStep, paymentTrack } from "@/demo/admin/order-tracks";
+import { CHANNEL_LABEL } from "@/demo/engine/counter-chat";
 import { STATUS_LABEL } from "@/demo/engine/orders";
 import { formatDate, formatDateTime } from "@/lib/date";
 import { formatARS } from "@/lib/money";
@@ -16,7 +17,7 @@ import { profileHref } from "./customers/Reminders";
 import { DetailHeader, TrackChip } from "./detail/DetailHeader";
 import { OrderEmails } from "./detail/OrderEmails";
 import { Facts, Panel } from "./detail/Panel";
-import { fulfillmentLabel, paymentLabel } from "./OrderCard";
+import { fulfillmentLabel, orderPaymentLabel } from "./OrderCard";
 import { OrderItems } from "./OrderItems";
 import { OrderStatusActions, PromiseDate } from "./OrderStatusActions";
 import { paymentHref, PROOF_STATE, ProofActions } from "./payments/ProofActions";
@@ -40,7 +41,7 @@ export function OrderDetail() {
   return (
     <div className="@container flex flex-col gap-6">
       <DetailHeader list={{ href: "/admin-demo/pedidos/", label: "Pedidos" }} title={order.code} eyebrow={`Pedido ficticio · ${formatDateTime(order.createdAt)}`}
-        status={<><TrackChip label="Pago" value={pay.label} tone={pay.tone} /><TrackChip label="Preparación y entrega" value={ful.label} tone={ful.tone} /></>}
+        status={<><TrackChip label="Pago" value={pay.label} tone={pay.tone} /><TrackChip label="Preparación y entrega" value={ful.label} tone={ful.tone} />{order.channel && <TrackChip label="Origen" value={CHANNEL_LABEL[order.channel]} tone="brand" />}</>}
         aside={<><p className="text-xs font-bold text-muted">Total</p><p className="text-3xl font-extrabold tabular-nums">{formatARS(order.total)}</p></>} />
       <section aria-labelledby="o-next" className="flex flex-col gap-3 rounded-sm bg-surface p-5 shadow-[var(--shadow-card)] ring-2 ring-primary/15">
         <div>
@@ -60,7 +61,7 @@ export function OrderDetail() {
           <Panel title="Productos, lote y servicios"><OrderItems lines={order.lines} lotCheck={order.lotCheck} /></Panel>
           <Panel title="Pago" action={manual && order.proof ? <Link href={paymentHref(order.code)} className="text-sm font-bold text-primary underline">Ver comprobante</Link> : undefined}>
             <Facts items={[
-              ["Medio", paymentLabel(order.paymentMethod)],
+              ["Medio", orderPaymentLabel(order)],
               ["Estado", pay.label],
               ...(manual && order.proof ? [["Comprobante", <span key="p" className="inline-flex flex-wrap items-center gap-2">{order.proof.fileName}<Badge tone={PROOF_STATE[order.proof.status].tone}>{PROOF_STATE[order.proof.status].label}</Badge></span>] as [string, ReactNode]] : []),
               ...(order.proof?.rejectReason ? [["Motivo del rechazo", order.proof.rejectReason] as [string, ReactNode]] : []),

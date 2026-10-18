@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { StatusBadge } from "@/components/molecules/StatusBadge";
+import { inHandLabel, orderOrigin } from "@/demo/admin/order-origin";
 import type { AdminOrder } from "@/demo/admin/types";
 import { formatDateTime } from "@/lib/date";
 import { formatARS } from "@/lib/money";
@@ -10,13 +11,16 @@ const SHIP = { PICKUP: "Retiro", LOCAL_DELIVERY: "Cadete", SHIPPING: "Envío nac
 
 export const paymentLabel = (m: AdminOrder["paymentMethod"]) => PAY[m];
 export const fulfillmentLabel = (f: AdminOrder["fulfillment"]) => SHIP[f];
+/** Medio del pedido: el de la tienda o, si se cobró en el local, "Efectivo en mano" (R4b). */
+export const orderPaymentLabel = (o: AdminOrder) => inHandLabel(o) ?? PAY[o.paymentMethod];
 
 /**
  * Pedido como fila a todo el ancho (8.3.3): código, cliente con fecha y medio, estado, importe y acceso a la ficha.
  * En el celular el estado sube junto al código y el resto se apila; nada se corta a la mitad.
  */
 export function OrderCard({ order }: { order: AdminOrder }) {
-  const meta = `${formatDateTime(order.createdAt)} · ${PAY[order.paymentMethod]} · ${SHIP[order.fulfillment]}${order.fromShop ? " · desde la tienda demo" : ""}`;
+  const origin = orderOrigin(order);
+  const meta = `${formatDateTime(order.createdAt)} · ${orderPaymentLabel(order)} · ${SHIP[order.fulfillment]}${origin ? ` · ${origin}` : ""}`;
   return (
     <Link href={`/admin-demo/pedidos/detalle/?codigo=${order.code}`} className="flex items-center gap-3 rounded-sm bg-surface p-4 shadow-[var(--shadow-card)] transition-colors hover:bg-accent/40 sm:gap-4">
       <div className="flex min-w-0 flex-1 flex-col gap-1 sm:flex-row sm:items-center sm:gap-4">

@@ -150,8 +150,9 @@ Con el stack en el carrito:
 3. **Confirmar pedido** → la **ficha de entrega**: estado real ("Pendiente de pago"), la fecha y el total. Tocá
    **Activar avisos de recompra**: "Antes de que se le termine la whey, le avisás vos, no la competencia."
 4. **Subir comprobante**: el estado pasa a **Comprobante en revisión**, nunca a pagado. Lo aprobás vos en el panel.
-5. **Seguir mi pedido**: estados con fecha y hora. Si querés el "wow" del lote, en el panel aprobá el comprobante en **Pagos
-   manuales**, pasalo a **En preparación** y a **Listo** con el control de lote, y volvé: cada producto muestra **LOTE · VTO**.
+5. **Seguir mi pedido**: estados con fecha y hora. Si querés el "wow" del lote, en el panel aprobá el comprobante en
+   **Pedidos → Por cobrar**, armalo en **Para armar** (juntar los potes y controlar el lote) y volvé: cada producto
+   muestra **LOTE · VTO**.
 6. **Mi cuenta** → **Entrar a la cuenta demo** → **Mi box**: la whey de Sofía está en rojo ("Se termina esta
    semana") con **Recomprar**, y **Repetir mi último pedido** carga todo en un toque.
 
@@ -243,8 +244,8 @@ Whey Vainilla (lote VL-2603-W) → **−40 %** → **Liquidar a $ 32.900**.
 - "Juan compra un scoop por día. El sistema sabe cuándo se le termina: **el jueves 8 de octubre**." → **Avisarle por
   email** (o el botón de WhatsApp con el mensaje ya escrito). "Le escribís vos antes de que vaya a otro lado."
 
-**Preparación con control de lote (30 s)** — **Pedidos → Preparación** → en VOL-000113 tocá **Armando** → **Control de lote** →
-**Controlar lotes** → tildá la barra → **Listo para despachar**.
+**Para armar con control de lote (30 s)** — **Pedidos → Para armar** → en VOL-000113 tildá la barra → **Ya junté todo** →
+tildá el lote → **Listo para despachar**. Después, **Despachos**: la lista de armado del día y la hoja de ruta del cadete.
 - "Nada sale sin confirmar el lote. Queda anotado en el pedido, por si un día hay un reclamo." Y "al cliente le llega
   solo el email de que está listo" (Ajustes → Emails → Bandeja de salida).
 

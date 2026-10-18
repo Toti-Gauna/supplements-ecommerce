@@ -12,12 +12,12 @@ export const SHOP = [
   { id: "home-carrusel", route: "", target: (p) => p.locator("section[aria-roledescription='carrusel']") },
   { id: "home-categorias", route: "", target: (p) => p.locator("section[aria-labelledby='cats-title']") },
   { id: "home-objetivos", route: "", target: (p) => p.locator("section[aria-labelledby='objetivos-title']") },
-  { id: "buscar-typo", route: "buscar/?q=creatna", target: (p) => p.locator("#contenido") },
+  { id: "buscar-typo", route: "buscar/?q=creatna", wait: 1200 },
   { id: "ficha-completa", route: "p/ionic-whey/" },
   { id: "ficha-galeria", route: "p/ionic-whey/", target: (p) => p.locator("[data-vt-hero]") },
   { id: "ficha-configurar", route: "p/ionic-whey/", target: (p) => p.getByRole("region", { name: "Elegí sabor, tamaño y cantidad" }) },
   { id: "ficha-compra-barra", route: "p/creatina-monohidrato/", only: "mobile", target: (p) => p.locator("[data-buy-bar]") },
-  { id: "comparar-bandeja", route: "c/proteinas/", target: (p) => p.locator("[data-compare-tray]"), prep: async (p) => {
+  { id: "comparar-bandeja", route: "c/proteinas/", prep: async (p) => {
     await p.getByRole("button", { name: "Comparar Ionic Whey 100%", exact: true }).click({ force: true });
     await p.getByRole("button", { name: "Comparar Proteína vegana arveja + arroz", exact: true }).click({ force: true });
   } },
@@ -31,7 +31,7 @@ export const SHOP = [
   { id: "checkout-datos", route: "checkout/", prep: withState(seedCart) },
   { id: "seguimiento-entregado", route: "pedido/demo-tutienda-entregado/", target: (p) => p.locator("#contenido") },
   { id: "seguimiento-etapas", route: "pedido/demo-tutienda-entregado/", target: (p) => p.getByRole("region", { name: "Etapas del pedido" }) },
-  { id: "club-inicio", route: "club/", prep: withState(signIn), target: (p) => p.locator("#contenido") },
+  { id: "club-inicio", route: "club/", prep: withState(signIn), wait: 2500 },
   { id: "club-niveles", route: "club/", prep: withState(signIn), target: (p) => p.getByRole("list", { name: "Tabla de niveles" }) },
   { id: "club-misiones", route: "club/", prep: withState(signIn), target: (p) => p.locator("section[aria-labelledby='mis']") },
   { id: "cupones", route: "cupones/", prep: withState(signIn), target: (p) => p.locator("#contenido") },

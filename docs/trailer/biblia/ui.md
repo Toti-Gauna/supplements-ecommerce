@@ -19,8 +19,16 @@ se captura. Los pasos siguientes leen **solo este archivo**.
    azar o reloj propio (ruleta girando, Shaker Rush), y como respaldo de cualquier escena.
 4. **Panel:** el menú lateral se pliega si el mouse está a un costado (el runner lo hace). El logo de marca del riel
    (`bolt`) se ve como un cuadrado liso: revisar en P0.3 si se compone un chrome propio para el trailer.
-5. **Estado que sí persiste entre pantallas** (se siembra, no se hace clic): carrito `volta-demo:cart`, cuenta
+5. **Claves de guardado con la ficha `tutienda`:** el tema es fijo (`volta-theme`); todo lo demás lleva el prefijo de la marca
+   (`tutienda-sound`, `tutienda-quiz-invite`, `tutienda-demo:cart`, `tutienda-demo:account`, `tutienda-demo:theme-preview`).
+   Los pedidos de muestra del seguimiento son `pedido/demo-tutienda/` y `pedido/demo-tutienda-entregado/`. Sin el aviso del
+   quiz sembrado, aparece un modal que tapa la pantalla.
+6. **Estado que sí persiste entre pantallas** (se siembra, no se hace clic): carrito `volta-demo:cart`, cuenta
    `volta-demo:account`. El estado del panel (`volta-demo:admin`, versión 19) **no se siembra**: se llega con clics.
+
+**Resultado (18/10/2026):** 31 piezas de la tienda y 33 del panel (`tienda` 122 y `panel` 136 PNG a 2×, en 1440 y 390,
+claro y oscuro; las de un solo tamaño son `ficha-compra-barra`, solo celular). 0 fallas. Hojas de contacto para mirarlas
+rápido: `docs/trailer/capturas/hojas/<area>-<1440|390>-<light|dark>.jpg`.
 
 ## 1. Inicio, descubrimiento y compra (T2; ráfagas en T1)
 | Plano | Ruta | Componente | Locator | Captura |
@@ -39,7 +47,7 @@ se captura. Los pasos siguientes leen **solo este archivo**.
 | Bolso | `carrito/` | `CartDrawer.tsx` (dialog "Carrito"), página "Tu carrito" | lista "Productos en el carrito" | `carrito` (con `volta-demo:cart` sembrado: colágeno ×2 + whey) |
 | Checkout 3 pasos | `checkout/` | `CheckoutView.tsx:106` (`#checkout-step`) | secuencia en `tests/e2e/helpers.ts` `checkoutAsGuest` | `checkout-datos` (los pasos 2 y 3 y la confirmación se arman en vivo) |
 | Confirmación | `checkout/confirmacion/` | `ConfirmationView.tsx` | `[data-order-panel]`, `section#pago` | **Escena propia** (requiere haber comprado en el mismo contexto) |
-| Seguimiento con lote | `pedido/demo-volta-entregado/` | `TrackingView.tsx`, `LotTag.tsx` | región "Etapas del pedido", `[data-trk-traveler]` | `seguimiento-entregado`, `seguimiento-etapas` (la demo trae un selector de estado: Esperando comprobante → … → Entregado) |
+| Seguimiento con lote | `pedido/demo-tutienda-entregado/` | `TrackingView.tsx`, `LotTag.tsx` | región "Etapas del pedido", `[data-trk-traveler]` | `seguimiento-entregado`, `seguimiento-etapas` (la demo trae un selector de estado: Esperando comprobante → … → Entregado) |
 | Claro / oscuro | cualquiera | `ThemeToggle.tsx` | botón "Activar modo claro/oscuro"; `html[data-theme]` | Todas las capturas existen en los dos modos |
 
 ## 2. Fidelidad y juegos (T2; ráfagas en T1)

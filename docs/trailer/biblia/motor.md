@@ -57,11 +57,27 @@ Aviso en la tienda (`src/features/trailer-invite/`): después de la pantalla de 
 "Ver trailer" (abre la firma) y "No por ahora". Una vez por sesión; la invitación al quiz espera a la página siguiente.
 Los tests y los scripts de capturas lo marcan visto (`volta-trailer-invite`). Se saca cuando el trailer esté terminado.
 
+## Exportación a MP4 (P0.6)
+`node scripts/trailer-export.mjs <pieza> [--ratio 16x9|9x16|both] [--fps 60] [--only audio|poster|email|video] [--poster-at 4]`
+(antes: `PAGES_BASE_PATH=/supplements-ecommerce npm run build`). Levanta su servidor, abre `/trailer/<pieza>/?export=1`,
+comprueba que el cuadro sea determinista (mismo segundo → mismos píxeles, con otro salto en el medio) y graba cuadro a
+cuadro (JPEG calidad 96 por stdin a ffmpeg, sin escribir imágenes a disco). Salida en `public/trailer/`:
+| Archivo | Qué es |
+|---|---|
+| `<pieza>.m4a` | Audio AAC 160 kbps, 48 kHz, normalizado a −14 LUFS / −1,5 dBTP. **Es el que reproduce la página** (arranca al instante; si falta o su duración no coincide, se sintetiza con la partitura) |
+| `<pieza>-16x9.mp4` / `-9x16.mp4` | H.264 High, CRF 17, 60 fps, 1920×1080 / 1080×1920, AAC 192 kbps, `faststart` |
+| `<pieza>-email.mp4` | 720p a 30 fps en dos pasadas, calculado para pesar menos de 9,5 MB |
+| `<pieza>-poster.jpg` | Cuadro de portada (`--poster-at`) |
+La página de la pieza ofrece "Descargar MP4" (del formato que se está viendo) y "Para email" cuando esos archivos existen.
+Ritmo de captura en este entorno: ~6 cuadros por segundo (≈ 9 min por formato a 60 fps). Desfase del códec AAC medido contra
+la síntesis: 0 ms. El Chromium de Playwright no trae AAC/H.264: en los tests la pista se sintetiza (en Chrome, Edge y Safari
+decodifica el archivo).
+
 ## Estado
 - Recetas portadas: `title`, `slam`, `statpunch`, `typewriter`, `themeflip`. El resto de la biblia (§3) se porta
   cuando un storyboard la pide (Tn.3): `uiflow`, `uinotify`, `uibuild`, `uiexplode`, `globeship`, `databars`, `stack`,
   `rules`, `ticker`, `corrupt`, `datamosh`, `gate`, `clickopen`, `remixtitle`, y el **dispositivo 3D** (nuevo).
-- Reloj: hoy corre con `performance.now()`. En P0.5 pasa a mandar el audio (`getOutputTimestamp`).
+- Reloj: con sonido manda el audio (`getOutputTimestamp`); sin sonido, `performance.now()`.
 - Movimiento reducido: el trailer no arranca solo; queda en el primer cuadro con "Reproducir".
 - Verificado: el mismo segundo da el mismo cuadro llegando por URL, desde el inicio y desde más adelante, en 16:9 y
   9:16 (`tests/e2e/trailer-engine.spec.ts`, hash de píxeles).

@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { withBase } from "@/lib/base-path";
 import type { Clock } from "../core/clock";
 import type { TrailerParams } from "../core/params";
 import { sceneAt } from "../core/timeline";
@@ -12,8 +13,9 @@ const clock2 = (t: number) => `${Math.floor(t / 60)}:${(t % 60).toFixed(1).padSt
  * Barra de control (fuera del escenario): reproducir/pausar, recorrer el trailer y, con `?dev=1`, la escena y el
  * segundo exacto. Se actualiza con el ticker de GSAP escribiendo en el DOM, sin renderizar React en cada cuadro.
  */
-export function Controls({ spec, clock, params }: { spec: TrailerSpec; clock: Clock; params: TrailerParams }) {
+export function Controls({ spec, pieza, clock, params }: { spec: TrailerSpec; pieza: string; clock: Clock; params: TrailerParams }) {
   const [playing, setPlaying] = useState(clock.playing());
+  const downloads = useDownloads(pieza, params.ratio);
   const range = useRef<HTMLInputElement>(null);
   const readout = useRef<HTMLSpanElement>(null);
 
@@ -38,7 +40,25 @@ export function Controls({ spec, clock, params }: { spec: TrailerSpec; clock: Cl
       <input ref={range} type="range" aria-label="Recorrer el trailer" min={0} max={spec.duration} step={0.01} defaultValue={0} className="flex-1"
         onInput={(e) => { clock.seek(Number(e.currentTarget.value)); }} />
       <span ref={readout} aria-live="off" className="tabular-nums">0:00.0</span>
+      {downloads.map((d) => (
+        <a key={d.href} href={d.href} download data-download={d.label} className="rounded-xs border border-white/40 px-3 py-1.5 uppercase tracking-wider">{d.label}</a>
+      ))}
       <a href={`?ratio=${other}`} className="underline underline-offset-2">{other.replace("x", ":")}</a>
     </div>
   );
+}
+
+/** Archivos exportados que existen para esta pieza (se pregunta con HEAD: en Pages un archivo ausente da 404). */
+function useDownloads(pieza: string, ratio: string) {
+  const [found, setFound] = useState<Array<{ href: string; label: string }>>([]);
+  useEffect(() => {
+    let off = false;
+    const candidates = [{ name: `${pieza}-${ratio}.mp4`, label: "Descargar MP4" }, ...(ratio === "16x9" ? [{ name: `${pieza}-email.mp4`, label: "Para email" }] : [])];
+    void Promise.all(candidates.map(async (c) => {
+      const href = withBase(`/trailer/${c.name}`);
+      try { return (await fetch(href, { method: "HEAD" })).ok ? { href, label: c.label } : null; } catch { return null; }
+    })).then((r) => { if (!off) setFound(r.filter((x): x is { href: string; label: string } => x !== null)); });
+    return () => { off = true; };
+  }, [pieza, ratio]);
+  return found;
 }

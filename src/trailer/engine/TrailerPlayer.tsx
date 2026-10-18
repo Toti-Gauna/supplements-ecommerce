@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { loadTrack } from "../audio/load";
 import { renderAudio } from "../audio/render";
 import { encodeWav } from "../audio/wav";
 import { parseParams } from "../core/params";
@@ -46,9 +47,9 @@ export default function TrailerPlayer({ pieza }: { pieza: string }) {
   useEffect(() => {
     if (frozen || !spec.music) return;
     let off = false;
-    void renderAudio(trackFor(spec), spec.duration).then((b) => { if (!off) { transport.setBuffer(b); setSoundReady(true); } });
+    void loadTrack(pieza, spec.duration, trackFor(spec)).then((b) => { if (!off) { transport.setBuffer(b); setSoundReady(true); } });
     return () => { off = true; transport.pause(); transport.playback.close(); };
-  }, [spec, frozen, transport]);
+  }, [spec, pieza, frozen, transport]);
 
   useEffect(() => {
     if (!master) return;
@@ -79,7 +80,7 @@ export default function TrailerPlayer({ pieza }: { pieza: string }) {
           );
         })}
       </Stage>
-      {!params.exportMode && master && <Controls spec={spec} clock={transport} params={params} />}
+      {!params.exportMode && master && <Controls spec={spec} pieza={pieza} clock={transport} params={params} />}
       {gate && master && <Gate ready={soundReady} onSound={() => start(true)} onMute={() => start(false)} />}
     </>
   );

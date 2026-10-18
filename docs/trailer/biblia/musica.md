@@ -52,5 +52,5 @@ El MP4 (P0.6) se normaliza a **−14 LUFS / −1 dBTP** con `loudnorm`.
 
 ## En la página
 El navegador solo deja sonar audio después de un toque: la pieza abre con **"Reproducir con sonido"** (o "Ver sin
-sonido"). Con sonido, el reloj del trailer es el del audio (`getOutputTimestamp`): la imagen espera al sonido. La pista se
-renderiza al cargar (unos segundos; en P0.6 pasa a un archivo comprimido pre-renderizado con la síntesis de respaldo).
+sonido"). Con sonido, el reloj del trailer es el del audio (`getOutputTimestamp`): la imagen espera al sonido. La página carga
+`public/trailer/<pieza>.m4a` (lo deja el exportador, ≈ 1 MB); si no existe, se sintetiza al cargar (unos segundos).

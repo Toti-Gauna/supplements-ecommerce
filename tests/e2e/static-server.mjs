@@ -7,7 +7,7 @@ import { extname, join, normalize } from "node:path";
 const ROOT = join(process.cwd(), "out");
 const BASE = (process.env.PAGES_BASE_PATH ?? "").replace(/\/+$/, "");
 const PORT = Number(process.env.E2E_PORT ?? 4173);
-const TYPES = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".css": "text/css", ".svg": "image/svg+xml", ".png": "image/png", ".txt": "text/plain; charset=utf-8", ".xml": "application/xml", ".json": "application/json", ".woff2": "font/woff2", ".woff": "font/woff" };
+const TYPES = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".css": "text/css", ".svg": "image/svg+xml", ".png": "image/png", ".txt": "text/plain; charset=utf-8", ".xml": "application/xml", ".json": "application/json", ".woff2": "font/woff2", ".woff": "font/woff", ".mp4": "video/mp4", ".m4a": "audio/mp4", ".jpg": "image/jpeg", ".webm": "video/webm" };
 
 function send(res, file, status = 200) {
   res.writeHead(status, { "content-type": TYPES[extname(file)] ?? "application/octet-stream" });

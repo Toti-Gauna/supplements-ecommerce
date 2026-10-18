@@ -89,6 +89,9 @@ test("el cierre: equipos, asesoría, promesa y el guiño con los precios del lib
   await seek(page, at(57));
   await expect(scene(page, "software").locator("[data-t='nb-screen'] img")).toBeVisible();
   await expect(scene(page, "software").locator("[data-t='ph-screen'] img")).toBeVisible();
+  // El escenario es imagen: los lectores de pantalla leen el resumen de la pieza.
+  await expect(page.locator("[data-trailer-viewport]")).toHaveAttribute("aria-hidden", "true");
+  await expect(page.locator("[data-trailer-summary]")).toContainText("Para que la tuya venda más.");
   // En 68 el eje de la promesa sigue en la cta y se va con el amanecer.
   await seek(page, at(68.1));
   await expect(scene(page, "en-vivo").locator("[data-t='axis']")).toBeVisible();

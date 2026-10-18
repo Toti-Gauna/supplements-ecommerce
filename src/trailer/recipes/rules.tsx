@@ -39,7 +39,7 @@ export const rules = defineRecipe<RulesProps>({
   build: ({ q, beat: B, reduced }) => {
     const tl = gsap.timeline();
     const one = (s: string) => q(`[data-t="${s}"]`);
-    const hor = one("plus-h"), ver = one("plus-v"), bars = [...hor, ...ver], glow = one("glow"), pair = one("pair");
+    const hor = one("plus-h"), ver = one("plus-v"), bars = [...hor, ...ver], glow = one("glow"), pair = one("shift");
     const strokes = [...one("nb-line"), ...one("ph-line")];
     if (reduced) {
       tl.set(pair, { ...SHRINK }, 0);

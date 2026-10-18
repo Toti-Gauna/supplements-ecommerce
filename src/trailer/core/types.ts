@@ -35,4 +35,6 @@ export interface TrailerSpec {
   music?: MusicPlan;
   /** Cue sheet de la pieza (se suma a los `cues` de cada receta). */
   effects?: PieceEffect[];
+  /** Lo que cuenta la pieza en texto, para lectores de pantalla (el escenario queda `aria-hidden`). Sin resumen se lee el título. */
+  summary?: string;
 }

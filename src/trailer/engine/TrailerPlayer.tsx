@@ -78,6 +78,7 @@ export default function TrailerPlayer({ pieza }: { pieza: string }) {
   const start = (sound: boolean) => { if (sound) transport.playback.unlock(); else transport.mute(); setGate(false); transport.play(); };
   return (
     <>
+      <p data-trailer-summary className="sr-only">{spec.summary ?? spec.title}</p>
       <Stage ref={stageRef} ratio={params.ratio}>
         {spec.scenes.map((scene) => {
           const { Component } = RECIPES[scene.recipe]!;

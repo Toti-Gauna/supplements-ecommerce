@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { BELT_CENTER_ROW, beltEase, beltPotCenter } from "@/trailer/recipes/clones";
 import { tickerEase } from "@/trailer/recipes/ticker";
+import { t1 } from "@/trailer/pieces/t1";
 
 /** Velocidad relativa de una curva de avance (derivada numérica, en "recorrido total por unidad de avance"). */
 const speed = (f: (p: number) => number, p: number, h = 1e-4) => (f(p + h) - f(p - h)) / (2 * h);
@@ -24,5 +25,14 @@ describe("T1 · curvas de las escenas del problema", () => {
     expect(speed(beltEase, 2.75 / 3 + 0.0005)).toBeCloseTo(speed(beltEase, 2.75 / 3 - 0.0005), 1); // el empalme no salta
     expect(speed(beltEase, 0.9999)).toBeLessThan(0.1 * speed(beltEase, 0.5)); // al final ya casi no se mueve
     expect(beltPotCenter(BELT_CENTER_ROW)).toBe(540);
+  });
+});
+
+describe("T1 · resumen para lectores de pantalla", () => {
+  it("cuenta los supers, los rótulos, el contacto y el guiño con los datos de las escenas y del libro", () => {
+    const s = t1.summary!;
+    for (const text of ["Mismo template.", "La tuya, no.", "pantallas de carga por fecha", "mostrador en cuotas y lista del proveedor", "No es solo software.",
+      "Para que la tuya venda más.", "223-446 7881", "Arrancá con 3 meses bonificados.", "$ 750.000 (USD 500)", "sujeto a disponibilidad"]) expect(s).toContain(text);
+    expect(s).not.toMatch(/volta/i);
   });
 });

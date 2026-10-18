@@ -21,11 +21,14 @@ export function DevicePair({ ratio, ry, front = "hoy-1440-dark", back = "home-ca
   const fit = FIT[ratio];
   return (
     <div className="absolute left-0 top-0" style={{ width: 1920, height: 1080, transformOrigin: "0 0", transform: `translate(${fit.x}px, ${fit.y}px) scale(${fit.k})` }}>
+      {/* `shift` achica y corre el par en 2D (escena 15): la perspectiva viaja con él y el par no se ve en oblicuo. */}
+      <div data-t="shift" className="absolute inset-0" style={{ transformOrigin: `${PAIR_CENTER.x}px ${PAIR_CENTER.y}px` }}>
       <div className="absolute inset-0" style={{ perspective: 1800, perspectiveOrigin: `${PAIR_CENTER.x}px ${PAIR_CENTER.y}px` }}>
         <div data-t="pair" className="absolute inset-0" style={{ transformStyle: "preserve-3d", transformOrigin: `${PAIR_CENTER.x}px ${PAIR_CENTER.y}px`, transform: `rotateY(${ry}deg)` }}>
           <Laptop id="nb" shot={front} cx={1290} cy={520} rx={6} />
           <Phone id="ph" shot={back} cx={860} cy={600} z={120} ry={26} />
         </div>
+      </div>
       </div>
     </div>
   );

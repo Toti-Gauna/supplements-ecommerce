@@ -5,7 +5,7 @@ import { WheelCollar } from "@/features/club/WheelCollar";
 import { WheelDisc } from "@/features/club/WheelDisc";
 import { WheelHub } from "@/features/club/WheelHub";
 import { WheelRim } from "@/features/club/WheelRim";
-import { STAGE_GLOW } from "@/features/club/wheel-art";
+import { PLATES, STAGE_GLOW } from "@/features/club/wheel-art";
 import { cssAnimations, setCssTime } from "../engine/css-clock";
 import { gsap } from "../engine/gsap";
 import { defineRecipe } from "../engine/recipe";
@@ -15,6 +15,14 @@ import { Chip } from "./tpl";
 export interface WheelLiveProps { eyebrow: string; title: string; prize: number; chip: [string, string] }
 
 const DIAL = 860;
+/**
+ * Desenfoque de movimiento: mientras el disco gira rápido, los gajos (amarillo contra azul y rojo) pasan por cada punto más de
+ * 3 veces por segundo, que es un destello según WCAG 2.3.1. Un velo del color promedio de los discos al 90 % deja el cambio
+ * por debajo del 10 % de luminancia, como se ve una rueda que gira en una cámara; se va cuando el disco ya casi frenó.
+ */
+const BLUR = 0.9;
+const hex2 = (h: string, i: number) => parseInt(h.slice(1 + i * 2, 3 + i * 2), 16);
+const PLATE_MIX = `rgb(${[0, 1, 2].map((i) => Math.round(PLATES.reduce((s, p) => s + hex2(p.base, i), 0) / PLATES.length)).join(" ")})`;
 /**
  * Frenada escrita en tiempos (desde el inicio de la escena): las fronteras entre gajos pasan por el puntero en fusas, en
  * semicorcheas y en una corchea, y el disco se detiene en el centro del premio en el tiempo 3. Con 8 gajos de 45°, cada
@@ -45,6 +53,7 @@ export const wheelLive = defineRecipe<WheelLiveProps>({
               <WheelDisc segments={segments} />
               <div data-t="landed" className="absolute inset-0"><WheelDisc segments={segments} landed={props.prize} /></div>
             </div>
+            <div data-t="blur" aria-hidden="true" className="absolute inset-[4.4%] rounded-full" style={{ background: `radial-gradient(circle, transparent 55%, rgb(0 0 0 / .45) 100%), ${PLATE_MIX}` }} />
             <div data-t="rim-idle" className="absolute inset-0"><WheelRim lights="idle" /></div>
             <div data-t="rim-win" className="absolute inset-0"><WheelRim lights="win" /></div>
             <div data-t="collar" className="absolute inset-0"><WheelCollar /></div>
@@ -66,7 +75,7 @@ export const wheelLive = defineRecipe<WheelLiveProps>({
     const win = cssAnimations([...one("landed"), ...one("rim-win")]);
     const land = wheelLanding(props.prize);
     if (reduced) {
-      tl.set(one("disc"), { rotate: land }, 0); tl.set(one("rim-idle"), { autoAlpha: 0 }, 0); tl.set(one("ring"), { autoAlpha: 0 }, 0);
+      tl.set(one("disc"), { rotate: land }, 0); tl.set([...one("rim-idle"), ...one("ring"), ...one("blur")], { autoAlpha: 0 }, 0);
       setCssTime(win, 5000);
       return tl;
     }
@@ -82,6 +91,9 @@ export const wheelLive = defineRecipe<WheelLiveProps>({
     WHEEL_STEPS.slice(1).forEach((t, k) => keys.push({ rotate: wheelBoundary(props.prize, k + 1), duration: (t - WHEEL_STEPS[k]!) * B, ease: "none" }));
     keys.push({ rotate: land, duration: (STOP - WHEEL_STEPS.at(-1)!) * B, ease: "power2.out" });
     tl.set(one("disc"), { rotate: start }, 0);
+    // El velo entra con el giro y se va desde la última frontera (2,5), cuando el disco ya solo recorre medio gajo.
+    tl.fromTo(one("blur"), { autoAlpha: 0 }, { autoAlpha: BLUR, duration: B / 8, ease: "none" }, (WHEEL_STEPS[0]! - 1 / 8) * B);
+    tl.to(one("blur"), { autoAlpha: 0, duration: (STOP - WHEEL_STEPS.at(-1)!) * B, ease: "none", immediateRender: false }, WHEEL_STEPS.at(-1)! * B);
     tl.to(one("disc"), { keyframes: keys, immediateRender: false }, (WHEEL_STEPS[0]! - 1 / 8) * B);
     // La traba cabecea en cada frontera (−12° → 0 en un octavo de tiempo).
     tl.set(collar, { rotate: 0, transformOrigin: "50% 26%" }, 0);

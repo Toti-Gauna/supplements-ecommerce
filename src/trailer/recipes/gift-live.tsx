@@ -24,14 +24,17 @@ const BOX = { w: 520, h: 709, top: 220 };
 export const giftLive = defineRecipe<GiftLiveProps>({
   id: "gift-live",
   Component: ({ props, ratio }) => {
-    const cx = ratio === "9x16" ? 540 : 960, steps = props.prompts.length;
+    const tall = ratio === "9x16", cx = tall ? 540 : 960, steps = props.prompts.length;
+    // En vertical la bolsa se agranda 1,5× (la caja sigue midiendo lo mismo adentro, para que el timeline la mueva igual).
+    const k = tall ? 1.5 : 1, top = tall ? 430 : BOX.top;
     return (
       <div className="absolute inset-0 overflow-hidden" style={{ background: TR.night }}>
-        <p className="font-display absolute left-0 right-0 text-center uppercase leading-none" style={{ top: 70, fontSize: 64, color: TR.onNight }}>{props.title}</p>
+        <p className="font-display absolute left-0 right-0 text-center uppercase leading-none" style={{ top: tall ? 190 : 70, fontSize: tall ? 72 : 64, color: TR.onNight }}>{props.title}</p>
         {[...props.prompts, props.done].map((t, i) => (
-          <p key={i} data-t="prompt" data-i={i} className="absolute left-0 right-0 text-center font-mono font-bold uppercase" style={{ top: 160, fontSize: 28, letterSpacing: "0.2em", color: TR.volt }}>{t}</p>
+          <p key={i} data-t="prompt" data-i={i} className="absolute left-0 right-0 text-center font-mono font-bold uppercase" style={{ top: tall ? 300 : 160, fontSize: tall ? 34 : 28, letterSpacing: "0.2em", color: TR.volt }}>{t}</p>
         ))}
-        <div data-t="cam" className="absolute overflow-hidden rounded-md" style={{ left: cx - BOX.w / 2, top: BOX.top, width: BOX.w, height: BOX.h, background: "radial-gradient(ellipse at 50% 30%, #1d2230 0%, #0a0c11 70%)", transformOrigin: "50% 45%" }}>
+        <div className="absolute" style={{ left: cx - BOX.w / 2, top, width: BOX.w, height: BOX.h, transform: `scale(${k})`, transformOrigin: "50% 0" }}>
+        <div data-t="cam" className="absolute inset-0 overflow-hidden rounded-md" style={{ background: "radial-gradient(ellipse at 50% 30%, #1d2230 0%, #0a0c11 70%)", transformOrigin: "50% 45%" }}>
           <BrandMarkProvider brand={tutienda}>
             <div data-t="swing" className="absolute inset-0" style={{ transformOrigin: "50% 0%" }}>
               {Array.from({ length: steps + 2 }, (_, i) => (
@@ -44,10 +47,11 @@ export const giftLive = defineRecipe<GiftLiveProps>({
           <div data-t="ring" className="absolute rounded-full" style={{ left: "50%", top: "52%", width: 180, height: 180, marginLeft: -90, marginTop: -90, boxShadow: `0 0 0 6px ${TR.volt}` }} />
           <div data-t="bars" className="absolute inset-0" style={{ boxShadow: "inset 0 70px 0 #000, inset 0 -70px 0 #000, inset 0 0 160px rgb(0 0 0 / .7)" }} />
         </div>
-        <div className="absolute flex" style={{ left: cx - 170, top: BOX.top + BOX.h + 26, gap: 10 }}>
+        </div>
+        <div className="absolute flex" style={{ left: cx - 170, top: top + BOX.h * k + 30, gap: 10 }}>
           {Array.from({ length: steps }, (_, i) => <span key={i} data-t="cell" className="block" style={{ width: 60, height: 12, background: TR.volt }} />)}
         </div>
-        <Chip n={props.chip[0]} text={props.chip[1]} bottom />
+        <Chip n={props.chip[0]} text={props.chip[1]} bottom ratio={ratio} />
       </div>
     );
   },

@@ -26,7 +26,7 @@ export const eclipseGuino = defineRecipe<GuinoProps>({
         <div data-t="bridge" className="absolute inset-0"><DawnSky ratio={ratio} /></div>
         <div className="absolute inset-x-0 flex flex-col" style={{ top: tall ? 260 : 110, paddingInline: px }}>
           <SectionMark n={props.n} label={s.eyebrow} />
-          <div className="mt-10"><SerifTitle text={t.title} italic={t.italic} size={tall ? 150 : 150} /></div>
+          <div className="mt-10"><SerifTitle text={t.title} italic={t.italic} size={tall ? 132 : 150} /></div>
           <div className="relative" style={{ marginTop: tall ? 90 : 60 }}>
             <div data-t="rule" className="origin-left" style={{ height: 2, background: EC.rulelight }} />
             <div className="flex items-end justify-between gap-10" style={{ paddingBlock: 28 }}>

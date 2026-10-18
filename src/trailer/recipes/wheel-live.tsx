@@ -14,7 +14,6 @@ import { Chip } from "./tpl";
 
 export interface WheelLiveProps { eyebrow: string; title: string; prize: number; chip: [string, string] }
 
-const DIAL = 860;
 /**
  * Desenfoque de movimiento: mientras el disco gira rápido, los gajos (amarillo contra azul y rojo) pasan por cada punto más de
  * 3 veces por segundo, que es un destello según WCAG 2.3.1. Un velo del color promedio de los discos al 90 % deja el cambio
@@ -40,12 +39,12 @@ const STOP = 3;
 export const wheelLive = defineRecipe<WheelLiveProps>({
   id: "wheel-live",
   Component: ({ props, ratio }) => {
-    const cx = ratio === "9x16" ? 540 : 960, cy = ratio === "9x16" ? 960 : 570;
+    const tall = ratio === "9x16", cx = tall ? 540 : 960, cy = tall ? 1040 : 570, DIAL = tall ? 960 : 860;
     const segments = defaultWheel.segments;
     return (
       <div className="absolute inset-0 overflow-hidden" style={{ background: `radial-gradient(ellipse at 50% 55%, ${STAGE_GLOW[0]}66 0%, ${STAGE_GLOW[1]}33 40%, ${TR.night} 75%)` }}>
-        <p className="eyebrow absolute left-0 right-0 text-center" style={{ top: 34, fontSize: 22, color: TR.muted }}>{props.eyebrow}</p>
-        <p className="font-display absolute left-0 right-0 text-center uppercase leading-none" style={{ top: 66, fontSize: 52, color: TR.onNight }}>{props.title}</p>
+        <p className="eyebrow absolute left-0 right-0 text-center" style={{ top: tall ? 230 : 34, fontSize: tall ? 26 : 22, color: TR.muted }}>{props.eyebrow}</p>
+        <p className="font-display absolute left-0 right-0 text-center uppercase leading-none" style={{ top: tall ? 272 : 66, fontSize: tall ? 66 : 52, color: TR.onNight }}>{props.title}</p>
         <BrandMarkProvider brand={tutienda}>
           <div className="absolute aspect-square select-none rounded-full" style={{ left: cx - DIAL / 2, top: cy - DIAL / 2 + 40, width: DIAL }}>
             <div aria-hidden="true" className="absolute inset-[1%] rounded-full shadow-[0_34px_70px_-26px_rgb(0_0_0/0.95)]" />
@@ -64,7 +63,7 @@ export const wheelLive = defineRecipe<WheelLiveProps>({
             </svg>
           </div>
         </BrandMarkProvider>
-        <Chip n={props.chip[0]} text={props.chip[1]} />
+        <Chip n={props.chip[0]} text={props.chip[1]} ratio={ratio} />
       </div>
     );
   },

@@ -138,3 +138,16 @@ decodifica el archivo).
   velo de desenfoque de movimiento mientras gira rápido. Cualquier giro o parpadeo nuevo se mide a 60 fps antes de cerrarlo.
 - **Perspectiva:** para mover un grupo 3D por el cuadro se mueve un envoltorio 2D que contiene a la perspectiva (`[data-t="shift"]`);
   mover el grupo dentro de una perspectiva fija lo deja en oblicuo. Informe completo: `docs/trailer/t1/qa.md`.
+
+## Lo que suma T1.5 (9:16)
+- **Un layout por escena sobre la misma línea de tiempo:** cada receta resuelve su `ratio` en el `Component` y en el `build` (que recibe `ratio`). Los
+  tiempos, el sonido y los cortes son los de 16:9; cambia dónde está cada cosa y a qué tamaño.
+- **Placas de celular** (`scripts/trailer-plates.mjs`, ids terminados en `-t`): capturas a 390 × 693 (panel) y 640 × 1138 (ficha: el botón del tema
+  recién aparece en la cabecera desde 640 px; en 390 vive en el menú) que llenan el escenario de 1080 × 1920 sin barras. Las cajas medidas
+  (`t1-plates.json`) salen en px de ese escenario. Las escenas de placas reciben en `props.tall` lo que cambia en vertical (qué placas y sus
+  cajas) y `forRatio` (`plate-kit.tsx`) las mezcla; un test comprueba que cada escena de placas traiga su versión vertical y que existan los archivos.
+- **Composición vertical** (storyboard §8): los supers van en el tercio superior (96 px); las cifras en dos renglones ("3 cuotas de" / "$ 40.892";
+  el número y debajo "SUBEN"); la bolsa, el celular de Shaker Rush y la ruleta se agrandan para llenar el ancho; los equipos de "No es solo
+  software" van a 0,8× con el celular adelante, y en la escena 15 el "+" queda arriba del texto y los equipos abajo. Un e2e recorre las 17
+  escenas en 9:16 y comprueba que ningún texto se salga del escenario (no cortes de texto).
+- **Detrás de la cifra, la placa baja a 0,1** en vertical (0,2 en 16:9): el panel de celular trae el texto más grande y compite con ella.

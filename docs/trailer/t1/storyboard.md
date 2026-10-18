@@ -162,7 +162,7 @@ Por qué esta división: `veredicto.md` §3.
 "Para que la tuya venda más." es una promesa sin número. No hay cifras de ventas, testimonios ni marcas reales. Las tiendas del problema son dibujos genéricos.
 
 ## 8. 9:16 y movimiento reducido
-**9:16** (T1.5): la misma partitura y los mismos cortes.
+**9:16** (T1.5, hecho: `docs/trailer/biblia/motor.md`): la misma partitura y los mismos cortes.
 - Grilla de 6 columnas × 12 filas.
 - Clones en columnas de a 2.
 - El marco del latido va arriba (1080 × 810), con "La tuya, no." abajo.

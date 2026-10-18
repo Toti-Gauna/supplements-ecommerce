@@ -18,6 +18,9 @@ const LAY = {
 } as const;
 
 /** 07 · Lista del proveedor (52–56): se pega la lista, "48" cuenta de a 12 con sus rayas, el resumen completo y corte a negro. */
+/** La placa baja detrás de la cifra: en vertical más (a 0,1), porque el panel de celular tiene el texto más grande y compite con ella. */
+const DIM: Record<Ratio, number> = { "16x9": 0.2, "9x16": 0.1 };
+
 export function ProveedorView({ props: base, ratio }: { props: ProveedorProps; ratio: Ratio }) {
   const props = forRatio(base, ratio), L = LAY[ratio], [bx, by] = center(props.load);
   return (
@@ -50,14 +53,14 @@ export function buildProveedor({ q, props: base, beat: B, reduced, ratio }: Scen
   const one = (s: string) => q(`[data-t="${s}"]`);
   const shown = [...one("count"), ...one("word"), ...one("bar"), ...one("rest")];
   if (!reduced) tl.fromTo(one("chip-rule"), { scaleX: 0 }, { scaleX: 1, duration: B / 4, ease: "trl.expo" }, 0);
-  if (reduced) { tl.set([...one("before"), ...one("press")], { autoAlpha: 0 }, 0); tl.set(one("after"), { autoAlpha: 1 }, 0); tl.set(one("plates"), { autoAlpha: 0.2 }, 0); }
+  if (reduced) { tl.set([...one("before"), ...one("press")], { autoAlpha: 0 }, 0); tl.set(one("after"), { autoAlpha: 1 }, 0); tl.set(one("plates"), { autoAlpha: DIM[ratio] }, 0); }
   else {
     tl.set(shown, { autoAlpha: 0 }, 0);
     // Click en "Cargar la lista de muestra" y la lista cae entera en ⅛ de tiempo: se pega, no se tipea.
     tl.fromTo(one("press"), { autoAlpha: 1, scale: 1.08 }, { scale: 1, autoAlpha: 0, duration: B / 4, ease: "power2.out" }, 0);
     tl.set(one("after"), { autoAlpha: 1 }, B / 8);
     tl.set(one("before"), { autoAlpha: 0 }, B / 8);
-    tl.to(one("plates"), { autoAlpha: 0.2, duration: B / 4, ease: "none", immediateRender: false }, B / 2);
+    tl.to(one("plates"), { autoAlpha: DIM[ratio], duration: B / 4, ease: "none", immediateRender: false }, B / 2);
     // "48" cuenta de a 12 en semicorcheas (½, ¾, 1 y 1¼ tiempos) mientras se trazan sus rayas, de a 12.
     tl.set([...one("word"), ...one("count")], { autoAlpha: 1 }, B / 2);
     for (let k = 0; k < STEPS; k++) {

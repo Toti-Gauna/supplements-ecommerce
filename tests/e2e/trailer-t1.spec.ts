@@ -99,6 +99,39 @@ test("el cierre: equipos, asesoría, promesa y el guiño con los precios del lib
   await expect(scene(page, "en-vivo").locator("[data-t='axis']")).toBeHidden();
 });
 
+test("9:16: los textos de cada escena entran en el escenario y las placas son las de celular", async ({ page }) => {
+  await page.setViewportSize({ width: 405, height: 720 });
+  await page.goto("trailer/t1/?export=1&ratio=9x16&t=15");
+  await ready(page);
+  const TEXTS = "[data-t='sup'], [data-t='super'], [data-t='line'], [data-t='chip'], [data-t='big'], [data-t='count'], [data-t='word'], [data-t='rest'], [data-t='note'], [data-t='title-line'], [data-t='item'], [data-t='price'], [data-t='fine'], [data-t='foot'], [data-t='prompt']";
+  const times: Array<[number, string]> = [[14, "calcadas"], [17, "veinte"], [21.5, "potes"], [25.5, "plano"], [29.5, "latido"], [32.5, "w1-carga"], [35.6, "w2-tema"], [38.5, "w3-regalo"],
+    [42, "w4-shaker"], [46, "w5-ruleta"], [50.5, "w6-mostrador"], [54.5, "w7-proveedor"], [58.5, "software"], [62.8, "asesoria"], [66, "promesa"], [76, "en-vivo"], [83.5, "guino"]];
+  for (const [beats, id] of times) {
+    await seek(page, at(beats));
+    const out = await page.evaluate(({ id: sceneId, sel }) => {
+      const stage = document.querySelector("[data-trailer-stage]")!.getBoundingClientRect();
+      const bad: string[] = [];
+      let seen = 0;
+      for (const el of document.querySelectorAll<HTMLElement>(`[data-escena='${sceneId}'] :is(${sel})`)) {
+        const cs = getComputedStyle(el);
+        if (cs.visibility === "hidden" || +cs.opacity < 0.5 || !el.textContent?.trim()) continue;
+        const r = el.getBoundingClientRect();
+        if (r.width < 1 || r.height < 1) continue;
+        seen++;
+        if (r.left < stage.left - 1 || r.right > stage.right + 1) bad.push(`${el.dataset.t} «${el.textContent.trim().slice(0, 30)}» ${Math.round(r.left - stage.left)}..${Math.round(r.right - stage.left)} de ${Math.round(stage.width)}`);
+      }
+      return { bad, seen };
+    }, { id, sel: TEXTS });
+    expect(out.seen, `${id} a ${beats}: hay textos que medir`).toBeGreaterThan(0);
+    expect(out.bad, `${id} a ${beats}`).toEqual([]);
+  }
+  await seek(page, at(34.2));
+  await expect(scene(page, "w2-tema").locator("img[data-t='light']")).toHaveAttribute("src", /ficha-light-t\.jpg/);
+  await seek(page, at(49.5));
+  await expect(scene(page, "w6-mostrador").locator("img[data-t='after']")).toHaveAttribute("src", /cuotas-t\.jpg/);
+  await expect(page.locator("[data-trailer-stage]")).not.toContainText(/volta/i);
+});
+
 test("con movimiento reducido cada escena queda en su lámina final", async ({ page }) => {
   await page.goto("trailer/t1/?export=1&reduced=1&t=5");
   await ready(page);

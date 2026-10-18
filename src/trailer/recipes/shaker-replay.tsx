@@ -20,10 +20,11 @@ const FIELD = { w: SCREEN.w, h: SCREEN.h - HUD };
 export const shakerReplay = defineRecipe<ShakerReplayProps>({
   id: "shaker-replay",
   Component: ({ props, ratio }) => {
-    const cx = ratio === "9x16" ? 540 : 1000, cy = ratio === "9x16" ? 960 : 540;
+    const tall = ratio === "9x16", cx = tall ? 540 : 1000, cy = tall ? 1010 : 540, k = tall ? 1.55 : 1;
     return (
       <div className="absolute inset-0 overflow-hidden" style={{ background: TR.night }}>
-        <div className="absolute" style={{ left: cx - PHONE.w / 2, top: cy - PHONE.h / 2, width: PHONE.w, height: PHONE.h, perspective: 1600 }}>
+        <div className="absolute" style={{ left: cx - PHONE.w / 2, top: cy - PHONE.h / 2, width: PHONE.w, height: PHONE.h, transform: `scale(${k})` }}>
+        <div className="absolute inset-0" style={{ perspective: 1600 }}>
           <div data-t="phone" className="absolute inset-0" style={{ borderRadius: 56, background: TR.night2, boxShadow: `inset 0 0 0 ${HAIR}px ${TR.volt}, 0 40px 80px rgb(0 0 0 / .6)` }}>
             <div className="absolute overflow-hidden" style={{ left: PHONE.pad, top: PHONE.pad, width: SCREEN.w, height: SCREEN.h, borderRadius: 42, background: `radial-gradient(ellipse at 50% 20%, ${TR.night2} 0%, ${TR.night} 70%)` }}>
               <div className="absolute inset-x-0 top-0 flex items-end justify-between px-6 pb-3" style={{ height: HUD }}>
@@ -40,7 +41,8 @@ export const shakerReplay = defineRecipe<ShakerReplayProps>({
             </div>
           </div>
         </div>
-        <Chip n={props.chip[0]} text={props.chip[1]} />
+        </div>
+        <Chip n={props.chip[0]} text={props.chip[1]} ratio={ratio} />
       </div>
     );
   },

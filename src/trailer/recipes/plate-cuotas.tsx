@@ -8,9 +8,12 @@ import { Chip } from "./tpl";
 export type CuotasProps = WithTall<{ mode: "cuotas"; before: string; after: string; card: Box; summary: Box; lines: [string, string]; note: string; chip: [string, string] }>;
 
 /** La cifra grande: en 16:9, columnas 1 a 10 con altura de mayúscula ≈ 220 px (display a 250); en 9:16, a todo el ancho en el tercio superior. */
-const BIGS: Record<Ratio, { x: number; y: number; size: number; note: number }> = { "16x9": { x: 96, y: 300, size: 250, note: 32 }, "9x16": { x: 60, y: 230, size: 200, note: 30 } };
+const BIGS: Record<Ratio, { x: number; y: number; size: number; note: number }> = { "16x9": { x: 96, y: 300, size: 250, note: 32 }, "9x16": { x: 60, y: 330, size: 200, note: 30 } };
 
 /** 06 · Mostrador en cuotas (48–52): se traza la tarjeta "3 cuotas", click, y la cifra se despega del resumen y aterriza enorme. */
+/** La placa baja detrás de la cifra: en vertical más (a 0,1), porque el panel de celular tiene el texto más grande y compite con ella. */
+const DIM: Record<Ratio, number> = { "16x9": 0.2, "9x16": 0.1 };
+
 export function CuotasView({ props: base, ratio }: { props: CuotasProps; ratio: Ratio }) {
   const props = forRatio(base, ratio), BIG = BIGS[ratio];
   return (
@@ -34,7 +37,7 @@ export function buildCuotas({ q, props: base, beat: B, reduced, ratio }: SceneCt
   const one = (s: string) => q(`[data-t="${s}"]`);
   if (reduced) {
     tl.set(one("before"), { autoAlpha: 0 }, 0); tl.set(one("after"), { autoAlpha: 1 }, 0);
-    tl.set(one("plates"), { autoAlpha: 0.2 }, 0); tl.set(one("trace"), { autoAlpha: 0 }, 0);
+    tl.set(one("plates"), { autoAlpha: DIM[ratio] }, 0); tl.set(one("trace"), { autoAlpha: 0 }, 0);
     return tl;
   }
   tl.fromTo(one("chip-rule"), { scaleX: 0 }, { scaleX: 1, duration: B / 4, ease: "trl.expo" }, 0);
@@ -45,7 +48,7 @@ export function buildCuotas({ q, props: base, beat: B, reduced, ratio }: SceneCt
   // La cifra sale de su caja en el resumen (escala ≤ 1: nunca se agranda una imagen) y aterriza en el tiempo 1.
   const s = props.summary;
   tl.fromTo(one("big"), { x: s.x - BIG.x, y: s.y - BIG.y, scale: s.height / BIG.size, autoAlpha: 0 }, { x: 0, y: 0, scale: 1, autoAlpha: 1, duration: B / 2, ease: "trl.expo" }, B / 2);
-  tl.to(one("plates"), { autoAlpha: 0.2, duration: B / 4, ease: "none", immediateRender: false }, B / 2);
+  tl.to(one("plates"), { autoAlpha: DIM[ratio], duration: B / 4, ease: "none", immediateRender: false }, B / 2);
   tl.fromTo(one("note"), { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: B / 2, ease: "trl.expo" }, 1.5 * B);
   return tl;
 }

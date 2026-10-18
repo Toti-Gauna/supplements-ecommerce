@@ -10,8 +10,8 @@ import { Grid } from "./tpl";
 const PATH = 1000;
 /** Centro del par (notebook + celular) en el 16:9: el eje sobre el que gira y se achica. */
 export const PAIR_CENTER = { x: 1240, y: 540 } as const;
-/** En 9:16 el par entra entero en el ancho (el re-encuadre fino es de T1.5). */
-const FIT: Record<Ratio, { k: number; x: number; y: number }> = { "16x9": { k: 1, x: 0, y: 0 }, "9x16": { k: 0.5, x: 540 - PAIR_CENTER.x * 0.5, y: 1100 - PAIR_CENTER.y * 0.5 } };
+/** En 9:16 el par entra entero en el ancho (0,8×), centrado en x = 540 y en el tercio inferior; el super va arriba. */
+const FIT: Record<Ratio, { k: number; x: number; y: number }> = { "16x9": { k: 1, x: 0, y: 0 }, "9x16": { k: 0.8, x: 540 - PAIR_CENTER.x * 0.8, y: 1290 - PAIR_CENTER.y * 0.8 } };
 
 /**
  * La notebook (centrada en 1290, 520) y el celular (adelante y a la izquierda, 860, 600) de "No es solo software", en un

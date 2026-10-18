@@ -1,4 +1,7 @@
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import { forRatio } from "@/trailer/recipes/plate-kit";
 import { BELT_CENTER_ROW, beltEase, beltPotCenter } from "@/trailer/recipes/clones";
 import { tickerEase } from "@/trailer/recipes/ticker";
 import { t1 } from "@/trailer/pieces/t1";
@@ -34,5 +37,29 @@ describe("T1 · resumen para lectores de pantalla", () => {
     for (const text of ["Mismo template.", "La tuya, no.", "pantallas de carga por fecha", "mostrador en cuotas y lista del proveedor", "No es solo software.",
       "Para que la tuya venda más.", "223-446 7881", "Arrancá con 3 meses bonificados.", "$ 750.000 (USD 500)", "sujeto a disponibilidad"]) expect(s).toContain(text);
     expect(s).not.toMatch(/volta/i);
+  });
+});
+
+describe("T1 · placas por formato", () => {
+  const PLATE_KEYS = ["light", "dark", "before", "after"] as const;
+  const ids = (props: Record<string, unknown>) => PLATE_KEYS.map((k) => props[k]).filter((v): v is string => typeof v === "string");
+
+  it("forRatio deja la base en 16:9 y suma lo vertical en 9:16", () => {
+    const props = { a: 1, b: 2, tall: { b: 3 } };
+    expect(forRatio(props, "16x9")).toBe(props);
+    expect(forRatio(props, "9x16")).toMatchObject({ a: 1, b: 3 });
+    const sin = { a: 1 };
+    expect(forRatio(sin, "9x16")).toBe(sin);
+  });
+
+  it("cada escena de placas trae su versión vertical y todos los archivos existen", () => {
+    const withPlates = t1.scenes.filter((s) => (s.props as { mode?: string } | undefined)?.mode);
+    expect(withPlates.map((s) => s.id)).toEqual(["w2-tema", "w6-mostrador", "w7-proveedor"]);
+    for (const s of withPlates) {
+      const props = s.props as Record<string, unknown> & { tall?: Record<string, unknown> };
+      expect(props.tall, `${s.id}: falta la versión vertical`).toBeDefined();
+      for (const id of [...ids(props), ...ids(props.tall!)]) expect(existsSync(join(process.cwd(), "public/trailer/shots/t1", `${id}.jpg`)), `${s.id}: ${id}.jpg`).toBe(true);
+      for (const id of ids(props.tall!)) expect(id.endsWith("-t"), `${s.id}: ${id} es una placa de celular`).toBe(true);
+    }
   });
 });

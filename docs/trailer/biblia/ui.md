@@ -26,8 +26,8 @@ se captura. Los pasos siguientes leen **solo este archivo**.
 6. **Estado que sí persiste entre pantallas** (se siembra, no se hace clic): carrito `volta-demo:cart`, cuenta
    `volta-demo:account`. El estado del panel (`volta-demo:admin`, versión 19) **no se siembra**: se llega con clics.
 
-**Resultado (18/10/2026):** 31 piezas de la tienda y 33 del panel (`tienda` 122 y `panel` 136 PNG a 2×, en 1440 y 390,
-claro y oscuro; las de un solo tamaño son `ficha-compra-barra`, solo celular). 0 fallas. Hojas de contacto para mirarlas
+**Resultado (18/10/2026):** 31 piezas de la tienda y 34 del panel (`tienda` 122 y `panel` 136 PNG a 2×, en 1440 y 390,
+claro y oscuro; `ficha-compra-barra` existe solo en celular). 0 fallas. Hojas de contacto para mirarlas
 rápido: `docs/trailer/capturas/hojas/<area>-<1440|390>-<light|dark>.jpg`.
 
 ## 1. Inicio, descubrimiento y compra (T2; ráfagas en T1)

@@ -40,6 +40,8 @@ export interface Variant {
   lots?: Lot[];
   /** Costo del proveedor por unidad (pesos enteros). Lo actualiza la lista de precios del proveedor. */
   cost?: number;
+  /** Desde cuándo rige ese costo (AAAA-MM-DD): lo pone la lista del proveedor al aplicarla. */
+  costSince?: string;
 }
 
 /** Lote de una variante: código del envase, vencimiento AAAA-MM (vence el último día del mes) y unidades. */

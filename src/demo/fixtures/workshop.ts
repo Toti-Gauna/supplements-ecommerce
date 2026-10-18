@@ -24,6 +24,8 @@ export interface WorkshopSettings {
   closures: Closure[];
   /** Margen que Volta quiere ganar sobre el precio de venta, en %. */
   targetMarginPct: number;
+  /** Margen objetivo propio de cada marca (R4c), en %. Sin uno, vale `targetMarginPct`. */
+  brandMargins?: Record<string, number>;
 }
 
 /**
@@ -143,6 +145,8 @@ export interface Recipe {
   variantCosts?: Record<string, number>;
   /** Embalaje e insumos por unidad. */
   items: RecipeItem[];
+  /** Desde cuándo rigen los costos de esta receta (AAAA-MM-DD). */
+  costSince?: string;
 }
 
 /** Costos de MUESTRA por producto (la marca propia deja más margen). Los productos sin costo aparecen como "sin costo cargado". */

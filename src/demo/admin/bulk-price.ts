@@ -1,5 +1,5 @@
 import { normalize } from "../engine/search";
-import type { Category, Product } from "../types";
+import type { Category, Product, Variant } from "../types";
 import type { Parsed } from "./import/cells";
 
 /**
@@ -29,6 +29,8 @@ export interface PriceUndo {
   label: string;
   count: number;
   prices: Record<string, { basePrice: number; deltas: Record<string, number> }>;
+  /** Costos de antes (lista del proveedor, R4c), por `producto::variante`: sin costo o fecha, no tenía. */
+  costs?: Record<string, { cost?: number; since?: string }>;
 }
 
 export function inScope(p: Product, scope: PriceScope): boolean {
@@ -75,6 +77,14 @@ export function applyPriceChange(products: Product[], scope: PriceScope, pct: nu
   return { products: next, undo };
 }
 
+/** Costo y fecha de antes (la lista del proveedor los cambia junto con el precio); sin dato guardado, no se toca. */
+function restoreCost(v: Variant, before: { cost?: number; since?: string } | undefined): Variant {
+  if (!before) return v;
+  const { cost, costSince, ...rest } = v;
+  void cost; void costSince;
+  return { ...rest, ...(before.cost !== undefined ? { cost: before.cost } : {}), ...(before.since ? { costSince: before.since } : {}) };
+}
+
 /** Vuelve los precios de lo alcanzado a como estaban; lo demás (stock, nombres, productos nuevos) no se toca. */
 export function undoPriceChange(products: Product[], undo: PriceUndo): Product[] {
   return products.map((p) => {
@@ -82,7 +92,10 @@ export function undoPriceChange(products: Product[], undo: PriceUndo): Product[]
     if (!before) return p;
     // Una variante creada después del aumento conserva su precio (su recargo se ajusta a la base de antes).
     const keep = (price: number) => price - before.basePrice;
-    return { ...p, basePrice: before.basePrice, variants: p.variants.map((v) => ({ ...v, priceDelta: v.id in before.deltas ? before.deltas[v.id]! : keep(p.basePrice + v.priceDelta) })) };
+    return {
+      ...p, basePrice: before.basePrice,
+      variants: p.variants.map((v) => restoreCost({ ...v, priceDelta: v.id in before.deltas ? before.deltas[v.id]! : keep(p.basePrice + v.priceDelta) }, undo.costs?.[`${p.slug}::${v.id}`])),
+    };
   });
 }
 

@@ -27,6 +27,8 @@ export interface CustomerProfile {
   /** Objetivo que eligió el cliente (o que cargó el local). Sin esto, se deduce de lo que compra. */
   goal?: Goal;
   notices?: RepurchaseNotice[];
+  /** Regalo de cumpleaños ya armado (R4c): uno por año. */
+  birthdayGift?: { year: number; code: string; at: string };
 }
 
 /** Fichas FICTICIAS por email (en minúsculas). Notas y fechas inventadas. */

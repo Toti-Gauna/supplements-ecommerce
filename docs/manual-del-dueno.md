@@ -27,6 +27,7 @@ escrito con la tienda de ejemplo **VOLTA**; en tu tienda vas a ver tu marca, per
 16. [Una rutina que funciona](#16-una-rutina-que-funciona)
 17. [Qué es simulado en la demo](#17-qué-es-simulado-en-la-demo)
 18. [Mostrador: vender en el local](#18-mostrador-vender-en-el-local)
+19. [Modo dueño: la tienda con lo que se edita marcado](#19-modo-dueño-la-tienda-con-lo-que-se-edita-marcado)
 
 ### Palabras que vas a ver
 
@@ -819,3 +820,28 @@ promete resultados ni dosis.
 
 > En la demo: ninguna venta se cobra ni emite factura. Bajan el stock de este navegador y quedan en el cierre del día;
 > **Reiniciar demo** las borra.
+
+---
+
+## 19. Modo dueño: la tienda con lo que se edita marcado
+
+Para cuando estás mirando la tienda y querés cambiar algo: "¿dónde se cambia este banner?". Abrí el menú del panel y
+tocá **Ver la tienda en modo dueño** (también está en el buscador del panel). La tienda se abre con una franja
+**Modo dueño** debajo del encabezado y una placa sobre cada cosa que se edita desde el panel.
+
+- **Las placas**: el carrusel del inicio, la campaña de la fecha, las categorías, los packs, los textos de "Armá tu
+  stack", las misiones del club, el precio y el stock de cada producto, las preguntas frecuentes, el descuento stack,
+  los premios del juego, los regalos y el contacto del pie. Tocás una y te lleva a la pantalla exacta del panel donde
+  se cambia (en una ficha, al editor de ese producto).
+- **El interruptor** de la franja prende y apaga las placas; **Volver al panel** te devuelve a **Hoy**.
+- **Tus clientes no lo ven nunca.** La franja solo aparece si llegaste desde el panel (o con `?dueno=1` al final de la
+  dirección) y dura lo que esa pestaña. Para sacarla del todo, abrí la tienda con `?dueno=0`.
+- **Ver este pedido en el panel**: en la confirmación de una compra hecha en la tienda, abre la ficha de ese pedido en
+  **Pedidos**, con su estado de pago y de preparación. Sirve para mostrar en la reunión que lo que compra el cliente te
+  llega al instante.
+
+![Placas del modo dueño en el inicio](kit-de-venta/img/09-modo-dueno-inicio-1440.png)
+
+> En la demo el panel está abierto a propósito, así que cualquiera que conozca `?dueno=1` puede prender el modo
+> dueño. Las placas solo son links al panel: no cambian nada de la tienda.
+

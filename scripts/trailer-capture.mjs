@@ -9,12 +9,12 @@ import { root, startServer } from "./kit-lib.mjs";
 import { SHOP } from "./trailer-shots-shop.mjs";
 import { ADMIN } from "./trailer-shots-admin.mjs";
 
-/** Prefijo de guardado de la marca del build (`storageKey` de la ficha): `tutienda-theme`, `tutienda-demo:cart`... */
+/** Prefijo de guardado de los datos de la demo (`storageKey` de la ficha): `tutienda-demo:cart`, `tutienda-demo:account`... */
 const KEY = process.env.CAPTURE_KEY ?? "tutienda";
 const out = path.resolve(process.argv[2] || path.join(root, "docs/trailer/capturas"));
 const only = process.argv[3] || "";
 const VIEWPORTS = [{ name: "1440", width: 1440, height: 900 }, { name: "390", width: 390, height: 844 }];
-const THEMES = ["light", "dark"];
+const THEMES = (process.env.CAPTURE_THEMES ?? "light,dark").split(",");
 const SHOTS = [...SHOP.map((s) => ({ ...s, area: "tienda" })), ...ADMIN.map((s) => ({ ...s, area: "panel" }))].filter((s) => s.id.includes(only));
 
 /** Todo lo que usa azar (premios, códigos, semillas) sale igual en cada corrida. */
@@ -30,9 +30,9 @@ async function newPage(browser, vp, theme) {
   const context = await browser.newContext({ viewport: { width: vp.width, height: vp.height }, deviceScaleFactor: 2, locale: "es-AR", timezoneId: "America/Argentina/Buenos_Aires", isMobile: mobile, hasTouch: mobile, reducedMotion: "reduce" });
   await context.addInitScript(SEEDED_RANDOM);
   await context.addInitScript(({ t, k }) => {
-    localStorage.setItem(`${k}-theme`, t);
-    localStorage.setItem(`${k}-sound`, "off");
-    localStorage.setItem(`${k}-quiz-invite`, "seen");
+    localStorage.setItem("volta-theme", t); // estas tres claves son fijas (no llevan el prefijo de la marca)
+    localStorage.setItem("volta-sound", "off");
+    localStorage.setItem("volta-quiz-invite", "seen");
     localStorage.setItem(`${k}-demo:theme-preview`, JSON.stringify({ state: { previewId: "original" }, version: 0 }));
   }, { t: theme, k: KEY });
   return { context, page: await context.newPage() };

@@ -160,3 +160,5 @@ tests/e2e/zz-*.spec.ts
 
 # Worktrees de agentes de Claude Code (copias de trabajo temporales)
 .claude/worktrees/
+docs/trailer/capturas/tienda/
+docs/trailer/capturas/panel/

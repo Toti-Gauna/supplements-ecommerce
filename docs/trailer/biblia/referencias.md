@@ -112,11 +112,31 @@ Fuente: `data/offers/prices.v2026-10-16.json` — versión **`2026-10-16.aprobad
 
 Producto de tiendas (`data/products/volta.json`): hoy se llama "Volta" y **no trae precios**; incluye catálogo de hasta 25 productos, consulta desde cada ficha, club y misiones estándar. **En el trailer se nombra "Tu tienda"** (`check:marca`). Pack de lanzamiento (`launch-pack-draft.json`): **borrador** (3 meses de Esencial con landing incluida, "sujeto a capacidad confirmada de asesoría económica").
 
-**Pendientes para Ignacio antes de P0.4:**
-1. ¿Se muestra el pack de lanzamiento (borrador)? Recomendación: **no**, salvo confirmación.
-2. Precios en **USD** tal como están, o en pesos.
-3. Las dos asesorías figuran sin confirmar en EK (`economicAdvisor.confirmed: false`): ¿se muestran igual como extras?
+**Decisiones de Ignacio (confirmadas):**
+1. Intro y cierre de Eclipse: como en §6 (se verifican contra la web publicada y el código de EW en P0.4).
+2. **Moneda: pesos como precio principal y el precio en dólares debajo**, a **$1.500 por dólar**. Se calcula del JSON aprobado, no se escribe a mano.
+3. Las dos asesorías (growth y gestión económica) **se muestran** como extras.
 4. El teléfono **223-446 7881** reemplaza al "contacto pendiente" de EK.
+5. Pack de lanzamiento: **pendiente de decisión** (ver el mensaje del paso P0.1).
+
+**Precios en pesos (USD × 1.500), para el bloque final:**
+| Concepto | USD | Pesos |
+|---|---|---|
+| Adaptación | 500 | $ 750.000 |
+| Pack | 700 | $ 1.050.000 |
+| Plan Esencial / mes | 30 | $ 45.000 |
+| Plan Conectado / mes | 75 | $ 112.500 |
+| Plan Automatización/IA / mes | 150 | $ 225.000 |
+| Landing premium adicional | 200 | $ 300.000 |
+| Asesoría growth, marketing y marca | 150 | $ 225.000 |
+| Asesoría de gestión económica | 150 | $ 225.000 |
+| Las dos asesorías | 250 | $ 375.000 |
+| WhatsApp estándar (sin IA) | 100 | $ 150.000 |
+| Chatbot IA | 250 | $ 375.000 |
+| Agente de voz con IA | 250 | $ 375.000 |
+| Migración | 100–300 | $ 150.000–450.000 |
+| Módulo operativo (desde) | 750 | $ 1.125.000 |
+| Presupuesto de terceros (Esencial / Conectado / IA) | 5 / 15 / 40 | $ 7.500 / 22.500 / 60.000 |
 
 ## 8. Qué NO se reutiliza
 - `velmar*`, `handy*`, `noir`, `synthwave`, `paper-city` y `bauhaus`: estilos y marcas ajenas.

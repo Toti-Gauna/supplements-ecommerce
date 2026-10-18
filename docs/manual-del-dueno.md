@@ -531,6 +531,13 @@ Vuelta al gym, Hot Sale, Día del Padre, Día del Amigo y Operación verano) y c
 de la Actividad Física, del Futbolista, del Running y del Boxeador). Cada una cambia los colores de la tienda y suma su
 key visual, cinta, cupón, productos y pantalla de carga. Antes se llamaba **Temáticas** (el enlace viejo te trae acá).
 
+Los días del deporte vienen con sus **fechas reales de 2027**: CrossFit Open del 18 de febrero al 8 de marzo (tres
+semanas, un WOD por semana), Actividad Física el 6 de abril (Día Mundial, OMS), Running el primer miércoles de junio
+(2 de junio, Global Running Day), Futbolista el 22 de junio (la AFA lo pasó del 14 de mayo en 2021, por el gol de
+Maradona en 1986) y Boxeador el 14 de septiembre (Firpo–Dempsey, 1923). Cada campaña arranca unos días antes y termina
+el día mismo. Vuelta al gym quedó del 9 al 21 de marzo para no pisarse con el Open. El Open y el Running cambian de
+día cada año: revisalos en el editor cuando se confirme el calendario.
+
 ![Calendario de campañas](img/rediseno/r3a/panel-calendario-1440-light.png)
 
 1. Entrá a **Campañas**. Arriba está la **Próxima campaña** con los días que faltan (también la ves en **Hoy en tu tienda**, con su checklist).

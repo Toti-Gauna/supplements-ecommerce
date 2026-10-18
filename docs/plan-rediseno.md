@@ -216,7 +216,7 @@ herramienta responde las preguntas que hoy le hacen por WhatsApp.
 | **Ficha "hoja técnica"** | Marcador arriba del pliegue en el celular: precio por servicio, proteína por servicio, servicios y "te dura N días". Sabor y tamaño como placas. Rótulo nutricional en la galería. Lote, vencimiento y RNPA como etiqueta de laboratorio. Dos precios explicados (transferencia y cuotas). Un solo bloque de stack, riel "Comparalo con…" y barra de compra fija con "Regalar". Fuera "Detalles y medidas" y la confianza heredada | L |
 | **Editor de producto (panel)** | Precio propio por presentación (adiós base + recargo), servicios por presentación, tabla nutricional y modo de uso editables, sellos y RNPA. Sin esto, la hoja técnica y el comparador muestran datos que el dueño no puede cargar | L |
 | **Catálogo** | Filtros de máquina (objetivo, marca, sabor, sellos, precio por servicio) y orden "Más rendidor" o "Más proteína por $". En el panel, columna de precio por servicio y margen | M |
-| **Comparador** *(aprobado)* | 2 o 3 productos lado a lado: proteína y precio por servicio, servicios, sellos y vencimiento. Es la respuesta que el dueño escribe 20 veces por día | L |
+| **Comparador** *(aprobado)* | 2 o 3 productos **del mismo tipo** lado a lado (ajuste de R3: suplementos y equipamiento nunca se mezclan; sumar uno de otro tipo avisa y ofrece empezar una comparación nueva): proteína y precio por servicio, servicios, sellos y vencimiento. Es la respuesta que el dueño escribe 20 veces por día | L |
 | **Armá tu stack y quiz** | El stack como rack de gimnasio con marcadores y "te dura". **Barra fija de total y compra en el celular.** Quiz a pantalla completa, una placa por pregunta con avance automático, y resultado "Tu programa" con el protocolo del día | M |
 | **Carrito y checkout** | Carrito "bolso" con un solo medidor de carga, "te dura N días" por línea y la cuenta regresiva del cadete. **Checkout en 3 pasos** (Datos y entrega, Pago, Revisar) con el resumen como ticket fijo, el cupón una sola vez y **la fecha real del calendario del cadete**. Confirmación como "ficha de entrega" que activa los avisos de recompra | L |
 | **Seguimiento** | Estados y fechas reales del pedido. **El cliente ve el lote y el vencimiento después del control en el panel** | M |
@@ -284,7 +284,20 @@ fecha o locker con combinación, vista previa grande y la tarjeta como imagen pa
 regalar; `/regalo/` como taquilla; bolsa de boxeo rehecha; locker; una apertura distinta para cada una de las 17 fechas
 (punto 11; Día del Amigo = spotter); revelación "tarjeta de atleta" en estudio neutro con "Compartí en tu historia";
 "Mis regalos" con el estado de cada regalo; gift card como saldo en el checkout (nunca "pago acreditado") y, en el
-panel, Marketing → Regalos y gift cards. Sigue R3c: una pantalla de carga única por fecha (pedido de Ignacio).
+panel, Marketing → Regalos y gift cards.
+
+**Estado de las pantallas de carga:** R3c hecho (PR de R3c, cuadros en [`img/rediseno/r3c/`](img/rediseno/r3c/)).
+Cada una de las 17 fechas tiene su pantalla de carga propia, más la original (barra olímpica que se carga): una escena
+mecánica de 1,6 a 1,85 s que nunca tapa el logo, con el descuento en un marcador LED; el navegador baja solo el arte
+de la fecha puesta. En el panel, Campañas muestra la de cada fecha (Repetir y Pantalla completa) y el Modo vitrina
+la vuelve a pasar sin recargar. **R3 cerrado.**
+
+**R3c · pantallas de carga por fecha (pedido de Ignacio: "rehacer cada pantalla de carga y que sea única por cada
+una"), fase 1:** arquitectura para las 17 fechas (registro, HTML compartido chico, arte por capas que se baja solo para
+la fecha puesta), la original nueva (barra olímpica) y las 4 de referencia para aprobar: Black Friday, Hot Sale, Vuelta
+al gym y Navidad, más la vista previa en el editor de Campañas y "Pantalla de carga" en el modo vitrina. Cuadros en
+[`img/rediseno/r3c/`](img/rediseno/r3c/). **Fase 2:** las otras 13 escenas con el mismo nivel (la mecánica de cada una
+está en `src/demo/engine/splash-scenes.ts`); hasta entonces usan la variante de campaña de R3a.
 
 ### Regalos: de formulario a momento
 - **"Regalá energía", quien regala:**

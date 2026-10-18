@@ -1,0 +1,33 @@
+/*
+ * CyberMonday (R3c): el rack de servidores arranca de abajo hacia arriba: cada bahía prende su LED y su barra de
+ * actividad, una por vez y cada vez más rápido (overclock); con la última, una línea de luz barre el rack y el
+ * marcador gira hasta el descuento. Capas (public/splash/cyber-monday/): 1 la sala y el gabinete · 2 las bahías
+ * prendidas · 3 las bahías apagadas (suben de a una bahía, 48 de 600, recortadas al interior 274,104 → 526,488) ·
+ * 4 la luz cian · 5 el barrido. Mecánica 0,28–1,34 s; número 1,05–1,59 s.
+ */
+.splash-stage[data-scene="cyber-monday"] {
+  --score-x: 5%; --score-y: 10.67%; --score-w: 23%; --score-h: 12.33%; --score-size: 6cqw;
+  --lit-at: 1000ms; --roll-at: 1050ms; --caption-at: 900ms;
+}
+.splash-stage[data-scene="cyber-monday"] :is(.s3, .s5) { clip-path: inset(17.333% 34.25% 18.667% 34.25%); }
+.splash-stage[data-scene="cyber-monday"] .s3::before { transform: translateY(-64%); }
+.splash-stage[data-scene="cyber-monday"] .s5::before { transform: translateY(76%); }
+@media (prefers-reduced-motion: no-preference) {
+  .splash-stage[data-scene="cyber-monday"] .s3::before { animation: cm-bays 760ms linear 280ms both; }
+  .splash-stage[data-scene="cyber-monday"] .s4::before { animation: cm-spill 760ms linear 280ms both; }
+  .splash-stage[data-scene="cyber-monday"] .s5::before { animation: cm-scan 280ms cubic-bezier(0.5, 0, 0.7, 1) 1060ms both; }
+}
+/* Una bahía por salto (48 de 600 = 8 %), cada salto un poco antes que el anterior. */
+@keyframes cm-bays {
+  0% { transform: translateY(0); animation-timing-function: steps(1, end); }
+  14% { transform: translateY(-8%); animation-timing-function: steps(1, end); }
+  28% { transform: translateY(-16%); animation-timing-function: steps(1, end); }
+  41% { transform: translateY(-24%); animation-timing-function: steps(1, end); }
+  53% { transform: translateY(-32%); animation-timing-function: steps(1, end); }
+  64% { transform: translateY(-40%); animation-timing-function: steps(1, end); }
+  74% { transform: translateY(-48%); animation-timing-function: steps(1, end); }
+  83% { transform: translateY(-56%); animation-timing-function: steps(1, end); }
+  91%, 100% { transform: translateY(-64%); }
+}
+@keyframes cm-spill { 0%, 14% { opacity: 0; } 91%, 100% { opacity: 1; } }
+@keyframes cm-scan { from { transform: translateY(0); } }

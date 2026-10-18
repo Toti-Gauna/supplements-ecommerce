@@ -33,15 +33,18 @@ export function CounterSell() {
   );
   return (
     <div className="pb-24 lg:pb-0">
-      <AdminPageHeader title="Mostrador">
-        <p>Para vender en el local: buscá el producto, tocá el pote y cobrá. Cada tarjeta dice el precio, lo que queda y el lote que sale: siempre el que vence primero.</p>
-        <p className="mt-3">El ticket aplica el mismo descuento stack que la tienda. Al cobrar elegís efectivo (con vuelto), transferencia, débito, crédito en un pago o en cuotas con recargo.</p>
-        <p className="mt-3">Es una venta simulada: baja el stock de este navegador y queda en el cierre del día. No se cobra nada ni se emite factura.</p>
-      </AdminPageHeader>
-      <div className="grid grid-cols-[minmax(0,1fr)] gap-6 lg:grid-cols-[minmax(0,1fr)_22rem] xl:grid-cols-[minmax(0,1fr)_25rem]">
-        <PotSearch id="mostrador-buscar" label="Buscar para vender" query={query} onQuery={setQuery} pots={counter.pots} lines={counter.lines} onAdd={onAdd} />
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-x-6 lg:grid-cols-[minmax(0,1fr)_22rem] xl:grid-cols-[minmax(0,1fr)_25rem]">
+        <div className="min-w-0">
+          <AdminPageHeader title="Mostrador">
+            <p>Para vender en el local: buscá el producto, tocá el pote y cobrá. Cada tarjeta dice el precio, lo que queda y el lote que sale: siempre el que vence primero.</p>
+            <p className="mt-3">El ticket aplica el mismo descuento stack que la tienda. Al cobrar elegís efectivo (con vuelto), transferencia, débito, crédito en un pago o en cuotas con recargo.</p>
+            <p className="mt-3">Es una venta simulada: baja el stock de este navegador y queda en el cierre del día. No se cobra nada ni se emite factura.</p>
+          </AdminPageHeader>
+          <PotSearch id="mostrador-buscar" label="Buscar para vender" query={query} onQuery={setQuery} pots={counter.pots} lines={counter.lines} onAdd={onAdd} />
+        </div>
+        {/* El ticket arranca a la altura del título: con su tope de alto, "Cobrar" se ve sin bajar. */}
         <aside aria-label="Ticket" className="hidden lg:block">
-          <div className="sticky top-24">{panel("ticket-titulo", "max-h-[calc(100dvh-7.5rem)]", "-mx-1 min-h-0 flex-1 overflow-y-auto px-1")}</div>
+          <div className="sticky top-24">{panel("ticket-titulo", "max-h-[calc(100dvh-13rem)]", "-mx-1 min-h-0 flex-1 overflow-y-auto px-1")}</div>
         </aside>
       </div>
       <TicketBar ticket={ticket} onOpen={() => setOpen("ticket")} onCharge={() => setOpen("charge")} />

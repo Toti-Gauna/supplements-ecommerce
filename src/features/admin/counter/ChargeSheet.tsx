@@ -62,8 +62,9 @@ export function ChargeSheet({ open, onClose, ticket, plans, onSell }: ChargeShee
             )}
             {option.method === "TRANSFER" && <p className="rounded-sm bg-warning-soft p-3 text-sm font-bold text-warning">Registrala cuando veas el ingreso en tu cuenta. En la demo no hay cuenta real: no se verifica nada.</p>}
             {problem && <p role="alert" className="text-sm font-bold text-danger">{problem}</p>}
-            <Button size="lg" onClick={confirm} disabled={"error" in preview} className="mt-auto w-full flex-wrap gap-x-2 gap-y-0 py-2">
-              <span>Registrar venta (simulada)</span>{"error" in preview ? null : <span className="font-lab">· {formatARS(preview.total)}</span>}
+            <Button size="lg" onClick={confirm} disabled={"error" in preview} className="mt-auto w-full flex-col gap-x-2 gap-y-0.5 py-2 sm:flex-row">
+              <span>Registrar venta (simulada)</span>
+              {"error" in preview ? null : <span className="font-lab"><span aria-hidden="true" className="hidden sm:inline">· </span>{formatARS(preview.total)}</span>}
             </Button>
           </>
         )}

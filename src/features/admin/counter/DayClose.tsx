@@ -20,9 +20,8 @@ import { ClosureList, DayTickets } from "./DayLists";
 function cells(s: DaySummary): ScoreCell[] {
   return [
     { key: "caja", label: "Caja esperada", value: s.cashExpected, money: true, wide: true, tone: "volt", hint: `Fondo ${formatARS(s.float)} + efectivo ${formatARS(s.byMethod.CASH)}` },
-    { key: "cobrado", label: "Cobrado", value: s.total, money: true, tone: "chalk", hint: plural(s.units, "pote", "potes") },
-    { key: "tickets", label: "Tickets", value: s.tickets, reading: plural(s.tickets, "ticket", "tickets"), tone: "chalk", hint: `${s.installmentSales} en cuotas` },
-    { key: "recargos", label: "Recargos de cuotas", value: s.surcharges, money: true, tone: s.surcharges ? "amber" : "chalk", hint: "Ya sumados a crédito" },
+    { key: "cobrado", label: "Cobrado", value: s.total, money: true, wide: true, tone: "chalk", hint: plural(s.units, "pote", "potes") },
+    { key: "tickets", label: "Tickets", value: s.tickets, wide: true, reading: plural(s.tickets, "ticket", "tickets"), tone: "chalk", hint: `${s.installmentSales} en cuotas` },
   ];
 }
 
@@ -56,13 +55,17 @@ export function DayClose() {
       <Scoreboard label="Caja del día" cells={cells(sum)} />
       <section aria-labelledby="por-medio" className="flex flex-col gap-3">
         <h2 id="por-medio" className="font-display text-3xl">Por medio de pago</h2>
-        <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-sm border border-line bg-line sm:grid-cols-4">
+        <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-sm border border-line bg-line sm:grid-cols-5">
           {COUNTER_METHODS.map((m) => (
             <div key={m} data-method={m} className="flex flex-col gap-1 bg-surface p-3">
               <dt className="eyebrow text-muted">{METHOD_LABEL[m]}</dt>
               <dd className="font-lab text-xl font-bold tabular-nums">{formatARS(sum.byMethod[m])}</dd>
             </div>
           ))}
+          <div data-method="recargos" className="col-span-2 flex flex-col gap-1 bg-surface p-3 sm:col-span-1">
+            <dt className="eyebrow text-muted">Recargos de cuotas</dt>
+            <dd className="font-lab text-xl font-bold tabular-nums">{formatARS(sum.surcharges)}<span className="block font-sans text-xs font-normal text-muted">Ya sumados en crédito</span></dd>
+          </div>
         </dl>
       </section>
       <section aria-labelledby="contar" className="flex max-w-2xl flex-col gap-4 rounded-sm bg-surface p-4 shadow-[var(--shadow-card)] sm:p-5">

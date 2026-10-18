@@ -1,11 +1,11 @@
 // Capturas de la tienda para el trailer. Cada una: { id, route, only?: "desktop"|"mobile", prep?(page), target?(page), wait? }.
 // Sin `target` se saca la ventana entera. Los selectores salen de docs/trailer/biblia/ui.md.
-const seedCart = (page) => page.evaluate(() => localStorage.setItem("volta-demo:cart", JSON.stringify({ state: { lines: [
+const seedCart = (page, { key }) => page.evaluate((k) => localStorage.setItem(`${k}-demo:cart`, JSON.stringify({ state: { lines: [
   { id: "l1", productSlug: "colageno", variantId: "co-limon-300", quantity: 2 },
-  { id: "l2", productSlug: "ionic-whey", variantId: "iw-vainilla-2lb", quantity: 1 }], couponCode: null }, version: 0 })));
-const signIn = (page) => page.evaluate(() => localStorage.setItem("volta-demo:account", JSON.stringify({ state: { user: { name: "Sofía Demo", email: "sofia.demo@ejemplo.com" }, usedRewards: [], sort: "relevance", wheelPrize: null }, version: 0 })));
+  { id: "l2", productSlug: "ionic-whey", variantId: "iw-vainilla-2lb", quantity: 1 }], couponCode: null }, version: 0 })), key);
+const signIn = (page, { key }) => page.evaluate((k) => localStorage.setItem(`${k}-demo:account`, JSON.stringify({ state: { user: { name: "Sofía Demo", email: "sofia.demo@ejemplo.com" }, usedRewards: [], sort: "relevance", wheelPrize: null }, version: 0 })), key);
 const reload = (page) => page.reload();
-const withState = (fn) => async (page) => { await fn(page); await reload(page); };
+const withState = (fn) => async (page, ctx) => { await fn(page, ctx); await reload(page); };
 const dlg = (name) => (p) => p.getByRole("dialog", { name });
 
 export const SHOP = [
@@ -18,19 +18,19 @@ export const SHOP = [
   { id: "ficha-configurar", route: "p/ionic-whey/", target: (p) => p.getByRole("region", { name: "Elegí sabor, tamaño y cantidad" }) },
   { id: "ficha-compra-barra", route: "p/creatina-monohidrato/", only: "mobile", target: (p) => p.locator("[data-buy-bar]") },
   { id: "comparar-bandeja", route: "c/proteinas/", target: (p) => p.locator("[data-compare-tray]"), prep: async (p) => {
-    await p.getByRole("button", { name: "Comparar Ionic Whey 100%", exact: true }).click();
-    await p.getByRole("button", { name: "Comparar Proteína vegana arveja + arroz", exact: true }).click();
+    await p.getByRole("button", { name: "Comparar Ionic Whey 100%", exact: true }).click({ force: true });
+    await p.getByRole("button", { name: "Comparar Proteína vegana arveja + arroz", exact: true }).click({ force: true });
   } },
   { id: "comparar-tabla", route: "comparar/?p=ionic-whey,proteina-vegana", target: (p) => p.locator("#contenido") },
-  { id: "stack-armador", route: "crear/", prep: async (p) => { await p.locator("[data-stack-ready]").waitFor(); await p.getByRole("checkbox", { name: "Fuerza" }).check(); } },
-  { id: "stack-resumen", route: "crear/", target: (p) => p.getByRole("region", { name: "Resumen de tu stack" }), prep: async (p) => { await p.locator("[data-stack-ready]").waitFor(); await p.getByRole("checkbox", { name: "Fuerza" }).check(); } },
+  { id: "stack-armador", route: "crear/", prep: async (p) => { await p.locator("[data-stack-ready]").waitFor(); await p.getByRole("checkbox", { name: /^Fuerza/ }).check({ force: true }); } },
+  { id: "stack-resumen", route: "crear/", target: (p) => p.getByRole("region", { name: "Resumen de tu stack" }), prep: async (p) => { await p.locator("[data-stack-ready]").waitFor(); await p.getByRole("checkbox", { name: /^Fuerza/ }).check({ force: true }); } },
   { id: "quiz-inicio", route: "crear/quiz/", target: (p) => p.locator("#contenido") },
   { id: "packs-lista", route: "packs/", target: (p) => p.locator("#contenido") },
   { id: "packs-detalle", route: "packs/?pack=hipertrofia", target: (p) => p.locator("#contenido") },
   { id: "carrito", route: "carrito/", prep: withState(seedCart), target: (p) => p.locator("#contenido") },
   { id: "checkout-datos", route: "checkout/", prep: withState(seedCart) },
-  { id: "seguimiento-entregado", route: "pedido/demo-volta-entregado/", target: (p) => p.locator("#contenido") },
-  { id: "seguimiento-etapas", route: "pedido/demo-volta/", target: (p) => p.getByRole("region", { name: "Etapas del pedido" }) },
+  { id: "seguimiento-entregado", route: "pedido/demo-tutienda-entregado/", target: (p) => p.locator("#contenido") },
+  { id: "seguimiento-etapas", route: "pedido/demo-tutienda-entregado/", target: (p) => p.getByRole("region", { name: "Etapas del pedido" }) },
   { id: "club-inicio", route: "club/", prep: withState(signIn), target: (p) => p.locator("#contenido") },
   { id: "club-niveles", route: "club/", prep: withState(signIn), target: (p) => p.getByRole("list", { name: "Tabla de niveles" }) },
   { id: "club-misiones", route: "club/", prep: withState(signIn), target: (p) => p.locator("section[aria-labelledby='mis']") },

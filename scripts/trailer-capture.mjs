@@ -9,6 +9,8 @@ import { root, startServer } from "./kit-lib.mjs";
 import { SHOP } from "./trailer-shots-shop.mjs";
 import { ADMIN } from "./trailer-shots-admin.mjs";
 
+/** Prefijo de guardado de la marca del build (`storageKey` de la ficha): `tutienda-theme`, `tutienda-demo:cart`... */
+const KEY = process.env.CAPTURE_KEY ?? "tutienda";
 const out = path.resolve(process.argv[2] || path.join(root, "docs/trailer/capturas"));
 const only = process.argv[3] || "";
 const VIEWPORTS = [{ name: "1440", width: 1440, height: 900 }, { name: "390", width: 390, height: 844 }];
@@ -27,12 +29,12 @@ async function newPage(browser, vp, theme) {
   const mobile = vp.width < 500;
   const context = await browser.newContext({ viewport: { width: vp.width, height: vp.height }, deviceScaleFactor: 2, locale: "es-AR", timezoneId: "America/Argentina/Buenos_Aires", isMobile: mobile, hasTouch: mobile, reducedMotion: "reduce" });
   await context.addInitScript(SEEDED_RANDOM);
-  await context.addInitScript((t) => {
-    localStorage.setItem("volta-theme", t);
-    localStorage.setItem("volta-sound", "off");
-    localStorage.setItem("volta-quiz-invite", "seen");
-    localStorage.setItem("volta-demo:theme-preview", JSON.stringify({ state: { previewId: "original" }, version: 0 }));
-  }, theme);
+  await context.addInitScript(({ t, k }) => {
+    localStorage.setItem(`${k}-theme`, t);
+    localStorage.setItem(`${k}-sound`, "off");
+    localStorage.setItem(`${k}-quiz-invite`, "seen");
+    localStorage.setItem(`${k}-demo:theme-preview`, JSON.stringify({ state: { previewId: "original" }, version: 0 }));
+  }, { t: theme, k: KEY });
   return { context, page: await context.newPage() };
 }
 
@@ -51,7 +53,7 @@ try {
           await page.goto(`${url}${shot.route}`);
           if (!mobileVp(vp)) await page.mouse.move(vp.width - 20, 500); // con el mouse a un costado, el menú del panel queda plegado
           await page.evaluate(() => document.fonts.ready);
-          if (shot.prep) await shot.prep(page, { theme, vp });
+          if (shot.prep) await shot.prep(page, { theme, vp, key: KEY });
           await page.waitForTimeout(shot.wait ?? 600);
           fs.mkdirSync(path.dirname(file), { recursive: true });
           const target = shot.target ? shot.target(page).first() : null;

@@ -22,7 +22,7 @@ export const ADMIN = [
   { id: "hoy-marcador", route: "admin-demo/", target: (p) => p.locator("[data-today-summary]") },
   { id: "hoy-lista", route: "admin-demo/", target: (p) => p.locator("[data-action^='receipt:']") },
   { id: "mostrador-vender", route: "admin-demo/mostrador/", prep: addPots },
-  { id: "mostrador-ticket", route: "admin-demo/mostrador/", prep: addPots, target: (p) => p.getByRole("region", { name: "Ticket en curso" }) },
+  { id: "mostrador-ticket", route: "admin-demo/mostrador/", prep: addPots, target: (p) => p.locator("aside[aria-label='Ticket'], [aria-label='Ticket en curso']").filter({ visible: true }) },
   { id: "mostrador-cuotas", route: "admin-demo/mostrador/", prep: payInstallments, target: dlg(/^Cobrar/) },
   { id: "mostrador-chat", route: "admin-demo/mostrador/chat/" },
   { id: "mostrador-cierre", route: "admin-demo/mostrador/cierre/" },

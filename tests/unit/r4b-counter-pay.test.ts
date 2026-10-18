@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { checkPayments } from "@/demo/admin/settings-form";
 import { closeDay, daySummary, differenceText } from "@/demo/engine/counter-close";
 import { cashChange, cashSuggestions, chargeFor, chargeLabel, counterPlans, installmentCharge, payOptions } from "@/demo/engine/counter-pay";
 import type { CounterSale } from "@/demo/engine/counter-sale";
@@ -59,6 +60,12 @@ describe("cobro", () => {
     expect(counterPlans([{ count: 6, pct: 30 }, { count: 3, pct: 10 }])).toEqual([{ count: 3, pct: 10 }, { count: 6, pct: 30 }]);
     expect(counterPlans([{ count: 1, pct: 5 }, { count: 3, pct: 150 }])).toEqual(DEFAULT_COUNTER_PLANS);
     expect(counterPlans(undefined)).toEqual(DEFAULT_COUNTER_PLANS);
+  });
+
+  it("Ajustes → Medios de pago valida el recargo de las cuotas", () => {
+    const ok = { methods: ["BANK_TRANSFER" as const], pct: 10, hours: 48, plans };
+    expect(checkPayments(ok)).toBeNull();
+    expect(checkPayments({ ...ok, plans: [{ count: 3, pct: 101 }] })).toBe("El recargo de las cuotas va de 0 a 100 %.");
   });
 
   it("botones de cobro y rótulos", () => {

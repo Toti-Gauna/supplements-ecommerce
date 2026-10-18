@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { MOBILE_ORDER, MOVED, SECTIONS, movedTarget, normalizePath, resolvePlace, type MenuTab } from "@/features/admin/menu";
 
-/** R4a: el menú de 8 entradas y a qué pestaña lleva cada ruta (las nuevas y las viejas). */
+/** R4a: el menú (9 entradas desde R4b, con Mostrador) y a qué pestaña lleva cada ruta (las nuevas y las viejas). */
 
 const flat = (tabs: MenuTab[]): MenuTab[] => tabs.flatMap((t) => [t, ...flat(t.children ?? [])]);
 
@@ -17,14 +17,23 @@ function panelRoutes(dir = join(process.cwd(), "app/admin-demo"), base = "/admin
 }
 
 describe("menú del panel (R4a)", () => {
-  it("tiene las 8 entradas en el orden acordado", () => {
-    expect(SECTIONS.map((s) => s.label)).toEqual(["Hoy", "Pedidos", "Stock", "Compras", "Clientes", "Promos", "Campañas", "Ajustes"]);
+  it("tiene las 9 entradas en el orden acordado, con Mostrador en el 2.º lugar (R4b)", () => {
+    expect(SECTIONS.map((s) => s.label)).toEqual(["Hoy", "Mostrador", "Pedidos", "Stock", "Compras", "Clientes", "Promos", "Campañas", "Ajustes"]);
     expect(SECTIONS[0]!.href).toBe("/admin-demo/");
+    expect(SECTIONS[1]!.href).toBe("/admin-demo/mostrador/");
   });
 
-  it("el celular tiene Hoy, Pedidos, Stock y Promos más “Más”; el centro queda libre para Mostrador (R4b)", () => {
-    expect(MOBILE_ORDER).toEqual(["hoy", "pedidos", "stock", "promos"]);
+  it("el celular tiene Hoy, Pedidos, Mostrador (en el centro), Stock y Promos más “Más”", () => {
+    expect(MOBILE_ORDER).toEqual(["hoy", "pedidos", "mostrador", "stock", "promos"]);
+    expect(MOBILE_ORDER[Math.floor(MOBILE_ORDER.length / 2)]).toBe("mostrador");
     expect(MOBILE_ORDER.every((id) => SECTIONS.some((s) => s.id === id))).toBe(true);
+  });
+
+  it("Mostrador reúne vender, el pedido por chat, el cierre del día y la consulta rápida en pestañas", () => {
+    expect(SECTIONS.find((s) => s.id === "mostrador")!.tabs.map((t) => t.label)).toEqual(["Vender", "Pedido por chat", "Cierre del día", "Consulta rápida"]);
+    expect(resolvePlace("/admin-demo/mostrador/")!.tab!.id).toBe("vender");
+    expect(resolvePlace("/admin-demo/mostrador/chat/")!.tab!.id).toBe("chat");
+    expect(resolvePlace("/admin-demo/mostrador/cierre/")!.tab!.id).toBe("cierre");
   });
 
   it("Promos reúne las seis herramientas en pestañas", () => {

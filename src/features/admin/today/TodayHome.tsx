@@ -1,4 +1,6 @@
 "use client";
+import { ScanBarcode } from "lucide-react";
+import { ButtonLink } from "@/components/atoms/Button";
 import { demoNow } from "@/demo/clock";
 import { salesSummary } from "@/demo/admin/metrics";
 import { greetingFor, summaryLine } from "@/demo/engine/today";
@@ -23,6 +25,8 @@ export function TodayHome() {
         <p className="eyebrow text-volt-ink">{formatDay(DEMO_TODAY, "long")} · panel demo</p>
         <h1 className="font-display text-[clamp(2.75rem,9vw,5.5rem)] leading-[0.9]">Hoy en tu tienda</h1>
         <p data-today-summary className="max-w-2xl text-muted"><strong className="text-ink">{greetingFor(demoNow())}.</strong> {summaryLine(actions)}</p>
+        {/* R4b: vender en el local está a un toque desde el inicio. */}
+        <ButtonLink href="/admin-demo/mostrador/" variant="secondary" className="mt-2 self-start"><ScanBarcode size={18} aria-hidden="true" /> Vender en el mostrador</ButtonLink>
       </header>
       <TodayScoreboard score={score} />
       <TodayList actions={actions} snapshot={snapshot} />

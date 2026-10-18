@@ -1,13 +1,13 @@
 /**
- * Mapa del menú del panel (R4a): 8 secciones y, dentro de cada una, pestañas. Módulo puro (sin React ni íconos) para
+ * Mapa del menú del panel (R4a): 9 secciones y, dentro de cada una, pestañas. Módulo puro (sin React ni íconos) para
  * poder probarlo: a qué sección y pestaña pertenece cada ruta y adónde redirigen las rutas viejas.
  *
- * R4b suma "Mostrador" como 9.ª entrada: se agrega la sección en el 2.º lugar de `SECTIONS` y el id "mostrador" en el
- * centro de `MOBILE_ORDER` (entre "pedidos" y "stock"). No hace falta tocar nada más del menú.
+ * R4b sumó "Mostrador" (venta en el local) en el 2.º lugar de `SECTIONS` y en el centro de `MOBILE_ORDER`, entre
+ * "pedidos" y "stock": en el celular es la pestaña central.
  */
 const P = "/admin-demo";
 
-export type SectionId = "hoy" | "pedidos" | "stock" | "compras" | "clientes" | "promos" | "campanas" | "ajustes";
+export type SectionId = "hoy" | "mostrador" | "pedidos" | "stock" | "compras" | "clientes" | "promos" | "campanas" | "ajustes";
 export type BadgeKey = "orders" | "payments" | "claims" | "stock" | "late" | "materials" | "prep";
 
 export interface MenuTab {
@@ -36,6 +36,12 @@ const tab = (id: string, label: string, path: string, match: string[] = [], badg
 
 export const SECTIONS: MenuSection[] = [
   { id: "hoy", label: "Hoy", short: "Hoy", href: `${P}/`, tabs: [] },
+  { id: "mostrador", label: "Mostrador", short: "Mostrador", href: `${P}/mostrador/`, tabs: [
+    tab("vender", "Vender", "/mostrador/"),
+    tab("chat", "Pedido por chat", "/mostrador/chat/"),
+    tab("cierre", "Cierre del día", "/mostrador/cierre/"),
+    tab("consulta", "Consulta rápida", "/mostrador/consulta/"),
+  ] },
   { id: "pedidos", label: "Pedidos", short: "Pedidos", href: `${P}/pedidos/`, tabs: [
     tab("pedidos", "Pedidos", "/pedidos/", [], "orders"),
     tab("pagos", "Pagos manuales", "/pagos/", [], "payments"),
@@ -90,8 +96,8 @@ export const SECTIONS: MenuSection[] = [
   ] },
 ];
 
-/** Pestañas del celular, de izquierda a derecha, y "Más" al final. R4b mete "mostrador" en el centro. */
-export const MOBILE_ORDER: SectionId[] = ["hoy", "pedidos", "stock", "promos"];
+/** Pestañas del celular, de izquierda a derecha, y "Más" al final. "Mostrador" (R4b) va en el centro. */
+export const MOBILE_ORDER: SectionId[] = ["hoy", "pedidos", "mostrador", "stock", "promos"];
 
 /** Rutas viejas que ya no tienen pantalla propia: llevan a su lugar nuevo. `carry` copia parámetros viejos con su nombre nuevo. */
 export interface Moved { to: string; label: string; carry?: Record<string, string> }

@@ -1,6 +1,6 @@
 import { demoNow } from "../clock";
 import type { CounterLine } from "../engine/counter";
-import { buildChatOrder, chatPaymentMethod, checkChatOrder, CHANNEL_LABEL, nextOrderCode, type ChatErrors, type ChatOrderDraft } from "../engine/counter-chat";
+import { buildChatOrder, chatCartLines, chatQuoteOptions, checkChatOrder, CHANNEL_LABEL, nextOrderCode, type ChatErrors, type ChatOrderDraft } from "../engine/counter-chat";
 import { closeDay, type CloseResult } from "../engine/counter-close";
 import { chargeLabel, counterPlans, type PayChoice } from "../engine/counter-pay";
 import { registerSale, type SaleResult } from "../engine/counter-sale";
@@ -67,8 +67,8 @@ export function createCounterActions(set: Set): CounterActions {
       set((s) => {
         const errors = checkChatOrder(draft, s.data.products);
         if (Object.keys(errors).length) { result = { ok: false, errors }; return {}; }
-        const lines = draft.lines.filter((l) => l.qty > 0).map((l, i) => ({ id: String(i), productSlug: l.productSlug, variantId: l.variantId, quantity: l.qty }));
-        const quote = quoteCart(lines, { fulfillment: draft.fulfillment, paymentMethod: draft.pay === "IN_HAND" ? null : chatPaymentMethod(draft.pay) });
+        const lines = chatCartLines(draft.lines);
+        const quote = quoteCart(lines, chatQuoteOptions(draft));
         const code = nextOrderCode(s.orders, ORDER_PREFIX);
         const at = demoNow();
         const promisedDate = promiseFor(lines, DEMO_TODAY, s.orders, s.workshop.settings, { fulfillment: draft.fulfillment }).day;

@@ -1,12 +1,14 @@
 "use client";
 import { useState } from "react";
 import { checkPayments, type PaymentsDraft } from "@/demo/admin/settings-form";
+import { counterPlans } from "@/demo/engine/counter-pay";
 import type { PaymentMethod } from "@/demo/types";
 import { useAdmin } from "@/stores/admin";
 import { useToasts } from "@/stores/toast";
 import { SubpageHeader } from "../marketing/SubpageHeader";
 import { NumberField } from "../NumberField";
 import { SaveBar } from "../SaveBar";
+import { CounterPlansFields } from "./CounterPlansFields";
 import { useSessionDraft } from "../useSessionDraft";
 
 const METHODS: { value: PaymentMethod; label: string; hint: string }[] = [
@@ -14,14 +16,14 @@ const METHODS: { value: PaymentMethod; label: string; hint: string }[] = [
   { value: "BANK_TRANSFER", label: "Transferencia", hint: "El comprador sube el comprobante y lo aprobás a mano (simulado)." },
   { value: "QR_MANUAL", label: "QR estático", hint: "Igual que la transferencia: aprobación manual simulada." },
 ];
-const isDraft = (x: unknown): x is PaymentsDraft => { const d = x as PaymentsDraft | null; return !!d && Array.isArray(d.methods) && typeof d.pct === "number" && typeof d.hours === "number"; };
+const isDraft = (x: unknown): x is PaymentsDraft => { const d = x as PaymentsDraft | null; return !!d && Array.isArray(d.methods) && typeof d.pct === "number" && typeof d.hours === "number" && Array.isArray(d.plans); };
 
 /** Ajustes → Medios de pago (8.3.29): medios activos, descuento por transferencia/QR y reserva sin comprobante. */
 export function PaymentSettings() {
   const settings = useAdmin((s) => s.data.settings);
   const saveSettings = useAdmin((s) => s.saveSettings);
   const push = useToasts((s) => s.push);
-  const saved: PaymentsDraft = { methods: settings.enabledMethods, pct: settings.transferDiscountPct, hours: settings.pendingTransferHours };
+  const saved: PaymentsDraft = { methods: settings.enabledMethods, pct: settings.transferDiscountPct, hours: settings.pendingTransferHours, plans: counterPlans(settings.counterPlans) };
   const session = useSessionDraft<PaymentsDraft>("volta-ui:settings-draft:pagos", saved, isDraft);
   const d = session.draft;
   const [error, setError] = useState<string | null>(null);
@@ -30,7 +32,7 @@ export function PaymentSettings() {
     const problem = checkPayments(d);
     setError(problem);
     if (problem) return;
-    saveSettings({ enabledMethods: d.methods, transferDiscountPct: d.pct, pendingTransferHours: d.hours });
+    saveSettings({ enabledMethods: d.methods, transferDiscountPct: d.pct, pendingTransferHours: d.hours, counterPlans: d.plans });
     push({ tone: "success", title: "Medios de pago guardados", description: "Se aplican a las compras nuevas del checkout de este navegador (solo en esta demo)." });
   };
   return (
@@ -53,6 +55,7 @@ export function PaymentSettings() {
         </div>
         {error && <p role="alert" className="text-sm font-semibold text-danger">{error}</p>}
       </section>
+      <CounterPlansFields plans={d.plans ?? []} onChange={(plans) => set({ plans })} />
       <SaveBar onSave={submit} dirty={session.dirty} label="Guardar medios de pago" discardText="Los medios de pago vuelven a como están guardados." onDiscard={() => { session.reset(); setError(null); }} />
     </div>
   );

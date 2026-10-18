@@ -62,6 +62,13 @@ export function nextOrderCode(orders: readonly Pick<AdminOrder, "code">[], prefi
 /** Medio del pedido para la tienda y el panel. "En mano" no tiene uno propio: se marca con `inHand`. */
 export const chatPaymentMethod = (pay: ChatPay): PaymentMethod => (pay === "IN_HAND" ? "BANK_TRANSFER" : pay);
 
+/** Opciones de la cotización de la tienda (`quoteCart`): envío y, con transferencia o QR, su descuento. En mano, sin descuento. */
+export const chatQuoteOptions = (d: Pick<ChatOrderDraft, "fulfillment" | "pay">) => ({ fulfillment: d.fulfillment, paymentMethod: d.pay === "IN_HAND" ? null : d.pay });
+
+/** Las líneas del pedido como las del carrito. */
+export const chatCartLines = (lines: readonly CounterLine[]) =>
+  lines.filter((l) => l.qty > 0).map((l, i) => ({ id: String.fromCharCode(97 + (i % 26)) + (i >= 26 ? i : ""), productSlug: l.productSlug, variantId: l.variantId, quantity: l.qty }));
+
 /** Sin email, una dirección que no existe (`.invalid`) con el teléfono: el cliente no se mezcla con otros. */
 export function chatEmail(d: Pick<ChatOrderDraft, "email" | "phone">): string {
   return d.email.trim().toLowerCase() || `${d.phone.replace(/[^\p{L}\p{N}]/gu, "").toLowerCase() || "cliente"}@sin-email.invalid`;
@@ -88,7 +95,7 @@ export function buildChatOrder(d: ChatOrderDraft, ctx: ChatOrderContext): AdminO
   return {
     code: ctx.code, createdAt: ctx.at, customer: { name: d.name.trim(), email: chatEmail(d), phone: d.phone.trim() }, userId: null,
     status: log.at(-1)!.to, fulfillment: d.fulfillment, paymentMethod, ...(d.fulfillment !== "PICKUP" ? { address: d.address.trim() } : {}),
-    lines: d.lines.filter((l) => l.qty > 0).map((l, i) => ({ id: String.fromCharCode(97 + (i % 26)) + (i >= 26 ? i : ""), productSlug: l.productSlug, variantId: l.variantId, quantity: l.qty })),
+    lines: chatCartLines(d.lines),
     total: ctx.total, notes: [], log, channel: d.channel, ...(ctx.promisedDate ? { promisedDate: ctx.promisedDate } : {}),
     ...(inHand ? { inHand: d.inHandMethod } : {}),
     ...(proof ? { proof: { fileName: `comprobante-por-${channel.toLowerCase()}.jpg`, receivedAt: ctx.at, status: "IN_REVIEW" as const } } : {}),

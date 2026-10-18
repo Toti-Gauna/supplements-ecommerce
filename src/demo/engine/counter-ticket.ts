@@ -17,6 +17,8 @@ export interface TicketRow {
   total: number;
   /** Lotes que salen con esta línea (FEFO). */
   lots: LotTake[];
+  /** Stock de la variante (-1 = a pedido): el tope de la cantidad. */
+  stock: number;
   /** Unidades pedidas por encima del stock (0 si alcanza o es a pedido). */
   short: number;
 }
@@ -39,7 +41,7 @@ export function buildTicket(lines: readonly CounterLine[], products: readonly Pr
     const price = unitPrice(product, variant);
     return [{
       key: lineKey(product.slug, variant.id), line, productName: product.name, variantLabel: variant.label, categorySlug: product.categorySlug,
-      unitPrice: price, total: price * line.qty, lots: fefoTake(variant, line.qty), short: variant.stock < 0 ? 0 : Math.max(0, line.qty - variant.stock),
+      unitPrice: price, total: price * line.qty, lots: fefoTake(variant, line.qty), stock: variant.stock, short: variant.stock < 0 ? 0 : Math.max(0, line.qty - variant.stock),
     }];
   });
   const subtotal = rows.reduce((s, r) => s + r.total, 0);

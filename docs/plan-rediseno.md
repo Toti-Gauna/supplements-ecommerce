@@ -342,6 +342,11 @@ mañana.
 | 9 | **Promos** en una pantalla con pestañas (cupones, descuento stack, ruleta, premios del juego, misiones) | S–M |
 | 10 | **Kit de venta:** el guion arranca en "Hoy" y sigue con "Mostrador" y los "wow" en 90 segundos; contraste con lo que el dueño ya usa ("Tiendanube te sube todo un 8 %; VOLTA lee la lista de tu distribuidor y sube cada marca con su margen"); capturas, video de 60–90 s y QA en celulares reales | M |
 
+**Estado:** R4a hecho (PR de R4a, capturas en [`img/rediseno/r4a/`](img/rediseno/r4a/)): "Hoy en tu tienda" como inicio
+del panel (marcador del día y lista de acciones por urgencia, cada una con su botón; aprobar un comprobante pide
+confirmar que ya entró el pago), el menú de 21 a 8 entradas con pestañas y las rutas viejas redirigiendo, ayuda en "?"
+y Promos en una pantalla con pestañas. Siguen R4b (Mostrador, que entra como 9.ª entrada, y Pedidos unificado) y R4c.
+
 ---
 
 ## 7 bis. Lotes pedidos por Ignacio el 16/10/2026 (antes de seguir con R2)

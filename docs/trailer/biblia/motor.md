@@ -85,8 +85,7 @@ decodifica el archivo).
   `"catalogo"` sube una cinta de potes y deja uno en el centro), `ticker` (filas inclinadas que aceleran y se congelan) y `trace`
   (`part: "plano"`: click, caja y línea plana; `part: "latido"`: el latido y el marco). Las curvas de avance son una sola función del
   progreso (`tickerEase`, `beltEase`): saltar a cualquier segundo da el mismo cuadro.
-- **Pieza de avance** `t1-avance` (`/trailer/t1-avance/`): las escenas de `t1` que ya tienen receta, con el sonido de la pieza. Se saca
-  cuando `t1` se publique entera.
+- **Pieza de avance** `t1-avance`: las escenas con receta, publicada mientras se construía. Se sacó en el lote 3, cuando `t1` se publicó entera.
 
 ## Lo que suma T1.3 · lote 2
 - **Arte real en vivo, con el reloj del trailer:** `splash-live` monta `SplashStage` (como la vista previa del panel, con `splashMarks`) y sus
@@ -114,3 +113,20 @@ decodifica el archivo).
 - Movimiento reducido: el trailer no arranca solo; queda en el primer cuadro con "Reproducir".
 - Verificado: el mismo segundo da el mismo cuadro llegando por URL, desde el inicio y desde más adelante, en 16:9 y
   9:16 (`tests/e2e/trailer-engine.spec.ts`, hash de píxeles).
+
+## Lo que suma T1.3 · lote 3
+- **Equipos CSS 3D** (`recipes/device-kit.tsx`): `Phone` (380 × 780) y `Laptop` (pantalla de 1040 × 650) con bisel `#121416`, espesor por capas
+  y contorno volt de 1 px que se dibuja con `strokeDashoffset` (frente y fondo). Las pantallas son placas de la app a su tamaño
+  (`hoy-1440-dark`, `home-carrusel-390-dark`, capturadas con `scripts/trailer-plates.mjs`, que ahora acepta viewport y ancho por placa).
+  `DevicePair` (`recipes/device.tsx`) pone los dos con perspectiva y es lo que comparten `device` (escena 14) y `rules` (escena 15).
+  El celular de Shaker Rush (escena 10) sigue siendo el suyo, hecho en `shaker-replay`.
+- **Recetas:** `device` (contornos, pantallas y giro de −12° a −6°), `rules` (los equipos se achican a 0,6; el "+" se traza, engorda y pasa a
+  corona; sube la luz de Eclipse y los filos pasan a corona) y `stack` (la promesa renglón por renglón, la marca de la tienda y el eje).
+  `DisplayLines` deja el renglón en 1,15 em con margen negativo: con la altura de 0,86 em la máscara de las letras cortaba las tildes.
+- **El eje continúa entre escenas:** `AXIS_Y` (`core/grid.ts`) lo ubica; `stack` lo deja solo en 67,5 y `eclipse-cta` (prop `axis`) lo pasa a corona en
+  ⅛ de tiempo y lo apaga en 1.
+- **Eclipse:** `eclipse-guino` lee el `teaser` de la sección `base-campaign` del libro de precios (titular, renglón, precio y letra chica salen de
+  `base-campaign.json` y del tarifario; si falta una frase se agrega al JSON). El cielo de la cta (`eclipse/sky.tsx`) se comparte: el guiño
+  entra con ese cielo y lo deja subir hasta el día pleno.
+- **`t1` publicada** en `/trailer/t1/` (las 19 escenas, 16:9). El 9:16 de estas escenas es de T1.5: el par de equipos, el eje y la marca ya
+  tienen un encuadre provisorio.

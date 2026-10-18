@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { expect, test, type Page } from "@playwright/test";
 
 // El config fuerza movimiento reducido para toda la suite; acá se prueba la versión animada (la reducida, con `?reduced=1`).
-test.use({ reducedMotion: "no-preference" });
+test.use({ contextOptions: { reducedMotion: "no-preference" } });
 
 /**
  * Motor del trailer (P0.3): el mismo segundo da exactamente el mismo cuadro llegando por tres caminos (URL `?t=`,

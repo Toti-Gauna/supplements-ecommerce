@@ -39,4 +39,13 @@ describe("trailer · libro de precios de Eclipse", () => {
     expect(fmtArs(-135_000)).toBe("−$ 135.000");
     expect(fmtUsd(1500)).toBe("USD 1.500");
   });
+
+  it("el guiño del teaser sale del libro: titular, renglón con su precio y letra chica con el plan bonificado", () => {
+    const t = section("base-campaign").teaser!;
+    expect([t.title, t.italic]).toEqual(["Arrancá con 3 meses", "bonificados."]);
+    expect(t.item).toBe("Adaptación de Tu tienda + asesoría inicial de growth");
+    expect(t.price).toEqual({ usd: 500, ars: 750_000 });
+    expect(t.fine).toBe("Incluye 3 meses del plan Esencial ($ 45.000/mes) · sujeto a disponibilidad · dólar a $ 1.500");
+    expect(section("launch-pack-draft").teaser).toBeUndefined(); // el pack es un borrador: no se muestra en el teaser
+  });
 });

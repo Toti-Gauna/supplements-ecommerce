@@ -41,3 +41,6 @@ export const FRAME: Record<Ratio, { x: number; y: number; w: number; h: number }
 };
 /** Alto de la línea plana: el centro del marco, así la línea se abre justo en él. */
 export const lineY = (ratio: Ratio) => FRAME[ratio].y + FRAME[ratio].h / 2;
+
+/** Eje de la promesa (T1, escenas 16 y 17): una línea volt a lo ancho, debajo del texto, que la cta pasa a corona y apaga. */
+export const AXIS_Y: Record<Ratio, number> = { "16x9": 860, "9x16": 1500 };

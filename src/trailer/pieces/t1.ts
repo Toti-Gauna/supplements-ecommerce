@@ -6,11 +6,11 @@ import PLATES from "./t1-plates.json";
 
 const BPM = 128;
 const beats = (n: number) => n * beatSec(BPM);
+const SOFTWARE = ["No es", "solo", "software."];
 
 /**
  * T1 · "El problema y la diferencia" (teaser, 45 s = 96 tiempos): una escena por fila de docs/trailer/t1/storyboard.md §3.
- * Las recetas marcadas (clones, ticker, trace, splash-live…) se construyen en T1.3; hasta entonces la pieza no se publica
- * (no está en `ids.ts`) y solo existe para fijar los tiempos y el sonido.
+ * Las 19 escenas tienen su receta (T1.3, lotes 1 a 3); la pieza se publica en /trailer/t1/ en 16:9 (el 9:16 es de T1.5).
  */
 export const t1: TrailerSpec = {
   id: "t1",
@@ -33,11 +33,11 @@ export const t1: TrailerSpec = {
     { id: "w5-ruleta", recipe: "wheel-live", dur: beats(4), props: { eyebrow: "Disco olímpico", title: "Cargá la barra y girá", prize: 0, chip: ["05", "Ruleta de cupones"] } },
     { id: "w6-mostrador", recipe: "plate", dur: beats(4), props: { mode: "cuotas", before: "cobrar", after: "cuotas", card: PLATES.cobrar.card, summary: PLATES.cuotas.summary, lines: ["3 cuotas de", "$ 40.892"], note: "Total con recargo $ 122.676 · recargo 12 %", chip: ["06", "Mostrador en cuotas"] } },
     { id: "w7-proveedor", recipe: "plate", dur: beats(4), props: { mode: "proveedor", before: "proveedor-pegar", after: "proveedor-resumen", load: PLATES["proveedor-pegar"].load, count: 48, word: "suben", rest: "3 bajan · 2 sin coincidencia", chip: ["07", "Lista del proveedor"] } },
-    { id: "software", recipe: "device", dur: beats(4) },
-    { id: "asesoria", recipe: "rules", dur: beats(4) },
-    { id: "promesa", recipe: "stack", dur: beats(4) },
-    { id: "en-vivo", recipe: "eclipse-cta", dur: beats(12) },
-    { id: "guino", recipe: "eclipse-guino", dur: beats(6) },
+    { id: "software", recipe: "device", dur: beats(4), props: { lines: SOFTWARE } },
+    { id: "asesoria", recipe: "rules", dur: beats(4), props: { prev: SOFTWARE, lines: ["Asesoría de", "Growth marketing", "y fidelización."] } },
+    { id: "promesa", recipe: "stack", dur: beats(4), props: { lines: ["Para que", "la tuya", "venda más."] } },
+    { id: "en-vivo", recipe: "eclipse-cta", dur: beats(12), props: { axis: true } },
+    { id: "guino", recipe: "eclipse-guino", dur: beats(6), props: { book: "tu-tienda", section: "base-campaign", n: "11" } },
     { id: "cierre", recipe: "eclipse-outro", dur: beats(10) },
   ]),
 };

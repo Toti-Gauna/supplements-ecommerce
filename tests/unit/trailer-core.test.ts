@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { createClock } from "@/trailer/core/clock";
 import { fitStage } from "@/trailer/core/fit";
-import { colEnd, colX, FRAME, GRID, gridLines, hash01, lineY, rowY } from "@/trailer/core/grid";
+import { AXIS_Y, colEnd, colX, FRAME, GRID, gridLines, hash01, lineY, rowY } from "@/trailer/core/grid";
 import { parseParams } from "@/trailer/core/params";
 import { bars, beatSec, sceneAt, sequence, validateTrailer } from "@/trailer/core/timeline";
 import { STAGE, type TrailerSpec } from "@/trailer/core/types";
@@ -79,7 +79,7 @@ describe("trailer · piezas publicadas", () => {
   it("cada pieza pasa el validador y usa recetas registradas", async () => {
     const { PIECES } = await import("@/trailer/pieces");
     const { PIECE_IDS } = await import("@/trailer/pieces/ids");
-    const recipes = ["title", "slam", "statpunch", "typewriter", "themeflip", "clones", "ticker", "trace", "plate", "splash-live", "gift-live", "wheel-live", "shaker-replay", "eclipse-intro", "eclipse-outro", "eclipse-cta", "eclipse-prices"];
+    const recipes = ["title", "slam", "statpunch", "typewriter", "themeflip", "clones", "ticker", "trace", "plate", "splash-live", "gift-live", "wheel-live", "shaker-replay", "eclipse-intro", "eclipse-outro", "eclipse-cta", "eclipse-prices", "eclipse-guino", "device", "rules", "stack"];
     for (const id of PIECE_IDS) {
       expect(validateTrailer(PIECES[id]), id).toEqual([]);
       for (const s of PIECES[id].scenes) expect(recipes, `${id}/${s.id}`).toContain(s.recipe);
@@ -119,5 +119,13 @@ describe("trailer · marco del latido", () => {
     expect([f.x, f.x + f.w]).toEqual([colX("16x9", 5), colEnd("16x9", 12)]);
     expect(lineY("16x9")).toBe(540);
     expect(lineY("9x16")).toBe(FRAME["9x16"].y + FRAME["9x16"].h / 2);
+  });
+});
+
+describe("trailer · eje de la promesa", () => {
+  it("queda dentro del escenario y debajo de la fila 5 de la grilla", () => {
+    expect(AXIS_Y["16x9"]).toBe(860);
+    expect(AXIS_Y["16x9"]).toBeGreaterThan(rowY("16x9", 5));
+    expect(AXIS_Y["9x16"]).toBeLessThan(1920);
   });
 });

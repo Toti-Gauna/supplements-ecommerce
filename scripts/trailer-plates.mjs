@@ -8,7 +8,7 @@ import path from "node:path";
 import { root, startServer } from "./kit-lib.mjs";
 import { run } from "./trailer-export-lib.mjs";
 
-const KEY = "tutienda", VP = { width: 1600, height: 900 }, K = 1920 / VP.width;
+const KEY = "tutienda", VP = { width: 1600, height: 900 };
 const outDir = path.join(root, "public/trailer/shots/t1");
 const addPots = async (p) => {
   for (const [q, key] of [["whey vainilla", "ionic-whey::iw-vainilla-2lb"], ["creatina", "creatina-monohidrato::cm-sin-sabor-300"], ["overvolt", "overvolt-pre::ov-limon-300"]]) {
@@ -29,6 +29,9 @@ const PLATES = [
   { id: "proveedor-resumen", theme: "dark", route: "admin-demo/lista-proveedor/", wait: 2500,
     prep: async (p) => { await p.getByRole("button", { name: "Cargar la lista de muestra" }).click(); await p.locator("[data-diff-summary]").scrollIntoViewIfNeeded(); await p.evaluate(() => window.scrollBy(0, 160)); },
     boxes: { summary: (p) => p.locator("[data-diff-summary]") } },
+  // Pantallas de los equipos de "No es solo software" (T1.3 lote 3): al tamaño de su pantalla (1040 × 650 y 380 × 780) y 2×.
+  { id: "hoy-1440-dark", theme: "dark", route: "admin-demo/", vp: { width: 1440, height: 900 }, w: 2080, boxes: {} },
+  { id: "home-carrusel-390-dark", theme: "dark", route: "", vp: { width: 390, height: 800 }, w: 760, boxes: {} },
 ];
 
 fs.mkdirSync(outDir, { recursive: true });
@@ -39,7 +42,8 @@ const jsonPath = path.join(root, "src/trailer/pieces/t1-plates.json");
 const boxes = fs.existsSync(jsonPath) ? JSON.parse(fs.readFileSync(jsonPath, "utf8")) : {};
 try {
   for (const plate of PLATES.filter((x) => x.id.includes(only))) {
-    const context = await browser.newContext({ viewport: VP, deviceScaleFactor: 2, locale: "es-AR", timezoneId: "America/Argentina/Buenos_Aires", reducedMotion: "reduce" });
+    const vp = plate.vp ?? VP, K = 1920 / vp.width;
+    const context = await browser.newContext({ viewport: vp, deviceScaleFactor: 2, locale: "es-AR", timezoneId: "America/Argentina/Buenos_Aires", reducedMotion: "reduce" });
     await context.addInitScript(({ t, k }) => {
       let a = 0x9e3779b9;
       Math.random = () => { a = (a + 0x6d2b79f5) | 0; let x = Math.imul(a ^ (a >>> 15), 1 | a); x = (x + Math.imul(x ^ (x >>> 7), 61 | x)) ^ x; return ((x ^ (x >>> 14)) >>> 0) / 4294967296; };
@@ -49,7 +53,7 @@ try {
     }, { t: plate.theme, k: KEY });
     const page = await context.newPage();
     await page.goto(`${url}${plate.route}`);
-    await page.mouse.move(VP.width - 20, 500); // el menú del panel queda plegado
+    await page.mouse.move(vp.width - 20, 500); // el menú del panel queda plegado
     await page.evaluate(() => document.fonts.ready);
     if (plate.prep) await plate.prep(page);
     await page.waitForTimeout(plate.wait ?? 800);
@@ -61,7 +65,7 @@ try {
     }
     const png = path.join(outDir, `${plate.id}.png`);
     await page.screenshot({ path: png });
-    await run(["-i", png, "-vf", "scale=2400:-2", "-q:v", "3", path.join(outDir, `${plate.id}.jpg`)]);
+    await run(["-i", png, "-vf", `scale=${plate.w ?? 2400}:-2`, "-q:v", "3", path.join(outDir, `${plate.id}.jpg`)]);
     fs.rmSync(png);
     console.log(`✓ ${plate.id}`);
     await context.close();

@@ -77,7 +77,7 @@ describe("marcas disponibles", () => {
   });
 
   it("una marca que no existe corta el build con un mensaje claro", () => {
-    expect(() => pickBrand("acme")).toThrow(/acme.*volta, nitro/);
+    expect(() => pickBrand("acme")).toThrow(/acme.*volta, nitro, tutienda/);
   });
 
   it("cada preset tiene un id válido y distinto, con su prefijo de guardado", () => {

@@ -1,12 +1,13 @@
 import { nitro } from "./nitro";
 import type { BrandConfig } from "./types";
+import { tutienda } from "./tutienda";
 import { volta } from "./volta";
 
 /**
  * Marcas disponibles. Para una demo nueva: copiar `volta.ts` (o `nitro.ts`) con el id del cliente, sumarla acá y
  * publicar con `NEXT_PUBLIC_BRAND=<id>`, o cambiar DEFAULT_BRAND si el repo es solo de ese cliente.
  */
-export const BRAND_PRESETS: Record<string, BrandConfig> = { volta, nitro };
+export const BRAND_PRESETS: Record<string, BrandConfig> = { volta, nitro, tutienda };
 
 /** La que se usa si no se indica ninguna. */
 export const DEFAULT_BRAND = "volta";

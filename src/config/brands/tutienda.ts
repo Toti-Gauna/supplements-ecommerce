@@ -1,0 +1,56 @@
+import { defineBrand } from "./types";
+
+/**
+ * TU TIENDA: ficha neutra para los trailers y las demos de venta ("Tu tienda" es el nombre que ve el dueño de la tienda
+ * que compra el sistema). Misma paleta que VOLTA, sin su nombre. Se publica con `NEXT_PUBLIC_BRAND=tutienda npm run build`.
+ */
+export const tutienda = defineBrand({
+  id: "tutienda",
+  name: "Tu tienda",
+  mark: "TU TIENDA",
+  descriptor: "Suplementos y deporte",
+  tagline: "Suplementos y equipamiento para entrenar, de las marcas que buscás",
+  city: "Mar del Plata",
+  instagram: "tutienda.mdp",
+  whatsappNumber: null,
+  email: null,
+  legalName: null,
+  cuit: null,
+  houseBrand: "Tu tienda Lab",
+  logo: "bolt",
+  paletteStatus: "provisional",
+  defaultMode: "dark",
+  colors: {
+    primary: "#c8ff2e",
+    primaryHover: "#d9ff6e",
+    onPrimary: "#0b0c0d",
+    accent: "#1f2225",
+    ion: "#2ee6d6",
+    plasma: "#8b72ff",
+    background: "#0b0c0d",
+    surface: "#151719",
+    text: "#f2f0ea",
+    muted: "#a6abb0",
+    border: "#33383d",
+    night: "#060707",
+    night2: "#121416",
+    voltInk: "#c8ff2e",
+  },
+  light: {
+    primary: "#131518",
+    primaryHover: "#2a2e33",
+    onPrimary: "#c8ff2e",
+    accent: "#e8eae5",
+    ion: "#0a7770",
+    plasma: "#5a3fe6",
+    background: "#f3f3ef",
+    surface: "#fcfcfa",
+    text: "#131518",
+    muted: "#4a5058",
+    border: "#d3d6d0",
+    night: "#111317",
+    night2: "#1b1e23",
+    voltInk: "#4a6a00",
+  },
+  signature: { volt: "#c8ff2e", voltSoft: "#e3ff8f", plasma: "#8b72ff", ion: "#2ee6d6", onNight: "#f2f0ea", nightMuted: "#a6abb0" },
+});

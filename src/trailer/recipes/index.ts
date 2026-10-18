@@ -3,10 +3,13 @@ import { eclipseIntro } from "../eclipse/intro";
 import { eclipseOutro } from "../eclipse/outro";
 import { eclipsePrices } from "../eclipse/prices";
 import type { Recipe } from "../engine/recipe";
+import { clones } from "./clones";
 import { slam } from "./slam";
 import { statpunch } from "./statpunch";
 import { themeflip } from "./themeflip";
+import { ticker } from "./ticker";
 import { title } from "./title";
+import { trace } from "./trace";
 import { typewriter } from "./typewriter";
 
 /**
@@ -15,6 +18,6 @@ import { typewriter } from "./typewriter";
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- cada receta tipa sus props; el registro las guarda juntas
 export const RECIPES: Record<string, Recipe<any>> = {
-  title, slam, statpunch, typewriter, themeflip,
+  title, slam, statpunch, typewriter, themeflip, clones, ticker, trace,
   "eclipse-intro": eclipseIntro, "eclipse-outro": eclipseOutro, "eclipse-cta": eclipseCta, "eclipse-prices": eclipsePrices,
 };

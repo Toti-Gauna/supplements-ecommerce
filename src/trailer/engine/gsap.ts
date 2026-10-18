@@ -15,6 +15,8 @@ CustomEase.create("trl.whip", "0.7,0,0.2,1");
 /** El cruce de la luna y el destello del loader de Eclipse (`components/loader/loader.css`). */
 CustomEase.create("trl.moon", "0.45,0,0.25,1");
 CustomEase.create("trl.glint", "0.2,0.7,0.3,1");
+/** Rampa de cámara: arranca lenta, acelera y llega al 94 % justo en el golpe (T1: `M0,0 C0.7,0 0.12,1 1,1`). */
+CustomEase.create("trl.rampa", "0.7,0,0.12,1");
 /** Golpe: pasa de largo un poco y vuelve. */
 CustomEase.create("trl.punch", "0.2,1.4,0.4,1");
 

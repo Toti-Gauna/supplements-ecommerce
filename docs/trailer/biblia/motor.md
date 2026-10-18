@@ -73,10 +73,23 @@ Ritmo de captura en este entorno: ~6 cuadros por segundo (≈ 9 min por formato 
 la síntesis: 0 ms. El Chromium de Playwright no trae AAC/H.264: en los tests la pista se sintetiza (en Chrome, Edge y Safari
 decodifica el archivo).
 
+## Lo que suma T1.3 · lote 1
+- **Contexto de escena** (`SceneCtx`): `reduced` (movimiento reducido: `?reduced=1` o `prefers-reduced-motion`; la receta arma una lámina quieta
+  con su estado final y un fundido de ¼ de tiempo) y `beat` (segundos por tiempo, para contar en tiempos).
+- **Curva `trl.rampa`** (`M0,0 C0.7,0 0.12,1 1,1`): la cámara arranca lenta y llega al 94 % justo en el golpe.
+- **Grilla suiza** (`core/grid.ts`, pura, con tests): 12 × 6 en 16:9 y 6 × 12 en 9:16; `colX`, `rowY`, el marco 4:3 (`FRAME`) y `lineY`.
+  `recipes/tpl.tsx` trae `Grid`, `Sup` (el super de plantilla), la tienda gris (`StoreDefs`) y el pote liso (`Pote`).
+- **Recetas** (escenas 2 a 6 del storyboard de T1): `clones` (`variant: "tienda"` pega 1 → 4 → 16 → 64 copias con la cámara que retrocede;
+  `"catalogo"` sube una cinta de potes y deja uno en el centro), `ticker` (filas inclinadas que aceleran y se congelan) y `trace`
+  (`part: "plano"`: click, caja y línea plana; `part: "latido"`: el latido y el marco). Las curvas de avance son una sola función del
+  progreso (`tickerEase`, `beltEase`): saltar a cualquier segundo da el mismo cuadro.
+- **Pieza de avance** `t1-avance` (`/trailer/t1-avance/`): las escenas de `t1` que ya tienen receta, con el sonido de la pieza. Se saca
+  cuando `t1` se publique entera.
+
 ## Estado
-- Recetas portadas: `title`, `slam`, `statpunch`, `typewriter`, `themeflip`. El resto de la biblia (§3) se porta
+- Recetas portadas: `title`, `slam`, `statpunch`, `typewriter`, `themeflip`, `clones`, `ticker`, `trace`. El resto de la biblia (§3) se porta
   cuando un storyboard la pide (Tn.3): `uiflow`, `uinotify`, `uibuild`, `uiexplode`, `globeship`, `databars`, `stack`,
-  `rules`, `ticker`, `corrupt`, `datamosh`, `gate`, `clickopen`, `remixtitle`, y el **dispositivo 3D** (nuevo).
+  `rules`, `corrupt`, `datamosh`, `gate`, `clickopen`, `remixtitle`, y el **dispositivo 3D** (nuevo).
 - Reloj: con sonido manda el audio (`getOutputTimestamp`); sin sonido, `performance.now()`.
 - Movimiento reducido: el trailer no arranca solo; queda en el primer cuadro con "Reproducir".
 - Verificado: el mismo segundo da el mismo cuadro llegando por URL, desde el inicio y desde más adelante, en 16:9 y

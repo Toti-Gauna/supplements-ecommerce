@@ -8,6 +8,8 @@ export interface TrailerParams {
   exportMode: boolean;
   /** Muestra el nombre de la escena y el tiempo (`?dev=1`). */
   dev: boolean;
+  /** Fuerza el movimiento reducido (`?reduced=1`); el navegador también lo pide con `prefers-reduced-motion`. */
+  reduced: boolean;
 }
 
 /** Lee la URL del trailer. Valores inválidos caen en el valor por defecto; `t` se recorta a [0, duración]. */
@@ -20,5 +22,6 @@ export function parseParams(search: string, duration: number): TrailerParams {
     ratio: q.get("ratio") === "9x16" ? "9x16" : "16x9",
     exportMode: q.get("export") === "1",
     dev: q.get("dev") === "1",
+    reduced: q.get("reduced") === "1",
   };
 }

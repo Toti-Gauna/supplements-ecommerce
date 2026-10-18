@@ -40,9 +40,9 @@ export default function TrailerPlayer({ pieza }: { pieza: string }) {
     if (!stage) return;
     let ctx: gsap.Context | undefined;
     let cancelled = false;
-    void document.fonts.ready.then(() => { if (!cancelled) ctx = gsap.context(() => setMaster(buildMaster(spec, stage, params.ratio)), stage); });
+    void document.fonts.ready.then(() => { if (!cancelled) ctx = gsap.context(() => setMaster(buildMaster(spec, stage, params.ratio, params.reduced || matchMedia("(prefers-reduced-motion: reduce)").matches)), stage); });
     return () => { cancelled = true; ctx?.revert(); setMaster(null); };
-  }, [spec, params.ratio]);
+  }, [spec, params.ratio, params.reduced]);
 
   useEffect(() => {
     if (frozen || !spec.music) return;

@@ -63,12 +63,15 @@ y distinta de las que hay hoy (negro + rojo agresivo, o blanco clínico). Todo s
   gesto y entra en **cámara lenta** en el último; sonido con el botón de sonido de la tienda y vibración donde la hay.
   Sin fecha, la **bolsa de boxeo** de siempre colgada en un box (bolsas lejanas, cuerdas del ring). **Cada fecha tiene
   su propia apertura** (`dates/`, un archivo por fecha, elegida por `selectOpening` del motor): Día del Amigo, el spot
-  del compañero en la banca; Navidad, el árbol de discos; Black Friday, la persiana del locker; CyberMonday, la polea
+  del compañero visto desde los pies del banco (llevan juntos la barra a los ganchos, se prende el rack y el regalo
+  aparece sobre el travesaño); Navidad, el árbol de discos; Black Friday, la persiana del locker; CyberMonday, la polea
   que carga al 100 %; Hot Sale, sogas de batalla; Día de la Madre, la colchoneta que se desenrolla; Halloween, las
   palancas del tablero que prenden el box; Año Nuevo, el cronómetro que llega a 20:27; San Valentín, dos pulsos que
   se sincronizan; Vuelta al gym, la lona del verano; Día del Padre, la cubierta de tractor; Operación verano, la bolsa
-  de arena en la playa; y los días del deporte con su gesto (wall ball, soga, penal, cinta de llegada y manoplas en
-  primera persona). Nada de cotillón: todo sale del gimnasio. El **locker** (la otra mecánica) se abre con 4 números
+  de arena en la playa; y los días del deporte con su gesto (wall ball, soga, penal; Running, la recta final de un estadio de
+  noche: la corredora se acerca en la perspectiva de la pista, rompe la cinta con los brazos arriba y el regalo espera en
+  el podio de la llegada; Boxeador, manoplas en primera persona: la que toca se enciende y el último golpe hace sonar la
+  campana del poste y deja el regalo en el banquito del rincón). Nada de cotillón: todo sale del gimnasio. El **locker** (la otra mecánica) se abre con 4 números
   (por defecto el día y el mes del regalo): corre el pestillo, gira la puerta y se prende la luz de adentro. Con
   "reducir movimiento" no hay cámara, partículas ni recorridos: "Abrirlo de una vez" aparece enseguida.
 - **Revelación "tarjeta de atleta"** (`scenes/reveal/`): siempre sobre un **estudio neutro** de grafito (nunca el color

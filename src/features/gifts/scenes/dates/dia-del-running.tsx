@@ -1,58 +1,68 @@
 import type { Pose } from "@/components/illustrations/figure";
-import { Athlete, Digits, Glow } from "@/components/illustrations/campaigns/b-stage";
+import { Athlete, Glow } from "@/components/illustrations/campaigns/b-stage";
 import { mixPose } from "../stage/pose";
-import { GymBackdrop } from "../stage/backdrop";
-import { FLOOR, lerp, type OpeningArtProps } from "../stage/types";
+import { lerp, type OpeningArtProps } from "../stage/types";
+import { FinishGantry, Stadium, TRACK } from "./running-track";
 
-const S = 2.5, LINE = 600;
-/** Zancada con la pierna derecha adelante (de perfil, hacia la derecha). */
-const STRIDE_A: Pose = {
-  head: [102, 42], neck: [95, 58], hip: [74, 104],
-  arm: [[92, 62], [72, 76], [60, 64]], farArm: [[97, 62], [112, 80], [126, 68]],
-  leg: [[74, 104], [104, 112], [100, 144], [111, 147]], farLeg: [[74, 104], [60, 140], [42, 174], [36, 184]],
+/** Corriendo hacia la cámara (silueta de frente, centro local en x = 80): rodilla derecha arriba, brazo izquierdo adelante. */
+const RUN_A: Pose = {
+  head: [80, 30], neck: [80, 48], hip: [80, 104], chest: 13, waist: 9, headR: 10, flat: true,
+  arm: [[93, 52], [106, 76], [90, 66]], farArm: [[67, 52], [58, 80], [62, 100]],
+  leg: [[88, 104], [94, 128], [96, 156], [98, 162]], farLeg: [[72, 104], [70, 146], [70, 182], [68, 186]],
 };
-/** La otra: piernas y brazos cruzados. */
-const STRIDE_B: Pose = {
-  ...STRIDE_A,
-  arm: [[92, 62], [108, 80], [124, 70]], farArm: [[97, 62], [76, 76], [62, 64]],
-  leg: [[74, 104], [62, 140], [44, 172], [38, 182]], farLeg: [[74, 104], [102, 114], [98, 146], [109, 149]],
+/** El otro paso: piernas y brazos cambiados. */
+const RUN_B: Pose = {
+  ...RUN_A,
+  arm: [[93, 52], [102, 80], [98, 100]], farArm: [[67, 52], [54, 76], [70, 66]],
+  leg: [[88, 104], [90, 146], [90, 182], [92, 186]], farLeg: [[72, 104], [66, 128], [64, 156], [62, 162]],
 };
+/** Cortando la cinta: pecho adelante y los brazos arriba en V. */
+const WIN: Pose = {
+  ...RUN_A,
+  arm: [[93, 52], [108, 30], [118, 8]], farArm: [[67, 52], [52, 30], [42, 8]],
+  leg: [[88, 104], [92, 144], [94, 182], [96, 186]], farLeg: [[72, 104], [68, 144], [66, 182], [64, 186]],
+};
+
+/** Cinta de llegada entre los postes: entera (se tensa cuando llega el pecho) o cortada, con las dos puntas cayendo. */
+function Tape({ accent, push, broken }: { accent: string; push: number; broken: boolean }) {
+  const [l, r] = TRACK.posts, y = TRACK.tape;
+  const stroke = (d: string) => (
+    <g fill="none" strokeLinecap="round">
+      <path d={d} stroke={accent} strokeWidth="9" />
+      <path d={d} stroke="#fff" strokeWidth="2" opacity=".6" />
+    </g>
+  );
+  if (broken) return <g>{stroke(`M${l} ${y}C${l + 120} ${y + 10} ${l + 230} ${y + 70} 300 ${y + 150}`)}{stroke(`M${r} ${y}C${r - 120} ${y + 14} ${r - 210} ${y + 80} 520 ${y + 170}`)}</g>;
+  return stroke(`M${l} ${y}Q400 ${y + 8 + push * 22} ${r} ${y}`);
+}
 
 /**
- * Día del Running: la recta final. Cada toque es una zancada: la corredora avanza hacia la cinta de llegada, el reloj
- * corre y el carril se ilumina; en la última, en cámara lenta, corta la cinta y el regalo espera en la meta.
+ * Día del Running: la recta final de un estadio de noche, de frente. Cada toque es una zancada: la corredora se acerca
+ * (crece en la perspectiva de la pista) y el reloj del pórtico corre; en la última, en cámara lenta, rompe la cinta con
+ * los brazos arriba y el regalo espera en la llegada, sobre el podio.
  */
 export default function DiaDelRunning({ u, c, t, steps, opened }: OpeningArtProps) {
-  const k = opened ? 1 : t / steps;
-  const x = lerp(-60, 400, k);
-  const pose = mixPose(STRIDE_A, STRIDE_B, (1 - Math.cos(t * Math.PI)) / 2);
+  const k = opened ? 1 : Math.min(1, t / steps);
+  const foot = lerp(560, TRACK.finish + 6, k);
+  const s = (2.6 * (foot - TRACK.horizon)) / (TRACK.finish - TRACK.horizon);
   const broken = opened || k >= 0.98;
-  const secs = (14.6 - 4.2 * k).toFixed(1);
+  const stride = mixPose(RUN_A, RUN_B, (1 - Math.cos(t * Math.PI)) / 2);
+  const pose = broken ? WIN : stride;
   return (
     <g>
-      <GymBackdrop u={u} c={c} beam={LINE} spread={240} light="#fff6d6" panels={false} seed={79} />
-      {/* La pista: carriles rojos en perspectiva y la línea de llegada. */}
-      <path d={`M0 ${FLOOR}H800V1000H0Z`} fill="#5a1d17" opacity=".75" />
-      <path d={[0, 1, 2, 3].map((i) => `M0 ${FLOOR + 30 + i * 62}H800`).join("")} stroke="#f2ede4" strokeOpacity=".55" strokeWidth="3" />
-      <path d={`M${LINE} ${FLOOR}L${LINE + 40} 1000`} stroke="#f2ede4" strokeWidth="10" />
-      <path d={`M${LINE} ${FLOOR}L${LINE + 40} 1000`} stroke="#000" strokeWidth="10" strokeDasharray="12 12" opacity=".7" />
-      {/* Postes de la llegada y la cinta (entera o cortada en dos). */}
-      <rect x={LINE - 6} y="430" width="10" height={FLOOR - 430} fill="#c9ced6" />
-      <rect x={LINE + 64} y="440" width="10" height={FLOOR - 440} fill="#9aa3ad" opacity=".7" />
-      {broken ? (
-        <g>
-          <path d={`M${LINE} 520q-26 60-70 90`} stroke={c.accent} strokeWidth="6" fill="none" />
-          <path d={`M${LINE + 68} 528q20 70 60 100`} stroke={c.accent} strokeWidth="6" fill="none" />
+      <Stadium u={u} c={c} />
+      <FinishGantry c={c} secs={2512 + Math.round(k * 15)} />
+      <ellipse cx={400} cy={foot + 2} rx={44 * s} ry={7 * s} fill="#000" opacity=".5" />
+      <Glow cx={400} cy={foot - 90 * s} rx={70 * s} ry={110 * s} color={c.accent} o={k > 0.7 ? 0.45 : 0.15} />
+      <Athlete pose={pose} x={400 - 80 * s} y={foot} s={s} rim={c.accent} rimDx={1.2} glow={broken ? c.accent : undefined} />
+      <Tape accent={c.accent} push={Math.max(0, (k - 0.75) * 4)} broken={broken} />
+      {opened && (
+        <g className="op-in">
+          <rect x="530" y="770" width="140" height="80" fill="#10141c" />
+          <rect x="530" y="770" width="140" height="5" fill={c.accent} />
+          <rect x="530" y="770" width="12" height="80" fill="#fff" opacity=".08" />
         </g>
-      ) : (
-        <path d={`M${LINE} 520Q${LINE + 34} ${528 + k * 10} ${LINE + 68} 528`} stroke={c.accent} strokeWidth="6" fill="none" />
       )}
-      {/* Reloj de la llegada. */}
-      <rect x={LINE - 150} y="330" width="210" height="70" rx="4" fill="#07080a" stroke="#2c313a" strokeWidth="3" />
-      <Digits value={secs.padStart(4, "0")} x={LINE - 134} y={343} h={44} color={c.accent} />
-      <Glow cx={x + 200} cy={FLOOR + 10} rx={160} ry={20} color="#fff6d6" o={0.4} />
-      <ellipse cx={x + 190} cy={FLOOR + 6} rx="70" ry="9" fill="#000" opacity=".45" />
-      <Athlete pose={pose} x={x} y={FLOOR} s={S} rim={c.accent} rimDx={1.3} glow={k > 0.8 ? c.accent : undefined} />
     </g>
   );
 }

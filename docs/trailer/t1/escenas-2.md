@@ -7,7 +7,7 @@ Sigue de [`escenas.md`](escenas.md), que tiene las convenciones y las escenas 1 
   - Cuerpo de 430 × 900 px, filo volt de 1 px y bisel `#121416`.
   - Centrado en (1000, 540), entre las columnas 6 y 9, con perspectiva de 1600 px.
   - Gira en Y de −10° a −4° entre 41 y 44 (`sine.inOut`).
-- **Pantalla:** Shaker Rush jugándose, con el HUD del juego (canvas, semilla 11, piloto automático, paso fijo de 1/60 s).
+- **Pantalla:** Shaker Rush jugándose, con el HUD del juego (canvas, semilla 266, piloto automático, paso fijo de 1/60 s).
   - Se elige la ventana de la partida para que las atrapadas caigan en 41,0, 41,5 y 42,0: son el Mi, el Sol y el La del estribillo.
   - En 43,0 aparece "¡Tiempo!" con el puntaje (`GameResult`, sin su `backdrop-blur`).
   - Solo se re-cronometra el reloj: lo que pasa en la partida es lo que da la semilla.

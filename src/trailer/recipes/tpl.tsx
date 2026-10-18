@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import { colX, gridLines } from "../core/grid";
 import type { Ratio } from "../core/types";
+import { TR } from "./kit";
 
 /**
  * Piezas comunes de la pieza T1: la tienda "de template" (gris, sin marca ni nombre), la grilla suiza y el super de
@@ -63,6 +64,18 @@ export function Pote({ style }: { style: CSSProperties }) {
     <div data-t="pot" className="absolute" style={{ width: 180, height: 240, borderRadius: "26px 26px 10px 10px", background: TPL.card, ...style }}>
       <div className="absolute inset-x-0" style={{ top: -24, height: 30, borderRadius: 8, background: TPL.bar }} />
       <div className="absolute" style={{ left: 30, right: 30, bottom: -44, height: 18, background: TPL.bar }} />
+    </div>
+  );
+}
+
+/** Rótulo de la ráfaga ("01 · Pantallas de carga por fecha"): mono de la tienda en un chip de noche, con su raya de 1 px. */
+export function Chip({ n, text, bottom = false, light = false }: { n: string; text: string; bottom?: boolean; light?: boolean }) {
+  const pos: CSSProperties = bottom ? { left: 96, bottom: 60 } : { left: 96, top: 60 };
+  return (
+    <div data-t="chip" className="absolute font-mono uppercase" style={{ ...pos, zIndex: 20, padding: "14px 22px 18px", fontSize: 34, letterSpacing: "0.12em", fontWeight: 500,
+      background: light ? TR.paper : TR.night, color: light ? TR.ink : TR.onNight, opacity: 0.94 }}>
+      <b style={{ color: light ? TR.ink : TR.volt, fontWeight: 600 }}>{n}</b> · {text}
+      <span data-t="chip-rule" className="absolute" style={{ left: 22, right: 22, bottom: 8, height: HAIR, background: light ? TR.ink : TR.volt, transformOrigin: "0 50%" }} />
     </div>
   );
 }

@@ -86,8 +86,20 @@ decodifica el archivo).
 - **Pieza de avance** `t1-avance` (`/trailer/t1-avance/`): las escenas de `t1` que ya tienen receta, con el sonido de la pieza. Se saca
   cuando `t1` se publique entera.
 
+## Lo que suma T1.3 · lote 2
+- **Arte real en vivo, con el reloj del trailer:** `splash-live` monta `SplashStage` (como la vista previa del panel, con `splashMarks`) y sus
+  animaciones CSS se pausan y se posicionan con `engine/css-clock.ts`; `wheel-live` arma la ruleta con sus piezas reales (disco, aro, traba
+  y maza) y la frena en 13 pasos escritos; `gift-live` dibuja la bolsa real en cada estado (0 a 5 golpes y abierta) y el timeline la mueve;
+  `shaker-replay` juega Shaker Rush con el piloto automático (`recipes/shaker-sim.ts`, pura) y lo dibuja con el canvas real del juego.
+- **Placas** (`plate`, modos `tema`, `cuotas` y `proveedor`): pantallas reales capturadas a 1600 × 900 y 2× con `scripts/trailer-plates.mjs`
+  (build con `NEXT_PUBLIC_BRAND=tutienda`), que también mide las cajas de lo que se anima encima (`pieces/t1-plates.json`).
+- **Marca del arte** (`src/config/brand-mark.tsx`): la bolsa y la maza imprimían `brand.mark` y el logo del build (VOLTA en el sitio
+  publicado). Ahora lo leen de un contexto que por defecto es el del build y que el trailer fija en la ficha `tutienda`.
+- **El motor espera las imágenes** (placas y arte de las fechas) decodificadas antes de armar el timeline.
+
 ## Estado
-- Recetas portadas: `title`, `slam`, `statpunch`, `typewriter`, `themeflip`, `clones`, `ticker`, `trace`. El resto de la biblia (§3) se porta
+- Recetas portadas: `title`, `slam`, `statpunch`, `typewriter`, `themeflip`, `clones`, `ticker`, `trace`, `plate`, `splash-live`,
+  `gift-live`, `wheel-live`, `shaker-replay`. El resto de la biblia (§3) se porta
   cuando un storyboard la pide (Tn.3): `uiflow`, `uinotify`, `uibuild`, `uiexplode`, `globeship`, `databars`, `stack`,
   `rules`, `corrupt`, `datamosh`, `gate`, `clickopen`, `remixtitle`, y el **dispositivo 3D** (nuevo).
 - Reloj: con sonido manda el audio (`getOutputTimestamp`); sin sonido, `performance.now()`.

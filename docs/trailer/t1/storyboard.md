@@ -55,7 +55,7 @@
 | 5 | `plano` | 24–28 | 11,250–13,125 | `trace` (nueva) | Pote → caja → línea | "Y después de comprar, nada." | Click en COMPRAR, la caja se va y queda la línea plana. Silencio en 27,5 |
 | 6 | `latido` | 28–30 | 13,125–14,063 | `trace` | La línea | "La tuya, no." (28–31) | La línea late y se vuelve volt, y se abre en un marco 4:3 |
 | 7 | `w1-carga` | 30–34 | 14,063–15,938 | `splash-live` (nueva) | Pantalla de carga real de CrossFit Open; después Black Friday y Navidad | 01 · Pantallas de carga por fecha (31–34) | 3 · 2 · 1 en corcheas; el "1" se congela en 31,5 y el "ya" de 32 es el **DROP 1** |
-| 8 | `w2-tema` | 34–37 | 15,938–17,344 | `themeflip` con placas | Ficha de Ionic Whey, de claro a oscuro | 02 · Modo claro y oscuro | Corte a la ficha clara; click en 35; el oscuro cubre todo en 36 |
+| 8 | `w2-tema` | 34–37 | 15,938–17,344 | `plate` (modo `tema`) | Ficha de Ionic Whey, de claro a oscuro | 02 · Modo claro y oscuro | Corte a la ficha clara; click en 35; el oscuro cubre todo en 36 |
 | 9 | `w3-regalo` | 37–41 | 17,344–19,219 | `gift-live` (nueva) | Bolsa: "Juli, te llegó un regalo de Caro" | 03 · Regalos que se abren a golpes | 5 golpes en corcheas (37–39), cámara lenta y en 40 "¡La rompiste!" |
 | 10 | `w4-shaker` | 41–44 | 19,219–20,625 | `device` + `shaker-replay` | Celular CSS 3D con Shaker Rush jugándose | 04 · Un juego propio | Atrapadas en 41, 41,5 y 42 sobre el estribillo; en 43 "¡Tiempo!" |
 | 11 | `w5-ruleta` | 44–48 | 20,625–22,500 | `wheel-live` (nueva) | Disco olímpico real | 05 · Ruleta de cupones | Anillo de 1 px, frenada escrita en 13 pasos; en 47 cae en 5 % |
@@ -144,7 +144,7 @@ Las escenas suman exactamente 96 tiempos. Los cortes fuertes caen en el tiempo 1
 - `SplashStage`: CrossFit Open, Black Friday y Navidad.
 - El disco de la ruleta con su collar.
 - La bolsa del regalo `REGALO-VE1M-AR7X`.
-- Shaker Rush: canvas, semilla 11 y piloto automático.
+- Shaker Rush: canvas, semilla 266 y piloto automático (sus tres últimas atrapadas caen casi en corcheas: el reloj se re-cronometra entre 0,82× y 1,14×).
 
 Por qué esta división: `veredicto.md` §3.
 

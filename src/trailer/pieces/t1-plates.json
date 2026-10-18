@@ -1,0 +1,56 @@
+{
+  "ficha-light": {
+    "toggle": {
+      "x": 1468,
+      "y": 53,
+      "width": 48,
+      "height": 48
+    },
+    "hero": {
+      "x": 222,
+      "y": 204,
+      "width": 742,
+      "height": 730
+    }
+  },
+  "ficha-dark": {
+    "hero": {
+      "x": 222,
+      "y": 204,
+      "width": 742,
+      "height": 730
+    }
+  },
+  "cobrar": {
+    "card": {
+      "x": 1336,
+      "y": 357,
+      "width": 273,
+      "height": 77
+    }
+  },
+  "cuotas": {
+    "summary": {
+      "x": 1356,
+      "y": 478,
+      "width": 515,
+      "height": 38
+    }
+  },
+  "proveedor-pegar": {
+    "load": {
+      "x": 302,
+      "y": 892,
+      "width": 355,
+      "height": 58
+    }
+  },
+  "proveedor-resumen": {
+    "summary": {
+      "x": 283,
+      "y": 367,
+      "width": 1440,
+      "height": 48
+    }
+  }
+}

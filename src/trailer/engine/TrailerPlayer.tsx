@@ -40,7 +40,10 @@ export default function TrailerPlayer({ pieza }: { pieza: string }) {
     if (!stage) return;
     let ctx: gsap.Context | undefined;
     let cancelled = false;
-    void document.fonts.ready.then(() => { if (!cancelled) ctx = gsap.context(() => setMaster(buildMaster(spec, stage, params.ratio, params.reduced || matchMedia("(prefers-reduced-motion: reduce)").matches)), stage); });
+    const reduced = params.reduced || matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Fuentes e imágenes (placas y arte de las escenas) listas antes de armar: el primer cuadro grabado ya está completo.
+    const images = () => Promise.all(Array.from(stage.querySelectorAll("img"), (img) => img.decode().catch(() => undefined)));
+    void document.fonts.ready.then(images).then(() => { if (!cancelled) ctx = gsap.context(() => setMaster(buildMaster(spec, stage, params.ratio, reduced)), stage); });
     return () => { cancelled = true; ctx?.revert(); setMaster(null); };
   }, [spec, params.ratio, params.reduced]);
 

@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { HeroSkeleton } from "@/components/atoms/Skeleton";
 import { ButtonLink } from "@/components/atoms/Button";
 import { EmptyState } from "@/components/molecules/EmptyState";
+import { PageHeader } from "@/components/templates/PageHeader";
 import { CART_LINK_PARAM, decodeCartLink } from "@/demo/engine/cart-link";
 import { plural } from "@/lib/plural";
 import { useDemoData } from "@/stores/admin";
@@ -35,6 +36,7 @@ export function RepurchaseLanding() {
   if (!hydrated || lines.length) return <div data-repurchase-landing><HeroSkeleton label="Armando tu bolso" /></div>;
   return (
     <div className="mx-auto max-w-xl px-4 py-16">
+      <PageHeader title="Tu bolso de recompra" />
       <EmptyState title="Este link no tiene productos disponibles" action={<ButtonLink href="/">Ir a la tienda</ButtonLink>}>
         Puede que ya no haya stock de lo que compraste o que el link esté incompleto. Escribinos por WhatsApp y te lo armamos.
       </EmptyState>

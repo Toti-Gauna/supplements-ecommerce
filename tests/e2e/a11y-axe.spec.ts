@@ -79,6 +79,12 @@ const PAGES: [string, string, string][] = [
   ["panel mostrador: cierre del día (R4b)", "admin-demo/mostrador/cierre/", "h1"],
   ["panel mostrador: consulta rápida (R4b)", "admin-demo/mostrador/consulta/", "[data-whatsapp-text]"],
   ["panel ajustes: medios de pago con las cuotas del mostrador (R4b)", "admin-demo/ajustes/pagos/", "#cuotas-mostrador"],
+  // R4c: margen, costos vivos y clientes.
+  ["panel compras: lista del proveedor con el margen por marca (R4c)", "admin-demo/lista-proveedor/", "[data-brand]"],
+  ["panel compras: costos vivos (R4c)", "admin-demo/costos/vivos/", "[role=tablist]"],
+  ["panel clientes: a quién escribirle hoy (R4c)", "admin-demo/usuarios/", "[data-write]"],
+  ["panel cliente: ficha con el regalo de cumpleaños (R4c)", "admin-demo/usuarios/ficha/?email=tomas.h%40ejemplo.com", "[data-birthday-gift]"],
+  ["tienda: link de recompra sin productos (R4c)", "recompra/?bolso=nada.x.1", "h1"],
 ];
 
 interface Violation { id: string; impact: string | null; help: string; nodes: { target: string[]; failureSummary?: string }[] }
@@ -152,6 +158,43 @@ for (const mode of ["dark", "light"] as const) {
       await page.goto("admin-demo/emails/");
       await page.getByRole("button", { name: "Editar el WhatsApp: En reclamo" }).click();
       await expect(page.getByRole("dialog", { name: "En reclamo" })).toBeVisible();
+      await page.waitForTimeout(500);
+      const found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+    });
+    test("panel compras: lista del proveedor con las diferencias cargadas (R4c)", async ({ page }) => {
+      await page.goto("admin-demo/lista-proveedor/");
+      await page.getByRole("button", { name: "Cargar la lista de muestra" }).click();
+      await expect(page.locator("[data-diff-summary]")).toContainText("48 suben");
+      await page.waitForTimeout(400);
+      const found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+    });
+    test("panel: el lote que vence con sus salidas armadas, combo y cupón (R4c)", async ({ page }) => {
+      await page.goto("admin-demo/");
+      await page.locator("[data-action^='lot:']").first().getByRole("button", { name: /Liquidar/ }).click();
+      const sheet = page.getByRole("dialog", { name: /Liquidar el lote/ });
+      await expect(sheet.locator("[data-liquidation-profit]")).toBeVisible();
+      await page.waitForTimeout(500);
+      let found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+      for (const tab of ["Combo", "Cupón", "Drop"]) {
+        await sheet.getByRole("tab", { name: tab }).click();
+        await page.waitForTimeout(250);
+        found = await audit(page);
+        expect(found, `${tab}\n${describe(found)}`).toEqual([]);
+      }
+      await sheet.getByRole("tab", { name: "Cupón" }).click();
+      await sheet.getByRole("button", { name: "Crear el cupón" }).click();
+      await expect(sheet.getByRole("link", { name: /WhatsApp a / }).first()).toBeVisible();
+      found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+    });
+    test("panel cliente: regalo de cumpleaños armado con su mensaje (R4c)", async ({ page }) => {
+      await page.goto("admin-demo/usuarios/ficha/?email=tomas.h%40ejemplo.com");
+      await page.getByRole("button", { name: "Mandarle el regalo de cumpleaños" }).click();
+      await page.getByRole("dialog", { name: "Armar el regalo de cumpleaños" }).getByRole("button", { name: "Sí, armar el regalo" }).click();
+      await expect(page.locator("[data-birthday-gift]")).toContainText("Regalo armado");
       await page.waitForTimeout(500);
       const found = await audit(page);
       expect(found, describe(found)).toEqual([]);

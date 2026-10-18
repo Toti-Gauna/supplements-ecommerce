@@ -1,0 +1,35 @@
+/*
+ * Operación verano (R3c): mañana en la costa. El termómetro de la playa sube a saltos hasta la zona roja y, al mismo
+ * tiempo, la botella se carga de electrolitos como una batería (cuatro tramos); el sol quema, tiembla el aire y el
+ * cartel de la rambla gira hasta el descuento.
+ * Capas (public/splash/operacion-verano/): 1 costa, termómetro vacío, botella vacía y cartel · 2 mercurio (recortado al
+ * tubo, 204,126 → 216,380 de 800 × 600) · 3 electrolitos (recortados al vidrio, 474,244 → 566,466) · 4 el vidrio y la
+ * tapa · 5 el calor. Mecánica 0,28–1,12 s; número 1,05–1,59 s.
+ */
+.splash-stage[data-scene="operacion-verano"] {
+  --score-x: 68.5%; --score-y: 12.33%; --score-w: 23%; --score-h: 12%; --score-size: 5.6cqw;
+  --lit-at: 960ms; --roll-at: 1050ms; --caption-at: 960ms;
+}
+.splash-stage[data-scene="operacion-verano"] .s2 { clip-path: inset(21% 73% 36.667% 25.5% round 0.75cqw); }
+.splash-stage[data-scene="operacion-verano"] .s3 { clip-path: inset(40.667% 29.25% 22.333% 59.25% round 1.5cqw); }
+@media (prefers-reduced-motion: no-preference) {
+  .splash-stage[data-scene="operacion-verano"] .s2::before { animation: ov-mercury 840ms linear 280ms both; }
+  .splash-stage[data-scene="operacion-verano"] .s3::before { animation: ov-fill 800ms linear 320ms both; }
+  .splash-stage[data-scene="operacion-verano"] .s5::before { animation: ov-heat 620ms ease-out 560ms both; }
+}
+/* El mercurio sube a saltos (frío, templado, calor) y rebota apenas en cada marca antes de llegar al rojo. */
+@keyframes ov-mercury {
+  0%, 8% { transform: translateY(32%); animation-timing-function: cubic-bezier(0.3, 1.5, 0.5, 1); }
+  26%, 34% { transform: translateY(22%); animation-timing-function: cubic-bezier(0.3, 1.5, 0.5, 1); }
+  54%, 62% { transform: translateY(11%); animation-timing-function: cubic-bezier(0.3, 1.4, 0.5, 1); }
+  100% { transform: translateY(0); }
+}
+/* La botella se carga en cuatro tramos, como una batería, con un chapoteo corto en cada uno. */
+@keyframes ov-fill {
+  0% { transform: translateY(33.333%); animation-timing-function: cubic-bezier(0.2, 0.9, 0.3, 1.15); }
+  18%, 25% { transform: translateY(25%); animation-timing-function: cubic-bezier(0.2, 0.9, 0.3, 1.15); }
+  43%, 50% { transform: translateY(16.667%); animation-timing-function: cubic-bezier(0.2, 0.9, 0.3, 1.15); }
+  68%, 75% { transform: translateY(8.333%); animation-timing-function: cubic-bezier(0.2, 0.9, 0.3, 1.15); }
+  100% { transform: translateY(0); }
+}
+@keyframes ov-heat { from { opacity: 0; transform: translateY(2%); } }

@@ -1,0 +1,56 @@
+/*
+ * Día del Running (R3c): estadio de noche. Se aprieta el cronómetro colgado del pórtico y la aguja sale disparada;
+ * la cinta de llegada se tensa, tiembla y se corta en el medio: cada mitad salta y cae girando desde su parante. El
+ * cronómetro se frena en 9,58 y el reloj de carrera gira hasta el descuento.
+ * Capas (public/splash/dia-del-running/): 1 estadio, pista y pórtico con el reloj · 2 y 3 las mitades de la cinta
+ * (giran desde 236,320 y 580,320 de 800 × 600) · 4 el chasquido · 5 el cronómetro · 6 la aguja (gira desde 150,372) ·
+ * 7 el botón. Mecánica 0,24–1,24 s; número 1,05–1,59 s.
+ */
+.splash-stage[data-scene="dia-del-running"] {
+  --score-x: 39.5%; --score-y: 10.33%; --score-w: 22.5%; --score-h: 10.67%; --score-size: 5.4cqw;
+  --lit-at: 760ms; --roll-at: 1050ms; --caption-at: 900ms;
+}
+.splash-stage[data-scene="dia-del-running"] .s2::before { transform-origin: 29.5% 53.333%; transform: rotate(48deg); }
+.splash-stage[data-scene="dia-del-running"] .s3::before { transform-origin: 72.5% 53.333%; transform: rotate(-48deg); }
+.splash-stage[data-scene="dia-del-running"] .s4::before { transform-origin: 51% 54.33%; opacity: 0; }
+.splash-stage[data-scene="dia-del-running"] .s6::before { transform-origin: 18.75% 62%; transform: rotate(417.5deg); }
+@media (prefers-reduced-motion: no-preference) {
+  .splash-stage[data-scene="dia-del-running"] .s7::before { animation: ru-press 900ms linear 240ms both; }
+  .splash-stage[data-scene="dia-del-running"] .s6::before { animation: ru-hand 520ms linear 280ms both; }
+  .splash-stage[data-scene="dia-del-running"] .s2::before { animation: ru-left 980ms linear 260ms both; }
+  .splash-stage[data-scene="dia-del-running"] .s3::before { animation: ru-right 980ms linear 260ms both; }
+  .splash-stage[data-scene="dia-del-running"] .s4::before { animation: ru-snap 380ms ease-out 720ms both; }
+}
+/* El botón baja al largar y otra vez al cortar. */
+@keyframes ru-press { 0%, 12%, 52%, 64%, 100% { transform: none; } 4%, 56% { transform: translateY(0.7%); } }
+/* La aguja vuela (más de una vuelta en medio segundo) y frena seco en 9,58 con un temblor. */
+@keyframes ru-hand {
+  0% { transform: rotate(0deg); animation-timing-function: cubic-bezier(0.4, 0, 0.8, 0.6); }
+  86% { transform: rotate(421deg); animation-timing-function: ease-out; }
+  93% { transform: rotate(415deg); }
+  100% { transform: rotate(417.5deg); }
+}
+/* Tensa y tiembla; a los 0,72 s se corta: salta para atrás y cae girando, con un vaivén hasta quedar colgando. */
+@keyframes ru-left {
+  0%, 20% { transform: rotate(0deg); }
+  28% { transform: rotate(-0.8deg); }
+  36% { transform: rotate(0.6deg); }
+  42% { transform: rotate(-1deg); }
+  47% { transform: rotate(0deg); animation-timing-function: ease-out; }
+  52% { transform: rotate(-9deg); animation-timing-function: cubic-bezier(0.5, 0, 0.75, 0.4); }
+  72% { transform: rotate(60deg); animation-timing-function: ease-in-out; }
+  86% { transform: rotate(42deg); animation-timing-function: ease-in-out; }
+  100% { transform: rotate(48deg); }
+}
+@keyframes ru-right {
+  0%, 20% { transform: rotate(0deg); }
+  28% { transform: rotate(0.8deg); }
+  36% { transform: rotate(-0.6deg); }
+  42% { transform: rotate(1deg); }
+  47% { transform: rotate(0deg); animation-timing-function: ease-out; }
+  52% { transform: rotate(9deg); animation-timing-function: cubic-bezier(0.5, 0, 0.75, 0.4); }
+  72% { transform: rotate(-60deg); animation-timing-function: ease-in-out; }
+  86% { transform: rotate(-42deg); animation-timing-function: ease-in-out; }
+  100% { transform: rotate(-48deg); }
+}
+@keyframes ru-snap { 0% { opacity: 0; transform: scale(0.6); } 15% { opacity: 1; } 100% { opacity: 0; transform: scale(1.4); } }

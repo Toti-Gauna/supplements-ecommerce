@@ -1,8 +1,14 @@
 import type { ComponentType } from "react";
 import type { SplashSceneId } from "@/demo/engine/splash-scenes";
 import { blackFridayLayers } from "./black-friday";
+import { crossfitOpenLayers } from "./crossfit-open";
+import { diaActividadFisicaLayers } from "./dia-actividad-fisica";
+import { diaDelBoxeadorLayers } from "./dia-del-boxeador";
+import { diaDelFutbolistaLayers } from "./dia-del-futbolista";
+import { diaDelRunningLayers } from "./dia-del-running";
 import { hotSaleLayers } from "./hot-sale";
 import { navidadLayers } from "./navidad";
+import { operacionVeranoLayers } from "./operacion-verano";
 import { vueltaAlGymLayers } from "./vuelta-al-gym";
 
 /**
@@ -15,4 +21,10 @@ export const SPLASH_ART: Partial<Record<SplashSceneId, ComponentType[]>> = {
   "hot-sale": hotSaleLayers,
   "vuelta-al-gym": vueltaAlGymLayers,
   navidad: navidadLayers,
+  "operacion-verano": operacionVeranoLayers,
+  "crossfit-open": crossfitOpenLayers,
+  "dia-actividad-fisica": diaActividadFisicaLayers,
+  "dia-del-futbolista": diaDelFutbolistaLayers,
+  "dia-del-running": diaDelRunningLayers,
+  "dia-del-boxeador": diaDelBoxeadorLayers,
 };

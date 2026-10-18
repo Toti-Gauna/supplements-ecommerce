@@ -1,4 +1,6 @@
 import { expect, test } from "@playwright/test";
+import { readySplashScene } from "../../src/demo/engine/splash-scenes";
+import type { SeasonId } from "../../src/demo/types";
 
 /** R3c · La pantalla de carga de cada fecha sin recargar: desde el modo vitrina y desde el editor de Campañas. */
 test.beforeEach(async ({ page }) => { await page.emulateMedia({ reducedMotion: "no-preference" }); });
@@ -26,12 +28,13 @@ test("modo vitrina: \"Pantalla de carga\" pasa la de la fecha a la vista, sin re
   await expect(splash).toBeHidden({ timeout: 5000 });
   await expect(bar).toBeVisible();
   await expect(page.locator("html")).toHaveAttribute("data-season", "hot-sale");
-  // Una fecha sin escena propia todavía pasa su variante de campaña.
+  // La fecha siguiente pasa su escena propia (o, si todavía no la tiene, su variante de campaña).
   await bar.getByRole("button", { name: "Fecha siguiente" }).click();
-  const next = await page.locator("html").getAttribute("data-season");
+  const next = (await page.locator("html").getAttribute("data-season")) as SeasonId;
   await bar.getByRole("button", { name: "Ver la pantalla de carga de esta fecha" }).click();
   await expect(splash).toBeVisible();
-  if (next === "dia-del-futbolista") await expect(splash.locator(".splash-barbell")).toBeVisible();
+  if (readySplashScene(next)) await expect(splash.locator(`.splash-stage[data-scene='${next}']`)).toBeVisible();
+  else await expect(splash.locator(".splash-barbell")).toBeVisible();
   await page.keyboard.press("Escape");
   await expect(splash).toBeHidden();
   await expect(bar).toBeVisible();

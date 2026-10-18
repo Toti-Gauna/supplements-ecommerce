@@ -131,3 +131,61 @@ for (const [id, layers] of Object.entries(REFERENCES)) {
     });
   }
 }
+
+/**
+ * Fase 2 · días del deporte y Operación verano: cada fecha con su escena propia (capas, y la capa que da la mecánica
+ * con su animación), sin tapar el logo ni desbordar a 375 y 1440, y que se retira sola al terminar el telón.
+ */
+const SPORTS = {
+  "operacion-verano": { layers: 5, slot: 2, animation: "ov-mercury" },
+  "crossfit-open": { layers: 6, slot: 5, animation: "cf-go" },
+  "dia-actividad-fisica": { layers: 6, slot: 5, animation: "af-step" },
+  "dia-del-futbolista": { layers: 5, slot: 4, animation: "fu-shot" },
+  "dia-del-running": { layers: 7, slot: 2, animation: "ru-left" },
+  "dia-del-boxeador": { layers: 4, slot: 3, animation: "bx-hammer" },
+} as const;
+
+for (const [id, scene] of Object.entries(SPORTS)) {
+  for (const width of [375, 1440]) {
+    test(`${id} a ${width}px: su escena con sus ${scene.layers} capas y su mecánica, sin tapar el logo ni desbordar`, async ({ page }) => {
+      await page.setViewportSize({ width, height: width < 600 ? 812 : 900 });
+      await holdSplash(page);
+      await previewTheme(page, id);
+      await page.goto("");
+      const stage = page.locator(`#volta-splash .splash-stage[data-scene='${id}']`);
+      await expect(stage).toBeVisible();
+      await expect(page.locator("#volta-splash .splash-barbell")).toBeHidden();
+      const images = await stage.locator(".sl").evaluateAll((els) => els.map((el) => getComputedStyle(el, "::before").backgroundImage));
+      expect(images.filter((i) => i.includes(`/splash/${id}/`))).toHaveLength(scene.layers);
+      expect(images.filter((i) => i !== "none" && !i.includes(`/splash/${id}/`))).toEqual([]);
+      const moving = await stage.locator(`.s${scene.slot}`).evaluate((el) => {
+        const cs = getComputedStyle(el, "::before");
+        return { image: cs.backgroundImage, animation: cs.animationName };
+      });
+      expect(moving.image).toContain(`/splash/${id}/${scene.slot}.svg`);
+      expect(moving.animation).toBe(scene.animation);
+      await logoClear(page);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+      await expect(stage.locator(".splash-caption")).toBeVisible();
+      await page.keyboard.press("Escape");
+      await expect(page.locator("#volta-splash")).toBeHidden();
+    });
+  }
+
+  test(`${id}: se retira sola cuando termina su animación, con solo el arte de su fecha`, async ({ page }) => {
+    await recordEnds(page);
+    const art: string[] = [];
+    page.on("response", (r) => { if (r.url().includes("/splash/")) art.push(`${r.status()} ${new URL(r.url()).pathname}`); });
+    await previewTheme(page, id);
+    await page.goto("", { waitUntil: "domcontentloaded" });
+    const splash = page.locator("#volta-splash");
+    await expect(page.locator("html")).toHaveAttribute("data-splash-scene", id);
+    await expect(splash).toBeHidden({ timeout: 5000 });
+    await expect(page.locator("html")).toHaveClass(/splash-done/);
+    const ends = await page.evaluate(() => (window as unknown as { ends: [string, number][] }).ends);
+    const at = (name: string) => ends.find(([n]) => n === name)?.[1];
+    expect(at(scene.animation)).toBeDefined();
+    expect(at("splash-curtain")).toBeGreaterThan(at(scene.animation)!);
+    expect(art.sort()).toEqual(Array.from({ length: scene.layers }, (_, i) => `200 /supplements-ecommerce/splash/${id}/${i + 1}.svg`));
+  });
+}

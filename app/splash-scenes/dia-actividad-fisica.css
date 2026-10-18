@@ -1,0 +1,34 @@
+/*
+ * Día de la Actividad Física (R3c): amanece en la pista. Baja la zapatilla, apoya el talón, planta la punta en la línea
+ * de largada y la línea se prende; levanta polvo y el contador de pasos del costado se carga celda por celda hasta que
+ * su vidrio gira hasta el descuento.
+ * Capas (public/splash/dia-actividad-fisica/): 1 pista, arboleda y contador apagado · 2 celdas encendidas · 3 la tapa
+ * de la barra (recortada a 513,178 → 693,204 de 800 × 600; corre de a una celda) · 4 la línea encendida · 5 la
+ * zapatilla (gira desde el talón, 258,476) · 6 el polvo. Mecánica 0,24–1,16 s; número 1,05–1,59 s.
+ */
+.splash-stage[data-scene="dia-actividad-fisica"] {
+  --score-x: 64%; --score-y: 14%; --score-w: 22.75%; --score-h: 11.67%; --score-size: 5.6cqw;
+  --lit-at: 700ms; --roll-at: 1050ms; --caption-at: 900ms;
+}
+.splash-stage[data-scene="dia-actividad-fisica"] .s3 { clip-path: inset(29.667% 13.375% 66% 64.125%); }
+.splash-stage[data-scene="dia-actividad-fisica"] .s3::before { transform: translateX(22.5%); }
+.splash-stage[data-scene="dia-actividad-fisica"] .s5::before { transform-origin: 32.25% 79.33%; }
+.splash-stage[data-scene="dia-actividad-fisica"] .s6::before { transform-origin: 49% 79%; opacity: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .splash-stage[data-scene="dia-actividad-fisica"] .s5::before { animation: af-step 580ms linear 240ms both; }
+  .splash-stage[data-scene="dia-actividad-fisica"] .s4::before { animation: af-line 300ms steps(1, end) 670ms both; }
+  .splash-stage[data-scene="dia-actividad-fisica"] .s6::before { animation: af-puff 560ms ease-out 650ms both; }
+  .splash-stage[data-scene="dia-actividad-fisica"] .s3::before { animation: af-count 400ms steps(10, end) 760ms both; }
+}
+/* Baja en el aire con la punta arriba, apoya el talón, planta la punta (golpe) y se asienta. */
+@keyframes af-step {
+  0% { transform: translate(-14%, -18%) rotate(-16deg); animation-timing-function: cubic-bezier(0.3, 0, 0.7, 0.6); }
+  55% { transform: translate(-0.6%, -1.4%) rotate(-12deg); animation-timing-function: ease-in; }
+  64% { transform: translate(0, 0) rotate(-10deg); animation-timing-function: cubic-bezier(0.6, 0, 0.9, 0.5); }
+  76% { transform: rotate(0deg); animation-timing-function: ease-out; }
+  86% { transform: rotate(-1deg); animation-timing-function: ease-in-out; }
+  100% { transform: rotate(0deg); }
+}
+@keyframes af-line { 0% { opacity: 0; } 20% { opacity: 1; } 40% { opacity: 0.4; } 60%, 100% { opacity: 1; } }
+@keyframes af-puff { 0% { opacity: 0; transform: scale(0.8); } 25% { opacity: 1; } 100% { opacity: 0; transform: scale(1.25) translateY(-3%); } }
+@keyframes af-count { from { transform: translateX(0); } }

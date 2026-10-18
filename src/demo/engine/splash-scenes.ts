@@ -43,12 +43,12 @@ export const SPLASH_SCENES: Record<SplashSceneId, SplashScene> = {
   "san-valentin": pending("Dos mancuernas que se acercan y encastran en el soporte doble."),
   "dia-del-padre": pending("Peso muerto: la barra cargada se despega del piso y se trabaja el bloqueo."),
   "dia-del-amigo": pending("Dos shakers que chocan (brindis de gym) y el marcador cuenta las repes."),
-  "operacion-verano": pending("Termómetro de la costa y botella que se llena de electrolitos."),
-  "crossfit-open": pending("Reloj de WOD: cuenta regresiva 3-2-1 y arranca el tiempo."),
-  "dia-actividad-fisica": pending("Zapatilla que pisa la línea de largada y se prende el contador de pasos."),
-  "dia-del-futbolista": pending("Pelota que entra al arco de entrenamiento y se mueve la red."),
-  "dia-del-running": pending("Cronómetro que se dispara y la cinta de llegada que se corta."),
-  "dia-del-boxeador": pending("Campana del ring: el martillo golpea y arranca el round."),
+  "operacion-verano": ready(5, "Termómetro de la costa que sube al rojo y botella que se carga de electrolitos en cuatro tramos."),
+  "crossfit-open": ready(6, "Reloj de WOD: cuenta regresiva 3-2-1 con su pitido y arranca el tiempo en cero."),
+  "dia-actividad-fisica": ready(6, "Zapatilla que pisa la línea de largada y el contador de pasos se carga celda por celda."),
+  "dia-del-futbolista": ready(5, "Pelota que entra al arco de entrenamiento, hunde la red y cae picando adentro."),
+  "dia-del-running": ready(7, "Cronómetro que se dispara y la cinta de llegada que se corta y cae desde los parantes."),
+  "dia-del-boxeador": ready(4, "Campana del ring: el martillo golpea dos veces y arranca el round."),
 };
 
 /** La escena terminada de una fecha (o la original sin fecha); `null` si la fecha sigue con la variante de campaña. */

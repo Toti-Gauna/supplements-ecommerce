@@ -12,8 +12,21 @@ import { SKINS } from "@/features/themes/skins";
 /** Pantallas de carga por fecha (R3c): el registro, el descuento del marcador y lo que marca el script del <head>. */
 const ROOT = join(__dirname, "../..");
 const SEASONS = Object.keys(SKINS).sort();
-/** Las cuatro de referencia de la fase 1 (más la original); el resto llega en la fase 2. */
-const READY = ["original", "black-friday", "hot-sale", "vuelta-al-gym", "navidad"];
+/** Escenas terminadas, con sus capas: la original, las cuatro de referencia de la fase 1 y las de la fase 2. */
+const READY_LAYERS: Record<string, number> = {
+  original: 0,
+  "black-friday": 4,
+  "hot-sale": 5,
+  "vuelta-al-gym": 4,
+  navidad: 7,
+  "operacion-verano": 5,
+  "crossfit-open": 6,
+  "dia-actividad-fisica": 6,
+  "dia-del-futbolista": 5,
+  "dia-del-running": 7,
+  "dia-del-boxeador": 4,
+};
+const READY = Object.keys(READY_LAYERS);
 
 describe("registro de pantallas de carga", () => {
   it("cubre cada fecha y la original, sin sobrantes", () => {
@@ -22,11 +35,14 @@ describe("registro de pantallas de carga", () => {
     for (const [id, s] of Object.entries(SPLASH_SCENES)) expect(s.mechanism.length, id).toBeGreaterThan(20);
   });
 
-  it("fase 1: la original y las cuatro de referencia terminadas; las otras 13 quedan pendientes para la fase 2", () => {
+  it("cada escena terminada está lista con sus capas; las que faltan siguen pendientes con la variante de campaña", () => {
+    for (const [id, layers] of Object.entries(READY_LAYERS)) {
+      expect(SPLASH_SCENES[id as keyof typeof SPLASH_SCENES], id).toMatchObject({ status: "ready", layers });
+    }
     const ready = Object.keys(SPLASH_SCENES).filter((id) => SPLASH_SCENES[id as keyof typeof SPLASH_SCENES].status === "ready");
     expect(ready.sort()).toEqual([...READY].sort());
     expect(pendingSplashScenes().sort()).toEqual(SEASONS.filter((id) => !READY.includes(id)).sort());
-    expect(pendingSplashScenes()).toHaveLength(13);
+    expect(pendingSplashScenes()).toHaveLength(SEASONS.length + 1 - READY.length);
   });
 
   it("cada escena terminada tiene su hoja de estilos, importada, y capas dentro del máximo", () => {
@@ -46,7 +62,7 @@ describe("registro de pantallas de carga", () => {
     expect(readySplashScene("black-friday")).toBe("black-friday");
     expect(readySplashScene(null)).toBe("original");
     expect(readySplashScene("halloween")).toBeNull();
-    expect(splashLayerMap()).toEqual({ "black-friday": 4, "hot-sale": 5, "vuelta-al-gym": 4, navidad: 7 });
+    expect(splashLayerMap()).toEqual(Object.fromEntries(Object.entries(READY_LAYERS).filter(([, n]) => n > 0)));
     expect(splashLayerUrls("/supplements-ecommerce", "hot-sale")[4]).toBe(`/supplements-ecommerce/splash/hot-sale/5.svg?v=${SPLASH_ART_VERSION}`);
     expect(splashLayerUrls("", "halloween")).toEqual([]);
   });

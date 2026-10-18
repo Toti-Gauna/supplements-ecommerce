@@ -10,6 +10,7 @@ import { stockLevels, suppliers, type StockLevel, type Supplier } from "../fixtu
 import { calendarEvents, materials, recipes, workshopSettings, type CalendarEvent, type Material, type Recipe, type WorkshopSettings } from "../fixtures/workshop";
 import type { PriceUndo } from "./bulk-price";
 import type { ImportSnapshot } from "./catalog-slice";
+import { defaultCounterData, type CounterData } from "./counter-data";
 import type { AdminClaim, AdminOrder, AdminUser, AuditEntry, StatusLogEntry } from "./types";
 import { emailsForOrder, OUTBOX_LIMIT, triggersForNewOrder, triggersForTransition, type OutboxEmail } from "./emails/triggers";
 import type { PurchaseOrder } from "./workshop/purchasing";
@@ -29,6 +30,8 @@ export interface AdminData {
   workshop: WorkshopData;
   /** Emails automáticos: plantillas y bandeja de salida simulada (nada se envía). */
   emails: EmailsData;
+  /** Mostrador (R4b): ventas en el local, cierres del día y fondo de caja. */
+  counter: CounterData;
 }
 
 export interface EmailsData {
@@ -95,6 +98,7 @@ export function defaultAdminData(): AdminData {
     lastPriceChange: null,
     workshop: structuredClone({ settings: workshopSettings, materials, recipes, profiles: customerProfiles, events: calendarEvents, suppliers, stockLevels, purchases: [] }),
     emails: { templates, outbox: seedOutbox(orders, templates) },
+    counter: defaultCounterData(),
   };
 }
 

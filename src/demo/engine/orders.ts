@@ -5,7 +5,8 @@ export type OrderStatus =
   | "PENDING_PAYMENT" | "PAYMENT_REVIEW" | "PAID" | "IN_PRODUCTION" | "READY"
   | "SHIPPED" | "DELIVERED" | "CANCELLED" | "IN_CLAIM" | "RETURNED";
 
-export type TransitionTrigger = "proof-received" | "proof-approved" | "proof-rejected" | "provider-confirmed" | "admin";
+/** `in-hand`: el dueño confirma que cobró en mano un pedido cargado en el mostrador (R4b). Un comprobante nunca paga. */
+export type TransitionTrigger = "proof-received" | "proof-approved" | "proof-rejected" | "provider-confirmed" | "in-hand" | "admin";
 
 export const STATUS_LABEL: Record<OrderStatus, string> = {
   PENDING_PAYMENT: "Pendiente de pago",
@@ -35,7 +36,7 @@ export function canTransition(from: OrderStatus, to: OrderStatus, ctx: Transitio
   switch (from) {
     case "PENDING_PAYMENT":
       if (to === "PAYMENT_REVIEW") return trigger === "proof-received";
-      if (to === "PAID") return trigger === "provider-confirmed";
+      if (to === "PAID") return trigger === "provider-confirmed" || trigger === "in-hand";
       return to === "CANCELLED" && trigger === "admin";
     case "PAYMENT_REVIEW":
       if (to === "PAID") return trigger === "proof-approved";

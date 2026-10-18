@@ -1,4 +1,6 @@
 import type { CartLine } from "../engine/cart-types";
+import type { OrderChannel } from "../engine/counter-chat";
+import type { CounterMethod } from "../engine/counter-pay";
 import type { OrderStatus } from "../engine/orders";
 import type { FulfillmentType, PaymentMethod } from "../types";
 import type { PrepStage } from "./workshop/preparation";
@@ -42,6 +44,10 @@ export interface AdminOrder {
   coupon?: { code: string; discount: number };
   /** Pedido que llegó desde el checkout de demostración de este navegador. */
   fromShop?: boolean;
+  /** Pedido cerrado por chat y cargado en el mostrador (R4b): por dónde llegó. */
+  channel?: OrderChannel;
+  /** Cobrado en mano en el local (R4b), con la confirmación del dueño: el medio real. `paymentMethod` queda en transferencia. */
+  inHand?: CounterMethod;
 }
 
 export interface AdminUser {

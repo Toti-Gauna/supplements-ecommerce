@@ -3,6 +3,8 @@ import { demoNow } from "@/demo/clock";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { createCatalogActions, type CatalogActions } from "@/demo/admin/catalog-slice";
+import { normalizeCounter } from "@/demo/admin/counter-data";
+import { createCounterActions, type CounterActions } from "@/demo/admin/counter-slice";
 import { createCustomerActions, type CustomerActions } from "@/demo/admin/customers-slice";
 import { normalizeHeroList } from "@/demo/admin/content-hero";
 import { migrateAdminData } from "@/demo/admin/migrate";
@@ -19,7 +21,7 @@ import { createGiftsActions, type GiftsActions } from "@/demo/admin/gifts-slice"
 import { setDemoData, type DemoData } from "@/demo/engine/source";
 import { ADMIN_STORE_VERSION, demoStorage, STORAGE_PREFIX } from "./storage";
 
-export type AdminState = AdminData & OrdersActions & DataActions & CatalogActions & WorkshopActions & PurchasingActions & EmailActions & CustomerActions & PacksActions & GiftsActions & {
+export type AdminState = AdminData & OrdersActions & DataActions & CatalogActions & WorkshopActions & PurchasingActions & EmailActions & CustomerActions & PacksActions & GiftsActions & CounterActions & {
   addClaim: (claim: Omit<AdminClaim, "id" | "status" | "createdAt">) => void;
   resetAdmin: () => void;
 };
@@ -41,6 +43,7 @@ export const useAdmin = create<AdminState>()(
       ...createCustomerActions(set, get),
       ...createPackActions(set, get),
       ...createGiftsActions(set, get),
+      ...createCounterActions(set),
       addClaim: (claim) =>
         set((s) => ({
           claims: [{ ...claim, id: `c-${Date.now().toString(36)}`, status: "OPEN", createdAt: demoNow(), fromShop: true }, ...s.claims],
@@ -75,9 +78,9 @@ export const useAdmin = create<AdminState>()(
         const content = { ...current.data.content, ...data.content } as DemoData["content"] & { slides?: unknown };
         delete content.slides;
         data.content = { ...content, hero: normalizeHeroList(content.hero) ?? current.data.content.hero };
-        return { ...current, ...p, data, workshop, emails: { ...current.emails, ...(p.emails ?? {}) } };
+        return { ...current, ...p, data, workshop, emails: { ...current.emails, ...(p.emails ?? {}) }, counter: normalizeCounter(p.counter) };
       },
-      partialize: (s) => ({ data: s.data, orders: s.orders, users: s.users, claims: s.claims, audit: s.audit, lastImport: s.lastImport, lastPriceChange: s.lastPriceChange, workshop: s.workshop, emails: s.emails }),
+      partialize: (s) => ({ data: s.data, orders: s.orders, users: s.users, claims: s.claims, audit: s.audit, lastImport: s.lastImport, lastPriceChange: s.lastPriceChange, workshop: s.workshop, emails: s.emails, counter: s.counter }),
     },
   ),
 );

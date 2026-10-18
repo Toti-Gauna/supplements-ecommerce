@@ -16,7 +16,8 @@ export const STORAGE_PREFIX = `${brand.storageKey}-demo:`;
 // v16: ayuda del box (R2c): cada pregunta frecuente lleva su tema y se suman las preguntas nuevas.
 // v17: regalos (R3b): gift cards con saldo y vencimiento, y el estado de cada regalo, sin tocar lo demás.
 // v18: fechas reales de los días del deporte (y Vuelta al gym en marzo) donde el dueño no cambió las de muestra.
-export const ADMIN_STORE_VERSION = 18;
+// v19: mostrador (R4b): ventas en el local, cierres del día y cuotas con recargo, sin tocar lo demás.
+export const ADMIN_STORE_VERSION = 19;
 
 /** localStorage tolerante a modo privado / cuota llena: la demo sigue funcionando en memoria. */
 const memory = new Map<string, string>();

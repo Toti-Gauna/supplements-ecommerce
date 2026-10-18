@@ -1,5 +1,4 @@
 import { expect, test } from "@playwright/test";
-import { horizontalOverflow } from "./helpers";
 import { holdSplash, logoClear, previewTheme, recordEnds } from "./splash-helpers";
 
 /**

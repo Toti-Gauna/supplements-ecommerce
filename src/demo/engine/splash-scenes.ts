@@ -28,7 +28,7 @@ export const SPLASH_ART_VERSION = 1;
 export const SPLASH_TOTAL_MS = { original: 1400, campaign: 1800, scene: 1850 } as const;
 
 const ready = (layers: number, mechanism: string): SplashScene => ({ status: "ready", layers, mechanism });
-const pending = (mechanism: string): SplashScene => ({ status: "pending", layers: 0, mechanism });
+// Una fecha nueva sin escena todavía se carga como { status: "pending", layers: 0, mechanism } y sale con la variante de campaña.
 
 export const SPLASH_SCENES: Record<SplashSceneId, SplashScene> = {
   original: ready(0, "Barra olímpica: entran los discos de a pares, encastran y cierran los topes."),

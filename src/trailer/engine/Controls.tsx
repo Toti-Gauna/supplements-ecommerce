@@ -22,7 +22,7 @@ export function Controls({ spec, clock, params }: { spec: TrailerSpec; clock: Cl
       const t = clock.time();
       if (range.current) range.current.value = String(t);
       if (readout.current) readout.current.textContent = `${clock2(t)} / ${clock2(spec.duration)}${params.dev ? ` · ${sceneAt(spec, t)?.id ?? ""}` : ""}`;
-      if (!clock.playing() && playing) setPlaying(false);
+      if (clock.playing() !== playing) setPlaying(clock.playing());
     };
     gsap.ticker.add(tick);
     return () => gsap.ticker.remove(tick);

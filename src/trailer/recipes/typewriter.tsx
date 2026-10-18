@@ -21,6 +21,7 @@ export const typewriter = defineRecipe<TypewriterProps>({
       </div>
     );
   },
+  cues: (props) => Array.from(props.text, (ch, i) => ({ t: 0.25 + i * (props.perChar ?? 0.055), voice: "tick" as const, midi: i, vel: ch === " " ? 0 : 0.8 })).filter((c) => c.vel > 0),
   build: ({ q, props, dur }) => {
     const tl = gsap.timeline();
     const typed = q('[data-t="typed"]')[0]!;

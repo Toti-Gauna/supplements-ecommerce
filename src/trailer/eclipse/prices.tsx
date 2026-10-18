@@ -51,6 +51,7 @@ export const eclipsePrices = defineRecipe<PricesProps>({
       </div>
     );
   },
+  cues: (props) => (BOOKS[props.book]?.sections.find((x) => x.id === props.section)?.rows ?? []).map((_, i) => ({ t: 0.4 + i * 0.11, voice: "tick" as const, midi: i, vel: 0.35 })),
   build: ({ q }) => {
     const tl = gsap.timeline({ defaults: { ease: "trl.expo" } });
     const one = (sel: string) => q(`[data-t="${sel}"]`);

@@ -22,6 +22,7 @@ export const title = defineRecipe<TitleProps>({
       </div>
     );
   },
+  cues: () => [{ t: 0.1, voice: "whoosh", dur: 0.5, vel: 0.45 }],
   build: ({ q, dur }) => {
     const tl = gsap.timeline();
     const chars = splitChars(q('[data-t="line"]'));

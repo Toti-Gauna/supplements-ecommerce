@@ -61,7 +61,15 @@ const PAGES: [string, string, string][] = [
   ["panel promos: ruleta con subpestañas (R4a)", "admin-demo/cupones/ruleta/", "[role=tablist]"],
   ["panel promos: descuento stack (R4a)", "admin-demo/descuento-stack/", "[role=tablist]"],
   ["panel promos: misiones (R4a)", "admin-demo/misiones/", "[role=tablist]"],
-  ["panel pedidos: pagos manuales (R4a)", "admin-demo/pagos/", "[role=tablist]"],
+  ["panel pedidos: por cobrar de a uno (R4a pagos manuales, R4b)", "admin-demo/pagos/", "article[aria-label^='Cobro de']"],
+  // R4b: Pedidos unificado y mensajes por estado.
+  ["panel pedidos: por cobrar resueltos (R4b)", "admin-demo/pagos/?estado=done", "[role=tablist]"],
+  ["panel pedidos: para armar en dos pasos (R4b)", "admin-demo/preparacion/", "article[data-step]"],
+  ["panel pedidos: despachos, lista de armado y hoja de ruta (R4b)", "admin-demo/despachos/?dia=2026-10-09", "[data-stop]"],
+  ["panel pedidos: postventa (R4b)", "admin-demo/postventa/", "[data-order]"],
+  ["panel pedidos: todos con WhatsApp (R4b)", "admin-demo/pedidos/?q=VOL-00012", "h1"],
+  ["panel emails con su versión WhatsApp (R4b)", "admin-demo/emails/", "[data-wa-line]"],
+  ["panel editor de email con WhatsApp (R4b)", "admin-demo/emails/editar/?id=tpl-payment-approved", "figure[aria-label='Vista previa del WhatsApp']"],
   ["panel compras: proveedores (R4a)", "admin-demo/proveedores/", "[role=tablist]"],
   ["panel ajustes: contacto (R4a)", "admin-demo/ajustes/", "[role=tablist]"],
   ["panel ajustes: emails con subpestañas (R4a)", "admin-demo/emails/", "[role=tablist]"],
@@ -138,6 +146,14 @@ for (const mode of ["dark", "light"] as const) {
       await expect(page.locator("[data-sale]")).toHaveCount(1);
       await page.waitForTimeout(400);
       found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+    });
+    test("panel: el WhatsApp de un estado se edita en un panel (R4b)", async ({ page }) => {
+      await page.goto("admin-demo/emails/");
+      await page.getByRole("button", { name: "Editar el WhatsApp: En reclamo" }).click();
+      await expect(page.getByRole("dialog", { name: "En reclamo" })).toBeVisible();
+      await page.waitForTimeout(500);
+      const found = await audit(page);
       expect(found, describe(found)).toEqual([]);
     });
     test("inicio: pestaña Deportes de \"Entrená por objetivo o por deporte\"", async ({ page }) => {

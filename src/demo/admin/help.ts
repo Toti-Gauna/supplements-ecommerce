@@ -3,7 +3,6 @@ import { STATUS_LABEL } from "../engine/orders";
 import { ORDER_TABS } from "./order-groups";
 import { MATERIAL_STATE_LABEL } from "./workshop/materials";
 import { MARGIN_LABEL } from "./workshop/costs";
-import { PREP_COLUMNS } from "./workshop/preparation";
 import { LEVEL_LABEL } from "./workshop/purchasing";
 
 /**
@@ -22,11 +21,12 @@ export const STAGE_HELP: Help = {
 };
 
 export const PAYMENT_QUEUE_HELP: Help = {
-  title: "Estados de los pagos manuales",
+  title: "Por cobrar",
   items: [
-    { term: "Por revisar", text: "El comprador subió un comprobante. Subirlo nunca marca el pedido como pagado: lo aprobás vos después de ver el ingreso." },
-    { term: "Esperando comprobante", text: "Transferencia o QR sin comprobante vigente (todavía no lo subió, o se lo rechazaste)." },
-    { term: "Resueltos", text: "Comprobantes que ya aprobaste o rechazaste a mano." },
+    { term: "Comprobantes por revisar", text: "El cliente subió el comprobante. Subirlo nunca marca el pedido como pagado: lo aprobás vos, después de ver el ingreso en tu cuenta." },
+    { term: "Sin pagar", text: "Transferencia o QR sin comprobante (todavía no lo subió, o se lo rechazaste) y Mercado Pago sin confirmar." },
+    { term: "Resueltos", text: "Comprobantes que ya aprobaste o rechazaste a mano, con su motivo." },
+    { term: "De a uno", text: "Cada pedido con su total, el comprobante y el botón de WhatsApp. Al resolverlo aparece el que sigue." },
   ],
 };
 
@@ -67,14 +67,13 @@ export const CALENDAR_HELP: Help = {
   ],
 };
 
-const STAGE_STATUS: Record<(typeof PREP_COLUMNS)[number]["id"], keyof typeof STATUS_LABEL> = { queue: "PAID", picking: "IN_PRODUCTION", "lot-check": "IN_PRODUCTION", ready: "READY" };
-
-/** Etapas del tablero de preparación y sus reglas (las mismas que valida `prepMove`). */
+/** Para armar (R4b): los dos pasos y sus reglas (las mismas que valida `prepMove`). */
 export const PREPARATION_HELP: Help = {
-  title: "Etapas de preparación",
+  title: "Para armar, en dos pasos",
   items: [
-    ...PREP_COLUMNS.map((c) => ({ term: c.label, text: `${c.hint}. Estado del pedido: ${STATUS_LABEL[STAGE_STATUS[c.id]].toLowerCase()}.` })),
-    { term: "Reglas", text: "Al salir de Por preparar se descuenta el embalaje, una sola vez. Un pedido no vuelve a Por preparar y uno listo no vuelve a preparación; de Control de lote se puede volver a Armando. Solo pasa a Listo para despachar con el lote de cada producto confirmado." },
+    { term: "1 · Juntá los potes", text: "Tildá cada producto a medida que lo sacás del estante. Con todo junto pasa al paso 2 (estado: en preparación) y se descuenta su embalaje, una sola vez." },
+    { term: "2 · Controlá lote y vencimiento", text: "Sale el pote que vence primero: confirmá que el lote y el vencimiento coinciden con la etiqueta. Con todos controlados queda Listo y pasa a Despachos." },
+    { term: "Reglas", text: "Un pedido sin pagar no se arma. Desde el paso 2 podés volver al 1; uno listo no vuelve a preparación. Solo queda listo con el lote de cada producto confirmado." },
   ],
 };
 

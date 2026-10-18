@@ -14,19 +14,24 @@ const subtabs = (page: Page) => page.getByRole("tablist", { name: "Subpestañas"
 /** El nombre de una pestaña puede llevar su contador al final (“Insumos 4 para reponer”). */
 const named = (label: string) => new RegExp(`^${label}( \\d+ [a-zé ]+)?$`);
 
-/** [ruta vieja, adónde llega, sección del menú, pestaña, subpestaña]. Una por cada ruta que existía antes de R4a, más las del Mostrador (R4b). */
+/**
+ * [ruta vieja, adónde llega, sección del menú, pestaña, subpestaña]. Una por cada ruta que existía antes de R4a, más las
+ * de R4b: el Mostrador y Pedidos (Por cobrar y Para armar usan las rutas de Pagos manuales y Preparación).
+ */
 const ROUTES: [string, RegExp, string, string | null, string?][] = [
   ["admin-demo/", /admin-demo\/$/, "Hoy", null],
   ["admin-demo/mostrador/", /mostrador\/$/, "Mostrador", "Vender"],
   ["admin-demo/mostrador/chat/", /mostrador\/chat\/$/, "Mostrador", "Pedido por chat"],
   ["admin-demo/mostrador/cierre/", /mostrador\/cierre\/$/, "Mostrador", "Cierre del día"],
   ["admin-demo/mostrador/consulta/", /mostrador\/consulta\/$/, "Mostrador", "Consulta rápida"],
-  ["admin-demo/pedidos/", /pedidos\/$/, "Pedidos", "Pedidos"],
-  ["admin-demo/pagos/", /pagos\/$/, "Pedidos", "Pagos manuales"],
-  ["admin-demo/preparacion/", /preparacion\/$/, "Pedidos", "Preparación"],
-  ["admin-demo/produccion/", /preparacion\/$/, "Pedidos", "Preparación"],
-  ["admin-demo/calendario/", /calendario\/$/, "Pedidos", "Calendario de despachos"],
-  ["admin-demo/reclamos/", /reclamos\/$/, "Pedidos", "Reclamos"],
+  ["admin-demo/pedidos/", /pedidos\/$/, "Pedidos", "Todos"],
+  ["admin-demo/pagos/", /pagos\/$/, "Pedidos", "Por cobrar"],
+  ["admin-demo/preparacion/", /preparacion\/$/, "Pedidos", "Para armar"],
+  ["admin-demo/produccion/", /preparacion\/$/, "Pedidos", "Para armar"],
+  ["admin-demo/calendario/", /calendario\/$/, "Pedidos", "Despachos", "Calendario"],
+  ["admin-demo/despachos/", /despachos\/$/, "Pedidos", "Despachos", "Lista y hoja de ruta"],
+  ["admin-demo/reclamos/", /reclamos\/$/, "Pedidos", "Postventa", "Reclamos"],
+  ["admin-demo/postventa/", /postventa\/$/, "Pedidos", "Postventa", "Seguimiento"],
   ["admin-demo/productos/", /productos\/$/, "Stock", "Productos y stock"],
   ["admin-demo/stock/", /productos\/\?ver=variantes/, "Stock", "Productos y stock"],
   ["admin-demo/planilla/", /productos\/\?formato=excel/, "Stock", "Productos y stock"],

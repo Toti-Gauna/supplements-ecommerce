@@ -1,7 +1,7 @@
 /**
- * Mapa del menú del panel (R4a): 9 secciones y, dentro de cada una, pestañas. Módulo puro (sin React ni íconos) para
- * poder probarlo: a qué sección y pestaña pertenece cada ruta y adónde redirigen las rutas viejas. R4b sumó "Mostrador"
- * (venta en el local) en el 2.º lugar de `SECTIONS` y en el centro de `MOBILE_ORDER`: en el celular es la pestaña central.
+ * Menú del panel: 9 secciones con pestañas (módulo puro): a qué sección y pestaña pertenece cada ruta y adónde
+ * redirigen las rutas viejas. "Mostrador" va 2.º y en el centro de `MOBILE_ORDER`. Pedidos se ordena por lo que hay
+ * que hacer; Por cobrar y Para armar reusan las rutas de Pagos manuales y Preparación.
  */
 const P = "/admin-demo";
 
@@ -40,12 +40,18 @@ export const SECTIONS: MenuSection[] = [
     tab("cierre", "Cierre del día", "/mostrador/cierre/"),
     tab("consulta", "Consulta rápida", "/mostrador/consulta/"),
   ] },
-  { id: "pedidos", label: "Pedidos", short: "Pedidos", href: `${P}/pedidos/`, tabs: [
-    tab("pedidos", "Pedidos", "/pedidos/", [], "orders"),
-    tab("pagos", "Pagos manuales", "/pagos/", [], "payments"),
-    tab("preparacion", "Preparación", "/preparacion/", ["/produccion"], "prep"),
-    tab("despachos", "Calendario de despachos", "/calendario/", [], "late"),
-    tab("reclamos", "Reclamos", "/reclamos/", [], "claims"),
+  { id: "pedidos", label: "Pedidos", short: "Pedidos", href: `${P}/pagos/`, tabs: [
+    tab("cobrar", "Por cobrar", "/pagos/", [], "payments"),
+    tab("armar", "Para armar", "/preparacion/", ["/produccion"], "prep"),
+    tab("despachos", "Despachos", "/despachos/", ["/calendario"], undefined, [
+      tab("ruta", "Lista y hoja de ruta", "/despachos/"),
+      tab("calendario", "Calendario", "/calendario/"),
+    ]),
+    tab("postventa", "Postventa", "/postventa/", ["/reclamos"], "claims", [
+      tab("seguimiento", "Seguimiento", "/postventa/"),
+      tab("reclamos", "Reclamos", "/reclamos/"),
+    ]),
+    tab("pedidos", "Todos", "/pedidos/", [], "orders"),
   ] },
   { id: "stock", label: "Stock", short: "Stock", href: `${P}/productos/`, tabs: [
     tab("productos", "Productos y stock", "/productos/", ["/stock", "/planilla"], "stock"),
@@ -106,7 +112,7 @@ export const MOVED: Record<string, Moved> = {
   [`${P}/cupones/lista`]: { to: `${P}/promos/`, label: "Promos · Cupones" },
   [`${P}/contenido`]: { to: `${P}/contenido/carrusel/`, label: "Ajustes · Contenido" },
   [`${P}/ajustes/contacto`]: { to: `${P}/ajustes/`, label: "Ajustes · Contacto" },
-  [`${P}/produccion`]: { to: `${P}/preparacion/`, label: "Pedidos · Preparación" },
+  [`${P}/produccion`]: { to: `${P}/preparacion/`, label: "Pedidos · Para armar" },
   [`${P}/stock`]: { to: `${P}/productos/?ver=variantes`, label: "Stock · Productos", carry: { vista: "stock", q: "q" } },
   [`${P}/planilla`]: { to: `${P}/productos/?formato=excel`, label: "Stock · formato Excel", carry: { q: "q" } },
 };

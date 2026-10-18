@@ -15,6 +15,7 @@ import { profileHref } from "../customers/Reminders";
 import { DetailHeader, TrackChip } from "../detail/DetailHeader";
 import { Facts, Panel } from "../detail/Panel";
 import { paymentLabel } from "../OrderCard";
+import { OrderWhatsapp } from "../orders/OrderWhatsapp";
 import { CollectionDialog } from "./CollectionDialog";
 import { PROOF_STATE, ProofActions } from "./ProofActions";
 
@@ -28,16 +29,16 @@ export function PaymentDetail() {
   const code = useSearchParams().get("codigo") ?? "";
   const order = useAdmin((s) => s.orders.find((o) => o.code === code));
   const [collecting, setCollecting] = useState(false);
-  if (!order) return <EmptyState title="No encontramos ese pago" action={<ButtonLink href="/admin-demo/pagos/">Ver pagos</ButtonLink>}>Revisá el código o reiniciá la demo.</EmptyState>;
+  if (!order) return <EmptyState title="No encontramos ese pago" action={<ButtonLink href="/admin-demo/pagos/">Ver Por cobrar</ButtonLink>}>Revisá el código o reiniciá la demo.</EmptyState>;
   const proof = order.proof;
   const pay = paymentTrack(order);
   const history = order.log.filter((l) => PAYMENT_STEPS.includes(l.to) || (l.from && PAYMENT_STEPS.slice(0, 2).includes(l.from))).reverse();
   return (
     <div className="@container flex flex-col gap-6">
-      <DetailHeader list={{ href: "/admin-demo/pagos/", label: "Pagos manuales" }} title={order.code} eyebrow={`Pago · ${paymentLabel(order.paymentMethod)}`}
+      <DetailHeader list={{ href: "/admin-demo/pagos/", label: "Por cobrar" }} title={order.code} eyebrow={`Pago · ${paymentLabel(order.paymentMethod)}`}
         status={<><TrackChip label="Pago" value={pay.label} tone={pay.tone} />{proof && <TrackChip label="Comprobante" value={PROOF_STATE[proof.status].label} tone={PROOF_STATE[proof.status].tone} />}</>}
         aside={<><p className="text-xs font-bold text-muted">Monto esperado</p><p className="text-3xl font-extrabold tabular-nums">{formatARS(order.total)}</p></>}
-        actions={<Button variant="secondary" size="sm" className="self-start" onClick={() => setCollecting(true)}><Landmark size={16} aria-hidden="true" /> Configurar datos de cobro</Button>} />
+        actions={<div className="flex flex-wrap gap-2"><OrderWhatsapp order={order} /><Button variant="secondary" size="sm" onClick={() => setCollecting(true)}><Landmark size={16} aria-hidden="true" /> Configurar datos de cobro</Button></div>} />
       <CollectionDialog open={collecting} onClose={() => setCollecting(false)} />
       {order.paymentMethod === "CHECKOUT_PRO" ? (
         <Panel title="Sin comprobante">

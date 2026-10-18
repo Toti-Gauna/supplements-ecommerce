@@ -13,6 +13,7 @@ import { closureFor, nextWorkday, prevWorkday } from "@/demo/engine/workdays";
 import type { WorkshopSettings } from "@/demo/fixtures/workshop";
 import { formatDay } from "@/lib/date";
 import { fulfillmentLabel } from "../OrderCard";
+import { OrderWhatsapp } from "../orders/OrderWhatsapp";
 import { InlineConfirm } from "./ImpactConfirm";
 import { capacityText } from "./MonthView";
 import { PickDate } from "./PickDate";
@@ -103,9 +104,12 @@ export function ScheduleSheet({ order, orders, settings, today, late, movable, w
                 <p className="text-xs text-muted">En escritorio también podés arrastrar el pedido a otro día del calendario. En producción, el cliente recibiría un aviso con la fecha nueva.</p>
               </section>
             ) : <p className="text-sm text-muted">Este pedido ya salió o está cerrado: su fecha no se reprograma.</p>}
-            <Link href={`/admin-demo/pedidos/detalle/?codigo=${order.code}`} className="inline-flex items-center gap-1.5 self-start text-sm font-bold text-primary underline">
-              Abrir el pedido completo <ArrowUpRight size={15} aria-hidden="true" />
-            </Link>
+            <div className="flex flex-wrap items-center gap-3">
+              <OrderWhatsapp order={order} />
+              <Link href={`/admin-demo/pedidos/detalle/?codigo=${order.code}`} className="inline-flex items-center gap-1.5 text-sm font-bold text-primary underline">
+                Abrir el pedido completo <ArrowUpRight size={15} aria-hidden="true" />
+              </Link>
+            </div>
           </div>
         </div>
       )}

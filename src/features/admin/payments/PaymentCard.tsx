@@ -8,9 +8,10 @@ import { formatDateTime } from "@/lib/date";
 import { formatARS } from "@/lib/money";
 import { Facts } from "../detail/Panel";
 import { paymentLabel } from "../OrderCard";
+import { OrderWhatsapp } from "../orders/OrderWhatsapp";
 import { paymentHref, PROOF_STATE, ProofActions } from "./ProofActions";
 
-/** Un pago de la cola (8.3.7): comprobante a la izquierda, todos los datos y las acciones a la derecha; en el celular se apilan. */
+/** Un pago resuelto (8.3.7, Por cobrar → Resueltos): comprobante a la izquierda, datos, total y acciones a la derecha; en el celular se apilan. */
 export function PaymentCard({ order: o }: { order: AdminOrder }) {
   const proof = o.proof;
   return (
@@ -34,6 +35,7 @@ export function PaymentCard({ order: o }: { order: AdminOrder }) {
           ...(proof?.rejectReason ? [["Observaciones", `Motivo: ${proof.rejectReason}`] as [string, string]] : []),
         ]} />
         <ProofActions order={o} />
+        <OrderWhatsapp order={o} className="self-start" />
       </div>
     </article>
   );

@@ -2,9 +2,9 @@
 import { Check, X } from "lucide-react";
 import { ConfirmButton } from "@/components/molecules/ConfirmButton";
 import type { AdminOrder } from "@/demo/admin/types";
-import { formatARS } from "@/lib/money";
 import { useAdmin } from "@/stores/admin";
 import { useDemoSave } from "../useDemoSave";
+import { ApproveProofButton } from "./ApproveProofButton";
 import { brand } from "@/config/brand";
 
 /**
@@ -12,7 +12,7 @@ import { brand } from "@/config/brand";
  * se verificó el ingreso; rechazar exige un motivo. Subir un comprobante nunca marca el pedido como pagado.
  */
 export function ProofActions({ order }: { order: AdminOrder }) {
-  const { approveProof, rejectProof, receiveProof } = useAdmin();
+  const { rejectProof, receiveProof } = useAdmin();
   const save = useDemoSave();
   if (order.paymentMethod === "CHECKOUT_PRO") return null;
   if (order.status === "PENDING_PAYMENT") {
@@ -27,13 +27,9 @@ export function ProofActions({ order }: { order: AdminOrder }) {
   if (order.proof?.status !== "IN_REVIEW") return null;
   return (
     <div className="flex flex-col gap-2">
-      <p className="rounded-sm bg-warning-soft p-2.5 text-xs font-bold text-warning">Antes de aprobar, {brand.name} verifica el ingreso en su cuenta. En la demo no hay cuenta real: aprobar solo cambia el estado local.</p>
+      <p className="rounded-sm bg-warning-soft p-2.5 text-xs font-bold text-warning">Antes de aprobar, mirá en la cuenta de {brand.name} que el ingreso haya entrado. En la demo no hay cuenta real: aprobar solo cambia el estado local.</p>
       <div className="flex flex-wrap gap-2">
-        <ConfirmButton size="sm" title={`Aprobar comprobante de ${order.code}`} confirmLabel="Aprobar"
-          description={<>¿Confirmás que verificaste el ingreso de <strong>{formatARS(order.total)}</strong>? El pedido pasa a <strong>Pagado</strong> en esta demo y queda en el historial.</>}
-          onConfirm={() => save("Comprobante aprobado", () => approveProof(order.code))}>
-          <Check size={16} aria-hidden="true" /> Aprobar
-        </ConfirmButton>
+        <ApproveProofButton code={order.code} amount={order.total}><Check size={16} aria-hidden="true" /> Aprobar</ApproveProofButton>
         <ConfirmButton size="sm" variant="danger" title={`Rechazar comprobante de ${order.code}`} confirmLabel="Rechazar" reasonLabel="Motivo del rechazo"
           description="El pedido vuelve a pendiente de pago y el comprador puede subir otro comprobante."
           onConfirm={(reason) => save("Comprobante rechazado", () => rejectProof(order.code, reason))}>

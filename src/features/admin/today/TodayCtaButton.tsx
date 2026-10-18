@@ -3,8 +3,8 @@ import { ArrowRight, Check, MessageCircle, Tag, Truck } from "lucide-react";
 import { ButtonLink, Button } from "@/components/atoms/Button";
 import { ConfirmButton } from "@/components/molecules/ConfirmButton";
 import type { TodayAction } from "@/demo/engine/today";
-import { formatARS } from "@/lib/money";
 import { useAdmin } from "@/stores/admin";
+import { ApproveProofButton } from "../payments/ApproveProofButton";
 import { useDemoSave } from "../useDemoSave";
 
 interface Props {
@@ -19,20 +19,13 @@ const WIDE = "w-full justify-between sm:w-auto sm:min-w-[13rem]";
 
 /** El único botón de cada fila: resuelve ahí (siempre con confirmación) o lleva exactamente al lugar. */
 export function TodayCtaButton({ action, strong, onClearance, onRepurchase }: Props) {
-  const approveProof = useAdmin((s) => s.approveProof);
   const transition = useAdmin((s) => s.transition);
   const save = useDemoSave();
   const variant = strong ? "primary" : "secondary";
   const { cta } = action;
   switch (cta.type) {
     case "approve":
-      return (
-        <ConfirmButton variant={variant} size="sm" className={WIDE} title={`Aprobar el comprobante de ${cta.code}`} confirmLabel="Sí, lo verifiqué"
-          description={<>¿Ya viste en tu cuenta el ingreso de <strong>{formatARS(cta.amount)}</strong>? Recién ahí el pedido pasa a <strong>Pagado</strong> y entra en la lista para armar. Si no entró, cancelá y abrí el comprobante para rechazarlo.</>}
-          onConfirm={() => save("Comprobante aprobado", () => approveProof(cta.code), "El pedido pasó a Pagado y está para armar. Cambio guardado solo en esta demo.")}>
-          {cta.label} <Check size={15} aria-hidden="true" />
-        </ConfirmButton>
-      );
+      return <ApproveProofButton code={cta.code} amount={cta.amount} variant={variant} className={WIDE}>{cta.label} <Check size={15} aria-hidden="true" /></ApproveProofButton>;
     case "dispatch":
       return (
         <ConfirmButton variant={variant} size="sm" className={WIDE} title={cta.to === "DELIVERED" ? `${cta.code}: ¿ya lo retiraron?` : `${cta.code}: ¿ya salió?`}

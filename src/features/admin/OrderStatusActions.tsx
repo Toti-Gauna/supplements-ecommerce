@@ -10,16 +10,16 @@ import { manualNextStatuses, STATUS_LABEL } from "@/demo/engine/orders";
 import { useAdmin } from "@/stores/admin";
 import { useToasts } from "@/stores/toast";
 import { PickDate } from "./calendar/PickDate";
+import { SimulateProvider } from "./payments/SimulateProvider";
 import { LotCheckSheet } from "./preparation/LotCheckSheet";
 import { useDemoSave } from "./useDemoSave";
 
 /**
- * Solo ofrece transiciones válidas (spec 5.2). El cobro se resuelve en "Pagos manuales" o por webhook. Pasar a Listo
+ * Solo ofrece transiciones válidas (spec 5.2). El cobro se resuelve en "Por cobrar" o por webhook. Pasar a Listo
  * desde la preparación abre el control de lote (Fase 7): sin el lote de cada producto, no se despacha.
  */
 export function OrderStatusActions({ order }: { order: AdminOrder }) {
   const transition = useAdmin((s) => s.transition);
-  const confirmProvider = useAdmin((s) => s.confirmProvider);
   const save = useDemoSave();
   const [checking, setChecking] = useState(false);
   const needsLots = (to: string) => to === "READY" && order.status === "IN_PRODUCTION" && missingLots(order).length > 0;
@@ -39,15 +39,9 @@ export function OrderStatusActions({ order }: { order: AdminOrder }) {
             {STATUS_LABEL[to]}
           </ConfirmButton>
         ))}
-        {mpPending && (
-          <ConfirmButton size="sm" variant="secondary" title="Simular notificación de Mercado Pago" confirmLabel="Simular"
-            description="En producción, el pedido pasa a Pagado solo cuando llega el webhook firmado y el servidor verifica monto, moneda y referencia. Esto es una simulación local."
-            onConfirm={() => save("Confirmación del proveedor simulada", () => confirmProvider(order.code))}>
-            Simular confirmación de Mercado Pago
-          </ConfirmButton>
-        )}
+        {mpPending && <SimulateProvider code={order.code} />}
       </div>
-      {next.some(needsLots) && <p className="text-xs text-muted">Para pasarlo a Listo, confirmá el lote de cada producto (también desde <Link href="/admin-demo/preparacion/" className="font-bold text-primary underline">Preparación de pedidos</Link>).</p>}
+      {next.some(needsLots) && <p className="text-xs text-muted">Para pasarlo a Listo, confirmá el lote de cada producto (también desde <Link href={`/admin-demo/preparacion/?codigo=${order.code}`} className="font-bold text-primary underline">Para armar</Link>).</p>}
       <LotCheckSheet order={checking ? order : null} onClose={() => setChecking(false)} />
     </div>
   );

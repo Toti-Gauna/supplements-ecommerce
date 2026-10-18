@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
-import { PreparationBoard } from "@/features/admin/preparation/PreparationBoard";
+import { Suspense } from "react";
+import { ListSkeleton } from "@/components/atoms/Skeleton";
+import { PackingList } from "@/features/admin/packing/PackingList";
 
-export const metadata: Metadata = { title: "Preparación de pedidos" };
+export const metadata: Metadata = { title: "Para armar" };
 
+/** Pedidos → Para armar (R4b): checklist de dos pasos por pedido, en la ruta de la vieja Preparación de pedidos. */
 export default function AdminPreparationPage() {
-  return <PreparationBoard />;
+  return <Suspense fallback={<ListSkeleton rows={4} />}><PackingList /></Suspense>;
 }

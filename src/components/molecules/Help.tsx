@@ -25,14 +25,24 @@ export function HelpPanel({ id, help, onClose, className }: { id: string; help: 
         <h3 className="font-bold">{help.title}</h3>
         <button type="button" onClick={onClose} aria-label="Cerrar explicación" className="grid h-8 w-8 place-items-center rounded-sm text-muted hover:bg-accent"><X size={15} aria-hidden="true" /></button>
       </div>
-      <dl className="grid gap-x-4 gap-y-1.5 sm:grid-cols-[auto_minmax(0,1fr)]">
-        {help.items.map((i) => (
-          <div key={i.term} className="contents">
-            <dt className="font-bold">{i.term}</dt>
-            <dd className="mb-1 text-muted sm:mb-0">{i.text}</dd>
-          </div>
-        ))}
-      </dl>
+      <HelpList help={help} />
     </section>
+  );
+}
+
+/**
+ * Los términos de una ayuda con su explicación: en el panel "i" van en dos columnas; `stacked` los apila (el "?" del
+ * encabezado de una pantalla, que se abre en un panel angosto).
+ */
+export function HelpList({ help, stacked = false }: { help: Help; stacked?: boolean }) {
+  return (
+    <dl className={cn("grid gap-x-4 gap-y-1.5", !stacked && "sm:grid-cols-[auto_minmax(0,1fr)]")}>
+      {help.items.map((i) => (
+        <div key={i.term} className="contents">
+          <dt className="font-bold">{i.term}</dt>
+          <dd className="mb-1 text-muted sm:mb-0">{i.text}</dd>
+        </div>
+      ))}
+    </dl>
   );
 }

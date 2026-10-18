@@ -19,6 +19,7 @@ import { OrderEmails } from "./detail/OrderEmails";
 import { Facts, Panel } from "./detail/Panel";
 import { fulfillmentLabel, orderPaymentLabel } from "./OrderCard";
 import { OrderItems } from "./OrderItems";
+import { OrderWhatsapp } from "./orders/OrderWhatsapp";
 import { OrderStatusActions, PromiseDate } from "./OrderStatusActions";
 import { paymentHref, PROOF_STATE, ProofActions } from "./payments/ProofActions";
 import { useDemoSave } from "./useDemoSave";
@@ -42,7 +43,8 @@ export function OrderDetail() {
     <div className="@container flex flex-col gap-6">
       <DetailHeader list={{ href: "/admin-demo/pedidos/", label: "Pedidos" }} title={order.code} eyebrow={`Pedido ficticio · ${formatDateTime(order.createdAt)}`}
         status={<><TrackChip label="Pago" value={pay.label} tone={pay.tone} /><TrackChip label="Preparación y entrega" value={ful.label} tone={ful.tone} />{order.channel && <TrackChip label="Origen" value={CHANNEL_LABEL[order.channel]} tone="brand" />}</>}
-        aside={<><p className="text-xs font-bold text-muted">Total</p><p className="text-3xl font-extrabold tabular-nums">{formatARS(order.total)}</p></>} />
+        aside={<><p className="text-xs font-bold text-muted">Total</p><p className="text-3xl font-extrabold tabular-nums">{formatARS(order.total)}</p></>}
+        actions={<OrderWhatsapp order={order} className="self-start" />} />
       <section aria-labelledby="o-next" className="flex flex-col gap-3 rounded-sm bg-surface p-5 shadow-[var(--shadow-card)] ring-2 ring-primary/15">
         <div>
           <h2 id="o-next" className="eyebrow text-muted">Próxima acción</h2>

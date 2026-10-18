@@ -126,6 +126,16 @@ for (const mode of ["dark", "light"] as const) {
       const found = await audit(page);
       expect(found, describe(found)).toEqual([]);
     });
+    test("tienda en modo dueño: franja y placas editables en el inicio y en una ficha (R4c)", async ({ page }) => {
+      for (const [path, count] of [["?dueno=1", 7], ["p/ionic-whey/", 2]] as const) {
+        await page.goto(path);
+        await expect(page.locator("[data-owner-spot]")).toHaveCount(count);
+        await expect(page.locator("html")).toHaveAttribute("data-theme", mode);
+        await page.waitForTimeout(400);
+        const found = await audit(page);
+        expect(found, describe(found)).toEqual([]);
+      }
+    });
     test("panel mostrador: ticket con stack, cobro en cuotas, venta registrada y cierre con tickets (R4b)", async ({ page }) => {
       await page.goto("admin-demo/mostrador/");
       for (const [q, key] of [["whey vainilla", "ionic-whey::iw-vainilla-2lb"], ["creatina", "creatina-monohidrato::cm-sin-sabor-300"], ["overvolt", "overvolt-pre::ov-limon-300"]] as const) {

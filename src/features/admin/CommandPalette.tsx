@@ -4,6 +4,7 @@ import { ArrowRight, Boxes, ClipboardList, CornerDownLeft, Disc3, FileSpreadshee
 import { useState, type ReactNode } from "react";
 import { Sheet } from "@/components/motion/Sheet";
 import { customerRows } from "@/demo/admin/customers";
+import { OWNER_STORE_HREF } from "@/demo/admin/owner-mode";
 import { matchesQuery } from "@/demo/admin/table";
 import { STATUS_LABEL } from "@/demo/engine/orders";
 import { cn } from "@/lib/cn";
@@ -39,6 +40,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
     { id: "collection", group: "Acciones", label: "Datos de cobro de muestra", icon: icon(Landmark), href: "/admin-demo/ajustes/cobro/", search: "alias cbu cvu titular qr transferencia cobro ajustes" },
     { id: "shipping", group: "Acciones", label: "Envíos y retiro", icon: icon(Truck), href: "/admin-demo/ajustes/envios/", search: "envio gratis zonas cadete retiro codigos postales ajustes" },
     { id: "shop", group: "Acciones", label: "Ver la tienda", icon: icon(Store), href: "/", search: "tienda sitio web" },
+    { id: "shop-owner", group: "Acciones", label: "Ver la tienda en modo dueño", icon: icon(Store), href: OWNER_STORE_HREF, search: "tienda modo dueño editar puntos" },
     ...orders.map((o) => ({ id: o.code, group: "Pedidos", label: `${o.code} · ${o.customer.name}`, hint: STATUS_LABEL[o.status], icon: icon(ClipboardList), href: `/admin-demo/pedidos/detalle/?codigo=${o.code}`, search: `${o.code} ${o.customer.name} ${o.customer.email}` })),
     ...packs.map((p) => ({ id: `pack-${p.id}`, group: "Packs", label: p.name, hint: p.active === false ? "Oculto" : p.focus, icon: icon(PackagePlus), href: `/admin-demo/packs/editar/?id=${p.id}`, search: `${p.name} ${p.focus} pack` })),
     ...products.map((p) => ({ id: p.slug, group: "Productos", label: p.name, hint: p.active === false ? "Pausado" : undefined, icon: icon(Boxes), href: `/admin-demo/productos/editar/?id=${p.slug}`, search: `${p.name} ${p.tags.join(" ")}` })),

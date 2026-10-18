@@ -2,8 +2,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
-import { ArrowUpRight, ChevronDown, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { ArrowUpRight, ChevronDown, MousePointerClick, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { LogoMark } from "@/components/atoms/Logo";
+import { OWNER_STORE_HREF } from "@/demo/admin/owner-mode";
 import { cn } from "@/lib/cn";
 import { ADMIN_NAV, isActive } from "./nav";
 import { useNavCounts } from "./useNavCounts";
@@ -87,6 +88,9 @@ export function SidebarContent({ onNavigate, rail = false, footer }: { onNavigat
         </div>
         <Link href="/" onClick={onNavigate} className="flex h-10 items-center gap-3 rounded-xs px-[15px] font-mono text-[12px] font-bold uppercase tracking-[0.04em] text-on-night transition-colors hover:bg-white/[0.07]">
           <ArrowUpRight size={18} aria-hidden="true" className="shrink-0 text-volt" /><span className={show}>Ir a la tienda</span>
+        </Link>
+        <Link href={OWNER_STORE_HREF} onClick={onNavigate} className="flex h-10 items-center gap-3 rounded-xs px-[15px] font-mono text-[12px] font-bold uppercase tracking-[0.04em] text-on-night transition-colors hover:bg-white/[0.07]">
+          <MousePointerClick size={18} aria-hidden="true" className="shrink-0 text-volt" /><span className={cn("truncate", show)}>Ver la tienda en modo dueño</span>
         </Link>
         {footer}
       </div>

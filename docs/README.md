@@ -9,6 +9,7 @@
 | [demo-pages.md](demo-pages.md) | Export estático, workflow de GitHub Pages (repo privado: opciones) y corte a producción |
 | [tono-visual.md](tono-visual.md) | Paleta, tipografía, logo, envases SVG y pantalla de carga |
 | [guion-demo.md](guion-demo.md) | Kit de venta: guion de 10 minutos para el dueño de una tienda (preparación, qué tocar y decir, plan B, preguntas y cierre) |
+| [kit-de-venta/](kit-de-venta/README.md) | Kit de venta: guion de 90 segundos, capturas, video del recorrido, checklist de QA en celulares reales y cómo regenerarlos |
 | [manual-del-dueno.md](manual-del-dueno.md) | Kit de venta: manual del panel sin palabras técnicas, tarea por tarea, con capturas en [img/](img/) |
 | [marca-blanca.md](marca-blanca.md) | Cómo cambiar nombre, logo, colores, WhatsApp y catálogo por cliente y publicar una demo por prospecto |
 | [referencia-velmar/](referencia-velmar/README.md) | Documentación del proyecto original (estructura, panel, QA): referencia, no describe esta tienda |

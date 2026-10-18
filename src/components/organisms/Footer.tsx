@@ -3,6 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 import { brand } from "@/config/brand";
 import { Logo } from "@/components/atoms/Logo";
 import { DEMO_TRACKING_TOKEN } from "@/demo/fixtures/commerce";
+import { OwnerSpot } from "@/features/owner/OwnerSpot";
 import { StoreSpecs } from "@/features/shell/StoreSpecs";
 import { ThemeTryButton } from "@/features/themes/ThemeTryButton";
 import { cn } from "@/lib/cn";
@@ -23,6 +24,7 @@ export function Footer() {
     <footer className={cn("cv-auto floor mt-24 text-on-night [contain-intrinsic-size:auto_640px]", DOCK_SPACE)}>
       <div className="lane h-2" aria-hidden="true" />
       <div className="mx-auto max-w-7xl px-4 pb-16 pt-12 sm:px-6">
+        <OwnerSpot id="contacto" className="mb-4" />
         <div className="grid grid-cols-[minmax(0,1fr)] gap-12 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
           <div className="flex flex-col gap-5">
             <Logo tone="light" />

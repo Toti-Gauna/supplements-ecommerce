@@ -117,7 +117,8 @@ Producto de tiendas (`data/products/volta.json`): hoy se llama "Volta" y **no tr
 2. **Moneda: pesos como precio principal y el precio en dólares debajo**, a **$1.500 por dólar**. Se calcula del JSON aprobado, no se escribe a mano.
 3. Las dos asesorías (growth y gestión económica) **se muestran** como extras.
 4. El teléfono **223-446 7881** reemplaza al "contacto pendiente" de EK.
-5. Pack de lanzamiento: **pendiente de decisión** (ver el mensaje del paso P0.1).
+5. **Promociones: se muestran las dos (opción C), primero la campaña base** (adaptación USD 500 con asesoría inicial de growth y 3 meses de Esencial bonificados) **y después el resto de lo que ofrece Eclipse** (pack de lanzamiento, planes, extras), con "sujeto a disponibilidad".
+6. **El bloque final de pricing es genérico y se alimenta de datos** (`data/offers/*.json` y `data/products/*.json` de EK): sin nombres de producto ni precios escritos en el código, para reusarlo en otros trailers y productos de Eclipse (DentalOS, Tableflow, etc.). Recibe: producto, ofertas (en orden de aparición), conversión de moneda (hoy 1.500) y contacto.
 
 **Precios en pesos (USD × 1.500), para el bloque final:**
 | Concepto | USD | Pesos |

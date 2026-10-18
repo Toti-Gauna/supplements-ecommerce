@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { MarketingHub } from "@/features/admin/marketing/MarketingHub";
+import { ModuleMoved } from "@/features/admin/ModuleMoved";
 
-export const metadata: Metadata = { title: "Marketing" };
+export const metadata: Metadata = { title: "Campañas" };
 
-export default function AdminMarketingPage() {
-  return <MarketingHub />;
+/** Marketing se repartió: Campañas, Promos y Ajustes. */
+export default function AdminMarketingMovedPage() {
+  return <ModuleMoved from="/admin-demo/marketing" />;
 }

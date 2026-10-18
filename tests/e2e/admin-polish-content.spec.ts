@@ -15,7 +15,7 @@ test.describe("escritorio con mouse", () => {
     // La fecha de la demo: octubre de 2026 (sale el Día de la Madre y la próxima es Halloween).
     await page.clock.setFixedTime(new Date("2026-10-12T12:00:00-03:00"));
     await page.goto("admin-demo/campanas/");
-    await expect(page.getByRole("link", { name: "Volver a Marketing" })).toBeVisible();
+    await expect(page.getByRole("tab", { name: "Campañas", exact: true })).toHaveAttribute("aria-current", "page");
     await expect(page.getByRole("heading", { level: 1, name: /Campañas/ })).toBeVisible();
     const mode = page.getByLabel("Modo", { exact: true });
     await expect(mode).toHaveValue("off");
@@ -38,21 +38,19 @@ test.describe("escritorio con mouse", () => {
     await expect(page.getByRole("switch", { name: /Probar temáticas/ })).toBeVisible();
   });
 
-  test("8.3.28 Contenido: tres tarjetas y cada subpágina tiene solo su tarea, con Volver", async ({ page }) => {
+  test("8.3.28 Contenido: tres pestañas dentro de Ajustes y cada una tiene solo su tarea", async ({ page }) => {
     await page.goto("admin-demo/contenido/");
-    const parts = page.getByRole("list", { name: "Partes del contenido" });
-    await expect(parts.getByRole("link")).toHaveCount(3);
-    await expect(page.getByRole("button", { name: /Guardar/ })).toHaveCount(0);
-    await parts.getByRole("link", { name: /Carrusel del inicio/ }).click();
     await expect(page).toHaveURL(/contenido\/carrusel\/$/);
+    const parts = page.getByRole("tablist", { name: "Subpestañas" });
+    await expect(parts.getByRole("tab")).toHaveCount(3);
+    await expect(page.getByRole("tab", { name: "Contenido", exact: true })).toHaveAttribute("aria-current", "page");
     await expect(page.getByRole("button", { name: "Guardar carrusel" })).toBeVisible();
     await expect(page.getByRole("button", { name: /Guardar (preguntas|textos)/ })).toHaveCount(0);
-    await page.getByRole("link", { name: "Volver a Contenido" }).click();
-    await parts.getByRole("link", { name: /Preguntas frecuentes/ }).click();
+    await parts.getByRole("tab", { name: /Preguntas frecuentes/ }).click();
     await expect(page.getByRole("button", { name: "Guardar preguntas" })).toBeVisible();
     await expect(page.getByRole("button", { name: /Guardar (carrusel|textos)/ })).toHaveCount(0);
     await page.goBack();
-    await parts.getByRole("link", { name: /Textos de inicio/ }).click();
+    await parts.getByRole("tab", { name: /Textos de inicio/ }).click();
     await expect(page.getByRole("button", { name: "Guardar textos" })).toBeVisible();
   });
 
@@ -69,8 +67,8 @@ test.describe("escritorio con mouse", () => {
     await expect(preview(page)).toContainText("Isolate Zero");
     await expect(preview(page).locator("svg[aria-label^='Isolate Zero']")).toBeVisible();
     // Salir y volver conserva el borrador.
-    await page.getByRole("link", { name: "Volver a Contenido" }).click();
-    await page.getByRole("link", { name: /Carrusel del inicio/ }).click();
+    await page.getByRole("tab", { name: "Textos de inicio" }).click();
+    await page.getByRole("tab", { name: "Carrusel", exact: true }).click();
     await expect(page.getByText("Recuperamos los cambios del carrusel que quedaron sin guardar.")).toBeVisible();
     await list.getByRole("button", { name: /^Destacado 2:/ }).click();
     await expect(titleField(page)).toHaveValue("Fuerza que se nota");

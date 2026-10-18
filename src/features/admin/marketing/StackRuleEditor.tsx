@@ -7,7 +7,7 @@ import { useToasts } from "@/stores/toast";
 import { NumberField } from "../NumberField";
 import { SaveBar } from "../SaveBar";
 import { useSessionDraft } from "../useSessionDraft";
-import { MARKETING, SubpageHeader } from "./SubpageHeader";
+import { SubpageHeader } from "./SubpageHeader";
 import { StackRulePreview } from "./StackRulePreview";
 
 const isDraft = (x: unknown): x is StackRule => { const d = x as StackRule | null; return !!d && typeof d.pct === "number" && typeof d.minCategories === "number"; };
@@ -41,7 +41,7 @@ function StackRuleForm({ saved }: { saved: StackRule }) {
   };
   return (
     <div>
-      <SubpageHeader trail={[MARKETING]} back={MARKETING} title="Descuento stack"
+      <SubpageHeader title="Descuento stack"
         intro="Cuánto se descuenta cuando el carrito suma suplementos de varias categorías distintas. Se aplica sobre esas líneas, antes del cupón y del descuento por transferencia." />
       <div className="grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-start">
         <section aria-label="Regla del descuento stack" className="flex flex-col gap-4 rounded-sm bg-surface p-4 shadow-[var(--shadow-card)] sm:p-5">

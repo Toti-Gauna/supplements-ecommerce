@@ -14,13 +14,11 @@ async function addFromBar(page: Page, slug: string, name: string) {
 
 test("Fase 3 · editor del descuento stack: valida, muestra un ejemplo real, guarda 15 % desde 2 categorías y el carrito lo usa; reiniciar demo vuelve a 10 %/3", async ({ page }) => {
   const assertNoExternal = guardNetwork(page);
-  await page.goto("admin-demo/marketing/");
-  const card = page.getByRole("list", { name: "Herramientas de marketing" }).getByRole("link", { name: /Descuento stack/ });
-  await expect(card).toContainText("10 % desde 3 categorías");
-  await card.click();
+  await page.goto("admin-demo/promos/");
+  await page.getByRole("tablist", { name: "Pestañas de la sección" }).getByRole("tab", { name: "Descuento stack" }).click();
   await expect(page).toHaveURL(/descuento-stack\/$/);
   await expect(page.getByRole("heading", { level: 1, name: /Descuento stack/ })).toBeVisible();
-  await expect(page.getByRole("link", { name: "Volver a Marketing" })).toBeVisible();
+  await expect(page.getByRole("tab", { name: "Descuento stack" })).toHaveAttribute("aria-current", "page");
   const pct = page.getByLabel(/^Descuento/);
   const cats = page.getByLabel(/^Categorías distintas/);
   const preview = page.getByRole("region", { name: "Vista previa" });
@@ -45,8 +43,9 @@ test("Fase 3 · editor del descuento stack: valida, muestra un ejemplo real, gua
   await page.getByRole("button", { name: "Guardar descuento stack" }).click();
   await expect(toast(page, "Descuento stack guardado")).toContainText("solo en esta demo");
   expect(await stored(page)).toEqual({ pct: 15, minCategories: 2 });
-  await page.getByRole("link", { name: "Volver a Marketing" }).click();
-  await expect(card).toContainText("15 % desde 2 categorías");
+  await page.reload();
+  await expect(pct).toHaveValue("15");
+  await expect(cats).toHaveValue("2");
 
   // Ficha, carrito y checkout con la regla nueva: whey + creatina ya alcanzan.
   await page.goto("p/ionic-whey/");
@@ -71,8 +70,6 @@ test("Fase 3 · editor del descuento stack: valida, muestra un ejemplo real, gua
   await page.goto("admin-demo/descuento-stack/");
   await expect(page.getByLabel(/^Descuento/)).toHaveValue("10");
   await expect(page.getByLabel(/^Categorías distintas/)).toHaveValue("3");
-  await page.goto("admin-demo/marketing/");
-  await expect(card).toContainText("10 % desde 3 categorías");
   assertNoExternal();
 });
 
@@ -86,6 +83,6 @@ test("Fase 3 · con 0 % el descuento stack queda apagado: la ficha no promete de
   const offer = page.getByRole("region", { name: "Sumá lo que va con este suplemento" });
   await expect(offer).toBeVisible();
   await expect(offer).not.toContainText("% off");
-  await page.goto("admin-demo/marketing/");
-  await expect(page.getByRole("link", { name: /Descuento stack/ }).first()).toContainText("Apagado (0 %)");
+  await page.goto("admin-demo/descuento-stack/");
+  await expect(page.getByLabel(/^Descuento/)).toHaveValue("0");
 });

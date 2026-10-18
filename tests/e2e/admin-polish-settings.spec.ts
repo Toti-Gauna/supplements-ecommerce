@@ -1,7 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 import { horizontalOverflow } from "./helpers";
 
-/** Polish 8.3.29: Ajustes por tarjetas, sin el bloque de Marca. */
+/** Polish 8.3.29: Ajustes por partes (ahora pestañas), sin el bloque de Marca. */
 
 const toast = (page: Page, text: string | RegExp) => page.getByRole("status").filter({ hasText: text });
 const stored = (page: Page) => page.evaluate(() => JSON.parse(localStorage.getItem("volta-demo:admin") ?? "null")?.state?.data ?? null);
@@ -11,36 +11,35 @@ test.describe("escritorio con mouse", () => {
   test.use({ viewport: { width: 1280, height: 900 }, isMobile: false, hasTouch: false });
   test.beforeEach(async ({ page }) => { await page.mouse.move(1240, 400); });
 
-  test("8.3.29 Ajustes ofrece cuatro tarjetas, sin Marca ni selectores de paleta; cada una abre solo su configuración", async ({ page }) => {
+  test("8.3.29 Ajustes ofrece sus partes en pestañas, sin Marca ni selectores de paleta; cada una abre solo su configuración", async ({ page }) => {
     await page.goto("admin-demo/ajustes/");
-    const cards = page.getByRole("list", { name: "Partes de los ajustes" });
-    for (const name of ["Contacto y WhatsApp", "Medios de pago", "Datos de cobro", "Envíos y retiro"]) await expect(cards.getByRole("link", { name: new RegExp(name) })).toBeVisible();
+    const tabs = page.getByRole("tablist", { name: "Pestañas de la sección" });
+    for (const name of ["Contacto", "Medios de pago", "Datos de cobro", "Envíos y retiro", "Contenido", "Emails"]) await expect(tabs.getByRole("tab", { name })).toBeVisible();
+    await expect(tabs.getByRole("tab", { name: "Contacto" })).toHaveAttribute("aria-current", "page");
     await expect(page.locator("main")).not.toContainText(/Marca|paleta/i);
-    await expect(page.getByRole("button", { name: /Guardar/ })).toHaveCount(0);
     for (const sub of SUBPAGES) {
       await page.goto(`admin-demo/ajustes/${sub}/`);
-      await expect(page.getByRole("link", { name: "Volver a Ajustes" })).toBeVisible();
+      await expect(page).toHaveURL(sub === "contacto" ? /ajustes\/$/ : new RegExp(`ajustes/${sub}/$`));
       await expect(page.locator("input[type=color]")).toHaveCount(0);
       await expect(page.getByRole("button", { name: /^Guardar/ })).toHaveCount(1);
     }
-    await cards.page().goto("admin-demo/ajustes/");
-    await cards.getByRole("link", { name: /Envíos y retiro/ }).click();
+    await page.goto("admin-demo/ajustes/");
+    await tabs.getByRole("tab", { name: /Envíos y retiro/ }).click();
     await expect(page).toHaveURL(/ajustes\/envios\/$/);
     await expect(page.getByRole("heading", { level: 1, name: /Envíos y retiro/ })).toBeVisible();
-    await page.getByRole("link", { name: "Volver a Ajustes" }).click();
+    await tabs.getByRole("tab", { name: "Contacto" }).click();
     await expect(page).toHaveURL(/ajustes\/$/);
   });
 
   test("8.3.29 borradores por sección: volver los conserva y guardar una no altera otra", async ({ page }) => {
-    await page.goto("admin-demo/ajustes/contacto/");
+    await page.goto("admin-demo/ajustes/");
     const wa = page.getByLabel("Número para el botón de WhatsApp");
     await wa.fill("123");
     await page.getByRole("button", { name: "Guardar contacto" }).click();
     await expect(page.getByRole("alert").filter({ hasText: "código de país y área" })).toBeVisible();
     await wa.fill("54 9 223 555 0101");
     // Salir sin guardar y editar otra sección.
-    await page.getByRole("link", { name: "Volver a Ajustes" }).click();
-    await page.getByRole("link", { name: /Medios de pago/ }).click();
+    await page.getByRole("tab", { name: /Medios de pago/ }).click();
     const pct = page.getByLabel(/Descuento transferencia\/QR/);
     await pct.fill("60");
     await page.getByRole("button", { name: "Guardar medios de pago" }).click();
@@ -52,7 +51,7 @@ test.describe("escritorio con mouse", () => {
     expect(data.settings.transferDiscountPct).toBe(15);
     expect(data.settings.whatsappNumber).toBeNull();
     // El borrador de contacto sigue; guardarlo no cambia los medios de pago.
-    await page.goto("admin-demo/ajustes/contacto/");
+    await page.goto("admin-demo/ajustes/");
     await expect(page.getByText("Recuperamos el número que quedó sin guardar.")).toBeVisible();
     await expect(wa).toHaveValue("54 9 223 555 0101");
     await page.getByRole("button", { name: "Guardar contacto" }).click();
@@ -61,8 +60,9 @@ test.describe("escritorio con mouse", () => {
     expect(data.settings.whatsappNumber).toBe("5492235550101");
     expect(data.settings.transferDiscountPct).toBe(15);
     await page.goto("admin-demo/ajustes/");
-    await expect(page.getByRole("link", { name: /Contacto y WhatsApp/ })).toContainText("+5492235550101");
-    await expect(page.getByRole("link", { name: /Medios de pago/ })).toContainText("15% por transferencia o QR");
+    await expect(page.getByLabel("Número para el botón de WhatsApp")).toHaveValue("5492235550101");
+    await page.goto("admin-demo/ajustes/pagos/");
+    await expect(page.getByLabel(/Descuento transferencia\/QR/)).toHaveValue("15");
   });
 
   test("8.3.29 envíos: código postal mal escrito se avisa; guardar cambia solo lo editado y descartar pide confirmación", async ({ page }) => {

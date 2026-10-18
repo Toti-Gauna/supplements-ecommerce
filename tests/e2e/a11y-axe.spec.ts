@@ -43,7 +43,7 @@ const PAGES: [string, string, string][] = [
   ["panel editor", "admin-demo/productos/editar/?id=overvolt-pre", "h1"],
   ["panel pedidos", "admin-demo/pedidos/", "h1"],
   ["panel clientes", "admin-demo/usuarios/", "h1"],
-  ["panel marketing", "admin-demo/marketing/", "h1"],
+  ["panel marketing (ruta vieja, lleva a Campañas)", "admin-demo/marketing/", "h1"],
   ["panel campañas", "admin-demo/campanas/", "[data-campaign-chip]"],
   ["panel editor de campaña", "admin-demo/campanas/editar/?id=black-friday", "[data-preview='desktop']"],
   ["panel piezas de campaña", "admin-demo/campanas/piezas/?id=black-friday", "[data-piece='story']"],
@@ -56,6 +56,15 @@ const PAGES: [string, string, string][] = [
   ["taquilla de regalos (R3b)", "regalo/", "h1"],
   ["panel regalos: gift cards (R3b)", "admin-demo/regalos/", "h1"],
   ["panel regalos: estados y sabor elegido (R3b)", "admin-demo/regalos/?ver=regalos", "h1"],
+  // R4a: pantallas con pestañas (barra de la sección y subpestañas).
+  ["panel promos: cupones (R4a)", "admin-demo/promos/", "[role=tablist]"],
+  ["panel promos: ruleta con subpestañas (R4a)", "admin-demo/cupones/ruleta/", "[role=tablist]"],
+  ["panel promos: descuento stack (R4a)", "admin-demo/descuento-stack/", "[role=tablist]"],
+  ["panel promos: misiones (R4a)", "admin-demo/misiones/", "[role=tablist]"],
+  ["panel pedidos: pagos manuales (R4a)", "admin-demo/pagos/", "[role=tablist]"],
+  ["panel compras: proveedores (R4a)", "admin-demo/proveedores/", "[role=tablist]"],
+  ["panel ajustes: contacto (R4a)", "admin-demo/ajustes/", "[role=tablist]"],
+  ["panel ajustes: emails con subpestañas (R4a)", "admin-demo/emails/", "[role=tablist]"],
 ];
 
 interface Violation { id: string; impact: string | null; help: string; nodes: { target: string[]; failureSummary?: string }[] }
@@ -89,6 +98,14 @@ for (const mode of ["dark", "light"] as const) {
         expect(found, describe(found)).toEqual([]);
       });
     }
+    test("panel: el “?” de una pantalla abre su ayuda en un panel (R4a)", async ({ page }) => {
+      await page.goto("admin-demo/promos/");
+      await page.getByRole("button", { name: "Ayuda: Cupones" }).click();
+      await expect(page.getByRole("dialog", { name: "Cupones" })).toBeVisible();
+      await page.waitForTimeout(500);
+      const found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+    });
     test("inicio: pestaña Deportes de \"Entrená por objetivo o por deporte\"", async ({ page }) => {
       await page.goto("");
       const section = page.locator("section[aria-labelledby='objetivos-title']");

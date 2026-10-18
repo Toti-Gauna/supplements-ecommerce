@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { CouponsList } from "@/features/admin/coupons/CouponsList";
+import { ModuleMoved } from "@/features/admin/ModuleMoved";
 
-export const metadata: Metadata = { title: "Cupones" };
+export const metadata: Metadata = { title: "Promos" };
 
-export default function AdminCouponsListPage() {
-  return <CouponsList />;
+/** La lista de cupones es la pestaña “Cupones” de Promos. */
+export default function AdminCuponesListaMovedPage() {
+  return <ModuleMoved from="/admin-demo/cupones/lista" />;
 }

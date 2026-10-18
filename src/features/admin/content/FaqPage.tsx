@@ -10,10 +10,9 @@ import type { StoreFaq } from "@/demo/types";
 import { useAdmin } from "@/stores/admin";
 import { useToasts } from "@/stores/toast";
 import { ListControls, moveItem } from "../ListControls";
-import { MARKETING, SubpageHeader } from "../marketing/SubpageHeader";
+import { SubpageHeader } from "../marketing/SubpageHeader";
 import { SaveBar } from "../SaveBar";
 import { useSessionDraft } from "../useSessionDraft";
-import { CONTENT_SECTION } from "./ContentHub";
 
 const isFaqs = (x: unknown): x is StoreFaq[] => Array.isArray(x) && x.every((f) => typeof f?.q === "string" && typeof f?.a === "string" && isFaqTopic(f?.topic));
 
@@ -35,7 +34,7 @@ export function FaqPage() {
   };
   return (
     <div>
-      <SubpageHeader trail={[MARKETING, CONTENT_SECTION]} back={CONTENT_SECTION} title="Preguntas frecuentes" intro="Las preguntas y respuestas de la ayuda del box, cada una en su tema. Las vacías no se guardan." />
+      <SubpageHeader title="Preguntas frecuentes" intro="Las preguntas y respuestas de la ayuda del box, cada una en su tema. Las vacías no se guardan." />
       {error && <p role="alert" className="mb-3 rounded-sm bg-danger-soft p-3 text-sm font-semibold text-danger">{error}</p>}
       <ol className="flex flex-col gap-3">
         {faqs.map((f, i) => (

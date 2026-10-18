@@ -16,13 +16,10 @@ async function addProduct(page: Page, label: string) {
 test.describe("escritorio con mouse", () => {
   test.use({ viewport: { width: 1440, height: 900 }, isMobile: false, hasTouch: false });
 
-  test("Marketing tiene la tarjeta con el dato vivo, la entrada del menú y la paleta; abre Packs con sus 9 packs", async ({ page }) => {
+  test("Packs es una pestaña de Stock, con la entrada en la paleta; abre Packs con sus 9 packs", async ({ page }) => {
     const assertNoExternal = guardNetwork(page);
-    await page.goto("admin-demo/marketing/");
-    const card = page.getByRole("list", { name: "Herramientas de marketing" }).getByRole("link", { name: /Packs/ });
-    await expect(card).toContainText("9 packs · 3 suscripciones activas");
-    await expect(page.getByRole("navigation", { name: "Secciones del panel demo" }).getByRole("link", { name: "Packs" })).toBeVisible();
-    await card.click();
+    await page.goto("admin-demo/productos/");
+    await page.getByRole("tablist", { name: "Pestañas de la sección" }).getByRole("tab", { name: "Packs" }).click();
     await expect(page).toHaveURL(/admin-demo\/packs\/$/);
     await expect(page.getByRole("heading", { level: 1, name: "Packs y suscripciones" })).toBeVisible();
     await expect(page.getByRole("button", { name: /^Packs/ })).toHaveAttribute("aria-pressed", "true");
@@ -115,7 +112,7 @@ test.describe("escritorio con mouse", () => {
     await expect(preview).toContainText("$ 107.775");
     await expect(page.getByText(/Cambios sin guardar/)).toBeVisible();
     // Salir y volver: el borrador sigue.
-    await page.goto("admin-demo/marketing/");
+    await page.goto("admin-demo/pedidos/");
     await page.goto("admin-demo/packs/editar/?id=hipertrofia");
     await expect(page.getByText("Recuperamos los cambios que quedaron sin guardar.")).toBeVisible();
     await expect(page.getByLabel(/^Descuento del pack/)).toHaveValue("20");

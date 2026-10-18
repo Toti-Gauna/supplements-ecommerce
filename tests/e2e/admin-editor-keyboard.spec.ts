@@ -40,7 +40,7 @@ for (const [label, width, height, touch] of [["escritorio", 1440, 900, false], [
     expect(Math.abs((await scrollY(page)) - y)).toBeLessThan(40);
     if (touch) {
       // La fila compacta de pasos también es fija (arriba): llegar a ella con Tab no sube la página.
-      await page.evaluate(() => document.querySelector<HTMLElement>("main a[href*='/admin-demo/productos/']")?.focus({ preventScroll: true }));
+      await page.evaluate(() => document.querySelector<HTMLElement>("main a[href*='/admin-demo/productos/']:not([role=tab])")?.focus({ preventScroll: true }));
       const before = await scrollY(page);
       await page.keyboard.press("Tab");
       expect(await focused(page)).toMatch(/Datos/);

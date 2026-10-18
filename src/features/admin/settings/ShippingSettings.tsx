@@ -10,7 +10,6 @@ import { SubpageHeader } from "../marketing/SubpageHeader";
 import { NumberField } from "../NumberField";
 import { SaveBar } from "../SaveBar";
 import { useSessionDraft } from "../useSessionDraft";
-import { SETTINGS_SECTION } from "./SettingsHub";
 
 const isDraft = (x: unknown): x is ShippingDraft => { const d = x as ShippingDraft | null; return !!d && typeof d.free === "number" && Array.isArray(d.zones) && d.zones.every((z) => typeof z?.id === "string" && typeof z.cps === "string"); };
 
@@ -42,7 +41,7 @@ export function ShippingSettings() {
   };
   return (
     <div>
-      <SubpageHeader trail={[SETTINGS_SECTION]} back={SETTINGS_SECTION} title="Envíos y retiro" intro="Lo que ve el comprador al elegir cómo recibe su pedido." />
+      <SubpageHeader title="Envíos y retiro" intro="Lo que ve el comprador al elegir cómo recibe su pedido." />
       {session.restored && <p role="status" className="mb-4 rounded-sm bg-warning-soft px-4 py-3 text-sm font-bold text-warning">Recuperamos los cambios de envíos que quedaron sin guardar.</p>}
       <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,22rem),1fr))] items-start gap-4">
         <section aria-labelledby="free-title" className="flex flex-col gap-3 rounded-sm bg-surface p-4 shadow-[var(--shadow-card)] sm:p-5">

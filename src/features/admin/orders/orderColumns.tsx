@@ -10,6 +10,7 @@ import { DEMO_TODAY } from "@/demo/fixtures/admin-orders";
 import { formatDate, formatDateTime } from "@/lib/date";
 import { formatARS } from "@/lib/money";
 import { fulfillmentLabel, paymentLabel } from "../OrderCard";
+import { OrderWhatsapp } from "./OrderWhatsapp";
 
 export const units = (o: AdminOrder) => o.lines.reduce((s, l) => s + l.quantity, 0);
 export const itemsText = (o: AdminOrder) => o.lines.map((l) => `${getProduct(l.productSlug)?.name ?? l.productSlug} ×${l.quantity}`).join(", ");
@@ -38,6 +39,8 @@ export const orderColumns: Column<AdminOrder>[] = [
   { id: "payment", header: "Pago", className: "whitespace-nowrap", cell: (o) => paymentLabel(o.paymentMethod), sortValue: (o) => paymentLabel(o.paymentMethod), exportValue: (o) => paymentLabel(o.paymentMethod) },
   { id: "fulfillment", header: "Entrega", className: "whitespace-nowrap", cell: (o) => fulfillmentLabel(o.fulfillment), sortValue: (o) => fulfillmentLabel(o.fulfillment), exportValue: (o) => fulfillmentLabel(o.fulfillment) },
   { id: "promised", header: "Comprometido", className: "whitespace-nowrap", cell: (o) => <PromisedCell order={o} />, sortValue: (o) => o.promisedDate, exportValue: (o) => o.promisedDate ?? "" },
+  // R4b: el WhatsApp con el mensaje de su estado, en cada fila (el link no abre la ficha).
+  { id: "whatsapp", header: "WhatsApp", className: "w-14", cell: (o) => <OrderWhatsapp order={o} compact variant="ghost" /> },
   // Lo que más importa del pedido: fijo a la derecha, se ve aunque la tabla no entre (con el menú fijado, por ejemplo).
   { id: "total", header: "Total", align: "right", money: true, stickyEnd: true, className: "whitespace-nowrap", cell: (o) => <strong>{formatARS(o.total)}</strong>, sortValue: (o) => o.total, exportValue: (o) => o.total },
 ];

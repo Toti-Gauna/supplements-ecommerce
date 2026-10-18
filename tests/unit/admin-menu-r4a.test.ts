@@ -27,6 +27,14 @@ describe("menú del panel (R4a)", () => {
     expect(MOBILE_ORDER.every((id) => SECTIONS.some((s) => s.id === id))).toBe(true);
   });
 
+  it("Pedidos se ordena por lo que hay que hacer (R4b): cobrar, armar, despachos, posventa y todos al final", () => {
+    const pedidos = SECTIONS.find((s) => s.id === "pedidos")!;
+    expect(pedidos.tabs.map((t) => t.label)).toEqual(["Por cobrar", "Para armar", "Despachos", "Postventa", "Todos"]);
+    expect(pedidos.tabs.find((t) => t.id === "despachos")!.children!.map((t) => t.label)).toEqual(["Lista y hoja de ruta", "Calendario"]);
+    expect(pedidos.tabs.find((t) => t.id === "postventa")!.children!.map((t) => t.label)).toEqual(["Seguimiento", "Reclamos"]);
+    expect(pedidos.href).toBe("/admin-demo/pagos/");
+  });
+
   it("Promos reúne las seis herramientas en pestañas", () => {
     expect(SECTIONS.find((s) => s.id === "promos")!.tabs.map((t) => t.label)).toEqual(["Cupones", "Descuento stack", "Ruleta", "Premios del juego", "Misiones", "Regalos y gift cards"]);
   });
@@ -58,8 +66,9 @@ describe("menú del panel (R4a)", () => {
   it("las rutas con detalle quedan en la pestaña de su lista", () => {
     const at = (p: string) => resolvePlace(p)!.tab!.id;
     expect(at("/admin-demo/pedidos/detalle/")).toBe("pedidos");
-    expect(at("/admin-demo/pagos/detalle/")).toBe("pagos");
-    expect(at("/admin-demo/reclamos/detalle/")).toBe("reclamos");
+    expect(at("/admin-demo/pagos/detalle/")).toBe("cobrar");
+    expect(at("/admin-demo/reclamos/detalle/")).toBe("postventa");
+    expect(resolvePlace("/admin-demo/reclamos/detalle/")!.sub!.id).toBe("reclamos");
     expect(at("/admin-demo/productos/editar/")).toBe("productos");
     expect(at("/admin-demo/packs/editar/")).toBe("packs");
     expect(at("/admin-demo/usuarios/ficha/")).toBe("clientes");
@@ -78,6 +87,20 @@ describe("menú del panel (R4a)", () => {
       expect(resolvePlace(target), `${from} → ${target}`).not.toBeNull();
       expect(target.split("?")[0]).not.toBe(`${from}/`);
     }
+  });
+
+  it("las rutas de Pedidos de antes de R4b siguen en su pestaña nueva, sin redirección", () => {
+    const where = (p: string) => { const x = resolvePlace(p)!; return [x.section.id, x.tab?.id, x.sub?.id]; };
+    expect(where("/admin-demo/pedidos/")).toEqual(["pedidos", "pedidos", undefined]);
+    expect(where("/admin-demo/pagos/")).toEqual(["pedidos", "cobrar", undefined]);
+    expect(where("/admin-demo/preparacion/")).toEqual(["pedidos", "armar", undefined]);
+    expect(where("/admin-demo/produccion/")).toEqual(["pedidos", "armar", undefined]);
+    expect(where("/admin-demo/calendario/")).toEqual(["pedidos", "despachos", "calendario"]);
+    expect(where("/admin-demo/despachos/")).toEqual(["pedidos", "despachos", "ruta"]);
+    expect(where("/admin-demo/reclamos/")).toEqual(["pedidos", "postventa", "reclamos"]);
+    expect(where("/admin-demo/postventa/")).toEqual(["pedidos", "postventa", "seguimiento"]);
+    for (const p of ["/admin-demo/pedidos", "/admin-demo/pagos", "/admin-demo/preparacion", "/admin-demo/calendario", "/admin-demo/reclamos"]) expect(MOVED[p], p).toBeUndefined();
+    expect(movedTarget("/admin-demo/produccion/")).toBe("/admin-demo/preparacion/");
   });
 
   it("al mudar una ruta se conservan los parámetros que traía", () => {

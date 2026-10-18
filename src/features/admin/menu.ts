@@ -36,12 +36,20 @@ const tab = (id: string, label: string, path: string, match: string[] = [], badg
 
 export const SECTIONS: MenuSection[] = [
   { id: "hoy", label: "Hoy", short: "Hoy", href: `${P}/`, tabs: [] },
-  { id: "pedidos", label: "Pedidos", short: "Pedidos", href: `${P}/pedidos/`, tabs: [
-    tab("pedidos", "Pedidos", "/pedidos/", [], "orders"),
-    tab("pagos", "Pagos manuales", "/pagos/", [], "payments"),
-    tab("preparacion", "Preparación", "/preparacion/", ["/produccion"], "prep"),
-    tab("despachos", "Calendario de despachos", "/calendario/", [], "late"),
-    tab("reclamos", "Reclamos", "/reclamos/", [], "claims"),
+  // R4b: Pedidos se ordena por lo que hay que hacer (cobrar, armar, despachar, posventa) y "Todos" queda al final.
+  // Por cobrar y Para armar usan las rutas de Pagos manuales y Preparación: los enlaces viejos abren la pestaña nueva.
+  { id: "pedidos", label: "Pedidos", short: "Pedidos", href: `${P}/pagos/`, tabs: [
+    tab("cobrar", "Por cobrar", "/pagos/", [], "payments"),
+    tab("armar", "Para armar", "/preparacion/", ["/produccion"], "prep"),
+    tab("despachos", "Despachos", "/despachos/", ["/calendario"], undefined, [
+      tab("ruta", "Lista y hoja de ruta", "/despachos/"),
+      tab("calendario", "Calendario", "/calendario/"),
+    ]),
+    tab("postventa", "Postventa", "/postventa/", ["/reclamos"], "claims", [
+      tab("seguimiento", "Seguimiento", "/postventa/"),
+      tab("reclamos", "Reclamos", "/reclamos/"),
+    ]),
+    tab("pedidos", "Todos", "/pedidos/", [], "orders"),
   ] },
   { id: "stock", label: "Stock", short: "Stock", href: `${P}/productos/`, tabs: [
     tab("productos", "Productos y stock", "/productos/", ["/stock", "/planilla"], "stock"),
@@ -102,7 +110,7 @@ export const MOVED: Record<string, Moved> = {
   [`${P}/cupones/lista`]: { to: `${P}/promos/`, label: "Promos · Cupones" },
   [`${P}/contenido`]: { to: `${P}/contenido/carrusel/`, label: "Ajustes · Contenido" },
   [`${P}/ajustes/contacto`]: { to: `${P}/ajustes/`, label: "Ajustes · Contacto" },
-  [`${P}/produccion`]: { to: `${P}/preparacion/`, label: "Pedidos · Preparación" },
+  [`${P}/produccion`]: { to: `${P}/preparacion/`, label: "Pedidos · Para armar" },
   [`${P}/stock`]: { to: `${P}/productos/?ver=variantes`, label: "Stock · Productos", carry: { vista: "stock", q: "q" } },
   [`${P}/planilla`]: { to: `${P}/productos/?formato=excel`, label: "Stock · formato Excel", carry: { q: "q" } },
 };

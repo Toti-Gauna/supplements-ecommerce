@@ -1,32 +1,33 @@
 import { expect, test, type Page } from "@playwright/test";
 import { horizontalOverflow } from "./helpers";
 
-/** Fase 7 · Operaciones: preparación con control de lote, reprogramar un despacho y compra sugerida a un proveedor. */
+/** Fase 7 · Operaciones: preparación con control de lote (Para armar, R4b), reprogramar un despacho y compra sugerida a un proveedor. */
 
 const toast = (page: Page, text: string | RegExp) => page.getByRole("status").filter({ hasText: text });
-const stage = (page: Page, name: RegExp) => page.getByRole("group", { name: "Etapa" }).getByRole("button", { name });
 
-test("preparación: un pedido pasa por Armando y Control de lote hasta Listo para despachar, con su lote y su email", async ({ page }) => {
+test("Para armar (antes Preparación): un pedido pasa por juntar los potes y el control de lote hasta Listo para despachar, con su lote y su email", async ({ page }) => {
   await page.goto("admin-demo/preparacion/");
-  await page.getByRole("button", { name: "Pasar VOL-000113 a Armando" }).click();
-  await expect(toast(page, "VOL-000113 pasó a “Armando”")).toBeVisible();
-  await stage(page, /^Armando/).click();
-  await page.getByRole("button", { name: "Pasar VOL-000113 a Control de lote" }).click();
-  await expect(toast(page, "VOL-000113 pasó a “Control de lote”")).toBeVisible();
-  await stage(page, /^Control de lote/).click();
-  await page.getByRole("button", { name: "Controlar lotes de VOL-000113" }).click();
-  const dialog = page.getByRole("dialog", { name: "Control de lote de VOL-000113" });
-  await expect(dialog).toContainText("Lote VL-2604-B · vence 10/2026");
+  const card = page.getByRole("article", { name: "Pedido VOL-000113" });
+  // Paso 1: sin tildar lo que se juntó no avanza.
+  await card.getByRole("button", { name: /Ya junté todo/ }).click();
+  await expect(card.getByRole("alert")).toContainText("Tildá cada producto");
+  await card.getByRole("checkbox", { name: /Barra proteica/ }).check();
+  await card.getByRole("button", { name: /Ya junté todo/ }).click();
+  await expect(toast(page, "VOL-000113: potes juntos")).toBeVisible();
+  // Paso 2: el control de lote, con el lote que sale.
+  await expect(card).toContainText("Lote VL-2604-B · vence 10/2026");
   // Sin marcar el lote no se despacha.
-  await dialog.getByRole("button", { name: "Listo para despachar" }).click();
-  await expect(dialog.getByRole("alert")).toContainText("Marcá el lote de cada producto");
-  await dialog.getByRole("checkbox", { name: /Barra proteica/ }).check();
-  await expect(dialog).toContainText("1 de 1 controlados");
+  await card.getByRole("button", { name: "Listo para despachar" }).click();
+  await expect(card.getByRole("alert")).toContainText("Marcá el lote de cada producto");
+  await card.getByRole("checkbox", { name: /Barra proteica/ }).check();
+  await expect(card).toContainText("1 de 1 controlados");
   expect(await horizontalOverflow(page)).toBeLessThanOrEqual(0);
-  await dialog.getByRole("button", { name: "Listo para despachar" }).click();
+  await card.getByRole("button", { name: "Listo para despachar" }).click();
   await expect(toast(page, "VOL-000113 está listo para despachar")).toBeVisible();
-  await stage(page, /^Listo para despachar/).click();
-  await expect(page.locator('section[data-column="ready"]').getByRole("article", { name: "Pedido VOL-000113" })).toContainText("Salió · lote VL-2604-B · vence 10/2026");
+  await expect(card).toHaveCount(0);
+  // Listo: aparece en Despachos el día que sale (retiro en el local).
+  await page.goto("admin-demo/despachos/?dia=2026-10-08");
+  await expect(page.getByRole("region", { name: "Correo y retiros en el local" }).locator("[data-order='VOL-000113']")).toContainText("Listo para retirar");
   // La ficha del pedido muestra el estado, el lote registrado y el email "listo" que salió solo.
   await page.goto("admin-demo/pedidos/detalle/?codigo=VOL-000113");
   await expect(page.getByText(/Preparación y entrega:\s*Listo para retirar/)).toBeVisible();

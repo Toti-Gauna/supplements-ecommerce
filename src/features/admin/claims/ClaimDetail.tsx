@@ -10,6 +10,7 @@ import { useAdmin } from "@/stores/admin";
 import { profileHref } from "../customers/Reminders";
 import { DetailHeader, TrackChip } from "../detail/DetailHeader";
 import { Facts, Panel } from "../detail/Panel";
+import { OrderWhatsapp } from "../orders/OrderWhatsapp";
 import { useDemoSave } from "../useDemoSave";
 import { CLAIM_STATUS, CLAIM_TYPE, isOpenClaim } from "./claimLabels";
 
@@ -49,6 +50,7 @@ export function ClaimDetail() {
             {claim.orderCode ? (
               <Facts items={[["Código", order ? <Link key="o" href={`/admin-demo/pedidos/detalle/?codigo=${order.code}`} className="text-primary underline">{order.code}</Link> : claim.orderCode], ...(order ? [["Estado", STATUS_LABEL[order.status]] as [string, string]] : [])]} />
             ) : <p className="text-sm text-muted">El comprador no indicó un pedido.</p>}
+            {order && <OrderWhatsapp order={order} className="mt-3" />}
           </Panel>
         </div>
       </div>

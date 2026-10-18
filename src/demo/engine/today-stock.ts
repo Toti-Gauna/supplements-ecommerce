@@ -1,4 +1,5 @@
 import { expiringLots, type LotRow } from "../admin/lots";
+import { lotDone } from "../admin/lot-drop";
 import { levelRows, nextDelivery, suggestedPurchases } from "../admin/workshop/purchasing";
 import { formatDay } from "@/lib/date";
 import { formatARS } from "@/lib/money";
@@ -42,9 +43,11 @@ export function lotActions(snap: TodaySnapshot, today: string): TodayAction[] {
       };
     }
     const pct = suggestedClearance(r.days);
+    const done = lotDone(r, snap.data, today);
+    const made = [done.combo && "combo", done.coupon && "cupón", done.drop && "drop"].filter(Boolean);
     return {
       id: `lot:${r.key}`, kind: "lot", tier: "semana", due: addDays(today, r.days), title: `Liquidá el lote ${r.lot.code}`,
-      detail: `${lotName(r)} · vence en ${plural(r.days, "día", "días")} · ${r.lot.units} u. Propuesta: −${pct} % (${formatARS(clearancePrice(r.listPrice, pct))}) para que salga antes.`,
+      detail: `${lotName(r)} · vence en ${plural(r.days, "día", "días")} · ${r.lot.units} u. Propuesta: −${pct} % (${formatARS(clearancePrice(r.listPrice, pct))}) para que salga antes. ${made.length ? `Ya armaste: ${made.join(", ")}.` : "También lo podés sumar a un combo, mandar un cupón o meter en el drop."}`,
       metric: { value: r.days, unit: r.days === 1 ? "día" : "días" }, href: EXPIRING_HREF,
       cta: { type: "clearance", label: `Liquidar −${pct} %`, lotKey: r.key, pct },
     };

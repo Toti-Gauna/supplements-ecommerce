@@ -158,9 +158,15 @@
 - Para probar en iPhone y Android reales: sonidos con el primer toque y con el interruptor de silencio, fluidez del
   inicio y del carrito en un Android de gama media, barra inferior en modo claro.
 
+## Rediseño R1–R4 ✅
+El rediseño UX/UI va por su lado en [plan-rediseno.md](plan-rediseno.md), con el estado de cada fase. R4 (panel "Centro
+de mando" y kit de venta) quedó completo: Hoy, Mostrador, Pedidos unificado con WhatsApp, lista del proveedor con margen
+por marca, costos vivos, lote que vence con acción armada, recompra por WhatsApp con link de bolso, regalo de
+cumpleaños, modo dueño en la tienda y el kit de venta en [kit-de-venta/](kit-de-venta/README.md).
+
 ## Pendiente
 | Qué queda | Dónde | Nota |
 |---|---|---|
 | Separar los datos del panel de la tienda (≈ 75 KB que hoy viajan a todas las páginas) | Rendimiento | Cambio de arquitectura de la store persistida |
 | Logo propio del cliente (archivo SVG/PNG) y otra ciudad que no sea Mar del Plata | Marca blanca | Después de la seña |
-| QA en iPhone y Android reales | Toda la demo | Lo hace Ignacio |
+| QA en iPhone y Android reales | Toda la demo | Lo hace Ignacio, con [kit-de-venta/qa-celulares.md](kit-de-venta/qa-celulares.md) |

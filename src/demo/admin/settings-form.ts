@@ -1,3 +1,4 @@
+import type { InstallmentPlan } from "../fixtures/counter";
 import type { PaymentMethod, ShippingZone } from "../types";
 
 /**
@@ -11,12 +12,14 @@ export function checkWhatsapp(text: string): string | null {
   return digits && (digits.length < 10 || digits.length > 15) ? "Escribí el número con código de país y área, por ejemplo 54 9 223 555 0000." : null;
 }
 
-export interface PaymentsDraft { methods: PaymentMethod[]; pct: number; hours: number }
+/** `plans`: cuotas con recargo del mostrador (R4b). */
+export interface PaymentsDraft { methods: PaymentMethod[]; pct: number; hours: number; plans?: InstallmentPlan[] }
 
 export function checkPayments(d: PaymentsDraft): string | null {
   if (d.methods.length === 0) return "Dejá al menos un medio de pago activo.";
   if (d.pct > 50) return "El descuento por transferencia/QR no puede superar 50%.";
   if (d.hours < 1 || d.hours > 168) return "La reserva va de 1 a 168 horas.";
+  if (d.plans?.some((p) => p.pct < 0 || p.pct > 100)) return "El recargo de las cuotas va de 0 a 100 %.";
   return null;
 }
 

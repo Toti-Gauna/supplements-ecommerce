@@ -28,7 +28,7 @@ function cells(s: TodayScore): Cell[] {
       hint: `${plural(s.toCollect.receipts, "comprobante", "comprobantes")} por revisar · ${s.toCollect.orders - s.toCollect.receipts} sin pagar` },
     { key: "armar", label: "Para armar", value: s.toPack.count, reading: plural(s.toPack.count, "pedido", "pedidos"), tone: s.toPack.late ? "amber" : "chalk", href: "/admin-demo/preparacion/",
       hint: s.toPack.late ? plural(s.toPack.late, "atrasado", "atrasados") : "Todos a tiempo" },
-    { key: "sale", label: "Sale hoy", value: s.leaving.cadete, reading: plural(s.leaving.cadete, "pedido con el cadete", "pedidos con el cadete"), tone: "chalk", href: "/admin-demo/calendario/",
+    { key: "sale", label: "Sale hoy", value: s.leaving.cadete, reading: plural(s.leaving.cadete, "pedido con el cadete", "pedidos con el cadete"), tone: "chalk", href: "/admin-demo/despachos/",
       hint: `Cupo ${s.leaving.slotsUsed}/${s.leaving.capacity}${s.leaving.pickup ? ` · ${s.leaving.pickup} retiran` : ""} · próximo ${next}` },
     { key: "stock", label: "Stock en riesgo", value: s.stockRisk.count, reading: plural(s.stockRisk.count, "variante", "variantes"), tone: s.stockRisk.out ? "amber" : "chalk", href: "/admin-demo/productos/?ver=variantes&stock=reponer",
       hint: `${s.stockRisk.out} sin stock · ${s.stockRisk.count - s.stockRisk.out} bajas` },

@@ -43,10 +43,11 @@ export function runOutLineForBuyer(item: Pick<RepurchaseItem, "runsOutOn" | "inD
 
 const firstName = (name: string) => name.trim().split(/\s+/)[0] ?? name;
 
-/** Mensaje de WhatsApp prellenado para avisarle al cliente. */
-export function repurchaseMessage(item: RepurchaseItem, store: string): string {
+/** Mensaje de WhatsApp prellenado para avisarle al cliente. Con `link`, suma el bolso ya armado (R4c). */
+export function repurchaseMessage(item: RepurchaseItem, store: string, link?: string): string {
   const when = item.inDays < 0 ? `ya se te terminó tu ${item.product}` : `${item.inDays === 0 ? "hoy" : `el ${dayText(item.runsOutOn)}`} se te termina tu ${item.product}`;
-  return `¡Hola ${firstName(item.name)}! Te escribimos de ${store}. Calculamos que ${when}. ¿Te preparamos otro? En Mar del Plata te lo llevamos con cadete ${DISPATCH_PROMISE}.`;
+  const cart = link ? ` Te dejé el bolso armado con lo mismo, para que confirmes cuando quieras: ${link}` : "";
+  return `¡Hola ${firstName(item.name)}! Te escribimos de ${store}. Calculamos que ${when}. ¿Te preparamos otro? En Mar del Plata te lo llevamos con cadete ${DISPATCH_PROMISE}.${cart}`;
 }
 
 /** Link de WhatsApp al teléfono del cliente (celular argentino: 54 9 + característica + número). */

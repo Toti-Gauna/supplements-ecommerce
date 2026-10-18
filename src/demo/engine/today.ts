@@ -14,9 +14,9 @@ export type TodayTier = "atrasado" | "hoy" | "semana" | "despues";
 export const TIER_ORDER: readonly TodayTier[] = ["atrasado", "hoy", "semana", "despues"];
 export const TIER_LABEL: Record<TodayTier, string> = { atrasado: "Atrasado", hoy: "Para hoy", semana: "Esta semana", despues: "Más adelante" };
 
-export type TodayKind = "late" | "receipt" | "dispatch" | "pack" | "purchase" | "repurchase" | "gift" | "lot" | "campaign" | "lots";
+export type TodayKind = "late" | "receipt" | "dispatch" | "pack" | "purchase" | "repurchase" | "gift" | "birthday" | "lot" | "campaign" | "lots";
 /** Prioridad dentro de un mismo nivel. */
-export const KIND_ORDER: readonly TodayKind[] = ["late", "receipt", "dispatch", "pack", "purchase", "repurchase", "gift", "lot", "campaign", "lots"];
+export const KIND_ORDER: readonly TodayKind[] = ["late", "receipt", "dispatch", "pack", "purchase", "repurchase", "gift", "birthday", "lot", "campaign", "lots"];
 
 /** El único botón de cada fila: resuelve ahí mismo (con confirmación) o lleva exactamente al lugar. */
 export type TodayCta =

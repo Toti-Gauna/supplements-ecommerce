@@ -5,16 +5,17 @@ import { Button } from "@/components/atoms/Button";
 import { Field, Input } from "@/components/atoms/Field";
 import { Select } from "@/components/atoms/Select";
 import { Sheet } from "@/components/motion/Sheet";
-import { brandsOf, parsePct, previewPriceChange, priceChangeLabel, ROUNDING_LABEL, type PriceScope, type Rounding } from "@/demo/admin/bulk-price";
+import { brandsOf, parsePct, previewPriceChange, priceChangeLabel, ROUNDING_LABEL, scopeLabel, type Rounding } from "@/demo/admin/bulk-price";
 import { cn } from "@/lib/cn";
 import { useAdmin } from "@/stores/admin";
 import { useToasts } from "@/stores/toast";
+import { useMarginChange } from "./useMarginChange";
 import { PricePreview } from "./PricePreview";
+import { chip, ScopeFields, toScope, type ScopeState } from "./ScopeFields";
 
-type Kind = PriceScope["kind"];
-const KINDS: { id: Kind; label: string }[] = [{ id: "brand", label: "Una marca" }, { id: "category", label: "Una categoría" }, { id: "all", label: "Todo el catálogo" }];
 const ROUNDINGS: Rounding[] = [100, 500, 1];
-const chip = "inline-flex min-h-11 cursor-pointer items-center rounded-sm border px-4 text-sm font-bold has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-primary/50";
+type Mode = "pct" | "margin";
+const MODES: { id: Mode; label: string }[] = [{ id: "pct", label: "Un % parejo" }, { id: "margin", label: "Al margen de la marca" }];
 
 /**
  * Aumento masivo de precios por % (Fase 6): marca, categoría o todo; % positivo o negativo; redondeo; vista previa por
@@ -33,14 +34,13 @@ function PriceIncreaseForm({ onClose }: { onClose: () => void }) {
   const push = useToasts((s) => s.push);
   const brands = brandsOf(data.products);
   const cats = [...data.categories].sort((a, b) => a.sortOrder - b.sortOrder).filter((c) => data.products.some((p) => p.categorySlug === c.slug));
-  const [kind, setKind] = useState<Kind>("brand");
-  const [brand, setBrand] = useState(brands[0] ?? "");
-  const [category, setCategory] = useState(cats[0]?.slug ?? "");
+  const [mode, setMode] = useState<Mode>("pct");
+  const [scopeState, setScopeState] = useState<ScopeState>({ kind: "brand", brand: brands[0] ?? "", category: cats[0]?.slug ?? "" });
   const [pctText, setPctText] = useState("8");
   const [step, setStep] = useState<Rounding>(100);
   /** Lo que se pidió confirmar: si después se cambia algo del formulario, la confirmación deja de valer. */
   const [askedFor, setAskedFor] = useState<string | null>(null);
-  const scope: PriceScope = kind === "brand" ? { kind, brand } : kind === "category" ? { kind, slug: category } : { kind };
+  const scope = toScope(scopeState);
   const pct = parsePct(pctText);
   const lines = pct.ok ? previewPriceChange(data.products, scope, pct.value, step) : [];
   const label = pct.ok ? priceChangeLabel(scope, pct.value, data.categories) : "";
@@ -53,25 +53,29 @@ function PriceIncreaseForm({ onClose }: { onClose: () => void }) {
     push({ tone: "success", title: `Precios actualizados: ${label}`, description: `${lines.length} variantes. Podés deshacerlo desde Productos y stock. Solo en esta demo.` });
     onClose();
   };
+  const margin = useMarginChange(scope, scopeLabel(scope, data.categories), onClose);
+  const head = (
+    <>
+      <div className="pr-12">
+        <h2 className="font-display text-3xl">Aumentar precios</h2>
+        <p className="mt-1 max-w-xl text-sm text-muted">Subí o bajá los precios de una marca, una categoría o todo el catálogo: por porcentaje o llevándolos al margen que fijaste para cada marca. Ves cada precio nuevo antes de aplicarlo y podés deshacerlo.</p>
+      </div>
+      <fieldset className="flex flex-wrap gap-2">
+        <legend className="sr-only">Cómo calcular el precio nuevo</legend>
+        {MODES.map((m) => (
+          <label key={m.id} className={cn(chip, mode === m.id ? "border-primary bg-primary text-on-primary" : "border-line bg-surface")}>
+            <input type="radio" name="price-mode" value={m.id} checked={mode === m.id} onChange={() => { setMode(m.id); setAskedFor(null); }} className="sr-only" />{m.label}
+          </label>
+        ))}
+      </fieldset>
+      <ScopeFields value={scopeState} onChange={(v) => { setScopeState(v); setAskedFor(null); }} brands={brands} categories={cats} />
+    </>
+  );
   return (
-    <form noValidate onSubmit={(e) => { e.preventDefault(); if (pct.ok && changes > 0) setAskedFor(signature); }} className="flex max-h-[94dvh] flex-col sm:max-h-[90dvh]">
+    <form noValidate onSubmit={(e) => { e.preventDefault(); if (mode === "margin") margin.submit(); else if (pct.ok && changes > 0) setAskedFor(signature); }} className="flex max-h-[94dvh] flex-col sm:max-h-[90dvh]">
       <div className="flex flex-col gap-5 overflow-y-auto p-5 pt-7 sm:p-7">
-        <div className="pr-12">
-          <h2 className="font-display text-3xl">Aumentar precios</h2>
-          <p className="mt-1 max-w-xl text-sm text-muted">Subí o bajá por porcentaje los precios de una marca, una categoría o todo el catálogo. Ves cada precio nuevo antes de aplicarlo y podés deshacerlo.</p>
-        </div>
-        <fieldset className="flex flex-col gap-3">
-          <legend className="mb-2 text-sm font-bold">¿A qué productos?</legend>
-          <div className="flex flex-wrap gap-2">
-            {KINDS.map((k) => (
-              <label key={k.id} className={cn(chip, kind === k.id ? "border-primary bg-primary text-on-primary" : "border-line bg-surface")}>
-                <input type="radio" name="price-scope" value={k.id} checked={kind === k.id} onChange={() => setKind(k.id)} className="sr-only" />{k.label}
-              </label>
-            ))}
-          </div>
-          {kind === "brand" && <Field id="price-brand" label="Marca"><Select id="price-brand" value={brand} onChange={(e) => setBrand(e.target.value)}>{brands.map((b) => <option key={b} value={b}>{b}</option>)}</Select></Field>}
-          {kind === "category" && <Field id="price-cat" label="Categoría"><Select id="price-cat" value={category} onChange={(e) => setCategory(e.target.value)}>{cats.map((c) => <option key={c.slug} value={c.slug}>{c.name}</option>)}</Select></Field>}
-        </fieldset>
+        {head}
+        {mode === "margin" ? margin.body : <>
         <div className="grid grid-cols-[minmax(0,1fr)] gap-3 sm:grid-cols-2">
           <Field id="price-pct" label="Porcentaje" hint="Con signo menos baja los precios (−10). Acepta decimales: 7,5." error={pct.ok ? undefined : pct.error}>
             <span className="relative block">
@@ -86,9 +90,10 @@ function PriceIncreaseForm({ onClose }: { onClose: () => void }) {
           </Field>
         </div>
         {pct.ok && <PricePreview lines={lines} />}
+        </>}
       </div>
       <div className="border-t border-line bg-surface px-5 py-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:px-7">
-        {asking ? (
+        {mode === "margin" ? margin.footer : asking ? (
           <div role="alertdialog" aria-label="Confirmar el aumento" className="flex flex-wrap items-center justify-end gap-2">
             <p className="mr-auto text-sm font-bold">¿Aplicar {label} a {lines.length} variantes? Se puede deshacer.</p>
             <Button variant="ghost" onClick={() => setAskedFor(null)}>Volver</Button>

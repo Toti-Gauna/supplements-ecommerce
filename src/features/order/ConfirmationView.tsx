@@ -1,12 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
-import { CalendarClock, MessageCircle } from "lucide-react";
+import { CalendarClock, LayoutDashboard, MessageCircle } from "lucide-react";
 import { ConfettiRain } from "@/components/molecules/ConfettiRain";
 import { ButtonLink } from "@/components/atoms/Button";
 import { HeroSkeleton } from "@/components/atoms/Skeleton";
 import { EmptyState } from "@/components/molecules/EmptyState";
 import { MissionProgress } from "@/components/molecules/MissionProgress";
 import { OrderSummary } from "@/components/molecules/OrderSummary";
+import { orderPanelHref } from "@/demo/admin/owner-mode";
 import { previewMission } from "@/demo/engine/missions";
 import { DEMO_TODAY } from "@/demo/fixtures/admin-orders";
 import { demoAccountProgress } from "@/demo/fixtures/commerce";
@@ -107,6 +108,10 @@ export function ConfirmationView() {
         <a href={whatsappLink(`Hola ${brand.name}! Hice el pedido ${order.code} en la tienda y tengo una consulta.`)} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-10 items-center justify-center gap-2 text-sm font-bold text-volt-ink underline">
           <MessageCircle size={16} aria-hidden="true" /> Consultar por WhatsApp
         </a>
+        {/* Demo de venta (R4c): el mismo pedido, recién entrado, en el panel del dueño. */}
+        <Link href={orderPanelHref(order.code)} data-order-panel className="inline-flex min-h-10 items-center justify-center gap-2 border border-dashed border-line px-3 text-sm font-bold text-ink hover:border-ink/50">
+          <LayoutDashboard size={16} aria-hidden="true" className="shrink-0" /><span className="underline underline-offset-4">Ver este pedido en el panel</span><span className="font-mono text-[11px] uppercase tracking-[0.06em] text-muted">· demo</span>
+        </Link>
       </aside>
     </div>
   );

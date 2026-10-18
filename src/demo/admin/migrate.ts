@@ -1,3 +1,4 @@
+import { withCounterData } from "./counter-data";
 import { defaultAdminData, type AdminData } from "./defaults";
 import { withSportCampaigns } from "./migrate-campaigns";
 import { withFaqTopics } from "./migrate-faqs";
@@ -7,7 +8,8 @@ import { withRealSportDates } from "./migrate-sport-dates";
 /**
  * v10–v12 ya usan el catálogo de suplementos: el carrusel agrega un campo opcional sin borrar ediciones. v14 suma el
  * equipamiento, v15 las campañas de R3a (días del deporte), v16 los temas de la ayuda, v17 las gift cards y el estado
- * de los regalos (R3b) y v18 las fechas reales de los días del deporte; cada paso corre una sola vez y en orden.
+ * de los regalos (R3b), v18 las fechas reales de los días del deporte y v19 el mostrador (R4b); cada paso corre una
+ * sola vez y en orden.
  */
 export function migrateAdminData(persisted: unknown, version: number): Partial<AdminData> {
   const saved = persisted as Partial<AdminData> | null;
@@ -18,7 +20,8 @@ export function migrateAdminData(persisted: unknown, version: number): Partial<A
   const campaigns = version < 15 ? withSportCampaigns(gear) : gear;
   const faqs = version < 16 ? withFaqTopics(campaigns) : campaigns;
   const gifts = version < 17 ? withGiftData(faqs) : faqs;
-  return version < 18 ? withRealSportDates(gifts) : gifts;
+  const dates = version < 18 ? withRealSportDates(gifts) : gifts;
+  return version < 19 ? withCounterData(dates) : dates;
 }
 
 /**

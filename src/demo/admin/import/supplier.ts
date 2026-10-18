@@ -37,7 +37,7 @@ export function findProduct(products: Product[], name: string, brand: string): P
     ?? pool.filter((p) => n.startsWith(key(p.name)) || key(p.name).startsWith(n)).sort((a, b) => b.name.length - a.name.length)[0];
 }
 
-function pickVariants(p: Product, r: { size: string; flavor: string; variant: string }): Parsed<Variant[]> {
+export function pickVariants(p: Product, r: { size: string; flavor: string; variant: string }): Parsed<Variant[]> {
   if (r.variant) {
     const v = p.variants.find((x) => key(x.label) === key(r.variant) || x.id === r.variant);
     return v ? { ok: true, value: [v] } : { ok: false, error: `No encontramos la variante “${r.variant}”` };

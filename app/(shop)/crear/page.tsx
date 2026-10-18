@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/templates/PageHeader";
 import { GoalRail } from "@/features/home/GoalRail";
+import { OwnerSpot } from "@/features/owner/OwnerSpot";
 import { StackBuilder } from "@/features/stack/StackBuilder";
 
 export const metadata: Metadata = {
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
 export default function StackPage() {
   return (
     <>
-      <StackBuilder intro={<PageHeader title="Armá tu stack">Combiná hasta tres objetivos, sumá tu deporte si querés y mirá cómo se arma tu estante, con el descuento stack.</PageHeader>} />
+      <StackBuilder intro={<><PageHeader title="Armá tu stack">Combiná hasta tres objetivos, sumá tu deporte si querés y mirá cómo se arma tu estante, con el descuento stack.</PageHeader><OwnerSpot id="stack" /></>} />
       <section aria-labelledby="explore-goals-title" className="mt-16 sm:mt-24">
         <p className="eyebrow text-volt-ink">Por objetivo</p>
         <h2 id="explore-goals-title" className="font-display mb-6 mt-2 text-3xl sm:text-4xl">O explorá por objetivo</h2>

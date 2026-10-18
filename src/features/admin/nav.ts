@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { BadgePercent, Boxes, ClipboardList, LayoutDashboard, PartyPopper, Settings, Users, Warehouse } from "lucide-react";
+import { BadgePercent, Boxes, ClipboardList, LayoutDashboard, PartyPopper, ScanBarcode, Settings, Users, Warehouse } from "lucide-react";
 import { MOBILE_ORDER, SECTIONS, resolvePlace, type BadgeKey, type MenuSection, type SectionId } from "./menu";
 
 export type NavBadge = BadgeKey;
@@ -13,12 +13,12 @@ export const ATTENTION: Partial<Record<SectionId, NavBadge[]>> = {
 };
 
 const ICONS: Record<SectionId, LucideIcon> = {
-  hoy: LayoutDashboard, pedidos: ClipboardList, stock: Boxes, compras: Warehouse, clientes: Users, promos: BadgePercent, campanas: PartyPopper, ajustes: Settings,
+  hoy: LayoutDashboard, mostrador: ScanBarcode, pedidos: ClipboardList, stock: Boxes, compras: Warehouse, clientes: Users, promos: BadgePercent, campanas: PartyPopper, ajustes: Settings,
 };
 
 export interface AdminNavItem extends MenuSection { icon: LucideIcon; attention: NavBadge[] }
 
-/** Las 8 entradas del menú, en orden. */
+/** Las 9 entradas del menú, en orden. */
 export const ADMIN_NAV: AdminNavItem[] = SECTIONS.map((s) => ({ ...s, icon: ICONS[s.id], attention: ATTENTION[s.id] ?? [] }));
 
 /** Entradas con pestaña propia en el celular; el resto está en "Más". */

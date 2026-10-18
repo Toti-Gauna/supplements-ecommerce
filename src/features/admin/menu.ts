@@ -1,13 +1,11 @@
 /**
- * Mapa del menú del panel (R4a): 8 secciones y, dentro de cada una, pestañas. Módulo puro (sin React ni íconos) para
- * poder probarlo: a qué sección y pestaña pertenece cada ruta y adónde redirigen las rutas viejas.
- *
- * R4b suma "Mostrador" como 9.ª entrada: se agrega la sección en el 2.º lugar de `SECTIONS` y el id "mostrador" en el
- * centro de `MOBILE_ORDER` (entre "pedidos" y "stock"). No hace falta tocar nada más del menú.
+ * Menú del panel: 9 secciones con pestañas (módulo puro): a qué sección y pestaña pertenece cada ruta y adónde
+ * redirigen las rutas viejas. "Mostrador" va 2.º y en el centro de `MOBILE_ORDER`. Pedidos se ordena por lo que hay
+ * que hacer; Por cobrar y Para armar reusan las rutas de Pagos manuales y Preparación.
  */
 const P = "/admin-demo";
 
-export type SectionId = "hoy" | "pedidos" | "stock" | "compras" | "clientes" | "promos" | "campanas" | "ajustes";
+export type SectionId = "hoy" | "mostrador" | "pedidos" | "stock" | "compras" | "clientes" | "promos" | "campanas" | "ajustes";
 export type BadgeKey = "orders" | "payments" | "claims" | "stock" | "late" | "materials" | "prep";
 
 export interface MenuTab {
@@ -36,12 +34,24 @@ const tab = (id: string, label: string, path: string, match: string[] = [], badg
 
 export const SECTIONS: MenuSection[] = [
   { id: "hoy", label: "Hoy", short: "Hoy", href: `${P}/`, tabs: [] },
-  { id: "pedidos", label: "Pedidos", short: "Pedidos", href: `${P}/pedidos/`, tabs: [
-    tab("pedidos", "Pedidos", "/pedidos/", [], "orders"),
-    tab("pagos", "Pagos manuales", "/pagos/", [], "payments"),
-    tab("preparacion", "Preparación", "/preparacion/", ["/produccion"], "prep"),
-    tab("despachos", "Calendario de despachos", "/calendario/", [], "late"),
-    tab("reclamos", "Reclamos", "/reclamos/", [], "claims"),
+  { id: "mostrador", label: "Mostrador", short: "Mostrador", href: `${P}/mostrador/`, tabs: [
+    tab("vender", "Vender", "/mostrador/"),
+    tab("chat", "Pedido por chat", "/mostrador/chat/"),
+    tab("cierre", "Cierre del día", "/mostrador/cierre/"),
+    tab("consulta", "Consulta rápida", "/mostrador/consulta/"),
+  ] },
+  { id: "pedidos", label: "Pedidos", short: "Pedidos", href: `${P}/pagos/`, tabs: [
+    tab("cobrar", "Por cobrar", "/pagos/", [], "payments"),
+    tab("armar", "Para armar", "/preparacion/", ["/produccion"], "prep"),
+    tab("despachos", "Despachos", "/despachos/", ["/calendario"], undefined, [
+      tab("ruta", "Lista y hoja de ruta", "/despachos/"),
+      tab("calendario", "Calendario", "/calendario/"),
+    ]),
+    tab("postventa", "Postventa", "/postventa/", ["/reclamos"], "claims", [
+      tab("seguimiento", "Seguimiento", "/postventa/"),
+      tab("reclamos", "Reclamos", "/reclamos/"),
+    ]),
+    tab("pedidos", "Todos", "/pedidos/", [], "orders"),
   ] },
   { id: "stock", label: "Stock", short: "Stock", href: `${P}/productos/`, tabs: [
     tab("productos", "Productos y stock", "/productos/", ["/stock", "/planilla"], "stock"),
@@ -52,7 +62,11 @@ export const SECTIONS: MenuSection[] = [
   { id: "compras", label: "Compras", short: "Compras", href: `${P}/proveedores/`, tabs: [
     tab("proveedores", "Proveedores", "/proveedores/"),
     tab("insumos", "Insumos", "/insumos/", [], "materials"),
-    tab("costos", "Costos y margen", "/costos/"),
+    tab("costos", "Costos y margen", "/costos/", [], undefined, [
+      tab("por-producto", "Por producto", "/costos/"),
+      tab("vivos", "Costos vivos", "/costos/vivos/"),
+    ]),
+    tab("lista-proveedor", "Lista del proveedor", "/lista-proveedor/"),
   ] },
   { id: "clientes", label: "Clientes", short: "Clientes", href: `${P}/usuarios/`, tabs: [tab("clientes", "Clientes", "/usuarios/")] },
   { id: "promos", label: "Promos", short: "Promos", href: `${P}/promos/`, tabs: [
@@ -90,8 +104,8 @@ export const SECTIONS: MenuSection[] = [
   ] },
 ];
 
-/** Pestañas del celular, de izquierda a derecha, y "Más" al final. R4b mete "mostrador" en el centro. */
-export const MOBILE_ORDER: SectionId[] = ["hoy", "pedidos", "stock", "promos"];
+/** Pestañas del celular, de izquierda a derecha, y "Más" al final. "Mostrador" (R4b) va en el centro. */
+export const MOBILE_ORDER: SectionId[] = ["hoy", "pedidos", "mostrador", "stock", "promos"];
 
 /** Rutas viejas que ya no tienen pantalla propia: llevan a su lugar nuevo. `carry` copia parámetros viejos con su nombre nuevo. */
 export interface Moved { to: string; label: string; carry?: Record<string, string> }
@@ -102,7 +116,7 @@ export const MOVED: Record<string, Moved> = {
   [`${P}/cupones/lista`]: { to: `${P}/promos/`, label: "Promos · Cupones" },
   [`${P}/contenido`]: { to: `${P}/contenido/carrusel/`, label: "Ajustes · Contenido" },
   [`${P}/ajustes/contacto`]: { to: `${P}/ajustes/`, label: "Ajustes · Contacto" },
-  [`${P}/produccion`]: { to: `${P}/preparacion/`, label: "Pedidos · Preparación" },
+  [`${P}/produccion`]: { to: `${P}/preparacion/`, label: "Pedidos · Para armar" },
   [`${P}/stock`]: { to: `${P}/productos/?ver=variantes`, label: "Stock · Productos", carry: { vista: "stock", q: "q" } },
   [`${P}/planilla`]: { to: `${P}/productos/?formato=excel`, label: "Stock · formato Excel", carry: { q: "q" } },
 };

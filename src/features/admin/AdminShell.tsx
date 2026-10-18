@@ -1,6 +1,8 @@
 "use client";
 import { useEffect, useState, type ReactNode } from "react";
 import { Sheet } from "@/components/motion/Sheet";
+import { visitedPanel } from "@/demo/admin/owner-mode";
+import { useOwnerMode } from "@/stores/ownerMode";
 import { AdminGate } from "./AdminGate";
 import { AdminSidebar, SidebarContent } from "./AdminSidebar";
 import { AdminTabBar } from "./AdminTabBar";
@@ -15,6 +17,9 @@ import { SectionTabs } from "./SectionTabs";
 export function AdminShell({ children }: { children: ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [search, setSearch] = useState(false);
+  // Pasar por el panel deja disponible el interruptor del modo dueño en la tienda (R4c), solo en esta pestaña.
+  const markOwner = useOwnerMode((s) => s.update);
+  useEffect(() => { markOwner(visitedPanel); }, [markOwner]);
   // ⌘K / Ctrl+K abre el buscador desde cualquier pantalla del panel.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {

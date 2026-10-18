@@ -18,6 +18,7 @@ export function paymentTrack(o: AdminOrder): Track {
   if (o.status === "PAYMENT_REVIEW") return { label: "Comprobante en revisión", tone: "warning" };
   if (o.status === "RETURNED") return { label: "Devuelto", tone: "neutral" };
   if (o.status === "CANCELLED") return wasPaid(o) ? { label: "Pagado y cancelado", tone: "neutral" } : { label: "Sin cobrar (cancelado)", tone: "neutral" };
+  if (o.inHand) return { label: "Cobrado en mano", tone: "success" };
   return { label: o.paymentMethod === "CHECKOUT_PRO" ? "Pagado con Mercado Pago" : "Pagado · aprobado a mano", tone: "success" };
 }
 

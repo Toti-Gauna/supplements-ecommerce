@@ -2,16 +2,20 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { MailCheck, PencilLine } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Badge } from "@/components/atoms/Badge";
 import { Switch } from "@/components/atoms/Switch";
 import { resolveInline, sampleContext } from "@/demo/admin/emails/render";
+import { waForEmail } from "@/demo/admin/whatsapp";
 import { EMAIL_TRIGGERS, TRIGGER_HINT, TRIGGER_LABEL, type EmailTemplate } from "@/demo/fixtures/emails";
+import type { WaMessageId } from "@/demo/fixtures/whatsapp";
 import type { FulfillmentType } from "@/demo/types";
 import { formatDateTime } from "@/lib/date";
 import { useAdmin } from "@/stores/admin";
 import { SubpageHeader } from "../marketing/SubpageHeader";
 import { useDemoSave } from "../useDemoSave";
+import { WhatsappOnlyList, WhatsappLine } from "./WhatsappLines";
+import { WhatsappSheet } from "./WhatsappSheet";
 
 export const EMAILS_SECTION = { href: "/admin-demo/emails/", label: "Emails automáticos" };
 
@@ -21,7 +25,8 @@ const audience = (t: EmailTemplate) => (t.only ? `Solo ${new Intl.ListFormat("es
 
 /**
  * Emails automáticos: una tarjeta por plantilla en el orden del recorrido del pedido (de la compra a la recompra), con
- * el asunto armado con un pedido real, cuántos salieron y si se envía solo. La bandeja de salida es otra página.
+ * el asunto armado con un pedido real, su versión WhatsApp (R4b), cuántos salieron y si se envía solo. Abajo, los
+ * estados que solo tienen WhatsApp. La bandeja de salida es otra página.
  */
 export function EmailsAdmin() {
   const router = useRouter();
@@ -30,6 +35,7 @@ export function EmailsAdmin() {
   const orders = useAdmin((s) => s.orders);
   const { setEmailTemplateActive } = useAdmin();
   const save = useDemoSave();
+  const [wa, setWa] = useState<WaMessageId | null>(null);
   const ordered = [...templates].sort((a, b) => step(a) - step(b));
   // Enlaces viejos a la pestaña de enviados: la bandeja ahora es una subpágina.
   useEffect(() => { if (params.get("vista") === "enviados") router.replace("/admin-demo/emails/enviados/"); }, [params, router]);
@@ -37,7 +43,7 @@ export function EmailsAdmin() {
   return (
     <>
       <SubpageHeader title="Emails automáticos"
-        intro="Un email en cada momento del pedido —compra, pago, armado, entrega— y el aviso cuando se le está por terminar el pote. Salen solos al cambiar el estado del pedido. En la demo no se envía nada: queda en la bandeja de salida." />
+        intro="Un email en cada momento del pedido —compra, pago, armado, entrega— y el aviso cuando se le está por terminar el pote. Salen solos al cambiar el estado del pedido. Cada uno tiene su versión corta por WhatsApp, que se manda a mano desde Pedidos. En la demo no se envía nada: el email queda en la bandeja de salida." />
       <ol aria-label="Plantillas" className="mb-8 grid grid-cols-[minmax(0,1fr)] gap-3 md:grid-cols-2 xl:grid-cols-3">
         {ordered.map((t, i) => {
           const sent = outbox.filter((m) => m.templateId === t.id && !m.test);
@@ -54,6 +60,7 @@ export function EmailsAdmin() {
               </div>
               <p className="text-sm text-muted">{TRIGGER_HINT[t.trigger]}{only && <> <strong className="font-bold text-ink">{only}.</strong></>}</p>
               <p className="rounded-sm bg-bg p-3 text-sm"><span className="block text-xs font-bold text-muted">Asunto (ejemplo)</span>{resolveInline(t.subject, sampleContext(t, orders))}</p>
+              {waForEmail(t.id).map((m) => <WhatsappLine key={m.id} message={m} orders={orders} onEdit={setWa} />)}
               <p className="flex items-center gap-1.5 text-xs font-semibold text-muted"><MailCheck size={14} aria-hidden="true" />{sent.length} {sent.length === 1 ? "enviado" : "enviados"}{sent[0] ? ` · último ${formatDateTime(sent[0].at)}` : ""}</p>
               <div className="mt-auto flex flex-wrap items-center justify-between gap-2">
                 <Switch checked={t.active} label="Se envía solo" ariaLabel={`Se envía solo: ${t.name}`} onChange={(v) => save(v ? `“${t.name}” activado` : `“${t.name}” pausado`, () => setEmailTemplateActive(t.id, v))} />
@@ -65,6 +72,8 @@ export function EmailsAdmin() {
           );
         })}
       </ol>
+      <WhatsappOnlyList orders={orders} onEdit={setWa} />
+      <WhatsappSheet id={wa} orders={orders} onClose={() => setWa(null)} />
     </>
   );
 }

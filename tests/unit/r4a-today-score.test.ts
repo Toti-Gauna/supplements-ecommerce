@@ -39,8 +39,8 @@ describe("textos y orden estable", () => {
 
   it("la frase de arriba cuenta lo urgente", () => {
     const list = todayBoard(snap(), DEMO_TODAY).actions;
-    expect(summaryLine(list)).toBe("Tenés 6 cosas para hoy. Arrancá por la primera de la lista.");
-    expect(summaryLine(list.filter((a) => a.tier === "semana"))).toBe("Nada urgente para hoy. Quedan 3 cosas para la semana.");
+    expect(summaryLine(list)).toBe("Tenés 7 cosas para hoy. Arrancá por la primera de la lista.");
+    expect(summaryLine(list.filter((a) => a.tier === "semana"))).toBe("Nada urgente para hoy. Quedan 4 cosas para la semana.");
   });
 
   it("a igual nivel y tipo, manda lo que vence antes y después el id", () => {

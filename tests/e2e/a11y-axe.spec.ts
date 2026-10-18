@@ -61,10 +61,30 @@ const PAGES: [string, string, string][] = [
   ["panel promos: ruleta con subpestañas (R4a)", "admin-demo/cupones/ruleta/", "[role=tablist]"],
   ["panel promos: descuento stack (R4a)", "admin-demo/descuento-stack/", "[role=tablist]"],
   ["panel promos: misiones (R4a)", "admin-demo/misiones/", "[role=tablist]"],
-  ["panel pedidos: pagos manuales (R4a)", "admin-demo/pagos/", "[role=tablist]"],
+  ["panel pedidos: por cobrar de a uno (R4a pagos manuales, R4b)", "admin-demo/pagos/", "article[aria-label^='Cobro de']"],
+  // R4b: Pedidos unificado y mensajes por estado.
+  ["panel pedidos: por cobrar resueltos (R4b)", "admin-demo/pagos/?estado=done", "[role=tablist]"],
+  ["panel pedidos: para armar en dos pasos (R4b)", "admin-demo/preparacion/", "article[data-step]"],
+  ["panel pedidos: despachos, lista de armado y hoja de ruta (R4b)", "admin-demo/despachos/?dia=2026-10-09", "[data-stop]"],
+  ["panel pedidos: postventa (R4b)", "admin-demo/postventa/", "[data-order]"],
+  ["panel pedidos: todos con WhatsApp (R4b)", "admin-demo/pedidos/?q=VOL-00012", "h1"],
+  ["panel emails con su versión WhatsApp (R4b)", "admin-demo/emails/", "[data-wa-line]"],
+  ["panel editor de email con WhatsApp (R4b)", "admin-demo/emails/editar/?id=tpl-payment-approved", "figure[aria-label='Vista previa del WhatsApp']"],
   ["panel compras: proveedores (R4a)", "admin-demo/proveedores/", "[role=tablist]"],
   ["panel ajustes: contacto (R4a)", "admin-demo/ajustes/", "[role=tablist]"],
   ["panel ajustes: emails con subpestañas (R4a)", "admin-demo/emails/", "[role=tablist]"],
+  // R4b: el mostrador (vender, pedido por chat, cierre del día y consulta rápida).
+  ["panel mostrador: vender (R4b)", "admin-demo/mostrador/", "[data-pot]"],
+  ["panel mostrador: pedido por chat (R4b)", "admin-demo/mostrador/chat/", "[data-pot]"],
+  ["panel mostrador: cierre del día (R4b)", "admin-demo/mostrador/cierre/", "h1"],
+  ["panel mostrador: consulta rápida (R4b)", "admin-demo/mostrador/consulta/", "[data-whatsapp-text]"],
+  ["panel ajustes: medios de pago con las cuotas del mostrador (R4b)", "admin-demo/ajustes/pagos/", "#cuotas-mostrador"],
+  // R4c: margen, costos vivos y clientes.
+  ["panel compras: lista del proveedor con el margen por marca (R4c)", "admin-demo/lista-proveedor/", "[data-brand]"],
+  ["panel compras: costos vivos (R4c)", "admin-demo/costos/vivos/", "[role=tablist]"],
+  ["panel clientes: a quién escribirle hoy (R4c)", "admin-demo/usuarios/", "[data-write]"],
+  ["panel cliente: ficha con el regalo de cumpleaños (R4c)", "admin-demo/usuarios/ficha/?email=tomas.h%40ejemplo.com", "[data-birthday-gift]"],
+  ["tienda: link de recompra sin productos (R4c)", "recompra/?bolso=nada.x.1", "h1"],
 ];
 
 interface Violation { id: string; impact: string | null; help: string; nodes: { target: string[]; failureSummary?: string }[] }
@@ -102,6 +122,89 @@ for (const mode of ["dark", "light"] as const) {
       await page.goto("admin-demo/promos/");
       await page.getByRole("button", { name: "Ayuda: Cupones" }).click();
       await expect(page.getByRole("dialog", { name: "Cupones" })).toBeVisible();
+      await page.waitForTimeout(500);
+      const found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+    });
+    test("tienda en modo dueño: franja y placas editables en el inicio y en una ficha (R4c)", async ({ page }) => {
+      for (const [path, count] of [["?dueno=1", 7], ["p/ionic-whey/", 2]] as const) {
+        await page.goto(path);
+        await expect(page.locator("[data-owner-spot]")).toHaveCount(count);
+        await expect(page.locator("html")).toHaveAttribute("data-theme", mode);
+        await page.waitForTimeout(400);
+        const found = await audit(page);
+        expect(found, describe(found)).toEqual([]);
+      }
+    });
+    test("panel mostrador: ticket con stack, cobro en cuotas, venta registrada y cierre con tickets (R4b)", async ({ page }) => {
+      await page.goto("admin-demo/mostrador/");
+      for (const [q, key] of [["whey vainilla", "ionic-whey::iw-vainilla-2lb"], ["creatina", "creatina-monohidrato::cm-sin-sabor-300"], ["overvolt", "overvolt-pre::ov-limon-300"]] as const) {
+        await page.getByLabel("Buscar para vender").fill(q);
+        await page.locator(`[data-pot='${key}']`).click();
+      }
+      await page.getByRole("region", { name: "Ticket en curso" }).getByRole("button", { name: /Ver el Ticket/ }).click();
+      await expect(page.getByRole("dialog", { name: "Ticket" })).toContainText("Descuento stack");
+      await page.waitForTimeout(500);
+      let found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+      await page.getByRole("dialog", { name: "Ticket" }).getByRole("button", { name: /^Cobrar/ }).click();
+      const charge = page.getByRole("dialog", { name: /^Cobrar/ });
+      await charge.getByText("3 cuotas", { exact: true }).click();
+      await expect(charge.locator("[data-installments]")).toBeVisible();
+      await page.waitForTimeout(500);
+      found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+      await charge.getByRole("button", { name: /Registrar venta/ }).click();
+      await expect(page.getByRole("dialog", { name: "Venta registrada (simulada)" })).toBeVisible();
+      found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+      await page.goto("admin-demo/mostrador/cierre/");
+      await expect(page.locator("[data-sale]")).toHaveCount(1);
+      await page.waitForTimeout(400);
+      found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+    });
+    test("panel: el WhatsApp de un estado se edita en un panel (R4b)", async ({ page }) => {
+      await page.goto("admin-demo/emails/");
+      await page.getByRole("button", { name: "Editar el WhatsApp: En reclamo" }).click();
+      await expect(page.getByRole("dialog", { name: "En reclamo" })).toBeVisible();
+      await page.waitForTimeout(500);
+      const found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+    });
+    test("panel compras: lista del proveedor con las diferencias cargadas (R4c)", async ({ page }) => {
+      await page.goto("admin-demo/lista-proveedor/");
+      await page.getByRole("button", { name: "Cargar la lista de muestra" }).click();
+      await expect(page.locator("[data-diff-summary]")).toContainText("48 suben");
+      await page.waitForTimeout(400);
+      const found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+    });
+    test("panel: el lote que vence con sus salidas armadas, combo y cupón (R4c)", async ({ page }) => {
+      await page.goto("admin-demo/");
+      await page.locator("[data-action^='lot:']").first().getByRole("button", { name: /Liquidar/ }).click();
+      const sheet = page.getByRole("dialog", { name: /Liquidar el lote/ });
+      await expect(sheet.locator("[data-liquidation-profit]")).toBeVisible();
+      await page.waitForTimeout(500);
+      let found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+      for (const tab of ["Combo", "Cupón", "Drop"]) {
+        await sheet.getByRole("tab", { name: tab }).click();
+        await page.waitForTimeout(250);
+        found = await audit(page);
+        expect(found, `${tab}\n${describe(found)}`).toEqual([]);
+      }
+      await sheet.getByRole("tab", { name: "Cupón" }).click();
+      await sheet.getByRole("button", { name: "Crear el cupón" }).click();
+      await expect(sheet.getByRole("link", { name: /WhatsApp a / }).first()).toBeVisible();
+      found = await audit(page);
+      expect(found, describe(found)).toEqual([]);
+    });
+    test("panel cliente: regalo de cumpleaños armado con su mensaje (R4c)", async ({ page }) => {
+      await page.goto("admin-demo/usuarios/ficha/?email=tomas.h%40ejemplo.com");
+      await page.getByRole("button", { name: "Mandarle el regalo de cumpleaños" }).click();
+      await page.getByRole("dialog", { name: "Armar el regalo de cumpleaños" }).getByRole("button", { name: "Sí, armar el regalo" }).click();
+      await expect(page.locator("[data-birthday-gift]")).toContainText("Regalo armado");
       await page.waitForTimeout(500);
       const found = await audit(page);
       expect(found, describe(found)).toEqual([]);

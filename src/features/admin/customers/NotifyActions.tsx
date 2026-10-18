@@ -3,12 +3,15 @@ import { Check, Mail, MessageCircle } from "lucide-react";
 import { buttonClass } from "@/components/atoms/Button";
 import { brand } from "@/config/brand";
 import { noticeFor, type RepurchaseItem } from "@/demo/admin/repurchase";
+import { repurchaseLines } from "@/demo/admin/repurchase-today";
 import { customerWhatsappLink, repurchaseMessage } from "@/demo/admin/repurchase-text";
+import { cartLinkPath } from "@/demo/engine/cart-link";
 import type { NoticeChannel } from "@/demo/fixtures/customers";
 import { cn } from "@/lib/cn";
 import { formatDateTime } from "@/lib/date";
 import { useAdmin } from "@/stores/admin";
 import { useToasts } from "@/stores/toast";
+import { shopUrl } from "./shopUrl";
 
 const CHANNEL: Record<NoticeChannel, string> = { email: "por email", whatsapp: "por WhatsApp" };
 const OUTBOX = "/admin-demo/emails/enviados/";
@@ -36,6 +39,8 @@ function useNotify(item: RepurchaseItem) {
 export function NotifyActions({ item, className }: { item: RepurchaseItem; className?: string }) {
   const notice = useAdmin((s) => noticeFor(s.workshop.profiles[item.email.toLowerCase()], item));
   const send = useNotify(item);
+  const orders = useAdmin((s) => s.orders);
+  const products = useAdmin((s) => s.data.products);
   if (notice) {
     return (
       <p className={cn("inline-flex items-center gap-1.5 text-sm font-bold text-success", className)}>
@@ -43,7 +48,9 @@ export function NotifyActions({ item, className }: { item: RepurchaseItem; class
       </p>
     );
   }
-  const whatsapp = customerWhatsappLink(item.phone, repurchaseMessage(item, brand.name));
+  // El mensaje lleva el link a la tienda con el bolso ya armado con lo mismo que compró (R4c).
+  const lines = repurchaseLines(orders, [item], products);
+  const whatsapp = customerWhatsappLink(item.phone, repurchaseMessage(item, brand.name, lines.length ? shopUrl(cartLinkPath(lines)) : undefined));
   return (
     <span className={cn("flex flex-wrap gap-2", className)}>
       <button type="button" onClick={send.email} aria-label={`Avisarle por email a ${item.name}: ${item.product}`} className={buttonClass("primary", "sm", "min-h-10 px-3.5")}>

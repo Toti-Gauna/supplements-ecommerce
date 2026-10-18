@@ -5,6 +5,11 @@ precios que cambian, vencimientos, clientes que no vuelven) **a lo que enamora**
 con el panel**, que es lo que le ahorra horas. Todos los botones, rutas, pedidos y clientes de este guion existen tal
 cual en la demo.
 
+> **Kit de venta** ([kit-de-venta/](kit-de-venta/README.md)): si tenés dos minutos, usá el
+> [guion de 90 segundos](kit-de-venta/guion-90s.md) (Hoy, Mostrador y los "wow", con el contraste con Tiendanube). Antes
+> de mandar la demo, pasá el [checklist de celulares reales](kit-de-venta/qa-celulares.md). Capturas y video del
+> recorrido en [kit-de-venta/img/](kit-de-venta/img/) y [kit-de-venta/video/](kit-de-venta/video/).
+
 - Demo publicada: `https://toti-gauna.github.io/supplements-ecommerce/` (o el link de la demo con la marca del
   prospecto, ver [marca-blanca.md](marca-blanca.md)). Las rutas de abajo se suman al final de esa dirección.
 - VOLTA es una marca inventada. Si armaste la demo con la marca del prospecto, los nombres cambian pero los botones son
@@ -150,8 +155,9 @@ Con el stack en el carrito:
 3. **Confirmar pedido** → la **ficha de entrega**: estado real ("Pendiente de pago"), la fecha y el total. Tocá
    **Activar avisos de recompra**: "Antes de que se le termine la whey, le avisás vos, no la competencia."
 4. **Subir comprobante**: el estado pasa a **Comprobante en revisión**, nunca a pagado. Lo aprobás vos en el panel.
-5. **Seguir mi pedido**: estados con fecha y hora. Si querés el "wow" del lote, en el panel aprobá el comprobante en **Pagos
-   manuales**, pasalo a **En preparación** y a **Listo** con el control de lote, y volvé: cada producto muestra **LOTE · VTO**.
+5. **Seguir mi pedido**: estados con fecha y hora. Si querés el "wow" del lote, en el panel aprobá el comprobante en
+   **Pedidos → Por cobrar**, armalo en **Para armar** (juntar los potes y controlar el lote) y volvé: cada producto
+   muestra **LOTE · VTO**.
 6. **Mi cuenta** → **Entrar a la cuenta demo** → **Mi box**: la whey de Sofía está en rojo ("Se termina esta
    semana") con **Recomprar**, y **Repetir mi último pedido** carga todo en un toque.
 
@@ -205,7 +211,8 @@ formato **Historia o reel**.
 Arranca siempre en **Hoy en tu tienda**: es lo primero que ve el dueño cada mañana. Si vas justo, salteá la recompra
 en Clientes (ya la mostraste desde Hoy).
 
-Abrí `/admin-demo/`. **Decí**: "Ahora lo tuyo. Esto lo abrís a la mañana con el mate."
+Abrí `/admin-demo/`. **Decí**: "Ahora lo tuyo. Esto lo abrís a la mañana con el mate." Este bloque es el
+[guion de 90 segundos](kit-de-venta/guion-90s.md) estirado: si se te acorta el tiempo, seguí ese.
 
 **Hoy en tu tienda (40 s)** — el panel abre acá.
 
@@ -243,8 +250,8 @@ Whey Vainilla (lote VL-2603-W) → **−40 %** → **Liquidar a $ 32.900**.
 - "Juan compra un scoop por día. El sistema sabe cuándo se le termina: **el jueves 8 de octubre**." → **Avisarle por
   email** (o el botón de WhatsApp con el mensaje ya escrito). "Le escribís vos antes de que vaya a otro lado."
 
-**Preparación con control de lote (30 s)** — **Pedidos → Preparación** → en VOL-000113 tocá **Armando** → **Control de lote** →
-**Controlar lotes** → tildá la barra → **Listo para despachar**.
+**Para armar con control de lote (30 s)** — **Pedidos → Para armar** → en VOL-000113 tildá la barra → **Ya junté todo** →
+tildá el lote → **Listo para despachar**. Después, **Despachos**: la lista de armado del día y la hoja de ruta del cadete.
 - "Nada sale sin confirmar el lote. Queda anotado en el pedido, por si un día hay un reclamo." Y "al cliente le llega
   solo el email de que está listo" (Ajustes → Emails → Bandeja de salida).
 
@@ -252,8 +259,13 @@ Whey Vainilla (lote VL-2603-W) → **−40 %** → **Liquidar a $ 32.900**.
 - "Te dice qué reponer, agrupado por distribuidora y con el total al costo." → **Copiar pedido para WhatsApp** en Sur
   Suplementos. "Lo pegás en el chat del proveedor y listo. Cuando llega, **Recibir mercadería** y se suma al stock."
 
+**Modo dueño (15 s)** — menú del panel → **Ver la tienda en modo dueño**.
+- "Esto es lo que ve tu cliente, con lo que cambiás vos marcado." Tocá la placa **Precio y stock de este producto** en
+  una ficha: abre ese producto en el panel. Si hiciste una compra en el celular, en la confirmación está **Ver este
+  pedido en el panel**: abre la ficha de ese mismo pedido.
+
 **Cerrá el panel**: "Y todo esto anda en el celular también", y mostrale el panel en el teléfono (pestañas de abajo:
-Hoy, Pedidos, Stock, Promos, Más).
+Hoy, Pedidos, Mostrador, Stock, Promos y Más).
 
 ## 9:00 · Cierre comercial (1 minuto)
 

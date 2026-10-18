@@ -20,6 +20,7 @@ import { specFromColumns, TableExcel } from "../table/TableExcel";
 import { useExport } from "../table/useExport";
 import { useTableState } from "../table/useTableState";
 import { profileHref } from "./Reminders";
+import { WriteTodayPanel } from "./WriteTodayPanel";
 import { useCustomerViews } from "./useCustomerViews";
 
 const FILTERS: FilterSpec<CustomerView>[] = [
@@ -99,6 +100,7 @@ export function CustomersTable() {
   return (
     <>
       <AdminPageHeader title="Clientes">Cuentas registradas y compradores invitados, unidos por email. Con el segmento “Se le termina esta semana” ves a quién avisarle. Perfiles ficticios: el panel nunca muestra contraseñas ni datos de pago.</AdminPageHeader>
+      <WriteTodayPanel />
       <DataTable caption="Clientes" noun="clientes" rows={all} columns={columns} state={state} {...table}
         rowKey={(c) => c.key} rowLabel={(c) => `Seleccionar ${c.name}`} rowHref={(c) => profileHref(c.email)} onExport={onExport} onExcel={() => state.setView("excel")} renderCard={(p) => <Card {...p} />}
         bulkActions={(list) => <BulkButton onClick={() => copy(list)}><Copy size={14} aria-hidden="true" /> Copiar emails</BulkButton>}

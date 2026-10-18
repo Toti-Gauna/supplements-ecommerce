@@ -11,12 +11,12 @@ escrito con la tienda de ejemplo **VOLTA**; en tu tienda vas a ver tu marca, per
 
 1. [Cómo moverte por el panel](#1-cómo-moverte-por-el-panel)
 2. [Hoy en tu tienda: tu día en una pantalla](#2-hoy-en-tu-tienda-tu-día-en-una-pantalla)
-3. [Pedidos, pagos y reclamos](#3-pedidos-pagos-y-reclamos)
+3. [Pedidos: cobrar, armar, despachar y posventa](#3-pedidos-cobrar-armar-despachar-y-posventa)
 4. [Clientes y recompra](#4-clientes-y-recompra)
 5. [Productos, stock y lotes](#5-productos-stock-y-lotes)
 6. [Importar la lista del proveedor (o tu catálogo)](#6-importar-la-lista-del-proveedor-o-tu-catálogo)
 7. [Aumentar precios](#7-aumentar-precios)
-8. [Preparación y despachos](#8-preparación-y-despachos)
+8. [Para armar, despachos y calendario](#8-para-armar-despachos-y-calendario)
 9. [Proveedores, compras, costos e insumos](#9-proveedores-compras-costos-e-insumos)
 10. [Emails automáticos](#10-emails-automáticos)
 11. [Cupones, ruleta, juego, misiones y descuento stack](#11-cupones-ruleta-juego-misiones-y-descuento-stack)
@@ -26,6 +26,8 @@ escrito con la tienda de ejemplo **VOLTA**; en tu tienda vas a ver tu marca, per
 15. [Ajustes](#15-ajustes)
 16. [Una rutina que funciona](#16-una-rutina-que-funciona)
 17. [Qué es simulado en la demo](#17-qué-es-simulado-en-la-demo)
+18. [Mostrador: vender en el local](#18-mostrador-vender-en-el-local)
+19. [Modo dueño: la tienda con lo que se edita marcado](#19-modo-dueño-la-tienda-con-lo-que-se-edita-marcado)
 
 ### Palabras que vas a ver
 
@@ -48,8 +50,8 @@ contraseña.
 ![Hoy en tu tienda y el menú en la compu](img/rediseno/r4a/menu-1440-light.png)
 
 **En la compu**
-- A la izquierda está el menú, con **8 entradas**: **Hoy**, **Pedidos**, **Stock**, **Compras**, **Clientes**,
-  **Promos**, **Campañas** y **Ajustes**. Se abre al pasar el mouse por encima. El número verde avisa cuánto hay para
+- A la izquierda está el menú, con **9 entradas**: **Hoy**, **Mostrador**, **Pedidos**, **Stock**, **Compras**,
+  **Clientes**, **Promos**, **Campañas** y **Ajustes**. Se abre al pasar el mouse por encima. El número verde avisa cuánto hay para
   atender en esa sección (comprobantes, pedidos atrasados, stock bajo).
 - Cada entrada tiene sus **pestañas** arriba de la pantalla (por ejemplo, Promos: Cupones, Descuento stack, Ruleta,
   Premios del juego, Misiones, Regalos y gift cards). Se recorren con el mouse, el dedo o las flechas del teclado.
@@ -61,21 +63,22 @@ contraseña.
 
 ![El panel en el celular, con el menú Más abierto](img/rediseno/r4a/menu-390-light.png)
 
-- Abajo tenés las pestañas **Hoy**, **Pedidos**, **Stock**, **Promos** y **Más** (el resto de las secciones). Las
-  pestañas de cada sección se deslizan hacia los costados.
+- Abajo tenés las pestañas **Hoy**, **Pedidos**, **Mostrador** (en el centro), **Stock**, **Promos** y **Más** (el
+  resto de las secciones). Las pestañas de cada sección se deslizan hacia los costados.
 - Arriba, el menú (☰), el buscador, el modo claro/oscuro y Reiniciar demo (la flecha circular).
 
 ### Dónde quedó cada pantalla
 
-Antes el menú tenía 21 entradas. Ahora son 8 y lo que era una entrada pasó a ser una pestaña dentro de su sección.
+Antes el menú tenía 21 entradas. Ahora son 9 y lo que era una entrada pasó a ser una pestaña dentro de su sección.
 Los enlaces viejos siguen andando: te llevan a la pestaña nueva.
 
 | Sección | Pestañas | Antes era |
 |---|---|---|
 | **Hoy** | (una sola pantalla) | Inicio |
-| **Pedidos** | Pedidos · Pagos manuales · Preparación · Calendario de despachos · Reclamos | Pedidos, Pagos manuales, Preparación (y la vieja Producción), Calendario de despachos, Reclamos |
+| **Mostrador** | Vender · Pedido por chat · Cierre del día · Consulta rápida | (nuevo: la venta en el local, ver la [sección 18](#18-mostrador-vender-en-el-local)) |
+| **Pedidos** | Por cobrar · Para armar · Despachos (Lista y hoja de ruta, Calendario) · Postventa (Seguimiento, Reclamos) · Todos | Pagos manuales (ahora **Por cobrar**), Preparación y la vieja Producción (ahora **Para armar**), Calendario de despachos (dentro de **Despachos**), Reclamos (dentro de **Postventa**) y la tabla de Pedidos (ahora **Todos**) |
 | **Stock** | Productos y stock · Categorías · Packs · Importar | Productos y stock (con Stock y Planilla adentro), Categorías y objetivos, Packs, Importar desde Excel |
-| **Compras** | Proveedores · Insumos · Costos y margen | Proveedores y compras, Insumos de embalaje, Costos y margen |
+| **Compras** | Proveedores · Insumos · Costos y margen (Por producto y Costos vivos) · Lista del proveedor | Proveedores y compras, Insumos de embalaje, Costos y margen; la Lista del proveedor es nueva (R4c) |
 | **Clientes** | (una sola pantalla, con la ficha de cada cliente) | Clientes |
 | **Promos** | Cupones · Descuento stack · Ruleta (Configuración y Premios disponibles) · Premios del juego · Misiones (y Simular progreso) · Regalos y gift cards | Cupones y ruleta (una pantalla con tarjetas), Descuento stack, Misiones, Regalos y gift cards |
 | **Campañas** | Campañas · Estudio de contenido | Campañas (antes Temáticas), Estudio de contenido, y el resumen de Marketing |
@@ -83,11 +86,15 @@ Los enlaces viejos siguen andando: te llevan a la pestaña nueva.
 
 Qué cambia en las direcciones: `/admin-demo/cupones/` y `/admin-demo/cupones/lista/` ahora son `/admin-demo/promos/`;
 `/admin-demo/marketing/` y `/admin-demo/tematicas/` llevan a **Campañas**; `/admin-demo/contenido/` lleva al carrusel y
-`/admin-demo/ajustes/contacto/` a **Ajustes**; `/admin-demo/produccion/` lleva a **Preparación** y `/admin-demo/stock/` y
-`/admin-demo/planilla/` a **Productos y stock** (vista por variante y formato Excel). El resto de las direcciones no
-cambió.
+`/admin-demo/ajustes/contacto/` a **Ajustes**; `/admin-demo/produccion/` lleva a **Para armar** y `/admin-demo/stock/` y
+`/admin-demo/planilla/` a **Productos y stock** (vista por variante y formato Excel). En Pedidos las direcciones de
+antes abren la pestaña nueva con sus filtros: `/admin-demo/pagos/` es **Por cobrar** (`?estado=done` sigue mostrando los
+resueltos), `/admin-demo/preparacion/` es **Para armar**, `/admin-demo/calendario/` es **Despachos → Calendario**,
+`/admin-demo/reclamos/` es **Postventa → Reclamos** y `/admin-demo/pedidos/` es **Todos**. Son nuevas
+`/admin-demo/despachos/` y `/admin-demo/postventa/`. El resto de las direcciones no cambió.
 
-> Mostrador (la venta en el local) se suma como novena entrada, en el centro de las pestañas del celular.
+> **Mostrador** (la venta en el local) es la novena entrada y la pestaña del centro en el celular: ver la
+> [sección 18](#18-mostrador-vender-en-el-local).
 
 **Tablas**: casi todas las listas (pedidos, clientes, productos, costos…) tienen buscador, filtros, **Reiniciar**
 filtros, **Columnas** para elegir qué ver, **Ver en formato Excel** y **Descargar Excel (.xlsx)** con lo que estás
@@ -108,7 +115,7 @@ Es lo primero que ves al abrir el panel. La idea: que a la mañana, en 30 segund
 | **Vendido hoy** | Pedidos de hoy ya pagados. Debajo, lo vendido en los últimos 7 días. Un comprobante sin aprobar no suma |
 | **Por cobrar** | Lo que todavía no cobraste: pedidos sin pagar y comprobantes que tenés que revisar |
 | **Para armar** | Pedidos pagados o en preparación, y cuántos están atrasados |
-| **Sale hoy** | Pedidos con el cadete de hoy, el cupo que le queda y el próximo día que tiene lugar |
+| **Sale hoy** | Pedidos con el cadete de hoy, el cupo que le queda y el próximo día que tiene lugar (te lleva a **Despachos**) |
 | **Stock en riesgo** | Variantes sin stock o con 3 unidades o menos |
 
 **Para hacer** es la lista del día, ya ordenada. Va de arriba hacia abajo en cuatro grupos: **Atrasado**, **Para hoy**,
@@ -117,12 +124,12 @@ comprobantes) y después lo que vence antes. Cada fila tiene **un solo botón**:
 
 | Fila | Botón | Qué pasa |
 |---|---|---|
-| Pedido atrasado o que sale hoy | **Terminar de armar** / **Armar** | Te abre el pedido |
-| Comprobante de un cliente | **Aprobar** | Te pregunta si ya viste la plata en tu cuenta. Recién con **Sí, lo verifiqué** el pedido pasa a Pagado y se va de la lista. Si no entró, tocá el nombre del comprobante para verlo y rechazarlo |
+| Pedido atrasado o que sale hoy | **Terminar de armar** / **Armar** | Te abre **Para armar** en ese pedido |
+| Comprobante de un cliente | **Aprobar** | Te pregunta si ya viste la plata en tu cuenta. Recién con **Sí, lo verifiqué** el pedido pasa a Pagado y se va de la lista. Si no entró, tocá el nombre del comprobante: se abre **Por cobrar** en ese pedido para verlo y rechazarlo |
 | Pedido listo que sale hoy | **Marcar enviado** (o **Marcar retirado**) | Te pide confirmar y el pedido pasa a Enviado o Entregado |
 | Compras a proveedores | **Armar los pedidos** | Te lleva a **Proveedores y compras**. Si hay variantes sin stock, es para hoy |
 | Clientes a los que se les termina el pote | **Avisarles** | Se abre la lista con el aviso por email o WhatsApp de cada uno. Los que avisás dejan de contar |
-| Pedidos de la semana | **Abrir preparación** | Te lleva al tablero de preparación |
+| Pedidos de la semana | **Ir a Para armar** | Te lleva a **Pedidos → Para armar** |
 | Regalo con el sabor ya elegido | **Ver el regalo** | Te lleva al regalo en **Regalos y gift cards**: es lo que tenés que armar |
 | Lote que vence en 30 días o menos | **Liquidar −30 %** | Abre la liquidación con el descuento propuesto (40 % si faltan 15 días o menos). Liquidado, sale de la lista. Un lote vencido aparece arriba de todo para sacarlo de la venta |
 | Próxima campaña | **Preparar** | Te abre el editor. Debajo, el checklist: cupón activo, productos con stock, descuento real y piezas para Instagram |
@@ -139,27 +146,79 @@ Al final, **Cómo viene la semana**: las ventas por día. Tocá una barra para v
 
 ---
 
-## 3. Pedidos, pagos y reclamos
+## 3. Pedidos: cobrar, armar, despachar y posventa
+
+**Pedidos** está ordenado por lo que tenés que hacer, de izquierda a derecha: **Por cobrar**, **Para armar**,
+**Despachos**, **Postventa** y, al final, **Todos** (la tabla con todos los pedidos). Al tocar **Pedidos** en el menú
+entrás a **Por cobrar**. En cada pantalla ves el **total** de cada pedido y el botón **Escribirle por WhatsApp**, que
+abre WhatsApp con el mensaje del estado del pedido ya escrito, al teléfono del cliente (sección 10).
 
 ### Los estados de un pedido
 
 Pendiente de pago → Comprobante en revisión → Pagado → En preparación → Listo → Enviado → Entregado. Además, un
 pedido puede quedar **En reclamo** o **Cancelado**. Cada cambio queda en el historial del pedido y, si corresponde,
-le manda al cliente su email (sección 10).
+le manda al cliente su email (sección 10). El WhatsApp no sale solo: lo mandás vos con el botón.
 
-### Revisar un pedido
+### Por cobrar: los comprobantes, de a uno
 
-1. Entrá a **Pedidos**. Filtrá por **Etapa** (Por cobrar, Por preparar, En preparación, Listos…) o buscá por código o
-   cliente.
+Cuando el cliente paga por transferencia o QR, sube el comprobante y el pedido queda **Comprobante en revisión**.
+Subir un comprobante **nunca** marca el pedido como pagado: lo aprobás vos.
+
+![Por cobrar: un pedido por vez, con el comprobante y el total](img/rediseno/r4b/pedidos-cobrar-1440-light.png)
+
+1. Entrá a **Pedidos → Por cobrar** (o tocá **Por cobrar** en el marcador de Hoy). Arriba dice cuánto falta cobrar.
+2. Se revisa **de a uno**: primero los comprobantes que subieron tus clientes y después los pedidos que todavía no se
+   pagaron. Ves el comprobante, el **total del pedido**, el medio y cuándo sale. **Anterior** y **Siguiente** te mueven;
+   abajo, en **En la fila**, tocás cualquiera para ir directo.
+3. Fijate en tu banco o billetera que la plata haya entrado.
+4. Si entró: **Aprobar** → te pregunta "¿Ya viste en tu cuenta el ingreso de …?" → **Sí, lo verifiqué**. El pedido
+   pasa a Pagado, entra en **Para armar** y al cliente le llega "Pago aprobado". En la pantalla aparece el que sigue.
+5. Si no coincide: **Rechazar**, escribí el motivo (por ejemplo "El monto no coincide") y confirmá. El cliente recibe
+   el motivo y cómo mandar otro; el pedido vuelve a **Sin pagar** y su WhatsApp ya dice el motivo.
+6. Un pedido **Sin pagar** que el cliente no va a pagar: **Cancelar el pedido**. Para recordarle que pague,
+   **Escribirle por WhatsApp**.
+7. En **Resueltos** queda todo lo que ya revisaste, con su motivo. **Configurar datos de cobro** cambia el alias y el
+   CBU que ve el comprador.
+
+![Por cobrar en el celular](img/rediseno/r4b/pedidos-cobrar-390-dark.png)
+
+> En la demo: no hay cuenta bancaria real. Aprobar solo cambia el estado en tu navegador. Los pagos con Mercado Pago
+> no llevan comprobante: en la tienda real se confirman solos (en la demo, **Simular confirmación de Mercado Pago**).
+
+**Para armar** y **Despachos** están en la sección 8.
+
+### Postventa: lo que ya salió
+
+En **Pedidos → Postventa → Seguimiento** está lo que pasa después del despacho:
+
+- **En camino**: lo que salió con el cadete o el correo. Cuando llega, **Marcar entregado** (al cliente le llega el
+  email "así se toma").
+- **En reclamo**: el pedido y el reclamo o la devolución que tiene abierto.
+- **Entregados hace poco** (últimos 30 días): **Escribirle por WhatsApp** para saber cómo le fue.
+
+![Postventa](img/rediseno/r4b/postventa-1440-dark.png)
+
+**Reclamos, devoluciones y arrepentimientos** están al lado, en **Postventa → Reclamos**:
+1. En **Pendientes** están los abiertos (arrepentimiento, devolución o reclamo).
+2. Tocá uno para ver el mensaje del cliente y su pedido.
+3. Usá **Marcar en curso** mientras lo resolvés, y después **Resolver** o **Rechazar**.
+
+Los arrepentimientos que el cliente manda desde el botón de arrepentimiento de la tienda aparecen acá solos.
+
+### Todos los pedidos y la ficha de un pedido
+
+1. Entrá a **Pedidos → Todos**. Filtrá por **Etapa** (Por cobrar, Por preparar, En preparación, Listos…) o buscá por
+   código o cliente. El ícono de WhatsApp de cada fila abre el mensaje de su estado.
 2. Tocá la fila del pedido (por ejemplo **VOL-000123**).
-3. Arriba ves el estado del pago, el de la preparación, el total y la **Próxima acción** (qué tenés que hacer vos).
+3. Arriba ves el estado del pago, el de la preparación, el total, **Escribirle por WhatsApp** y la **Próxima acción**
+   (qué tenés que hacer vos).
 4. Más abajo: el cliente, los productos con el **lote que sale** de cada uno, el pago, la entrega, el historial, las
    notas internas y los emails que ya le llegaron.
 
 ![Ficha de un pedido con comprobante en revisión](img/panel-pedido.png)
 
 **Cambiar el estado**: en la ficha, tocá el botón del estado siguiente (por ejemplo **En preparación**) y confirmá.
-Para pasar a **Listo** te pide el control de lote (sección 8). Para cambiar varios pedidos juntos: en la lista, tildá
+Para pasar a **Listo** te pide el control de lote (sección 8). Para cambiar varios pedidos juntos: en **Todos**, tildá
 los pedidos y usá la acción en lote que aparece (por ejemplo **Pasar a En preparación**).
 
 **Fecha de despacho**: en la ficha, **Fecha comprometida de despacho** → elegí el día → **Guardar**. **Ver la
@@ -167,32 +226,6 @@ capacidad en el calendario** te muestra si el cadete tiene lugar ese día.
 
 **Notas internas**: escribí en **Nueva nota (no la ve el comprador)** y tocá **Agregar nota**. Sirve para "pidió
 cambiar a chocolate" o "retira el jueves".
-
-### Aprobar o rechazar un pago por transferencia o QR
-
-Cuando el cliente paga por transferencia o QR, sube el comprobante y el pedido queda **Comprobante en revisión**.
-Subir un comprobante **nunca** marca el pedido como pagado: lo aprobás vos.
-
-1. Entrá a **Pedidos → Pagos manuales** (o tocá **Revisar comprobantes** en el inicio).
-2. En **Por revisar**, mirá el comprobante, el monto esperado y el medio.
-3. Fijate en tu banco o billetera que la plata haya entrado.
-4. Si entró: **Aprobar** y confirmá. El pedido pasa a Pagado y al cliente le llega "Pago aprobado".
-5. Si no coincide: **Rechazar**, escribí el motivo (por ejemplo "El monto no coincide") y confirmá. El cliente recibe
-   el motivo y cómo mandar otro.
-6. En **Resueltos** queda todo lo que ya revisaste, con su motivo.
-
-![Pagos manuales por revisar](img/panel-pagos.png)
-
-> En la demo: no hay cuenta bancaria real. Aprobar solo cambia el estado en tu navegador. Los pagos con Mercado Pago
-> no llevan comprobante; en la tienda real se confirman solos.
-
-### Reclamos, devoluciones y arrepentimientos
-
-1. Entrá a **Reclamos**. En **Pendientes** están los abiertos (arrepentimiento, devolución o reclamo).
-2. Tocá uno para ver el mensaje del cliente y su pedido.
-3. Usá **Marcar en curso** mientras lo resolvés, y después **Resolver** o **Rechazar**.
-
-Los arrepentimientos que el cliente manda desde el botón de arrepentimiento de la tienda aparecen acá solos.
 
 ---
 
@@ -210,6 +243,32 @@ En **Clientes** está cada persona que te compró, con o sin cuenta, unida por s
 
 Otros segmentos útiles: **Recompra atrasada** (ya se le terminó y no volvió), **Nuevos**, **Frecuentes**, **VIP** y
 **Sin compras**. También podés filtrar por **Objetivo** (masa muscular, fuerza, definición…).
+
+### A quién escribirle hoy (con el link del bolso)
+
+Arriba de **Clientes**, **A quién escribirle hoy** junta a las personas a las que ya se les terminó el pote (hace menos
+de un mes) o se les termina esta semana: una tarjeta por persona, con lo que se le termina, el mensaje de WhatsApp ya
+escrito y dos botones.
+
+1. **Escribirle por WhatsApp** abre el chat con el mensaje armado. Queda anotado que le avisaste y la persona sale de
+   la lista (el aviso no se repite).
+2. **Copiar el link del bolso**: el mensaje trae un link a la tienda que, al abrirlo, **carga en el bolso lo mismo que
+   compró** (misma presentación y cantidad, si hoy hay stock) y lo lleva al carrito. Solo confirma y paga; no se genera
+   ningún pedido hasta entonces.
+
+El cálculo sale de los servicios del pote y de cuándo lo recibió, igual que en la ficha y en **Hoy** (la fila
+"Avisales a N clientes que se les termina el pote"). Es orientativo.
+
+![A quién escribirle hoy](img/rediseno/r4c/recompra-whatsapp-1440.png)
+
+### Regalo de cumpleaños
+
+En la ficha del cliente, **Objetivo y cumpleaños**: cargá el día y el mes. Desde 7 días antes aparece **Mandarle el
+regalo de cumpleaños**. Al confirmarlo se emite una **gift card de la casa de $ 10.000** a su nombre (se descuenta en
+su próxima compra y vence a los 12 meses; no es un pago) y queda el mensaje de WhatsApp con el link para abrirla. Hay
+uno por año. El mismo regalo aparece en **Promos → Regalos** y, en el día del cumpleaños, en **Hoy en tu tienda**.
+
+![Regalo de cumpleaños armado en la ficha](img/rediseno/r4c/cumpleanos-390.png)
 
 ### Avisarle que se le está por terminar
 
@@ -289,6 +348,22 @@ comparación como imagen): la respuesta que hoy escribís por WhatsApp.
 En la tienda ese sabor sale con el precio tachado y "Liquidación · vence 11/2026". Para volver atrás: en el lote,
 **Cambiar la liquidación** → **Quitar liquidación**.
 
+### Otras salidas para un lote que vence
+
+La misma hoja (**Liquidar** en Productos y stock o en la fila de **Hoy**) tiene cuatro pestañas, cada una ya armada:
+
+- **Liquidar**: además del precio, te dice cuánto ganás o perdés si se vende todo el lote ("ganás $ 17.550") y cuánto
+  perdés si vence sin venderse.
+- **Combo**: sugiere el producto que más se lleva junto (por ejemplo un shaker), el descuento (10, 15 o 20 %) y el
+  precio del combo con su margen. **Crear el combo** lo deja como un pack en la tienda.
+- **Cupón**: crea un cupón real en **Promos** (código `LOTE…`, 15 % por defecto, vigente 14 días sin pasar del
+  vencimiento y con tantos usos como unidades) y arma el mensaje de WhatsApp de cada cliente que ya compró ese producto.
+- **Drop**: lo suma a los productos en oferta de la próxima campaña, con su cupón.
+
+La pestaña muestra un tilde cuando ya armaste esa salida y **Hoy** lo anota ("Ya armaste: combo, cupón").
+
+![Qué hacer con un lote que vence](img/rediseno/r4c/lote-acciones-1440.png)
+
 ### Categorías y objetivos
 
 En **Categorías y objetivos** ordenás las categorías (**Subir**/**Bajar**), elegís las destacadas y editás los
@@ -340,37 +415,61 @@ Para subir (o bajar) un porcentaje a una marca, una categoría o todo el catálo
 
 La tienda ya muestra los precios nuevos. **Deshacer aumento** vuelve exacto al precio anterior (el último aumento).
 
+**Al margen de la marca**: en vez de un porcentaje parejo, elegí **Al margen de la marca** (arriba del formulario).
+Cada variante con costo cargado pasa al precio que deja el margen que fijaste para su marca (ver
+[Lista del proveedor](#lista-del-proveedor-y-margen-por-marca)), redondeado hacia arriba (terminado en 900, a $100 o a
+$500). Las que no tienen costo no se tocan. También se deshace.
+
 ---
 
-## 8. Preparación y despachos
+## 8. Para armar, despachos y calendario
 
-### Preparar pedidos con control de lote
+### Para armar: dos pasos por pedido
 
-En **Pedidos → Preparación** están los pedidos pagados, en orden de despacho, en cuatro columnas: **Por preparar → Armando →
-Control de lote → Listo para despachar**.
+En **Pedidos → Para armar** están los pedidos pagados, el que sale antes primero (los atrasados, con borde rojo). Cada
+pedido tiene su checklist de **dos pasos**, sin columnas ni arrastrar:
 
-![Tablero de preparación](img/panel-preparacion.png)
+![Para armar](img/rediseno/r4b/pedidos-armar-1440-light.png)
 
-1. En la tarjeta del pedido (por ejemplo **VOL-000113**) tocá el botón de la etapa siguiente: **Armando**. También
-   podés arrastrar la tarjeta o usar **Mover etapa**. Al empezar a armarlo se descuenta el embalaje.
-2. Cuando lo tenés armado, pasalo a **Control de lote**.
-3. Tocá **Controlar lotes**. Sacá el pote que vence primero y fijate que el lote coincida con la etiqueta.
-4. Tildá cada producto. Abajo dice "1 de 1 controlados".
-5. Tocá **Listo para despachar**. Sin todos los lotes tildados no te deja.
+1. **Juntá los potes**: tildá cada producto a medida que lo sacás del estante (si salís de la pantalla, lo tildado
+   queda). Con todo tildado, **Ya junté todo**: el pedido pasa a "En preparación", se descuenta su embalaje (una sola
+   vez) y al cliente le llega "Preparando tu pedido".
+2. **Controlá lote y vencimiento**: cada producto muestra el lote que tiene que salir (el que vence primero, por
+   ejemplo **Lote VL-2604-B · vence 10/2026**). Fijate que coincida con la etiqueta y tildalo. Abajo dice "1 de 1
+   controlados". **Listo para despachar**: sin todos los lotes tildados no te deja. Si falta un pote, **Volver a
+   juntar** te lleva al paso 1.
 
-![Control de lote en el celular](img/celular-control-lote.png)
+Arriba podés filtrar por **1 · Juntar** o **2 · Controlar lote**. El total y el WhatsApp del pedido están en cada
+tarjeta. Desde Hoy, **Armar** te abre directo el pedido.
+
+![Para armar en el celular](img/rediseno/r4b/pedidos-armar-390-dark.png)
 
 El lote queda anotado en el pedido ("Lote controlado: VL-2604-B · vence 10/2026") y al cliente le llega solo el email
 de "listo para retirar" o "listo para salir", según cómo lo recibe. Desde ese momento, en el **seguimiento** de su
 pedido cada producto muestra su etiqueta **LOTE VL-2604-B · VTO 10/2026**: antes del control dice "Lote: se controla
 al armar tu pedido". Es la prueba de que vende originales y con fecha, sin que nadie pregunte por WhatsApp.
 
-En el celular, las columnas se eligen con los botones de **Etapa** de arriba.
+### Despachos: lista de armado y hoja de ruta del cadete
+
+En **Pedidos → Despachos → Lista y hoja de ruta** elegís el día (**Hoy**, **Mañana** y los próximos días hábiles, cada
+uno con cuántos pedidos salen). Lo atrasado se suma a hoy.
+
+![Despachos: lista de armado y hoja de ruta](img/rediseno/r4b/despachos-ruta-1440-light.png)
+
+- **Lista de armado**: cuántos potes de cada variante tenés que juntar para todos los pedidos pagados que salen ese día
+  (por ejemplo "2× Barra proteica · Maní"), con el lote que sale y de qué pedidos son. Lo que ya está junto se marca.
+- **Hoja de ruta del cadete**: los envíos en Mar del Plata ordenados por zona y franja (Centro de 10 a 12 h, Playa
+  Grande y Los Troncos de 12 a 14 h…), con la dirección, el total y **qué cobrar** ("Ya pagó: no cobrar" o "Cobrar $ …"
+  si todavía no pagó). Cuando se lo das al cadete, **Marcar enviado**. **Mandarle la hoja al cadete** abre WhatsApp con
+  el recorrido escrito.
+- **Correo y retiros en el local**: lo que sale ese día sin cadete.
+
+![Hoja de ruta en el celular](img/rediseno/r4b/despachos-ruta-390-light.png)
 
 ### Calendario de despachos
 
-En **Pedidos → Calendario de despachos** ves cada pedido en el día que sale: con el cadete en Mar del Plata, por correo o para
-retirar.
+En **Pedidos → Despachos → Calendario** ves cada pedido en el día que sale: con el cadete en Mar del Plata, por correo
+o para retirar.
 
 ![Calendario de despachos](img/panel-calendario.png)
 
@@ -409,6 +508,40 @@ En **Costos y margen** ves cuánto te cuesta cada producto (lo que le pagás al 
 deja al precio actual y el precio sugerido para tu **Margen objetivo (%)**. El filtro **Margen bajo o pérdida** te
 muestra lo que conviene revisar. Tocá un producto para ver el margen de cada presentación.
 
+### Lista del proveedor y margen por marca
+
+En **Compras → Lista del proveedor** pegás la lista de precios de tu distribuidor (copiada de Excel, Sheets o un mail)
+y ves, antes de tocar nada, qué cambió.
+
+1. En **Margen por marca** fijá cuánto querés ganar sobre el precio de venta con cada marca. Debajo de cada campo
+   ves lo que deja hoy en promedio. Sin un margen propio vale el general de **Costos y margen**.
+2. Pegá la lista (o tocá **Cargar la lista de muestra**). La primera fila tiene que tener títulos como "Artículo" y
+   "Costo".
+3. Arriba te resume: **"48 suben, 3 bajan, 2 sin coincidencia"**. Filtrá por **Suben**, **Bajan** o **Sin coincidencia**
+   (lo que tu tienda no vende o una presentación que no existe: no se toca nada).
+4. En cada variante ves el costo de antes y el nuevo, el margen que te deja el precio actual y **el precio de venta
+   nuevo que propone el margen de la marca**, redondeado hacia arriba (por defecto, terminado en 900). Destildá las que
+   no quieras mover: el costo se actualiza igual.
+5. **Aplicar costos y precios** y confirmá. Se puede **Deshacer** (vuelven precios y costos).
+
+![Lista del proveedor con las diferencias](img/rediseno/r4c/lista-proveedor-diferencias-1440.png)
+
+Es distinto de **Stock → Importar**, que actualiza costos y precios fila por fila desde un archivo; acá primero ves las
+diferencias y el margen de cada marca.
+
+### Costos vivos
+
+En **Costos y margen → Costos vivos**, una fila por variante con:
+
+- **Costo** y **Rige desde**: la fecha desde la que vale (la de la lista del proveedor al aplicarla, o el día en que lo
+  cambiaste a mano). Los costos de hace más de 60 días se marcan.
+- **Cobertura**: para cuántos días alcanza el stock al ritmo de venta (stock ÷ venta diaria de las últimas 8 semanas,
+  con pedidos pagados y ventas del mostrador). Es orientativo.
+- **Ganancia al liquidar**: en los lotes por vencer, cuánto ganás o perdés si se liquidan con el descuento propuesto, y
+  cuánto perdés si vencen.
+
+![Costos vivos](img/rediseno/r4c/costos-vivos-1440.png)
+
 ### Insumos de embalaje
 
 En **Insumos de embalaje**: cajas, bolsas, precintos, folletos, cinta y los regalos que sumás a los pedidos (sachets,
@@ -433,9 +566,20 @@ está por terminar**. Salen solos cuando cambiás el estado del pedido.
 3. Elegí un pedido en **Con el pedido** para ver la vista previa con datos reales, en **Escritorio** o **Celular**.
 4. **Enviar prueba** y después **Guardar cambios**. **Restaurar** vuelve al texto original.
 
+**Versión WhatsApp**: cada email tiene al lado su mensaje corto de WhatsApp, el que se abre con **Escribirle por
+WhatsApp** en Pedidos. En la tarjeta del email lo ves armado con un pedido real; **Editar WhatsApp** (o la sección
+**Versión WhatsApp** dentro del editor del email) lo cambia con las mismas fichas de datos (**Insertar Nombre del
+cliente**, **Total del pedido**…) y **Guardar WhatsApp**. **Volver al de muestra** deshace los cambios. Los estados que
+no mandan email (**En reclamo**, **Cancelado** y **Devuelto**) tienen solo su WhatsApp, en **Solo por WhatsApp**.
+
+![La versión WhatsApp junto al email](img/rediseno/r4b/mensajes-whatsapp-1440-light.png)
+
+![Editar el WhatsApp de un estado sin email](img/rediseno/r4b/mensajes-whatsapp-panel-390-light.png)
+
 **Bandeja de salida**: todos los emails que "salieron", con buscador y filtro por **Momento**.
 
-> En la demo: no sale ningún email. Todo queda en la Bandeja de salida para que lo veas.
+> En la demo: no sale ningún email. Todo queda en la Bandeja de salida para que lo veas. El WhatsApp se abre con el
+> mensaje escrito y lo mandás vos; los mensajes editados quedan solo en este navegador.
 
 ---
 
@@ -651,8 +795,9 @@ Cada parte es una pestaña; el **Contenido** (sección 14) y los **Emails** (sec
 
 - **Contacto y WhatsApp**: el número del botón de WhatsApp de la tienda, con código de país y área
   (54 9 223 …). **Guardar contacto**.
-- **Medios de pago**: cuáles se ofrecen (Mercado Pago, transferencia, QR), el descuento por transferencia o QR y
-  cuántas horas se reserva un pedido sin comprobante. **Guardar medios de pago**.
+- **Medios de pago**: cuáles se ofrecen (Mercado Pago, transferencia, QR), el descuento por transferencia o QR,
+  cuántas horas se reserva un pedido sin comprobante y el **recargo de las cuotas del mostrador** (3 y 6 cuotas).
+  **Guardar medios de pago**.
 - **Datos de cobro**: alias, CBU/CVU, titular y QR que ve el comprador para transferir. **Guardar datos de cobro**.
 - **Envíos y retiro**: envío gratis desde cierto monto y cada forma de entrega (retiro en el local, cadete en Mar del
   Plata con sus códigos postales, envío al resto del país) con precio y plazo. **Guardar envíos**.
@@ -666,7 +811,8 @@ Cada parte es una pestaña; el **Contenido** (sección 14) y los **Emails** (sec
 **Cada mañana (10 minutos)**
 1. **Hoy en tu tienda**: hacé la lista de arriba hacia abajo. Primero lo atrasado y los comprobantes (aprobá solo lo que
    ya viste en tu cuenta).
-2. **Pedidos → Preparación**: armá lo de hoy y hacé el control de lote.
+2. **Pedidos → Para armar**: juntá los potes de lo que sale y hacé el control de lote. Después, **Despachos**: la hoja de
+   ruta para el cadete.
 3. **Avisarles** (en Hoy): mandá el aviso a quien se le termina el pote.
 
 **Cada semana**
@@ -692,9 +838,92 @@ Cada parte es una pestaña; el **Contenido** (sección 14) y los **Emails** (sec
 | Todo se guarda solo en el equipo y el navegador que usás; **Reiniciar demo** lo borra | Se guarda en la tienda y lo ven todos los equipos |
 | Ningún pago es real: aprobar un comprobante solo cambia el estado | Mercado Pago confirma solo; la transferencia la aprobás vos después de verla en tu cuenta |
 | No sale ningún email: quedan en la Bandeja de salida | Le llegan al cliente |
-| El WhatsApp se abre con el mensaje escrito, pero lo mandás vos | Igual |
+| El WhatsApp se abre con el mensaje escrito, pero lo mandás vos. Los teléfonos de los clientes son inventados | Igual, con el teléfono que dejó el cliente |
 | El giro de la ruleta y el cupón del juego valen uno por navegador | Uno por cuenta |
 | Las suscripciones a un pack no cobran ni envían nada: solo se cuentan y se listan | El cobro mensual y los avisos de cada entrega se definen con el medio de pago real |
 | Proveedores, clientes, pedidos y códigos de lote son inventados | Son los tuyos |
 | La fecha del panel está fija en el lunes 5 de octubre de 2026 | Es la fecha de hoy |
 | Las gift cards no tienen dinero real: el saldo es un descuento simulado y el regalo viaja dentro del link | El servidor emite la gift card, guarda el saldo y el link es una clave al azar |
+| Las ventas del mostrador no cobran nada ni emiten factura: bajan el stock de este navegador y quedan en el cierre del día | Se registran en la tienda con su comprobante y el stock baja para todos |
+| El link de recompra y el regalo de cumpleaños viajan con los datos adentro del link y funcionan en este navegador; los mensajes de WhatsApp los mandás vos | El servidor guarda el bolso y el regalo, y el link es una clave al azar |
+
+---
+
+## 18. Mostrador: vender en el local
+
+Para cuando el cliente está adelante tuyo o te escribe por WhatsApp. Está segundo en el menú, es la pestaña del medio en
+el celular y también lo abrís desde **Hoy** con **Vender en el mostrador**. Pensado para la tablet o el celular del
+mostrador: botones grandes y todo a un toque.
+
+![Mostrador en el celular, con el ticket abajo](img/rediseno/r4b/mostrador-390-light.png)
+
+### Vender
+1. Escribí lo que te piden en el buscador: el producto, la marca o el sabor ("whey chocolate", "creatina"). Entiende
+   errores chicos. Sin escribir nada ves lo que más sale.
+2. Tocá el pote para sumarlo al ticket. Cada tarjeta dice el precio, cuánto queda y **el lote que sale: siempre el que
+   vence primero**. Si vence en menos de 60 días se ve en ámbar con los días que faltan; un lote liquidado sale a su
+   precio de liquidación.
+3. El ticket está siempre a la vista: a la derecha en la compu y abajo en el celular (**Ver el ticket** para cambiar
+   cantidades o sacar algo). Con suplementos de 3 categorías distintas aplica solo el **descuento stack**, el mismo de
+   la tienda.
+4. **Cobrar** y elegí cómo paga:
+   - **Efectivo**: anotá con cuánto paga (o tocá un billete) y te dice el vuelto.
+   - **Transferencia**: registrala cuando veas la plata en tu cuenta.
+   - **Débito** o **Crédito 1 pago**: sin recargo.
+   - **3 cuotas** o **6 cuotas**: con el recargo de **Ajustes → Medios de pago** (en la demo, 12 % y 24 %). Ves el valor
+     de cada cuota y el total; las cuotas son iguales y se redondean al peso.
+5. **Registrar venta (simulada)**: queda el comprobante en pantalla (número de ticket, vuelto o cuotas y de qué lote
+   salió cada pote) y el stock baja en el panel y en la tienda. **Nueva venta** deja el ticket listo para el siguiente.
+
+![Cobro en 3 cuotas con el recargo](img/rediseno/r4b/cobro-cuotas.png)
+
+### Pedido por chat (WhatsApp o Instagram)
+Cuando alguien te compra por mensaje, cargalo en **Pedido por chat**: canal, nombre, teléfono o usuario, productos,
+entrega (retiro, cadete o envío) y cómo paga. Entra en **Pedidos** como cualquier otro, con "por WhatsApp" o "por
+Instagram" a la vista, y sigue el mismo camino.
+- Con **transferencia o QR** queda pendiente de pago. Si ya te mandó el comprobante por el chat, marcalo: queda **en
+  revisión** y lo aprobás en Pagos cuando ves la plata. Un comprobante nunca lo marca pagado.
+- Con **link de Mercado Pago** queda esperando la confirmación.
+- **Cobrado en mano** (efectivo o tarjeta en el local) solo si ya lo cobraste: te pide confirmarlo y recién ahí entra
+  pagado.
+
+### Cierre del día
+La **caja esperada** es el fondo con el que abriste más todo lo cobrado en efectivo (el vuelto ya salió de lo que te
+dieron). Debajo, lo cobrado por medio de pago, los recargos de las cuotas y los tickets del día. Contá la plata,
+anotala en **Efectivo contado** (te dice si sobra o falta) y tocá **Cerrar el día**. Queda en **Cierres anteriores**; lo
+que vendas después va al próximo cierre.
+
+![Cierre del día](img/rediseno/r4b/cierre-dia.png)
+
+### Consulta rápida
+"¿Tenés whey de vainilla?": buscá el producto y vas a ver cada presentación con precio, stock y lote, y el **texto para
+WhatsApp** ya armado con el precio y la disponibilidad de hoy. **Copiar texto** y lo pegás en el chat. El mensaje no
+promete resultados ni dosis.
+
+> En la demo: ninguna venta se cobra ni emite factura. Bajan el stock de este navegador y quedan en el cierre del día;
+> **Reiniciar demo** las borra.
+
+---
+
+## 19. Modo dueño: la tienda con lo que se edita marcado
+
+Para cuando estás mirando la tienda y querés cambiar algo: "¿dónde se cambia este banner?". Abrí el menú del panel y
+tocá **Ver la tienda en modo dueño** (también está en el buscador del panel). La tienda se abre con una franja
+**Modo dueño** debajo del encabezado y una placa sobre cada cosa que se edita desde el panel.
+
+- **Las placas**: el carrusel del inicio, la campaña de la fecha, las categorías, los packs, los textos de "Armá tu
+  stack", las misiones del club, el precio y el stock de cada producto, las preguntas frecuentes, el descuento stack,
+  los premios del juego, los regalos y el contacto del pie. Tocás una y te lleva a la pantalla exacta del panel donde
+  se cambia (en una ficha, al editor de ese producto).
+- **El interruptor** de la franja prende y apaga las placas; **Volver al panel** te devuelve a **Hoy**.
+- **Tus clientes no lo ven nunca.** La franja solo aparece si llegaste desde el panel (o con `?dueno=1` al final de la
+  dirección) y dura lo que esa pestaña. Para sacarla del todo, abrí la tienda con `?dueno=0`.
+- **Ver este pedido en el panel**: en la confirmación de una compra hecha en la tienda, abre la ficha de ese pedido en
+  **Pedidos**, con su estado de pago y de preparación. Sirve para mostrar en la reunión que lo que compra el cliente te
+  llega al instante.
+
+![Placas del modo dueño en el inicio](kit-de-venta/img/09-modo-dueno-inicio-1440.png)
+
+> En la demo el panel está abierto a propósito, así que cualquiera que conozca `?dueno=1` puede prender el modo
+> dueño. Las placas solo son links al panel: no cambian nada de la tienda.
+

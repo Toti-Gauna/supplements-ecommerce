@@ -20,6 +20,7 @@ import { specFromColumns, TableExcel } from "../table/TableExcel";
 import { useExport } from "../table/useExport";
 import { useTableState } from "../table/useTableState";
 import { orderColumns, PromisedCell } from "./orderColumns";
+import { OrderWhatsapp } from "./OrderWhatsapp";
 import { ORDER_PREFIX } from "@/demo/fixtures/house";
 
 function OrderRowCard({ row: o, selected, onToggle, onOpen }: RowCardProps<AdminOrder>) {
@@ -35,6 +36,7 @@ function OrderRowCard({ row: o, selected, onToggle, onOpen }: RowCardProps<Admin
         <span className="font-extrabold tabular-nums">{formatARS(o.total)}</span>
         <ChevronRight size={18} aria-hidden="true" className="text-muted" />
       </button>
+      <OrderWhatsapp order={o} compact variant="ghost" />
     </div>
   );
 }
@@ -52,7 +54,7 @@ const FILTERS: FilterSpec<AdminOrder>[] = [
 const search = (o: AdminOrder) => `${o.code} ${o.customer.name} ${o.customer.email}`;
 const detail = (o: AdminOrder) => `/admin-demo/pedidos/detalle/?codigo=${o.code}`;
 
-/** Pedidos como en un CRM: filtros por etapa y fechas, búsqueda, orden, acciones en lote, ficha completa y Excel. */
+/** Pedidos → Todos (R4b): como en un CRM, con filtros por etapa y fechas, búsqueda, orden, acciones en lote, WhatsApp, ficha y Excel. */
 export function OrdersTable() {
   const orders = useAdmin((s) => s.orders);
   const transition = useAdmin((s) => s.transition);
@@ -78,7 +80,7 @@ export function OrdersTable() {
   }
   return (
     <>
-      <AdminPageHeader title="Pedidos">Pedidos ficticios. Filtrá por etapa o fecha, buscá, ordená por cualquier columna, cambiá estados en lote o abrí la ficha tocando la fila.</AdminPageHeader>
+      <AdminPageHeader title="Todos los pedidos">Pedidos ficticios. Filtrá por etapa o fecha, buscá, ordená por cualquier columna, cambiá estados en lote o abrí la ficha tocando la fila. El ícono de WhatsApp abre el mensaje del estado de cada pedido ya escrito. Para el trabajo del día usá las pestañas Por cobrar, Para armar, Despachos y Postventa.</AdminPageHeader>
       <DataTable caption="Pedidos" noun="pedidos" rows={orders} columns={orderColumns} state={state} {...table}
         rowKey={(o) => o.code} rowLabel={(o) => `Seleccionar ${o.code}`}
         bulkActions={(list, clear) => BULK_TARGETS.map((to) => <BulkButton key={to} onClick={() => bulkMove(list, to, clear)}>Pasar a {STATUS_LABEL[to]}</BulkButton>)}

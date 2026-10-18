@@ -1,3 +1,4 @@
+import { DEMO_TODAY } from "../fixtures/admin-orders";
 import type { CalendarEvent, Closure, Material, Recipe, WorkshopSettings } from "../fixtures/workshop";
 import { slugify } from "./import/cells";
 import { auditEntry, type AdminData, type WorkshopData } from "./defaults";
@@ -52,7 +53,12 @@ export function createWorkshopActions(set: Set): WorkshopActions {
     },
     adjustMaterials: (ids, op, label) => edit(label, `${ids.length} insumos`, (w) => ({ materials: applyMaterialOp(w.materials, ids, op) })),
     updateMaterials: (materials, action) => edit(action, "Insumos", () => ({ materials })),
-    saveRecipe: (slug, recipe) => edit("Receta de costo guardada", slug, (w) => ({ recipes: { ...w.recipes, [slug]: recipe } })),
+    // Si cambió algún costo del proveedor, el nuevo rige desde hoy (R4c, "Costos vivos").
+    saveRecipe: (slug, recipe) => edit("Receta de costo guardada", slug, (w) => {
+      const before = w.recipes[slug];
+      const moved = before?.supplierCost !== recipe.supplierCost || JSON.stringify(before?.variantCosts ?? {}) !== JSON.stringify(recipe.variantCosts ?? {});
+      return { recipes: { ...w.recipes, [slug]: moved ? { ...recipe, costSince: DEMO_TODAY } : recipe } };
+    }),
     applyPrice: (slug, price) =>
       set((s) => ({
         data: { ...s.data, products: s.data.products.map((p) => (p.slug === slug ? { ...p, basePrice: basePriceFor(p, price) } : p)) },

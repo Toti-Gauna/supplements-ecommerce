@@ -1,5 +1,6 @@
 import { DISPATCH_PROMISE } from "../engine/lead-time";
 import type { Coupon, HeroFeature, Mission, PaymentMethod, ShippingZone } from "../types";
+import { DEFAULT_COUNTER_PLANS, type InstallmentPlan } from "./counter";
 import { HOUSE_SHAKER } from "./house";
 import { brand } from "@/config/brand";
 import { ORDER_PREFIX } from "./house";
@@ -22,6 +23,8 @@ export interface DemoSettings {
   lowStockThreshold?: number;
   /** Descuento stack: % y cuántas categorías de suplementos distintas hacen falta. */
   stack?: { pct: number; minCategories: number };
+  /** Mostrador (R4b): cuotas con crédito y su recargo. Las demos viejas no lo traen: se usan las de muestra. */
+  counterPlans?: InstallmentPlan[];
 }
 
 /** Ajustes de cobro de MUESTRA. Ningún dato bancario real. */
@@ -39,6 +42,7 @@ export const demoSettings: DemoSettings = {
   brandColors: { primary: brand.colors.primary, accent: brand.colors.accent, background: brand.colors.background },
   legalName: brand.legalName,
   cuit: brand.cuit,
+  counterPlans: DEFAULT_COUNTER_PLANS,
 };
 
 /** Bloque "Armá tu stack" del inicio (Contenido → Textos de inicio). Lo que va después de la coma se pinta en voltio. */

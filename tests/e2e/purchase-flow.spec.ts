@@ -25,6 +25,8 @@ test("flujo móvil completo hasta la confirmación de demostración", async ({ p
 
   // Carrito: cupón vencido, cupón válido
   await expect(page).toHaveURL(/carrito\/$/);
+  // El panel lateral se cierra al navegar: hasta que termina, su ruleta no se confunde con la de la página.
+  await expect(drawer).toHaveCount(0);
   const cartLines = page.getByRole("list", { name: "Productos en el carrito" });
   await expect(cartLines.getByText("Creatina monohidrato micronizada")).toBeVisible();
   await expect(cartLines.getByText("500 g")).toBeVisible();

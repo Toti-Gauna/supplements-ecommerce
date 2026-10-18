@@ -8,7 +8,8 @@ import { addDays } from "./workdays";
 /**
  * Pedidos en la lista de hoy (R4a). Reglas:
  * - Comprobante en revisión → "Para hoy", uno por pedido: el que sale antes, primero. El botón aprueba solo después de
- *   confirmar que el ingreso se verificó; nunca se marca pagado sin esa confirmación.
+ *   confirmar que el ingreso se verificó; nunca se marca pagado sin esa confirmación. El título abre Por cobrar en ese
+ *   comprobante y "Armar" abre Para armar en ese pedido (R4b).
  * - Pagado o en preparación con la fecha de despacho vencida → "Atrasado", uno por pedido.
  * - Pagado o en preparación que sale hoy → "Para hoy", uno por pedido.
  * - Listo con fecha de hoy (o vencida) → "Para hoy" ("Atrasado" si ya tenía que salir): se marca enviado o retirado.
@@ -17,7 +18,11 @@ import { addDays } from "./workdays";
 const PAY: Record<PaymentMethod, string> = { BANK_TRANSFER: "transferencia", QR_MANUAL: "QR", CHECKOUT_PRO: "Mercado Pago" };
 const HOW: Record<FulfillmentType, string> = { LOCAL_DELIVERY: "cadete", PICKUP: "retira en el local", SHIPPING: "correo" };
 const orderHref = (code: string) => `/admin-demo/pedidos/detalle/?codigo=${code}`;
+/** Pedidos → Para armar (R4b); con `?codigo=` abre ese pedido. */
 export const PREPARATION_HREF = "/admin-demo/preparacion/";
+const packHref = (code: string) => `${PREPARATION_HREF}?codigo=${code}`;
+/** Pedidos → Por cobrar (R4b) arrancando en ese comprobante. */
+const collectHref = (code: string) => `/admin-demo/pagos/?codigo=${code}`;
 const short = (day: string) => formatDay(day).replace(",", "");
 
 /** Pagado o en preparación: falta armarlo. */
@@ -39,7 +44,7 @@ export function receiptActions(orders: AdminOrder[], today: string): TodayAction
       id: `receipt:${o.code}`, kind: "receipt", tier: "hoy", due: day < today ? today : day,
       title: `Comprobante de ${o.customer.name}`,
       detail: `${o.code} · ${PAY[o.paymentMethod]} · ${how}. Mirá tu cuenta antes de aprobar.`,
-      metric: { value: o.total, money: true }, href: `/admin-demo/pagos/detalle/?codigo=${o.code}`,
+      metric: { value: o.total, money: true }, href: collectHref(o.code),
       cta: { type: "approve", label: "Aprobar", code: o.code, amount: o.total },
     };
   });
@@ -53,7 +58,7 @@ export function lateAndTodayActions(orders: AdminOrder[], today: string): TodayA
       title: late ? `${o.code} está atrasado` : `Armá ${o.code}: sale hoy`,
       detail: `${o.customer.name} · ${HOW[o.fulfillment]} · ${late ? `tenía que salir el ${short(o.promisedDate!)}` : "fecha de hoy"} · ${stageText(o)}`,
       metric: { value: 1, unit: "pedido" }, href: orderHref(o.code),
-      cta: { type: "link", label: late ? "Terminar de armar" : "Armar", href: orderHref(o.code) },
+      cta: { type: "link", label: late ? "Terminar de armar" : "Armar", href: packHref(o.code) },
     };
   });
 }
@@ -85,6 +90,6 @@ export function packAction(orders: AdminOrder[], today: string): TodayAction | n
     title: `Armá ${plural(rest.length, "pedido", "pedidos")} de la semana`,
     detail: `El primero sale el ${short(due)} (${first.code}, ${HOW[first.fulfillment]}). ${rest.filter((o) => o.status === "PAID").length} sin empezar.`,
     metric: { value: rest.length }, href: PREPARATION_HREF,
-    cta: { type: "link", label: "Abrir preparación", href: PREPARATION_HREF },
+    cta: { type: "link", label: "Ir a Para armar", href: PREPARATION_HREF },
   };
 }

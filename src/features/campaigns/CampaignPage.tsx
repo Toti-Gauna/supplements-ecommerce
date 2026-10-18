@@ -10,6 +10,7 @@ import { useUrlSearch } from "@/lib/useUrlSearch";
 import { useDemoData } from "@/stores/admin";
 import { useHydrated } from "@/stores/hydration";
 import { useEffectivePreview } from "@/stores/themePreview";
+import { OwnerSpot } from "../owner/OwnerSpot";
 import { ThemeOffersRail } from "../themes/ThemeOffersRail";
 import { CampaignCalendar } from "./CampaignCalendar";
 import { CampaignDrop } from "./CampaignDrop";
@@ -57,12 +58,13 @@ export function CampaignPage() {
   if (!hydrated) return <HeroSkeleton label="Cargando campaña" />;
   const params = new URLSearchParams(search);
   const theme = themes.find((t) => t.id === params.get("id") && t.active);
-  if (!theme) return <CampaignCalendar themes={themes} />;
+  if (!theme) return <><OwnerSpot id="campana" /><CampaignCalendar themes={themes} /></>;
   const forced = PHASES[params.get("fase") ?? ""] ?? null;
   const phase = forced ?? (preview === theme.id ? "live" : null);
   const show = (fase: string | null) => replace(fase ? `id=${theme.id}&fase=${fase}` : `id=${theme.id}`);
   return (
     <div className="-mx-4 -mt-6 flex flex-col gap-8 sm:-mx-6 sm:-mt-10">
+      <OwnerSpot id="campana" ctx={{ campaignId: theme.id }} className="px-4 sm:px-6" />
       <CampaignDetail key={`${theme.id}-${phase}`} theme={theme} phase={phase} />
       <nav aria-label="Demostración de la campaña" className="mx-4 flex flex-wrap items-center gap-2 border border-dashed border-ink/20 p-3 sm:mx-6">
         <p className="mr-2 text-sm text-muted">Demostración · ver esta campaña:</p>

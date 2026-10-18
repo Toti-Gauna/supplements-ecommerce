@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { RegalarView } from "@/features/gifts/regalar/RegalarView";
+import { OwnerSpot } from "@/features/owner/OwnerSpot";
 
 export const metadata: Metadata = {
   title: "Regalá energía",
@@ -8,5 +9,5 @@ export const metadata: Metadata = {
 
 /** "Regalá energía" (R3b): elegir qué regalar y armar el regalo con la tarjeta en vivo. */
 export default function RegalarPage() {
-  return <RegalarView />;
+  return <><OwnerSpot id="regalos" /><RegalarView /></>;
 }

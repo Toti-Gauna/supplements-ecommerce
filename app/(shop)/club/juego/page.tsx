@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { GameView } from "@/features/game/GameView";
+import { OwnerSpot } from "@/features/owner/OwnerSpot";
 
 export const metadata: Metadata = {
   title: "Shaker Rush · Juego del Club",
@@ -7,5 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function GamePage() {
-  return <GameView />;
+  return <><OwnerSpot id="juego" /><GameView /></>;
 }

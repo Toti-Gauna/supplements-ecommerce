@@ -1,6 +1,7 @@
 "use client";
 import type { Column } from "@/components/organisms/data-table/types";
 import { brandsOf } from "@/demo/admin/bulk-price";
+import { coverage, coverageText } from "@/demo/admin/live-costs";
 import { hasClearance, hasExpiring, type LotRow } from "@/demo/admin/lots";
 import { STOCK_LABEL, stockMargin, stockState, type StockRow } from "@/demo/admin/stock";
 import type { FilterSpec } from "@/demo/admin/table";
@@ -53,14 +54,15 @@ export function variantFilters(categories: Category[], products: Product[]): Fil
 export const variantSearch = (r: StockRow) => `${r.productName} ${r.variantLabel} ${r.categoryName} ${r.brand} ${r.lot?.code ?? ""}`;
 export const productSearch = (p: Product) => `${p.name} ${p.slug} ${p.brand} ${p.tags.join(" ")}`;
 
-interface VariantActions { setStock: (r: StockRow, stock: number) => void; onClear: (lot: LotRow) => void }
+interface VariantActions { setStock: (r: StockRow, stock: number) => void; onClear: (lot: LotRow) => void; /** Unidades vendidas por día de cada variante (clave `producto::variante`), para la cobertura. */ sales: Map<string, number> }
 
 /**
  * Una fila por variante: el stock se edita acá mismo (− / + / número / a pedido) y el lote que vence se liquida.
  * Categoría y "En la tienda" arrancan ocultas (son filtros); marca, precio por servicio, lote, costo y margen están a
  * la vista (R2: el costo sale de la variante o de Costos; "≈" cuando se estima en proporción al precio).
  */
-export function variantColumns({ setStock, onClear }: VariantActions): Column<StockRow>[] {
+export function variantColumns({ setStock, onClear, sales }: VariantActions): Column<StockRow>[] {
+  const cover = (r: StockRow) => coverage(r.stock, sales.get(r.key) ?? 0);
   return [
     { id: "product", header: "Producto", pinned: true, primary: true, cell: (r) => r.productName, sortValue: (r) => r.productName, exportValue: (r) => r.productName },
     { id: "variant", header: "Variante", cell: (r) => r.variantLabel, sortValue: (r) => r.variantLabel, exportValue: (r) => r.variantLabel },
@@ -74,6 +76,8 @@ export function variantColumns({ setStock, onClear }: VariantActions): Column<St
     { id: "active", header: "En la tienda", defaultHidden: true, cell: (r) => (r.active ? "Visible" : <span className="text-muted">Pausado</span>), sortValue: (r) => r.active, exportValue: (r) => (r.active ? "Visible" : "Pausado") },
     { id: "cost", header: "Costo", align: "right", money: true, cell: (r) => (r.cost ? <CostText row={r} /> : "—"), sortValue: (r) => r.cost ?? null, exportValue: (r) => r.cost ?? "" },
     { id: "margin", header: "Margen", align: "right", cell: (r) => <MarginText value={stockMargin(r)} />, sortValue: stockMargin, exportValue: (r) => stockMargin(r) ?? "" },
+    // R4c: para cuántos días alcanza el stock al ritmo de venta (el detalle está en Compras → Costos vivos).
+    { id: "coverage", header: "Cobertura", defaultHidden: true, align: "right", cell: (r) => coverageText(cover(r)), sortValue: (r) => cover(r).days, exportValue: (r) => coverageText(cover(r)) },
     { id: "value", header: "Valor en stock", align: "right", money: true, cell: (r) => (r.stock > 0 ? formatARS(r.stock * r.price) : "—"), sortValue: (r) => Math.max(0, r.stock) * r.price, exportValue: (r) => Math.max(0, r.stock) * r.price },
   ];
 }

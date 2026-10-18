@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { PageHeader } from "@/components/templates/PageHeader";
 import { HelpView } from "@/features/help/HelpView";
+import { OwnerSpot } from "@/features/owner/OwnerSpot";
 
 export const metadata: Metadata = {
   title: "Ayuda del box",
@@ -12,6 +13,7 @@ export default function HelpPage() {
   return (
     <>
       <PageHeader title="Ayuda del box">Preguntas frecuentes por tema. Buscá con tus palabras (sin tildes también) y, si no está, preguntale al local.</PageHeader>
+      <OwnerSpot id="preguntas" />
       <HelpView />
     </>
   );

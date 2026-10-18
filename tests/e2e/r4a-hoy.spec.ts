@@ -24,11 +24,11 @@ test("el marcador dice lo mismo que los datos de la demo y la lista va por urgen
   await expect(score(page, "armar")).toContainText("1 atrasado");
   await expect(score(page, "sale").getByRole("img", { name: "1 pedido con el cadete" })).toBeVisible();
   await expect(score(page, "stock").getByRole("img", { name: "30 variantes" })).toBeVisible();
-  await expect(page.locator("[data-today-summary]")).toContainText("Tenés 6 cosas para hoy");
+  await expect(page.locator("[data-today-summary]")).toContainText("Tenés 7 cosas para hoy");
   const ids = await page.locator("[data-action]").evaluateAll((els) => els.map((e) => e.getAttribute("data-action")));
   expect(ids).toEqual([
     "late:VOL-000115", "receipt:VOL-000124", "receipt:VOL-000123", "dispatch:VOL-000120", "purchase:suggested", "repurchase:due",
-    "pack:rest", "gift:REGALO-T4M4-N0X2", "lot:barra-proteica::bp-mani-x12::VL-2604-B", "campaign:halloween", "lots:rest",
+    "birthday:tomas.h@ejemplo.com", "pack:rest", "gift:REGALO-T4M4-N0X2", "birthday:flor.m@ejemplo.com", "lot:barra-proteica::bp-mani-x12::VL-2604-B", "campaign:halloween", "lots:rest",
   ]);
   await expect(page.locator("[data-tier]")).toHaveCount(4);
   await expect(page.getByText(/acreditad/i)).toHaveCount(0);
@@ -82,9 +82,11 @@ test("despachar, liquidar y avisar se resuelven ahí mismo y salen de la lista",
 });
 
 const LINKS: [string, string, RegExp, (page: Page) => Promise<void>][] = [
-  ["late:VOL-000115", "Terminar de armar", /pedidos\/detalle\/\?codigo=VOL-000115/, async (p) => { await expect(p.getByRole("heading", { level: 1, name: /VOL-000115/ })).toBeVisible(); }],
+  // R4b: "Armar" abre Para armar en ese pedido; el título del comprobante abre Por cobrar en él.
+  ["late:VOL-000115", "Terminar de armar", /preparacion\/\?codigo=VOL-000115/, async (p) => { await expect(p.getByRole("article", { name: "Pedido VOL-000115" })).toBeFocused(); }],
+  ["receipt:VOL-000123", "Comprobante de Diego Álvarez", /pagos\/\?codigo=VOL-000123/, async (p) => { await expect(p.getByRole("article", { name: "Cobro de VOL-000123" })).toBeVisible(); }],
   ["purchase:suggested", "Armar los pedidos", /\/admin-demo\/(proveedores|compras)\//, async (p) => { await expect(p.getByText("Laboratorio Costa (muestra)").first()).toBeVisible(); }],
-  ["pack:rest", "Abrir preparación", /\/admin-demo\/(preparacion|pedidos)\//, async (p) => { await expect(p.getByText("VOL-000114").first()).toBeVisible(); }],
+  ["pack:rest", "Ir a Para armar", /\/admin-demo\/preparacion\/$/, async (p) => { await expect(p.getByRole("article", { name: "Pedido VOL-000114" })).toBeVisible(); }],
   ["gift:REGALO-T4M4-N0X2", "Ver el regalo", /regalos\/\?ver=regalos/, async (p) => { await expect(p.getByText("Juanma").first()).toBeVisible(); }],
   ["campaign:halloween", "Preparar Halloween", /campanas\/editar\/\?id=halloween/, async (p) => { await expect(p.getByRole("heading", { level: 1, name: "Halloween" })).toBeVisible(); }],
   ["lots:rest", "Ver los lotes", /vence=pronto/, async (p) => { await expect(p.getByText("BS-2603-A").first()).toBeVisible(); }],

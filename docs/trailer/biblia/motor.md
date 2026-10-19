@@ -151,3 +151,12 @@ decodifica el archivo).
   software" van a 0,8× con el celular adelante, y en la escena 15 el "+" queda arriba del texto y los equipos abajo. Un e2e recorre las 17
   escenas en 9:16 y comprueba que ningún texto se salga del escenario (no cortes de texto).
 - **Detrás de la cifra, la placa baja a 0,1** en vertical (0,2 en 16:9): el panel de celular trae el texto más grande y compite con ella.
+
+## Lo que suma T1.6 (exportación de T1)
+- **Salidas** (`node scripts/trailer-export.mjs t1`, con `PAGES_BASE_PATH=/supplements-ecommerce npm run build` hecho): `t1-16x9.mp4` (11,3 MB) y `t1-9x16.mp4`
+  (11,2 MB) a 60 fps y 2700 cuadros, `t1-email.mp4` (720p, 3,0 MB), `t1-poster.jpg` (el cuadro de 27,7 s: "No es solo software") y `t1.m4a`
+  (la pista pre-armada que reproduce la página; −13,9 LUFS). Se grabó en ~6,5 min por formato. Los MP4 viven en el repo, como los de la firma.
+- **El maestro se recorre una vez al armarlo** (`TrailerPlayer.tsx`): sin eso, el cuadro que cae justo en el inicio de una escena salía con el estado
+  previo (el 675 del MP4, `?t=0`, `?t=40.313`). Verificado sobre los 2700 cuadros: solo cambian el 0 y el 675.
+- **Comprobaciones del MP4** (`ffprobe`): H.264 1920 × 1080 / 1080 × 1920 a 60/1, 45,000 s, AAC estéreo a 48 kHz de 44,992 s (el audio es 8 ms más corto por los
+  bloques de AAC).

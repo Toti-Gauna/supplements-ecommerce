@@ -25,7 +25,7 @@ for (const ratio of ["16x9", "9x16"] as const) {
   test(`${ratio}: las escenas del problema dan el mismo cuadro por tres caminos`, async ({ page }) => {
     test.setTimeout(200_000); // 16 cuadros, cada uno con su carga y tres capturas a 2,6×.
     await page.setViewportSize(ratio === "16x9" ? { width: 960, height: 540 } : { width: 405, height: 720 });
-    for (const t of [rel("apertura", 2.5), rel("calcadas", 1.3), rel("potes", 2.1), rel("latido", 0.7), rel("w1-carga", 2.5), rel("w2-tema", 4.5), rel("w3-regalo", 5.2), rel("w4-shaker", 5.4), rel("w5-ruleta", 5), rel("w6-mostrador", 5.2), rel("w7-proveedor", 5.1), rel("software", 4), rel("asesoria", 2.2), rel("promesa", 2.3), rel("guino", 2.5), rel("cierre", 4)]) {
+    for (const t of [rel("apertura", 2.5), rel("calcadas", 1.3), rel("potes", 2.1), rel("latido", 0.7), rel("w1-carga", 2.5), rel("w2-tema", 4.5), rel("w3-regalo", 5.2), rel("w4-shaker", 5.4), rel("w5-ruleta", 5), rel("w6-mostrador", 5.2), rel("w7-proveedor", 5.1), rel("software", 4), rel("asesoria", 2.2), rel("promesa", 2.3), rel("sistema", 4), rel("en-vivo", 8), rel("oferta", 10), rel("mantenimiento", 6), rel("piezas", 6), rel("cierre", 4)]) {
       await page.goto(`trailer/t1/?export=1&ratio=${ratio}&t=${t}`);
       await ready(page);
       await seek(page, t);
@@ -44,7 +44,7 @@ for (const ratio of ["16x9", "9x16"] as const) {
 test("cada escena del problema muestra su super y el cierre abre el marco de la tienda", async ({ page }) => {
   await page.goto("trailer/t1/?export=1&t=7");
   await ready(page);
-  for (const [beats, id, text] of [[1.5, "calcadas", "Mismo template."], [1, "veinte", "Mismo 20 % OFF."], [1, "potes", "Misma tienda."], [1.5, "plano", "Y después de comprar, nada."], [1.5, "latido", "La tuya,"]] as const) {
+  for (const [beats, id, text] of [[1.5, "calcadas", "Mismo template."], [1, "veinte", "Mismo 20 % OFF."], [1, "potes", "Misma tienda."], [1.5, "plano", "Y después de comprar, nada."], [1.5, "latido", "Tu negocio,"]] as const) {
     await seek(page, rel(id, beats));
     await expect(scene(page, id)).toBeVisible();
     await expect(scene(page, id)).toContainText(text);
@@ -100,8 +100,12 @@ test("el cierre: equipos, asesoría, promesa y el guiño con los precios del lib
   for (const [beats, id, texts] of [
     [rel("software", 6), "software", ["No es", "solo", "software.", "El panel, para vos", "La tienda, para tus clientes"]],
     [rel("asesoria", 2.5), "asesoria", ["Asesoría de", "Growth marketing", "y fidelización."]],
-    [rel("promesa", 2), "promesa", ["Para que", "la tuya", "venda más.", "Tu tienda"]],
-    [rel("guino", 3), "guino", ["Arrancá con 3 meses", "bonificados.", "Adaptación de Tu tienda + asesoría inicial de growth", "$ 750.000", "USD 500", "Incluye 3 meses del plan Esencial ($ 45.000/mes) · sujeto a disponibilidad · dólar a $ 1.500", "223-446 7881"]],
+    [rel("sistema", 5), "sistema", ["Te arma un sistema", "de crecimiento."]],
+    [rel("promesa", 2), "promesa", ["Para que", "tu negocio", "venda más.", "Tu tienda"]],
+    [rel("en-vivo", 8), "en-vivo", ["Eclipse potencia tus ventas,", "crea tendencias y hace", "volver a tus clientes.", "Mirá un ejemplo de cómo podría verse tu negocio potenciado.", "223-446 7881"]],
+    [rel("oferta", 10), "oferta", ["El precio de", "hacer crecer tu negocio.", "$ 750.000", "USD 500", "2 meses de mantenimiento bonificados", "100 mensajes automáticos de WhatsApp", "$ 375.000", "4 × $ 225.000", "Recargo del 20 % en cada cuota"]],
+    [rel("mantenimiento", 6), "mantenimiento", ["siempre andando.", "2 meses de mantenimiento bonificados", "$ 45.000"]],
+    [rel("piezas", 6), "piezas", ["Más mensajes automáticos de WhatsApp", "Chatbot IA (WhatsApp o web)"]],
   ] as const) {
     await seek(page, beats);
     for (const text of texts) await expect(scene(page, id), `${id}: ${text}`).toContainText(text);
@@ -113,7 +117,7 @@ test("el cierre: equipos, asesoría, promesa y el guiño con los precios del lib
   await expect(scene(page, "software").locator("[data-t='ph-screen'] img")).toBeVisible();
   // El escenario es imagen: los lectores de pantalla leen el resumen de la pieza.
   await expect(page.locator("[data-trailer-viewport]")).toHaveAttribute("aria-hidden", "true");
-  await expect(page.locator("[data-trailer-summary]")).toContainText("Para que la tuya venda más.");
+  await expect(page.locator("[data-trailer-summary]")).toContainText("Para que tu negocio venda más.");
   // Al empezar la cta el eje de la promesa sigue ahí y se va con el amanecer.
   await seek(page, rel("en-vivo", 0.1));
   await expect(scene(page, "en-vivo").locator("[data-t='axis']")).toBeVisible();
@@ -125,9 +129,9 @@ test("9:16: los textos de cada escena entran en el escenario y las placas son la
   await page.setViewportSize({ width: 405, height: 720 });
   await page.goto("trailer/t1/?export=1&ratio=9x16&t=15");
   await ready(page);
-  const TEXTS = "[data-t='sup'], [data-t='super'], [data-t='line'], [data-t='chip'], [data-t='big'], [data-t='count'], [data-t='word'], [data-t='rest'], [data-t='note'], [data-t='title-line'], [data-t='item'], [data-t='price'], [data-t='fine'], [data-t='foot'], [data-t='prompt']";
+  const TEXTS = "[data-t='sup'], [data-t='super'], [data-t='line'], [data-t='chip'], [data-t='big'], [data-t='count'], [data-t='word'], [data-t='rest'], [data-t='note'], [data-t='title-line'], [data-t='item'], [data-t='price'], [data-t='fine'], [data-t='foot'], [data-t='prompt'], [data-t^='line-'], [data-t='inc'], [data-t='cash'], [data-t='cuotas'], li[data-t='row'], [data-t='sub'], [data-t='url'], [data-t='phone']";
   const times = [["calcadas", 1], ["veinte", 1], ["potes", 1.5], ["plano", 1.5], ["latido", 1.5], ["w1-carga", 2.5], ["w2-tema", 5], ["w3-regalo", 5.5],
-    ["w4-shaker", 6.5], ["w5-ruleta", 6], ["w6-mostrador", 6], ["w7-proveedor", 6], ["software", 6], ["asesoria", 2.8], ["promesa", 2.5], ["en-vivo", 8], ["guino", 3]] as const;
+    ["w4-shaker", 6.5], ["w5-ruleta", 6], ["w6-mostrador", 6], ["w7-proveedor", 6], ["software", 6], ["asesoria", 2.8], ["promesa", 2.5], ["sistema", 5], ["en-vivo", 8], ["oferta", 10], ["mantenimiento", 6], ["piezas", 6]] as const;
   for (const [id, beats] of times) {
     await seek(page, rel(id, beats));
     const out = await page.evaluate(({ id: sceneId, sel }) => {

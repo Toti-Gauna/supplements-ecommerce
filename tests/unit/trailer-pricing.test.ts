@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { TU_TIENDA_BOOK, USD_RATE } from "@/trailer/eclipse/book";
 import { fmtArs, fmtUsd } from "@/trailer/eclipse/pricing";
+import { GROWTH_OFFER, offerPrices, SALES_BOOK } from "@/trailer/eclipse/offer";
 
 describe("trailer · libro de precios de Eclipse", () => {
   const book = TU_TIENDA_BOOK;
@@ -47,5 +48,29 @@ describe("trailer · libro de precios de Eclipse", () => {
     expect(t.price).toEqual({ usd: 500, ars: 750_000 });
     expect(t.fine).toBe("Incluye 3 meses del plan Esencial ($ 45.000/mes) · sujeto a disponibilidad · dólar a $ 1.500");
     expect(section("launch-pack-draft").teaser).toBeUndefined(); // el pack es un borrador: no se muestra en el teaser
+  });
+});
+
+describe("trailer · oferta de venta de T1 (19/10/2026)", () => {
+  const p = offerPrices(GROWTH_OFFER);
+  it("el paquete sale USD 500 = $ 750.000 y al contado lleva el 50 % de descuento", () => {
+    expect(p.list).toEqual({ usd: 500, ars: 750_000 });
+    expect(p.cash).toEqual({ usd: 250, ars: 375_000 });
+  });
+  it("en hasta 4 cuotas, cada una con 20 % de recargo: 4 × $ 225.000 = $ 900.000", () => {
+    expect(p.installments).toBe(4);
+    expect(p.installment).toEqual({ usd: 150, ars: 225_000 });
+    expect(p.financed).toEqual({ usd: 600, ars: 900_000 });
+  });
+  it("incluye 2 meses de mantenimiento, 100 mensajes de WhatsApp y la asesoría", () => {
+    expect(GROWTH_OFFER.maintenance.months).toBe(2);
+    expect(GROWTH_OFFER.includes.map((i) => i.name)).toEqual(["Tienda digital moderna", "100 mensajes automáticos de WhatsApp", "Asesoría en marketing digital y trends"]);
+  });
+  it("el mantenimiento muestra el plan Esencial del tarifario después de los meses bonificados, y las piezas usan sus precios", () => {
+    const m = SALES_BOOK.sections.find((s) => s.id === "mantenimiento")!;
+    expect(m.rows.at(-1)!.price).toEqual({ usd: 30, ars: 45_000 });
+    const piezas = SALES_BOOK.sections.find((s) => s.id === "piezas")!;
+    expect(piezas.rows[0]!.name).toBe("Más mensajes automáticos de WhatsApp");
+    expect(piezas.rows.slice(1).map((r) => r.price?.usd)).toEqual([250, 250, 150, 200]);
   });
 });

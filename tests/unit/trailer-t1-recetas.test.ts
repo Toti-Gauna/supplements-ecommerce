@@ -32,10 +32,11 @@ describe("T1 · curvas de las escenas del problema", () => {
 });
 
 describe("T1 · resumen para lectores de pantalla", () => {
-  it("cuenta los supers, los rótulos, el contacto y el guiño con los datos de las escenas y del libro", () => {
+  it("cuenta los supers, los rótulos, lo que vende Eclipse, el contacto y la oferta con los datos de las escenas", () => {
     const s = t1.summary!;
-    for (const text of ["Mismo template.", "La tuya, no.", "pantallas de carga por fecha", "mostrador en cuotas y lista del proveedor", "No es solo software.",
-      "Para que la tuya venda más.", "223-446 7881", "Arrancá con 3 meses bonificados.", "$ 750.000 (USD 500)", "sujeto a disponibilidad"]) expect(s).toContain(text);
+    for (const text of ["Mismo template.", "Tu negocio, no.", "pantallas de carga por fecha", "mostrador en cuotas y lista del proveedor", "No es solo software.",
+      "Te arma un sistema de crecimiento.", "Para que tu negocio venda más.", "223-446 7881", "2 meses de mantenimiento bonificados", "$ 750.000 (USD 500)",
+      "100 mensajes automáticos de whatsapp", "Al contado, $ 375.000", "4 cuotas de $ 225.000"]) expect(s).toContain(text);
     expect(s).not.toMatch(/volta/i);
   });
 });

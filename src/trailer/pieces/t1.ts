@@ -8,6 +8,20 @@ import { t1Summary } from "./t1-resumen";
 const BPM = 128;
 const beats = (n: number) => n * beatSec(BPM);
 const SOFTWARE = ["No es", "solo", "software."];
+/** Lo que vende Eclipse, en pantallas de solo texto con cambio de color (tanda 2 de la versión de ventas). */
+const SISTEMA = [
+  { lines: ["Vendés.", "¿Pero tu cliente vuelve?"], tone: "paper", beats: 3 },
+  { lines: ["Eclipse no te hace", "solo una tienda."], tone: "night", beats: 2 },
+  { lines: ["Te arma un sistema", "de crecimiento."], tone: "volt", beats: 3 },
+  { lines: ["Ventas digitales."], tone: "night", beats: 1 },
+  { lines: ["Clientes que vuelven."], tone: "paper", beats: 1 },
+  { lines: ["Marketing y trends."], tone: "night", beats: 1 },
+  { lines: ["Procesos más simples."], tone: "paper", beats: 1 },
+] as const;
+const PITCH = {
+  label: "Probalo en vivo", title: "Eclipse potencia tus ventas,", italic: "crea tendencias y hace", italic2: "volver a tus clientes.",
+  sub: "Mirá un ejemplo de cómo podría verse tu negocio potenciado.",
+};
 
 /**
  * Montaje de ventas (pedido de Ignacio, 19/10): apertura de 3 s, el bloque "Mismo…" a ritmo corto y cada escena de producto de 8 tiempos
@@ -20,8 +34,8 @@ const SCENES = sequence([
   { id: "veinte", recipe: "ticker", dur: beats(3), speed: 4 / 3, props: { phrase: "20 % OFF", text: "Mismo 20 % OFF." } },
   { id: "potes", recipe: "clones", dur: beats(3), speed: 4 / 3, props: { variant: "catalogo", text: "Misma tienda." } },
   { id: "plano", recipe: "trace", dur: beats(4), props: { part: "plano", text: ["Y después de comprar, nada."] } },
-  { id: "latido", recipe: "trace", dur: beats(2), props: { part: "latido", text: ["La tuya,", "no."] } },
-  { id: "w1-carga", recipe: "splash-live", dur: beats(PRODUCT), speed: 0.8, props: { dates: ["crossfit-open", "black-friday", "navidad"], carry: ["La tuya,", "no."], chip: ["01", "Pantallas de carga por fecha"] } },
+  { id: "latido", recipe: "trace", dur: beats(2), props: { part: "latido", text: ["Tu negocio,", "no."] } },
+  { id: "w1-carga", recipe: "splash-live", dur: beats(PRODUCT), speed: 0.8, props: { dates: ["crossfit-open", "black-friday", "navidad"], carry: ["Tu negocio,", "no."], chip: ["01", "Pantallas de carga por fecha"] } },
   { id: "w2-tema", recipe: "plate", dur: beats(PRODUCT), speed: 0.8, props: { mode: "tema", light: "ficha-light", dark: "ficha-dark", toggle: PLATES["ficha-light"].toggle, focus: PLATES["ficha-light"].hero, chip: ["02", "Modo claro y oscuro"],
       tall: { light: "ficha-light-t", dark: "ficha-dark-t", toggle: PLATES["ficha-light-t"].toggle, focus: PLATES["ficha-light-t"].hero } } },
   { id: "w3-regalo", recipe: "gift-live", dur: beats(PRODUCT), speed: 0.8, props: { occasion: "volta", title: "Juli, te llegó un regalo de Caro", prompts: OPENINGS.original.prompts, done: OPENINGS.original.done, chip: ["03", "Regalos que se abren a golpes"] } },
@@ -32,10 +46,13 @@ const SCENES = sequence([
       intro: "Tu proveedor te manda su lista de costos.", action: "La cruzás con tus productos y aplicás los precios con un toque.", chip: ["07", "Lista del proveedor"] } },
   { id: "software", recipe: "device", dur: beats(8), props: { lines: SOFTWARE, panel: "El panel, para vos", shop: "La tienda, para tus clientes" } },
   { id: "asesoria", recipe: "rules", dur: beats(4), props: { prev: SOFTWARE, lines: ["Asesoría de", "Growth marketing", "y fidelización."] } },
-  { id: "promesa", recipe: "stack", dur: beats(4), props: { lines: ["Para que", "la tuya", "venda más."] } },
-  { id: "en-vivo", recipe: "eclipse-cta", dur: beats(12), props: { axis: true } },
-  { id: "guino", recipe: "eclipse-guino", dur: beats(6), props: { book: "tu-tienda", section: "base-campaign", n: "11" } },
-  { id: "cierre", recipe: "eclipse-outro", dur: beats(10) },
+  { id: "sistema", recipe: "kinetic", dur: beats(12), props: { slides: SISTEMA } },
+  { id: "promesa", recipe: "stack", dur: beats(4), props: { lines: ["Para que", "tu negocio", "venda más."] } },
+  { id: "en-vivo", recipe: "eclipse-cta", dur: beats(12), props: { axis: true, pitch: PITCH } },
+  { id: "oferta", recipe: "eclipse-offer", dur: beats(16), props: { n: "11" } },
+  { id: "mantenimiento", recipe: "eclipse-prices", dur: beats(10), props: { book: "tu-tienda-ventas", section: "mantenimiento", n: "12" } },
+  { id: "piezas", recipe: "eclipse-prices", dur: beats(10), props: { book: "tu-tienda-ventas", section: "piezas", n: "13" } },
+  { id: "cierre", recipe: "eclipse-outro", dur: beats(8) },
 ]);
 
 /**

@@ -63,7 +63,7 @@ const BASE: Record<string, [number, number]> = {
  */
 export function t1Sound(scenes: SceneSpec[]): { music: MusicPlan; effects: PieceEffect[] } {
   const now = new Map(scenes.map((s) => [s.id, { start: s.start / (60 / 128), dur: s.dur / (60 / 128), speed: s.speed ?? 1 }]));
-  const owner = (b: number) => Object.entries(BASE).find(([, [a, d]]) => b >= a && b < a + d) ?? Object.entries(BASE).at(-1)!;
+  const owner = (b: number) => Object.entries(BASE).find(([id, [a, d]]) => now.has(id) && b >= a && b < a + d) ?? Object.entries(BASE).at(-1)!;
   const point = (id: string, b: number) => { const [a] = BASE[id]!, n = now.get(id)!; return n.start + (b - a) / n.speed; };
   // Un límite de tramo o silencio sigue a su escena igual que los efectos, sin pasarse de ella; cada silencio conserva su largo y queda pegado al golpe.
   const bound = (b: number) => { const [id] = owner(b), n = now.get(id)!; return Math.min(point(id, b), n.start + n.dur); };
@@ -75,5 +75,6 @@ export function t1Sound(scenes: SceneSpec[]): { music: MusicPlan; effects: Piece
     silences: T1_MUSIC_96.silences!.map(([a, b]) => { const end = bound(b); return [r(end - (b - a)), r(end)] as [number, number]; }),
     breaks: T1_MUSIC_96.breaks!.map((k) => ({ ...k, from: r(bound(k.from)), to: r(bound(k.to)) })),
   };
-  return { music, effects: T1_EFFECTS_96.map((e) => ({ ...e, t: r(point(e.scene, e.t)) })) };
+  // Las escenas que ya no están (el guiño) se llevan sus efectos.
+  return { music, effects: T1_EFFECTS_96.filter((e) => now.has(e.scene)).map((e) => ({ ...e, t: r(point(e.scene, e.t)) })) };
 }

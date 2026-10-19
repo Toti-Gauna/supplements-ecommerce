@@ -1,0 +1,14 @@
+{
+  "id": "crecimiento",
+  "name": "Sistema de crecimiento de ventas, fidelización de clientes y automatización inicial",
+  "usd": 500,
+  "maintenance": { "plan": "essential", "months": 2 },
+  "includes": [
+    { "name": "Tienda digital moderna", "detail": "Con sistema de fidelización y guía para tus clientes." },
+    { "name": "100 mensajes automáticos de WhatsApp", "detail": "Avisos y recompra. Después podés sumar más." },
+    { "name": "Asesoría en marketing digital y trends", "detail": "Qué publicar, a quién y cuándo, para que vuelvan a comprar." }
+  ],
+  "cashDiscount": 0.5,
+  "installments": { "max": 4, "surchargePerInstallment": 0.2 },
+  "source": "Instrucción de Ignacio, 19/10/2026: paquete de USD 500 con 2 meses de mantenimiento bonificados, 100 mensajes automáticos de WhatsApp y asesoría; 50 % de descuento al contado; hasta 4 cuotas con 20 % de recargo por cuota."
+}

@@ -3,6 +3,9 @@
  * (`eclipse-email-kit/data/offers/*.json`) y arma las páginas del bloque final, en pesos con el dólar debajo. Sirve para
  * cualquier producto de Eclipse: cambian el nombre del producto, las ofertas y su orden.
  */
+/** Dólar de referencia que pidió Ignacio para mostrar los precios en pesos (18/10/2026). */
+export const USD_RATE = 1500;
+
 export interface Extra { name: string; price: number; scope: string }
 export interface Plan { id: string; name: string; monthly: number; thirdPartyBudget: number; scope: string }
 export interface Prices {

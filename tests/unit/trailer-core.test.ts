@@ -79,7 +79,7 @@ describe("trailer · piezas publicadas", () => {
   it("cada pieza pasa el validador y usa recetas registradas", async () => {
     const { PIECES } = await import("@/trailer/pieces");
     const { PIECE_IDS } = await import("@/trailer/pieces/ids");
-    const recipes = ["title", "slam", "statpunch", "typewriter", "themeflip", "clones", "ticker", "trace", "plate", "splash-live", "gift-live", "wheel-live", "shaker-replay", "eclipse-intro", "eclipse-outro", "eclipse-cta", "eclipse-prices", "eclipse-guino", "device", "rules", "stack"];
+    const recipes = ["title", "slam", "statpunch", "typewriter", "themeflip", "clones", "ticker", "trace", "plate", "splash-live", "gift-live", "wheel-live", "shaker-replay", "eclipse-intro", "eclipse-outro", "eclipse-cta", "eclipse-prices", "eclipse-guino", "device", "rules", "stack", "kinetic", "eclipse-offer"];
     for (const id of PIECE_IDS) {
       expect(validateTrailer(PIECES[id]), id).toEqual([]);
       for (const s of PIECES[id].scenes) expect(recipes, `${id}/${s.id}`).toContain(s.recipe);

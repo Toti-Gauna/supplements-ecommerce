@@ -16,7 +16,7 @@ describe("T1 · tiempos y sonido del montaje de ventas", () => {
   it("la duración es la suma de las escenas, sin huecos y con los cortes en la grilla", () => {
     expect(t1.duration).toBeCloseTo(total, 6);
     expect(validateTrailer(t1)).toEqual([]);
-    expect(t1.scenes).toHaveLength(19);
+    expect(t1.scenes).toHaveLength(22);
   });
 
   it("la apertura dura 3 s y cada escena de producto 8 tiempos (3,75 s)", () => {

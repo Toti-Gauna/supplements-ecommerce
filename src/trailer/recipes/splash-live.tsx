@@ -54,7 +54,7 @@ export const splashLive = defineRecipe<SplashLiveProps>({
             );
           })}
         </div>
-        <p data-t="carry" className="font-display absolute uppercase leading-[0.86]" style={{ left: tall ? 60 : 96, top: tall ? f.y + f.h + 110 : 388, fontSize: displaySize(ratio, 150, 150), color: TR.onNight }}>
+        <p data-t="carry" className="font-display absolute uppercase leading-[0.86]" style={{ left: tall ? 60 : 96, top: tall ? f.y + f.h + 110 : 388, fontSize: displaySize(ratio, 128, 150), color: TR.onNight }}>
           {props.carry.map((line, i) => <span key={i} data-t="carry-line" className="block" style={i === props.carry.length - 1 ? { color: TR.volt } : undefined}>{line}</span>)}
         </p>
         <Chip n={props.chip[0]} text={props.chip[1]} />

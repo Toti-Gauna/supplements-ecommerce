@@ -1,12 +1,14 @@
 import { eclipseCta } from "../eclipse/cta";
 import { eclipseGuino } from "../eclipse/guino";
 import { eclipseIntro } from "../eclipse/intro";
+import { eclipseOffer } from "../eclipse/offer-page";
 import { eclipseOutro } from "../eclipse/outro";
 import { eclipsePrices } from "../eclipse/prices";
 import type { Recipe } from "../engine/recipe";
 import { clones } from "./clones";
 import { device } from "./device";
 import { giftLive } from "./gift-live";
+import { kinetic } from "./kinetic";
 import { plate } from "./plate";
 import { rules } from "./rules";
 import { shakerReplay } from "./shaker-replay";
@@ -27,7 +29,7 @@ import { typewriter } from "./typewriter";
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- cada receta tipa sus props; el registro las guarda juntas
 export const RECIPES: Record<string, Recipe<any>> = {
-  title, slam, statpunch, typewriter, themeflip, clones, ticker, trace, plate, device, rules, stack,
+  title, slam, statpunch, typewriter, themeflip, clones, ticker, trace, plate, device, rules, stack, kinetic,
   "splash-live": splashLive, "gift-live": giftLive, "wheel-live": wheelLive, "shaker-replay": shakerReplay,
-  "eclipse-intro": eclipseIntro, "eclipse-outro": eclipseOutro, "eclipse-cta": eclipseCta, "eclipse-prices": eclipsePrices, "eclipse-guino": eclipseGuino,
+  "eclipse-intro": eclipseIntro, "eclipse-outro": eclipseOutro, "eclipse-cta": eclipseCta, "eclipse-prices": eclipsePrices, "eclipse-guino": eclipseGuino, "eclipse-offer": eclipseOffer,
 };

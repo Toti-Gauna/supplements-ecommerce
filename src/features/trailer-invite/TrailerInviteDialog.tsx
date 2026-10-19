@@ -3,6 +3,7 @@ import { Play } from "lucide-react";
 import { Button, ButtonLink } from "@/components/atoms/Button";
 import { Sheet } from "@/components/motion/Sheet";
 import { EclipseMark } from "@/trailer/eclipse/EclipseMark";
+import { primeTrailerAudio } from "@/trailer/engine/audio-prime";
 import { TRAILER_INVITE_HREF } from "./trailer-invite";
 
 interface Props { open: boolean; onAccept: () => void; onDecline: () => void }
@@ -25,7 +26,7 @@ export function TrailerInviteDialog({ open, onAccept, onDecline }: Props) {
           <p className="mt-2.5 text-muted">Estamos armando el trailer de tu tienda. Mirá cómo viene: la apertura, el cierre y los precios. Con el botón de abajo lo pausás y lo recorrés.</p>
         </div>
         <div className="flex flex-col gap-2.5 sm:flex-row-reverse">
-          <ButtonLink href={TRAILER_INVITE_HREF} data-autofocus onClick={onAccept} size="lg" className="w-full sm:flex-1">
+          <ButtonLink href={TRAILER_INVITE_HREF} data-autofocus onClick={() => { primeTrailerAudio(); onAccept(); }} size="lg" className="w-full sm:flex-1">
             <Play size={18} aria-hidden="true" />Ver trailer
           </ButtonLink>
           <Button variant="secondary" size="lg" onClick={onDecline} className="w-full sm:w-auto">No por ahora</Button>

@@ -60,17 +60,24 @@ test("la firma de Eclipse: apertura, contacto y precios en pesos con el dólar d
 test("con música: la firma abre con la puerta de sonido y “Ver sin sonido” arranca el trailer", async ({ page }) => {
   await page.goto("trailer/firma/");
   await ready(page);
-  const gate = page.locator("[data-trailer-gate]");
-  await expect(gate.getByRole("button", { name: /Reproducir con sonido|Preparando el sonido/ })).toBeVisible();
+  // Mientras se arma la pista hay una pantalla de carga (con "Ver sin sonido"); sin toque previo, al terminar queda la puerta de sonido.
+  const gate = page.locator("[data-trailer-loading], [data-trailer-gate]");
+  await expect(gate.getByRole("button", { name: "Ver sin sonido" })).toBeVisible();
   await gate.getByRole("button", { name: "Ver sin sonido" }).click();
   await expect(gate).toHaveCount(0);
   await expect(page.locator("[data-trailer-controls]").getByRole("button", { name: "Pausa" })).toBeVisible();
 });
 
 test("los MP4 exportados se ofrecen para descargar (y solo los que existen)", async ({ page }) => {
-  await page.goto("trailer/firma/?t=1");
+  // En un celular vertical abre en 9:16 solo; acá se pide el 16:9 para comprobar el botón de la versión liviana.
+  await page.goto("trailer/firma/?t=1&ratio=16x9");
   await ready(page);
   const controls = page.locator("[data-trailer-controls]");
+  // Quien mira ve un solo botón, con la versión liviana; `?dev=1` muestra el MP4 completo y el de email por separado.
+  await expect(controls.locator("a[download]")).toHaveCount(1);
+  await expect(controls.locator("a[data-download='Descargar MP4']")).toHaveAttribute("href", /\/trailer\/firma-email\.mp4$/);
+  await page.goto("trailer/firma/?t=1&dev=1&ratio=16x9");
+  await ready(page);
   await expect(controls.locator("a[data-download='Descargar MP4']")).toHaveAttribute("href", /\/trailer\/firma-16x9\.mp4$/);
   await expect(controls.locator("a[data-download='Para email']")).toHaveAttribute("href", /\/trailer\/firma-email\.mp4$/);
   await page.goto("trailer/firma/?t=1&ratio=9x16");
@@ -80,4 +87,16 @@ test("los MP4 exportados se ofrecen para descargar (y solo los que existen)", as
   await page.goto("trailer/demo/?t=1");
   await ready(page);
   await expect(controls.locator("a[download]")).toHaveCount(0);
+});
+
+test("en un celular vertical el trailer abre en 9:16 y ofrece el MP4 vertical (con ?ratio=16x9 se queda en horizontal)", async ({ page }) => {
+  await page.goto("trailer/firma/?t=1");
+  await ready(page);
+  await expect(page.locator("[data-trailer-controls]").locator("a[download]")).toHaveAttribute("href", /\/trailer\/firma-9x16\.mp4$/);
+  const box = await page.locator("[data-trailer-stage]").boundingBox();
+  expect(box!.height).toBeGreaterThan(box!.width);
+  await page.goto("trailer/firma/?t=1&ratio=16x9");
+  await ready(page);
+  const wide = await page.locator("[data-trailer-stage]").boundingBox();
+  expect(wide!.width).toBeGreaterThan(wide!.height);
 });

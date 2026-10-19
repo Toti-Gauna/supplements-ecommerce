@@ -2,8 +2,9 @@ import * as fx from "./fx";
 import { gain, reverb, type Buses, type VoiceFn } from "./kit";
 import type { Note, Voice } from "./score";
 import * as voices from "./voices";
+import * as adVoices from "./voices-ad";
 
-const VOICES: Record<Voice, VoiceFn> = { ...voices, ...fx };
+const VOICES: Record<Voice, VoiceFn> = { ...voices, ...adVoices, ...fx };
 /** Ganancia final (medida con ffmpeg sobre la firma: ≈ −14 LUFS integrado, pico ≤ −1 dBTP; docs/trailer/biblia/musica.md). */
 export const MASTER = 0.94;
 export const SAMPLE_RATE = 48000;

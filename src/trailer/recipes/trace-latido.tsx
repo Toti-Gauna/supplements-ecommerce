@@ -36,7 +36,7 @@ export function LatidoView({ ratio, text }: { ratio: Ratio; text: string[] }) {
       <div data-t="seg-bot" className="absolute" style={{ ...seg(f.x, f.w), background: volt }} />
       <div data-t="side-l" className="absolute" style={{ left: f.x, top: f.y, width: HAIR, height: f.h, background: volt }} />
       <div data-t="side-r" className="absolute" style={{ left: f.x + f.w - HAIR, top: f.y, width: HAIR, height: f.h, background: volt }} />
-      <p data-t="super" className="font-display absolute uppercase leading-[0.86]" style={{ left: tall ? 60 : 96, top: tall ? f.y + f.h + 110 : 388, fontSize: displaySize(ratio, 150, 150), color: TR.onNight }}>
+      <p data-t="super" className="font-display absolute uppercase leading-[0.86]" style={{ left: tall ? 60 : 96, top: tall ? f.y + f.h + 110 : 388, fontSize: displaySize(ratio, 128, 150), color: TR.onNight }}>
         {text.map((line, i) => <span key={i} data-t="line" className="block" style={i === text.length - 1 ? { color: volt } : undefined}>{line}</span>)}
       </p>
     </>

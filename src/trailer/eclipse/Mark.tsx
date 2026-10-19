@@ -14,11 +14,13 @@ export function SectionMark({ n, label, dark = false }: { n: string; label: stri
 }
 
 /** Titular serif de Eclipse con la parte final en itálica de corona ("Probalo *en vivo*."). */
-export function SerifTitle({ text, italic, size, dark = false }: { text: string; italic: string; size: number; dark?: boolean }) {
+export function SerifTitle({ text, italic, italic2, size, dark = false }: { text: string; italic: string; italic2?: string; size: number; dark?: boolean }) {
   return (
     <h2 data-t="title" className="leading-[0.95]" style={{ fontFamily: FONT.serif, fontSize: size, color: dark ? EC.dawn : EC.ink, letterSpacing: "-0.01em" }}>
       <span data-t="title-line" className="block whitespace-nowrap">{text}</span>
       <span data-t="title-line" className="block italic" style={{ color: dark ? EC.corona : EC.deep }}>{italic}</span>
+      {/* Segundo renglón en itálica: las letras animadas van sueltas y cortarían la palabra si el renglón se partiera solo. */}
+      {italic2 && <span data-t="title-line" className="block italic" style={{ color: dark ? EC.corona : EC.deep }}>{italic2}</span>}
     </h2>
   );
 }

@@ -53,3 +53,25 @@ describe("T1 · tiempos y sonido del montaje de ventas", () => {
     for (const n of notes.filter((x) => x.voice !== "gate")) expect(n.t).toBeLessThan(t1.duration);
   });
 });
+
+describe("T1 · música publicitaria", () => {
+  const start = (id: string) => t1.scenes.find((s) => s.id === id)!.start / beat;
+  const parts = t1.music!.parts;
+  it("arranca con la marimba, el drop cae en las pantallas de carga y cierra en Do mayor", () => {
+    expect(parts[0]!.style).toBe("ad-intro");
+    expect(parts.find((p) => p.style === "ad-chorus")!.from).toBeCloseTo(start("w1-carga"), 2);
+    expect(parts.at(-1)!.style).toBe("ad-end");
+    expect(parts.some((p) => ["drop", "stutter", "half"].includes(p.style))).toBe(false); // nada del groove electrónico
+  });
+  it("el gancho suena en marimba en Do mayor pentatónica, sin sierras en el estribillo", () => {
+    const from = start("w1-carga") * beat, to = start("w3-regalo") * beat;
+    const chorus = notes.filter((n) => n.t >= from && n.t < to);
+    const melody = chorus.filter((n) => n.voice === "mallet").map((n) => n.midi % 12);
+    expect(melody.length).toBeGreaterThan(12);
+    for (const pc of melody) expect([0, 2, 4, 7, 9]).toContain(pc); // do, re, mi, sol, la
+    expect(chorus.some((n) => n.voice === "pluck" || n.voice === "bass" || n.voice === "stab")).toBe(false);
+  });
+  it("hay silencio real antes del drop, de los equipos y de la promesa", () => {
+    expect(t1.music!.silences!.map(([, to]) => to)).toEqual(["w1-carga", "software", "promesa"].map((id) => expect.closeTo(start(id), 2)));
+  });
+});

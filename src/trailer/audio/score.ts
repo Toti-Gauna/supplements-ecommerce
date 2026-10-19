@@ -1,11 +1,13 @@
+import { AD_STYLES } from "./styles-ad";
+
 /**
  * Partitura del trailer (pura, con tests): el plan musical por tramos se convierte en notas con tiempo en segundos.
  * Firma sonora de "Tu tienda" (docs/trailer/biblia/musica.md): 128 BPM, La menor (Am–F–C–G) en los drops y Do mayor
  * (C–G–Am–F) en la parte tranquila del cierre, con el mismo estribillo de 4 compases. Todo cae en la grilla de corcheas.
  */
-export type Voice = "kick" | "clap" | "hat" | "sub" | "bass" | "pluck" | "bell" | "pad" | "keys" | "drone" | "stab" | "tone" | "riser" | "impact" | "boom" | "shimmer" | "whoosh" | "tick" | "click" | "gate";
+export type Voice = "kick" | "clap" | "hat" | "sub" | "bass" | "pluck" | "bell" | "pad" | "keys" | "drone" | "stab" | "tone" | "mallet" | "uke" | "snap" | "ebass" | "riser" | "impact" | "boom" | "shimmer" | "whoosh" | "tick" | "click" | "gate";
 export interface Note { t: number; voice: Voice; midi: number; dur: number; vel: number }
-export type Style = "tension" | "drop" | "calm" | "final" | "silence" | "clon" | "plano" | "stutter" | "half";
+export type Style = "tension" | "drop" | "calm" | "final" | "silence" | "clon" | "plano" | "stutter" | "half" | keyof typeof AD_STYLES;
 /** Tramo musical en tiempos (negras) desde el inicio del trailer. */
 export interface MusicPart { from: number; to: number; style: Style }
 /** Corte de voces: en [from, to) las voces nombradas se callan (el resto del tramo sigue). */
@@ -39,7 +41,7 @@ export function buildScore(plan: MusicPlan): Note[] {
       STYLES[part.style](part.from + b * 4, b, put, len);
     }
     if (part.style === "tension") { const from = Math.max(part.from + 0.5, part.to - 6); add(from, "riser", 69, part.to - 0.5 - from, 0.8); } // sube y corta seco medio tiempo antes del golpe
-    if (part.style === "drop" || part.style === "final") add(part.from, "impact", 33, 4, 1);
+    if (part.style === "drop" || part.style === "final" || part.style === "ad-chorus") add(part.from, "impact", 33, 4, part.style === "ad-chorus" ? 0.7 : 1);
     if (part.style === "half") add(part.from, "boom", 33, 4, 0.9);
   }
   for (const [from, to] of plan.silences ?? []) add(from, "gate", 0, to - from, 1);
@@ -53,6 +55,7 @@ type Add = (beats: number, voice: Voice, midi: number, durBeats: number, vel: nu
 const HALF = [MINOR[0]!, MINOR[1]!, MINOR[3]!]; // Am – F – G (la parte de la cuenta queda suspendida en Sol)
 const HALF_HOOK = [0, 1, 3]; // compases del estribillo que canta cada uno
 const STYLES: Record<Style, (at: number, bar: number, add: Add, len: number) => void> = {
+  ...AD_STYLES,
   silence: () => {},
   tension(at, bar, add) {
     add(at, "pad", 45, 4, 0.5); add(at, "pad", 52, 4, 0.35); // La + Mi graves: dron

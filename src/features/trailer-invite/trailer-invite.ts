@@ -7,8 +7,8 @@ import { brand } from "@/config/brand";
  */
 export const TRAILER_INVITE_KEY = `${brand.storageKey}-trailer-invite`;
 
-/** Pieza que abre "Ver trailer": la que muestra cómo va el trabajo. */
-export const TRAILER_INVITE_HREF = "/trailer/firma/";
+/** Pieza que abre "Ver trailer": la más nueva terminada (T1; pasa a T2 cuando esté lista). La firma queda en `/trailer/firma/`. */
+export const TRAILER_INVITE_HREF = "/trailer/t1/";
 
 /** Igual que la invitación al quiz: ni en la compra, ni en el panel, ni en los enlaces puntuales (regalo, pedido). */
 const SKIP = ["/crear/quiz", "/quiz", "/checkout", "/admin-demo", "/regalo", "/pedido", "/trailer"];

@@ -25,10 +25,10 @@ test.describe("aviso del trailer (sesión nueva)", () => {
     await expect(invite(page)).toHaveCount(0);
   });
 
-  test("“Ver trailer” abre la firma del trailer", async ({ page }) => {
+  test("“Ver trailer” abre la pieza más nueva (T1)", async ({ page }) => {
     await page.goto("");
     await invite(page).getByRole("link", { name: "Ver trailer" }).click();
-    await expect(page).toHaveURL(/trailer\/firma\/$/);
+    await expect(page).toHaveURL(/trailer\/t1\/$/);
     await page.waitForFunction(() => window.__trailer?.ready === true);
     await expect(page.locator("[data-trailer-controls]")).toBeVisible();
   });

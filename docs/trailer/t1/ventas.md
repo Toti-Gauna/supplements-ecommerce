@@ -18,6 +18,9 @@ Ignacio vio T1 publicado y lo marcó "bien como base, mal para ventas": partes m
 - Hecho así: `kinetic` (receta nueva, 7 placas de solo texto en 12 tiempos), `eclipse-cta` con `pitch` (titular, bajada, link y contacto a la derecha), `eclipse-offer` (receta nueva: paquete, incluye, contado y cuotas, con los números calculados en `eclipse/offer.ts` desde `data/oferta-crecimiento.json`) y dos páginas de `eclipse-prices` del libro `tu-tienda-ventas` (mantenimiento y piezas). "La tuya, no." pasó a "Tu negocio, no." y la promesa a "Para que tu negocio venda más.". El guiño de la campaña base salió de T1.
 - **Pendiente de Ignacio:** cuántos usuarios y datos soporta el mantenimiento (no está en el tarifario; la página muestra lo que sí está: horas, servicios de terceros y el plan después). La firma (`/trailer/firma/`) sigue con la campaña base de 3 meses del libro aprobado.
 
-## Tanda 3 (pendiente): música y exportación
-- Música publicitaria (mayor, gancho de 4 a 6 notas, palmas y pluck, sin bajo electrónico) sobre el montaje final.
-- 9:16 de las escenas nuevas, exportación de MP4 y póster, e2e y CI.
+## Tanda 3 (hecha): música publicitaria y exportación
+- **Música** (`audio/styles-ad.ts`, `audio/voices-ad.ts`): Do mayor, I–V–vi–IV, gancho de cuatro compases en marimba ("sol-sol-la-do · do / re-do-la-do", con su respuesta que sube al mi), ukelele a contratiempo, palmas y chasquidos, bajo redondo; sin sierras ni groove de pista. Estilos `ad-intro`, `ad-verse`, `ad-chorus`, `ad-break` (pantallas de texto) y `ad-end` (cierra en Do).
+- **Partitura atada a las escenas** (`pieces/t1-sonido.ts`): cada tramo empieza y termina en una escena y cada efecto se escribe relativo a su escena, así un cambio de montaje no desarma la música. Silencio real antes del drop (pantallas de carga), de "No es solo software" y de la promesa.
+- **Mezcla:** −14,7 LUFS integrado, pico −1,5 dBFS (`t1.m4a`).
+- **MP4:** 16:9, 9:16, email (< 10 MB) y póster (cuadro de los equipos, 38,8 s) rehechos para los 75,5 s.
+- Pendiente de Ignacio: la capacidad del mantenimiento (usuarios y datos) y si la música sintetizada alcanza o se reemplaza por un tema con licencia (el montaje no cambia).

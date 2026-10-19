@@ -100,3 +100,13 @@ test("en un celular vertical el trailer abre en 9:16 y ofrece el MP4 vertical (c
   const wide = await page.locator("[data-trailer-stage]").boundingBox();
   expect(wide!.width).toBeGreaterThan(wide!.height);
 });
+
+test("la carga nunca queda trabada: si el sonido tarda, a los 8 s aparece la puerta con “Ver sin sonido”", async ({ page }) => {
+  // El Chromium de los tests no decodifica AAC: la pista se sintetiza (tarda) y la puerta tiene que salir igual.
+  await page.goto("trailer/firma/");
+  await expect(page.locator("[data-trailer-loading]")).toBeVisible();
+  const gate = page.locator("[data-trailer-gate]");
+  await expect(gate).toBeVisible({ timeout: 15_000 });
+  await gate.getByRole("button", { name: "Ver sin sonido" }).click();
+  await expect(page.locator("[data-trailer-controls]").getByRole("button", { name: "Pausa" })).toBeVisible();
+});

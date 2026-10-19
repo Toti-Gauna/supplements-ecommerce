@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { inviteSeen, QUIZ_INVITE_KEY, rememberInvite, shouldInviteToQuiz } from "@/features/quiz/quiz-invite";
 
-/** L4 · invitación al quiz de la primera visita: dónde sale, una sola vez y sin romperse sin almacenamiento. */
+/** L4 · invitación al quiz: dónde sale, cuándo queda apagada y sin romperse sin almacenamiento. */
 describe("invitación al quiz", () => {
   afterEach(() => vi.unstubAllGlobals());
 
@@ -28,12 +28,14 @@ describe("invitación al quiz", () => {
     expect(QUIZ_INVITE_KEY.includes("-demo:")).toBe(false);
   });
 
-  it("recuerda la elección y, sin almacenamiento, la da por vista sin romperse", () => {
+  it("guarda la elección sin apagarla (vuelve en la próxima carga); solo \"seen\" la apaga y, sin almacenamiento, no se rompe", () => {
     const store = new Map<string, string>();
     vi.stubGlobal("window", { localStorage: { getItem: (k: string) => store.get(k) ?? null, setItem: (k: string, v: string) => void store.set(k, v) } });
     expect(inviteSeen()).toBe(false);
     rememberInvite("no");
     expect(store.get(QUIZ_INVITE_KEY)).toBe("no");
+    expect(inviteSeen()).toBe(false);
+    store.set(QUIZ_INVITE_KEY, "seen");
     expect(inviteSeen()).toBe(true);
     const broken = () => { throw new Error("bloqueado"); };
     vi.stubGlobal("window", { localStorage: { getItem: broken, setItem: broken } });

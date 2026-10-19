@@ -6,6 +6,7 @@ import { encodeWav } from "../audio/wav";
 import { parseParams } from "../core/params";
 import { PIECES } from "../pieces";
 import { RECIPES } from "../recipes";
+import { invitePhase, setInvitePhase } from "@/features/trailer-invite/invite-flow";
 import { takePrimedAudio } from "./audio-prime";
 import { Controls } from "./Controls";
 import { settleLooseAnimations } from "./css-clock";
@@ -45,10 +46,15 @@ export default function TrailerPlayer({ pieza }: { pieza: string }) {
     let cancelled = false;
     const reduced = params.reduced || matchMedia("(prefers-reduced-motion: reduce)").matches;
     // Fuentes e imágenes (placas y arte de las escenas) listas antes de armar: el primer cuadro grabado ya está completo.
-    const images = () => Promise.all(Array.from(stage.querySelectorAll("img"), (img) => img.decode().catch(() => undefined)));
-    void document.fonts.ready.then(images).then(() => { if (!cancelled) ctx = gsap.context(() => setMaster(buildMaster(spec, stage, params.ratio, reduced)), stage); });
+    // Con tope de tiempo: si un navegador no termina de decodificar una imagen, el trailer arma igual (la imagen llega después).
+    const settle = (p: Promise<unknown>) => Promise.race([p.catch(() => undefined), new Promise((r) => setTimeout(r, 6000))]);
+    const images = () => Promise.all(Array.from(stage.querySelectorAll("img"), (img) => settle(img.decode())));
+    void settle(document.fonts.ready).then(images).then(() => { if (!cancelled) ctx = gsap.context(() => setMaster(buildMaster(spec, stage, params.ratio, reduced)), stage); });
     return () => { cancelled = true; ctx?.revert(); setMaster(null); };
   }, [spec, params.ratio, params.reduced]);
+
+  // Vino desde "Ver trailer": al volver a la tienda le toca la invitación al quiz.
+  useEffect(() => { if (invitePhase() === "watching") setInvitePhase("quiz"); }, []);
 
   useEffect(() => {
     if (frozen || !spec.music) return;
@@ -93,6 +99,13 @@ export default function TrailerPlayer({ pieza }: { pieza: string }) {
     });
     return () => { off = true; };
   }, [gate, prepared, auto, transport]);
+  // Si el sonido tarda (un celular que no decodifica y tiene que sintetizar), no se queda en la carga: a los 8 s aparece la puerta, con
+  // "Ver sin sonido" ya disponible y "Reproducir con sonido" que se habilita cuando la pista esté lista.
+  useEffect(() => {
+    if (!gate || !master || soundReady || auto !== "wait") return;
+    const id = setTimeout(() => setAuto("gate"), 8000);
+    return () => clearTimeout(id);
+  }, [gate, master, soundReady, auto]);
   return (
     <>
       <p data-trailer-summary className="sr-only">{spec.summary ?? spec.title}</p>
@@ -108,7 +121,7 @@ export default function TrailerPlayer({ pieza }: { pieza: string }) {
       </Stage>
       {!params.exportMode && master && <Controls spec={spec} pieza={pieza} clock={transport} params={params} />}
       {gate && auto !== "gate" && <Loading onMute={() => start(false)} />}
-      {gate && auto === "gate" && <Gate ready onSound={() => start(true)} onMute={() => start(false)} />}
+      {gate && auto === "gate" && <Gate ready={soundReady || !spec.music} onSound={() => start(true)} onMute={() => start(false)} />}
     </>
   );
 }

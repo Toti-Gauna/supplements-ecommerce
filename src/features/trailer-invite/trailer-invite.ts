@@ -2,8 +2,8 @@ import { brand } from "@/config/brand";
 
 /**
  * Invitación al trailer (pedido de Ignacio, 18/10/2026): mientras el trailer está en construcción, después de la
- * pantalla de carga la tienda ofrece verlo ("Ver trailer" / "No por ahora"). Aparece una vez por sesión del navegador,
- * así cada visita nueva muestra el avance. Si `localStorage` ya la tiene vista (los tests, playwright.config.ts) no sale.
+ * pantalla de carga la tienda ofrece verlo ("Ver trailer" / "No por ahora"). Aparece en cada carga de la página (ver `invite-flow.ts`).
+ * Con la clave en "seen" queda apagada: así la apagan los tests (playwright.config.ts).
  */
 export const TRAILER_INVITE_KEY = `${brand.storageKey}-trailer-invite`;
 
@@ -20,19 +20,11 @@ export function shouldInviteToTrailer({ path, seen }: { path: string; seen: bool
   return !SKIP.some((s) => p === s || p.startsWith(`${s}/`));
 }
 
-/** ¿Ya la vio en esta sesión (o los tests la marcaron)? Sin almacenamiento se da por vista: no insistir. */
-export function trailerInviteSeen(): boolean {
+/** ¿Está apagada (la clave en "seen", como la dejan los tests)? Sin almacenamiento se da por apagada: no insistir. */
+export function trailerInviteOff(): boolean {
   try {
-    return window.sessionStorage.getItem(TRAILER_INVITE_KEY) !== null || window.localStorage.getItem(TRAILER_INVITE_KEY) !== null;
+    return window.localStorage.getItem(TRAILER_INVITE_KEY) === "seen";
   } catch {
     return true;
-  }
-}
-
-export function rememberTrailerInvite(choice: "ver" | "no"): void {
-  try {
-    window.sessionStorage.setItem(TRAILER_INVITE_KEY, choice);
-  } catch {
-    /* sin almacenamiento: no se recuerda */
   }
 }

@@ -1,8 +1,8 @@
 import { brand } from "@/config/brand";
 
 /**
- * Invitación al quiz (L4, pedido de Ignacio): la primera vez que alguien entra a la tienda, después de la pantalla de
- * carga, un modal lo invita a hacer el quiz. Se muestra una sola vez por navegador.
+ * Invitación al quiz (L4, pedido de Ignacio): después del aviso del trailer (si dijo que no o cuando vuelve de verlo) un modal invita a
+ * hacer el quiz, en cada carga de la página (19/10/2026; ver `invite-flow.ts`). La elección se guarda, pero solo "seen" la apaga.
  *
  * La clave va FUERA del prefijo de la demo (`volta-demo:`): "Reiniciar demo" no la borra (no vuelve a aparecer cada
  * vez que alguien reinicia para mostrar la tienda) y los tests la dejan marcada de entrada (playwright.config.ts).
@@ -27,10 +27,10 @@ export function shouldInviteToQuiz({ path, seen }: { path: string; seen: boolean
   return !SKIP.some((s) => p === s || p.startsWith(`${s}/`));
 }
 
-/** ¿Ya la vio? Sin almacenamiento (modo privado, bloqueado) se da por vista: mejor no insistir en cada página. */
+/** ¿Está apagada (la clave en "seen", como la dejan los tests)? Sin almacenamiento (modo privado, bloqueado) se da por apagada. */
 export function inviteSeen(): boolean {
   try {
-    return window.localStorage.getItem(QUIZ_INVITE_KEY) !== null;
+    return window.localStorage.getItem(QUIZ_INVITE_KEY) === "seen";
   } catch {
     return true;
   }

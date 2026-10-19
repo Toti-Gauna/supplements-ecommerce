@@ -9,6 +9,8 @@ export class AudioPlayback {
   private src: AudioBufferSourceNode | null = null;
   /** Llamar sincrónicamente dentro del click: crea y reanuda el contexto. */
   unlock() { this.ctx ??= new AudioContext({ latencyHint: "playback" }); void this.ctx.resume(); }
+  /** Toma un contexto ya funcionando (el que creó el toque de "Ver trailer"). */
+  adopt(ctx: AudioContext) { this.ctx = ctx; }
   active() { return this.src !== null; }
   now() {
     const c = this.ctx!;

@@ -11,7 +11,7 @@ export interface RulesProps { prev: string[]; lines: string[] }
 const PLUS_AT = { "16x9": { x: 887, y: 540, len: 160 }, "9x16": { x: 130, y: 250, len: 140 } } as const;
 const FAT = 16, K_FAT = HAIR / FAT;
 /** Los equipos se achican a 0,6 y quedan centrados en x = 450 (columnas 1 a 5); en vertical se achican a 0,7 de lo que ya eran y bajan un poco. */
-const SHRINKS = { "16x9": { scale: 0.6, x: 450 - PAIR_CENTER.x, y: 0 }, "9x16": { scale: 0.7, x: 0, y: 40 } } as const;
+const SHRINKS = { "16x9": { scale: 0.5, x: 470 - PAIR_CENTER.x, y: 0 }, "9x16": { scale: 0.7, x: 0, y: 40 } } as const;
 /** Corona: un radial de 1600 px al 35 % que sube de y + 900 a y + 600 detrás de los equipos (en vertical, centrado en ellos). */
 const GLOWS = { "16x9": { x: 960, y: 540, size: 1600, from: 900, to: 600 }, "9x16": { x: 540, y: 600, size: 1500, from: 900, to: 650 } } as const;
 
@@ -30,7 +30,7 @@ export const rules = defineRecipe<RulesProps>({
       <div className="absolute inset-0 overflow-hidden" style={{ background: TR.night }}>
         <Grid ratio={ratio} color={TR.volt} opacity={0.14} />
         <div data-t="glow" className="absolute rounded-full" style={{ left: GLOW.x - GLOW.size / 2, top: GLOW.y - GLOW.size / 2, width: GLOW.size, height: GLOW.size, background: `radial-gradient(closest-side, ${EC.corona}59, ${EC.corona}33 55%, transparent)` }} />
-        <DevicePair ratio={ratio} ry={-6} />
+        <DevicePair ratio={ratio} />
         {bar("plus-h", PLUS.len, FAT)}
         {bar("plus-v", FAT, PLUS.len)}
         <DisplayLines lines={props.prev} ratio={ratio} col={1} row={2} size={130} tag="prev" />

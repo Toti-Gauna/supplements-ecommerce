@@ -8,28 +8,27 @@ import { Grid } from "./tpl";
 
 /** Trazo completo del contorno (el kit lo normaliza a 1000). */
 const PATH = 1000;
-/** Centro del par (notebook + celular) en el 16:9: el eje sobre el que gira y se achica. */
-export const PAIR_CENTER = { x: 1240, y: 540 } as const;
-/** En 9:16 el par entra entero en el ancho (0,8×), centrado en x = 540 y en el tercio inferior; el super va arriba. */
-const FIT: Record<Ratio, { k: number; x: number; y: number }> = { "16x9": { k: 1, x: 0, y: 0 }, "9x16": { k: 0.8, x: 540 - PAIR_CENTER.x * 0.8, y: 1290 - PAIR_CENTER.y * 0.8 } };
-
 /**
- * La notebook (centrada en 1290, 520) y el celular (adelante y a la izquierda, 860, 600) de "No es solo software", en un
- * bloque `[data-t="pair"]` con perspectiva que gira en Y. `ry` es el giro de entrada del par.
+ * Equipos de frente, uno al lado del otro y sin tocarse: el celular (la tienda) y la notebook (el panel), a su escala por formato. Son los
+ * mismos en "No es solo software" y en la asesoría (que los achica a un costado), así la escena siguiente sigue desde donde quedó la anterior.
  */
-export function DevicePair({ ratio, ry, front = "hoy-1440-dark", back = "home-carrusel-390-dark" }: { ratio: Ratio; ry: number; front?: string; back?: string }) {
-  const fit = FIT[ratio];
+const FLAT = {
+  "16x9": { ph: { x: 900, y: 560, k: 0.7 }, nb: { x: 1480, y: 560, k: 0.7 }, cap: { y: 900, size: 30, w: 640 }, origin: { x: 1313, y: 560 } },
+  "9x16": { ph: { x: 250, y: 1150, k: 0.8 }, nb: { x: 730, y: 1150, k: 0.5 }, cap: { y: 1500, size: 26, w: 400 }, origin: { x: 490, y: 1150 } },
+} as const;
+/** Centro del par en el 16:9: el eje sobre el que se achica (escena 15). */
+export const PAIR_CENTER = FLAT["16x9"].origin;
+
+type Place = { x: number; y: number; k: number };
+const at = (p: Place) => ({ left: p.x, top: p.y, width: 0, height: 0, transform: `scale(${p.k})` });
+
+/** El celular y la notebook de frente, en un bloque `[data-t="shift"]` que la asesoría achica y corre. */
+export function DevicePair({ ratio, front = "hoy-1440-dark", back = "home-carrusel-390-dark" }: { ratio: Ratio; front?: string; back?: string }) {
+  const L = FLAT[ratio];
   return (
-    <div className="absolute left-0 top-0" style={{ width: 1920, height: 1080, transformOrigin: "0 0", transform: `translate(${fit.x}px, ${fit.y}px) scale(${fit.k})` }}>
-      {/* `shift` achica y corre el par en 2D (escena 15): la perspectiva viaja con él y el par no se ve en oblicuo. */}
-      <div data-t="shift" className="absolute inset-0" style={{ transformOrigin: `${PAIR_CENTER.x}px ${PAIR_CENTER.y}px` }}>
-      <div className="absolute inset-0" style={{ perspective: 1800, perspectiveOrigin: `${PAIR_CENTER.x}px ${PAIR_CENTER.y}px` }}>
-        <div data-t="pair" className="absolute inset-0" style={{ transformStyle: "preserve-3d", transformOrigin: `${PAIR_CENTER.x}px ${PAIR_CENTER.y}px`, transform: `rotateY(${ry}deg)` }}>
-          <Laptop id="nb" shot={front} cx={1290} cy={520} rx={6} />
-          <Phone id="ph" shot={back} cx={860} cy={600} z={120} ry={26} />
-        </div>
-      </div>
-      </div>
+    <div data-t="shift" className="absolute inset-0" style={{ transformOrigin: `${L.origin.x}px ${L.origin.y}px` }}>
+      <div className="absolute" style={at(L.ph)}><Phone id="ph" shot={back} cx={0} cy={0} /></div>
+      <div className="absolute" style={at(L.nb)}><Laptop id="nb" shot={front} cx={0} cy={0} /></div>
     </div>
   );
 }
@@ -44,31 +43,42 @@ export function DisplayLines({ lines, ratio, col, row, size, tag = "line" }: { l
   );
 }
 
-export interface DeviceProps { lines: string[] }
+export interface DeviceProps { lines: string[]; panel: string; shop: string }
+
+/** Los rótulos van debajo de cada equipo: el panel para el dueño y la tienda para sus clientes. */
+function Captions({ ratio, panel, shop }: { ratio: Ratio; panel: string; shop: string }) {
+  const L = FLAT[ratio];
+  const cap = (x: number, tag: string, text: string) => (
+    <p data-t={tag} className="absolute -translate-x-1/2 text-center font-mono uppercase" style={{ left: x, top: L.cap.y, width: L.cap.w, fontSize: L.cap.size, letterSpacing: "0.08em", color: TR.onNight, zIndex: 5 }}>{text}</p>
+  );
+  return <>{cap(L.nb.x, "cap-nb", panel)}{cap(L.ph.x, "cap-ph", shop)}</>;
+}
 
 /**
- * 14 · "No es solo software" (56–60, DROP 2): sobre negro con la grilla se trazan los contornos de los dos equipos en ½
- * tiempo, se prenden las pantallas (el panel y el inicio de la tienda) y el par gira de −12° a −6° hasta el final.
+ * 14 · "No es solo software" (DROP 2): sobre negro con la grilla se trazan los contornos de los dos equipos, uno al lado del otro y de frente
+ * (sin superponerse), se prenden las pantallas y cada uno se presenta con su rótulo: el panel para el dueño y la tienda para los clientes.
  */
 export const device = defineRecipe<DeviceProps>({
   id: "device",
   Component: ({ props, ratio }) => (
     <div className="absolute inset-0 overflow-hidden" style={{ background: TR.night }}>
       <Grid ratio={ratio} color={TR.volt} opacity={0.14} />
-      <DevicePair ratio={ratio} ry={-6} />
-      <DisplayLines lines={props.lines} ratio={ratio} col={1} row={2} size={130} />
+      <DevicePair ratio={ratio} />
+      <Captions ratio={ratio} panel={props.panel} shop={props.shop} />
+      <DisplayLines lines={props.lines} ratio={ratio} col={1} row={2} size={ratio === "9x16" ? 104 : 130} />
     </div>
   ),
   build: ({ q, beat: B, reduced }) => {
     const tl = gsap.timeline();
     const one = (s: string) => q(`[data-t="${s}"]`);
-    const lines = [...one("nb-line"), ...one("ph-line")], screens = [...one("nb-screen"), ...one("ph-screen")];
-    if (reduced) { tl.fromTo(screens, { autoAlpha: 0 }, { autoAlpha: 1, duration: B / 4, ease: "none" }, 0); return tl; }
-    const chars = splitChars(one("line"));
-    tl.fromTo(chars, { yPercent: 110 }, { yPercent: 0, duration: B / 4, ease: "trl.expo", stagger: 0.012 }, 0);
-    tl.fromTo(lines, { strokeDashoffset: PATH }, { strokeDashoffset: 0, duration: B / 2, ease: "trl.expo" }, 0);
-    tl.fromTo(screens, { autoAlpha: 0 }, { autoAlpha: 1, duration: B / 8, ease: "none" }, B / 2);
-    tl.fromTo(one("pair"), { rotateY: -12 }, { rotateY: -6, duration: 3.5 * B, ease: "sine.inOut" }, B / 2);
+    const caps = [...one("cap-nb"), ...one("cap-ph")], screens = [...one("nb-screen"), ...one("ph-screen")];
+    if (reduced) { tl.fromTo([...screens, ...caps], { autoAlpha: 0 }, { autoAlpha: 1, duration: B / 4, ease: "none" }, 0); return tl; }
+    tl.fromTo(splitChars(one("line")), { yPercent: 110 }, { yPercent: 0, duration: B / 4, ease: "trl.expo", stagger: 0.012 }, 0);
+    tl.fromTo([...one("nb-line"), ...one("ph-line")], { strokeDashoffset: PATH }, { strokeDashoffset: 0, duration: B / 2, ease: "trl.expo" }, 0);
+    tl.fromTo(one("nb-screen"), { autoAlpha: 0 }, { autoAlpha: 1, duration: B / 8, ease: "none" }, B / 2);
+    tl.fromTo(one("cap-nb"), { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: B / 2, ease: "trl.expo" }, B);
+    tl.fromTo(one("ph-screen"), { autoAlpha: 0 }, { autoAlpha: 1, duration: B / 8, ease: "none" }, 2.5 * B);
+    tl.fromTo(one("cap-ph"), { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: B / 2, ease: "trl.expo" }, 3 * B);
     return tl;
   },
 });

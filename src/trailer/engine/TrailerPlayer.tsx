@@ -6,10 +6,12 @@ import { encodeWav } from "../audio/wav";
 import { parseParams } from "../core/params";
 import { PIECES } from "../pieces";
 import { RECIPES } from "../recipes";
+import { takePrimedAudio } from "./audio-prime";
 import { Controls } from "./Controls";
 import { settleLooseAnimations } from "./css-clock";
 import { Gate } from "./Gate";
 import { gsap, type Timeline } from "./gsap";
+import { Loading } from "./Loading";
 import { buildMaster } from "./master";
 import { Stage } from "./Stage";
 import { trackFor } from "./track";
@@ -28,7 +30,7 @@ const base64 = (bytes: Uint8Array) => { let s = ""; for (let i = 0; i < bytes.le
  */
 export default function TrailerPlayer({ pieza }: { pieza: string }) {
   const spec = PIECES[pieza]!;
-  const [params] = useState(() => parseParams(window.location.search, spec.duration));
+  const [params] = useState(() => parseParams(window.location.search, spec.duration, matchMedia("(max-width: 820px) and (orientation: portrait)").matches));
   const [transport] = useState(() => createTransport(spec.duration));
   const stageRef = useRef<HTMLDivElement>(null);
   const [master, setMaster] = useState<Timeline | null>(null);
@@ -79,6 +81,18 @@ export default function TrailerPlayer({ pieza }: { pieza: string }) {
   }, [master, transport, params.t, frozen, spec]);
 
   const start = (sound: boolean) => { if (sound) transport.playback.unlock(); else transport.mute(); setGate(false); transport.play(); };
+  // Listo el armado y el sonido: si "Ver trailer" ya dejó el audio funcionando, arranca solo; si no (link directo), queda la puerta.
+  const [auto, setAuto] = useState<"wait" | "go" | "gate">("wait");
+  const prepared = Boolean(master) && (soundReady || !spec.music);
+  useEffect(() => {
+    if (!gate || !prepared || auto !== "wait") return;
+    let off = false;
+    void takePrimedAudio().then((ctx) => {
+      if (off) { void ctx?.close(); return; }
+      if (ctx) { transport.playback.adopt(ctx); setAuto("go"); setGate(false); transport.play(); } else setAuto("gate");
+    });
+    return () => { off = true; };
+  }, [gate, prepared, auto, transport]);
   return (
     <>
       <p data-trailer-summary className="sr-only">{spec.summary ?? spec.title}</p>
@@ -93,7 +107,8 @@ export default function TrailerPlayer({ pieza }: { pieza: string }) {
         })}
       </Stage>
       {!params.exportMode && master && <Controls spec={spec} pieza={pieza} clock={transport} params={params} />}
-      {gate && master && <Gate ready={soundReady} onSound={() => start(true)} onMute={() => start(false)} />}
+      {gate && auto !== "gate" && <Loading onMute={() => start(false)} />}
+      {gate && auto === "gate" && <Gate ready onSound={() => start(true)} onMute={() => start(false)} />}
     </>
   );
 }

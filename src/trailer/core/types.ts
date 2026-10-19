@@ -17,6 +17,8 @@ export interface SceneSpec<P extends object = object> {
   start: number;
   dur: number;
   props?: P;
+  /** Velocidad del timeline de la receta (1 = la que trae): menos de 1 la estira y más de 1 la comprime dentro de la misma escena. */
+  speed?: number;
 }
 
 import type { MusicPlan, Voice } from "../audio/score";

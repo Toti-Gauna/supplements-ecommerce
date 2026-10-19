@@ -1,12 +1,12 @@
 import type { MusicPlan, Voice } from "../audio/score";
-import type { PieceEffect } from "../core/types";
+import type { PieceEffect, SceneSpec } from "../core/types";
 
 /**
  * Sonido de T1 · "El problema y la diferencia" (docs/trailer/t1/sonido.md): plan musical por tramos y cue sheet, todo en
  * tiempos desde el inicio (128 BPM). Lo que ya suena por estilo no se repite acá: el impacto del DROP 1 (32), el boom del
  * DROP 2 (56), el latido y la subida de 28 y la línea plana de 26 a 27,5. Los efectos de `eclipse-*` son de cada receta.
  */
-export const T1_MUSIC: MusicPlan = {
+const T1_MUSIC_96: MusicPlan = {
   bpm: 128,
   parts: [
     { from: 0, to: 12, style: "tension" }, { from: 12, to: 26, style: "clon" }, { from: 26, to: 28, style: "plano" },
@@ -27,7 +27,7 @@ const PASTE = [12, 13, 14, 15].flatMap((t): Row[] => [[t, "click", 0.7], [t, "ti
 const BAG = [37, 37.5, 38, 38.5, 39];
 const WHEEL: number[] = [...Array.from({ length: 8 }, (_, k) => 44.5 + k / 8), ...Array.from({ length: 4 }, (_, k) => 45.5 + k / 4), 46.5];
 
-export const T1_EFFECTS: PieceEffect[] = [
+const T1_EFFECTS_96: PieceEffect[] = [
   ...rows("calcadas", PASTE),
   ...rows("veinte", [[16, "click", 0.5], [18, "riser", 0.3, 69, 1.5], [19.5, "tick", 0.6, 74]]),
   ...rows("potes", [[20, "whoosh", 0.25, 69, 2.75], [23, "tick", 0.6, 74], [23.5, "tick", 0.3, 64]]),
@@ -48,3 +48,32 @@ export const T1_EFFECTS: PieceEffect[] = [
   ...rows("promesa", [[64, "impact", 0.7, 33, 2], [64.25, "impact", 0.6, 33, 2], [64.5, "impact", 0.8, 33, 2], [65, "shimmer", 0.35, 88]]),
   ...rows("guino", [[80, "whoosh", 0.25, 69, 1], [80.5, "tick", 0.2, 81], [81, "bell", 0.4, 81, 1], [82, "tick", 0.2, 76]]),
 ];
+
+/** El montaje de 96 tiempos para el que se escribió la partitura de arriba: id → [inicio, duración]. */
+const BASE: Record<string, [number, number]> = {
+  apertura: [0, 12], calcadas: [12, 4], veinte: [16, 4], potes: [20, 4], plano: [24, 4], latido: [28, 2], "w1-carga": [30, 4], "w2-tema": [34, 3],
+  "w3-regalo": [37, 4], "w4-shaker": [41, 3], "w5-ruleta": [44, 4], "w6-mostrador": [48, 4], "w7-proveedor": [52, 4], software: [56, 4], asesoria: [60, 4],
+  promesa: [64, 4], "en-vivo": [68, 12], guino: [80, 6], cierre: [86, 10],
+};
+
+/**
+ * Lleva la partitura de 96 tiempos al montaje de ventas (escenas más largas o más cortas): cada tiempo sigue a su escena. Los efectos
+ * conservan su lugar dentro de la escena (escalado por su `speed`); los tramos y silencios se estiran con la escena. Es la música de
+ * transición hasta la partitura publicitaria nueva, que se escribe sobre el montaje final.
+ */
+export function t1Sound(scenes: SceneSpec[]): { music: MusicPlan; effects: PieceEffect[] } {
+  const now = new Map(scenes.map((s) => [s.id, { start: s.start / (60 / 128), dur: s.dur / (60 / 128), speed: s.speed ?? 1 }]));
+  const owner = (b: number) => Object.entries(BASE).find(([, [a, d]]) => b >= a && b < a + d) ?? Object.entries(BASE).at(-1)!;
+  const point = (id: string, b: number) => { const [a] = BASE[id]!, n = now.get(id)!; return n.start + (b - a) / n.speed; };
+  // Un límite de tramo o silencio sigue a su escena igual que los efectos, sin pasarse de ella; cada silencio conserva su largo y queda pegado al golpe.
+  const bound = (b: number) => { const [id] = owner(b), n = now.get(id)!; return Math.min(point(id, b), n.start + n.dur); };
+  const r = (n: number) => Math.round(n * 1000) / 1000;
+  const total = scenes.reduce((t, x) => t + x.dur, 0) / (60 / 128);
+  const parts = T1_MUSIC_96.parts.map((p, i, all) => ({ ...p, from: i === 0 ? 0 : r(bound(p.from)), to: i === all.length - 1 ? r(total) : r(bound(p.to)) }));
+  const music: MusicPlan = {
+    ...T1_MUSIC_96, parts,
+    silences: T1_MUSIC_96.silences!.map(([a, b]) => { const end = bound(b); return [r(end - (b - a)), r(end)] as [number, number]; }),
+    breaks: T1_MUSIC_96.breaks!.map((k) => ({ ...k, from: r(bound(k.from)), to: r(bound(k.to)) })),
+  };
+  return { music, effects: T1_EFFECTS_96.map((e) => ({ ...e, t: r(point(e.scene, e.t)) })) };
+}

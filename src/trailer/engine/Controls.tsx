@@ -15,7 +15,7 @@ const clock2 = (t: number) => `${Math.floor(t / 60)}:${(t % 60).toFixed(1).padSt
  */
 export function Controls({ spec, pieza, clock, params }: { spec: TrailerSpec; pieza: string; clock: Clock; params: TrailerParams }) {
   const [playing, setPlaying] = useState(clock.playing());
-  const downloads = useDownloads(pieza, params.ratio);
+  const downloads = useDownloads(pieza, params.ratio, params.dev);
   const range = useRef<HTMLInputElement>(null);
   const readout = useRef<HTMLSpanElement>(null);
 
@@ -49,16 +49,19 @@ export function Controls({ spec, pieza, clock, params }: { spec: TrailerSpec; pi
 }
 
 /** Archivos exportados que existen para esta pieza (se pregunta con HEAD: en Pages un archivo ausente da 404). */
-function useDownloads(pieza: string, ratio: string) {
+function useDownloads(pieza: string, ratio: string, dev: boolean) {
   const [found, setFound] = useState<Array<{ href: string; label: string }>>([]);
   useEffect(() => {
     let off = false;
-    const candidates = [{ name: `${pieza}-${ratio}.mp4`, label: "Descargar MP4" }, ...(ratio === "16x9" ? [{ name: `${pieza}-email.mp4`, label: "Para email" }] : [])];
+    // Quien mira el trailer ve un solo botón y baja la versión liviana (la de email en 16:9, el vertical en 9:16); `?dev=1` muestra todas.
+    const candidates = dev
+      ? [{ name: `${pieza}-${ratio}.mp4`, label: "Descargar MP4" }, ...(ratio === "16x9" ? [{ name: `${pieza}-email.mp4`, label: "Para email" }] : [])]
+      : [{ name: ratio === "16x9" ? `${pieza}-email.mp4` : `${pieza}-9x16.mp4`, label: "Descargar MP4" }];
     void Promise.all(candidates.map(async (c) => {
       const href = withBase(`/trailer/${c.name}`);
       try { return (await fetch(href, { method: "HEAD" })).ok ? { href, label: c.label } : null; } catch { return null; }
     })).then((r) => { if (!off) setFound(r.filter((x): x is { href: string; label: string } => x !== null)); });
     return () => { off = true; };
-  }, [pieza, ratio]);
+  }, [pieza, ratio, dev]);
   return found;
 }

@@ -2,13 +2,13 @@ import { expect, test, type Page } from "@playwright/test";
 import { guardNetwork, horizontalOverflow } from "./helpers";
 import { holdSplash } from "./splash-helpers";
 
-/** L4 · invitación al quiz en la primera visita (celular, 375 px). El quiz y "Tu programa" van en quiz-l4.spec.ts. */
+/** L4 · invitación al quiz (celular, 375 px), con el aviso del trailer apagado. El quiz y "Tu programa" van en quiz-l4.spec.ts. */
 const origin = `http://localhost:${Number(process.env.E2E_PORT ?? 4173)}`;
 const KEY = "volta-quiz-invite";
 const invite = (page: Page) => page.getByRole("dialog", { name: "¿Armamos tu rutina en 1 minuto?" });
 const stored = (page: Page) => page.evaluate((k) => localStorage.getItem(k), KEY);
 
-test.describe("invitación al quiz (primera visita, sin nada guardado)", () => {
+test.describe("invitación al quiz (sin el aviso del trailer)", () => {
   // Sin la marca de "vista" que el resto de los tests trae de playwright.config.ts (la temática sigue en Original).
   test.use({ storageState: { cookies: [], origins: [{ origin, localStorage: [
     { name: "volta-demo:theme-preview", value: JSON.stringify({ state: { previewId: "original" }, version: 0 }) },
@@ -16,7 +16,7 @@ test.describe("invitación al quiz (primera visita, sin nada guardado)", () => {
     { name: "volta-trailer-invite", value: "seen" },
   ] }] } });
 
-  test("sale una sola vez: foco adentro, “Ahora no” la cierra y no vuelve ni al recargar ni en otra página", async ({ page }) => {
+  test("foco adentro, “Ahora no” la cierra y no vuelve al navegar; al recargar la página vuelve a salir", async ({ page }) => {
     const assertNoExternal = guardNetwork(page);
     await page.goto("");
     const dialog = invite(page);
@@ -32,14 +32,16 @@ test.describe("invitación al quiz (primera visita, sin nada guardado)", () => {
     await dialog.getByRole("button", { name: "Ahora no" }).click();
     await expect(dialog).toHaveCount(0);
     expect(await stored(page)).toBe("no");
-    await page.reload();
-    await expect(page.locator("main")).toBeVisible();
+    // Navegando dentro de la tienda (sin recargar) no vuelve.
+    const card = page.locator("main a[href*='/p/']:visible").first();
+    const href = await card.getAttribute("href");
+    await card.click();
+    await expect(page).toHaveURL(new RegExp(`${href}$`));
     await page.waitForTimeout(800);
     await expect(invite(page)).toHaveCount(0);
-    await page.goto("packs/");
-    await expect(page.getByRole("heading", { level: 1, name: "Packs" })).toBeVisible();
-    await page.waitForTimeout(500);
-    await expect(invite(page)).toHaveCount(0);
+    // Cada carga de la página vuelve a empezar (pedido de Ignacio, 19/10/2026).
+    await page.reload();
+    await expect(invite(page)).toBeVisible();
     assertNoExternal();
   });
 

@@ -23,8 +23,9 @@ export const TONES: Record<Tone, { bg: string; fg: string; accent: string }> = {
   paper: { bg: TR.paper, fg: TR.ink, accent: TR.ink },
 };
 
-/** Parte en letras con máscara (cada letra sube desde atrás de su línea). Se revierte solo al cerrar el contexto del trailer. */
-export const splitChars = (els: HTMLElement[]) => els.flatMap((el) => SplitText.create(el, { type: "chars", mask: "chars" }).chars as HTMLElement[]);
+/** Parte en letras con máscara (cada letra sube desde atrás de su línea), agrupadas por palabra: el renglón se corta entre palabras, nunca
+ * adentro de una (en el celular "SIMPLES." quedaba partida). Se revierte solo al cerrar el contexto del trailer. */
+export const splitChars = (els: HTMLElement[]) => els.flatMap((el) => SplitText.create(el, { type: "words,chars", mask: "chars", charsClass: "trl-char" }).chars as HTMLElement[]);
 
 /** Formato de cifras en pesos argentinos, sin decimales. */
 export const ars = (n: number) => Math.round(n).toLocaleString("es-AR");
